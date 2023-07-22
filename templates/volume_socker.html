@@ -1,0 +1,299 @@
+{% extends "base_dashboard.html" %}
+{% load static %}
+{% block dashboard_body %}
+
+<style>
+    .bi-graph-up{
+        color: #80808094;
+        outline: 1px solid;
+        padding: 6px 6px;
+    border-radius: 9px;
+    height: 27px;
+    width: 27px;
+transition: 0.3s;
+    }
+    .bi-graph-up:hover{
+        color: white;
+        outline: 1px solid;
+        background-color: cornflowerblue;
+    }
+    .dataTables_length{
+        margin-bottom: 1rem;
+    }
+    tr:hover .symbol_name{
+        color: cornflowerblue;
+    }
+    th{
+        font-weight: 500 !important;
+    }
+    td{
+        color: #686868 !important;
+
+    }
+</style>
+<div>
+
+
+    <div class="container">
+        <h4 class="my-3">Volume Shockers Intraday | NSE Stocks | NiftyTrader</h4>
+        <div class="row justify-content-center mt-5">
+            <div class="col-md-12">
+               
+                <table border="1" class="table table-hover mb-4" id="volume_shocker_table" >
+                    <thead class="table-light text-secondary">
+                        <tr> 
+                            <th>SYMBOL</th>
+                            <th>LTP</th>
+                            <th>HIGH</th>
+                            <th>LOW</th>
+                            <th>AVG DAILY VOLUME(LACS)</th>
+                            <th>(TODAY/AVG VOLUME)</th>
+                        </tr>
+                    </thead>
+           
+                    <tbody id="breakout-table"  style="display: none;"></tbody>
+                </table>
+                <div class=""  id="loader" style="display: none;">
+                <p class="container row placeholder-glow gap-1 justify-content-center" style="height: 2rem;">
+                    <span class="placeholder col-3"></span>
+                    <span class="placeholder col-1"></span>
+                    <span class="placeholder col-1"></span>
+                    <span class="placeholder col-1"></span>
+                    <span class="placeholder col-3"></span>
+                    <span class="placeholder " style="width: 23.3% ;"></span>
+                    
+                  </p>
+                <p class="container row placeholder-glow gap-1 justify-content-center" style="height: 2rem;">
+                    <span class="placeholder col-3"></span>
+                    <span class="placeholder col-1"></span>
+                    <span class="placeholder col-1"></span>
+                    <span class="placeholder col-1"></span>
+                    <span class="placeholder col-3"></span>
+                    <span class="placeholder " style="width: 23.3% ;"></span>
+                    
+                  </p>
+                <p class="container row placeholder-glow gap-1 justify-content-center" style="height: 2rem;">
+                    <span class="placeholder col-3"></span>
+                    <span class="placeholder col-1"></span>
+                    <span class="placeholder col-1"></span>
+                    <span class="placeholder col-1"></span>
+                    <span class="placeholder col-3"></span>
+                    <span class="placeholder " style="width: 23.3% ;"></span>
+                    
+                  </p>
+                <p class="container row placeholder-glow gap-1 justify-content-center" style="height: 2rem;">
+                    <span class="placeholder col-3"></span>
+                    <span class="placeholder col-1"></span>
+                    <span class="placeholder col-1"></span>
+                    <span class="placeholder col-1"></span>
+                    <span class="placeholder col-3"></span>
+                    <span class="placeholder " style="width: 23.3% ;"></span>
+                    
+                  </p>
+                <p class="container row placeholder-glow gap-1 justify-content-center" style="height: 2rem;">
+                    <span class="placeholder col-3"></span>
+                    <span class="placeholder col-1"></span>
+                    <span class="placeholder col-1"></span>
+                    <span class="placeholder col-1"></span>
+                    <span class="placeholder col-3"></span>
+                    <span class="placeholder " style="width: 23.3% ;"></span>
+                    
+                  </p>
+                <p class="container row placeholder-glow gap-1 justify-content-center" style="height: 2rem;">
+                    <span class="placeholder col-3"></span>
+                    <span class="placeholder col-1"></span>
+                    <span class="placeholder col-1"></span>
+                    <span class="placeholder col-1"></span>
+                    <span class="placeholder col-3"></span>
+                    <span class="placeholder " style="width: 23.3% ;"></span>
+                    
+                  </p>
+                <p class="container row placeholder-glow gap-1 justify-content-center" style="height: 2rem;">
+                    <span class="placeholder col-3"></span>
+                    <span class="placeholder col-1"></span>
+                    <span class="placeholder col-1"></span>
+                    <span class="placeholder col-1"></span>
+                    <span class="placeholder col-3"></span>
+                    <span class="placeholder " style="width: 23.3% ;"></span>
+                    
+                  </p>
+                <p class="container row placeholder-glow gap-1 justify-content-center" style="height: 2rem;">
+                    <span class="placeholder col-3"></span>
+                    <span class="placeholder col-1"></span>
+                    <span class="placeholder col-1"></span>
+                    <span class="placeholder col-1"></span>
+                    <span class="placeholder col-3"></span>
+                    <span class="placeholder " style="width: 23.3% ;"></span>
+                    
+                  </p>
+                <p class="container row placeholder-glow gap-1 justify-content-center" style="height: 2rem;">
+                    <span class="placeholder col-3"></span>
+                    <span class="placeholder col-1"></span>
+                    <span class="placeholder col-1"></span>
+                    <span class="placeholder col-1"></span>
+                    <span class="placeholder col-3"></span>
+                    <span class="placeholder " style="width: 23.3% ;"></span>
+                    
+                  </p>
+                <p class="container row placeholder-glow gap-1 justify-content-center" style="height: 2rem;">
+                    <span class="placeholder col-3"></span>
+                    <span class="placeholder col-1"></span>
+                    <span class="placeholder col-1"></span>
+                    <span class="placeholder col-1"></span>
+                    <span class="placeholder col-3"></span>
+                    <span class="placeholder " style="width: 23.3% ;"></span>
+                    
+                  </p>
+                <p class="container row placeholder-glow gap-1 justify-content-center" style="height: 2rem;">
+                    <span class="placeholder col-3"></span>
+                    <span class="placeholder col-1"></span>
+                    <span class="placeholder col-1"></span>
+                    <span class="placeholder col-1"></span>
+                    <span class="placeholder col-3"></span>
+                    <span class="placeholder " style="width: 23.3% ;"></span>
+                    
+                  </p>
+                <p class="container row placeholder-glow gap-1 justify-content-center" style="height: 2rem;">
+                    <span class="placeholder col-3"></span>
+                    <span class="placeholder col-1"></span>
+                    <span class="placeholder col-1"></span>
+                    <span class="placeholder col-1"></span>
+                    <span class="placeholder col-3"></span>
+                    <span class="placeholder " style="width: 23.3% ;"></span>
+                    
+                  </p>
+                <p class="container row placeholder-glow gap-1 justify-content-center" style="height: 2rem;">
+                    <span class="placeholder col-3"></span>
+                    <span class="placeholder col-1"></span>
+                    <span class="placeholder col-1"></span>
+                    <span class="placeholder col-1"></span>
+                    <span class="placeholder col-3"></span>
+                    <span class="placeholder " style="width: 23.3% ;"></span>
+                    
+                  </p>
+                <p class="container row placeholder-glow gap-1 justify-content-center" style="height: 2rem;">
+                    <span class="placeholder col-3"></span>
+                    <span class="placeholder col-1"></span>
+                    <span class="placeholder col-1"></span>
+                    <span class="placeholder col-1"></span>
+                    <span class="placeholder col-3"></span>
+                    <span class="placeholder " style="width: 23.3% ;"></span>
+                    
+                  </p>
+                <p class="container row placeholder-glow gap-1 justify-content-center" style="height: 2rem;">
+                    <span class="placeholder col-3"></span>
+                    <span class="placeholder col-1"></span>
+                    <span class="placeholder col-1"></span>
+                    <span class="placeholder col-1"></span>
+                    <span class="placeholder col-3"></span>
+                    <span class="placeholder " style="width: 23.3% ;"></span>
+                    
+                  </p>
+                <p class="container row placeholder-glow gap-1 justify-content-center" style="height: 2rem;">
+                    <span class="placeholder col-3"></span>
+                    <span class="placeholder col-1"></span>
+                    <span class="placeholder col-1"></span>
+                    <span class="placeholder col-1"></span>
+                    <span class="placeholder col-3"></span>
+                    <span class="placeholder " style="width: 23.3% ;"></span>
+                    
+                  </p>
+                <p class="container row placeholder-glow gap-1 justify-content-center" style="height: 2rem;">
+                    <span class="placeholder col-3"></span>
+                    <span class="placeholder col-1"></span>
+                    <span class="placeholder col-1"></span>
+                    <span class="placeholder col-1"></span>
+                    <span class="placeholder col-3"></span>
+                    <span class="placeholder " style="width: 23.3% ;"></span>
+                    
+                  </p>
+                <p class="container row placeholder-glow gap-1 justify-content-center" style="height: 2rem;">
+                    <span class="placeholder col-3"></span>
+                    <span class="placeholder col-1"></span>
+                    <span class="placeholder col-1"></span>
+                    <span class="placeholder col-1"></span>
+                    <span class="placeholder col-3"></span>
+                    <span class="placeholder " style="width: 23.3% ;"></span>
+                    
+                  </p>
+                <p class="container row placeholder-glow gap-1 justify-content-center" style="height: 2rem;">
+                    <span class="placeholder col-3"></span>
+                    <span class="placeholder col-1"></span>
+                    <span class="placeholder col-1"></span>
+                    <span class="placeholder col-1"></span>
+                    <span class="placeholder col-3"></span>
+                    <span class="placeholder " style="width: 23.3% ;"></span>
+                    
+                  </p>
+                <p class="container row placeholder-glow gap-1 justify-content-center" style="height: 2rem;">
+                    <span class="placeholder col-3"></span>
+                    <span class="placeholder col-1"></span>
+                    <span class="placeholder col-1"></span>
+                    <span class="placeholder col-1"></span>
+                    <span class="placeholder col-3"></span>
+                    <span class="placeholder " style="width: 23.3% ;"></span>
+                    
+                  </p>
+             
+              
+                </div>
+              
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        // Function to create the table rows from the JSON data
+        function createTableRows(data) {
+            let table = $("#breakout-table");
+            for (let item of data) {
+                let row = $("<tr>");
+                $("<td style='display: flex; align-items: center; gap: 0.4rem;'>").append('<a href="https://www.tradingview.com/chart/MgiGDMYM/?symbol=' + item.symbol_name + '&aff_id=113877" target="_blank"><i class="bi bi-graph-up"></i></a> <p style="margin-top: 0rem; margin-bottom: 0rem;" class="symbol_name">' + item.symbol_name + '</p>').appendTo(row);
+                $("<td>").text(item.last_trade_price).appendTo(row);
+                $("<td>").text(item.high).appendTo(row);
+                $("<td>").text(item.low).appendTo(row);
+                $("<td>").text(item.avg_daily_volume).addClass('text-center').appendTo(row);
+                $("<td>").text(item.ratio).addClass('text-center').appendTo(row);
+                table.append(row);
+            }
+
+            $("#loader").hide(); // Hide the loader once data is loaded
+            $("#breakout-table").show(); // Show the table after data is loaded
+            if ($.fn.DataTable.isDataTable("#volume_shocker_table")) {
+                $("#volume_shocker_table").DataTable().destroy();
+            }
+
+            $('#volume_shocker_table').DataTable({
+          "pageLength": 25
+        });
+  
+        }
+
+        // Make an AJAX request to fetch the breakout data
+        function volume_shocker_data() {
+            
+            $("#loader").show(); 
+        $.ajax({
+            url: '/breakout_data',
+            method: 'GET',
+            dataType: 'json',
+            beforeSend: function () {
+                $("#loader").show(); // Show the loader before AJAX call
+            },
+            success: function (data) {
+                console.log(data);
+                createTableRows(data);
+            },
+            error: function (xhr, status, error) {
+                console.error('Request failed. Status: ' + xhr.status);
+                $("#loader").hide(); // Hide the loader in case of an error
+            }
+        });
+    }
+    volume_shocker_data();
+        setInterval(volume_shocker_data, 150000);
+    </script>
+</div>
+
+{% endblock dashboard_body %}

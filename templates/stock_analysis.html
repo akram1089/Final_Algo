@@ -1,0 +1,418 @@
+{% extends "base_dashboard.html" %}
+{% load static %}
+{% block dashboard_body %}
+<style>
+  #stock-list-container {
+    display: flex;
+    flex-wrap: wrap;
+
+    align-items: center;
+  }
+
+  .search_stock_sort {
+    display: flex;
+    gap: 2rem;
+    align-items: flex-end;
+    flex-wrap: wrap;
+  }
+
+  .danger_change {
+    border: 1px solid;
+    border-radius: 5px;
+    background: #ffeaea;
+    padding: 0 7px;
+
+  }
+
+  .success_change {
+    border: 1px solid;
+    border-radius: 5px;
+    background: #bde6bde4;
+    padding: 0 7px;
+
+  }
+
+  .warning_change {
+    border: 1px solid;
+    border-radius: 5px;
+    background: #fffccde4;
+    padding: 0 7px;
+
+  }
+
+  .filter_all {
+    background: rgba(33, 150, 243, .1);
+    padding: 4px 12px 3px;
+    -webkit-transition: all .2s ease-in-out;
+    -moz-transition: all .2s ease-in-out;
+    transition: all .2s ease-in-out;
+    margin-top: 5px;
+    font-weight: 500;
+    color: dodgerblue;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+
+  .filter_all:hover {
+    background: linear-gradient(180deg, #4399eb, #5cadfb);
+    color: #fff;
+  }
+
+  .success_hover {
+    background: #dff5dfe4;
+    padding: 4px 12px 3px;
+    -webkit-transition: all .2s ease-in-out;
+    -moz-transition: all .2s ease-in-out;
+    transition: all .2s ease-in-out;
+    margin-top: 5px;
+    font-weight: 500;
+    color: green;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+
+  .success_hover:hover {
+    background: #05ac72;
+    color: #fff;
+
+  }
+
+  .warning_hover:hover {
+    background: #f5b945;
+    color: #fff;
+
+  }
+
+  .warning_hover {
+    background: rgba(245, 185, 69, .1);
+    color: #f5b945;
+
+    padding: 4px 12px 3px;
+    -webkit-transition: all .2s ease-in-out;
+    -moz-transition: all .2s ease-in-out;
+    transition: all .2s ease-in-out;
+    margin-top: 5px;
+    font-weight: 500;
+    cursor: pointer;
+    border-radius: 8px;
+
+  }
+
+  .danger_hover {
+    background: rgba(235, 84, 99, .1);
+    color: #eb5463;
+
+    padding: 4px 12px 3px;
+    -webkit-transition: all .2s ease-in-out;
+    -moz-transition: all .2s ease-in-out;
+    transition: all .2s ease-in-out;
+    margin-top: 5px;
+    font-weight: 500;
+    cursor: pointer;
+    border-radius: 8px;
+
+  }
+
+  .danger_hover:hover {
+    background: #eb5463;
+    color: #fff;
+  }
+
+  .active_stock_head {
+    background: linear-gradient(180deg, #4399eb, #5cadfb) !important;
+    color: #fff !important;
+  }
+
+  .main_container,.last_content {
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+    border-radius: 6px;
+  }
+
+  #stock-list-container {
+    max-height: 70vh;
+    overflow-y: auto;
+  }
+  .btn:hover {
+    color: rgba(0, 0, 0, 0.547);
+    background-color: rgba(240, 248, 255, 0.582);
+    border-color: white !important;
+}
+</style>
+<div class="title_analysis my-3">
+  <h5>TECHNICAL & FUNDAMENTAL ANALYSIS OF INDIAN STOCKS
+  </h5>
+  <div class="main_container p-3">
+    <div class="main_analysis d-flex align-items-end"
+      style="    white-space: nowrap;     justify-content: space-between;">
+
+
+      <div class=" d-flex flex-wrap"  style="gap: 0.5rem;">
+        <div class="filter_all filter-btn" data-filter="all">All</div>
+
+        <div class=" filter-btn success_hover" data-filter="gt5">5% <i class="bi bi-arrow-up"></i></div>
+        <div class=" filter-btn success_hover" data-filter="between3to5">3 ~ 5%</div>
+
+
+        <div class=" filter-btn success_hover" data-filter="between1to3">1 ~ 3%</div>
+
+
+        <div class="warning_hover filter-btn" data-filter="between1toMinus1">1 ~
+          -1%</div>
+
+
+        <div class="danger_hover filter-btn" data-filter="betweenMinus1toMinus3">-1 ~
+          -3%</div>
+
+        <div class="danger_hover filter-btn" data-filter="betweenMinus3toMinus5">-3 ~
+          -5%</div>
+
+        <div class="danger_hover filter-btn" data-filter="ltMinus5">-5% <i class="bi bi-arrow-down"></i></div>
+      </div>
+
+      <div class="search_stock_sort">
+        <input type="text" id="search-input" class="form-control mt-3 " style="width: fit-content;" placeholder="Search Stock">
+        <div class="dropdown">
+          <button class="btn btn-light dropdown-toggle" type="button" id="sortDropdown" data-bs-toggle="dropdown"
+            aria-haspopup="true" aria-expanded="false">
+            Sort By
+          </button>
+          <div class="dropdown-menu" aria-labelledby="sortDropdown">
+            <a class="dropdown-item sort-btn" href="#" data-sort="az">A to Z</a>
+            <a class="dropdown-item sort-btn" href="#" data-sort="za">Z to A</a>
+            <a class="dropdown-item sort-btn" href="#" data-sort="gainers">Top Gainers</a>
+            <a class="dropdown-item sort-btn" href="#" data-sort="losers">Top Losers</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div id="stock-list-container" class="mt-2"></div>
+    <div class="bottom_content mt-4">
+      <p>Analyse over 300 Indian stocks that trade on the National Stock exchange. The stock analysis tool at Super-Algo allows you to analyze stocks using TA tools like trends, candlestick analysis, volume, gap support and resistance, levels and more.</p>
+      <p>Technical Analysis: It is a tool that is used to evaluate investments and also find trading opportunities by observing and analyzing trading trends, such as price movement, volume, gaps etc. Also, technical analysts focus on trading signals, patterns of price movements, and many other analytical charting tools for evaluating a security's strength or weakness. It can be used on any security with historical trading data and includes stocks, commodities, futures, fixed-income, currencies, and other securities.</p>
+    </div>
+  </div>
+ 
+</div>
+
+
+<div class="last_content my-5 shadow p-3">
+<h5>TECHNICAL & FUNDAMENTAL ANALYSIS OF INDIAN STOCKS</h5>
+<h5>The market discounts everything:</h5>
+<p>Several experts criticize technical analysis as it only considers price movements and ignores fundamental factors. It also removes the requirement to consider the factors separately before making an investmentdecision. So, the only remaining thing is the analysis of price movements, which technical analysts consider as the product of supply and demand for a specific stock in the market.</p>
+<h5>The Price movements in trends:</h5>
+<p>Several experts criticize technical analysis as it only considers price movements and ignores fundamental factors. It also removes the requirement to consider the factors separately before making an investment decision. So, the only remaining thing is the analysis of price movements, which technical analysts consider as the product of supply and demand for a specific stock in the market.</p>
+
+</div>
+<script>
+  $(document).ready(function () {
+    var originalData = [];
+    var currentFilter = "all"; 
+    function fetch_Stock_data(params) {
+
+
+      $.ajax({
+        url: "/stock_list",
+        dataType: "json",
+        success: function (data) {
+          originalData = data.slice(); 
+
+          var stockListContainer = $("#stock-list-container");
+
+          function renderStocks(stocks) {
+            stockListContainer.empty();
+
+            for (var i = 0; i < stocks.length; i++) {
+              var stock = stocks[i];
+
+              var stockItem = $("<div>", {
+                class: "col-lg-3 col-sm-6 p-2"
+              });
+
+              var stockLink = $("<a>", {
+                class: "text-decoration-none text-secondary",
+                target: "_blank",
+                href: "#"
+              });
+
+              var stockListItem = $("<div>", {
+                class: "p-2 cursor-pointer stock-list-item bg-white d-flex align-items-center justify-content-between shadow fs-6 rounded ",
+                title: stock.symbol_name,
+                style:"width: 17.9rem; !important"
+
+              });
+
+              var stockName = $("<div>").append($("<h6>", {
+                class: "text-uppercase m-0 fw-500 fs-6 label-color-5",
+                text: stock.symbol_name
+              }));
+
+              var stockValues = $("<div>", {
+                class: "d-flex align-items-center"
+              });
+
+              var todayClose = $("<span>", {
+                class: "me-1 text-red fs-6",
+                text: stock.today_close
+              });
+
+              var changePercent = $("<span>", {
+                class: "stock_values fs-6 low_values",
+                text: stock.change_percent
+              });
+
+              if (parseFloat(stock.change_percent) < -1) {
+                changePercent.addClass("text-danger danger_change");
+                todayClose.addClass("text-danger");
+              } else if (parseFloat(stock.change_percent) > 1) {
+                changePercent.addClass("text-success success_change");
+                todayClose.addClass("text-success");
+              } else if (parseFloat(stock.change_percent) >= -1 && parseFloat(stock.change_percent) < 1) {
+                changePercent.addClass("text-warning warning_change");
+                todayClose.addClass("text-warning");
+              }
+              stockValues.append(todayClose, changePercent);
+
+              stockListItem.append(stockName, stockValues);
+              stockLink.append(stockListItem);
+              stockItem.append(stockLink);
+              stockListContainer.append(stockItem);
+            }
+          }
+
+    
+          renderStocks(data);
+
+         
+          $(".filter-btn").click(function () {
+            $(".filter-btn").removeClass("active_stock_head"); 
+            $(this).addClass("active_stock_head"); 
+
+            currentFilter = $(this).data("filter"); 
+            if (currentFilter === "all") {
+              renderStocks(originalData);
+            } else {
+              var filteredStocks = originalData.filter(function (stock) {
+                var changePercent = parseFloat(stock.change_percent);
+                switch (currentFilter) {
+                  case "gt5":
+                    return changePercent > 5;
+                  case "between3to5":
+                    return changePercent >= 3 && changePercent <= 5;
+                  case "between1to3":
+                    return changePercent >= 1 && changePercent <= 3;
+                  case "between1toMinus1":
+                    return changePercent >= -1 && changePercent <= 1;
+                  case "betweenMinus1toMinus3":
+                    return changePercent >= -3 && changePercent <= -1;
+                  case "betweenMinus3toMinus5":
+                    return changePercent >= -5 && changePercent <= -3;
+                  case "ltMinus5":
+                    return changePercent < -5;
+                  default:
+                    return false;
+                }
+              });
+              renderStocks(filteredStocks);
+            }
+            
+            localStorage.setItem("filter", currentFilter);
+          });
+
+          $("#search-input").on("keyup", function () {
+            var searchTerm = $(this).val().trim().toLowerCase();
+            var filteredStocks = originalData.filter(function (stock) {
+              return stock.symbol_name.toLowerCase().includes(searchTerm);
+            });
+
+            renderStocks(filteredStocks);
+          });
+
+       
+          $(".sort-btn").click(function () {
+            $(".sort-btn").removeClass("active"); 
+            $(this).addClass("active"); 
+
+            var sortOption = $(this).data("sort");
+            var sortedStocks = originalData.slice(); 
+
+            switch (sortOption) {
+              case "az":
+                sortedStocks.sort(function (a, b) {
+                  return a.symbol_name.localeCompare(b.symbol_name);
+                });
+                break;
+              case "za":
+                sortedStocks.sort(function (a, b) {
+                  return b.symbol_name.localeCompare(a.symbol_name);
+                });
+                break;
+              case "gainers":
+                sortedStocks.sort(function (a, b) {
+                  return parseFloat(b.change_percent) - parseFloat(a.change_percent);
+                });
+                break;
+              case "losers":
+                sortedStocks.sort(function (a, b) {
+                  return parseFloat(a.change_percent) - parseFloat(b.change_percent);
+                });
+                break;
+              default:
+                break;
+            }
+
+            if (currentFilter !== "all") {
+              
+              sortedStocks = sortedStocks.filter(function (stock) {
+                var changePercent = parseFloat(stock.change_percent);
+                switch (currentFilter) {
+                  case "gt5":
+                    return changePercent > 5;
+                  case "between3to5":
+                    return changePercent >= 3 && changePercent <= 5;
+                  case "between1to3":
+                    return changePercent >= 1 && changePercent <= 3;
+                  case "between1toMinus1":
+                    return changePercent >= -1 && changePercent <= 1;
+                  case "betweenMinus1toMinus3":
+                    return changePercent >= -3 && changePercent <= -1;
+                  case "betweenMinus3toMinus5":
+                    return changePercent >= -5 && changePercent <= -3;
+                  case "ltMinus5":
+                    return changePercent < -5;
+                  default:
+                    return false;
+                }
+              });
+            }
+
+            renderStocks(sortedStocks);
+            
+            localStorage.setItem("sortOption", sortOption);
+          });
+
+      
+          var savedFilter = localStorage.getItem("filter");
+          var savedSortOption = localStorage.getItem("sortOption");
+          if (savedFilter) {
+            currentFilter = savedFilter; 
+            $(".filter-btn[data-filter='" + savedFilter + "']").addClass("active");
+            $(".filter-btn[data-filter='" + savedFilter + "']").click();
+          }
+          if (savedSortOption) {
+            $(".sort-btn[data-sort='" + savedSortOption + "']").addClass("active");
+            $(".sort-btn[data-sort='" + savedSortOption + "']").click();
+          }
+        }
+      });
+    }
+    fetch_Stock_data();
+
+ //King of NYC ---  TUFAIL AKRAM  
+    setInterval(fetch_Stock_data, 50000);
+  });
+
+</script>
+
+{% endblock dashboard_body %}

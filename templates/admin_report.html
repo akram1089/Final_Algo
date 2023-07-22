@@ -1,0 +1,340 @@
+{% extends "base_admin_panel.html" %}
+{% load static %}
+{% block dashboard_admin_body %}
+
+<style>
+  .dataTables_length {
+    margin: 7px 0 10px 0 !important;
+  }
+
+  .main_report_admin {
+    background: white;
+    padding: 4rem 2rem;
+    border-radius: 10px;
+  }
+</style>
+<style>
+  thead {
+    border-color: #8080803b !important;
+    border-style: solid;
+    border-width: 0;
+  }
+
+  table.dataTable.no-footer {
+    border-bottom: 1px solid #11111112 !important;
+  }
+
+  .sorting::after,
+  .sorting::before {
+    display: none !important;
+  }
+
+  #Users_table_wrapper {
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    padding: 2rem;
+    background: white;
+    border-radius: 12px;
+  }
+
+  .table-responsive thead {
+    background-color: #01A3FF !important;
+  }
+</style>
+
+<div class="">
+  <div class="main_report_admin">
+    <div class="row" style="row-gap: 1rem;">
+      <div class="col-md-3 col-sm-6">
+        <input class="form-control form-control-solid" placeholder="Pick date rage" id="report_admin"
+          data-listener-added_a06394db="true">
+      </div>
+      <div class="col-md-2 col-sm-6 w-auto">
+        <select class="form-select" id="select-option1">
+          <option value="customers">No of customers added</option>
+          <option value="revenue">Total revenue generated</option>
+          <option value="sales">Total No. of sales created</option>
+        </select>
+      </div>
+      <!-- <div class="col-md-2 col-sm-6 w-auto">
+        <select class="form-select" id="select-option2">
+          <option value="option1">Option 1</option>
+          <option value="option2">Option 2</option>
+          <option value="option3">Option 3</option>
+        </select>
+      </div> -->
+
+      <div class="col-md-1 col-sm-6">
+        <button class="btn btn-primary" style="height: 37px;"><i class="bi bi-arrow-right"></i></button>
+      </div>
+    </div>
+
+    <div id="table-container1" style="display: none;">
+      <table id="data-table1" class="table mt-4 admin_report_table">
+        <thead style="color: white; background-color: #01A3FF !important; border-bottom: 1px solid black !important;">
+          <tr>
+            <th scope="col"> Registration Date</th>
+            <th scope="col">Full Name </th>
+            <th scope="col">Email </th>
+            <th scope="col">Package </th>
+            <th scope="col">Active / Inactive </th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Table data will be populated dynamically -->
+        </tbody>
+      </table>
+    </div>
+
+    <div id="table-container2" style="display: none;">
+      <table id="data-table2" class="table mt-4 admin_report_table">
+        <thead style="color: white; background-color: #FF8000 !important; border-bottom: 1px solid black !important;">
+          <tr>
+            <th scope="col">Puchanged Date</th>
+            <th scope="col">Full Name</th>
+            <th scope="col">Email</th>
+            <th scope="col">Amount</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Table data will be populated dynamically -->
+        </tbody>
+      </table>
+    </div>
+
+    <div id="table-container3" style="display: none;">
+      <table id="data-table3" class="table mt-4 admin_report_table">
+        <thead style="color: white; background-color: #008000 !important; border-bottom: 1px solid black !important;">
+          <tr>
+            <th scope="col">Column X</th>
+            <th scope="col">Column Y</th>
+            <th scope="col">Column Z</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Table data will be populated dynamically -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <script>
+    $("#report_admin").daterangepicker();
+  </script>
+
+  <script>
+    $(document).ready(function () {
+      var dataTable1 = $('#data-table1').DataTable({
+        "pageLength": 25,
+      });
+      var dataTable2 = $('#data-table2').DataTable({
+        "pageLength": 25,
+      });
+      var dataTable3 = $('#data-table3').DataTable({
+        "pageLength": 25,
+      });
+
+      // Add event listener for the button click
+      $("button").click(function () {
+        var selectedOption = $("#select-option1").val();
+        generateTable(selectedOption);
+      });
+
+
+      // Generate table rows based on the selected option
+function generateTable(option) {
+  // Clear existing table data
+  dataTable1.clear().draw();
+  dataTable2.clear().draw();
+  dataTable3.clear().draw();
+
+  // Generate 25 random data rows
+  var tableData1 = [];
+  var tableData2 = [];
+  
+  var tableData3 = [
+          { column1: "Sale 1", column2: "Product A", column3: "10 units" },
+          { column1: "Sale 2", column2: "Product B", column3: "5 units" },
+          { column1: "Sale 3", column2: "Product C", column3: "3 units" }
+        ];
+  for (var i = 0; i < 25; i++) {
+    tableData1.push({
+      column1: getRandomDate(),
+      column2: getRandomName(),
+      column3: getRandomEmail(),
+      column4: getRandomPackage(),
+      column5: getRandomStatus()
+    });
+
+    tableData2.push({
+      column1: getRandomDate(),
+      column2: getRandomName(),
+      column3: getRandomEmail(),
+      column4: getRandomAmount()
+    });
+  }
+
+  // Generate table rows based on the selected option
+  if (option === "customers") {
+    generateRows(dataTable1, tableData1);
+    showTable("#table-container1");
+    hideTables(["#table-container2", "#table-container3"]);
+  } else if (option === "revenue") {
+    generateRows(dataTable2, tableData2);
+    showTable("#table-container2");
+    hideTables(["#table-container1", "#table-container3"]);
+  } else if (option === "sales") {
+    generateRows(dataTable3, tableData3);
+    showTable("#table-container3");
+    hideTables(["#table-container1", "#table-container2"]);
+  }
+}
+      // Generate table rows
+      function generateRows(dataTable, data) {
+        data.forEach(function (row) {
+          dataTable.row.add([row.column1, row.column2, row.column3, row.column4, row.column5]).draw();
+        });
+      }
+
+      // Show table container
+      function showTable(containerId) {
+        $(containerId).show();
+      }
+
+      // Hide table containers
+      function hideTables(tableIds) {
+        tableIds.forEach(function (tableId) {
+          $(tableId).hide();
+        });
+      }
+
+      // Set initial table to table-container1
+      generateTable("customers");
+    });
+
+    // Helper functions
+
+    // Get random date in the format "YYYY-MM-DD"
+    function getRandomDate() {
+      var start = new Date(2020, 0, 1);
+      var end = new Date();
+      var randomDate = new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
+      return randomDate.toISOString().slice(0, 10);
+    }
+
+    // Get random name
+  // Generate random name
+function getRandomName() {
+  var names = [
+    "John Doe",
+    "Jane Smith",
+    "Michael Johnson",
+    "Emily Brown",
+    "Daniel Wilson",
+    "Olivia Davis",
+    "William Taylor",
+    "Sophia Anderson",
+    "Alexander Thomas",
+    "Isabella Clark",
+    "Matthew Martinez",
+    "Emma Miller",
+    "James Anderson",
+    "Ava Moore",
+    "Benjamin Robinson",
+    "Mia Martinez",
+    "Joseph Johnson",
+    "Charlotte Smith",
+    "Daniel White",
+    "Harper Lee",
+    "Samuel Davis",
+    "Ella Wilson",
+    "Andrew Thompson",
+    "Victoria Harris",
+    "David Lewis",
+    "Abigail Wright",
+    "Josephine Walker",
+    "Daniel Young",
+    "Grace Allen",
+    "Henry Turner",
+    "Scarlett Baker",
+    "Christopher Harris",
+    "Chloe Martin",
+    "Jack Adams",
+    "Lily Turner",
+    "Samuel Bennett",
+    "Zoe James",
+    "David Mitchell",
+    "Layla Garcia",
+    "Nicholas Nelson",
+    "Audrey Edwards",
+    "Leo Collins",
+    "Aria Hill",
+    "Ethan Cooper",
+    "Sofia Morris",
+    "Joshua Sanchez",
+    "Lucy Reed"
+  ];
+  var randomIndex = Math.floor(Math.random() * names.length);
+  return names[randomIndex];
+}
+
+
+    // Get random email
+// Generate random email
+function getRandomEmail() {
+  var emails = [
+    "john.doe@example.com",
+    "jane.smith@example.com",
+    "michael.johnson@example.com",
+    "emily.brown@example.com",
+    "daniel.wilson@example.com",
+    "olivia.davis@example.com",
+    "william.taylor@example.com",
+    "sophia.anderson@example.com",
+    "alexander.thomas@example.com",
+    "isabella.clark@example.com",
+    "matthew.martinez@example.com",
+    "emma.miller@example.com",
+    "james.anderson@example.com",
+    "ava.moore@example.com",
+    "benjamin.robinson@example.com",
+    "mia.martinez@example.com",
+    "joseph.johnson@example.com",
+    "charlotte.smith@example.com",
+    "daniel.white@example.com",
+    "harper.lee@example.com",
+    "samuel.davis@example.com",
+    "ella.wilson@example.com",
+    "andrew.thompson@example.com",
+    "victoria.harris@example.com",
+    "david.lewis@example.com",
+    "abigail.wright@example.com",
+    "josephine.walker@example.com"
+  ];
+  var randomIndex = Math.floor(Math.random() * emails.length);
+  return emails[randomIndex];
+}
+
+
+    // Get random package
+    function getRandomPackage() {
+      var packages = ["Premium", "Plus", "Basic", "Advanced"];
+      var randomIndex = Math.floor(Math.random() * packages.length);
+      return packages[randomIndex];
+    }
+
+
+    // Get random status (Active / Inactive)
+    function getRandomStatus() {
+      var statuses = ["Active", "Inactive"];
+      var randomIndex = Math.floor(Math.random() * statuses.length);
+      return statuses[randomIndex];
+    }
+    function getRandomAmount() {
+      var Amounts = [499,599,999,1999];
+      var randomIndex = Math.floor(Math.random() * Amounts.length);
+      return Amounts[randomIndex];
+    }
+
+
+  </script>
+</div >
+      {% endblock dashboard_admin_body %}

@@ -1,0 +1,134 @@
+{% extends "base_dashboard.html" %}
+{% load static %}
+{% block dashboard_body %}
+<div class="main_head_strategies border-bottom my-4">
+    <div
+      class="strategies d-flex mt-4"
+      style="align-items: center; gap: 0.3rem"
+    >
+      <h4 class="">Bulk Deal Data </h4>
+      <span>
+        <i
+          class="bi bi-exclamation-circle"
+          data-bs-toggle="collapse"
+          data-bs-target="#collapseExample"
+          aria-expanded="false"
+          aria-controls="collapseExample"
+        ></i>
+      </span>
+    </div>
+  </div>
+  <div class="collapse" id="collapseExample" style="margin-bottom: 25px">
+    <div class="card card-body">
+      <div class="antd-pro-components-markdown-index-markdownStyle">
+        <p>Strategies</p>
+        <ul>
+          <li>Bear Call, Put, Spread</li>
+          <li>Bull Call, Put, Spread</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+<div class="date_filter d-flex my-2" style="justify-content: flex-end;">
+    <label for="date">Select Date:</label>
+<select id="date" name="date" >
+    
+</select>
+
+</div>
+
+<table id="bulk_data" class="display py-3" >
+    <thead style='    background: #4399eb!important; color:white;
+   '>
+        <tr>
+            <th>Symbol Name</th>
+            <th>Security Name</th>
+            <th>Client Name</th>
+            <th>Type</th>
+            <th>Trade Quantity</th>
+            <th>Trade Price</th>
+            <th>Total Value</th>
+            <th>Date</th>
+        </tr>
+    </thead>
+    <tbody id="data-table-body"></tbody>
+</table>
+
+<!-- ...existing HTML code... -->
+
+<script>
+    $(document).ready(function() {
+        // Initialize DataTable with options
+        var dataTable = $('#bulk_data').DataTable({
+            "pageLength": 25
+        });
+
+        // Function to generate table rows
+        function generateTableRows(data) {
+            var rows = "";
+            for (var i = 0; i < data.length; i++) {
+                var row = "<tr>" +
+                    "<td>" + data[i].symbol_name + "</td>" +
+                    "<td>" + data[i].security_name + "</td>" +
+                    "<td>" + data[i].client_name + "</td>" +
+                    "<td>" + data[i].type + "</td>" +
+                    "<td>" + data[i].trade_quantity + "</td>" +
+                    "<td>" + data[i].trade_price + "</td>" +
+                    "<td>" + data[i].totaL_VALUE + "</td>" +
+                    "<td>" + data[i].created_at + "</td>" +
+                    "</tr>";
+                rows += row;
+            }
+            return rows;
+        }
+
+        // Function to populate date options in the select element
+        function populateDateOptions(dates) {
+            var options = "";
+            for (var i = 0; i < dates.length; i++) {
+                options += "<option value='" + dates[i] + "'>" + dates[i] + "</option>";
+            }
+            $('#date').html(options);
+        }
+
+        $('#date').change(function() {
+            var selectedDate = $(this).val();
+            $.ajax({
+                url: '/bulk_deal_data',
+                type: 'GET',
+                data: { date: selectedDate },
+                dataType: 'json',
+                success: function(response) {
+                    var dealData = response.deal_data;
+                    var tableRows = generateTableRows(dealData);
+                    dataTable.clear().rows.add($(tableRows)).draw(); // Clear existing data and add new data
+                }
+            });
+        });
+
+        // Retrieve initial data on page load
+        $.ajax({
+            url: '/bulk_deal_data',
+            type: 'GET',
+            dataType: 'json',
+            success: function(response) {
+                var dealData = response.deal_data;
+                var tableRows = generateTableRows(dealData);
+                dataTable.clear().rows.add($(tableRows)).draw(); // Add initial data
+
+                var dealDates = response.deal_dates;
+                populateDateOptions(dealDates);
+            }
+        });
+    });
+</script>
+
+<!-- ...remaining HTML code... -->
+
+
+{% endblock dashboard_body %}
+
+
+

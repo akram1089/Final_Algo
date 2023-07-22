@@ -1,0 +1,292 @@
+{% extends "base_dashboard.html" %} {% load static %} {% block dashboard_body %}
+<style>
+  .desc_usage_active {
+    color: #011490;
+    text-align: center;
+    border-bottom: 2px solid #011490;
+    font-size: 21px;
+    font-weight: 600;
+  }
+
+  .col-4 {
+    text-align: center;
+    transition: 0.3s;
+    cursor: pointer;
+  }
+
+  @media (max-width: 768px) {
+    .head_image {
+      width: fit-content !important;
+    }
+    canvas[Attributes Style] {
+      aspect-ratio: auto 400 / 400 !important;
+    }
+  }
+</style>
+
+<body>
+  <div class="container">
+    <h5 class="text-center mt-3">
+      FII/FPI and DII Trading Activity in Cash Market (Provisional)
+    </h5>
+  </div>
+  <div class="description_usage my-4">
+    <div class="head_desc_usage">
+      <div class="row border-bottom">
+        <div
+          class="chart-header col-4"
+          onclick="filterChart('fii_dii')"
+          data-btn-id="1"
+          style="font-size: 21px"
+        >
+          FII/DII Chart
+        </div>
+        <div
+          class="chart-header col-4"
+          onclick="filterChart('fii')"
+          data-btn-id="2"
+          style="font-size: 21px"
+        >
+          FII Chart
+        </div>
+        <div
+          class="chart-header col-4"
+          onclick="filterChart('dii')"
+          data-btn-id="3"
+          style="font-size: 21px"
+        >
+          DII Chart
+        </div>
+      </div>
+      <div class="main_desc_usage mt-4" id="main_desc_usage"></div>
+    </div>
+  </div>
+  <div id="chartContainer " style="height: 100%">
+    <div class="dii_fii" id="dii_fii" style="width: 100%; height: 70vh">
+      <canvas id="fii_diiChart" style="display: block; box-sizing: border-box; height: 487px; width: 974px;"></canvas>
+    </div>
+    <div class="fii" id="fii" style="width: 100%; height: 70vh">
+      <canvas id="fiiChart" style="display: block; box-sizing: border-box; height: 487px; width: 974px;"></canvas>
+    </div>
+
+    <div class="dii" id="dii" style="width: 100%; height: 70vh">
+      <canvas id="diiChart" style="display: block; box-sizing: border-box; height: 487px; width: 974px;"></canvas>
+    </div>
+  </div>
+
+  <script>
+
+    var labels_dii = {{ labels_dii|safe }};
+    var values_dii = {{ values_dii|safe }};
+    var colors = values_dii.map(value => value >= 0 ? 'rgba(0, 243, 0, 0.2)' : 'rgba(255, 0, 0, 0.2)');
+    var borderColors = values_dii.map(value => value >= 0 ? 'rgba(0, 243, 0, 1)' : 'rgba(255, 0, 0, 1)');
+
+    var ctx = document.getElementById('diiChart').getContext('2d');
+    var chart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: labels_dii,
+        datasets: [{
+          label: 'Net Value',
+          data: values_dii,
+          backgroundColor: colors,
+          borderColor: borderColors,
+          borderWidth: 1
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        indexAxis: 'y', // Display labels on the y-axis
+        scales: {
+          x: {
+            beginAtZero: true,
+            grid: {
+              display: false, // Hide y-axis background border
+            },
+          }
+        },
+        plugins: {
+          legend: {
+            labels: {
+              usePointStyle: true,
+              fontColor: "black",
+            },
+          },
+          tooltip: {
+            callbacks: {
+              label: function (context) {
+                var label = context.dataset.label || "";
+                if (label) {
+                  label += ": ";
+                }
+                label += context.parsed.y;
+                return label;
+              },
+              title: function (context) {
+                var title = "";
+                if (context.length > 0) {
+                  var dataIndex = context[0].dataIndex;
+                  title =
+                    "Date: " +
+                    dates[dataIndex] +
+                    "\nToday Close: " +
+                    closes[dataIndex] +
+                    "\nPrev Close: " +
+                    prev_close[dataIndex] +
+                    "\nToday: " +
+                    differences[dataIndex];
+                }
+                return title;
+              },
+            },
+          },
+          datalabels: {
+            display: true,
+            align: "end",
+            anchor: "end",
+            color: "black",
+            rotation: 270,
+            font: {
+              weight: "bold",
+            },
+            formatter: function (value, context) {
+              return value;
+            },
+          },
+        },
+      },
+    });
+    
+
+    var labels_fii = {{ labels_fii|safe }};
+    var values_fii = {{ values_fii|safe }};
+    var colors = values_fii.map(value => value >= 0 ? 'rgba(0, 243, 0, 0.2)' : 'rgba(255, 0, 0, 0.2)');
+    var borderColors = values_fii.map(value => value >= 0 ? 'rgba(0, 243, 0, 1)' : 'rgba(255, 0, 0, 1)');
+
+    var ctx = document.getElementById('fiiChart').getContext('2d');
+    var chart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels_fii,
+            datasets: [{
+                label: 'Net Value',
+                data: values_fii,
+                backgroundColor: colors,
+                borderColor: borderColors,
+                borderWidth: 1
+            }]
+        },
+        options: {
+          responsive: true,
+
+          maintainAspectRatio: false,
+            indexAxis: 'y', // Display labels on the y-axis
+            scales: {
+                x: {
+                  grid: {
+                    display: false, // Hide y-axis background border
+                  },
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+    var labels = {{ labels|safe }};
+        var values = {{ values|safe }};
+        var colors = values.map(value => value >= 0 ? 'rgba(0, 243, 0, 0.2)' : 'rgba(255, 0, 0, 0.2)');
+        var borderColors = values.map(value => value >= 0 ? 'rgba(0, 243, 0, 1)' : 'rgba(255, 0, 0, 1)');
+
+        var ctx = document.getElementById('fii_diiChart').getContext('2d');
+        var chart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Net Value',
+                    data: values,
+                    backgroundColor: colors,
+                    borderColor: borderColors,
+                    borderWidth: 1
+                }]
+            },
+            options: {
+              responsive: true,
+
+              maintainAspectRatio: false,
+                indexAxis: 'y', // Display labels on the y-axis
+                scales: {
+               
+                    
+              
+                    x: {
+                        beginAtZero: true,
+                        grid: {
+                          display: false, // Hide y-axis background border
+                        },
+                    }
+                }
+            }
+        });
+  </script>
+
+  <script>
+    // Function to show or hide charts based on filter selection
+    var dii_fii = document.getElementById("dii_fii");
+    var fii = document.getElementById("fii");
+    var dii = document.getElementById("dii");
+    dii_fii.style.display = "block";
+
+    fii.style.display = "none";
+    dii.style.display = "none";
+    function filterChart(filter) {
+      var dii_fii = document.getElementById("dii_fii");
+      var fii = document.getElementById("fii");
+      var dii = document.getElementById("dii");
+      var chartContainer = document.getElementById("chartContainer");
+
+      if (filter === "fii_dii") {
+        dii_fii.style.display = "block";
+
+        fii.style.display = "none";
+        dii.style.display = "none";
+      } else if (filter === "fii") {
+        dii_fii.style.display = "none";
+        fii.style.display = "block";
+        dii.style.display = "none";
+      } else if (filter === "dii") {
+        dii_fii.style.display = "none";
+        fii.style.display = "none";
+        dii.style.display = "block";
+      }
+    }
+    $(document).ready(function () {
+      $("[data-btn-id]:first-child").addClass("desc_usage_active");
+      // Filter button click event
+      $("[data-btn-id]").click(function () {
+        var btnId = $(this).attr("data-btn-id");
+        filterResults(btnId);
+        changeButtonColor($(this));
+      });
+
+      // Initial filtering (optional)
+      filterResults(1);
+      // Function to filter results
+      function filterResults(btnId) {
+        // Clear previous results
+        // Filter elements based on btnId
+      }
+
+      // Function to change button color
+      function changeButtonColor(button) {
+        // Reset color of all buttons
+        $("[data-btn-id]").removeClass("desc_usage_active");
+
+        // Add color to the clicked button
+        button.addClass("desc_usage_active");
+      }
+    });
+  </script>
+</body>
+{% endblock dashboard_body %}

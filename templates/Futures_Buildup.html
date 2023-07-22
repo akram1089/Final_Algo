@@ -1,0 +1,279 @@
+{% extends "base_dashboard.html" %} {% block dashboard_body %}
+<script>
+    // Function to get the current time in the format HH:mm
+
+</script>
+<script>
+    $(document).ready(function () {
+        function getCurrentTime() {
+        var now = new Date();
+        var hours = now.getHours();
+        var minutes = now.getMinutes();
+        minutes = minutes < 10 ? "0" + minutes : minutes; // Add leading zero if minutes < 10
+        var currentTime =now 
+        return currentTime;
+    }
+
+    // Update the current time element initially
+    document.getElementById("currentTime").textContent = getCurrentTime();
+
+    // Update the current time every hour
+    setInterval(function () {
+        document.getElementById("currentTime").textContent = getCurrentTime();
+    }, 3600000); // Refresh every 1 hour
+        // Retrieve the stored buildupType from local storage
+        var storedBuildupType = localStorage.getItem("buildupType");
+
+        // Set the stored buildupType as the checked radio button
+        if (storedBuildupType) {
+            $('input[name="buildupType"][value="' + storedBuildupType + '"]').prop(
+                "checked",
+                true
+            );
+        } else {
+            $('input[name="buildupType"][value="all"]').prop("checked", true); // Default selection
+        }
+
+        // Initialize DataTable with default options
+        var dataTable = $("#buildupTable").DataTable();
+
+        // Initial load with stored or default buildupType
+        loadData(storedBuildupType || "all");
+
+        // Handle radio button change event
+        $('input[name="buildupType"]').change(function () {
+            var selectedBuildupType = $(this).val();
+            loadData(selectedBuildupType);
+
+            // Store the selected buildupType in local storage
+            localStorage.setItem("buildupType", selectedBuildupType);
+        });
+
+        // Handle refresh button click event
+        $("#refreshButton").click(function () {
+            var selectedBuildupType = $('input[name="buildupType"]:checked').val();
+            loadData(selectedBuildupType);
+        });
+
+        function loadData(buildupType) {
+            $.ajax({
+                url: "/get_data_buildup/",
+                type: "GET",
+                data: { buildup_type: buildupType },
+                success: function (response) {
+                    // Clear the table data
+                    dataTable.clear();
+
+                    // Populate the table with data
+                    $.each(response.data, function (index, item) {
+                        var rowData = Object.values(item);
+
+                        // Add additional logic for cell modification
+                        console.log(rowData[10]);
+                        if (rowData[10] === "Long Build Up") {
+                            rowData[10] =
+                                '<span class="long_buildup">' + rowData[10] + "</span>";
+                        }
+                        if (rowData[10] === "Short Build Up") {
+                            rowData[10] =
+                                '<span class="short_buildup">' + rowData[10] + "</span>";
+                        }
+                        if (rowData[10] === "Short Covering") {
+                            rowData[10] =
+                                '<span class="short_covering">' + rowData[10] + "</span>";
+                        }
+                        if (rowData[10] === "Long Unwinding") {
+                            rowData[10] =
+                                '<span class="long_unwinding">' + rowData[10] + "</span>";
+                        }
+
+
+
+                        if (parseFloat(rowData[2]) >= 0) {
+                            rowData[2] =
+                                '<span class="text-success">' + rowData[2] + "</span>";
+                        } else {
+                            rowData[2] =
+                                '<span class="text-danger">' + rowData[2] + "</span>";
+                        }
+
+                        if (parseFloat(rowData[4]) >= 0) {
+                            rowData[4] =
+                                '<span class="text-success">' + rowData[4] + "</span>";
+                        } else {
+                            rowData[4] =
+                                '<span class="text-danger">' + rowData[4] + "</span>";
+                        }
+
+                        if (parseFloat(rowData[6]) >= 0) {
+                            rowData[6] =
+                                '<span class="text-success">' + rowData[6] + "</span>";
+                        } else {
+                            rowData[6] =
+                                '<span class="text-danger">' + rowData[6] + "</span>";
+                        }
+
+                        // Add the row data to the DataTable
+                        dataTable.row.add(rowData);
+                    });
+
+                    // Draw the DataTable with updated data
+                    dataTable.draw();
+                    },
+                error: function (xhr, status, error) {
+                    // Handle error
+                    console.error(error);
+                },
+            });
+        }
+    });
+</script>
+<style>
+
+.long_buildup{
+        background: lightgreen;
+    color: white;
+    border-radius: 50px;
+    font-weight: 600;
+    padding: 4px 15px 7px 18px;
+    font-size: 14px;
+    }
+    .short_buildup{
+        background: lightcoral;
+    color: white;
+    border-radius: 50px;
+    font-weight: 600;
+    padding: 4px 15px 7px 18px;
+    font-size: 14px;
+    }
+    .short_covering{
+        background:   #c9c900;;
+    color: white;
+    border-radius: 50px;
+    font-weight: 600;
+    padding: 4px 15px 7px 18px;
+    font-size: 14px;
+    }
+    .long_unwinding{
+        background:   #ff9900;;
+    color: rgb(255, 255, 255);
+    border-radius: 50px;
+    font-weight: 600;
+    padding: 4px 15px 7px 18px;
+    font-size: 14px;
+    }
+
+
+    .filter,
+    .term_filter {
+        width: 21px;
+        height: 23px;
+    }
+
+    .radio_button {
+        display: flex !important;
+        gap: 0.3rem !important;
+        align-items: flex-end !important;
+    }
+
+    table.dataTable.no-footer {
+        border-bottom: 1px solid #11111112 !important;
+    }
+
+    .sorting::after,
+    .sorting::before {
+        display: none !important;
+    }
+    #buildupTable_length{
+        padding: 0 0 18px 0 !important;
+    }
+ 
+</style>
+
+<div class="">
+    <div class="last_update_more_refresh d-flex" style="justify-content: space-between; align-items: center; margin-top: 2rem;">
+        <h5 id="lastUpdatedTime">Last Updated At: <span id="currentTime"></span></h5>
+        <div class="btn_refresh_more">
+            <button class="button btn btn-primary">MORE INFO</button>
+            <button id="refreshButton" class="button btn btn-secondary">REFRESH</button>
+        </div>
+    </div>
+
+    <div class="collapse_filters d-flex" style="align-items: baseline; justify-content: space-between">
+        <div class="market_header d-flex mt-4">
+            <h4 class="text-dark">Futures Buildup Screener</h4>
+            <span><i class="bi bi-exclamation-circle" class="btn btn-primary" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample"></i></span>
+        </div>
+
+        <div class="filters d-flex" style="gap: 0.5rem">
+            <div class="container">
+                <div class="form-group">
+                    <label class="form-check-label">
+                        <input type="radio" name="buildupType" class="form-check-input" value="all" checked /> All
+                    </label>
+                    <label class="form-check-label">
+                        <input type="radio" name="buildupType"  class="form-check-input" value="long_build_up" /> Long
+                        Build Up
+                    </label>
+                    <label class="form-check-label">
+                        <input type="radio" name="buildupType"  class="form-check-input" value="short_build_up" />
+                        Short Build Up
+                    </label>
+                    <label class="form-check-label">
+                        <input type="radio" name="buildupType"  class="form-check-input" value="long_unwinding" />
+                        Long Unwinding
+                    </label>
+                    <label class="form-check-label">
+                        <input type="radio" name="buildupType"  class="form-check-input" value="short_covering" />
+                        Short Covering
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="collapse" id="collapseExample" style="margin-bottom: 25px">
+    <div class="card card-body text-dark position-relative">
+        <div class="antd-pro-components-markdown-index-markdownStyle">
+            <p>
+                Get an overview of your AlgoBulls account's key performance indicators,
+                metrics, and data points. Track and analyse your algo strategies, funds,
+                subscriptions, and more.
+            </p>
+            <ul>
+                <li>Analyse your algo trading strategies.</li>
+                <li>
+                    Subscribe to a plan, add a broker, or add new strategies to your
+                    portfolio.
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<table id="buildupTable" class="table" style="    white-space: nowrap;">
+    <thead style="    background: #f1f5fa;
+        border-bottom: 1px solid black !important;
+    ">
+        <tr>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Date Change</th>
+            <th>Volume Contracts</th>
+            <th>% Volume Contracts</th>
+            <th>OI</th>
+            <th>%OI</th>
+            <th>Basis</th>
+            <th>COC</th>
+            <th>Spot</th>
+            <th>Build Up</th>
+        </tr>
+    </thead>
+    <tbody>
+        <!-- Table body will be populated dynamically -->
+    </tbody>
+</table>
+
+{% endblock dashboard_body %}

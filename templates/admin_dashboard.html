@@ -1,0 +1,695 @@
+{% extends "base_admin_panel.html" %}
+{% load static %}
+{% block dashboard_admin_body %}
+
+<style>
+    .dashboard_date_picker {
+
+
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        row-gap: 0.2rem;
+
+    }
+
+    .picker_date {
+        display: flex;
+        gap: 1rem;
+
+    }
+
+    .card_sells {
+        display: flex;
+        justify-content: space-between;
+        padding: 13px;
+        align-items: center;
+    }
+
+    @media screen and (min-width:768px) {
+        .col-lg-4 {
+            width: 31%;
+        }
+
+
+    }
+
+    @media screen and (max-width:400px) {
+        .sales_price {
+            display: flex;
+            justify-content: center !important;
+            align-items: center;
+            padding: 13px;
+            flex-wrap: wrap;
+
+        }
+    }
+
+    p {
+        margin-bottom: auto;
+    }
+
+    .sales_price {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 13px;
+        flex-wrap: wrap;
+
+    }
+
+    .sales_per_compared {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+    }
+
+    .inner_sales {
+        display: flex;
+        align-items: center;
+
+    }
+
+    .compared_prev {
+        font-size: 12px;
+        color: rgb(22, 35, 35);
+    }
+
+    .saw-pulse__counter {
+        background: #d9ecff;
+        border-radius: 0.125rem;
+        color: #004b9a;
+        font-size: 2.5rem;
+        font-weight: 500;
+        line-height: 1;
+        margin: 0 1.25rem 0.75rem;
+        padding: 1.5rem 1.25rem;
+        text-align: center;
+    }
+
+    .sa-widget-header {
+        align-items: center;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .sa-widget-header__title {
+        font-size: 1.0625rem;
+        font-weight: 500;
+        margin: 0;
+    }
+
+    .saw-pulse__header {
+        padding: 1.25rem;
+    }
+
+    .card {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+        word-wrap: break-word;
+        background-color: #fff;
+        background-clip: border-box;
+        border: 0 solid rgba(0, 0, 0, 0.125);
+        border-radius: 2px;
+    }
+
+    .row {
+        margin-left: auto;
+    }
+
+    .saw-chart__header {
+        padding: 1.25rem 1.25rem 0;
+    }
+
+    .sa-widget-header {
+        align-items: center;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    @media (min-width: 992px) {
+        .col-lg-8 {
+            flex: 0 0 auto;
+            width: 65.666667%;
+        }
+    }
+</style>
+<style>
+    .saw-chart__body {
+        width: 100%;
+        overflow-x: auto;
+        padding: 19px;
+    }
+
+    .saw-chart__container {
+        position: relative;
+        width: 100%;
+        padding-bottom: 50%;
+        /* Adjust the padding-bottom value to set the chart container height */
+    }
+
+    .saw-chart__container canvas {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+    }
+</style>
+<div class="main_dashboard ">
+    <div class="dashboard_date_picker ">
+        <h4 style="    font-weight: 700;">Dashboard</h4>
+        <div class="picker_date">
+            <input class="form-control form-control-solid" placeholder="Pick date rage" id="export_admin"
+                data-listener-added_a06394db="true">
+            <button class="button btn btn-primary">EXPORT</button>
+        </div>
+    </div>
+
+
+
+    <div class="row my-3 " style="gap: 27px;     margin-left: auto;">
+        <div class=" shadow col-lg-4 col-md-12 col-sm-12" style="background-color: white;">
+
+            <div class="card_sells">
+                <p>Total sells</p>
+                <i class="bi bi-three-dots-vertical"></i>
+            </div>
+            <div class="sales_price">
+                <h4>$3799.00</h4>
+                <div class="sales_per_compared">
+                    <div class="inner_sales text-success">
+                        <i class="bi bi-caret-up-fill"></i>
+                        <p>34.7%</p>
+                    </div>
+
+                    <p class="compared_prev">Compared to April 2023</p>
+                </div>
+            </div>
+        </div>
+
+        <div class=" shadow col-lg-4 col-md-12 col-sm-12" style="background-color: white;">
+
+            <div class="card_sells">
+                <p>Total sells</p>
+                <i class="bi bi-three-dots-vertical"></i>
+            </div>
+            <div class="sales_price">
+                <h4>$3799.00</h4>
+                <div class="sales_per_compared">
+                    <div class="inner_sales text-success">
+                        <i class="bi bi-caret-up-fill"></i>
+                        <p>34.7%</p>
+                    </div>
+
+                    <p class="compared_prev">Compared to April 2023</p>
+                </div>
+            </div>
+        </div>
+
+        <div class=" shadow col-lg-4 col-md-12 col-sm-12" style="background-color: white;">
+
+            <div class="card_sells">
+                <p>Total sells</p>
+                <i class="bi bi-three-dots-vertical"></i>
+            </div>
+            <div class="sales_price">
+                <h4>$3799.00</h4>
+                <div class="sales_per_compared">
+                    <div class="inner_sales text-success">
+                        <i class="bi bi-caret-up-fill"></i>
+                        <p>34.7%</p>
+                    </div>
+
+                    <p class="compared_prev">Compared to April 2023</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="row" style="gap: 15px;     margin-left: auto;">
+
+        <div class="col-lg-4 card">
+            <div class="sa-widget-header saw-pulse__header">
+                <h2 class="sa-widget-header__title">Active users</h2>
+                <div class="sa-widget-header__actions">
+                    <div class="dropdown"><button type="button" class="btn btn-sm btn-sa-muted d-block"
+                            id="widget-context-menu-4" data-bs-toggle="dropdown" aria-expanded="false"
+                            aria-label="More"><svg xmlns="http://www.w3.org/2000/svg" width="3" height="13"
+                                fill="currentColor">
+                                <path
+                                    d="M1.5,8C0.7,8,0,7.3,0,6.5S0.7,5,1.5,5S3,5.7,3,6.5S2.3,8,1.5,8z M1.5,3C0.7,3,0,2.3,0,1.5S0.7,0,1.5,0 S3,0.7,3,1.5S2.3,3,1.5,3z M1.5,10C2.3,10,3,10.7,3,11.5S2.3,13,1.5,13S0,12.3,0,11.5S0.7,10,1.5,10z">
+                                </path>
+                            </svg></button>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="widget-context-menu-4" >
+                            <li><a class="dropdown-item" href="#">Settings</a></li>
+                            <li><a class="dropdown-item" href="#">Move</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item text-danger" href="#">Remove</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="saw-pulse__counter">148</div>
+
+
+
+
+            <table class="table p-2">
+                <thead>
+                    <tr>
+                        <th>Active pages</th>
+                        <th class="text-end">Users</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><a href="#" class="text-reset">/products/brandix-z4</a></td>
+                        <td class="text-end">15</td>
+                    </tr>
+                    <tr>
+                        <td><a href="#" class="text-reset">/categories/drivetrain</a></td>
+                        <td class="text-end">11</td>
+                    </tr>
+                    <tr>
+                        <td><a href="#" class="text-reset">/categories/monitors</a></td>
+                        <td class="text-end">7</td>
+                    </tr>
+                    <tr>
+                        <td><a href="#" class="text-reset">/account/orders</a></td>
+                        <td class="text-end">4</td>
+                    </tr>
+                    <tr>
+                        <td><a href="#" class="text-reset">/cart</a></td>
+                        <td class="text-end">3</td>
+                    </tr>
+                    <tr>
+                        <td><a href="#" class="text-reset">/checkout</a></td>
+                        <td class="text-end">3</td>
+                    </tr>
+                    <tr>
+                        <td><a href="#" class="text-reset">/pages/about-us</a></td>
+                        <td class="text-end">1</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-lg-8">
+            <div class="card h-100">
+                <div class="sa-widget-header saw-chart__header">
+                    <h2 class="sa-widget-header__title">Sales & Expenses Statistics</h2>
+                    <div class="sa-widget-header__actions">
+                        <div class="dropdown"><button type="button" class="btn btn-sm btn-sa-muted d-block"
+                                id="widget-context-menu-5" data-bs-toggle="dropdown" aria-expanded="false"
+                                aria-label="More"><svg xmlns="http://www.w3.org/2000/svg" width="3" height="13"
+                                    fill="currentColor">
+                                    <path
+                                        d="M1.5,8C0.7,8,0,7.3,0,6.5S0.7,5,1.5,5S3,5.7,3,6.5S2.3,8,1.5,8z M1.5,3C0.7,3,0,2.3,0,1.5S0.7,0,1.5,0 S3,0.7,3,1.5S2.3,3,1.5,3z M1.5,10C2.3,10,3,10.7,3,11.5S2.3,13,1.5,13S0,12.3,0,11.5S0.7,10,1.5,10z">
+                                    </path>
+                                </svg></button>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="widget-context-menu-5">
+                                <li><a class="dropdown-item" href="#">Settings</a></li>
+                                <li><a class="dropdown-item" href="#">Move</a></li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li><a class="dropdown-item text-danger" href="#">Remove</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="saw-chart__body">
+                    <div class="saw-chart__container"><canvas id="stackedBarChart"></canvas>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <div class="row my-3" style="gap: 15px;     margin-left: auto;">
+
+        <div class="col-lg-8" style=" background-color:white;">
+
+            <div class="sa-widget-header saw-table__header" style="    padding: 15px 8px 13px 8px;">
+                <h2 class="sa-widget-header__title">Recent orders</h2>
+                <div class="sa-widget-header__actions">
+                    <div class="dropdown"><button type="button" class="btn btn-sm btn-sa-muted d-block"
+                            id="widget-context-menu-6" data-bs-toggle="dropdown" aria-expanded="false"
+                            aria-label="More"><svg xmlns="http://www.w3.org/2000/svg" width="3" height="13"
+                                fill="currentColor">
+                                <path
+                                    d="M1.5,8C0.7,8,0,7.3,0,6.5S0.7,5,1.5,5S3,5.7,3,6.5S2.3,8,1.5,8z M1.5,3C0.7,3,0,2.3,0,1.5S0.7,0,1.5,0 S3,0.7,3,1.5S2.3,3,1.5,3z M1.5,10C2.3,10,3,10.7,3,11.5S2.3,13,1.5,13S0,12.3,0,11.5S0.7,10,1.5,10z">
+                                </path>
+                            </svg></button>
+
+                    </div>
+                </div>
+            </div>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">No.</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Co.</th>
+                        <th scope="col">Customer</th>
+                        <th scope="col">Date</th>
+                        <th scope="col">Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><a href="app-order.html" class="text-reset">#00745</a></td>
+                        <td>
+                            <div class="d-flex fs-6">
+                                <div class="badge rounded-pill text-bg-primary">Pending</div>
+                            </div>
+                        </td>
+                        <td>Germany</td>
+                        <td>
+                            <div class="d-flex align-items-center"><a href="app-customer.html"
+                                    class="sa-symbol sa-symbol--shape--circle sa-symbol--size--md me-3">
+                                    <div class="sa-symbol__text">GB</div>
+                                </a>
+                                <div><a href="app-customer.html" class="text-reset">Giordano Bruno</a></div>
+                            </div>
+                        </td>
+                        <td>2020-11-02</td>
+                        <td>$2,742.00</td>
+                    </tr>
+                    <tr>
+                        <td><a href="app-order.html" class="text-reset">#00513</a></td>
+                        <td>
+                            <div class="d-flex fs-6">
+                                <div class="badge rounded-pill text-bg-warning">Hold</div>
+                            </div>
+                        </td>
+                        <td>India</td>
+                        <td>
+                            <div class="d-flex align-items-center"><a href="app-customer.html"
+                                    class="sa-symbol sa-symbol--shape--circle sa-symbol--size--md me-3">
+                                    <div class="sa-symbol__text">HW</div>
+                                </a>
+                                <div><a href="app-customer.html" class="text-reset">Hans Weber</a></div>
+                            </div>
+                        </td>
+                        <td>2020-09-05</td>
+                        <td>$204.00</td>
+                    </tr>
+                    <tr>
+                        <td><a href="app-order.html" class="text-reset">#00507</a></td>
+                        <td>
+                            <div class="d-flex fs-6">
+                                <div class="badge rounded-pill text-bg-primary">Pending</div>
+                            </div>
+                        </td>
+                        <td>Italy</td>
+                        <td>
+                            <div class="d-flex align-items-center"><a href="app-customer.html"
+                                    class="sa-symbol sa-symbol--shape--circle sa-symbol--size--md me-3">
+                                    <div class="sa-symbol__text">AR</div>
+                                </a>
+                                <div><a href="app-customer.html" class="text-reset">Andrea Rossi</a></div>
+                            </div>
+                        </td>
+                        <td>2020-08-21</td>
+                        <td>$5,039.00</td>
+                    </tr>
+                    <tr>
+                        <td><a href="app-order.html" class="text-reset">#00104</a></td>
+                        <td>
+                            <div class="d-flex fs-6">
+                                <div class="badge rounded-pill text-bg-danger">Canceled</div>
+                            </div>
+                        </td>
+                        <td>USA
+                        </td>
+                        <td>
+                            <div class="d-flex align-items-center"><a href="app-customer.html"
+                                    class="sa-symbol sa-symbol--shape--circle sa-symbol--size--md me-3">
+                                    <div class="sa-symbol__text">RF</div>
+                                </a>
+                                <div><a href="app-customer.html" class="text-reset">Richard Feynman</a></div>
+                            </div>
+                        </td>
+                        <td>2020-06-22</td>
+                        <td>$79.00</td>
+                    </tr>
+                    <tr>
+                        <td><a href="app-order.html" class="text-reset">#00097</a></td>
+                        <td>
+                            <div class="d-flex fs-6">
+                                <div class="badge rounded-pill text-bg-success">Completed</div>
+                            </div>
+                        </td>
+                        <td>UK</td>
+                        <td>
+                            <div class="d-flex align-items-center"><a href="app-customer.html"
+                                    class="sa-symbol sa-symbol--shape--circle sa-symbol--size--md me-3">
+                                    <div class="sa-symbol__text">LG</div>
+                                </a>
+                                <div><a href="app-customer.html" class="text-reset">Leonardo Garcia</a></div>
+                            </div>
+                        </td>
+                        <td>2020-05-09</td>
+                        <td>$826.00</td>
+                    </tr>
+                    <tr>
+                        <td><a href="app-order.html" class="text-reset">#00082</a></td>
+                        <td>
+                            <div class="d-flex fs-6">
+                                <div class="badge rounded-pill text-bg-success">Completed</div>
+                            </div>
+                        </td>
+                        <td>UAE</td>
+                        <td>
+                            <div class="d-flex align-items-center"><a href="app-customer.html"
+                                    class="sa-symbol sa-symbol--shape--circle sa-symbol--size--md me-3">
+                                    <div class="sa-symbol__text">NT</div>
+                                </a>
+                                <div><a href="app-customer.html" class="text-reset">Nikola Tesla</a></div>
+                            </div>
+                        </td>
+                        <td>2020-04-27</td>
+                        <td>$1,052.00</td>
+                    </tr>
+                    <tr>
+                        <td><a href="app-order.html" class="text-reset">#00063</a></td>
+                        <td>
+                            <div class="d-flex fs-6">
+                                <div class="badge rounded-pill text-bg-primary">Pending</div>
+                            </div>
+                        </td>
+                        <td>Bangladesh
+                        </td>
+                        <td>
+                            <div class="d-flex align-items-center"><a href="app-customer.html"
+                                    class="sa-symbol sa-symbol--shape--circle sa-symbol--size--md me-3">
+                                    <div class="sa-symbol__text">MC</div>
+                                </a>
+                                <div><a href="app-customer.html" class="text-reset">Marie Curie</a></div>
+                            </div>
+                        </td>
+                        <td>2020-02-09</td>
+                        <td>$441.00</td>
+                    </tr>
+                    <tr>
+                        <td><a href="app-order.html" class="text-reset">#00012</a></td>
+                        <td>
+                            <div class="d-flex fs-6">
+                                <div class="badge rounded-pill text-bg-success">Completed</div>
+                            </div>
+                        </td>
+                        <td>Colombia</td>
+                        <td>
+                            <div class="d-flex align-items-center"><a href="app-customer.html"
+                                    class="sa-symbol sa-symbol--shape--circle sa-symbol--size--md me-3">
+                                    <div class="sa-symbol__text">KT</div>
+                                </a>
+                                <div><a href="app-customer.html" class="text-reset">Konstantin Tsiolkovsky</a></div>
+                            </div>
+                        </td>
+                        <td>2020-01-01</td>
+                        <td>$12,961.00</td>
+                    </tr>
+                </tbody>
+            </table>
+
+
+
+
+
+        </div>
+        <div class="col-lg-4"style="background: white;">
+            <div class="sa-widget-header saw-table__header" style="    padding: 15px 8px 13px 8px;">
+                <h2 class="sa-widget-header__title">Sales by traffic source</h2>
+                <div class="sa-widget-header__actions">
+                    <div class="dropdown"><button type="button" class="btn btn-sm btn-sa-muted d-block"
+                            id="widget-context-menu-6" data-bs-toggle="dropdown" aria-expanded="false"
+                            aria-label="More"><svg xmlns="http://www.w3.org/2000/svg" width="3" height="13"
+                                fill="currentColor">
+                                <path
+                                    d="M1.5,8C0.7,8,0,7.3,0,6.5S0.7,5,1.5,5S3,5.7,3,6.5S2.3,8,1.5,8z M1.5,3C0.7,3,0,2.3,0,1.5S0.7,0,1.5,0 S3,0.7,3,1.5S2.3,3,1.5,3z M1.5,10C2.3,10,3,10.7,3,11.5S2.3,13,1.5,13S0,12.3,0,11.5S0.7,10,1.5,10z">
+                                </path>
+                            </svg></button>
+
+                    </div>
+                </div>
+            </div>
+            <canvas id="Doughnut_chart"></canvas>
+            
+        </div>
+       
+    </div>
+</div>
+
+
+<script>
+    var data = {
+      labels: ["Yandex", "YouTube", "Google", "Facebook", "Instagram"],
+      datasets: [{
+        data: [2742, 3272, 2303, 1434, 799],
+        backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0", "#9966FF"],
+        hoverBackgroundColor: ["#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0", "#9966FF"]
+      }]
+    };
+
+    var options = {
+      responsive: true,
+      cutoutPercentage: 50,
+      tooltips: {
+        callbacks: {
+          label: function (tooltipItem, data) {
+            var dataset = data.datasets[tooltipItem.datasetIndex];
+            var value = dataset.data[tooltipItem.index];
+            return data.labels[tooltipItem.index] + ": $" + value.toLocaleString();
+          }
+        }
+      }
+    };
+
+    var chart = new Chart("Doughnut_chart", {
+      type: "doughnut",
+      data: data,
+      options: options
+    });
+  </script>
+
+
+<script>
+    $("#export_admin").daterangepicker();
+</script>
+<script>
+    Chart.plugins.register({
+      afterDraw: function (chart) {
+        var ctx = chart.chart.ctx;
+        var subtitle = "Subtitle";
+
+        // Data for labels, orders, and amounts
+        var data = [
+          { label: "Yandex", orders: 12, amount: "$2,742.00" },
+          { label: "YouTube", orders: 51, amount: "$3,272.00" },
+          { label: "Google", orders: 4, amount: "$2,303.00" },
+          { label: "Facebook", orders: 10, amount: "$1,434.00" },
+          { label: "Instagram", orders: 1, amount: "$799.00" },
+        ];
+
+        ctx.font = "16px Arial";
+        ctx.fillStyle = "#666";
+        ctx.textAlign = "center";
+
+        // Position and spacing variables
+        var subtitleX = chart.chart.width / 2;
+        var subtitleY = chart.chart.height - 10;
+        var spacing = 20;
+
+        // Draw subtitle with labels, orders, and amounts
+        ctx.fillText(subtitle, subtitleX, subtitleY);
+        for (var i = 0; i < data.length; i++) {
+          var item = data[i];
+          var labelX = subtitleX - 80;
+          var labelY = subtitleY + (i + 2) * spacing;
+          var amountX = subtitleX;
+          var amountY = subtitleY + (i + 3) * spacing;
+
+          ctx.fillText(item.label, labelX, labelY);
+          ctx.fillText(item.amount, amountX, amountY);
+        }
+      }
+    });
+
+    var data = {
+      labels: ["Yandex", "YouTube", "Google", "Facebook", "Instagram"],
+      datasets: [{
+        data: [12, 51, 4, 10, 1],
+        backgroundColor: ["#36A2EB", "#FFCE56", "#FF6384", "#4BC0C0", "#FF9F40"]
+      }]
+    };
+
+    var options = {
+      responsive: true,
+      plugins: {
+        legend: {
+          display: false
+        }
+      }
+    };
+
+    var chart = new Chart("chart", {
+      type: "pie",
+      data: data,
+      options: options
+    });
+  </script>
+<script>
+    var ctx = document.getElementById('stackedBarChart').getContext('2d');
+
+    var data = {
+        labels: ['April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December', 'January', 'February', 'March'],
+        datasets: [{
+            label: 'Sales',
+            backgroundColor: '#36A2EB',
+            data: [300000, 350000, 400000, 450000, 380000, 420000, 390000, 410000, 480000, 450000, 470000, 490000]
+        }, {
+            label: 'Expenses',
+            backgroundColor: '#FF6384',
+            data: [200000, 210000, 220000, 230000, 240000, 230000, 220000, 210000, 200000, 190000, 210000, 220000]
+        }]
+    };
+
+    var options = {
+        responsive: true,
+        legend: {
+            position: 'top',
+        },
+        scales: {
+            x: {
+                stacked: true,
+            },
+            y: {
+                stacked: true,
+                ticks: {
+                    beginAtZero: true,
+                    stepSize: 100000,
+                    max: 500000
+                }
+            }
+        }
+    };
+
+    var stackedBarChart = new Chart(ctx, {
+        type: 'bar',
+        data: data,
+        options: options
+    });
+</script>
+
+{% endblock dashboard_admin_body %}

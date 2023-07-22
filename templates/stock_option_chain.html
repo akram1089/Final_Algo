@@ -1,0 +1,788 @@
+{% extends "base_dashboard.html" %}
+{% load static %}
+{% block dashboard_body %}
+
+<style>
+    /* KING OF NYC :-     TUFAIL AKRAM */
+    .day_1 {
+        border-radius: 4px;
+        color: white;
+        background: cornflowerblue;
+        width: fit-content;
+        height: 28px;
+        padding: 0 6px 0 5px;
+        transition: 0.3s;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+    }
+
+    .day_1:hover {
+        color: cornflowerblue;
+        border: 1px solid cornflowerblue;
+        background: transparent;
+    }
+
+    .button_left_simu,
+    .button_right_simu {
+        display: flex;
+        gap: 1rem;
+
+    }
+
+    .main_all_button_filter {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .pre_built_simu {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 1rem 0;
+        gap: 0.5rem;
+    }
+
+    .strategy_simu {
+        display: flex;
+        gap: 2rem;
+    }
+
+    .straddle {
+        border: 1.5px solid cornflowerblue;
+        padding: 4px 12px;
+        border-radius: 7px;
+        color: cornflowerblue;
+        transition: 0.3s;
+
+    }
+
+    .straddle:hover {
+        background: cornflowerblue;
+        color: white;
+    }
+
+    .success_cvr {
+        background: #90eeae65 !important;
+        color: rgb(13, 162, 0);
+    }
+
+    .danger_cvr {
+        background: #ff000054 !important;
+        color: red;
+    }
+
+    .normal_no_conclusion {
+        background: #fbf5cd;
+    }
+</style>
+<style>
+    .close_dot {
+        width: 15px;
+        height: 15px;
+        background: red;
+        border-radius: 50%;
+
+    }
+
+    .open_dot {
+        width: 15px;
+        height: 15px;
+        background: rgb(0, 231, 27);
+        border-radius: 50%;
+
+    }
+
+    .market_status {
+        display: flex;
+        align-items: center;
+        gap: 0.2rem;
+    }
+
+    .top_refresh_market_status {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    #trading_view_chart {
+        color: gray;
+        font-size: 16px;
+        font-weight: 100;
+        border: 1px solid #8080804a;
+        border-radius: 8px;
+        padding: 5px;
+        transition: 0.3s;
+    }
+
+    #option_icon_chart {
+        color: gray;
+        font-size: 19px;
+        font-weight: 100;
+        border: 1px solid #8080804a;
+        border-radius: 8px;
+        padding: 7px;
+        transition: 0.3s;
+    }
+
+    #trading_view_chart:hover,
+    #option_icon_chart:hover {
+        color: white;
+
+        background-color: #4d97ff;
+    }
+
+    .web-outline-btn {
+        color: #4399eb;
+        border: 1px solid #4399eb !important;
+        background-color: #fff !important;
+        -webkit-box-shadow: none !important;
+        box-shadow: none !important;
+        -webkit-transition: .3s !important;
+        -moz-transition: .3s !important;
+        transition: .3s !important;
+        outline: 0 !important;
+        border-radius: 7px !important;
+        font-weight: 400;
+    }
+
+    .web-outline-btn:hover {
+        background-color: #4399eb !important;
+        color: white;
+    }
+
+    #spot_price,
+    #pcr,
+    #oi_pcr,
+    #lot_size,
+    #india_vix,
+    #max_pain {
+        margin-bottom: auto;
+        font-size: 13px;
+        font-weight: 700;
+        color: dimgray;
+    }
+
+    .spot_price,
+    .pcr_value,
+    .oi_value,
+    .lot_size_value,
+    .india_vix_value,
+    .max_pain_value {
+        font-size: 13px;
+        font-weight: 500;
+        color: dimgray;
+    }
+
+    td {
+        font-size: 12px !important;
+        font-weight: 500;
+    }
+
+    .calls_puts_data {
+        background-color: #f1f5fa;
+        font-size: 12px;
+        font-weight: 500;
+        color: var(--label-color-5);
+        text-transform: uppercase;
+        padding: 10px 5px;
+        -moz-box-flex: 1 !important;
+        -webkit-flex: 1 1 auto !important;
+        flex: 1 1 auto !important;
+        border-left: 1px solid #dee2e6 !important;
+        border-bottom: 1px solid #dee2e6 !important;
+        border-right-color: #dee2e6 !important;
+        border-top-color: #dee2e6 !important;
+        text-align: center;
+
+    }
+</style>
+<script>
+
+    function updateMarketStatus() {
+        const now = new Date();
+        const dayOfWeek = now.getDay();
+        const hour = now.getHours();
+        const minute = now.getMinutes();
+
+        const isWeekday = dayOfWeek >= 1 && dayOfWeek <= 5;
+        const isMarketOpen = isWeekday && hour === 9 && minute >= 15 && hour < 16;
+        console.log(isMarketOpen);
+        if (isMarketOpen) {
+            $(".market_status").empty().append("<span class='open_dot'></span> <span class='market_open fw-bold'>Today Market Open</span>")
+        } else {
+            $(".market_status").empty().append("<span  class='close_dot'></span> <span class='market_close fw-bold'>Today Market Closed</span>")
+        }
+    }
+
+    // Call the updateMarketStatus function initially
+
+
+    // Call the updateMarketStatus function every minute to keep the status updated
+    setInterval(updateMarketStatus, 60000); // 60000 milliseconds = 1 minute
+</script>
+
+
+<div>
+    <div class="container mt-2" style="    max-width: inherit;">
+        <h4 class="fw-semibold">Option Chain (Equity Derivatives)</h4>
+
+        <div class="top_refresh_market_status">
+            <div class="market_status"></div>
+            <div class="form-check form-switch">
+                <label class="form-check-label fw-bold" for="auto-refresh-switch">Auto Refresh</label>
+                <input class="form-check-input" type="checkbox" id="auto-refresh-switch">
+            </div>
+        </div>
+        <div class="main_container"
+            style="box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;">
+
+            <div class="main_table_top_content  mt-3  ">
+                <div class="top_symbol_data d-flex justify-content-between"
+                    style="     flex-wrap: wrap;   padding: 24px 16px;">
+                    <div class="left_data_option_top d-flex" style=" align-items: center;   gap: 1rem;">
+
+
+                        <div class="chart_tracking_view">
+
+
+                        </div>
+                        <div class="symbol_dropdown">
+                            <!-- <label for="symbol-dropdown">Select Symbol:</label> -->
+                            <select id="symbol-dropdown" class="form-select form-select-sm">
+                                <option value="">--Select Symbol--</option>
+                            </select>
+                        </div>
+                        <div class="spot_price_main">
+                            <p style="margin-bottom: auto;" id="spot_price">Spot Price</p>
+                            <p class="spot_price" style="margin-bottom: auto;"></p>
+                        </div>
+                        <div class="pcr_main">
+                            <p style="margin-bottom: auto;" id="pcr">PCR</p>
+                            <p class="pcr_value" style="margin-bottom: auto;"></p>
+                        </div>
+
+                        <div class="oi_pcr">
+                            <p style="margin-bottom: auto;" id="oi_pcr">CHG OI PCR</p>
+                            <p class="oi_value" style="margin-bottom: auto;"></p>
+                        </div>
+
+                        <div class="lot_size">
+                            <p style="margin-bottom: auto;" id="lot_size">Lot Size</p>
+                            <p class="lot_size_value" style="margin-bottom: auto;"></p>
+                        </div>
+
+                        <div class="india_vix">
+                            <p style="margin-bottom: auto;" id="india_vix">India Vix</p>
+                            <p class="india_vix_value" style="margin-bottom: auto;"></p>
+                        </div>
+
+                        <div class="max_pain">
+                            <p style="margin-bottom: auto;" id="max_pain">Max Pain</p>
+                            <p class="max_pain_value" style="margin-bottom: auto;"></p>
+                        </div>
+
+
+                        <!-- <label for="date-dropdown">Select Date:</label> -->
+                        <div class="symbol_data_picker">
+                            <select id="date-dropdown" class="form-select form-select-sm">
+                                <option value="">--Select Date--</option>
+                            </select>
+
+
+
+                        </div>
+
+
+
+
+
+
+
+
+
+                    </div>
+                    <div class="right_data_opiton_top d-flex" style="gap: 1rem;">
+                        <a target="_blank" href="{% url 'stock_future' %}"><button
+                                class="web-outline-btn futures-btn fw-500 fs-6 px-3 py-1">Futures</button></a>
+
+                        <a class="opiton_icon" target="_blank" href="{% url 'put_call_ratio' %}">
+
+                            <i class='bx bx-bar-chart-alt' id="option_icon_chart"></i>
+                        </a>
+                    </div>
+
+
+                </div>
+
+
+                <div class="calls_puts_data px-0">
+                    <div class="row">
+                        <div class="col-6">Calls</div>
+                        <div class="col-6">Puts</div>
+                    </div>
+                </div>
+
+
+
+
+
+
+
+
+            </div>
+            <style>
+                table {
+                    border-collapse: collapse;
+                    width: 100%;
+                    table-layout: fixed;
+                }
+
+
+
+
+                .sticky-header {
+                    position: sticky;
+                    top: 197px;
+                    z-index: 999;
+                }
+
+                {% comment %} ::-webkit-scrollbar {
+                    display: none;
+                } {% endcomment %}
+
+                .text-success {
+                    color: rgb(4, 178, 4) !important;
+                }
+            </style>
+
+            <div class="table_opiton_data pb-3">
+
+                <table class="table">
+                    <thead class="table_head text-center">
+                        <tr>
+
+                            <th scope="col" style="    background: #c9ffed; font-size: 12px;
+    color: darkslategray;       width: 2.7vw;"> DELTA</th>
+
+                            <th scope="col" style="    background: #c9ffed; font-size: 12px;
+    color: darkslategray;width: 5vw; ">BUILTUP</th>
+                            <th scope="col" style="    background: #c9ffed; font-size: 12px;
+        color: darkslategray;         width: 3.6vw;">VOLUME</th>
+                            <th scope="col" style="    background: #c9ffed; font-size: 12px;
+        color: darkslategray; width: 5vw;">OI IN VALUE</th>
+                            <th scope="col" style="    background: #c9ffed; font-size: 12px;
+        color: darkslategray;">CHG IN OI VALUE</th>
+
+                            <th scope="col" style="    background: #c9ffed; font-size: 12px;
+    color: darkslategray;    ">OI</th>
+
+
+                            <th scope="col" style="    background: #c9ffed; font-size: 12px;
+    color: darkslategray; width:  75px;">CHNG IN OI %</th>
+
+                            <th scope="col" style="    background: #c9ffed; font-size: 12px;
+    color: darkslategray;   ">IV</th>
+
+                            <th scope="col" style="    background: #c9ffed; font-size: 12px;
+    color: darkslategray;  ">BID PRICE</th>
+
+                            <th scope="col" style="    background: #c9ffed; font-size: 12px;
+    color: darkslategray;">LTP CHNG </th>
+
+                            <th scope="col" style="font-size: 12px; background-color: #f1f5fa;     width: 56px;">STRIKE
+                            </th>
+
+                            <th scope="col" style="background: #ffd2cf;  font-size: 12px;
+    color: darkslategray;">LTP CHG %</th>
+                            <th scope="col" style="background: #ffd2cf;  font-size: 12px;
+    color: darkslategray;">BID PRICE</th>
+                            <th scope="col" style="background: #ffd2cf;  font-size: 12px;
+    color: darkslategray;     ">IV</th>
+                            <th scope="col" style="background: #ffd2cf;  font-size: 12px;
+    color: darkslategray;">CHNG IN OI</th>
+                            <th scope="col" style="background: #ffd2cf;  font-size: 12px;
+    color: darkslategray;   ">OI</th>
+                            <th scope="col" style="background: #ffd2cf;  font-size: 12px;
+    color: darkslategray;  ">CHG IN OI VALUE </th>
+                            <th scope="col" style="background: #ffd2cf;  font-size: 12px;
+    color: darkslategray;   ">CHG IN OI VALUE</th>
+                            <th scope="col" style="background: #ffd2cf;  font-size: 12px;
+    color: darkslategray;   ">VOLUME</th>
+                            <th scope="col" style="background: #ffd2cf;  font-size: 12px;
+    color: darkslategray;">BUILTUP</th>
+                            <th scope="col" style="background: #ffd2cf;  font-size: 12px;
+    color: darkslategray;">DELTA</th>
+                            <th scope="col" style="background: #ffd2cf;  font-size: 12px;
+    color: darkslategray;">PCR</th>
+                            <th scope="col" style="background: #ffd2cf;  font-size: 12px;
+    color: darkslategray;">CHG OI PCR</th>
+                            <th scope="col" style="background: #ffd2cf;  font-size: 12px;
+    color: darkslategray;">VOLUME PCR</th>
+
+                        </tr>
+                    </thead>
+                    <tbody id="table_simu">
+
+
+                    </tbody>
+                </table>
+
+            </div>
+
+            <script>
+
+                function checkScrollPosition() {
+                    const tableContainer = document.querySelector('.table-container');
+                    const headerRow = document.querySelector('thead');
+                    const topOffset = 122;
+
+
+                    const scrollY = window.scrollY || window.pageYOffset;
+
+
+                    if (scrollY >= topOffset) {
+                        headerRow.classList.add('sticky-header');
+                    } else {
+                        headerRow.classList.remove('sticky-header');
+                    }
+                }
+
+                window.addEventListener('scroll', checkScrollPosition);
+
+                checkScrollPosition();
+            </script>
+
+        </div>
+
+
+
+
+
+
+    </div>
+
+
+
+
+
+    <!-- <div class="expected_range">
+        <p>Expected Range</p>
+        <p class="expected_values"></p>
+    </div> -->
+
+
+
+
+
+
+
+
+
+    <style>
+        .stick-to-top {
+            position: sticky;
+            top: 71px;
+            left: 0;
+            width: 100%;
+            z-index: 9999;
+            background-color: white;
+            margin-top: 0% !important;
+        }
+    </style>
+
+    <script>
+
+
+        function stickToTop() {
+            const topRefreshStatusDiv = document.querySelector('.main_table_top_content');
+            const topOffset = 122;
+
+
+            function checkScrollPosition() {
+                if (window.pageYOffset >= topOffset) {
+                    topRefreshStatusDiv.classList.add('stick-to-top')
+                } else {
+                    topRefreshStatusDiv.classList.remove('stick-to-top');
+                }
+            }
+
+
+            window.addEventListener('scroll', checkScrollPosition);
+        }
+
+
+
+        let autoRefreshInterval;
+
+
+        function toggleAutoRefresh() {
+            const isChecked = $("#auto-refresh-switch").is(":checked");
+            if (isChecked) {
+                autoRefreshInterval = setInterval(function () {
+                    updateDateDropdown($('#symbol-dropdown').val(), $('#date-dropdown').val());
+                }, 60000);
+            } else {
+                clearInterval(autoRefreshInterval);
+            }
+
+            localStorage.setItem('autoRefreshState', isChecked);
+        }
+
+
+        $('#auto-refresh-switch').on('change', toggleAutoRefresh);
+
+
+
+
+        document.addEventListener('DOMContentLoaded', function () {
+
+
+
+            const autoRefreshState = localStorage.getItem('autoRefreshState');
+
+
+            if (autoRefreshState === 'true') {
+                $('#auto-refresh-switch').prop('checked', true);
+            } else {
+                $('#auto-refresh-switch').prop('checked', false);
+            }
+
+
+            toggleAutoRefresh();
+        });
+
+
+        $('#auto-refresh-switch').on('change', toggleAutoRefresh);
+
+
+        function updateDateDropdown(symbol_Option_chain, prevSelectedDate) {
+            var selectedDate = $('#date-dropdown').val();
+            if (prevSelectedDate) {
+                selectedDate = prevSelectedDate;
+            }
+            $.ajax({
+                url: '/fetch_option_data_with_spot_price',
+                data: { symbol: symbol_Option_chain, selectedDate: selectedDate },
+                dataType: 'json',
+                success: function (data) {
+
+                    generate_Option_Table(data.All_option_data, data.india_spot_data.last_trade_price)
+                    console.log(data)
+                    var pcr_value = data.put_call_ratio
+                    $(".pcr_value").text(pcr_value.toFixed(4))
+
+                    var spot_change = data.india_spot_data.change_per < 0 ? "text-danger" : "text-success"
+
+                    $(".spot_price").text(data.india_spot_data.last_trade_price + "(" + data.india_spot_data.change_per + "%)").addClass(spot_change)
+                    $('.chart_tracking_view').empty()
+                    $('.chart_tracking_view').append("<a href='https://www.tradingview.com/chart/MgiGDMYM/?symbol=" + data.india_spot_data.symbol_name + "&aff_id=113877' target='_blank'><i class='bx bx-line-chart' id='trading_view_chart'></i></a>");
+                    var oi_pcr = data.oi_pcr
+                    $(".oi_value").text(oi_pcr.toFixed(4))
+                    var lot_size_value = data.india_spot_data.lot_size
+                    $(".lot_size_value").text(lot_size_value)
+
+                    var vix_change = data.India_vix_data.change < 0 ? "text-danger" : "text-success"
+                    var india_vix_value = data.India_vix_data.last_trade_price
+                    $(".india_vix_value").text(india_vix_value + "(" + data.India_vix_data.change + "%)").addClass(vix_change)
+
+                    var max_pain_value = data.india_spot_data.max_pain
+                    $(".max_pain_value").text(max_pain_value)
+                    var high_round = data.india_spot_data.high
+                    var low_round = data.india_spot_data.low
+                    console.log(high_round, low_round);
+                    var expected_values = data
+                    $(".expected_values").text(expected_values)
+
+
+                    function generate_Option_Table(simu_args, spotPrice) {
+                        console.log(spotPrice);
+                        var table_simu = $("#table_simu")
+                        table_simu.empty();
+                        for (var i = 0; i < simu_args.length; i++) {
+                            var calls_builtup_simu = "";
+
+
+                            if (simu_args[i].calls_builtup === "Call Short Covering" || simu_args[i].calls_builtup === "Call Buying") {
+                                calls_builtup_simu = "success_cvr fw-bolder";
+                            } else if (simu_args[i].calls_builtup === "No Conclusion") {
+                                calls_builtup_simu = "normal_no_conclusion ";
+                            } else if (simu_args[i].calls_builtup === "Call Long Covering" || simu_args[i].calls_builtup === "Call Writing") {
+                                calls_builtup_simu = "danger_cvr fw-bolder";
+                            }
+
+                            var puts_builtup_simu = "";
+                            if (simu_args[i].puts_builtup === "Put Short Covering" || simu_args[i].puts_builtup === "Put Buying") {
+                                puts_builtup_simu = "success_cvr fw-bolder";
+                            } else if (simu_args[i].puts_builtup === "No Conclusion") {
+                                puts_builtup_simu = "normal_no_conclusion";
+                            } else if (simu_args[i].puts_builtup === "Put Long Covering" || simu_args[i].puts_builtup === "Put Writing") {
+                                puts_builtup_simu = "danger_cvr fw-bolder";
+                            }
+
+                            var pcr_simu = simu_args[i].puts_oi / simu_args[i].calls_oi;
+                            var pcr_oi_change = simu_args[i].puts_change_oi / simu_args[i].calls_change_oi;
+                            var pcr_volume = simu_args[i].puts_volume / simu_args[i].calls_volume;
+                            var strikePrice = simu_args[i].strike_price;
+                            var spot_Price = spotPrice
+                            var change_oi_color = simu_args[i].calls_change_oi / 50 <0 ?"text-danger":"text-success"
+                            var change_puts_oi_color = simu_args[i].puts_change_oi / 50 <0 ?"text-danger":"text-success"
+
+
+                            // background-color: #fbf5cd;
+                            var row = "<tr>" +
+
+                                "<td style='background-color: " + (strikePrice < spot_Price ? "#fbf5cd" : "") + "'>" + simu_args[i].call_delta + "</td>" +
+                                "<td class=" + calls_builtup_simu + "  style='background-color: " + (strikePrice < spot_Price ? "#fbf5cd" : "") + "'>" + simu_args[i].calls_builtup + "</td>" +
+                                "<td style='background-color: " + (strikePrice < spot_Price ? "#fbf5cd" : "") + "'>" + simu_args[i].calls_volume / 50 + "</td>" +
+                                "<td style='background-color: " + (strikePrice < spot_Price ? "#fbf5cd" : "") + "'>" + simu_args[i].calls_oi_value + "</td>" +
+                                "<td style='background-color: " + (strikePrice < spot_Price ? "#fbf5cd" : "") + "'>" + simu_args[i].calls_change_oi_value + "</td>" +
+                                "<td style='background-color: " + (strikePrice < spot_Price ? "#fbf5cd" : "") + "' >" + simu_args[i].calls_oi / 50 + "</td>" +
+                                "<td class=" + change_oi_color+  " style='background-color: " + (strikePrice < spot_Price ? "#fbf5cd" : "") + "'>" + simu_args[i].calls_change_oi / 50 + "</td>" +
+                                "<td style='background-color: " + (strikePrice < spot_Price ? "#fbf5cd" : "") + "'>" + simu_args[i].calls_iv + "</td>" +
+                                "<td style='background-color: " + (strikePrice < spot_Price ? "#fbf5cd" : "") + "'>" + simu_args[i].calls_bid_price + "</td>" +
+                                "<td style='background-color: " + (strikePrice < spot_Price ? "#fbf5cd" : "") + "'>" + simu_args[i].calls_ltp + "</td>" +
+
+                                "<td style='background: aliceblue;'>" + simu_args[i].strike_price + "</td>" +
+
+                                "<td style='background-color: " + (strikePrice > spot_Price ? "#fbf5cd" : "") + "'>" + simu_args[i].puts_ltp + "</td>" +
+                                "<td style='background-color: " + (strikePrice > spot_Price ? "#fbf5cd" : "") + "'>" + simu_args[i].puts_bid_price + "</td>" +
+                                "<td style='background-color: " + (strikePrice > spot_Price ? "#fbf5cd" : "") + "'>" + simu_args[i].puts_iv + "</td>" +
+                                "<td class="+ change_puts_oi_color + " style='background-color: " + (strikePrice > spot_Price ? "#fbf5cd" : "") + "'>" + simu_args[i].puts_change_oi / 50 + "</td>" +
+                                "<td style='background-color: " + (strikePrice > spot_Price ? "#fbf5cd" : "") + "'>" + simu_args[i].puts_oi / 50 + "</td>" +
+                                "<td style='background-color: " + (strikePrice > spot_Price ? "#fbf5cd" : "") + "'>" + simu_args[i].puts_oi_value + "</td>" +
+                                "<td style='background-color: " + (strikePrice > spot_Price ? "#fbf5cd" : "") + "'>" + simu_args[i].puts_change_oi_value + "</td>" +
+                                "<td style='background-color: " + (strikePrice > spot_Price ? "#fbf5cd" : "") + "'>" + simu_args[i].puts_volume / 50 + "</td>" +
+                                "<td class=" + puts_builtup_simu + " style='background-color: " + (strikePrice > spot_Price ? "#fbf5cd" : "") + "'>" + simu_args[i].puts_builtup + " </td>" +
+                                "<td style='background-color: " + (strikePrice > spot_Price ? "#fbf5cd" : "") + "'>" + simu_args[i].put_delta + "</td>" +
+                                "<td style='background-color: " + (strikePrice > spot_Price ? "#fbf5cd" : "") + "'>" + pcr_simu.toFixed(2) + "</td>" +
+                                "<td style='background-color: " + (strikePrice > spot_Price ? "#fbf5cd" : "") + "'>" + pcr_oi_change.toFixed(2) + "</td>" +
+                                "<td style='background-color: " + (strikePrice > spot_Price ? "#fbf5cd" : "") + "'>" + pcr_volume.toFixed(2) + "</td>" +
+
+                                "</tr>";
+                            table_simu.append(row);
+                        }
+                    }
+
+
+
+                    var dateDropdown = $('#date-dropdown');
+                    dateDropdown.empty();
+
+
+                    dateDropdown.append($('<option>', {
+                        value: '',
+                        text: '--Select Date--'
+                    }));
+
+
+                    for (var i = 0; i < data.All_dates.length; i++) {
+                        dateDropdown.append($('<option>', {
+                            value: data.All_dates[i],
+                            text: data.All_dates[i]
+                        }));
+                    }
+
+
+                    var prevSelectedDate = localStorage.getItem('selectedDate');
+                    if (prevSelectedDate && data.All_dates.includes(prevSelectedDate)) {
+                        dateDropdown.val(prevSelectedDate);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error(error);
+                }
+            });
+        }
+
+        $(document).ready(function () {
+            stickToTop();
+            updateMarketStatus();
+
+            function populateSymbolsDropdown() {
+                $.ajax({
+                    url: '/fetch_option_data_with_spot_price',
+                    dataType: 'json',
+                    success: function (data) {
+
+                        var symbolDropdown = $('#symbol-dropdown');
+                        symbolDropdown.empty();
+
+                        symbolDropdown.append($('<option>', {
+                            value: '',
+                            text: '--Select Symbol--'
+                        }));
+
+
+                        for (var i = 0; i < data.All_symbols.length; i++) {
+                            symbolDropdown.append($('<option>', {
+                                value: data.All_symbols[i],
+                                text: data.All_symbols[i]
+                            }));
+                        }
+
+
+                        var prevSelectedSymbol = localStorage.getItem('symbol_Option_chain');
+                        if (prevSelectedSymbol && data.All_symbols.includes(prevSelectedSymbol)) {
+                            symbolDropdown.val(prevSelectedSymbol);
+                        }
+
+
+
+                    },
+                    error: function (xhr, status, error) {
+                        console.error(error);
+                    }
+                });
+            }
+
+
+            populateSymbolsDropdown();
+
+
+            $('#symbol-dropdown').change(function () {
+                var symbol_Option_chain = $(this).val();
+
+
+                localStorage.removeItem('selectedDate');
+
+                updateDateDropdown(symbol_Option_chain);
+
+                localStorage.setItem('symbol_Option_chain', symbol_Option_chain);
+            });
+
+
+            $('#date-dropdown').change(function () {
+                var symbol_Option_chain = $('#symbol-dropdown').val();
+                var selectedDate = $(this).val();
+
+
+                localStorage.setItem('selectedDate', selectedDate);
+
+                updateDateDropdown(symbol_Option_chain, selectedDate);
+            });
+        });
+
+
+        document.addEventListener('DOMContentLoaded', function () {
+
+            var prevSelectedSymbol = localStorage.getItem('symbol_Option_chain');
+            var prevSelectedDate = localStorage.getItem('selectedDate');
+
+            if (prevSelectedSymbol) {
+                $('#symbol-dropdown').val(prevSelectedSymbol);
+                updateDateDropdown(prevSelectedSymbol)
+                if (prevSelectedDate) {
+                    $('#date-dropdown').val(prevSelectedDate);
+                    updateDateDropdown(prevSelectedSymbol, prevSelectedDate);
+                }
+            } else {
+                updateDateDropdown("nifty");
+            }
+
+
+        });
+    </script>
+</div>
+
+{% endblock dashboard_body %}

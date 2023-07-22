@@ -1,0 +1,316 @@
+{% extends "base_dashboard.html" %}
+{% load static %}
+{% block dashboard_body %}
+<style>
+    .port_folio_manage_head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+
+        margin-top: 3rem;
+
+    }
+
+    .portfolio_filters {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        row-gap: 1rem;
+
+    }
+
+    #table_first_portfolio,
+    #gamma_theta,
+    #P_L_price {
+        margin: 20px 0;
+        padding: 12px 17px;
+        background: #f1f5fa;
+        font-weight: 600;
+    }
+
+    .nifty_all_btn {
+        display: flex;
+        align-items: center;
+        gap: 7rem;
+        justify-content: center;
+        margin-bottom: 14px;
+    }
+
+    .paper_portfolio_name {
+        display: flex;
+        align-items: center;
+        margin: 30px 0;
+
+    }
+</style>
+<div class="port_folio_manage_head">
+    <h3>Options Portfolio</h3>
+    <div class="form-check" id="header_checks">
+        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+        <label class="form-check-label" for="flexCheckDefault">
+            Greeks in Decimals
+        </label>
+    </div>
+    <div class="form-check" id="header_checks">
+        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+        <label class="form-check-label" for="flexCheckDefault">
+            Greeks in Rs.
+        </label>
+    </div>
+</div>
+
+<div class="portfolio_filters mt-3">
+    <div class="left_filters_portfolio">
+        <input type="radio" class="btn-check" name="options-outlined" id="success-outlined" autocomplete="off" checked>
+        <label class="btn btn-outline-success" for="success-outlined"
+            onclick="port_folio_first_filter('real_portfolio')">REAL PORTFOLIO</label>
+
+        <input type="radio" class="btn-check" name="options-outlined" id="danger-outlined" autocomplete="off">
+        <label class="btn btn-outline-danger" for="danger-outlined"
+            onclick="port_folio_first_filter('paper_portfolio')">PAPER PORTFOLIO </label>
+        <input type="radio" class="btn-check" name="options-outlined" id="warning-outlined" autocomplete="off">
+        <label class="btn btn-outline-warning" for="warning-outlined"
+            onclick="port_folio_first_filter('custom_portfolio')">CUSTOM PORTFOLIO</label>
+    </div>
+    <div class="right_filter_portfolio">
+        <button class="button btn btn-primary">STRATEGY BUILDER</button>
+        <button class="button btn btn-secondary">REFRESH</button>
+    </div>
+</div>
+
+<div class="real_portfolio_content ">
+
+    <div class="inner_real_content d-flex justify-content-center align-items-center flex-column">
+        <h2 class="fw-bolder my-5">You have no trades in your real portfolio</h2>
+        <h5 class="my-5">Add some trades using</h5>
+
+        <button class="btn btn-success mb-5">STRATEGY BUILDER</button>
+    </div>
+
+</div>
+
+
+
+
+
+
+
+
+<div class="paper_portfolio_content">
+    <div class="row" id="table_first_portfolio">
+        <div class="col-md-3 col-sm-12 ">SELECT ALL</div>
+        <div class="col-md-3 col-sm-12">EXPAND ALL</div>
+        <div class="col-md-2 col-sm-12">COLLAPSE ALL</div>
+        <div class="col-md-2 col-sm-12">Portfolio P%L</div>
+        <div class="col-md-2 col-sm-12 text-success">₹ +1,000</div>
+
+    </div>
+    <div class="nifty_all_btn">
+        <button class="button btn btn-secondary">NIFTY</button>
+        <button class="button btn btn-outline-secondary">ALL</button>
+    </div>
+
+    <div class="row paper_portfolio_name">
+        <div class="col-md-2 col-sm-12"> <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+        </div>
+        <div class="col-md-2 col-sm-12 d-flex flex-column">
+            <p style="margin-bottom: auto;">NIFTY</p>
+            <p style="margin-bottom: auto;">04-Jul-2023 13:09</p>
+
+        </div>
+        <div class="col-md-2 col-sm-12">
+            <p style="margin-bottom: auto; " class="fw-bold text-success">
+                19478 (+0.1%)</p>
+        </div>
+        <div class="col-md-2 col-sm-12">
+            <p style="margin-bottom: auto; ">My portfolio</p>
+        </div>
+        <div class="col-md-2 col-sm-12"><i class="bi bi-dot" style="    margin: -26px 0;
+            font-size: 51px;
+            color: green;"></i></div>
+        <div class="col-md-2 col-sm-12 text-success fw-bold">₹ +1000.00
+        </div>
+    </div>
+    <div class="row" id="gamma_theta">
+        <div class="col-md-3 col-sm-12">
+            <p style="margin-bottom: auto;">Portfolio Delta: 100.00</p>
+        </div>
+        <div class="col-md-3 col-sm-12">
+            <p style="margin-bottom: auto;">Theta: 0.00</p>
+        </div>
+        <div class="col-md-3 col-sm-12">
+            <p style="margin-bottom: auto;">Gamma: 0.00</p>
+        </div>
+        <div class="col-md-3 col-sm-12">
+            <p style="margin-bottom: auto;">Vega: 0.00</p>
+        </div>
+    </div>
+
+    <div class="row" id="P_L_price">
+        <div class="col-md-2 col-sm-12"></div>
+        <div class="col-md-2 col-sm-12"></div>
+        <div class="col-md-2 col-sm-12"></div>
+        <div class="col-md-2 col-sm-12"></div>
+        <div class="col-md-2 col-sm-12">
+            <p style="margin-bottom: auto;">Portfolio P&L</p>
+        </div>
+        <div class="col-md-2 col-sm-12">
+            <p style="margin-bottom: auto;" class="text-success fw-bold">
+                ₹ +1,000</p>
+        </div>
+    </div>
+
+
+
+
+
+</div>
+<div class="custom_portfolio_content">
+    <div class="row" id="table_first_portfolio">
+        <div class="col-md-3 col-sm-12 ">SELECT ALL</div>
+        <div class="col-md-3 col-sm-12">EXPAND ALL</div>
+        <div class="col-md-2 col-sm-12">COLLAPSE ALL</div>
+        <div class="col-md-2 col-sm-12">Portfolio P%L</div>
+        <div class="col-md-2 col-sm-12 text-success">₹ +1,000</div>
+
+    </div>
+    <div class="nifty_all_btn">
+        <button class="button btn btn-secondary">NIFTY</button>
+        <button class="button btn btn-outline-secondary">ALL</button>
+    </div>
+
+    <div class="row paper_portfolio_name">
+        <div class="col-md-2 col-sm-12"> <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+        </div>
+        <div class="col-md-2 col-sm-12 d-flex flex-column">
+            <p style="margin-bottom: auto;">NIFTY</p>
+            <p style="margin-bottom: auto;">04-Jul-2023 13:09</p>
+
+        </div>
+        <div class="col-md-2 col-sm-12">
+            <p style="margin-bottom: auto; " class="fw-bold text-success">
+                19478 (+0.1%)</p>
+        </div>
+        <div class="col-md-2 col-sm-12">
+            <p style="margin-bottom: auto; ">My portfolio</p>
+        </div>
+        <div class="col-md-2 col-sm-12"><i class="bi bi-dot" style="    margin: -26px 0;
+            font-size: 51px;
+            color: green;"></i></div>
+        <div class="col-md-2 col-sm-12 text-success fw-bold">₹ +1000.00
+        </div>
+    </div>
+    <div class="row" id="gamma_theta">
+        <div class="col-md-3 col-sm-12">
+            <p style="margin-bottom: auto;">Portfolio Delta: 100.00</p>
+        </div>
+        <div class="col-md-3 col-sm-12">
+            <p style="margin-bottom: auto;">Theta: 0.00</p>
+        </div>
+        <div class="col-md-3 col-sm-12">
+            <p style="margin-bottom: auto;">Gamma: 0.00</p>
+        </div>
+        <div class="col-md-3 col-sm-12">
+            <p style="margin-bottom: auto;">Vega: 0.00</p>
+        </div>
+    </div>
+
+    <div class="row" id="P_L_price">
+        <div class="col-md-2 col-sm-12"></div>
+        <div class="col-md-2 col-sm-12"></div>
+        <div class="col-md-2 col-sm-12"></div>
+        <div class="col-md-2 col-sm-12"></div>
+        <div class="col-md-2 col-sm-12">
+            <p style="margin-bottom: auto;">Portfolio P&L</p>
+        </div>
+        <div class="col-md-2 col-sm-12">
+            <p style="margin-bottom: auto;" class="text-success fw-bold">
+                ₹ +1,000</p>
+        </div>
+    </div>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="main_traders d-flex justify-content-between">
+    <div class="traders-left d-flex gap-2">
+        <div class="dropdown">
+            <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                aria-expanded="false">
+                Dropdown button
+            </button>
+            <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="#">Action</a></li>
+                <li><a class="dropdown-item" href="#">Another action</a></li>
+                <li><a class="dropdown-item" href="#">Something else here</a></li>
+            </ul>
+        </div>
+        <button class="btn btn-danger">DELETE TRADE</button>
+    </div>
+    <div class="traders-right d-flex gap-2">
+        <button class="btn btn-success">GO TO ARCHIVE</button>
+        <div class="dropdown">
+            <button class="btn btn-success dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                aria-expanded="false">
+                Dropdown button
+            </button>
+            <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="#">Action</a></li>
+                <li><a class="dropdown-item" href="#">Another action</a></li>
+                <li><a class="dropdown-item" href="#">Something else here</a></li>
+            </ul>
+        </div>
+
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        $(".real_portfolio_content").show()
+        $(".paper_portfolio_content").hide()
+        $(".custom_portfolio_content").hide()
+    })
+    function port_folio_first_filter(portfolio_args) {
+        if (portfolio_args == "real_portfolio") {
+            $(".real_portfolio_content").show()
+            $(".paper_portfolio_content").hide()
+            $(".custom_portfolio_content").hide()
+        } else if (portfolio_args == "paper_portfolio") {
+            $(".real_portfolio_content").hide()
+            $(".paper_portfolio_content").show()
+            $(".custom_portfolio_content").hide()
+        } else {
+            $(".real_portfolio_content").hide()
+            $(".paper_portfolio_content").hide()
+            $(".custom_portfolio_content").show()
+        }
+    }
+</script>
+{% endblock dashboard_body %}

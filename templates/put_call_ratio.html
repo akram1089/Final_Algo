@@ -1,0 +1,1024 @@
+{% extends "base_dashboard.html" %} {% load static %} {% block dashboard_body %}
+
+<style>
+  #first_symbol_id,
+  #second_symbol_id,
+  #third_symbol_id,
+  #Fourth_symbol_id,
+  #fifth_symbol_id {
+    display: flex;
+  }
+
+  .main_content_put_oi {
+    box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
+      rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+    padding: 30px;
+  }
+
+  .Oi_date_bars,
+  #Oi_date_bars_C {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+  }
+
+  .main_content_toggles {
+    background-color: #f0f8ff5c;
+  }
+
+  .main_toggles {
+    font-size: 15px;
+    color: dimgray;
+    line-height: 23px;
+    cursor: pointer;
+  }
+
+  .symbol_toggles {
+    font-size: 15px;
+    color: cornflowerblue;
+    line-height: 23px;
+    cursor: pointer;
+  }
+
+  .main_toggles_active {
+    border-top: 2px solid cornflowerblue;
+    color: cornflowerblue;
+    line-height: 23px;
+  }
+
+  #symbol_nifty,
+  #symbol_banknifty,
+  #symbol_fin_nifty {
+    border-right: 1px solid darkgray;
+    padding-right: 7px;
+  }
+
+  .symbol_active {
+    color: dimgray;
+  }
+
+  .con_1,
+  .con_2,
+  .con_3,
+  .con_4,
+  .con_5 {
+    display: flex;
+    height: 80vh;
+    width: 123vh;
+  }
+
+  .main_spot_price {
+    flex-direction: column;
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  .spot_icon {
+    display: flex;
+    align-items: baseline;
+  }
+</style>
+<h5 class="my-2">Nifty Open Interest Live Chart: Nifty Option Chain</h5>
+<div class="main_content_put_oi">
+  <div class="Oi_date_bars">
+    <div id="oi_barCount">
+      <label for="barCount">Number of Bars:</label>
+      <select id="barCount" onchange="updateChart()" class="form-select">
+        <option value="15" selected>15</option>
+        <option value="10">10</option>
+        <option value="5">5</option>
+        <option value="all">All</option>
+      </select>
+    </div>
+    <div id="Oi_expiryDate">
+      <label for="expiryDate">Expiry Date:</label>
+      <select
+        id="expiryDate"
+        onchange="updateChart()"
+        class="form-select"
+      ></select>
+    </div>
+    <div class="main_spot_price d-flex">
+      <div class="inner_spot d-flex">
+        <p style="margin-bottom: auto">Spot :</p>
+        <p style="margin-bottom: auto" id="spot_price_p"></p>
+      </div>
+      <div class="inner_percent">
+        <div class="spot_icon">
+          <i class="" id="spot_icon_inner"></i>
+          <div id="inner_percent"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="Oi_date_bars_C">
+    <div id="oi_c_barCount">
+      <label for="barCount_C">Number of Bars:</label>
+      <select id="barCount_C" onchange="updateChart_oi()" class="form-select">
+        <option value="15" selected>15</option>
+        <option value="10">10</option>
+        <option value="5">5</option>
+        <option value="all">All</option>
+      </select>
+    </div>
+    <div id="Oi_c_expiryDate">
+      <label for="expiryDate_C">Expiry Date:</label>
+      <select
+        id="expiryDate_C"
+        onchange="updateChart_oi()"
+        class="form-select"
+      ></select>
+    </div>
+    <div class="main_spot_price d-flex">
+      <div class="inner_spot d-flex">
+        <p style="margin-bottom: auto">Spot :</p>
+        <p style="margin-bottom: auto" id="spot_price_p_c"></p>
+      </div>
+      <div class="inner_percent">
+        <div class="spot_icon">
+          <i class="" id="spot_icon_inner_C"></i>
+          <div id="inner_percent_C"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="main_content_toggles">
+    <div
+      class="mian_put_call_head d-flex justify-content-between"
+      style="flex-wrap: wrap; white-space: nowrap; overflow: auto"
+    >
+      <div class="head_toggles d-flex gap-2 my-2">
+        <h5
+          onclick="main_put('OI')"
+          class="main_toggles main_toggles_active"
+          id="oi"
+        >
+          Open Interest
+        </h5>
+        <h5 onclick="main_put('C_OI')" class="main_toggles" id="coi">
+          Change in OI
+        </h5>
+        <h5 onclick="main_put('P_C_R')" class="main_toggles" id="pcr">
+          Put Call ratio
+        </h5>
+        <h5 onclick="main_put('V_PCR')" class="main_toggles" id="vpcr">
+          Volume PCR
+        </h5>
+        <h5 onclick="main_put('L_M_P')" class="main_toggles" id="lmp">
+          Live Max Pain
+        </h5>
+      </div>
+      <div class="symbol_toggles" id="symbol_toggles">
+        <div class="first_symbol gap-2" id="first_symbol_id">
+          <h5
+            class="symbol_toggles"
+            id="symbol_nifty"
+            onclick="OI_symbols('niftyoilist', 'NIFTY+50')"
+          >
+            Nifty1
+          </h5>
+          <h5
+            class="symbol_toggles"
+            id="symbol_banknifty"
+            onclick="OI_symbols('bankniftyoi', 'NIFTY+BANK')"
+          >
+            Bank Nifty1
+          </h5>
+          <h5
+            class="symbol_toggles"
+            id="symbol_fin_nifty"
+            onclick="OI_symbols('finniftyoilist', 'NIFTY+FIN+SERVICE')"
+          >
+            Fin Nifty 1
+          </h5>
+          <h5 class="symbol_toggles" id="symbol_stocks">Stock 1</h5>
+        </div>
+        <div class="second_symbol gap-2" id="second_symbol_id">
+          <h5
+            class="symbol_toggles"
+            id="symbol_nifty_oi"
+            onclick="OI_symbols_oi('niftyoichange', 'NIFTY+50')"
+          >
+            Nifty 2
+          </h5>
+          <h5
+            class="symbol_toggles"
+            id="symbol_banknifty_oi"
+            onclick="OI_symbols_oi('bankniftyoichange', 'NIFTY+BANK')"
+          >
+            Bank Nifty 2
+          </h5>
+          <h5
+            class="symbol_toggles"
+            id="symbol_fin_nifty_oi"
+            onclick="OI_symbols_oi('finniftyoichange', 'NIFTY+FIN+SERVICE')"
+          >
+            Fin Nifty 2
+          </h5>
+          <h5 class="symbol_toggles">Stock 2</h5>
+        </div>
+        <div class="third_symbol gap-2" id="third_symbol_id">
+          <h5 class="symbol_toggles" onclick="traders('nifty')">Nifty3</h5>
+          <h5 class="symbol_toggles" onclick="traders('banknifty')">
+            Bank Nifty 3
+          </h5>
+          <h5 class="symbol_toggles" onclick="traders('finnifty')">
+            Fin Nifty 3
+          </h5>
+          <h5 class="symbol_toggles">Stock 3</h5>
+        </div>
+        <div class="Fourth_symbol gap-2" id="Fourth_symbol_id">
+          <h5 class="symbol_toggles" onclick="pcr_volume('niftyvolumepcr')">
+            Nifty4
+          </h5>
+          <h5 class="symbol_toggles" onclick="pcr_volume('bankniftyvolumepcr')">
+            Bank Nifty 4
+          </h5>
+          <h5 class="symbol_toggles" onclick="pcr_volume('finniftyvolumepcr')">
+            Fin Nifty 4
+          </h5>
+          <h5 class="symbol_toggles">Stock 4</h5>
+        </div>
+        <div class="fifth_symbol gap-2" id="fifth_symbol_id">
+          <h5 class="symbol_toggles" onclick="symbol_pain('nifty')">Nifty5</h5>
+          <h5 class="symbol_toggles" onclick="symbol_pain('banknifty')">
+            Bank Nifty 5
+          </h5>
+          <h5 class="symbol_toggles" onclick="symbol_pain('finnifty')">
+            Fin Nifty 5
+          </h5>
+          <h5 class="symbol_toggles">Stock 5</h5>
+        </div>
+      </div>
+    </div>
+
+    <div class="main_contents">
+      <div id="con_1" style="height: 65vh">
+        <canvas id="chart"></canvas>
+      </div>
+      <div id="con_2" style="height: 65vh">
+        <canvas id="chart_OI_change"></canvas>
+      </div>
+      <div id="con_3" style="height: 65vh">
+        <canvas id="myChart"></canvas>
+      </div>
+      <div id="con_4" style="height: 65vh">
+        <canvas id="myChart_pcr"></canvas>
+      </div>
+      <div id="con_5" style="height: 65vh">
+        <canvas id="chart_max_pain"></canvas>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  $("#symbol_stocks").on("click", function () {
+    window.open("/stock_analysis");
+  });
+  document.getElementById("first_symbol_id").style.display = "flex";
+  document.getElementById("second_symbol_id").style.display = "none";
+  document.getElementById("third_symbol_id").style.display = "none";
+  document.getElementById("Fourth_symbol_id").style.display = "none";
+  document.getElementById("fifth_symbol_id").style.display = "none";
+
+  document.getElementById("con_1").style.display = "flex";
+  document.getElementById("con_2").style.display = "none";
+  document.getElementById("con_3").style.display = "none";
+  document.getElementById("con_4").style.display = "none";
+  document.getElementById("con_5").style.display = "none";
+
+  $("#oi").addClass("main_toggles_active");
+  $("#coi").removeClass("main_toggles_active");
+  $("#pcr").removeClass("main_toggles_active");
+  $("#vpcr").removeClass("main_toggles_active");
+  $("#lmp").removeClass("main_toggles_active");
+
+  $("#symbol_nifty").addClass("symbol_active");
+  $("#symbol_banknifty").removeClass("symbol_active");
+  $("#symbol_fin_nifty").removeClass("symbol_active");
+  $("#symbol_stocks").removeClass("symbol_active");
+
+  $("#Oi_expiryDate").show();
+  $("#oi_barCount").show();
+  $(".Oi_date_bars").show();
+  $("#Oi_date_bars_C").hide();
+  function main_put(Main_arg) {
+    if (Main_arg == "OI") {
+      document.getElementById("first_symbol_id").style.display = "flex";
+      document.getElementById("second_symbol_id").style.display = "none";
+      document.getElementById("third_symbol_id").style.display = "none";
+      document.getElementById("Fourth_symbol_id").style.display = "none";
+      document.getElementById("fifth_symbol_id").style.display = "none";
+
+      document.getElementById("con_1").style.display = "flex";
+      document.getElementById("con_2").style.display = "none";
+      document.getElementById("con_3").style.display = "none";
+      document.getElementById("con_4").style.display = "none";
+      document.getElementById("con_5").style.display = "none";
+      $("#oi").addClass("main_toggles_active");
+      $("#coi").removeClass("main_toggles_active");
+      $("#pcr").removeClass("main_toggles_active");
+      $("#vpcr").removeClass("main_toggles_active");
+      $("#lmp").removeClass("main_toggles_active");
+
+      $("#Oi_expiryDate").show();
+      $("#oi_barCount").show();
+      $(".Oi_date_bars").show();
+      $("#Oi_date_bars_C").hide();
+      OI_symbols("niftyoilist", "NIFTY+50");
+    } else if (Main_arg == "C_OI") {
+      document.getElementById("first_symbol_id").style.display = "none";
+      document.getElementById("second_symbol_id").style.display = "flex";
+      document.getElementById("third_symbol_id").style.display = "none";
+      document.getElementById("Fourth_symbol_id").style.display = "none";
+      document.getElementById("fifth_symbol_id").style.display = "none";
+
+      document.getElementById("con_1").style.display = "none";
+      document.getElementById("con_2").style.display = "flex";
+      document.getElementById("con_3").style.display = "none";
+      document.getElementById("con_4").style.display = "none";
+      document.getElementById("con_5").style.display = "none";
+
+      $("#oi").removeClass("main_toggles_active");
+      $("#coi").addClass("main_toggles_active");
+      $("#pcr").removeClass("main_toggles_active");
+      $("#vpcr").removeClass("main_toggles_active");
+      $("#lmp").removeClass("main_toggles_active");
+      $("#Oi_expiryDate").hide();
+      $("#oi_barCount").hide();
+      $(".Oi_date_bars").hide();
+      $("#Oi_date_bars_C").show();
+      OI_symbols_oi("niftyoichange", "NIFTY+50");
+    } else if (Main_arg == "P_C_R") {
+      traders("nifty");
+      document.getElementById("first_symbol_id").style.display = "none";
+      document.getElementById("second_symbol_id").style.display = "none";
+      document.getElementById("third_symbol_id").style.display = "flex";
+      document.getElementById("Fourth_symbol_id").style.display = "none";
+      document.getElementById("fifth_symbol_id").style.display = "none";
+
+      document.getElementById("con_1").style.display = "none";
+      document.getElementById("con_2").style.display = "none";
+      document.getElementById("con_3").style.display = "flex";
+      document.getElementById("con_4").style.display = "none";
+      document.getElementById("con_5").style.display = "none";
+      $("#oi").removeClass("main_toggles_active");
+      $("#coi").removeClass("main_toggles_active");
+      $("#pcr").addClass("main_toggles_active");
+      $("#vpcr").removeClass("main_toggles_active");
+      $("#lmp").removeClass("main_toggles_active");
+      $("#Oi_expiryDate").hide();
+      $("#oi_barCount").hide();
+      $("#Oi_date_bars_C").show();
+    } else if (Main_arg == "V_PCR") {
+      document.getElementById("first_symbol_id").style.display = "none";
+      document.getElementById("second_symbol_id").style.display = "none";
+      document.getElementById("third_symbol_id").style.display = "none";
+      document.getElementById("Fourth_symbol_id").style.display = "flex";
+      document.getElementById("fifth_symbol_id").style.display = "none";
+
+      document.getElementById("con_1").style.display = "none";
+      document.getElementById("con_2").style.display = "none";
+      document.getElementById("con_3").style.display = "none";
+      document.getElementById("con_4").style.display = "flex";
+      document.getElementById("con_5").style.display = "none";
+
+      $("#oi").removeClass("main_toggles_active");
+      $("#coi").removeClass("main_toggles_active");
+      $("#pcr").removeClass("main_toggles_active");
+      $("#vpcr").addClass("main_toggles_active");
+      $("#lmp").removeClass("main_toggles_active");
+      $("#Oi_expiryDate").hide();
+      $("#oi_barCount").hide();
+      $("#Oi_date_bars_C").show();
+    } else if (Main_arg == "L_M_P") {
+      document.getElementById("first_symbol_id").style.display = "none";
+      document.getElementById("second_symbol_id").style.display = "none";
+      document.getElementById("third_symbol_id").style.display = "none";
+      document.getElementById("Fourth_symbol_id").style.display = "none";
+      document.getElementById("fifth_symbol_id").style.display = "flex";
+
+      document.getElementById("con_1").style.display = "none";
+      document.getElementById("con_2").style.display = "none";
+      document.getElementById("con_3").style.display = "none";
+      document.getElementById("con_4").style.display = "none";
+      document.getElementById("con_5").style.display = "flex";
+
+      $("#oi").removeClass("main_toggles_active");
+      $("#coi").removeClass("main_toggles_active");
+      $("#pcr").removeClass("main_toggles_active");
+      $("#vpcr").removeClass("main_toggles_active");
+      $("#lmp").addClass("main_toggles_active");
+      $("#Oi_expiryDate").hide();
+      $("#oi_barCount").hide();
+      $("#Oi_date_bars_C").show();
+    }
+  }
+</script>
+
+<script>
+  function ratios(ratio) {
+    const All_nifty_traders = document.getElementById("All_nifty_traders");
+    const All_OI = document.getElementById("All_OI");
+    const PCR_chart = document.getElementById("PCR_chart");
+
+    if (ratio === "PCR") {
+      traders("nifty");
+      All_nifty_traders.style.display = "block";
+      PCR_chart.style.display = "block";
+      All_OI.style.display = "none";
+    } else if (ratio === "OI") {
+      All_nifty_traders.style.display = "none";
+      PCR_chart.style.display = "none";
+      All_OI.style.display = "block";
+    }
+  }
+
+  let myChart;
+
+  function showSpinner() {
+    document.getElementById("spinner").classList.remove("d-none");
+  }
+
+  function hideSpinner() {
+    document.getElementById("spinner").classList.add("d-none");
+  }
+
+  function traders(trade) {
+    showSpinner();
+
+    fetch(`/put_call_ratio_chart?trade=${trade}`)
+      .then((response) => response.json())
+      .then((data) => {
+        var pcrValues = data.pcr_values;
+
+        var indexCloseValues = data.index_close_values;
+        var timeValues = data.time_values;
+
+        // Clear existing chart
+        if (myChart) {
+          myChart.destroy();
+        }
+
+        var ctx = document.getElementById("myChart").getContext("2d");
+        myChart = new Chart(ctx, {
+          type: "line",
+          data: {
+            labels: timeValues,
+            datasets: [
+              {
+                label: "PCR",
+                data: pcrValues,
+                yAxisID: "pcr-axis",
+                borderColor: "rgb(75, 192, 192)",
+                backgroundColor: "rgb(75, 192, 192, 0.2)",
+              },
+              {
+                label: "Index Close",
+                data: indexCloseValues,
+                yAxisID: "index-close-axis",
+                borderColor: "rgb(192, 75, 75)",
+                backgroundColor: "rgb(192, 75, 75, 0.2)",
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+
+            maintainAspectRatio: false,
+            scales: {
+              yAxes: [
+                {
+                  id: "pcr-axis",
+                  type: "linear",
+                  position: "left",
+                  ticks: {
+                    beginAtZero: true,
+                  },
+                  scaleLabel: {
+                    display: true,
+                    labelString: "PCR Value",
+                  },
+                },
+                {
+                  id: "index-close-axis",
+                  type: "linear",
+                  position: "right",
+                  ticks: {
+                    beginAtZero: true,
+                  },
+                  scaleLabel: {
+                    display: true,
+                    labelString: "Index Close",
+                  },
+                },
+              ],
+            },
+          },
+        });
+
+        hideSpinner();
+      });
+  }
+</script>
+<script>
+  var myChart_max_pain;
+
+  function symbol_pain(symbol) {
+    if (myChart_max_pain) {
+      myChart_max_pain.destroy(); // Destroy previous chart instance
+    }
+
+    $.ajax({
+      url: '{% url "scale_stacking_chart" %}',
+      type: "GET",
+      data: {
+        symbol: symbol,
+      },
+      dataType: "json",
+      success: function (chartData) {
+        var labels = chartData.labels;
+
+        var ppValues = chartData.pp_values;
+        var cpValues = chartData.cp_values;
+
+        var data = {
+          labels: labels,
+          datasets: [
+            {
+              label: "pp",
+              data: ppValues,
+              backgroundColor: "rgba(75, 192, 192, 0.2)",
+              borderColor: "rgba(75, 192, 192, 1)",
+              borderWidth: 1,
+            },
+            {
+              label: "cp",
+              data: cpValues,
+              backgroundColor: "rgba(255, 99, 132, 0.2)",
+              borderColor: "rgba(255, 99, 132, 1)",
+              borderWidth: 1,
+            },
+          ],
+        };
+
+        var options = {
+          maintainAspectRatio: false,
+          scales: {
+            x: {
+              grid: {
+                display: false, // Hide y-axis background border
+              },
+              title: {
+                display: true,
+                text: "Strike Price",
+              },
+            },
+            y: {
+              title: {
+                display: true,
+                text: "pp",
+              },
+            },
+          },
+        };
+
+        var ctx = document.getElementById("chart_max_pain").getContext("2d");
+        myChart_max_pain = new Chart(ctx, {
+          type: "bar",
+          data: data,
+          options: options,
+        });
+      },
+      error: function (xhr, errmsg, err) {
+        console.log(errmsg);
+      },
+    });
+  }
+
+  // Initial chart rendering with default symbol
+  symbol_pain("nifty");
+</script>
+<script>
+  var myChart_pcr; // Reference to the chart instance
+
+  // Function to update the chart with new data
+  function updateChart_pcr(chartData) {
+    const pcrValues = chartData.pcr_values;
+    console.log(pcrValues)
+    const indexCloseValues = chartData.index_close_values;
+    console.log(indexCloseValues)
+    const timeValues = chartData.time_values;
+
+    // Update the chart data
+    myChart_pcr.data.labels = timeValues;
+    myChart_pcr.data.datasets[0].data = pcrValues;
+    myChart_pcr.data.datasets[1].data = indexCloseValues;
+    myChart_pcr.update();
+  }
+
+  // Fetch chart data from the server
+  function pcr_volume(pcr_chart_arg) {
+    $.ajax({
+      url: "/pcr_volume",
+      type: "GET",
+      dataType: "json",
+      data: { trade: pcr_chart_arg }, // Pass the argument in the data object
+      success: function (data) {
+        console.log(data);
+        updateChart_pcr(data);
+      },
+      error: function (xhr, status, error) {
+        console.log("Error:", error);
+      },
+    });
+  }
+
+  // Create the initial chart
+  const ctx = document.getElementById("myChart_pcr").getContext("2d");
+  const initialData = {
+    labels: [],
+    datasets: [
+      {
+        label: "PCR",
+        data: [],
+        yAxisID: "pcr-axis",
+        borderColor: "rgb(75, 192, 192)",
+        backgroundColor: "rgb(75, 192, 192, 0.2)",
+      },
+      {
+        label: "Index Close",
+        data: [],
+        yAxisID: "index-close-axis",
+        borderColor: "rgb(192, 75, 75)",
+        backgroundColor: "rgb(192, 75, 75, 0.2)",
+      },
+    ],
+  };
+  const initialOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    scales: {
+      yAxes: [
+        {
+          id: "pcr-axis",
+          type: "linear",
+          position: "left",
+          ticks: {
+            beginAtZero: true,
+          },
+          scaleLabel: {
+            display: true,
+            labelString: "PCR Value",
+          },
+        },
+        {
+          id: "index-close-axis",
+          type: "linear",
+          position: "right",
+          ticks: {
+            beginAtZero: true,
+          },
+          scaleLabel: {
+            display: true,
+            labelString: "Index Close",
+          },
+        },
+      ],
+    },
+  };
+  myChart_pcr = new Chart(ctx, {
+    type: "line",
+    data: initialData,
+    options: initialOptions,
+  });
+
+  // Fetch chart data on page load
+  pcr_volume("niftyvolumepcr");
+
+  // Fetch chart data every 5 seconds
+</script>
+<script>
+  function OI_symbols_oi(arg1, arg2) {
+    const arg = { nifty: arg1, spot: arg2 };
+    localStorage.removeItem("expiryDate_oi"); // Clear the expiry date from local storage
+    localStorage.setItem("selectedSymbol_oi", JSON.stringify(arg)); // Save selected symbol in local storage
+    const expiryDateSelect = document.getElementById("expiryDate_C");
+    expiryDateSelect.value = ""; // Reset the expiry date select box
+    updateChart_oi();
+    if (arg1 == "niftyoichange") {
+      $("#symbol_nifty").addClass("symbol_active");
+      $("#symbol_banknifty").removeClass("symbol_active");
+      $("#symbol_fin_nifty").removeClass("symbol_active");
+      $("#symbol_stocks").removeClass("symbol_active");
+    } else if (arg1 == "bankniftyoichange") {
+      $("#symbol_nifty").removeClass("symbol_active");
+      $("#symbol_banknifty").addClass("symbol_active");
+      $("#symbol_fin_nifty").removeClass("symbol_active");
+      $("#symbol_stocks").removeClass("symbol_active");
+    } else if (arg1 == "finniftyoichange") {
+      $("#symbol_nifty").removeClass("symbol_active");
+      $("#symbol_banknifty").removeClass("symbol_active");
+      $("#symbol_fin_nifty").addClass("symbol_active");
+      $("#symbol_stocks").removeClass("symbol_active");
+    }
+  }
+
+  function updateChart_oi() {
+    const barCount_oi = document.getElementById("barCount_C").value;
+    const selectedSymbol_oi = JSON.parse(
+      localStorage.getItem("selectedSymbol_oi")
+    ); // Retrieve selected symbol from local storage
+
+    const arg = selectedSymbol_oi || { nifty: "niftyoilist", spot: "NIFTY+50" }; // Use the selected symbol or default values if not available
+
+    localStorage.setItem("barCount_oi", barCount_oi); // Save barCount_oi in local storage
+
+    const expiryDateSelect = document.getElementById("expiryDate_C");
+    const expiryDate = expiryDateSelect.value;
+
+    if (expiryDate && !expiryDateSelect.disabled) {
+      localStorage.setItem("expiryDate_oi", expiryDate); // Save expiryDate in local storage
+    } else {
+      localStorage.removeItem("expiryDate_oi"); // Clear the expiry date from local storage
+    }
+
+    $.ajax({
+      url: "/filtered_oi_change_data",
+      type: "GET",
+      data: {
+        bar_count: barCount_oi,
+        expiry_date:
+          arg.nifty === "finniftyoilist"
+            ? null
+            : localStorage.getItem("expiryDate_oi"),
+        arg: JSON.stringify(arg),
+      },
+      dataType: "json",
+      success: function (response) {
+        const spotPrice = response.spot_price;
+        const closestPrices = response.closest_prices;
+        const callOI = response.calls_oi;
+        const putOI = response.puts_oi;
+        const dates_oi = response.dates;
+        const change_value = response.change_value;
+        const change_per = response.change_per;
+
+        let labels = [];
+        if (closestPrices && closestPrices.length > 0) {
+          labels = closestPrices.map((price) => price.toString());
+        }
+        document.getElementById("spot_price_p_c").innerText = spotPrice;
+        document.getElementById(
+          "inner_percent_C"
+        ).innerText = ` ${change_value} (${change_per}%)  `;
+        if (change_value < 0) {
+          $("#spot_icon_inner_C").addClass(
+            " bi bi-caret-down-fill text-danger"
+          );
+          $("#spot_price_p_c").addClass("text-danger");
+          $("#inner_percent_C").addClass("text-danger");
+        } else {
+          $("#spot_price_p_c").addClass("text-success");
+          $("#inner_percent_C").addClass("text-success");
+          $("#spot_icon_inner_C").addClass(" bi bi-caret-up-fill text-success");
+        }
+
+        const data = {
+          labels: labels,
+          datasets: [
+            {
+              label: "Call OI",
+              data: callOI,
+              backgroundColor: "rgba(75, 192, 192, 0.2)",
+              borderColor: "rgba(75, 192, 192, 1)",
+              borderWidth: 1,
+            },
+            {
+              label: "Put OI",
+              data: putOI,
+              backgroundColor: "rgba(255, 99, 132, 0.2)",
+              borderColor: "rgba(255, 99, 132, 1)",
+              borderWidth: 1,
+            },
+          ],
+        };
+
+        const options = {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            x: {
+              grid: {
+                display: false, // Hide y-axis background border
+              },
+              title: {
+                display: true,
+                text: "Strike Prices",
+              },
+            },
+            y: {
+              title: {
+                display: true,
+                text: "Call OI",
+              },
+            },
+          },
+        };
+
+        const chartElement = document.getElementById("chart_OI_change");
+        if (window.barChart !== undefined) {
+          window.barChart.destroy();
+        }
+        window.barChart = new Chart(chartElement, {
+          type: "bar",
+          data: data,
+          options: options,
+        });
+
+        expiryDateSelect.innerHTML = "";
+        for (let i = 0; i < dates_oi.length; i++) {
+          const option = document.createElement("option");
+          option.value = dates_oi[i];
+          option.textContent = dates_oi[i];
+          if (dates_oi[i] === localStorage.getItem("expiryDate_oi")) {
+            option.selected = true;
+          }
+          expiryDateSelect.appendChild(option);
+        }
+      },
+    });
+  }
+
+  $(document).ready(function () {
+    const selectedSymbol_oi = localStorage.getItem("selectedSymbol_oi");
+    if (selectedSymbol_oi) {
+      const arg = JSON.parse(selectedSymbol_oi);
+      const barCount_OI = localStorage.getItem("barCount_oi"); // Update the key to 'barCount_oi' instead of 'barCount_OI'
+      document.getElementById("barCount_C").value = barCount_OI || "15"; // Set barCount from local storage or default value
+    } else {
+      updateChart_oi();
+    }
+  });
+</script>
+<script>
+  function OI_symbols(arg1, arg2) {
+    const arg = { nifty: arg1, spot: arg2 };
+    localStorage.removeItem("expiryDate"); // Clear the expiry date from local storage
+    localStorage.setItem("selectedSymbol", JSON.stringify(arg)); // Save selected symbol in local storage
+    const expiryDateSelect = document.getElementById("expiryDate");
+    expiryDateSelect.value = ""; // Reset the expiry date select box
+    updateChart();
+    if (arg1 == "niftyoilist") {
+      $("#symbol_nifty").addClass("symbol_active");
+      $("#symbol_banknifty").removeClass("symbol_active");
+      $("#symbol_fin_nifty").removeClass("symbol_active");
+      $("#symbol_stocks").removeClass("symbol_active");
+    } else if (arg1 == "bankniftyoi") {
+      $("#symbol_nifty").removeClass("symbol_active");
+      $("#symbol_banknifty").addClass("symbol_active");
+      $("#symbol_fin_nifty").removeClass("symbol_active");
+      $("#symbol_stocks").removeClass("symbol_active");
+    } else if (arg1 == "finniftyoilist") {
+      $("#symbol_nifty").removeClass("symbol_active");
+      $("#symbol_banknifty").removeClass("symbol_active");
+      $("#symbol_fin_nifty").addClass("symbol_active");
+      $("#symbol_stocks").removeClass("symbol_active");
+    }
+  }
+
+  function updateChart() {
+    const barCount = document.getElementById("barCount").value;
+    const selectedSymbol = JSON.parse(localStorage.getItem("selectedSymbol")); // Retrieve selected symbol from local storage
+
+    const arg = selectedSymbol || { nifty: "niftyoilist", spot: "NIFTY+50" }; // Use the selected symbol or default values if not available
+
+    localStorage.setItem("barCount", barCount); // Save barCount in local storage
+
+    const expiryDateSelect = document.getElementById("expiryDate");
+    const expiryDate = expiryDateSelect.value;
+
+    if (expiryDate && !expiryDateSelect.disabled) {
+      localStorage.setItem("expiryDate", expiryDate); // Save expiryDate in local storage
+    } else {
+      localStorage.removeItem("expiryDate"); // Clear the expiry date from local storage
+    }
+
+    $.ajax({
+      url: "/filtered_oi_data",
+      type: "GET",
+      data: {
+        bar_count: barCount,
+        expiry_date:
+          arg.nifty === "finniftyoilist"
+            ? null
+            : localStorage.getItem("expiryDate"),
+        arg: JSON.stringify(arg),
+      },
+      dataType: "json",
+      success: function (response) {
+        const spotPrice = response.spot_price;
+        const closestPrices = response.closest_prices;
+        const callOI = response.calls_oi;
+        const putOI = response.puts_oi;
+        const dates_oi = response.dates;
+        const change_value = response.change_value;
+        const change_per = response.change_per;
+
+        let labels = [];
+        if (closestPrices && closestPrices.length > 0) {
+          labels = closestPrices.map((price) => price.toString());
+        }
+        document.getElementById("spot_price_p").innerText = spotPrice;
+        document.getElementById(
+          "inner_percent"
+        ).innerText = ` ${change_value} (${change_per}%)  `;
+        if (change_value < 0) {
+          $("#spot_icon_inner").addClass(" bi bi-caret-down-fill text-danger");
+          $("#spot_price_p").addClass("text-danger");
+          $("#inner_percent").addClass("text-danger");
+        } else {
+          $("#spot_price_p").addClass("text-success");
+          $("#inner_percent").addClass("text-success");
+          $("#spot_icon_inner").addClass(" bi bi-caret-up-fill text-success");
+        }
+
+        const data = {
+          labels: labels,
+          datasets: [
+            {
+              label: "Call OI",
+              data: callOI,
+              backgroundColor: "rgba(75, 192, 192, 0.2)",
+              borderColor: "rgba(75, 192, 192, 1)",
+              borderWidth: 1,
+            },
+            {
+              label: "Put OI",
+              data: putOI,
+              backgroundColor: "rgba(255, 99, 132, 0.2)",
+              borderColor: "rgba(255, 99, 132, 1)",
+              borderWidth: 1,
+            },
+          ],
+        };
+
+        const options = {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            x: {
+              grid: {
+                display: false, // Hide y-axis background border
+              },
+              title: {
+                display: true,
+                text: "Strike Prices",
+              },
+            },
+            y: {
+              title: {
+                display: true,
+                text: "Call OI",
+              },
+            },
+          },
+        };
+
+        const chartElement = document.getElementById("chart");
+        if (window.barChart !== undefined) {
+          window.barChart.destroy();
+        }
+        window.barChart = new Chart(chartElement, {
+          type: "bar",
+          data: data,
+          options: options,
+        });
+
+        expiryDateSelect.innerHTML = "";
+        for (let i = 0; i < dates_oi.length; i++) {
+          const option = document.createElement("option");
+          option.value = dates_oi[i];
+          option.textContent = dates_oi[i];
+          if (dates_oi[i] === localStorage.getItem("expiryDate")) {
+            option.selected = true;
+          }
+          expiryDateSelect.appendChild(option);
+        }
+      },
+    });
+  }
+
+  $(document).ready(function () {
+    const selectedSymbol = localStorage.getItem("selectedSymbol");
+    if (selectedSymbol) {
+      const arg = JSON.parse(selectedSymbol);
+      const barCount = localStorage.getItem("barCount");
+      document.getElementById("barCount").value = barCount || "15"; // Set barCount from local storage or default value
+      OI_symbols(arg.nifty, arg.spot);
+    } else {
+      updateChart();
+    }
+  });
+</script>
+{% endblock dashboard_body %}

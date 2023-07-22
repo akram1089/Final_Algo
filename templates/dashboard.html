@@ -1,0 +1,403 @@
+
+
+{% extends "base_dashboard.html" %} {% load static %}
+<script
+  type="text/javascript"
+  src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"
+></script>
+<script
+  type="text/javascript"
+  src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"
+></script>
+<script
+  type="text/javascript"
+  src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"
+></script>
+<link
+  rel="stylesheet"
+  type="text/css"
+  href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css"
+/>
+{% block dashboard_body %}
+<script
+  type="text/javascript"
+  src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"
+></script>
+<script
+  type="text/javascript"
+  src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"
+></script>
+<script
+  type="text/javascript"
+  src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"
+></script>
+<link
+  rel="stylesheet"
+  type="text/css"
+  href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css"
+/>
+
+<script>
+  $(function () {
+    $('input[name="daterange"]').daterangepicker(
+      {
+        opens: "left",
+      },
+      function (start, end, label) {
+        console.log(
+          "A new date selection was made: " +
+            start.format("YYYY-MM-DD") +
+            " to " +
+            end.format("YYYY-MM-DD")
+        );
+      }
+    );
+  });
+</script>
+<div class="container">
+  <div
+    class="top_gainer_loser_graph d-flex mt-5"
+    style="flex-wrap: wrap; gap: 2rem;"
+  >
+    <div
+      class="chart-container"
+      style="
+        position: relative;
+        border-radius: 10px;
+        text-align: center;
+        width: 23rem;
+        height: 24rem;
+        box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+        padding: 19px 31px 45px 33px;
+      "
+    >
+      <h5>Top Price Gainers</h5>
+      <canvas id="gainersChart"></canvas>
+    </div>
+
+    <div
+      class="chart-container"
+      style="
+        position: relative;
+        border-radius: 10px;
+        text-align: center;
+        width: 23rem;
+        height: 24rem;
+        box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+        padding: 19px 31px 45px 33px;
+      "
+    >
+      <h5>Top Price Loosers</h5>
+      <canvas id="losersChart"></canvas>
+    </div>
+
+
+
+    <div
+      class="chart-container"
+      style="
+        position: relative;
+        border-radius: 10px;
+        text-align: center;
+        width: 23rem;
+        height: 24rem;
+        box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+        padding: 19px 31px 45px 33px;
+      "
+    >
+      <h5>Top OI Gainers</h5>
+      <canvas id="symbolChart"></canvas>
+    </div>
+    <div
+      class="chart-container"
+      style="
+        position: relative;
+        border-radius: 10px;
+        text-align: center;
+        width: 23rem;
+        height: 24rem;
+        box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+        padding: 19px 31px 45px 33px;
+      "
+    >
+      <h5>Top OI Loosers</h5>
+      <canvas id="symbolChart_looser"></canvas>
+    </div>
+ {% comment %}
+    <div
+      class="chart-container"
+      style="
+        position: relative;
+        border-radius: 10px;
+        text-align: center;
+        width: 23rem;
+        height: 24rem;
+        box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+        padding: 19px 31px 45px 33px;
+      "
+    >
+      <h5>Top Volume Buzzers</h5>
+      <canvas id="symbol_volume_buzzers"></canvas>
+    </div>
+    {% endcomment %}
+  </div>
+
+
+
+  <div
+    class="Trading_volume_prifit_loss mt-3 d-flex flex-wrap"
+    style="justify-content: space-between; row-gap: 1rem"
+  >
+    <div class="card border-1" style="width: 37rem; height: 30rem">
+      <div class="trading_volume_head">
+        <div class="first_volume_main">
+          <div class="first_volume_card d-flex">
+            <p style="margin-bottom: auto">Trading valume</p>
+            <i class="bi bi-box-arrow-up-right text-primary"></i>
+          </div>
+          <div class="volume_price">
+            <h5>₹0</h5>
+          </div>
+        </div>
+        <div class="first_volume_main volume_main_active">
+          <div class="first_volume_card d-flex">
+            <p style="margin-bottom: auto">Trading valume</p>
+            <i class="bi bi-box-arrow-up-right text-primary"></i>
+          </div>
+          <div class="volume_price">
+            <h5>₹0</h5>
+          </div>
+        </div>
+        <div class="first_volume_main">
+          <div class="first_volume_card d-flex">
+            <p style="margin-bottom: auto">Trading valume</p>
+            <i class="bi bi-box-arrow-up-right text-primary"></i>
+          </div>
+          <div class="volume_price">
+            <h5>₹0</h5>
+          </div>
+        </div>
+      </div>
+
+      <div class="data_not_found_section">
+        <img src="{% static "/img/course_not_found_icon.png" %}" style=" width:
+        13rem;" alt="">
+        <h5>No Trading Volume data found</h5>
+        <p>Run some strategies to visualize data here</p>
+        <button class="button btn btn-primary">Explore Marketplace</button>
+      </div>
+    </div>
+
+    <div class="card border-1" style="width: 37rem; height: 30rem">
+      <div class="profit_loss_volume">
+        <h5>P&L & Trading Volume</h5>
+
+        <div class="icons_ref_full">
+          <i class="bi bi-arrow-clockwise"></i>
+          <i class="bi bi-arrows-expand"></i>
+          <i class="bi bi-gear"></i>
+          <i class="bi bi-arrows-fullscreen"></i>
+        </div>
+      </div>
+
+      <table class="table" style="overflow: auto">
+        <thead class="bg-light">
+          <tr>
+            <th scope="col " class="border-end">Strategy Name</th>
+            <th scope="col" class="border-end">Total Txns.</th>
+            <th scope="col" class="border-end">Volume (₹)</th>
+            <th scope="col">P&L (₹)</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+
+      <div class="data_not_found_section">
+        <img src="{% static "/img/course_not_found_icon.png" %}" style=" width:
+        13rem;" alt="">
+        <h5>No P&L & Trading Volume data found</h5>
+        <p>Run some strategies to visualize data here</p>
+        <button class="button btn btn-primary">Explore Marketplace</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script>
+
+     var top_gainer_labels = {{ top_gainer_labels|safe }};
+     var top_gainer_values = {{ top_gainer_values|safe }};
+
+     var ctx = document.getElementById('gainersChart').getContext('2d');
+     var chart = new Chart(ctx, {
+         type: 'bar',
+         data: {
+             labels: top_gainer_labels,
+             datasets: [{
+                 label: '% Price Change',
+                 data: top_gainer_values,
+                 backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                 borderColor: 'rgba(54, 162, 235, 1)',
+                 borderWidth: 1
+             }]
+         },
+         options: {
+             indexAxis: 'y',
+             responsive: true,
+             maintainAspectRatio: false,
+             scales: {
+                 y: {
+                     beginAtZero: true
+                 },
+                 xAxes: [{
+                     barPercentage: 0.4
+                 }]
+             },
+
+         },
+         title: {
+             display: true,
+             text: 'Chart.js Horizontal Bar Chart'
+           }
+     });
+
+
+
+  var looser_labels= {{ looser_labels|safe }};
+     var looser_values= {{ looser_values|safe }};
+
+     var ctx = document.getElementById('losersChart').getContext('2d');
+     var chart = new Chart(ctx, {
+         type: 'bar',
+         data: {
+             labels: looser_labels,
+             datasets: [{
+                 label: 'Loss Percentage',
+                 data:looser_values,
+                 backgroundColor: 'rgba(255, 99, 132, 0.5)',  // Red color for bars
+                 borderColor: 'rgba(255, 99, 132, 1)',
+                 borderWidth: 1
+             }]
+         },
+         options: {
+             indexAxis: 'y',
+             responsive: true,
+             maintainAspectRatio: false,
+             scales: {
+                 y: {
+                     beginAtZero: true
+                 },
+                 xAxes: [{
+                     barPercentage: 0.4
+                 }]
+             },
+
+         },
+         title: {
+             display: true,
+             text: 'Chart.js Horizontal Bar Chart'
+           }
+     });
+
+  var labels_oi_gainer= {{ labels_oi_gainer|safe }};
+     var values_oi_losers= {{ values_oi_losers|safe }};
+
+     var ctx = document.getElementById('symbolChart').getContext('2d');
+     var chart = new Chart(ctx, {
+         type: 'bar',
+         data: {
+             labels: labels_oi_gainer,
+             datasets: [{
+                 label: 'Loss Percentage',
+                 data:values_oi_losers,
+                 backgroundColor: 'rgba(0, 128, 0, 0.2)', // Green background color
+                 borderColor: 'rgba(0, 128, 0, 1)', // Green border color
+                 borderWidth: 1
+             }]
+         },
+         options: {
+             indexAxis: 'y',
+             responsive: true,
+             maintainAspectRatio: false,
+             scales: {
+                 y: {
+                     beginAtZero: true
+                 },
+                 xAxes: [{
+                     barPercentage: 0.4
+                 }]
+             },
+
+         },
+         title: {
+             display: true,
+             text: 'Chart.js Horizontal Bar Chart'
+           }
+     });
+  var labels_oi_loser= {{ labels_oi_loser|safe }};
+     var values_oi_loser= {{ values_oi_loser|safe }};
+
+     var ctx = document.getElementById('symbolChart_looser').getContext('2d');
+     var chart = new Chart(ctx, {
+         type: 'bar',
+         data: {
+             labels: labels_oi_loser,
+             datasets: [{
+                 label: 'Loss Percentage',
+                 data:values_oi_loser,
+                 backgroundColor: 'rgba(101, 67, 33, 0.2)', // Dark brown background color
+                    borderColor: 'rgba(101, 67, 33, 1)', // Dark brown border color
+                 borderWidth: 1
+             }]
+         },
+         options: {
+             indexAxis: 'y',
+             responsive: true,
+             maintainAspectRatio: false,
+             scales: {
+                 y: {
+                     beginAtZero: true
+                 },
+                 xAxes: [{
+                     barPercentage: 0.4
+                 }]
+             },
+
+         },
+         title: {
+             display: true,
+             text: 'Chart.js Horizontal Bar Chart'
+           }
+     });
+</script>
+{% comment %}
+<script>
+  var symbols_loser = {{ symbols_loser|safe }};
+  var percentages = {{ percentages_loser|safe }};
+
+  var ctx = document.getElementById('losersChart').getContext('2d');
+  var chart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+          labels: symbols_loser,
+          datasets: [{
+              label: 'Loss Percentage',
+              data: percentages_loser,
+              backgroundColor: 'rgba(255, 99, 132, 0.5)',  // Red color for bars
+              borderColor: 'rgba(255, 99, 132, 1)',
+              borderWidth: 1
+          }]
+      },
+      options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+              y: {
+                  beginAtZero: true
+              }
+          }
+      }
+  });
+</script>
+{% endcomment %} {% endblock dashboard_body %}

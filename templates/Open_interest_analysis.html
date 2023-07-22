@@ -1,0 +1,179 @@
+{% extends 'base_dashboard.html' %}
+{% load static %}
+{% block dashboard_body %}
+<style>
+
+
+
+</style>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+</head>
+<div class="container" style="    max-width: inherit !important;">
+
+  <h2 class="text-center text-primary">Option chain</h2>
+
+<h5 class="text-warning " style='    display: flex;
+flex-direction: row-reverse;
+margin: 11px 0 24px 0;
+border-top: 1px solid beige; '>Page will referesh after every 15 minutes</h5>
+
+  <form action=" {% url 'Open_interest_analysis' %} " method="post">
+    {% csrf_token %}
+    <div class="filter_main d-flex gap-2 px-2">
+
+      <select class="form-select" aria-label="Default select example" id="symbolSelect" name="symbols" >
+    
+          <option value="NIFTY" selected>Select the option</option>
+          <option value="NIFTY">NIFTY</option>
+          <option value="BANKNIFTY">BANKNIFTY</option>
+       
+  
+      </select>
+
+      <select class="form-select" id="expirySelect" aria-label="Default select example" name="expiryDates">
+      
+        <option value="">-- Select Expiry --</option>
+      </select>
+
+      <button class="button btn btn-primary" >REFRESH</button>
+    </div>
+
+  </form>
+  {% comment %}
+  "strikePrice":16100,
+  "expiryDate":"01-Jun-2023",
+  "underlying":"NIFTY",
+  "identifier":"OPTIDXNIFTY01-06-2023PE16100.00",
+  "openInterest":24474,
+  "changeinOpenInterest":-2591,
+  "pchangeinOpenInterest":-9.573249584334011,
+  "totalTradedVolume":167271,
+  "impliedVolatility":92.85,
+  "lastPrice":0.4,
+  "change":-0.44999999999999996,
+  "pChange":-52.94117647058824,
+  "totalBuyQuantity":1634500,
+  "totalSellQuantity":316950,
+  "bidQty":35050,
+  "bidprice":0.4,
+  "askQty":16600,
+  "askPrice":0.45,
+  "underlyingValue":18534.4 {% endcomment %}
+  {% comment %}
+  <table class="table  mt-3 table-responsive small">
+
+  </table> {% endcomment %}
+
+
+
+  <div class="">
+    <table class="display py-3  " id="Open_interest"  >
+      <thead style='    background: #002771;
+      color: white;'>
+        <tr class="">
+          <th scope="col">#</th>
+          <th scope="col">Underlying</th>
+          <th scope="col">Strike Price</th>
+          <th scope="col">Expiry Date</th>
+          <th scope="col">OpenInterest </th>
+          <th scope="col">C-OI </th>
+          <th scope="col">TotalTradedVolume </th>
+        </tr>
+      </thead>
+      <tbody class="table-group-divider">
+        {% for df in dataframe %}
+        <tr class="">
+          <th>{{forloop.counter}}</th>
+          <td>{{df.underlying}}</td>
+          <td>{{df.strikePrice}}</td>
+          <td>{{df.expiryDate}}</td>
+          <td>
+
+            {% if df.openInterest < 0%} <span class="text-danger">-{{df.openInterest}}</span>
+              {% else %}
+              <span class="text-success">+{{df.openInterest}}</span>
+              {% endif %}
+
+          </td>
+
+          <td>
+            {% if df.changeinOpenInterest < 0%} <span class="text-danger">-{{df.changeinOpenInterest}}</span>
+              {% else %}
+              <span class="text-success">+{{df.changeinOpenInterest}}</span>
+              {% endif %}
+          </td>
+          <td>{{df.totalTradedVolume}}</td>
+        </tr>
+        {% endfor %}
+
+      </tbody>
+    </table>
+  </div>
+
+
+</div>
+
+<script >
+
+
+  $(document).ready(function () {
+
+console.log("HI tehre");
+    $('#symbolSelect').change(function () {
+      const selectedSymbol = $(this).val();
+
+      if (selectedSymbol === '') {
+        $('#expirySelect').prop('disabled', true);
+        $('#expirySelect').html('<option value="">-- Select Expiry --</option>');
+       
+        return;
+      }
+
+      $.ajax({
+        url: '{% url "get_option_chain" %}',
+        type: 'GET',
+        dataType: 'json',
+        data: {
+          'symbol': selectedSymbol
+        },
+        success: function (response) {
+          if (response.expiry_dates) {
+            $('#expirySelect').prop('disabled', false);
+            $('#expirySelect').html('<option value="">-- Select Expiry --</option>');
+
+            const expiryDates = response.expiry_dates;
+            $.each(expiryDates, function (index, date) {
+              $('#expirySelect').append($('<option>', {
+                value: date,
+                text: date
+              }));
+            });
+          } else {
+            console.error('Invalid response format');
+          }
+        },
+        error: function (xhr, textStatus, error) {
+          console.error(error);
+        }
+      });
+    });
+
+    //     $('#optionForm').submit(function(e) {
+    //         e.preventDefault();
+    //         const symbol = $('#symbolSelect').val();
+    //         const expiry = $('#expirySelect').val();
+
+    //         // Perform further actions based on the selected symbol and expiry
+    //         console.log('Selected Symbol:', symbol);
+    //         console.log('Selected Expiry:', expiry);
+    //     });
+  });
+</script>
+
+<script>
+  setInterval(function() {
+      location.reload();
+  }, 150000); //15 minute refresh
+</script>
+
+{% endblock dashboard_body %}

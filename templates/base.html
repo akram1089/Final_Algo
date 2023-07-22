@@ -1,0 +1,1640 @@
+<!DOCTYPE html>
+{% load static %}
+
+<html lang="en">
+
+<head>
+    <!-- META TAGS-->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, user-scalable=0">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="csrf-token" content="mUSTfgLU82wfiGO60fL0r7QcECHLvQMoZInvAjfD">
+    <!-- TITLE-->
+    <title>{% block title %}{% endblock title %}</title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css" />
+
+    <meta name="mobile-web-app-capable" content="yes">
+    <!-- FAVICON-->
+
+    <link rel="icon" type="image/png" sizes="16x16" href="https://files.tradetron.tech/favicon-16x16.png">
+    <link rel="manifest" href="https://tradetron.tech/images/v1/icon/manifest.json">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-element-bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
+
+
+
+    <!-- STYLE :: START-->
+    <link rel="stylesheet" href="./css/v1/aap.css">
+    <link rel="stylesheet" href=" {% static './css/v1/aap.css' %} ">
+    <link rel="stylesheet" href=" {% static './css/v1/manual.css' %} ">
+    <link rel="stylesheet" href=" {% static './css/v1/features.css' %} ">
+    <link rel="stylesheet" href=" {% static './css/v1/features_manuals.css' %} ">
+    <link rel="stylesheet" href="./css/v1/features.css">
+    <link rel="stylesheet" href="./css/v1/features_manuals.css">
+    <link rel="stylesheet" href="./css/v1/manual.css">
+    <!-- STYLE :: END--><!--[if lt IE 9]>
+<script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script><![endif]-->
+    <meta name="description"
+        content="AlgoN is a multi asset, multi-currency, multi exchange Algo Strategy marketplace for people to create algo strategies with our web based strategy builder">
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
+        crossorigin="anonymous"></script>
+        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+
+</head>
+<style>
+    .carousel-container {
+        height: 0.5rem;
+    }
+
+    .slick-initialized .slick-slide {
+        display: flex !important;
+    }
+
+    .slick-slide > div {
+        margin-right: 0.2rem !important;
+    }
+
+    .slick-next.slick-arrow,
+    .slick-prev.slick-arrow {
+        display: none !important;
+    }
+
+    .carousel-slide {
+        color: white;
+        background: #000000d4;
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .carousel-slide p {
+        margin: 0;
+    }
+
+    .text-danger {
+        color: red;
+    }
+
+    .text-success {
+        color: green;
+    }
+</style>
+
+<script>
+    $(document).ready(function() {
+        $('.slick-carousel').slick({
+            slidesToShow: 8,
+            slidesToScroll: 1,
+            autoplay: true,
+            autoplaySpeed: 2000,
+            infinite: true,
+            speed: 500, // Adjust the speed of the slide transition (in milliseconds)
+            easing: 'ease',
+        });
+    });
+</script>
+<style>
+    #spinner {
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity .5s ease-out, visibility 0s linear .5s;
+        z-index: 99999;
+    }
+
+    #spinner.show {
+        transition: opacity .5s ease-out, visibility 0s linear 0s;
+        visibility: visible;
+        opacity: 1;
+    }
+</style>
+
+<body>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript>
+        <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TC7HNSD" height="0" width="0"
+            style="display:none;visibility:hidden"></iframe>
+    </noscript>
+    <!-- End Google Tag Manager (noscript) -->
+
+    <div id="spinner"
+        class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
+        <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;"></div>
+    </div>
+    {% comment %} top swipper {% endcomment %}
+
+     
+        <div class="swiper-button-play-pause"></div>
+    </div>
+    <!-- HEADER :: START-->
+    <header class="header" id="header" style="top: 0px; height: 100px;">
+        <div class="header__wrapper">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-12 col-xl-3 d-flex align-items-center justify-content-between d-xl-block">
+                        <div class="logotype logotype--header">
+                            <a class="logotype__link d-flex align-items-start" href="/" title="">
+                                <img class="logotype__img " src="{% static '/img/img-logotype-dark.png' %}"
+                                    alt="Logo" title="Logo" style="    width: 140px !important;">
+                            </a>
+                        </div>
+                        <div class="d-block d-xl-none">
+                            <div class="hamburger hamburger--squeeze" role="button" hamburger-js="hamburger-js"
+                                onclick="hamburger()">
+                                <div class="hamburger-box">
+                                    <div class="hamburger-inner"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="header__menu animate fadeIn" mobile-block-js="">
+                            <div class="header__menu-body d-flex">
+                                <div class="header__menu-row d-flex w-100">
+                                    <div class="header__menu-col">
+                                        <div class="header__nav-wrapper">
+                                            <div class="header__nav">
+                                                <div class="dropdown">
+                                                    <button class="btn dropdown-toggle d-flex pl-0 " id="first_dropdown"
+                                                        type="button"><span>Features</span>
+                                                    </button>
+                                                    <div class="dropdown-menu d-block">
+                                                        <div class="dropdown-menu-wrapper d-flex flex-column">
+                                                            <a class="dropdown-item d-flex align-items-center"
+                                                                href="{% url 'features' %}#trading-engine">
+                                                                
+                                                                <div><i class="bi bi-bar-chart"></i></div>
+                                                                <div><span>Trading Engine</span></div>
+                                                            </a>
+                                                            <a class="dropdown-item d-flex align-items-center"
+                                                                href="{% url 'features' %}">
+                                                                <div><i class="bi bi-clipboard-data"></i></div>
+                                                                <div><span>Strategy Builder</span></div>
+                                                            </a>
+                                                            <a class="dropdown-item d-flex align-items-center"
+                                                                href="{% url 'features' %}#social-trading">
+                                                                <div><i class="bi bi-people"></i></div>
+                                                                <div><span>Social Trading</span></div>
+                                                            </a>
+                                                            <a class="dropdown-item d-flex align-items-center"
+                                                                href="{% url 'features' %}#backtesting-engine">
+                                                                <div><i class="bi bi-gear"></i></div>
+                                                                <div><span>Backtesting Engine</span></div>
+                                                            </a>
+                                                            <a class="dropdown-item d-flex align-items-center"
+                                                                href="{% url 'features' %}#execution-algo">
+                                                                <div><i class="bi bi-diagram-2"></i></div>
+                                                                <div><span>Execution Algos</span></div>
+                                                            </a>
+                                                            <a class="dropdown-item d-flex align-items-center"
+                                                                href="{% url 'features' %}#reports">
+                                                                <div><i class="bi bi-clipboard2"></i></div>
+                                                                <div><span>Reports</span></div>
+                                                            </a>
+                                                            <a class="dropdown-item d-flex align-items-center"
+                                                                href="{% url 'features' %}#fund-management">
+                                                                <div><i class="bi bi-star"></i></div>
+                                                                <div><span>Fund Management</span></div>
+                                                            </a>
+                                                            <a class="dropdown-item d-flex align-items-center"
+                                                                href="{% url 'features' %}#keywords">
+                                                                <div><i class="bi bi-pencil-square"></i></div>
+                                                                <div><span>Keywords</span></div>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="header__menu-col">
+                                        <div class="header__nav-wrapper">
+                                            <div class="header__nav">
+                                                <div class="dropdown">
+                                                    <button class="btn dropdown-toggle d-flex pl-0 "
+                                                        type="button"><span>Use cases</span>
+                                                    </button>
+                                                    <div class="dropdown-menu d-block">
+                                                        <div class="dropdown-menu-wrapper d-flex flex-column">
+                                                            <a class="dropdown-item d-flex align-items-center "
+                                                                href=" {% url 'use_cases_strategy' %}">
+                                                                <div><i class="bi bi-person-vcard"></i></div>
+                                                                <div><span>Strategy Creators</span></div>
+                                                            </a>
+                                                            <a class="dropdown-item d-flex align-items-center "
+                                                                href=" {% url 'use_cases_invester' %}">
+                                                                <div><i class="bi bi-cash-coin"></i></div>
+                                                                <div><span>Investors</span></div>
+                                                            </a>
+                                                            <a class="dropdown-item d-flex align-items-center "
+                                                                href="./use_cases_broker.html">
+                                                                <div><i class="bi bi-safe2"></i></div>
+                                                                <div><span>Brokers</span></div>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="header__nav-wrapper">
+                                            <div class="header__nav">
+                                                <div class="dropdown">
+                                                    <button class="btn dropdown-toggle d-flex pl-0 "
+                                                        type="button"><span>Services</span>
+                                                    </button>
+                                                    <div class="dropdown-menu d-block">
+                                                        <div class="dropdown-menu-wrapper d-flex flex-column">
+                                                            <a class="dropdown-item d-flex align-items-center"
+                                                                href="https://learn.tradetron.tech">
+                                                                <div><span>TT Uni</span></div>
+                                                            </a>
+                                                            <a class="dropdown-item d-flex align-items-center "
+                                                                href="./services_quants.html">
+                                                                <div><span>TT Quants</span></div>
+                                                            </a>
+                                                            <a class="dropdown-item d-flex align-items-center "
+                                                                href="./services_assistance.html">
+                                                                <div><span>TT Assistant</span></div>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="header__nav-wrapper d-flex d-md-none">
+                                            <div class="header__nav">
+                                                <a class="" href="./pricing.html" title="">Pricing</a>
+                                            </div>
+                                            <div class="header__nav"><a href="./market.html" title="">Strategy
+                                                    Market</a></div>
+
+                                            <div class="header__nav">
+                                                <a class="" href="./contact.html" title="">Contact</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="header__menu-footer d-flex align-items-center justify-content-between">
+                                <div>
+                                    <div class="header__nav-wrapper d-flex align-items-center justify-content-center">
+                                        <div class="header__nav">
+                                            <a class="" href="./pricing.html" title="">Pricing</a>
+                                        </div>
+                                        <div class="header__nav"><a class="" href="./market.html"
+                                                title="Strategy Marketplace">Strategy Market</a></div>
+
+                                        <div class="header__nav">
+                                            <a class="" href="./contact.html" title="">Contact
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div>
+                                    {% if user.is_authenticated %}
+                                    <a class="button btn btn-primary" href="{% url 'dashboard1' %}">Dashboard</a>
+                                    Welcome--{{user.full_name}}
+                                    {% else %}
+
+                                    <div class="header__btn-wrapper d-flex align-items-center justify-content-end">
+                                        <a class="header__btn header__btn--signup btn" id="headerSignUpLink"
+                                            href="javascript:void(0);" title="" data-bs-toggle="modal"
+                                            data-bs-target="#signupModal">
+                                            <span>Sign up</span>
+                                        </a>
+                                        <a class="header__btn header__btn--signin btn c-btn c-btn--bg" href="#"
+                                            title="signin" data-bs-toggle="modal" data-bs-target="#signinModal">
+                                            <i class="bi bi-person-fill "></i><span>Sign in</span>
+                                        </a>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                    <div class="col-6 d-none d-xl-block">
+                        <div class="header__nav-wrapper d-flex align-items-center justify-content-center">
+
+                            <!-- <div class="header__nav">
+                                <div class="dropdown" id="dropmenu_first">
+                                    <button class="btn dropdown-toggle d-flex align-items-center "
+                                        id="dropdownMenuFutures" type="button" data-toggle="dropdown"
+                                        aria-haspopup="true" aria-expanded="false">
+                                        <span>Features</span><i class="bi bi-arrow-down-short"></i></button>
+                                    <div class="dropdown-menu animate slideIn" aria-labelledby="dropdownMenuFutures"
+                                        id="dropmenu_frst">
+                                        <div class="dropdown-menu-corner position-absolute"></div>
+                                        <div class="dropdown-menu-wrapper d-flex flex-column">
+                                            <a class="dropdown-item d-flex align-items-center"
+                                                href="http://features.html#trading-engine">
+                                                <div><i class="bi bi-bar-chart"></i></div>
+                                                <div><span>Trading Engine</span></div>
+                                            </a>
+                                            <a class="dropdown-item d-flex align-items-center"
+                                                href="{% url 'features' %}#strategy-builder">
+                                                <div><i class="bi bi-clipboard-data"></i></div>
+                                                <div><span>Strategy Builder</span></div>
+                                            </a>
+                                            <a class="dropdown-item d-flex align-items-center"
+                                                href="{% url 'features' %}#social-trading">
+                                                <div><i class="bi bi-people"></i></div>
+                                                <div><span>Social Trading</span></div>
+                                            </a>
+                                            <a class="dropdown-item d-flex align-items-center"
+                                                href="{% url 'features' %}#backtesting-engine">
+                                                <div><i class="bi bi-gear"></i></div>
+                                                <div><span>Backtesting Engine</span></div>
+                                            </a>
+                                            <a class="dropdown-item d-flex align-items-center"
+                                                href="{% url 'features' %}#execution-algo>
+                                                <div><i class="bi bi-diagram-2"></i></div>
+                                                <div><span>Execution Algos</span></div>
+                                            </a>
+                                            <a class="dropdown-item d-flex align-items-center"
+                                                href="{% url 'features' %}#reports">
+                                                <div><i class="bi bi-clipboard2"></i></div>
+                                                <div><span>Reports</span></div>
+                                            </a>
+                                            <a class="dropdown-item d-flex align-items-center"
+                                                href="{% url 'features' %}#fund-management">
+                                                <div><i class="bi bi-star"></i></div>
+                                                <div><span>Fund Management</span></div>
+                                            </a>
+                                            <a class="dropdown-item d-flex align-items-center"
+                                                href="{% url 'features' %}#keywords">
+                                                <div><i class="bi bi-pencil-square"></i></div>
+                                                <div><span>Keywords</span></div>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div> -->
+                            <div class="header_nav">
+                                <!-- Example single danger button -->
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-outline-secondary dropdown-toggle"
+                                        id="dropdownMenuFutures" data-bs-toggle="dropdown" aria-expanded="false">
+                                        Features
+                                    </button>
+                                    <div class="dropdown-menu-corner-first position-absolute"></div>
+                                    <ul class="dropdown-menu">
+                                        <a class="dropdown-item d-flex align-items-center"
+                                            href="{% url 'features' %}#trading-engine">
+                                            <div><i class="bi bi-bar-chart"></i></div>
+                                            <div><span>Trading Engine</span></div>
+                                        </a>
+                                        <a class="dropdown-item d-flex align-items-center"
+                                            href="{% url 'features' %}#strategy-builder">
+                                            <div><i class="bi bi-clipboard-data"></i></div>
+                                            <div><span>Strategy Builder</span></div>
+                                        </a>
+                                        <a class="dropdown-item d-flex align-items-center"
+                                            href="{% url 'features' %}#social-trading">
+                                            <div><i class="bi bi-people"></i></div>
+                                            <div><span>Social Trading</span></div>
+                                        </a>
+                                        <a class="dropdown-item d-flex align-items-center"
+                                            href="{% url 'features' %}#backtesting-engine">
+                                            <div><i class="bi bi-gear"></i></div>
+                                            <div><span>Backtesting Engine</span></div>
+                                        </a>
+                                        <a class="dropdown-item d-flex align-items-center"
+                                            href="{% url 'features' %}#execution-algo">
+                                            <div><i class="bi bi-diagram-2"></i></div>
+                                            <div><span>Execution Algos</span></div>
+                                        </a>
+                                        <a class="dropdown-item d-flex align-items-center"
+                                            href="{% url 'features' %}#reports">
+                                            <div><i class="bi bi-clipboard2"></i></div>
+                                            <div><span>Reports</span></div>
+                                        </a>
+                                        <a class="dropdown-item d-flex align-items-center"
+                                            href="{% url 'features' %}#fund-management">
+                                            <div><i class="bi bi-star"></i></div>
+                                            <div><span>Fund Management</span></div>
+                                        </a>
+                                        <a class="dropdown-item d-flex align-items-center"
+                                            href="{% url 'features' %}#keywords">
+                                            <div><i class="bi bi-pencil-square"></i></div>
+                                            <div><span>Keywords</span></div>
+                                        </a>
+                                    </ul>
+                                </div>
+
+
+                            </div>
+                            <div class="header_nav">
+                                <!-- Example single danger button -->
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-outline-secondary dropdown-toggle"
+                                        id="dropdownMenuFutures" data-bs-toggle="dropdown" aria-expanded="false">
+                                        Use cases
+                                    </button>
+                                    <ul class="dropdown-menu" style="">
+                                        <a class="dropdown-item d-flex align-items-center "
+                                            href=" {% url 'use_cases_strategy' %}">
+                                            <div><i class="bi bi-person-vcard"></i></div>
+                                            <div><span>Strategy Creators</span></div>
+                                        </a>
+                                        <a class="dropdown-item d-flex align-items-center "
+                                            href=" {% url 'use_cases_invester' %}">
+                                            <div><i class="bi bi-cash-coin"></i></div>
+                                            <div><span>Investors</span></div>
+                                        </a>
+                                        <a class="dropdown-item d-flex align-items-center "
+                                            href="./use_cases_broker.html">
+                                            <div><i class="bi bi-safe2"></i></div>
+                                            <div><span>Brokers</span></div>
+                                        </a>
+                                    </ul>
+                                </div>
+
+
+                            </div>
+
+                            <!-- <div class="header__nav">
+                                <div class="dropdown" id="dropmenu_second">
+                                    <button class="btn dropdown-toggle d-flex align-items-center "
+                                        id="dropdownMenuUsecases" type="button" data-toggle="dropdown"
+                                        aria-haspopup="true" aria-expanded="false">
+                                        <span>Use cases</span><i class="bi bi-arrow-down-short"></i>
+                                    </button>
+                                    <div class="dropdown-menu animate slideIn" aria-labelledby="dropdownMenuUsecases" id="dropmenu_scnd">
+                                        <div class="dropdown-menu-corner position-absolute"></div>
+                                        <div class="dropdown-menu-wrapper d-flex flex-column">
+                                            <a class="dropdown-item d-flex align-items-center "
+                                                href=" {% url 'use_cases_strategy' %}">
+                                                <div><i class="bi bi-person-vcard"></i></div>
+                                                <div><span>Strategy Creators</span></div>
+                                            </a>
+                                            <a class="dropdown-item d-flex align-items-center "
+                                                href=" {% url 'use_cases_invester' %}">
+                                                <div><i class="bi bi-cash-coin"></i></div>
+                                                <div><span>Investors</span></div>
+                                            </a>
+                                            <a class="dropdown-item d-flex align-items-center "
+                                               href="./use_cases_broker.html">
+                                                <div><i class="bi bi-safe2"></i></div>
+                                                <div><span>Brokers</span></div>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div> -->
+
+                            <div class="header_nav">
+                                <!-- Example single danger button -->
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-outline-secondary dropdown-toggle"
+                                        data-bs-toggle="dropdown" aria-expanded="false" id="dropdownMenuFutures">
+                                        Services
+                                    </button>
+                                    <ul class="dropdown-menu" style="">
+                                        <a class="dropdown-item d-flex align-items-center"
+                                            href="https://learn.tradetron.tech">
+                                            <div><span>TT Uni</span></div>
+                                        </a>
+                                        <a class="dropdown-item d-flex align-items-center "
+                                            href="./services_quants.html">
+                                            <div><span>TT Quants</span></div>
+                                        </a>
+                                        <a class="dropdown-item d-flex align-items-center "
+                                            href="./services_assistance.html">
+                                            <div><span>TT Assistant</span></div>
+                                        </a>
+                                    </ul>
+                                </div>
+
+
+                            </div>
+
+
+
+
+                            <!-- <div class="header__nav">
+                                <div class="dropdown">
+                                    <button class="btn dropdown-toggle d-flex align-items-center "
+                                        id="dropdownMenuUsecases" type="button" data-toggle="dropdown"
+                                        aria-haspopup="true" aria-expanded="false">
+                                        <span>Services</span><i class="bi bi-arrow-down-short"></i>
+                                    </button>
+                                    <div class="dropdown-menu animate slideIn" aria-labelledby="dropdownMenuUsecases">
+                                        <div class="dropdown-menu-corner position-absolute"></div>
+                                        <div class="dropdown-menu-wrapper d-flex flex-column">
+                                            <a class="dropdown-item d-flex align-items-center"
+                                                href="https://learn.tradetron.tech">
+                                                <div><span>TT Uni</span></div>
+                                            </a>
+                                            <a class="dropdown-item d-flex align-items-center "
+                                               href="./services_quants.html">
+                                                <div><span>TT Quants</span></div>
+                                            </a>
+                                            <a class="dropdown-item d-flex align-items-center "
+                                                href="./services_assistance.html">
+                                                <div><span>TT Assistant</span></div>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div> -->
+
+                            <div class="header__nav ">
+                                <a class="" href="./pricing.html" title="">Pricing</a>
+                            </div>
+                            <div class="header__nav">
+                                <a class="" href="./market.html" title="">Strategy Market</a>
+                            </div>
+
+                            <div class="header__nav">
+                                <a class="" href="{% url 'contact_us' %}" title="">Contact</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-3 d-none d-xl-block">
+                        {% if user.is_authenticated %}
+                        <a class="button btn btn-outline-primary" type="button"
+                            href="{% url 'dashboard1' %}">Dashboard</a>
+                        {% else %}
+                        <div class="header__btn-wrapper d-flex align-items-center justify-content-end">
+                            <a class="header__btn header__btn--signup btn" href="#" title="" data-bs-toggle="modal"
+                                data-bs-target="#signupModal"><span>Sign up</span>
+                            </a>
+                            <a class="header__btn header__btn--signin btn c-btn c-btn--bg" href="#" title=""
+                                data-bs-toggle="modal" data-bs-target="#signinModal">
+                                <i class="bi bi-person-fill text-light"></i><span>Sign in</span>
+                            </a>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    <!-- HEADER :: END-->
+
+    <div class="antd-pro-layouts-basic-layout-floatingSocialContainer" style=" bottom: 20px;
+    z-index: 9999999999;
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    border-radius: 25px;
+    position: fixed;
+    background-color: white;
+    box-shadow: rgb(0 0 0 / 95%) 0px 5px 15px;
+    right: 16px;"><a href="https://api.whatsapp.com/send?phone=" target="_blank" rel="noopener"><img
+                src="/static/img/logos/whatsappSocial.d300daea.svg" alt="whatsapp"></a><a href="tel:+"><img
+                src="/static/img/logos/phone.782354bc.svg" alt="phone"></a><a><img
+                src="/static/img/logos/email.62a27ea7.svg" alt="feedback"></a></div>
+
+    {% for message in messages %}
+    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert" style="    z-index: 99999999;
+    position: fixed;
+    top: 3rem;
+    width: fit-content;
+    margin: auto;
+    white-space: nowrap;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+">
+        <strong> {{ message }} </strong>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endfor %}
+    <!-- SECTION main :: START-->
+    {% block body %}
+
+
+    {% endblock body %}
+
+
+    <footer class="footer" id="footer">
+        <div class="footer__wrapper footer__wrapper-0">
+            <div class="container">
+                <div class="row">
+                    <div class="col">
+                        <div class="footer__line"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer__wrapper footer__wrapper-1">
+            <div class="container">
+                <div class="row">
+                    <div class="col-6 col-md-12 col-lg-3 order-1 order-md-1 mb-3 mb-lg-0">
+                        <div class="logotype logotype--footer"><a class="logotype__link d-flex align-items-start"
+                                href="#" title="">
+                                <img class="logotype__img img-fluid" src="{% static '/img/img-logotype-dark.png' %}"
+                                    alt="Logo" title="Logo"></a></div>
+                    </div>
+                    <div class="col-6 order-2 d-block d-md-none">
+                        <div class="social social--footer d-flex justify-content-end">
+                            <ul class="social__list d-flex align-items-center gap-2 ">
+                                <li class="social__list-item">
+                                    <a class="social__link d-flex align-items-start"
+                                        href="https://www.facebook.com/tradetron" target="_blank" title="facebook">
+                                        <i class="bi bi-facebook"></i></a>
+                                </li>
+                                <li class="social__list-item ml-3">
+                                    <a class="social__link d-flex align-items-start" target="_blank"
+                                        href="https://twitter.com/Tradetron1" title="twitter">
+                                        <i class="bi bi-twitter"></i>
+                                    </a>
+                                </li>
+                                <li class="social__list-item ml-3">
+                                    <a class="social__link d-flex align-items-start" target="_blank"
+                                        href="http://linkedin.com/company/tradetron" title="linkedin">
+                                        <i class="bi bi-linkedin"></i>
+                                    </a>
+                                </li>
+                                <li class="social__list-item ml-3">
+                                    <a class="social__link d-flex align-items-start" target="_blank"
+                                        href="https://t.me/joinchat/N1f9Ohkd7tqNvt5Opj0l8A" title="Telegram">
+                                        <i class="bi bi-telegram"></i>
+                                    </a>
+                                </li>
+                                <li class="social__list-item ml-3">
+                                    <a class="social__link d-flex align-items-start" target="_blank"
+                                        href="https://www.youtube.com/channel/UCvw85AMGH07-1J_VVEx0Txg" title="Youtube">
+                                        <i class="bi bi-youtube"></i>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+
+
+                    </div>
+                    <div class="col-12 col-md-8 col-lg-6 order-3 order-md-2">
+                        <div class="row">
+                            <div class="col-4">
+                                <div class="nav nav--footer">
+                                    <ul class="nav__list d-flex flex-column">
+                                        <li class="nav__list-item mb-3">
+                                            <a class="nav__list-link" href="http://features.html#trading-engine"
+                                                title="Features">Features
+                                            </a>
+                                        </li>
+                                        <li class="nav__list-item mb-3">
+                                            <a class="nav__list-link" href="https://review.tradetron.tech/"
+                                                title="Wall of Love">
+                                                Wall of Love
+                                            </a>
+                                        </li>
+                                        <li class="nav__list-item mb-3">
+                                            <a class="nav__list-link" href="./pricing.html" title="Pricing">
+                                                Pricing
+                                            </a>
+                                        </li>
+                                        <li class="nav__list-item mb-3">
+                                            <a class="nav__list-link" href="https://tradetron.tech/html-view/API"
+                                                title="API">
+                                                API
+                                            </a>
+                                        </li>
+
+                                        <li class="nav__list-item mb-3">
+                                            <a class="nav__list-link" href="https://tradetron.tech/html-view/webinars"
+                                                title="Webinars">
+                                                Webinars
+                                            </a>
+                                        </li>
+
+
+                                        <li class="nav__list-item mb-3"><a class="nav__list-link"
+                                                href="https://tradetron.tech/html-view/affiliates"
+                                                title="">Affiliates</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="nav nav--footer">
+                                    <ul class="nav__list d-flex flex-column">
+
+                                        <li class="nav__list-item mb-3"><a class="nav__list-link"
+                                                href="https://tradetron.tech/html-view/partners" title="">Partners</a>
+                                        </li>
+
+                                        <li class="nav__list-item mb-3"><a class="nav__list-link" href="#" title=""
+                                                data-bs-toggle="collapse" data-bs-target="#rescources_list">Resources <i
+                                                    class="bi bi-arrow-down-short"
+                                                    style="font-size: 10px;display: inline;"></i></a>
+                                            <ul class="collapse" id="rescources_list" style="margin-top: 10px; ">
+                                                <li class="nav__list-item mb-3">
+                                                    <a class="nav__list-link" href="https://tradetron.tech/blog/"
+                                                        title="Blog">
+                                                        Blog
+                                                    </a>
+                                                </li>
+
+                                                <li class="nav__list-item mb-3">
+                                                    <a class="nav__list-link" href="https://help.tradetron.tech/en/"
+                                                        title="Helpdesk">
+                                                        Helpdesk
+                                                    </a>
+                                                </li>
+                                                <li class="nav__list-item mb-3">
+                                                    <a class="nav__list-link" href="https://tradetron.tech/backtest"
+                                                        title="Backtest">
+                                                        Backtest
+                                                    </a>
+                                                </li>
+                                                <li class="nav__list-item mb-3"><a class="nav__list-link"
+                                                        href="https://tradetron.tech/html-view/videos"
+                                                        title="">Videos</a>
+                                                </li>
+                                                <li class="nav__list-item mb-3">
+                                                    <a class="nav__list-link"
+                                                        href="https://tradetron.tech/html-view/strategy-templates"
+                                                        title="Strategy Templates">
+                                                        Strategy Templates
+                                                    </a>
+                                                </li>
+                                                <li class="nav__list-item mb-3">
+                                                    <a class="nav__list-link"
+                                                        href="https://tradetron.tech/keyword/documentation"
+                                                        title="Keyword Documentation">
+                                                        Keyword Documentation
+                                                    </a>
+                                                </li>
+                                                <li class="nav__list-item "><a class="nav__list-link"
+                                                        href="https://tradetron.tech/faq" title="">FAQ</a>
+                                                </li>
+
+                                            </ul>
+
+
+                                        </li>
+                                        <li class="nav__list-item mb-3">
+                                            <a class="nav__list-link" href="https://tradetron.tech/top-creators"
+                                                target="_blank" title="Top Creators">
+                                                Top Creators
+                                            </a>
+                                        </li>
+
+                                        <li class="nav__list-item mb-3">
+                                            <a class="nav__list-link" href="https://qna.tradetron.tech/" target="_blank"
+                                                title="QnA Forum">
+                                                QnA Forum
+                                            </a>
+                                        </li>
+                                        <li class="nav__list-item mb-3">
+                                            <a class="nav__list-link" href="https://tradetron.tech/html-view/newsletter"
+                                                title="Newsletter" target="_blank">
+                                                Newsletter
+                                            </a>
+                                        </li>
+                                        <li class="nav__list-item mb-3">
+                                            <a class="nav__list-link" href="https://learn.tradetron.tech/"
+                                                title="TT Uni" target="_blank">
+                                                TT Uni
+                                            </a>
+                                        </li>
+
+
+                                        <li class="nav__list-item mb-3">
+                                            <a class="nav__list-link" href="https://tradetron.instatus.com/"
+                                                title="TT Status" target="_blank">
+                                                TT Status
+                                            </a>
+                                        </li>
+
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="nav nav--footer">
+                                    <ul class="nav__list d-flex flex-column">
+                                        <li class="nav__list-item mb-3">
+                                            <a class="nav__list-link" href="https://tradetron.tech/pages/privacy-policy"
+                                                title="Privacy Policy">
+                                                Privacy policy
+                                            </a>
+                                        </li>
+                                        <li class="nav__list-item mb-3">
+                                            <a class="nav__list-link" href="https://tradetron.tech/pages/terms-of-use"
+                                                title="Terms of use">Terms of use
+                                            </a>
+                                        </li>
+                                        <li class="nav__list-item mb-3"><a class="nav__list-link"
+                                                href="https://tradetron.tech/html-view/patentpending" title="">Patent
+                                                Pending</a>
+                                        </li>
+                                        <li class="nav__list-item mb-3"><a class="nav__list-link"
+                                                href="https://tradetron.tech/html-view/trademark" title="">Trademark</a>
+                                        </li>
+
+                                        <li class="nav__list-item mb-3"><a class="nav__list-link"
+                                                href="https://tradetron.tech/html-view/jobs" title="">Careers</a>
+                                        </li>
+
+                                        <li class="nav__list-item mb-3">
+                                            <a class="nav__list-link" href="./contact.html" title="Contact">
+                                                Contact
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-4 col-lg-3 order-2 order-md-3 mb-5 mb-md-0">
+                        <div class="social social--footer d-none d-md-block">
+                            <ul class="social__list d-flex align-items-center gap-1">
+                                <li class="social__list-item">
+                                    <a class="social__link d-flex align-items-start"
+                                        href="https://www.facebook.com/tradetron" target="_blank" title="facebook">
+                                        <i class="bi bi-facebook"></i>
+                                    </a>
+                                </li>
+                                <li class="social__list-item ml-3">
+                                    <a class="social__link d-flex align-items-start" target="_blank"
+                                        href="https://twitter.com/Tradetron1" title="twitter">
+                                        <i class="bi bi-twitter"></i>
+                                    </a>
+                                </li>
+                                <li class="social__list-item ml-3">
+                                    <a class="social__link d-flex align-items-start" target="_blank"
+                                        href="http://linkedin.com/company/tradetron" title="LinkedIn">
+                                        <i class="bi bi-linkedin"></i>
+                                    </a>
+                                </li>
+                                <li class="social__list-item ml-3">
+                                    <a class="social__link d-flex align-items-start" target="_blank"
+                                        href="https://t.me/joinchat/N1f9Ohkd7tqNvt5Opj0l8A" title="Telegram">
+                                        <i class="bi bi-telegram"></i>
+                                    </a>
+                                </li>
+                                <li class="social__list-item ml-3">
+                                    <a class="social__link d-flex align-items-start" target="_blank"
+                                        href="https://www.youtube.com/channel/UCvw85AMGH07-1J_VVEx0Txg" title="Youtube">
+                                        <i class="bi bi-youtube"></i>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="footer-app-btns mt-4">
+                            <a href="https://play.google.com/store/apps/details?id=com.tradetron" class="mr-2 mr-lg-4">
+                                <img src="https://files.tradetron.tech/btn-play-store.png" alt="Play Store" /></a>
+                            <a href="https://apps.apple.com/in/app/tradetron/id1540269842">
+                                <img src="https://files.tradetron.tech/btn-app-store.png" alt="App Store" /></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer__wrapper footer__wrapper-2">
+            <div class="container">
+                <div class="row">
+                    <div class="col">
+                        <div class="copyright text-center">
+                            <p class="copyright__text">Superlogo ® . Copyright 2023</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+
+    <div class="modal modal--signin fade" id="signinModal" tabindex="-1" role="dialog" aria-labelledby="SignIn"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content py-5">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="
+                                                        position: relative;
+    display: flex;
+    top: -2rem;
+    left: 92%;"></button>
+                <div class="modal-header justify-content-center pb-3">
+                    <h5 class="modal-title" id="SignIn">Sign in</h5>
+                </div>
+                <div class="modal-body">
+                    <div class="modal-body-cover">
+                        <form id="modalSignInForm" method='post' action="{% url 'login_user' %}"
+                            class="d-flex flex-column">
+                            {% csrf_token %}
+                            <span class="text-danger show-error-text" id="error_login_error_login"></span>
+                            <div class="form-group">
+                                <label for="modalEmailSignIn">Email</label>
+                                <input class="form-control" id="modalEmailSignIn" name="email" type="email" required
+                                    aria-describedby="emailHelp">
+                                <span class="text-danger show-error-text" id="error_login_email"></span>
+                            </div>
+                            <div class="form-group">
+                                <label for="modalPasswordSignIn">Password</label>
+                                <input class="form-control" id="modalPasswordSignIn" type="password" name="password"
+                                    required aria-describedby="passwordHelp">
+                                <span class="text-danger show-error-text" id="error_login_password"></span>
+                                <a class="form-text text-muted" id="passwordHelp"
+                                    href="{% url 'reset_password' %}">Forgot password?</a>
+                            </div>
+                            <div class="form-group form-group--error position-relative">
+                                <div class="form-helper position-absolute d-flex align-items-start">
+                                    <span>Wrong email/password</span>
+                                </div>
+                            </div>
+                            <div class="position-relative mb-3">
+                                <div data-sitekey="6LcLyMwZAAAAAMYfPLgiFvrprPgc8zdkifiais0p" class="g-recaptcha"></div>
+                                <span class="text-danger show-error-text" id="error_login_g-recaptcha-response"></span>
+                            </div>
+                            <button class="btn c-btn c-btn--bg" id="signInButton" type="submit">Sign in</button>
+                            <p class="modal__link d-flex align-items-center justify-content-center">Don’t have an
+                                account?&nbsp;
+                                <a href='#' id="sign_up_link" data-bs-dismiss='modal' data-bs-toggle='modal'
+                                    data-bs-target='#signupModal'> Sign up</a>
+                            </p>
+                        </form>
+                        <div class="modal__or">
+                            <p><span>or</span></p>
+                        </div>
+                        <div class="modal__btn-wrapper d-flex flex-column">
+                            <a class="btn modal__btn c-btn c-btn--bg modal__btn--facebook d-flex align-items-center justify-content-start"
+                                href="https://tradetron.tech/auth/redirect/facebook" title="">
+                                <div class="d-flex align-items-center justify-content-center">
+                                    <i class="bi bi-facebook"></i>
+                                </div>
+                                <span>Sign in with Facebook</span>
+                            </a>
+                            <a class="btn modal__btn c-btn c-btn--bg modal__btn--google d-flex align-items-center justify-content-start"
+                                href="https://tradetron.tech/auth/redirect/google" title="">
+                                <div class="d-flex align-items-center justify-content-center">
+                                    <i class="bi bi-google""></i>
+                            </div>
+                            <span>Sign in with Google</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+   </div>
+   <!-- MODAL sign in :: END-->
+   
+   
+   <!-- MODAL sign in :: START-->
+   <div class=" modal modal--signup fade" id="signupModal" tabindex="-1" role="dialog" aria-labelledby="SignUp"
+                                        aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered" role="document">
+                                            <div class="modal-content py-5">
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                    aria-label="Close" style="
+                                                        position: relative;
+    display: flex;
+    top: -2rem;
+    left: 92%;"></button>
+                                                <div class="modal-header justify-content-center pb-3">
+
+
+                                                    <h5 class="modal-title" id="SignUp">Sign up</h5>
+
+                                                </div>
+                                                <div class="modal-body">
+                                                    <div class="modal-body-cover">
+                                                        <form id="modalSignUpForm" action="{% url 'signUp' %}"
+                                                            method="post" class="d-flex flex-column  ">
+                                                            {% csrf_token %}
+                                                            <input type="hidden" value="" required name="reference" />
+
+                                                            <div class="form-group">
+                                                                <label for="modalFullNameSignUp">Full Name</label>
+                                                                <input class="form-control" name="name" required
+                                                                    id="modalFullNameSignUp" type="text">
+                                                                <span class="text-danger show-error-text"
+                                                                    id="error_name"></span>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label for="modalEmailSignUp">Email</label>
+                                                                <input class="form-control" name="email" required
+                                                                    id="modalEmailSignUp" type="email">
+                                                                <span class="text-danger show-error-text"
+                                                                    id="error_email"></span>
+                                                            </div>
+
+                                                            <div class="form-group">
+                                                                <label for="modalPhoneSignUp">Phone</label>
+                                                                <div class="row">
+                                                                    <div class="col-4 pr-0">
+                                                                        <select name="phone_code" class="form-control"
+                                                                            id="modalCountryCodeSignUp" required>
+                                                                            <option value="">code</option>
+                                                                            <option value="+93">+93</option>
+                                                                            <option value="+355">+355</option>
+                                                                            <option value="+213">+213</option>
+                                                                            <option value="+1684">+1684</option>
+                                                                            <option value="+376">+376</option>
+                                                                            <option value="+244">+244</option>
+                                                                            <option value="+1264">+1264</option>
+                                                                            <option value="+1268">+1268</option>
+                                                                            <option value="+54">+54</option>
+                                                                            <option value="+374">+374</option>
+                                                                            <option value="+297">+297</option>
+                                                                            <option value="+61">+61</option>
+                                                                            <option value="+43">+43</option>
+                                                                            <option value="+994">+994</option>
+                                                                            <option value="+1242">+1242</option>
+                                                                            <option value="+973">+973</option>
+                                                                            <option value="+880">+880</option>
+                                                                            <option value="+1246">+1246</option>
+                                                                            <option value="+375">+375</option>
+                                                                            <option value="+32">+32</option>
+                                                                            <option value="+501">+501</option>
+                                                                            <option value="+229">+229</option>
+                                                                            <option value="+1441">+1441</option>
+                                                                            <option value="+975">+975</option>
+                                                                            <option value="+591">+591</option>
+                                                                            <option value="+387">+387</option>
+                                                                            <option value="+267">+267</option>
+                                                                            <option value="+55">+55</option>
+                                                                            <option value="+246">+246</option>
+                                                                            <option value="+673">+673</option>
+                                                                            <option value="+359">+359</option>
+                                                                            <option value="+226">+226</option>
+                                                                            <option value="+257">+257</option>
+                                                                            <option value="+855">+855</option>
+                                                                            <option value="+237">+237</option>
+                                                                            <option value="+1">+1</option>
+                                                                            <option value="+238">+238</option>
+                                                                            <option value="+1345">+1345</option>
+                                                                            <option value="+236">+236</option>
+                                                                            <option value="+235">+235</option>
+                                                                            <option value="+56">+56</option>
+                                                                            <option value="+86">+86</option>
+                                                                            <option value="+61">+61</option>
+                                                                            <option value="+672">+672</option>
+                                                                            <option value="+57">+57</option>
+                                                                            <option value="+269">+269</option>
+                                                                            <option value="+242">+242</option>
+                                                                            <option value="+242">+242</option>
+                                                                            <option value="+682">+682</option>
+                                                                            <option value="+506">+506</option>
+                                                                            <option value="+225">+225</option>
+                                                                            <option value="+385">+385</option>
+                                                                            <option value="+53">+53</option>
+                                                                            <option value="+357">+357</option>
+                                                                            <option value="+420">+420</option>
+                                                                            <option value="+45">+45</option>
+                                                                            <option value="+253">+253</option>
+                                                                            <option value="+1767">+1767</option>
+                                                                            <option value="+1809">+1809</option>
+                                                                            <option value="+670">+670</option>
+                                                                            <option value="+593">+593</option>
+                                                                            <option value="+20">+20</option>
+                                                                            <option value="+503">+503</option>
+                                                                            <option value="+240">+240</option>
+                                                                            <option value="+291">+291</option>
+                                                                            <option value="+372">+372</option>
+                                                                            <option value="+251">+251</option>
+                                                                            <option value="+61">+61</option>
+                                                                            <option value="+500">+500</option>
+                                                                            <option value="+298">+298</option>
+                                                                            <option value="+679">+679</option>
+                                                                            <option value="+358">+358</option>
+                                                                            <option value="+33">+33</option>
+                                                                            <option value="+594">+594</option>
+                                                                            <option value="+689">+689</option>
+                                                                            <option value="+241">+241</option>
+                                                                            <option value="+220">+220</option>
+                                                                            <option value="+995">+995</option>
+                                                                            <option value="+49">+49</option>
+                                                                            <option value="+233">+233</option>
+                                                                            <option value="+91">+91</option>
+                                                                            <option value="+30">+30</option>
+                                                                            <option value="+299">+299</option>
+                                                                            <option value="+1473">+1473</option>
+                                                                            <option value="+590">+590</option>
+                                                                            <option value="+1671">+1671</option>
+                                                                            <option value="+502">+502</option>
+                                                                            <option value="+44">+44</option>
+                                                                            <option value="+224">+224</option>
+                                                                            <option value="+245">+245</option>
+                                                                            <option value="+592">+592</option>
+                                                                            <option value="+509">+509</option>
+                                                                            <option value="+504">+504</option>
+                                                                            <option value="+852">+852</option>
+                                                                            <option value="+36">+36</option>
+                                                                            <option value="+354">+354</option>
+                                                                            <option value="+350">+350</option>
+                                                                            <option value="+62">+62</option>
+                                                                            <option value="+98">+98</option>
+                                                                            <option value="+964">+964</option>
+                                                                            <option value="+353">+353</option>
+                                                                            <option value="+972">+972</option>
+                                                                            <option value="+39">+39</option>
+                                                                            <option value="+1876">+1876</option>
+                                                                            <option value="+81">+81</option>
+                                                                            <option value="+44">+44</option>
+                                                                            <option value="+962">+962</option>
+                                                                            <option value="+7">+7</option>
+                                                                            <option value="+254">+254</option>
+                                                                            <option value="+686">+686</option>
+                                                                            <option value="+850">+850</option>
+                                                                            <option value="+82">+82</option>
+                                                                            <option value="+965">+965</option>
+                                                                            <option value="+996">+996</option>
+                                                                            <option value="+856">+856</option>
+                                                                            <option value="+371">+371</option>
+                                                                            <option value="+961">+961</option>
+                                                                            <option value="+266">+266</option>
+                                                                            <option value="+231">+231</option>
+                                                                            <option value="+218">+218</option>
+                                                                            <option value="+423">+423</option>
+                                                                            <option value="+370">+370</option>
+                                                                            <option value="+352">+352</option>
+                                                                            <option value="+853">+853</option>
+                                                                            <option value="+389">+389</option>
+                                                                            <option value="+261">+261</option>
+                                                                            <option value="+265">+265</option>
+                                                                            <option value="+60">+60</option>
+                                                                            <option value="+960">+960</option>
+                                                                            <option value="+223">+223</option>
+                                                                            <option value="+356">+356</option>
+                                                                            <option value="+44">+44</option>
+                                                                            <option value="+692">+692</option>
+                                                                            <option value="+596">+596</option>
+                                                                            <option value="+222">+222</option>
+                                                                            <option value="+230">+230</option>
+                                                                            <option value="+269">+269</option>
+                                                                            <option value="+52">+52</option>
+                                                                            <option value="+691">+691</option>
+                                                                            <option value="+373">+373</option>
+                                                                            <option value="+377">+377</option>
+                                                                            <option value="+976">+976</option>
+                                                                            <option value="+1664">+1664</option>
+                                                                            <option value="+212">+212</option>
+                                                                            <option value="+258">+258</option>
+                                                                            <option value="+95">+95</option>
+                                                                            <option value="+264">+264</option>
+                                                                            <option value="+674">+674</option>
+                                                                            <option value="+977">+977</option>
+                                                                            <option value="+599">+599</option>
+                                                                            <option value="+31">+31</option>
+                                                                            <option value="+687">+687</option>
+                                                                            <option value="+64">+64</option>
+                                                                            <option value="+505">+505</option>
+                                                                            <option value="+227">+227</option>
+                                                                            <option value="+234">+234</option>
+                                                                            <option value="+683">+683</option>
+                                                                            <option value="+672">+672</option>
+                                                                            <option value="+1670">+1670</option>
+                                                                            <option value="+47">+47</option>
+                                                                            <option value="+968">+968</option>
+                                                                            <option value="+92">+92</option>
+                                                                            <option value="+1">+1</option>
+                                                                            <option value="+970">+970</option>
+                                                                            <option value="+507">+507</option>
+                                                                            <option value="+675">+675</option>
+                                                                            <option value="+595">+595</option>
+                                                                            <option value="+51">+51</option>
+                                                                            <option value="+63">+63</option>
+                                                                            <option value="+48">+48</option>
+                                                                            <option value="+351">+351</option>
+                                                                            <option value="+1787">+1787</option>
+                                                                            <option value="+974">+974</option>
+                                                                            <option value="+262">+262</option>
+                                                                            <option value="+40">+40</option>
+                                                                            <option value="+70">+70</option>
+                                                                            <option value="+250">+250</option>
+                                                                            <option value="+290">+290</option>
+                                                                            <option value="+1869">+1869</option>
+                                                                            <option value="+1758">+1758</option>
+                                                                            <option value="+508">+508</option>
+                                                                            <option value="+1784">+1784</option>
+                                                                            <option value="+684">+684</option>
+                                                                            <option value="+378">+378</option>
+                                                                            <option value="+239">+239</option>
+                                                                            <option value="+966">+966</option>
+                                                                            <option value="+221">+221</option>
+                                                                            <option value="+381">+381</option>
+                                                                            <option value="+248">+248</option>
+                                                                            <option value="+232">+232</option>
+                                                                            <option value="+65">+65</option>
+                                                                            <option value="+421">+421</option>
+                                                                            <option value="+386">+386</option>
+                                                                            <option value="+44">+44</option>
+                                                                            <option value="+677">+677</option>
+                                                                            <option value="+252">+252</option>
+                                                                            <option value="+27">+27</option>
+                                                                            <option value="+211">+211</option>
+                                                                            <option value="+34">+34</option>
+                                                                            <option value="+94">+94</option>
+                                                                            <option value="+249">+249</option>
+                                                                            <option value="+597">+597</option>
+                                                                            <option value="+47">+47</option>
+                                                                            <option value="+268">+268</option>
+                                                                            <option value="+46">+46</option>
+                                                                            <option value="+41">+41</option>
+                                                                            <option value="+963">+963</option>
+                                                                            <option value="+886">+886</option>
+                                                                            <option value="+992">+992</option>
+                                                                            <option value="+255">+255</option>
+                                                                            <option value="+66">+66</option>
+                                                                            <option value="+228">+228</option>
+                                                                            <option value="+690">+690</option>
+                                                                            <option value="+676">+676</option>
+                                                                            <option value="+1868">+1868</option>
+                                                                            <option value="+216">+216</option>
+                                                                            <option value="+90">+90</option>
+                                                                            <option value="+7370">+7370</option>
+                                                                            <option value="+1649">+1649</option>
+                                                                            <option value="+688">+688</option>
+                                                                            <option value="+256">+256</option>
+                                                                            <option value="+380">+380</option>
+                                                                            <option value="+971">+971</option>
+                                                                            <option value="+44">+44</option>
+                                                                            <option value="+680">+680</option>
+                                                                            <option value="+1">+1</option>
+                                                                            <option value="+598">+598</option>
+                                                                            <option value="+998">+998</option>
+                                                                            <option value="+678">+678</option>
+                                                                            <option value="+39">+39</option>
+                                                                            <option value="+58">+58</option>
+                                                                            <option value="+84">+84</option>
+                                                                            <option value="+1284">+1284</option>
+                                                                            <option value="+1340">+1340</option>
+                                                                            <option value="+681">+681</option>
+                                                                            <option value="+212">+212</option>
+                                                                            <option value="+967">+967</option>
+                                                                            <option value="+38">+38</option>
+                                                                            <option value="+260">+260</option>
+                                                                            <option value="+263">+263</option>
+                                                                        </select>
+                                                                    </div>
+
+                                                                    <div class="col-8">
+                                                                        <input class="form-control" name="mobile"
+                                                                            id="modalPhoneSignUp" type="text" required>
+                                                                    </div>
+                                                                </div>
+                                                                <span class="text-danger show-error-text"
+                                                                    id="error_mobile"></span> <span
+                                                                    class="text-danger show-error-text"
+                                                                    id="error_phone_code"></span>
+                                                            </div>
+                                                            <div class="form-group" id="modalCountrySignUp">
+                                                                <label for="country_id">Country</label>
+                                                                <select class="form-control" name="country_id"
+                                                                    id="country_id" required>
+                                                                    <option selected disabled>Select Country</option>
+                                                                    <option value="USA">USA </option>
+                                                                    <option value="INDIA"> INDIA</option>
+                                                                </select>
+                                                                <span class="text-danger show-error-text"
+                                                                    id="error_country_id"></span>
+                                                            </div>
+
+                                                            <div class="form-group" id="modalStateSignUp">
+                                                                <label for="modalStateSignUp">State</label>
+                                                                <select id="state_id" name="state_id"
+                                                                    class="form-control" required>
+                                                                    <option selected disabled>Select State</option>
+                                                                    <option value="CA"> CA</option>
+                                                                    <option value="TELANGANA"> TELANGANA</option>
+                                                                </select>
+                                                                <span class="text-danger show-error-text"
+                                                                    id="error_state_id"></span>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label for="modalPasswordSignUp">Password</label>
+                                                                <input class="form-control" name="password"
+                                                                    id="modalPasswordSignUp" type="password" required>
+                                                                <span class="text-danger show-error-text"
+                                                                    id="error_password"></span>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label for="modalPasswordSignUp">Confirm
+                                                                    Password</label>
+                                                                <input class="form-control" name="Cofirm_password"
+                                                                    id="modalPasswordSignUp" type="password" required>
+                                                                <span class="text-danger show-error-text"
+                                                                    id="error_password"></span>
+                                                            </div>
+                                                            <div class="form-group form-check">
+                                                                <input class="form-check-input" id="modalAgreeSignUp"
+                                                                    name="terms_of_service" required type="checkbox">
+                                                                <label class="form-check-label w-100"
+                                                                    for="modalAgreeSignUp">
+                                                                    I agree to the <a
+                                                                        href='/'
+                                                                        target="_blank">terms of service</a>
+                                                                </label>
+                                                                <span class="text-danger show-error-text"
+                                                                    id="error_terms_of_service"></span>
+                                                            </div>
+                                                            <div class="position-relative mb-3">
+                                                                <div data-sitekey="6LcLyMwZAAAAAMYfPLgiFvrprPgc8zdkifiais0p"
+                                                                    class="g-recaptcha"></div>
+                                                                <span class="text-danger show-error-text"
+                                                                    id="error_register_g-recaptcha-response"></span>
+                                                            </div>
+                                                            <button class="btn c-btn c-btn--bg" id="signUpButtonPopup"
+                                                                type="submit">Sign up</button>
+                                                            <p
+                                                                class="modal__link d-flex align-items-center justify-content-center">
+                                                                Already have an
+                                                                account?&nbsp;<a href='#' data-bs-dismiss='modal'
+                                                                    data-bs-toggle='modal'
+                                                                    data-bs-target='#signinModal'>Sign
+                                                                    in</a></p>
+
+                                                        </form>
+                                                        <div class="modal__or">
+                                                            <p><span>or</span></p>
+                                                        </div>
+                                                        <div class="modal__btn-wrapper d-flex flex-column">
+                                                            <a class="btn modal__btn c-btn c-btn--bg modal__btn--facebook d-flex align-items-center justify-content-start"
+                                                                href="https://tradetron.tech/auth/redirect/facebook"
+                                                                title="">
+                                                                <div
+                                                                    class="d-flex align-items-center justify-content-center">
+                                                                    <i class="bi bi-facebook"></i>
+                                                                </div>
+                                                                <span>Sign in with Facebook</span>
+                                                            </a>
+                                                            <a class="btn modal__btn c-btn c-btn--bg modal__btn--google d-flex align-items-center justify-content-start"
+                                                                href="https://tradetron.tech/auth/redirect/google"
+                                                                title="">
+                                                                <div
+                                                                    class="d-flex align-items-center justify-content-center">
+                                                                    <i class="bi bi-google""></i>
+                            </div>
+                            <span>Sign in with Google</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+   
+
+                                                                </div>
+                                                        </div>
+
+                                                        <!-- <script type="text/javascript" src="https://tradetron.tech/js/v1/vendor.js"></script>
+<script type="text/javascript" src="https://tradetron.tech/js/v1/app.js"></script>
+    <script src="https://checkout.razorpay.com/v1/razorpay.js"></script>
+    <script type="text/javascript" src="https://tradetron.tech/js/v1/senja-testimonials.js"></script>
+    <script src="https://www.google.com/recaptcha/api.js?" async defer></script>
+
+
+<script type="text/javascript" src="https://tradetron.tech/js/v1/auth.js"></script> -->
+                                                        <script
+                                                            src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+                                                        <script
+                                                            src="https://cdnjs.cloudflare.com/ajax/libs/Counter-Up/1.0.0/jquery.counterup.min.js"></script>
+
+                                                        <script typ src=" {% static './js/main.js' %} "></script>
+                                                        <script src=" {% static './js/data.js' %} "></script>
+                                                        <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+                                                        <script src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+<script>
+    var swiper = new Swiper('.swiper-container', {
+        loop: true,
+        slidesPerView: 8,
+        spaceBetween: 1,
+        autoplay: {
+            delay: 2000,
+            disableOnInteraction: false,
+        },
+        navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+        },
+        on: {
+            init: function () {
+                var playPauseButton = document.querySelector('.swiper-button-play-pause');
+                playPauseButton.addEventListener('click', function () {
+                    if (swiper.autoplay.running) {
+                        swiper.autoplay.stop();
+                        playPauseButton.innerHTML = 'Play';
+                    } else {
+                        swiper.autoplay.start();
+                        playPauseButton.innerHTML = 'Pause';
+                    }
+                });
+            },
+        },
+    });
+</script>
+
+                                                        <script>
+                                                            var swiper1 = new Swiper(".mySwiper", {
+                                                                slidesPerView: 1,
+                                                                spaceBetween: 30,
+                                                                loop: true,
+                                                                pagination: {
+                                                                    el: ".swiper-pagination",
+                                                                    clickable: true,
+                                                                },
+
+                                                            });
+
+                                                            var swiper2 = new Swiper(".testimonials", {
+                                                                slidesPerView: 3,
+                                                                spaceBetween: 30,
+                                                                loop: true,
+                                                                pagination: {
+                                                                    el: ".swiper-pagination",
+                                                                    clickable: true,
+                                                                }, breakpoints: {
+                                                                    '1200': {
+                                                                        slidesPerView: 3,
+                                                                        spaceBetween: 30,
+                                                                    },
+                                                                    '400': {
+                                                                        slidesPerView: 1,
+                                                                        spaceBetween: 30,
+                                                                    },
+
+                                                                    '300': {
+                                                                        slidesPerView: 1,
+                                                                        spaceBetween: 30,
+                                                                    },
+                                                                }
+
+                                                            });
+
+
+                                                            var swiper3 = new Swiper(".swiper-container-strategy", {
+
+                                                                spaceBetween: 30,
+                                                                loop: true,
+                                                                breakpoints: {
+                                                                    '1200': {
+                                                                        slidesPerView: 3,
+                                                                        spaceBetween: 40,
+                                                                    },
+                                                                    '640': {
+                                                                        slidesPerView: 1,
+                                                                        spaceBetween: 30,
+                                                                    },
+                                                                },
+                                                                pagination: {
+                                                                    el: ".swiper-pagination",
+                                                                    clickable: true,
+                                                                },
+
+                                                            });
+
+                                                            var swiper4 = new Swiper(".swiper-container-features", {
+                                                                slidesPerView: 5,
+                                                                spaceBetween: 30,
+                                                                loop: true,
+                                                                pagination: {
+                                                                    el: ".swiper-pagination",
+                                                                    clickable: true,
+                                                                },
+                                                                navigation: {
+                                                                    nextEl: ".features__carousel-btn--next",
+                                                                    prevEl: ".features__carousel-btn--prev",
+                                                                },
+                                                                breakpoints: {
+                                                                    '1200': {
+                                                                        slidesPerView: 5,
+                                                                        spaceBetween: 30,
+                                                                    },
+                                                                    '640': {
+                                                                        slidesPerView: 1,
+                                                                        spaceBetween: 30,
+                                                                    },
+
+                                                                    '400': {
+                                                                        slidesPerView: 1,
+                                                                        spaceBetween: 30,
+                                                                    },
+                                                                }
+
+
+                                                            });
+
+                                                            var swiper5 = new Swiper(".swiper-container-pricing", {
+                                                                slidesPerView: 5,
+                                                                spaceBetween: 30,
+
+                                                                pagination: {
+                                                                    el: ".swiper-pagination",
+                                                                    clickable: true,
+                                                                },
+                                                                navigation: {
+                                                                    nextEl: ".features__carousel-btn--next",
+                                                                    prevEl: ".features__carousel-btn--prev",
+                                                                },
+                                                                breakpoints: {
+                                                                    '1200': {
+                                                                        slidesPerView: 7,
+                                                                        spaceBetween: 0,
+                                                                        loop: false,
+                                                                        noSwiping: true,
+                                                                    },
+                                                                    '800': {
+                                                                        slidesPerView: 3,
+                                                                        spaceBetween: 30,
+                                                                    },
+
+                                                                    '400': {
+                                                                        slidesPerView: 1,
+                                                                        spaceBetween: 30,
+                                                                    },
+                                                                }
+
+
+                                                            });
+                                                            var swiper5 = new Swiper(".swiper-container-partners", {
+                                                                slidesPerView: 5,
+                                                                spaceBetween: 30,
+
+                                                                pagination: {
+                                                                    el: ".swiper-pagination",
+                                                                    clickable: true,
+                                                                },
+                                                                navigation: {
+                                                                    nextEl: ".features__carousel-btn--next",
+                                                                    prevEl: ".features__carousel-btn--prev",
+                                                                },
+                                                                breakpoints: {
+                                                                    '1200': {
+                                                                        slidesPerView: 7,
+                                                                        spaceBetween: 0,
+                                                                        loop: false,
+                                                                        noSwiping: true,
+                                                                    },
+                                                                    '800': {
+                                                                        slidesPerView: 3,
+                                                                        spaceBetween: 30,
+                                                                    },
+
+                                                                    '400': {
+                                                                        slidesPerView: 1,
+                                                                        spaceBetween: 30,
+                                                                    },
+                                                                }, autoplay: {
+                                                                    delay: 1000,
+                                                                },
+
+
+                                                            });
+                                                            controlVideoVolume.addEventListener('click', function () {
+                                                                if (bannerVideo.muted) {
+                                                                    bannerVideo.muted = false;
+                                                                    $("#unmuted").css('display', 'block')
+                                                                    $("#muted").css('display', 'none')
+
+                                                                } else {
+                                                                    bannerVideo.muted = true;
+                                                                    $("#muted").css('display', 'block')
+                                                                    $("#unmuted").css('display', 'none')
+                                                                }
+                                                            });
+
+                                                            $('[data-toggle="counter-up"]').counterUp({
+                                                                delay: 10,
+                                                                time: 2000
+                                                            });
+
+
+
+
+
+                                                            (() => {
+                                                                'use strict'
+
+                                                                // Fetch all the forms we want to apply custom Bootstrap validation styles to
+                                                                const forms = document.querySelectorAll('.needs-validation')
+
+                                                                // Loop over them and prevent submission
+                                                                Array.from(forms).forEach(form => {
+                                                                    form.addEventListener('submit', event => {
+                                                                        if (!form.checkValidity()) {
+                                                                            event.preventDefault()
+                                                                            event.stopPropagation()
+                                                                        }
+
+                                                                        form.classList.add('was-validated')
+                                                                    }, false)
+                                                                })
+                                                            })()
+
+
+                                                        </script>
+</body>
+
+</html>

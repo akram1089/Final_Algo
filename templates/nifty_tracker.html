@@ -1,0 +1,718 @@
+{% extends "base_dashboard.html" %} {% load static %} {% block dashboard_body %}
+
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Stock Performance Chart</title>
+  <style>
+    #performanceChart {
+      width: 100%;
+      height: 75%;
+    }
+
+    .select_days {
+      display: flex;
+      width: fit-content;
+      gap: 1rem;
+      white-space: nowrap;
+      align-items: center;
+
+    }
+
+    .select_days_main {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+    }
+
+    .symbol_main_history {
+      display: flex;
+      justify-content: center;
+      gap: 5rem;
+      color: dimgray;
+      border-top: 1px solid lightgray;
+    }
+
+    .chart1,
+    .chart2,
+    .chart3,
+    .chart4 {
+      box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+      padding: 34px;
+
+    }
+
+    .symbol_main_history h5.active {
+      color: cornflowerblue;
+
+      border-top: 3px solid;
+    }
+
+    .symbol_main_history h5 {
+      cursor: pointer;
+      width: 12rem;
+      transition: 0.3s;
+      text-align: center;
+    }
+  </style>
+  <style>
+    #chart_nifty_tracker {
+      width: 88vw;
+    }
+
+    @media screen and (max-width: 700px) {
+      #chart_nifty_tracker {
+        width: 75vw;
+      }
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@3.0.0/dist/chart.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+
+<body>
+  <div class="main_inner_body my-3  ">
+
+    <div class="main_chart_history">
+      <div class="chart1">
+        <div class="last_updated_main d-flex justify-content-end">
+          <p>Everyday Updates at : 3:30PM</p>
+        </div>
+        <div class="select_days_main">
+          <h4>COMPARISON BETWEEN PREVIOUS DAY CLOSE & TODAY CLOSE</h4>
+          <div class="select_days">
+            <label for="#daysDropdown">Select Days</label>
+            <select id="daysDropdown" class="form-select my-3">
+              <option value="10">10 days</option>
+              <option value="20" selected>20 days</option>
+              <option value="30">30 days</option>
+              <option value="40">40 days</option>
+              <option value="60">60 days</option>
+            </select>
+          </div>
+        </div>
+        <div class="symbol_main_history">
+          <h5 data-symbol="%5ENSEI">Nifty</h5>
+          <h5 data-symbol="%5ENSEBANK">Bank Nifty</h5>
+          <h5 data-symbol="NIFTY_FIN_SERVICE.NS">Fin Nifty</h5>
+        </div>
+
+        <div style="height: 65vh" id="chart_nifty_tracker">
+          <canvas id="performanceChart"></canvas>
+        </div>
+      </div>
+      <div class="chart2 my-4">
+        <div class="last_updated_main d-flex justify-content-end">
+          <p>Everyday Updates at : 9:15AM</p>
+        </div>
+
+        <h4>COMPARISON BETWEEN DAY OPENS & DAY CLOSES</h4>
+        <div style="height: 65vh" class="mt-4" id="chart_nifty_tracker">
+          <canvas id="performanceChart2"></canvas>
+        </div>
+      </div>
+      <div class="chart3">
+        <div class="last_updated_main d-flex justify-content-end">
+          <p>Everyday Updates at : 9:15AM</p>
+        </div>
+        <h4>COMPARISON BETWEEN PREVIOUS CLOSE & TODAY OPEN</h4>
+        <div style="height: 65vh" class="mt-4" id="chart_nifty_tracker">
+          <canvas id="performanceChart3"></canvas>
+        </div>
+      </div>
+      <div class="chart4 mt-4">
+        <div class="last_updated_main d-flex justify-content-end">
+          <p>Everyday Updates at : 9:15AM to 3:30PM</p>
+        </div>
+        <h4>COMPARISON BETWEEN PREVIOUS DAY CLOSES & TODAY CLOSES - PREVIOUS CLOSE & TODAY OPEN </h4>
+        <div style="height: 65vh" class="mt-4" id="chart_nifty_tracker">
+          <canvas id="performanceChart4"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    var performanceChart;
+    var performanceChart2;
+    var performanceChart3;
+    var performanceChart4;
+
+    var selectedSymbol_history = null;
+
+    $(document).ready(function () {
+      // Retrieve saved symbol and days from local storage
+      var savedSymbol = localStorage.getItem("selectedSymbol_history");
+      var savedDays = localStorage.getItem("selectedDays");
+
+      if (savedSymbol && savedDays) {
+        Historical_Data(savedSymbol, parseInt(savedDays));
+        $("h5[data-symbol='" + savedSymbol + "']").addClass("active"); // Add active class to saved symbol
+      } else {
+        Historical_Data("%5ENSEI", 20); // Set a default symbol and number of days
+        $("h5[data-symbol='%5ENSEI']").addClass("active"); // Add active class to default symbol
+      }
+
+      // Attach click event listeners to the symbols
+      $("h5").click(function () {
+        var symbol = $(this).attr("data-symbol");
+        selectedSymbol_history = symbol;
+        Historical_Data(symbol, parseInt($("#daysDropdown").val()));
+        $("h5").removeClass("active"); // Remove active class from all symbols
+        $(this).addClass("active"); // Add active class to clicked symbol
+      });
+
+      // Attach change event listener to the days dropdown
+      $("#daysDropdown").change(function () {
+        var symbol = selectedSymbol_history || "%5ENSEI";
+        var days = parseInt($(this).val());
+        Historical_Data(symbol, days);
+      });
+    });
+
+    function Historical_Data(historical_symbols, days) {
+      selectedSymbol_history = historical_symbols; // Update the selected symbol
+
+      // Save symbol and days to local storage
+      localStorage.setItem("selectedSymbol_history", historical_symbols);
+      localStorage.setItem("selectedDays", days);
+
+      $.ajax({
+        url:
+          "{% url 'performance_chart' %}?historical_symbols=" +
+          historical_symbols +
+          "&days=" +
+          days,
+        dataType: "json",
+        success: function (data) {
+          console.log(data);
+          var dates = data["dates"];
+          var closes = data["closes"].map(function (value) {
+            return value.toFixed(2); // Convert to two decimal places
+          });
+          var opens = data["opens"].map(function (value) {
+            return value.toFixed(2); // Convert to two decimal places
+          });
+
+          var differences_day_close = opens.map(function (value, index) {
+            return Math.abs(value - closes[index]).toFixed(2);
+          });
+          var differences = data["differences"].map(function (value) {
+            return Math.abs(value.toFixed(2));
+          });
+          var prev_close_today_open_diff = data[
+            "prev_close_today_open_diff"
+          ].map(function (value) {
+            return Math.abs(value.toFixed(2));
+          });
+
+          var prev_close_today_open_diff_minus_diff = data[
+            "prev_close_today_open_diff_minus_diff"
+          ].map(function (value) {
+            return Math.abs(value.toFixed(2));
+          });
+          var prev_close_today_open_diff_minus_diff_main = data[
+            "prev_close_today_open_diff_minus_diff_main"
+          ].map(function (value) {
+            return Math.abs(value.toFixed(2));
+          });
+
+          var prev_close = data[
+            "prev_close"
+          ].map(function (value) {
+            return Math.abs(value.toFixed(2));
+          });
+          var prev_close_today_close = data[
+            "prev_close_today_close"
+          ].map(function (value) {
+            return Math.abs(value.toFixed(2));
+          });
+
+
+
+          console.log(prev_close_today_open_diff_minus_diff);
+          if (performanceChart) {
+            performanceChart.destroy();
+          }
+          if (performanceChart2) {
+            performanceChart2.destroy();
+          }
+
+          if (performanceChart3) {
+            performanceChart3.destroy();
+          }
+          if (performanceChart4) {
+            performanceChart4.destroy();
+          }
+
+
+          var ctx = document
+            .getElementById("performanceChart")
+            .getContext("2d");
+          var ctx2 = document
+            .getElementById("performanceChart2")
+            .getContext("2d");
+          var ctx3 = document
+            .getElementById("performanceChart3")
+            .getContext("2d");
+          var ctx4 = document
+            .getElementById("performanceChart4")
+            .getContext("2d");
+
+          var max = historical_symbols === "%5ENSEBANK" ? Math.max(...differences) + 400 : Math.max(...differences) + 200;
+          var max_chart2 = historical_symbols === "%5ENSEBANK" ? Math.max(...differences_day_close) + 400 : Math.max(...differences_day_close) + 200;
+          var max_chart3 = historical_symbols === "%5ENSEBANK" ? Math.max(...prev_close_today_open_diff_minus_diff) + 400 : Math.max(...prev_close_today_open_diff_minus_diff) + 200;
+          console.log(max)
+
+
+          performanceChart = new Chart(ctx, {
+            type: "bar",
+            data: {
+              labels: dates,
+              datasets: [
+                {
+                  label: "Prev Close - Today Close",
+                  data: differences,
+                  borderWidth: 1,
+                  borderColor: function (context) {
+                    return closes[context.dataIndex] > opens[context.dataIndex]
+                      ? "green"
+                      : "red";
+                  },
+                  backgroundColor: function (context) {
+                    return closes[context.dataIndex] > opens[context.dataIndex]
+                      ? "rgba(87, 255, 26, 0.42)"
+                      : "rgba(255, 12, 26, 0.42)";
+                  },
+                },
+              ],
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              scales: {
+                x:{
+                  grid: {
+                    display: false, // Hide y-axis background border
+                  },
+                },
+                y: {
+             
+                  min: 0,
+                  max: max, // Set dynamic max value
+                  ticks: {
+                    stepSize: 25,
+                    callback: function (value, index, values) {
+                      return index % 1 === 0 ? value : "";
+                    },
+                  },
+                },
+              },
+              plugins: {
+                legend: {
+                  labels: {
+                    usePointStyle: true,
+                    fontColor: "black",
+                  },
+                },
+                tooltip: {
+                  callbacks: {
+                    label: function (context) {
+                      var label = context.dataset.label || "";
+                      if (label) {
+                        label += ": ";
+                      }
+                      label += context.parsed.y;
+                      return label;
+                    },
+                    title: function (context) {
+                      var title = "";
+                      if (context.length > 0) {
+                        var dataIndex = context[0].dataIndex;
+                        title =
+                          "Date: " +
+                          dates[dataIndex] +
+                          "\nToday Close: " +
+                          closes[dataIndex] +
+                          "\nPrev Close: " +
+                          prev_close[dataIndex] +
+                          "\nToday: " +
+                          differences[dataIndex];
+                      }
+                      return title;
+                    },
+                  },
+                },
+                datalabels: {
+                  display: true,
+                  align: "end",
+                  anchor: "end",
+                  color: "black",
+                  rotation: 270,
+                  font: {
+                    weight: "bold",
+                  },
+                  formatter: function (value, context) {
+                    return value;
+                  },
+                },
+              },
+              animation: {
+                onComplete: function (animation) {
+                  setTimeout(function () {
+                    performanceChart.options.animation.easing = "linear";
+                    performanceChart.update();
+                  }, 1000);
+                },
+              },
+            },
+            plugins: [ChartDataLabels],
+          });
+          
+          performanceChart2 = new Chart(ctx2, {
+            type: "bar",
+            data: {
+              labels: dates,
+              datasets: [
+                {
+                  label: "Day Open - Day Close",
+                  data: differences_day_close,
+                  borderWidth: 1,
+                  borderColor: function (context) {
+                    return opens[context.dataIndex] >
+                      closes[context.dataIndex]
+                      ? "red"
+                      : "green";
+                  },
+                  backgroundColor: function (context) {
+                    return opens[context.dataIndex] >
+                      closes[context.dataIndex]
+                      ? " rgba(255, 12, 26, 0.5)"
+                      : "rgba(87, 255, 26, 0.5)";
+                  },
+                },
+
+
+              ],
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              scales: {
+                x:{
+                  grid: {
+                    display: false, // Hide y-axis background border
+                  },
+                },
+                y: {
+                  min: 0,
+                  max: max_chart2, // Set dynamic max value
+                  ticks: {
+                    stepSize: 25,
+                    callback: function (value, index, values) {
+                      return index % 1 === 0 ? value : "";
+                    },
+                  },
+                },
+              },
+              plugins: {
+                legend: {
+                  labels: {
+                    usePointStyle: true,
+                    fontColor: "black",
+                  },
+                },
+                tooltip: {
+                  callbacks: {
+                    label: function (context) {
+                      var label = context.dataset.label || "";
+                      if (label) {
+                        label += ": ";
+                      }
+                      label += context.parsed.y;
+                      return label;
+                    },
+                    title: function (context) {
+                      var title = "";
+                      if (context.length > 0) {
+                        var dataIndex = context[0].dataIndex;
+                        title =
+                          "Date: " +
+                          dates[dataIndex] +
+                          "\nDay Open: " +
+                          opens[dataIndex] +
+                          "\nDay Close: " +
+                          closes[dataIndex];
+                      }
+                      return title;
+                    },
+                  },
+                },
+                datalabels: {
+                  display: true,
+                  align: "end",
+                  anchor: "end",
+                  color: "black",
+                  rotation: 270,
+                  font: {
+                    weight: "bold",
+                  },
+                  formatter: function (value, context) {
+                    return value;
+                  },
+                },
+              },
+              animation: {
+                onComplete: function (animation) {
+                  setTimeout(function () {
+                    performanceChart2.options.animation.easing = "linear";
+                    performanceChart2.update();
+                  }, 1000);
+                },
+              },
+            },
+            plugins: [ChartDataLabels],
+          });
+
+
+          performanceChart3 = new Chart(ctx3, {
+            type: "bar",
+            data: {
+              labels: dates,
+              datasets: [
+                {
+                  label: "Prev Close - Today Open",
+                  data: prev_close_today_open_diff_minus_diff,
+                  borderWidth: 1,
+                  borderColor: function (context) {
+                    return prev_close[context.dataIndex] >
+                      opens[context.dataIndex]
+                      ? "red"
+                      : "green";
+                  },
+                  backgroundColor: function (context) {
+                    return prev_close[context.dataIndex] >
+                      opens[context.dataIndex]
+                      ? " rgba(255, 12, 26, 0.5)"
+                      : "rgba(87, 255, 26, 0.5)";
+                  },
+                },
+
+
+              ],
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              scales: {
+                x:{
+                  grid: {
+                    display: false, // Hide y-axis background border
+                  },
+                },
+                y: {
+                  min: 0,
+                  max: max_chart3, // Set dynamic max value
+                  ticks: {
+                    stepSize: 25,
+                    callback: function (value, index, values) {
+                      return index % 1 === 0 ? value : "";
+                    },
+                  },
+                },
+              },
+              plugins: {
+                legend: {
+                  labels: {
+                    usePointStyle: true,
+                    fontColor: "black",
+                  },
+                },
+                tooltip: {
+                  callbacks: {
+                    label: function (context) {
+                      var label = context.dataset.label || "";
+                      if (label) {
+                        label += ": ";
+                      }
+                      label += context.parsed.y;
+                      return label;
+                    },
+                    title: function (context) {
+                      var title = "";
+                      if (context.length > 0) {
+                        var dataIndex = context[0].dataIndex;
+                        title =
+                          "Date: " +
+                          dates[dataIndex] +
+                          "\nOpen: " +
+                          opens[dataIndex] +
+                          "\nPrev Close: " +
+                          prev_close[dataIndex];
+                      }
+                      return title;
+                    },
+                  },
+                },
+                datalabels: {
+                  display: true,
+                  align: "end",
+                  anchor: "end",
+                  color: "black",
+                  rotation: 270,
+                  font: {
+                    weight: "bold",
+                  },
+                  formatter: function (value, context) {
+                    return value;
+                  },
+                },
+              },
+              animation: {
+                onComplete: function (animation) {
+                  setTimeout(function () {
+                    performanceChart2.options.animation.easing = "linear";
+                    performanceChart2.update();
+                  }, 1000);
+                },
+              },
+            },
+            plugins: [ChartDataLabels],
+          });
+          performanceChart4 = new Chart(ctx4, {
+            type: "bar",
+            data: {
+              labels: dates,
+              datasets: [
+                {
+                  label: " PREVIOUS CLOSE & TODAY OPEN ",
+                  data: prev_close_today_open_diff_minus_diff,
+                  borderWidth: 1,
+                  borderColor: function (context) {
+                    return prev_close[context.dataIndex] >
+                      opens[context.dataIndex]
+                      ? "red"
+                      : "green";
+                  },
+                  backgroundColor: function (context) {
+                    return prev_close[context.dataIndex] >
+                      opens[context.dataIndex]
+                      ? " rgba(255, 12, 26, 0.5)"
+                      : "rgba(87, 255, 26, 0.5)";
+                  },
+                },
+
+                {
+                  label: "PREVIOUS  CLOSES & TODAY CLOSES ",
+                  data: differences,
+                  borderWidth: 1,
+                  borderColor: function (context) {
+                    return closes[context.dataIndex] >
+                      opens[context.dataIndex]
+                      ? "green"
+                      : "red";
+                  },
+                  backgroundColor: function (context) {
+                    return closes[context.dataIndex] >
+                      opens[context.dataIndex]
+                      ? "rgba(87, 255, 26, 0.42)"
+                      : "rgba(255, 12, 26, 0.42)";
+                  },
+                },
+
+              ],
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              scales: {
+                x:{
+                  grid: {
+                    display: false, // Hide y-axis background border
+                  },
+                },
+                y: {
+                  min: 0,
+                  max: max_chart2, // Set dynamic max value
+                  ticks: {
+                    stepSize: 25,
+                    callback: function (value, index, values) {
+                      return index % 1 === 0 ? value : "";
+                    },
+                  },
+                },
+              },
+              plugins: {
+                legend: {
+                  labels: {
+                    usePointStyle: true,
+                    fontColor: "black",
+                  },
+                },
+                tooltip: {
+                  callbacks: {
+                    label: function (context) {
+                      var label = context.dataset.label || "";
+                      if (label) {
+                        label += ": ";
+                      }
+                      label += context.parsed.y;
+                      return label;
+                    },
+                    title: function (context) {
+                      var title = "";
+                      if (context.length > 0) {
+                        var dataIndex = context[0].dataIndex;
+                        title =
+                          "Date: " +
+                          dates[dataIndex] +
+                          "\nPrevClose - TodayClose: " +
+                          differences[dataIndex] +
+                          "\n PrevClose - TodayOpen: " +
+                          prev_close_today_open_diff_minus_diff[dataIndex];
+                      }
+                      return title;
+                    },
+                  },
+                },
+                datalabels: {
+                  display: true,
+                  align: "end",
+                  anchor: "end",
+                  color: "black",
+                  rotation: 270,
+                  font: {
+                    weight: "bold",
+                  },
+                  formatter: function (value, context) {
+                    return value;
+                  },
+                },
+              },
+              animation: {
+                onComplete: function (animation) {
+                  setTimeout(function () {
+                    performanceChart2.options.animation.easing = "linear";
+                    performanceChart2.update();
+                  }, 1000);
+                },
+              },
+            },
+            plugins: [ChartDataLabels],
+          });
+
+        },
+        error: function () {
+          console.log("Error fetching stock data.");
+        },
+      });
+    }
+  </script>
+</body>
+
+</html>
+
+{% endblock dashboard_body %}

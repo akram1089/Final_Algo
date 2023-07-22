@@ -1,0 +1,1735 @@
+{% extends "base_dashboard.html" %} {% load static %} {% block dashboard_body %}
+
+<style>
+  .strategies_active {
+    color: white;
+    background-color: #042452;
+    border-color: #021a3d;
+  }
+</style>
+
+<div class="container">
+  <div class="main_head_strategies border-bottom my-4">
+    <div
+      class="strategies d-flex mt-4"
+      style="align-items: center; gap: 0.3rem"
+    >
+      <h4 class="">Strategy Builder</h4>
+      <span>
+        <i
+          class="bi bi-exclamation-circle"
+          data-bs-toggle="collapse"
+          data-bs-target="#collapseExample"
+          aria-expanded="false"
+          aria-controls="collapseExample"
+        ></i>
+      </span>
+    </div>
+  </div>
+  <div class="collapse" id="collapseExample" style="margin-bottom: 25px">
+    <div class="card card-body">
+      <div class="antd-pro-components-markdown-index-markdownStyle">
+        <p>Strategies</p>
+        <ul>
+          <li>Bear Call, Put, Spread</li>
+          <li>Bull Call, Put, Spread</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="option_chain_symbol">
+    <div class="left_symbol">
+      <select class="form-select" aria-label="Default select example">
+        <option selected>Open this select menu</option>
+        <option value="1">One</option>
+        <option value="2">Two</option>
+        <option value="3">Three</option>
+      </select>
+      <div class="option_chain_name">
+        <p
+          class="text-secondary"
+          style="margin-bottom: auto !important; font-weight: 600"
+        >
+          Option Chain
+        </p>
+        <i class="bi bi-box-arrow-up-right"></i>
+      </div>
+
+      <div class="max_pain">
+        <div class="max_pain_inner">
+          <p
+            class="text-secondary"
+            style="margin-bottom: auto !important; font-weight: 600"
+          >
+            Max Pain
+          </p>
+          <i class="bi bi-box-arrow-up-right"></i>
+        </div>
+        <p class="text-secondary" style="margin-bottom: auto !important">
+          18700
+        </p>
+      </div>
+      <div class="lot_size">
+        <p
+          class="text-secondary"
+          style="margin-bottom: auto !important; font-weight: 600"
+        >
+          Lot Size
+        </p>
+        <p class="text-secondary" style="margin-bottom: auto !important">50</p>
+      </div>
+      <div class="spot_price">
+        <p
+          class="text-secondary"
+          style="margin-bottom: auto !important; font-weight: 600"
+        >
+          Spot
+        </p>
+        <p class="text-danger" style="margin-bottom: auto !important">
+          18729.4-26.5(-0.14%)
+        </p>
+      </div>
+    </div>
+
+    <div class="right_symbol d-flex">
+      <button class="button btn btn-outline-primary">Option Chain</button>
+      <button class="button btn btn-outline-primary">Futures</button>
+      <button class="button btn btn-outline-primary">Saved Strategies</button>
+      <i class="bi bi-arrow-clockwise text-primary"></i>
+    </div>
+  </div>
+
+  <div class="pre_build_strategies">
+    <div class="title">
+      <h5>Pre Built Strategies :</h5>
+    </div>
+    <button
+      class="button btn btn-outline-primary"
+      onclick="filter_strategy(1)"
+      data-btn-id="1"
+    >
+      STRADDLE
+    </button>
+    <button
+      class="button btn btn-outline-primary"
+      onclick="filter_strategy(2)"
+      data-btn-id="2"
+    >
+      STRANGLE
+    </button>
+    <button
+      class="button btn btn-outline-primary"
+      onclick="filter_strategy(3)"
+      data-btn-id="3"
+    >
+      SPREAD
+    </button>
+    <button
+      class="button btn btn-outline-primary"
+      onclick="filter_strategy(4)"
+      data-btn-id="4"
+    >
+      IRON FLY
+    </button>
+    <button
+      class="button btn btn-outline-primary"
+      onclick="filter_strategy(5)"
+      data-btn-id="5"
+    >
+      IRON CONDOR
+    </button>
+    <button
+      class="button btn btn-outline-primary"
+      onclick="filter_strategy(6)"
+      data-btn-id="6"
+    >
+      JADE LIZARD
+    </button>
+  </div>
+
+  <div
+    class="pre_build_fields"
+    id="pre_build_fields"
+    style="display: flex; flex-direction: column"
+  >
+    <div id="dynamic-rows" style="margin-top: 7px; margin-bottom: 7px">
+      <!-- Dynamic rows will be added here -->
+    </div>
+  </div>
+</div>
+<div class="builder_chart container" style="    width: 98%;">
+  <div class="row">
+    <div id="customSpinner" class="boxHeight position-relative">
+      <h5 class="heading-stocks text-capitalize">Payoff Diagram</h5>
+      <div id="strategyCharts" title="" class="e-control e-chart e-lib e-touch" dir="" style="
+          touch-action: none;
+          user-select: none;
+          position: relative;
+          display: block;
+          overflow: hidden;
+        ">
+        <div id="strategyCharts_Secondary_Element" style="position: relative; left: 0px; top: 0px"></div>
+        <svg id="strategyCharts_svg" width="1168" height="400">
+          <rect id="strategyCharts_ChartBorder" opacity="1" fill="transparent" stroke="transparent" stroke-width="0" stroke-dasharray="undefined" d="undefined" y="0" x="0" height="400" width="1168" rx="0" ry="0" transform=""></rect>
+          <rect id="strategyCharts_ChartAreaBorder" opacity="1" fill="transparent" stroke="transparent" stroke-width="0" stroke-dasharray="undefined" d="undefined" y="10" x="87" height="295.5" width="1071" rx="0" ry="0" transform=""></rect>
+          <g id="strategyChartsAxisInsideCollection">
+            <g id="strategyChartsAxisGroup0Inside">
+              <path id="strategyChartsAxisLine_0" d="M 87 305.5 L 1158 305.5" stroke-dasharray="" stroke-width="1" stroke="#b5b5b5"></path>
+              <path id="strategyCharts_MajorTickLine_0_0" opacity="null" fill="transparent" stroke="#b5b5b5" stroke-width="1" stroke-dasharray="null" d="M 87 306 L 87 311"></path>
+              <path id="strategyCharts_MajorTickLine_0_1" opacity="null" fill="transparent" stroke="#b5b5b5" stroke-width="1" stroke-dasharray="null" d="M 235.75 306 L 235.75 311"></path>
+              <path id="strategyCharts_MajorTickLine_0_2" opacity="null" fill="transparent" stroke="#b5b5b5" stroke-width="1" stroke-dasharray="null" d="M 384.5 306 L 384.5 311"></path>
+              <path id="strategyCharts_MajorTickLine_0_3" opacity="null" fill="transparent" stroke="#b5b5b5" stroke-width="1" stroke-dasharray="null" d="M 533.25 306 L 533.25 311"></path>
+              <path id="strategyCharts_MajorTickLine_0_4" opacity="null" fill="transparent" stroke="#b5b5b5" stroke-width="1" stroke-dasharray="null" d="M 682 306 L 682 311"></path>
+              <path id="strategyCharts_MajorTickLine_0_5" opacity="null" fill="transparent" stroke="#b5b5b5" stroke-width="1" stroke-dasharray="null" d="M 830.75 306 L 830.75 311"></path>
+              <path id="strategyCharts_MajorTickLine_0_6" opacity="null" fill="transparent" stroke="#b5b5b5" stroke-width="1" stroke-dasharray="null" d="M 979.5 306 L 979.5 311"></path>
+              <path id="strategyCharts_MajorTickLine_0_7" opacity="null" fill="transparent" stroke="#b5b5b5" stroke-width="1" stroke-dasharray="null" d="M 1128.25 306 L 1128.25 311"></path>
+              <g id="strategyChartsAxisLabels0">
+                <text id="strategyCharts0_AxisLabel_0" x="71" y="328" fill="#686868" font-size="12px" font-style="Normal" font-family="Segoe UI" font-weight="Normal" text-anchor="" labelrotation="undefined" transform="" opacity="undefined" dominant-baseline="undefined" style="
+                    font-family: 'Segoe UI';
+                    font-style: normal;
+                    font-size: 12px;
+                    font-weight: normal;
+                  ">
+                  16650
+                </text>
+                <text id="strategyCharts0_AxisLabel_1" x="219.75" y="328" fill="#686868" font-size="12px" font-style="Normal" font-family="Segoe UI" font-weight="Normal" text-anchor="" labelrotation="undefined" transform="" opacity="undefined" dominant-baseline="undefined" style="
+                    font-family: 'Segoe UI';
+                    font-style: normal;
+                    font-size: 12px;
+                    font-weight: normal;
+                  ">
+                  17150
+                </text>
+                <text id="strategyCharts0_AxisLabel_2" x="368.5" y="328" fill="#686868" font-size="12px" font-style="Normal" font-family="Segoe UI" font-weight="Normal" text-anchor="" labelrotation="undefined" transform="" opacity="undefined" dominant-baseline="undefined" style="
+                    font-family: 'Segoe UI';
+                    font-style: normal;
+                    font-size: 12px;
+                    font-weight: normal;
+                  ">
+                  17650
+                </text>
+                <text id="strategyCharts0_AxisLabel_3" x="517.25" y="328" fill="#686868" font-size="12px" font-style="Normal" font-family="Segoe UI" font-weight="Normal" text-anchor="" labelrotation="undefined" transform="" opacity="undefined" dominant-baseline="undefined" style="
+                    font-family: 'Segoe UI';
+                    font-style: normal;
+                    font-size: 12px;
+                    font-weight: normal;
+                  ">
+                  18150
+                </text>
+                <text id="strategyCharts0_AxisLabel_4" x="666" y="328" fill="#686868" font-size="12px" font-style="Normal" font-family="Segoe UI" font-weight="Normal" text-anchor="" labelrotation="undefined" transform="" opacity="undefined" dominant-baseline="undefined" style="
+                    font-family: 'Segoe UI';
+                    font-style: normal;
+                    font-size: 12px;
+                    font-weight: normal;
+                  ">
+                  18650
+                </text>
+                <text id="strategyCharts0_AxisLabel_5" x="814.75" y="328" fill="#686868" font-size="12px" font-style="Normal" font-family="Segoe UI" font-weight="Normal" text-anchor="" labelrotation="undefined" transform="" opacity="undefined" dominant-baseline="undefined" style="
+                    font-family: 'Segoe UI';
+                    font-style: normal;
+                    font-size: 12px;
+                    font-weight: normal;
+                  ">
+                  19150
+                </text>
+                <text id="strategyCharts0_AxisLabel_6" x="963.5" y="328" fill="#686868" font-size="12px" font-style="Normal" font-family="Segoe UI" font-weight="Normal" text-anchor="" labelrotation="undefined" transform="" opacity="undefined" dominant-baseline="undefined" style="
+                    font-family: 'Segoe UI';
+                    font-style: normal;
+                    font-size: 12px;
+                    font-weight: normal;
+                  ">
+                  19650
+                </text>
+                <text id="strategyCharts0_AxisLabel_7" x="1112.25" y="328" fill="#686868" font-size="12px" font-style="Normal" font-family="Segoe UI" font-weight="Normal" text-anchor="" labelrotation="undefined" transform="" opacity="undefined" dominant-baseline="undefined" style="
+                    font-family: 'Segoe UI';
+                    font-style: normal;
+                    font-size: 12px;
+                    font-weight: normal;
+                  ">
+                  20150
+                </text>
+              </g>
+              <text id="strategyCharts_AxisTitle_0" x="622.5" y="350" fill="#767f88" font-size="14px" font-style="normal" font-family="Segoe UI" font-weight="Normal" text-anchor="middle" labelrotation="undefined" transform="" opacity="1" dominant-baseline="undefined" aria-label="Strike Price" tabindex="2" style="
+                  font-family: 'Segoe UI';
+                  font-style: normal;
+                  font-size: 14px;
+                  font-weight: normal;
+                  color: rgb(118, 127, 136);
+                  text-anchor: middle;
+                ">
+                Strike Price
+              </text>
+            </g>
+            <g id="strategyChartsAxisGroup1Inside">
+              <path id="strategyCharts_MajorGridLine_1_0" opacity="null" fill="transparent" stroke="#dbdbdb" stroke-width="1" stroke-dasharray="" d="M 87 305.5 L 1158 305.5"></path>
+              <path id="strategyCharts_MajorGridLine_1_1" opacity="null" fill="transparent" stroke="#dbdbdb" stroke-width="1" stroke-dasharray="" d="M 87 263.2857142857143 L 1158 263.2857142857143"></path>
+              <path id="strategyCharts_MajorGridLine_1_2" opacity="null" fill="transparent" stroke="#dbdbdb" stroke-width="1" stroke-dasharray="" d="M 87 221.07142857142856 L 1158 221.07142857142856"></path>
+              <path id="strategyCharts_MajorGridLine_1_3" opacity="null" fill="transparent" stroke="#dbdbdb" stroke-width="1" stroke-dasharray="" d="M 87 178.85714285714286 L 1158 178.85714285714286"></path>
+              <path id="strategyCharts_MajorGridLine_1_4" opacity="null" fill="transparent" stroke="#dbdbdb" stroke-width="1" stroke-dasharray="" d="M 87 136.64285714285714 L 1158 136.64285714285714"></path>
+              <path id="strategyCharts_MajorGridLine_1_5" opacity="null" fill="transparent" stroke="#dbdbdb" stroke-width="1" stroke-dasharray="" d="M 87 94.42857142857142 L 1158 94.42857142857142"></path>
+              <path id="strategyCharts_MajorGridLine_1_6" opacity="null" fill="transparent" stroke="#dbdbdb" stroke-width="1" stroke-dasharray="" d="M 87 52.21428571428572 L 1158 52.21428571428572"></path>
+              <path id="strategyCharts_MajorGridLine_1_7" opacity="null" fill="transparent" stroke="#dbdbdb" stroke-width="1" stroke-dasharray="" d="M 87 10 L 1158 10"></path>
+              <g id="strategyChartsAxisLabels1">
+                <text id="strategyCharts1_AxisLabel_0" x="55" y="305" fill="#686868" font-size="12px" font-style="Normal" font-family="Segoe UI" font-weight="Normal" text-anchor="middle" labelrotation="undefined" transform="rotate(0,55,305)" opacity="undefined" dominant-baseline="middle" style="
+                    font-family: 'Segoe UI';
+                    font-style: normal;
+                    font-size: 12px;
+                    font-weight: normal;
+                    text-anchor: middle;
+                  ">
+                  -120000
+                </text>
+                <text id="strategyCharts1_AxisLabel_1" x="55" y="263" fill="#686868" font-size="12px" font-style="Normal" font-family="Segoe UI" font-weight="Normal" text-anchor="middle" labelrotation="undefined" transform="rotate(0,55,263)" opacity="undefined" dominant-baseline="middle" style="
+                    font-family: 'Segoe UI';
+                    font-style: normal;
+                    font-size: 12px;
+                    font-weight: normal;
+                    text-anchor: middle;
+                  ">
+                  -100000
+                </text>
+                <text id="strategyCharts1_AxisLabel_2" x="58.5" y="221" fill="#686868" font-size="12px" font-style="Normal" font-family="Segoe UI" font-weight="Normal" text-anchor="middle" labelrotation="undefined" transform="rotate(0,58.5,221)" opacity="undefined" dominant-baseline="middle" style="
+                    font-family: 'Segoe UI';
+                    font-style: normal;
+                    font-size: 12px;
+                    font-weight: normal;
+                    text-anchor: middle;
+                  ">
+                  -80000
+                </text>
+                <text id="strategyCharts1_AxisLabel_3" x="58.5" y="178" fill="#686868" font-size="12px" font-style="Normal" font-family="Segoe UI" font-weight="Normal" text-anchor="middle" labelrotation="undefined" transform="rotate(0,58.5,178)" opacity="undefined" dominant-baseline="middle" style="
+                    font-family: 'Segoe UI';
+                    font-style: normal;
+                    font-size: 12px;
+                    font-weight: normal;
+                    text-anchor: middle;
+                  ">
+                  -60000
+                </text>
+                <text id="strategyCharts1_AxisLabel_4" x="58.5" y="136" fill="#686868" font-size="12px" font-style="Normal" font-family="Segoe UI" font-weight="Normal" text-anchor="middle" labelrotation="undefined" transform="rotate(0,58.5,136)" opacity="undefined" dominant-baseline="middle" style="
+                    font-family: 'Segoe UI';
+                    font-style: normal;
+                    font-size: 12px;
+                    font-weight: normal;
+                    text-anchor: middle;
+                  ">
+                  -40000
+                </text>
+                <text id="strategyCharts1_AxisLabel_5" x="58.5" y="94" fill="#686868" font-size="12px" font-style="Normal" font-family="Segoe UI" font-weight="Normal" text-anchor="middle" labelrotation="undefined" transform="rotate(0,58.5,94)" opacity="undefined" dominant-baseline="middle" style="
+                    font-family: 'Segoe UI';
+                    font-style: normal;
+                    font-size: 12px;
+                    font-weight: normal;
+                    text-anchor: middle;
+                  ">
+                  -20000
+                </text>
+                <text id="strategyCharts1_AxisLabel_6" x="74" y="52" fill="#686868" font-size="12px" font-style="Normal" font-family="Segoe UI" font-weight="Normal" text-anchor="middle" labelrotation="undefined" transform="rotate(0,74,52)" opacity="undefined" dominant-baseline="middle" style="
+                    font-family: 'Segoe UI';
+                    font-style: normal;
+                    font-size: 12px;
+                    font-weight: normal;
+                    text-anchor: middle;
+                  ">
+                  0
+                </text>
+                <text id="strategyCharts1_AxisLabel_7" x="61" y="10" fill="#686868" font-size="12px" font-style="Normal" font-family="Segoe UI" font-weight="Normal" text-anchor="middle" labelrotation="undefined" transform="rotate(0,61,10)" opacity="undefined" dominant-baseline="middle" style="
+                    font-family: 'Segoe UI';
+                    font-style: normal;
+                    font-size: 12px;
+                    font-weight: normal;
+                    text-anchor: middle;
+                  ">
+                  20000
+                </text>
+              </g>
+              <text id="strategyCharts_AxisTitle_1" x="28" y="152.75" fill="#767f88" font-size="14px" font-style="normal" font-family="Segoe UI" font-weight="Normal" text-anchor="middle" labelrotation="-90" transform="rotate(-90,28,157.75)" opacity="1" dominant-baseline="null" tabindex="2" aria-label="Profit/Loss" style="
+                  font-family: 'Segoe UI';
+                  font-style: normal;
+                  font-size: 14px;
+                  font-weight: normal;
+                  color: rgb(118, 127, 136);
+                  text-anchor: middle;
+                ">
+                Profit/Loss
+              </text>
+            </g>
+            <g id="strategyChartsDefinitionLine"></g>
+          </g>
+          <g id="strategyCharts_UserInteraction" opacity="0" style="pointer-events: none">
+            <path id="strategyCharts_HorizontalLine" opacity="0.7" fill="none" stroke="#4f4f4f" stroke-width="1" stroke-dasharray="5, 5" d="M 87 93.4375 L 1158 93.4375"></path>
+            <path id="strategyCharts_VerticalLine" opacity="0.7" fill="none" stroke="#4f4f4f" stroke-width="1" stroke-dasharray="5, 5" d="M 161.375 10 L 161.375 305.5"></path>
+            <g id="strategyCharts_crosshair_axis">
+              <path id="strategyCharts_axis_tooltip_0" fill="#4399eb" d="M 138.875 317.5 Q 138.875 315.5 140.875 315.5 L 156.375 315.5 L 161.375 305.5 Q 161.375 305.5 161.375 305.5 L 166.375 315.5 L 181.875 315.5 Q 183.875 315.5 183.875 317.5 L 183.875 341.5 Q 183.875 343.5 181.875 343.5 L 140.875 343.5 Q 138.875 343.5 138.875 341.5 z"></path>
+              <text id="strategyCharts_axis_tooltip_text_0" x="143.875" y="334" fill="white" font-size="13px" font-style="Normal" font-family="Segoe UI" font-weight="Normal" text-anchor="start" labelrotation="undefined" transform="" opacity="1" dominant-baseline="undefined" style="
+                  font-family: 'Segoe UI';
+                  font-style: normal;
+                  font-size: 13px;
+                  font-weight: normal;
+                  color: white;
+                  text-anchor: start;
+                ">
+                16900
+              </text>
+              <path id="strategyCharts_axis_tooltip_1" fill="#4399eb" d="M 10 81.4375 Q 10 79.4375 12 79.4375 L 75 79.4375 Q 77 79.4375 77 81.4375 L 77 88.4375 L 87 93.4375 Q 87 93.4375 87 93.4375 L 77 98.4375 L 77 105.4375 Q 77 107.4375 75 107.4375 L 12 107.4375 Q 10 107.4375 10 105.4375 z"></path>
+              <text id="strategyCharts_axis_tooltip_text_1" x="15" y="97.9375" fill="white" font-size="13px" font-style="Normal" font-family="Segoe UI" font-weight="Normal" text-anchor="start" labelrotation="undefined" transform="" opacity="1" dominant-baseline="undefined" style="
+                  font-family: 'Segoe UI';
+                  font-style: normal;
+                  font-size: 13px;
+                  font-weight: normal;
+                  color: white;
+                  text-anchor: start;
+                ">
+                -19530.46
+              </text>
+            </g>
+          </g>
+          <g id="strategyChartsSeriesCollection">
+            <g id="strategyChartsSeriesGroup0" transform="translate(87,10)" clip-path="url(#strategyCharts_ChartSeriesClipRect_0)">
+              <defs>
+                <clipPath id="strategyCharts_ChartSeriesClipRect_0">
+                  <rect id="strategyCharts_ChartSeriesClipRect_0_Rect" opacity="1" fill="transparent" stroke="Gray" stroke-width="1" stroke-dasharray="undefined" d="undefined" y="0" x="0" height="295.5" width="1071" rx="0" ry="0" transform=""></rect>
+                </clipPath>
+              </defs>
+              <path id="strategyCharts_Series_0" opacity="1" fill="none" stroke="#2196f3" stroke-width="3px" stroke-dasharray="false" d="M 0 38.22503571428571 L 14.875 38.22503571428571 L 14.875 38.22503571428571 L 29.75 38.22503571428571 L 29.75 38.22503571428571 L 44.625 38.22503571428571 L 44.625 38.22503571428571 L 59.5 38.22503571428571 L 59.5 38.22503571428571 L 74.375 38.22503571428571 L 74.375 38.22503571428571 L 89.25 38.22503571428571 L 89.25 38.22503571428571 L 104.125 38.22503571428571 L 104.125 38.22503571428571 L 119 38.22503571428571 L 119 38.22503571428571 L 133.875 38.22503571428571 L 133.875 38.22503571428571 L 148.75 38.22503571428571 L 148.75 38.22503571428571 L 163.625 38.22503571428571 L 163.625 38.22503571428571 L 178.5 38.22503571428571 L 178.5 38.22503571428571 L 193.375 38.22503571428571 L 193.375 38.22503571428571 L 208.25 38.22503571428571 L 208.25 38.22503571428571 L 223.125 38.22503571428571 L 223.125 38.22503571428571 L 238 38.22503571428571 L 238 38.22503571428571 L 252.875 38.22503571428571 L 252.875 38.22503571428571 L 267.75 38.22503571428571 L 267.75 38.22503571428571 L 282.625 38.22503571428571 L 282.625 38.22503571428571 L 297.5 38.22503571428571 L 297.5 38.22503571428571 L 312.375 38.22503571428571 L 312.375 38.22503571428571 L 327.25 38.22503571428571 L 327.25 38.22503571428571 L 342.125 38.22503571428571 L 342.125 38.22503571428571 L 357 38.22503571428571 L 357 38.22503571428571 L 371.875 38.22503571428571 L 371.875 38.22503571428571 L 386.75 38.22503571428571 L 386.75 38.22503571428571 L 401.625 38.22503571428571 L 401.625 38.22503571428571 L 416.5 38.22503571428571 L 416.5 38.22503571428571 L 431.375 38.22503571428571 L 431.375 38.22503571428571 L 446.25 38.22503571428571 L 446.25 38.22503571428571 L 461.125 38.22503571428571 L 461.125 38.22503571428571 L 476 38.22503571428571 L 476 38.22503571428571 L 490.875 38.22503571428571 L 490.875 38.22503571428571 L 505.75 38.22503571428571 L 505.75 38.22503571428571 L 520.625 38.22503571428571 L 520.625 38.22503571428571 L 535.5 38.22503571428571 L 535.5 38.22503571428571 L 550.375 38.22503571428571 L 550.375 38.22503571428571 L 565.25 38.22503571428571 L 565.25 38.22503571428571 L 580.125 38.22503571428571 L 580.125 38.22503571428571 L 595 38.22503571428571 L 595 38.22503571428571 L 609.875 43.50182142857144 L 609.875 43.50182142857144 L 624.75 48.77860714285713 L 624.75 48.77860714285713 L 639.625 54.05539285714286 L 639.625 54.05539285714286 L 654.5 59.33217857142856 L 654.5 59.33217857142856 L 669.375 64.60896428571428 L 669.375 64.60896428571428 L 684.25 69.88575000000002 L 684.25 69.88575000000002 L 699.125 75.16253571428571 L 699.125 75.16253571428571 L 714 80.43932142857143 L 714 80.43932142857143 L 728.875 85.71610714285713 L 728.875 85.71610714285713 L 743.75 90.99289285714286 L 743.75 90.99289285714286 L 758.625 96.26967857142856 L 758.625 96.26967857142856 L 773.5 101.54646428571428 L 773.5 101.54646428571428 L 788.375 106.82325000000002 L 788.375 106.82325000000002 L 803.25 112.10003571428571 L 803.25 112.10003571428571 L 818.125 117.37682142857143 L 818.125 117.37682142857143 L 833 122.65360714285713 L 833 122.65360714285713 L 847.875 127.93039285714286 L 847.875 127.93039285714286 L 862.75 133.20717857142856 L 862.75 133.20717857142856 L 877.625 138.48396428571428 L 877.625 138.48396428571428 L 892.5 143.76075 L 892.5 143.76075 L 907.375 149.0375357142857 L 907.375 149.0375357142857 L 922.25 154.31432142857145 L 922.25 154.31432142857145 L 937.125 159.59110714285714 L 937.125 159.59110714285714 L 952 164.86789285714286 L 952 164.86789285714286 L 966.875 170.14467857142859 L 966.875 170.14467857142859 L 981.75 175.42146428571428 L 981.75 175.42146428571428 L 996.625 180.69824999999997 L 996.625 180.69824999999997 L 1011.5 185.9750357142857 L 1011.5 185.9750357142857 L 1026.375 191.25182142857145 L 1026.375 191.25182142857145 L 1041.25 196.52860714285714 L 1041.25 196.52860714285714 L 1056.125 201.80539285714286 L 1056.125 201.80539285714286 L 1071 207.08217857142859 " clip-path=""></path>
+            </g>
+            <g id="strategyChartsSeriesGroup1" transform="translate(87,10)" clip-path="url(#strategyCharts_ChartSeriesClipRect_1)">
+              <defs>
+                <clipPath id="strategyCharts_ChartSeriesClipRect_1">
+                  <rect id="strategyCharts_ChartSeriesClipRect_1_Rect" opacity="1" fill="transparent" stroke="Gray" stroke-width="1" stroke-dasharray="undefined" d="undefined" y="0" x="0" height="295.5" width="1071" rx="0" ry="0" transform=""></rect>
+                </clipPath>
+              </defs>
+              <path id="strategyCharts_Series_1" opacity="1" fill="none" stroke="#f96c92" stroke-width="3px" stroke-dasharray="false" d="M 0 253.2804375 L 14.875 248.00365178571428 L 14.875 248.00365178571428 L 29.75 242.7268660714286 L 29.75 242.7268660714286 L 44.625 237.45008035714287 L 44.625 237.45008035714287 L 59.5 232.17329464285712 L 59.5 232.17329464285712 L 74.375 226.89650892857142 L 74.375 226.89650892857142 L 89.25 221.61972321428573 L 89.25 221.61972321428573 L 104.125 216.3429375 L 104.125 216.3429375 L 119 211.06615178571428 L 119 211.06615178571428 L 133.875 205.7893660714286 L 133.875 205.7893660714286 L 148.75 200.51258035714287 L 148.75 200.51258035714287 L 163.625 195.23579464285712 L 163.625 195.23579464285712 L 178.5 189.95900892857142 L 178.5 189.95900892857142 L 193.375 184.68222321428573 L 193.375 184.68222321428573 L 208.25 179.4054375 L 208.25 179.4054375 L 223.125 174.12865178571428 L 223.125 174.12865178571428 L 238 168.8518660714286 L 238 168.8518660714286 L 252.875 163.57508035714287 L 252.875 163.57508035714287 L 267.75 158.29829464285712 L 267.75 158.29829464285712 L 282.625 153.02150892857142 L 282.625 153.02150892857142 L 297.5 147.7447232142857 L 297.5 147.7447232142857 L 312.375 142.4679375 L 312.375 142.4679375 L 327.25 137.19115178571428 L 327.25 137.19115178571428 L 342.125 131.9143660714286 L 342.125 131.9143660714286 L 357 126.63758035714285 L 357 126.63758035714285 L 371.875 121.36079464285713 L 371.875 121.36079464285713 L 386.75 116.08400892857144 L 386.75 116.08400892857144 L 401.625 110.8072232142857 L 401.625 110.8072232142857 L 416.5 105.5304375 L 416.5 105.5304375 L 431.375 100.25365178571428 L 431.375 100.25365178571428 L 446.25 94.97686607142859 L 446.25 94.97686607142859 L 461.125 89.70008035714285 L 461.125 89.70008035714285 L 476 84.42329464285713 L 476 84.42329464285713 L 490.875 79.14650892857144 L 490.875 79.14650892857144 L 505.75 73.8697232142857 L 505.75 73.8697232142857 L 520.625 68.5929375 L 520.625 68.5929375 L 535.5 63.31615178571428 L 535.5 63.31615178571428 L 550.375 58.03936607142858 L 550.375 58.03936607142858 L 565.25 52.76258035714285 L 565.25 52.76258035714285 L 580.125 47.48579464285713 L 580.125 47.48579464285713 L 595 42.20900892857143 L 595 42.20900892857143 L 609.875 42.20900892857143 L 609.875 42.20900892857143 L 624.75 42.20900892857143 L 624.75 42.20900892857143 L 639.625 42.20900892857143 L 639.625 42.20900892857143 L 654.5 42.20900892857143 L 654.5 42.20900892857143 L 669.375 42.20900892857143 L 669.375 42.20900892857143 L 684.25 42.20900892857143 L 684.25 42.20900892857143 L 699.125 42.20900892857143 L 699.125 42.20900892857143 L 714 42.20900892857143 L 714 42.20900892857143 L 728.875 42.20900892857143 L 728.875 42.20900892857143 L 743.75 42.20900892857143 L 743.75 42.20900892857143 L 758.625 42.20900892857143 L 758.625 42.20900892857143 L 773.5 42.20900892857143 L 773.5 42.20900892857143 L 788.375 42.20900892857143 L 788.375 42.20900892857143 L 803.25 42.20900892857143 L 803.25 42.20900892857143 L 818.125 42.20900892857143 L 818.125 42.20900892857143 L 833 42.20900892857143 L 833 42.20900892857143 L 847.875 42.20900892857143 L 847.875 42.20900892857143 L 862.75 42.20900892857143 L 862.75 42.20900892857143 L 877.625 42.20900892857143 L 877.625 42.20900892857143 L 892.5 42.20900892857143 L 892.5 42.20900892857143 L 907.375 42.20900892857143 L 907.375 42.20900892857143 L 922.25 42.20900892857143 L 922.25 42.20900892857143 L 937.125 42.20900892857143 L 937.125 42.20900892857143 L 952 42.20900892857143 L 952 42.20900892857143 L 966.875 42.20900892857143 L 966.875 42.20900892857143 L 981.75 42.20900892857143 L 981.75 42.20900892857143 L 996.625 42.20900892857143 L 996.625 42.20900892857143 L 1011.5 42.20900892857143 L 1011.5 42.20900892857143 L 1026.375 42.20900892857143 L 1026.375 42.20900892857143 L 1041.25 42.20900892857143 L 1041.25 42.20900892857143 L 1056.125 42.20900892857143 L 1056.125 42.20900892857143 L 1071 42.20900892857143 " clip-path=""></path>
+            </g>
+            <g id="strategyChartsSeriesGroup2" transform="translate(87,10)" clip-path="url(#strategyCharts_ChartSeriesClipRect_2)">
+              <defs>
+                <clipPath id="strategyCharts_ChartSeriesClipRect_2">
+                  <rect id="strategyCharts_ChartSeriesClipRect_2_Rect" opacity="1" fill="transparent" stroke="Gray" stroke-width="1" stroke-dasharray="undefined" d="undefined" y="0" x="0" height="295.5" width="1071" rx="0" ry="0" transform=""></rect>
+                </clipPath>
+              </defs>
+              <path id="strategyCharts_Series_2" opacity="1" fill="none" stroke="#000000" stroke-width="3px" stroke-dasharray="5, 5" d="M 0 249.2911875 L 14.875 244.01440178571428 L 14.875 244.01440178571428 L 29.75 238.73761607142856 L 29.75 238.73761607142856 L 44.625 233.46083035714287 L 44.625 233.46083035714287 L 59.5 228.18404464285715 L 59.5 228.18404464285715 L 74.375 222.90725892857142 L 74.375 222.90725892857142 L 89.25 217.63047321428573 L 89.25 217.63047321428573 L 104.125 212.3536875 L 104.125 212.3536875 L 119 207.07690178571428 L 119 207.07690178571428 L 133.875 201.80011607142856 L 133.875 201.80011607142856 L 148.75 196.52333035714287 L 148.75 196.52333035714287 L 163.625 191.24654464285715 L 163.625 191.24654464285715 L 178.5 185.96975892857142 L 178.5 185.96975892857142 L 193.375 180.69297321428573 L 193.375 180.69297321428573 L 208.25 175.4161875 L 208.25 175.4161875 L 223.125 170.13940178571428 L 223.125 170.13940178571428 L 238 164.86261607142856 L 238 164.86261607142856 L 252.875 159.58583035714287 L 252.875 159.58583035714287 L 267.75 154.30904464285715 L 267.75 154.30904464285715 L 282.625 149.03225892857142 L 282.625 149.03225892857142 L 297.5 143.75547321428573 L 297.5 143.75547321428573 L 312.375 138.47868749999998 L 312.375 138.47868749999998 L 327.25 133.20190178571428 L 327.25 133.20190178571428 L 342.125 127.92511607142856 L 342.125 127.92511607142856 L 357 122.64833035714287 L 357 122.64833035714287 L 371.875 117.37154464285715 L 371.875 117.37154464285715 L 386.75 112.09475892857145 L 386.75 112.09475892857145 L 401.625 106.81797321428571 L 401.625 106.81797321428571 L 416.5 101.54118749999999 L 416.5 101.54118749999999 L 431.375 96.2644017857143 L 431.375 96.2644017857143 L 446.25 90.98761607142856 L 446.25 90.98761607142856 L 461.125 85.71083035714287 L 461.125 85.71083035714287 L 476 80.43404464285715 L 476 80.43404464285715 L 490.875 75.15725892857145 L 490.875 75.15725892857145 L 505.75 69.88047321428571 L 505.75 69.88047321428571 L 520.625 64.60368749999999 L 520.625 64.60368749999999 L 535.5 59.32690178571429 L 535.5 59.32690178571429 L 550.375 54.05011607142856 L 550.375 54.05011607142856 L 565.25 48.77333035714287 L 565.25 48.77333035714287 L 580.125 43.49654464285714 L 580.125 43.49654464285714 L 595 38.219758928571444 L 595 38.219758928571444 L 609.875 43.49654464285714 L 609.875 43.49654464285714 L 624.75 48.77333035714287 L 624.75 48.77333035714287 L 639.625 54.05011607142856 L 639.625 54.05011607142856 L 654.5 59.32690178571429 L 654.5 59.32690178571429 L 669.375 64.60368749999999 L 669.375 64.60368749999999 L 684.25 69.88047321428571 L 684.25 69.88047321428571 L 699.125 75.15725892857145 L 699.125 75.15725892857145 L 714 80.43404464285715 L 714 80.43404464285715 L 728.875 85.71083035714287 L 728.875 85.71083035714287 L 743.75 90.98761607142856 L 743.75 90.98761607142856 L 758.625 96.2644017857143 L 758.625 96.2644017857143 L 773.5 101.54118749999999 L 773.5 101.54118749999999 L 788.375 106.81797321428571 L 788.375 106.81797321428571 L 803.25 112.09475892857145 L 803.25 112.09475892857145 L 818.125 117.37154464285715 L 818.125 117.37154464285715 L 833 122.64833035714287 L 833 122.64833035714287 L 847.875 127.92511607142856 L 847.875 127.92511607142856 L 862.75 133.20190178571428 L 862.75 133.20190178571428 L 877.625 138.47868749999998 L 877.625 138.47868749999998 L 892.5 143.75547321428573 L 892.5 143.75547321428573 L 907.375 149.03225892857142 L 907.375 149.03225892857142 L 922.25 154.30904464285715 L 922.25 154.30904464285715 L 937.125 159.58583035714287 L 937.125 159.58583035714287 L 952 164.86261607142856 L 952 164.86261607142856 L 966.875 170.13940178571428 L 966.875 170.13940178571428 L 981.75 175.4161875 L 981.75 175.4161875 L 996.625 180.69297321428573 L 996.625 180.69297321428573 L 1011.5 185.96975892857142 L 1011.5 185.96975892857142 L 1026.375 191.24654464285715 L 1026.375 191.24654464285715 L 1041.25 196.52333035714287 L 1041.25 196.52333035714287 L 1056.125 201.80011607142856 L 1056.125 201.80011607142856 L 1071 207.07690178571428 " clip-path=""></path>
+            </g>
+            <defs>
+              <clipPath id="strategyCharts_ChartAreaClipRect_">
+                <rect id="strategyCharts_ChartAreaClipRect__Rect" x="87" y="10" width="1071" height="295.5" fill="transparent" stroke-width="1" stroke="Gray"></rect>
+              </clipPath>
+            </defs>
+          </g>
+          <g id="strategyChartsAxisOutsideCollection"></g>
+          <clipPath id="strategyCharts_chart_legend_clipPath">
+            <rect id="strategyCharts_chart_legend_element_clipPath_rect" opacity="1" fill="transparent" stroke="transparent" stroke-width="1" stroke-dasharray="undefined" d="undefined" y="364" x="488.5" height="34" width="191" rx="0" ry="0" transform=""></rect>
+          </clipPath>
+          <g id="strategyCharts_chart_legend_g">
+            <rect id="strategyCharts_chart_legend_element" opacity="1" fill="transparent" stroke="transparent" stroke-width="1" stroke-dasharray="undefined" d="undefined" y="356" x="488.5" height="34" width="191" rx="0" ry="0" transform=""></rect>
+            <g id="strategyCharts_chart_legend_collections" style="
+                clip-path: url('#strategyCharts_chart_legend_clipPath');
+              ">
+              <g id="strategyCharts_chart_legend_translate_g">
+                <g id="strategyCharts_chart_legend_g_0" tabindex="3" aria-label="Click to show or hide the LEG1 series" style="outline: none; cursor: pointer">
+                  <path id="strategyCharts_chart_legend_shape_0" opacity="1" fill="#2196f3" stroke="#2196f3" stroke-width="3px" stroke-dasharray="" d="M 496.5 373 L 506.5 373"></path>
+                  <text id="strategyCharts_chart_legend_text_0" x="511.5" y="377.5" fill="#767f88" font-size="13px" font-style="Normal" font-family="Segoe UI" font-weight="Normal" text-anchor="start" labelrotation="undefined" transform="" opacity="1" dominant-baseline="undefined" aria-label="Click to show or hide the LEG1 series" style="
+                      font-family: 'Segoe UI';
+                      font-style: normal;
+                      font-size: 13px;
+                      font-weight: normal;
+                      color: rgb(118, 127, 136);
+                      text-anchor: start;
+                    ">
+                    LEG1
+                  </text>
+                </g>
+                <g id="strategyCharts_chart_legend_g_1" tabindex="3" aria-label="Click to show or hide the LEG2 series" style="outline: none; cursor: pointer">
+                  <path id="strategyCharts_chart_legend_shape_1" opacity="1" fill="#f96c92" stroke="#f96c92" stroke-width="3px" stroke-dasharray="" d="M 548.5 373 L 558.5 373"></path>
+                  <text id="strategyCharts_chart_legend_text_1" x="563.5" y="377.5" fill="#767f88" font-size="13px" font-style="Normal" font-family="Segoe UI" font-weight="Normal" text-anchor="start" labelrotation="undefined" transform="" opacity="1" dominant-baseline="undefined" aria-label="Click to show or hide the LEG2 series" style="
+                      font-family: 'Segoe UI';
+                      font-style: normal;
+                      font-size: 13px;
+                      font-weight: normal;
+                      color: rgb(118, 127, 136);
+                      text-anchor: start;
+                    ">
+                    LEG2
+                  </text>
+                </g>
+                <g id="strategyCharts_chart_legend_g_2" tabindex="3" aria-label="Click to show or hide the COMBINE series" style="outline: none; cursor: pointer">
+                  <path id="strategyCharts_chart_legend_shape_2" opacity="1" fill="#000000" stroke="#000000" stroke-width="3px" stroke-dasharray="" d="M 600.5 373 L 610.5 373"></path>
+                  <text id="strategyCharts_chart_legend_text_2" x="615.5" y="377.5" fill="#767f88" font-size="13px" font-style="Normal" font-family="Segoe UI" font-weight="Normal" text-anchor="start" labelrotation="undefined" transform="" opacity="1" dominant-baseline="undefined" aria-label="Click to show or hide the COMBINE series" style="
+                      font-family: 'Segoe UI';
+                      font-style: normal;
+                      font-size: 13px;
+                      font-weight: normal;
+                      color: rgb(118, 127, 136);
+                      text-anchor: start;
+                    ">
+                    COMBINE
+                  </text>
+                </g>
+              </g>
+            </g>
+          </g>
+        <!-- Code injected by live-server -->
+<script>
+//   &lt;-- For SVG support
+if ('WebSocket' in window) {
+(function () {
+  function refreshCSS() {
+    var sheets = [].slice.call(document.getElementsByTagName("link"));
+    var head = document.getElementsByTagName("head")[0];
+    for (var i = 0; i &lt; sheets.length; ++i) {
+      var elem = sheets[i];
+      var parent = elem.parentElement || head;
+      parent.removeChild(elem);
+      var rel = elem.rel;
+      if (elem.href &amp;&amp; typeof rel != "string" || rel.length == 0 || rel.toLowerCase() == "stylesheet") {
+        var url = elem.href.replace(/(&amp;|\?)_cacheOverride=\d+/, '');
+        elem.href = url + (url.indexOf('?') &gt;= 0 ? '&amp;' : '?') + '_cacheOverride=' + (new Date().valueOf());
+      }
+      parent.appendChild(elem);
+    }
+  }
+  var protocol = window.location.protocol === 'http:' ? 'ws://' : 'wss://';
+  var address = protocol + window.location.host + window.location.pathname + '/ws';
+  var socket = new WebSocket(address);
+  socket.onmessage = function (msg) {
+    if (msg.data == 'reload') window.location.reload();
+    else if (msg.data == 'refreshcss') refreshCSS();
+  };
+  if (sessionStorage &amp;&amp; !sessionStorage.getItem('IsThisFirstTime_Log_From_LiveServer')) {
+    console.log('Live reload enabled.');
+    sessionStorage.setItem('IsThisFirstTime_Log_From_LiveServer', true);
+  }
+})();
+}
+else {
+console.error('Upgrade your browser. This Browser is NOT supported WebSocket for Live-Reloading.');
+}
+// 
+</script>
+</svg>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  var strategy = [
+    {
+      id: 1,
+      main_desc: `
+      <div class="container " style="display: flex;
+      gap: 0.3rem;
+      flex-direction: column;">
+        <div class="row">
+          <div class="col">
+            <div class="form-group">
+              <select class="form-select">
+                <option selected>Instruments</option>
+                <option >Call</option>
+                <option>Put</option>
+                <option>Future</option>
+              </select>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <select class="form-select">
+                <option selected>Expiry</option>
+                <option>Select Option 1</option>
+                <option>Select Option 2</option>
+                <option>Select Option 3</option>
+              </select>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <select class="form-select">
+                <option selected>Strike Price</option>
+                <option>Select Option 1</option>
+                <option>Select Option 2</option>
+                <option>Select Option 3</option>
+              </select>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <select class="form-select">
+                <option selected>Position</option>
+                <option>Select Option 1</option>
+                <option>Select Option 2</option>
+                <option>Select Option 3</option>
+              </select>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <input type="number" class="form-control" placeholder="No. of Lots">
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <input type="number" class="form-control" placeholder="Traded Price">
+            </div>
+          </div>
+          <div class="col">
+            <button class="btn btn-primary add-row">
+              <i class="bi bi-plus"></i>
+            </button>
+          </div>
+        </div>
+        <div class="row delete-straddle">
+          <div class="col">
+            <div class="form-group">
+              <select class="form-select">
+                <option selected>Instruments</option>
+                <option >Call</option>
+                <option>Put</option>
+                <option>Future</option>
+              </select>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <select class="form-select">
+                <option selected>Expiry</option>
+                <option>Select Option 1</option>
+                <option>Select Option 2</option>
+                <option>Select Option 3</option>
+              </select>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <select class="form-select">
+                <option selected>Strike Price</option>
+                <option>Select Option 1</option>
+                <option>Select Option 2</option>
+                <option>Select Option 3</option>
+              </select>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <select class="form-select">
+                <option selected>Position</option>
+                <option>Select Option 1</option>
+                <option>Select Option 2</option>
+                <option>Select Option 3</option>
+              </select>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <input type="number" class="form-control" placeholder="No. of Lots">
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <input type="number" class="form-control" placeholder="Traded Price">
+            </div>
+          </div>
+          <div class="col">
+            <button class="btn btn-danger delete-row">
+              <i class="bi bi-trash"></i>
+            </button>
+          </div>
+        </div>
+        <div id="dynamic-rows">
+          <!-- Dynamic rows will be added here -->
+        </div>
+      </div>
+
+      <div class="save_calc-btn" style="    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    right: 10%;
+    position: relative; gap:1rem;">
+        <button class="button btn btn-outline-primary">SAVE</button><button class="button btn btn-outline-primary">CALCULATE</button>
+      </div>
+      `,
+    },
+    {
+      id: 2,
+      main_desc: `  <div class="container " style="display: flex;
+      gap: 0.3rem;
+      flex-direction: column;">
+        <div class="row">
+          <div class="col">
+            <div class="form-group">
+              <select class="form-select">
+                <option selected>Instruments</option>
+                <option >Call</option>
+                <option>Put</option>
+                <option>Future</option>
+              </select>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <select class="form-select">
+                <option selected>Expiry</option>
+                <option>Select Option 1</option>
+                <option>Select Option 2</option>
+                <option>Select Option 3</option>
+              </select>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <select class="form-select">
+                <option selected>Strike Price</option>
+                <option>Select Option 1</option>
+                <option>Select Option 2</option>
+                <option>Select Option 3</option>
+              </select>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <select class="form-select">
+                <option selected>Position</option>
+                <option>Select Option 1</option>
+                <option>Select Option 2</option>
+                <option>Select Option 3</option>
+              </select>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <input type="number" class="form-control" placeholder="No. of Lots">
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <input type="number" class="form-control" placeholder="Traded Price">
+            </div>
+          </div>
+          <div class="col">
+            <button class="btn btn-primary add-row">
+              <i class="bi bi-plus"></i>
+            </button>
+          </div>
+        </div>
+        <div class="row delete-straddle">
+          <div class="col">
+            <div class="form-group">
+              <select class="form-select">
+                <option selected>Instruments</option>
+                <option >Call</option>
+                <option>Put</option>
+                <option>Future</option>
+              </select>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <select class="form-select">
+                <option selected>Expiry</option>
+                <option>Select Option 1</option>
+                <option>Select Option 2</option>
+                <option>Select Option 3</option>
+              </select>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <select class="form-select">
+                <option selected>Strike Price</option>
+                <option>Select Option 1</option>
+                <option>Select Option 2</option>
+                <option>Select Option 3</option>
+              </select>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <select class="form-select">
+                <option selected>Position</option>
+                <option>Select Option 1</option>
+                <option>Select Option 2</option>
+                <option>Select Option 3</option>
+              </select>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <input type="number" class="form-control" placeholder="No. of Lots">
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <input type="number" class="form-control" placeholder="Traded Price">
+            </div>
+          </div>
+          <div class="col">
+            <button class="btn btn-danger delete-row">
+              <i class="bi bi-trash"></i>
+            </button>
+          </div>
+        </div>
+        <div id="dynamic-rows">
+          <!-- Dynamic rows will be added here -->
+        </div>
+      </div>
+
+      <div class="save_calc-btn" style="    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    right: 10%;
+    position: relative; gap:1rem;">
+        <button class="button btn btn-outline-primary">SAVE</button><button class="button btn btn-outline-primary">CALCULATE</button>
+      </div>
+      `,
+    },
+    {
+      id: 3,
+      main_desc: ` <div class="container " style="display: flex;
+      gap: 0.3rem;
+      flex-direction: column;">
+        <div class="row">
+          <div class="col">
+            <div class="form-group">
+              <select class="form-select">
+                <option selected>Instruments</option>
+                <option >Call</option>
+                <option>Put</option>
+                <option>Future</option>
+              </select>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <select class="form-select">
+                <option selected>Expiry</option>
+                <option>Select Option 1</option>
+                <option>Select Option 2</option>
+                <option>Select Option 3</option>
+              </select>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <select class="form-select">
+                <option selected>Strike Price</option>
+                <option>Select Option 1</option>
+                <option>Select Option 2</option>
+                <option>Select Option 3</option>
+              </select>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <select class="form-select">
+                <option selected>Position</option>
+                <option>Select Option 1</option>
+                <option>Select Option 2</option>
+                <option>Select Option 3</option>
+              </select>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <input type="number" class="form-control" placeholder="No. of Lots">
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <input type="number" class="form-control" placeholder="Traded Price">
+            </div>
+          </div>
+          <div class="col">
+            <button class="btn btn-primary add-row">
+              <i class="bi bi-plus"></i>
+            </button>
+          </div>
+        </div>
+        <div class="row delete-straddle">
+          <div class="col">
+            <div class="form-group">
+              <select class="form-select">
+                <option selected>Instruments</option>
+                <option >Call</option>
+                <option>Put</option>
+                <option>Future</option>
+              </select>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <select class="form-select">
+                <option selected>Expiry</option>
+                <option>Select Option 1</option>
+                <option>Select Option 2</option>
+                <option>Select Option 3</option>
+              </select>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <select class="form-select">
+                <option selected>Strike Price</option>
+                <option>Select Option 1</option>
+                <option>Select Option 2</option>
+                <option>Select Option 3</option>
+              </select>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <select class="form-select">
+                <option selected>Position</option>
+                <option>Select Option 1</option>
+                <option>Select Option 2</option>
+                <option>Select Option 3</option>
+              </select>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <input type="number" class="form-control" placeholder="No. of Lots">
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <input type="number" class="form-control" placeholder="Traded Price">
+            </div>
+          </div>
+          <div class="col">
+            <button class="btn btn-danger delete-row">
+              <i class="bi bi-trash"></i>
+            </button>
+          </div>
+        </div>
+        <div id="dynamic-rows">
+          <!-- Dynamic rows will be added here -->
+        </div>
+      </div>
+
+      <div class="save_calc-btn" style="    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    right: 10%;
+    position: relative; gap:1rem;">
+        <button class="button btn btn-outline-primary">SAVE</button><button class="button btn btn-outline-primary">CALCULATE</button>
+      </div>
+      `,
+    },
+    {
+      id: 4,
+      main_desc: ` 
+      <div class="container " style="display: flex;
+      gap: 0.3rem;
+      flex-direction: column;">
+        <div class="row">
+          <div class="col">
+            <div class="form-group">
+              <select class="form-select">
+                <option selected>Instruments</option>
+                <option >Call</option>
+                <option>Put</option>
+                <option>Future</option>
+              </select>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <select class="form-select">
+                <option selected>Expiry</option>
+                <option>Select Option 1</option>
+                <option>Select Option 2</option>
+                <option>Select Option 3</option>
+              </select>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <select class="form-select">
+                <option selected>Strike Price</option>
+                <option>Select Option 1</option>
+                <option>Select Option 2</option>
+                <option>Select Option 3</option>
+              </select>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <select class="form-select">
+                <option selected>Position</option>
+                <option>Select Option 1</option>
+                <option>Select Option 2</option>
+                <option>Select Option 3</option>
+              </select>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <input type="number" class="form-control" placeholder="No. of Lots">
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <input type="number" class="form-control" placeholder="Traded Price">
+            </div>
+          </div>
+          <div class="col">
+            <button class="btn btn-primary add-row">
+              <i class="bi bi-plus"></i>
+            </button>
+          </div>
+        </div>
+        <div class="row delete-straddle">
+          <div class="col">
+            <div class="form-group">
+              <select class="form-select">
+                <option selected>Instruments</option>
+                <option >Call</option>
+                <option>Put</option>
+                <option>Future</option>
+              </select>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <select class="form-select">
+                <option selected>Expiry</option>
+                <option>Select Option 1</option>
+                <option>Select Option 2</option>
+                <option>Select Option 3</option>
+              </select>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <select class="form-select">
+                <option selected>Strike Price</option>
+                <option>Select Option 1</option>
+                <option>Select Option 2</option>
+                <option>Select Option 3</option>
+              </select>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <select class="form-select">
+                <option selected>Position</option>
+                <option>Select Option 1</option>
+                <option>Select Option 2</option>
+                <option>Select Option 3</option>
+              </select>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <input type="number" class="form-control" placeholder="No. of Lots">
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <input type="number" class="form-control" placeholder="Traded Price">
+            </div>
+          </div>
+          <div class="col">
+            <button class="btn btn-danger delete-row">
+              <i class="bi bi-trash"></i>
+            </button>
+          </div>
+        </div>
+        <div class="row delete-straddle">
+          <div class="col">
+            <div class="form-group">
+              <select class="form-select">
+                <option selected>Instruments</option>
+                <option >Call</option>
+                <option>Put</option>
+                <option>Future</option>
+              </select>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <select class="form-select">
+                <option selected>Expiry</option>
+                <option>Select Option 1</option>
+                <option>Select Option 2</option>
+                <option>Select Option 3</option>
+              </select>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <select class="form-select">
+                <option selected>Strike Price</option>
+                <option>Select Option 1</option>
+                <option>Select Option 2</option>
+                <option>Select Option 3</option>
+              </select>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <select class="form-select">
+                <option selected>Position</option>
+                <option>Select Option 1</option>
+                <option>Select Option 2</option>
+                <option>Select Option 3</option>
+              </select>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <input type="number" class="form-control" placeholder="No. of Lots">
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <input type="number" class="form-control" placeholder="Traded Price">
+            </div>
+          </div>
+          <div class="col">
+            <button class="btn btn-danger delete-row">
+              <i class="bi bi-trash"></i>
+            </button>
+          </div>
+        </div>
+        <div class="row delete-straddle">
+          <div class="col">
+            <div class="form-group">
+              <select class="form-select">
+                <option selected>Instruments</option>
+                <option >Call</option>
+                <option>Put</option>
+                <option>Future</option>
+              </select>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <select class="form-select">
+                <option selected>Expiry</option>
+                <option>Select Option 1</option>
+                <option>Select Option 2</option>
+                <option>Select Option 3</option>
+              </select>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <select class="form-select">
+                <option selected>Strike Price</option>
+                <option>Select Option 1</option>
+                <option>Select Option 2</option>
+                <option>Select Option 3</option>
+              </select>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <select class="form-select">
+                <option selected>Position</option>
+                <option>Select Option 1</option>
+                <option>Select Option 2</option>
+                <option>Select Option 3</option>
+              </select>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <input type="number" class="form-control" placeholder="No. of Lots">
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <input type="number" class="form-control" placeholder="Traded Price">
+            </div>
+          </div>
+          <div class="col">
+            <button class="btn btn-danger delete-row">
+              <i class="bi bi-trash"></i>
+            </button>
+          </div>
+        </div>
+        <div id="dynamic-rows">
+          <!-- Dynamic rows will be added here -->
+        </div>
+      </div>
+
+      <div class="save_calc-btn" style="    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    right: 10%;
+    position: relative; gap:1rem;">
+        <button class="button btn btn-outline-primary">SAVE</button><button class="button btn btn-outline-primary">CALCULATE</button>
+      </div>
+      `,
+    },
+    {
+      id: 5,
+      main_desc: ` 
+      <div class="container " style="display: flex;
+      gap: 0.3rem;
+      flex-direction: column;">
+        <div class="row">
+          <div class="col">
+            <div class="form-group">
+              <select class="form-select">
+                <option selected>Instruments</option>
+                <option >Call</option>
+                <option>Put</option>
+                <option>Future</option>
+              </select>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <select class="form-select">
+                <option selected>Expiry</option>
+                <option>Select Option 1</option>
+                <option>Select Option 2</option>
+                <option>Select Option 3</option>
+              </select>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <select class="form-select">
+                <option selected>Strike Price</option>
+                <option>Select Option 1</option>
+                <option>Select Option 2</option>
+                <option>Select Option 3</option>
+              </select>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <select class="form-select">
+                <option selected>Position</option>
+                <option>Select Option 1</option>
+                <option>Select Option 2</option>
+                <option>Select Option 3</option>
+              </select>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <input type="number" class="form-control" placeholder="No. of Lots">
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <input type="number" class="form-control" placeholder="Traded Price">
+            </div>
+          </div>
+          <div class="col">
+            <button class="btn btn-primary add-row">
+              <i class="bi bi-plus"></i>
+            </button>
+          </div>
+        </div>
+        <div class="row delete-straddle">
+          <div class="col">
+            <div class="form-group">
+              <select class="form-select">
+                <option selected>Instruments</option>
+                <option >Call</option>
+                <option>Put</option>
+                <option>Future</option>
+              </select>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <select class="form-select">
+                <option selected>Expiry</option>
+                <option>Select Option 1</option>
+                <option>Select Option 2</option>
+                <option>Select Option 3</option>
+              </select>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <select class="form-select">
+                <option selected>Strike Price</option>
+                <option>Select Option 1</option>
+                <option>Select Option 2</option>
+                <option>Select Option 3</option>
+              </select>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <select class="form-select">
+                <option selected>Position</option>
+                <option>Select Option 1</option>
+                <option>Select Option 2</option>
+                <option>Select Option 3</option>
+              </select>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <input type="number" class="form-control" placeholder="No. of Lots">
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <input type="number" class="form-control" placeholder="Traded Price">
+            </div>
+          </div>
+          <div class="col">
+            <button class="btn btn-danger delete-row">
+              <i class="bi bi-trash"></i>
+            </button>
+          </div>
+        </div>
+        <div class="row delete-straddle">
+          <div class="col">
+            <div class="form-group">
+              <select class="form-select">
+                <option selected>Instruments</option>
+                <option >Call</option>
+                <option>Put</option>
+                <option>Future</option>
+              </select>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <select class="form-select">
+                <option selected>Expiry</option>
+                <option>Select Option 1</option>
+                <option>Select Option 2</option>
+                <option>Select Option 3</option>
+              </select>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <select class="form-select">
+                <option selected>Strike Price</option>
+                <option>Select Option 1</option>
+                <option>Select Option 2</option>
+                <option>Select Option 3</option>
+              </select>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <select class="form-select">
+                <option selected>Position</option>
+                <option>Select Option 1</option>
+                <option>Select Option 2</option>
+                <option>Select Option 3</option>
+              </select>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <input type="number" class="form-control" placeholder="No. of Lots">
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <input type="number" class="form-control" placeholder="Traded Price">
+            </div>
+          </div>
+          <div class="col">
+            <button class="btn btn-danger delete-row">
+              <i class="bi bi-trash"></i>
+            </button>
+          </div>
+        </div>
+        <div class="row delete-straddle">
+          <div class="col">
+            <div class="form-group">
+              <select class="form-select">
+                <option selected>Instruments</option>
+                <option >Call</option>
+                <option>Put</option>
+                <option>Future</option>
+              </select>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <select class="form-select">
+                <option selected>Expiry</option>
+                <option>Select Option 1</option>
+                <option>Select Option 2</option>
+                <option>Select Option 3</option>
+              </select>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <select class="form-select">
+                <option selected>Strike Price</option>
+                <option>Select Option 1</option>
+                <option>Select Option 2</option>
+                <option>Select Option 3</option>
+              </select>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <select class="form-select">
+                <option selected>Position</option>
+                <option>Select Option 1</option>
+                <option>Select Option 2</option>
+                <option>Select Option 3</option>
+              </select>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <input type="number" class="form-control" placeholder="No. of Lots">
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <input type="number" class="form-control" placeholder="Traded Price">
+            </div>
+          </div>
+          <div class="col">
+            <button class="btn btn-danger delete-row">
+              <i class="bi bi-trash"></i>
+            </button>
+          </div>
+        </div>
+        <div id="dynamic-rows">
+          <!-- Dynamic rows will be added here -->
+        </div>
+      </div>
+
+      <div class="save_calc-btn" style="    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    right: 10%;
+    position: relative; gap:1rem;">
+        <button class="button btn btn-outline-primary">SAVE</button><button class="button btn btn-outline-primary">CALCULATE</button>
+      </div>
+      `,
+    },
+    {
+      id: 6,
+      main_desc: ` 
+      <div class="container " style="display: flex;
+      gap: 0.3rem;
+      flex-direction: column;">
+        <div class="row">
+          <div class="col">
+            <div class="form-group">
+              <select class="form-select">
+                <option selected>Instruments</option>
+                <option >Call</option>
+                <option>Put</option>
+                <option>Future</option>
+              </select>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <select class="form-select">
+                <option selected>Expiry</option>
+                <option>Select Option 1</option>
+                <option>Select Option 2</option>
+                <option>Select Option 3</option>
+              </select>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <select class="form-select">
+                <option selected>Strike Price</option>
+                <option>Select Option 1</option>
+                <option>Select Option 2</option>
+                <option>Select Option 3</option>
+              </select>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <select class="form-select">
+                <option selected>Position</option>
+                <option>Select Option 1</option>
+                <option>Select Option 2</option>
+                <option>Select Option 3</option>
+              </select>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <input type="number" class="form-control" placeholder="No. of Lots">
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <input type="number" class="form-control" placeholder="Traded Price">
+            </div>
+          </div>
+          <div class="col">
+            <button class="btn btn-primary add-row">
+              <i class="bi bi-plus"></i>
+            </button>
+          </div>
+        </div>
+        <div class="row delete-straddle">
+          <div class="col">
+            <div class="form-group">
+              <select class="form-select">
+                <option selected>Instruments</option>
+                <option >Call</option>
+                <option>Put</option>
+                <option>Future</option>
+              </select>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <select class="form-select">
+                <option selected>Expiry</option>
+                <option>Select Option 1</option>
+                <option>Select Option 2</option>
+                <option>Select Option 3</option>
+              </select>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <select class="form-select">
+                <option selected>Strike Price</option>
+                <option>Select Option 1</option>
+                <option>Select Option 2</option>
+                <option>Select Option 3</option>
+              </select>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <select class="form-select">
+                <option selected>Position</option>
+                <option>Select Option 1</option>
+                <option>Select Option 2</option>
+                <option>Select Option 3</option>
+              </select>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <input type="number" class="form-control" placeholder="No. of Lots">
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <input type="number" class="form-control" placeholder="Traded Price">
+            </div>
+          </div>
+          <div class="col">
+            <button class="btn btn-danger delete-row">
+              <i class="bi bi-trash"></i>
+            </button>
+          </div>
+        </div>
+        <div class="row delete-straddle">
+          <div class="col">
+            <div class="form-group">
+              <select class="form-select">
+                <option selected>Instruments</option>
+                <option >Call</option>
+                <option>Put</option>
+                <option>Future</option>
+              </select>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <select class="form-select">
+                <option selected>Expiry</option>
+                <option>Select Option 1</option>
+                <option>Select Option 2</option>
+                <option>Select Option 3</option>
+              </select>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <select class="form-select">
+                <option selected>Strike Price</option>
+                <option>Select Option 1</option>
+                <option>Select Option 2</option>
+                <option>Select Option 3</option>
+              </select>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <select class="form-select">
+                <option selected>Position</option>
+                <option>Select Option 1</option>
+                <option>Select Option 2</option>
+                <option>Select Option 3</option>
+              </select>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <input type="number" class="form-control" placeholder="No. of Lots">
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <input type="number" class="form-control" placeholder="Traded Price">
+            </div>
+          </div>
+          <div class="col">
+            <button class="btn btn-danger delete-row">
+              <i class="bi bi-trash"></i>
+            </button>
+          </div>
+        </div>
+        <div id="dynamic-rows">
+          <!-- Dynamic rows will be added here -->
+        </div>
+      </div>
+
+      <div class="save_calc-btn" style="    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    right: 10%;
+    position: relative; gap:1rem;">
+        <button class="button btn btn-outline-primary">SAVE</button><button class="button btn btn-outline-primary">CALCULATE</button>
+      </div>
+      `,
+    },
+  ];
+
+  document.getElementById("pre_build_fields").innerHTML = strategy[0].main_desc;
+
+  function filter_strategy(id) {
+    const Filtered_about = strategy.filter((Curr_dest) => {
+      return Curr_dest.id === id;
+    });
+
+    Filtered_about.map((x) => {
+      document.getElementById("pre_build_fields").innerHTML = x.main_desc;
+    });
+
+    initializeDynamicRows();
+  }
+
+  $(document).ready(function () {
+    $("[data-btn-id]:first-child").addClass("strategies_active");
+    $('[data-btn-id="1"]').addClass("strategies_active");
+
+    // Filter button click event
+    $("[data-btn-id]").click(function () {
+      var btnId = $(this).attr("data-btn-id");
+      filterResults(btnId);
+      changeButtonColor($(this));
+    });
+
+    filterResults(1);
+    initializeDynamicRows();
+
+    function filterResults(btnId) {}
+
+    function changeButtonColor(button) {
+      $("[data-btn-id]").removeClass("strategies_active");
+      button.addClass("strategies_active");
+    }
+  });
+
+  function initializeDynamicRows() {
+    var addRowButton = document.querySelector(".add-row");
+
+    if (addRowButton) {
+      addRowButton.removeEventListener("click", addDynamicRow);
+    }
+
+    var dynamicRowsContainer = document.getElementById("dynamic-rows");
+    if (dynamicRowsContainer) {
+      dynamicRowsContainer.removeEventListener("click", deleteDynamicRow);
+    }
+
+    var addButton = document.querySelector(".add-row");
+    if (addButton) {
+      addButton.addEventListener("click", addDynamicRow);
+    }
+
+    if (dynamicRowsContainer) {
+      dynamicRowsContainer.addEventListener("click", deleteDynamicRow);
+    }
+  }
+
+  function addDynamicRow() {
+    var dynamicRows = document.getElementById("dynamic-rows");
+
+    var newRow = document.createElement("div");
+    newRow.classList.add("row", "dynamic-row");
+    newRow.innerHTML = `
+      <div class="col">
+        <div class="form-group">
+          <select class="form-control">
+            <option>Select Option 1</option>
+            <option>Select Option 2</option>
+            <option>Select Option 3</option>
+          </select>
+        </div>
+      </div>
+      <div class="col">
+        <div class="form-group">
+          <select class="form-control">
+            <option>Select Option 1</option>
+            <option>Select Option 2</option>
+            <option>Select Option 3</option>
+          </select>
+        </div>
+      </div>
+      <div class="col">
+        <div class="form-group">
+          <select class="form-control">
+            <option>Select Option 1</option>
+            <option>Select Option 2</option>
+            <option>Select Option 3</option>
+          </select>
+        </div>
+      </div>
+      <div class="col">
+        <div class="form-group">
+          <select class="form-control">
+            <option>Select Option 1</option>
+            <option>Select Option 2</option>
+            <option>Select Option 3</option>
+          </select>
+        </div>
+      </div>
+      <div class="col">
+        <div class="form-group">
+          <input type="number" class="form-control">
+        </div>
+      </div>
+      <div class="col">
+        <div class="form-group">
+          <input type="number" class="form-control">
+        </div>
+      </div>
+      <div class="col">
+        <button class="btn btn-danger delete-row">
+          <i class="bi bi-trash"></i>
+        </button>
+      </div>
+    `;
+
+    dynamicRows.appendChild(newRow);
+  }
+
+  function deleteDynamicRow(event) {
+    if (event.target.classList.contains("delete-row")) {
+      var row = event.target.closest(".dynamic-row");
+      row.remove();
+      var row_strddle = event.target.closest(".delete-straddle");
+      row_strddle.remove();
+    }
+  }
+</script>
+{% endblock %}

@@ -1,0 +1,26 @@
+<div class="carousel-container">
+    <div class="slick-carousel">
+        {% for symbol in symbols %}
+        <div class="carousel-slide">
+            <p>{{ symbol.symbol }}</p>
+            {% if symbol.pChange > 0 %}
+            <p class="text-danger">{{ symbol.pChange }}</p>
+            {% else %}
+            <p class="text-success">{{ symbol.pChange }}</p>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $('.slick-carousel').slick({
+            slidesToShow: 8,
+            slidesToScroll: 1,
+            autoplay: true,
+            autoplaySpeed: 2000,
+            infinite: true
+        });
+    });
+</script>

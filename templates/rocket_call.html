@@ -1,0 +1,2621 @@
+{% extends "base_dashboard.html" %}
+{% load static %}
+{% block dashboard_body %}
+<style>
+  .desc_usage_active {
+    color: #011490;
+    text-align: center;
+    border-bottom: 2px solid #011490;
+    font-size: 21px;
+    font-weight: 600;
+  }
+
+  .col-4 {
+    text-align: center;
+    transition: 0.3s;
+    cursor: pointer;
+  }
+
+  @media (max-width: 768px) {
+    .head_image {
+      width: fit-content !important;
+    }
+
+  }
+
+  .smp_barBase {
+    background: #e9eff2;
+    width: 100px;
+    height: 16px;
+    display: inline-block;
+    vertical-align: middle;
+  }
+
+  li {
+    list-style: none;
+  }
+
+  #top_potential {
+    display: block;
+    height: 16px;
+  }
+
+  a {
+    text-decoration: none;
+  }
+
+  .txt14_333B {
+    margin-bottom: auto !important;
+  }
+
+  .csbar span {
+    display: inline-block;
+    height: 10px;
+  }
+
+  .sentimeter_active {
+    color: #011490;
+    text-align: center;
+    border-bottom: 2px solid #011490;
+    font-size: 21px;
+    font-weight: 600;
+  }
+
+  .smaxPon li {
+    border-bottom: 1px solid #f2f4f5;
+    padding: 15px 0;
+  }
+
+  .news_list li {
+    padding: 15px 0;
+    border-bottom: 1px dotted #cdd8dd;
+  }
+</style>
+<div class="container">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <div class="main_head_strategies border-bottom my-4">
+    <div class="strategies d-flex mt-4" style="align-items: center; gap: 0.3rem">
+      <h4 class="">Rocket Call</h4>
+      <span>
+        <i class="bi bi-exclamation-circle" data-bs-toggle="collapse" data-bs-target="#collapseExample"
+          aria-expanded="false" aria-controls="collapseExample"></i>
+      </span>
+    </div>
+  </div>
+  <div class="collapse" id="collapseExample" style="margin-bottom: 25px">
+    <div class="card card-body">
+      <div class="antd-pro-components-markdown-index-markdownStyle">
+        <p>BSE NSE Holidays 2023 List</p>
+        <ul>
+          <li>Below are the NSE F&O Lot Size for the stocks and indices traded on NSE.</li>
+
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+
+
+
+  <div class="top_rocket_call">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <div class="description_usage my-4">
+    <div class="head_desc_usage">
+      <div class="row border-bottom">
+        <div class="chart-header col-4" onclick="filterChart('fii_dii')" data-btn-id="1" style="font-size: 21px">
+          Stock Calls
+        </div>
+        <div class="chart-header col-4" onclick="filterChart('fii')" data-btn-id="2" style="font-size: 21px">
+          Nifty & Bank Nifty Calls
+        </div>
+        <div class="chart-header col-4" onclick="filterChart('dii')" data-btn-id="3" style="font-size: 21px">
+          Bulls Eye
+        </div>
+      </div>
+      <div class="main_desc_usage mt-4" id="main_desc_usage"></div>
+    </div>
+  </div>
+
+
+
+
+
+
+  <div id="chartContainer " style="height: 100%">
+    <div class="dii_fii" id="dii_fii" style="width: 100%; height: 80%">
+      <h5 class="text-center">Stock Calls</h5>
+      <table width="100%" cellspacing="0" cellpadding="0" id="most_recommended_stock_table" class="table table-striped table-hover">
+        <thead style="    background: aliceblue;">
+          <tr>
+            <td width="140"></td>
+            <td width="35"></td>
+            <td width="35"></td>
+            <td width="35"></td>
+            <td width="85"></td>
+            <td colspan="3" style="color:#fff; background:#35708a;" align="center">Target Price (% Diff from CMP)</td>
+          </tr>
+          <tr>
+            <td>Stocks</td>
+            <td>Buy</td>
+            <td>Hold</td>
+            <td>Sell</td>
+            <td>CMP</td>
+            <td width="70">Median</td>
+            <td width="70">Low</td>
+            <td width="70">High</td>
+          </tr>
+        </thead>
+        <tbody id="tradenow_tblh" class="show_most_recommended_stock">
+          
+          <tr>
+            <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_AL.html" class="txt13">Ashok Leyland</a>
+              
+              <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE208A01029','BSE','500477');"></span> 
+            </td>
+            <td width="35"><span class="green">7</span></td>
+            <td width="40">0</td>
+            <td width="40"><span class="red_13">0</span></td>
+            <td width="70" align="right"><strong>161.15</strong></td>
+            <td width="66" align="right"><strong>193</strong> (20%)</td>
+            <td width="66" align="right"><strong>180</strong> (12%)</td>
+            <td width="66" align="right"><strong>215</strong> (33%)</td>
+          </tr>
+          
+          <tr>
+            <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_MM.html" class="txt13">M&amp;M</a>
+              
+              <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE101A01026','BSE','500520');"></span> 
+            </td>
+            <td width="35"><span class="green">6</span></td>
+            <td width="40">0</td>
+            <td width="40"><span class="red_13">0</span></td>
+            <td width="70" align="right"><strong>1376.55</strong></td>
+            <td width="66" align="right"><strong>1581</strong> (15%)</td>
+            <td width="66" align="right"><strong>1500</strong> (9%)</td>
+            <td width="66" align="right"><strong>1685</strong> (22%)</td>
+          </tr>
+          
+          <tr>
+            <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_ZT.html" class="txt13">Zee Entertain</a>
+              
+              <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE256A01028','BSE','505537');"></span> 
+            </td>
+            <td width="35"><span class="green">6</span></td>
+            <td width="40">0</td>
+            <td width="40"><span class="red_13">0</span></td>
+            <td width="70" align="right"><strong>178.35</strong></td>
+            <td width="66" align="right"><strong>225</strong> (26%)</td>
+            <td width="66" align="right"><strong>210</strong> (18%)</td>
+            <td width="66" align="right"><strong>240</strong> (35%)</td>
+          </tr>
+          
+          <tr>
+            <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_IEI01.html" class="txt13">Info Edge</a>
+              
+              <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE663F01024','BSE','532777');"></span> 
+            </td>
+            <td width="35"><span class="green">2</span></td>
+            <td width="40">3</td>
+            <td width="40"><span class="red_13">0</span></td>
+            <td width="70" align="right"><strong>4382.40</strong></td>
+            <td width="66" align="right"><strong>4415</strong> (1%)</td>
+            <td width="66" align="right"><strong>4010</strong> (-8%)</td>
+            <td width="66" align="right"><strong>5170</strong> (18%)</td>
+          </tr>
+          
+          <tr>
+            <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_SPI.html" class="txt13">Sun Pharma</a>
+              
+              <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE044A01036','BSE','524715');"></span> 
+            </td>
+            <td width="35"><span class="green">5</span></td>
+            <td width="40">0</td>
+            <td width="40"><span class="red_13">0</span></td>
+            <td width="70" align="right"><strong>979.15</strong></td>
+            <td width="66" align="right"><strong>1144</strong> (17%)</td>
+            <td width="66" align="right"><strong>1123</strong> (15%)</td>
+            <td width="66" align="right"><strong>1172</strong> (20%)</td>
+          </tr>
+          
+          <tr>
+            <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_E05.html" class="txt13">Emami</a>
+              
+              <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE548C01032','BSE','531162');"></span> 
+            </td>
+            <td width="35"><span class="green">3</span></td>
+            <td width="40">0</td>
+            <td width="40"><span class="red_13">0</span></td>
+            <td width="70" align="right"><strong>410.00</strong></td>
+            <td width="66" align="right"><strong>456</strong> (11%)</td>
+            <td width="66" align="right"><strong>385</strong> (-6%)</td>
+            <td width="66" align="right"><strong>517</strong> (26%)</td>
+          </tr>
+          
+          <tr>
+            <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_SC12.html" class="txt13">Shree Cements</a>
+              
+              <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE070A01015','BSE','500387');"></span> 
+            </td>
+            <td width="35"><span class="green">0</span></td>
+            <td width="40">2</td>
+            <td width="40"><span class="red_13">0</span></td>
+            <td width="70" align="right"><strong>25358.35</strong></td>
+            <td width="66" align="right"><strong>25</strong> (-100%)</td>
+            <td width="66" align="right"><strong>23,000</strong> (-100%)</td>
+            <td width="66" align="right"><strong>27,821</strong> (-100%)</td>
+          </tr>
+          
+          <tr>
+            <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_ARB.html" class="txt13">Amara Raja Batt</a>
+              
+              <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE885A01032','BSE','500008');"></span> 
+            </td>
+            <td width="35"><span class="green">3</span></td>
+            <td width="40">2</td>
+            <td width="40"><span class="red_13">0</span></td>
+            <td width="70" align="right"><strong>628.65</strong></td>
+            <td width="66" align="right"><strong>707</strong> (12%)</td>
+            <td width="66" align="right"><strong>690</strong> (10%)</td>
+            <td width="66" align="right"><strong>762</strong> (21%)</td>
+          </tr>
+          
+          <tr>
+            <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_TEL.html" class="txt13">Tata Motors</a>
+              
+              <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE155A01022','BSE','500570');"></span> 
+            </td>
+            <td width="35"><span class="green">4</span></td>
+            <td width="40">0</td>
+            <td width="40"><span class="red_13">0</span></td>
+            <td width="70" align="right"><strong>562.80</strong></td>
+            <td width="66" align="right"><strong>623</strong> (11%)</td>
+            <td width="66" align="right"><strong>605</strong> (7%)</td>
+            <td width="66" align="right"><strong>650</strong> (15%)</td>
+          </tr>
+          
+          <tr>
+            <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_JKC.html" class="txt13">JK Lakshmi Cem</a>
+              
+              <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE786A01032','BSE','500380');"></span> 
+            </td>
+            <td width="35"><span class="green">4</span></td>
+            <td width="40">0</td>
+            <td width="40"><span class="red_13">0</span></td>
+            <td width="70" align="right"><strong>721.00</strong></td>
+            <td width="66" align="right"><strong>838</strong> (16%)</td>
+            <td width="66" align="right"><strong>815</strong> (13%)</td>
+            <td width="66" align="right"><strong>870</strong> (21%)</td>
+          </tr>
+          
+          <tr>
+            <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_CGC01.html" class="txt13">CG Consumer</a>
+              
+              <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE299U01018','BSE','539876');"></span> 
+            </td>
+            <td width="35"><span class="green">3</span></td>
+            <td width="40">0</td>
+            <td width="40"><span class="red_13">0</span></td>
+            <td width="70" align="right"><strong>285.55</strong></td>
+            <td width="66" align="right"><strong>353</strong> (24%)</td>
+            <td width="66" align="right"><strong>302</strong> (6%)</td>
+            <td width="66" align="right"><strong>400</strong> (40%)</td>
+          </tr>
+          
+          <tr>
+            <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_TP06.html" class="txt13">Torrent Pharma</a>
+              
+              <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE685A01028','BSE','500420');"></span> 
+            </td>
+            <td width="35"><span class="green">2</span></td>
+            <td width="40">2</td>
+            <td width="40"><span class="red_13">0</span></td>
+            <td width="70" align="right"><strong>1842.85</strong></td>
+            <td width="66" align="right"><strong>1840</strong> (-0%)</td>
+            <td width="66" align="right"><strong>1650</strong> (-10%)</td>
+            <td width="66" align="right"><strong>1910</strong> (4%)</td>
+          </tr>
+          
+          <tr>
+            <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_BE03.html" class="txt13">Bharat Elec</a>
+              
+              <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE263A01024','BSE','500049');"></span> 
+            </td>
+            <td width="35"><span class="green">4</span></td>
+            <td width="40">0</td>
+            <td width="40"><span class="red_13">0</span></td>
+            <td width="70" align="right"><strong>123.05</strong></td>
+            <td width="66" align="right"><strong>133</strong> (8%)</td>
+            <td width="66" align="right"><strong>125</strong> (2%)</td>
+            <td width="66" align="right"><strong>150</strong> (22%)</td>
+          </tr>
+          
+          <tr>
+            <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_AP.html" class="txt13">Aurobindo Pharm</a>
+              
+              <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE406A01037','BSE','524804');"></span> 
+            </td>
+            <td width="35"><span class="green">1</span></td>
+            <td width="40">3</td>
+            <td width="40"><span class="red_13">0</span></td>
+            <td width="70" align="right"><strong>673.20</strong></td>
+            <td width="66" align="right"><strong>660</strong> (-2%)</td>
+            <td width="66" align="right"><strong>600</strong> (-11%)</td>
+            <td width="66" align="right"><strong>716</strong> (6%)</td>
+          </tr>
+          
+          <tr>
+            <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_OI13.html" class="txt13">Oil India</a>
+              
+              <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE274J01014','BSE','533106');"></span> 
+            </td>
+            <td width="35"><span class="green">1</span></td>
+            <td width="40">3</td>
+            <td width="40"><span class="red_13">0</span></td>
+            <td width="70" align="right"><strong>246.40</strong></td>
+            <td width="66" align="right"><strong>293</strong> (19%)</td>
+            <td width="66" align="right"><strong>280</strong> (14%)</td>
+            <td width="66" align="right"><strong>330</strong> (34%)</td>
+          </tr>
+          
+          <tr>
+            <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_BB09.html" class="txt13">Bandhan Bank</a>
+              
+              <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE545U01014','BSE','541153');"></span> 
+            </td>
+            <td width="35"><span class="green">2</span></td>
+            <td width="40">1</td>
+            <td width="40"><span class="red_13">0</span></td>
+            <td width="70" align="right"><strong>241.35</strong></td>
+            <td width="66" align="right"><strong>292</strong> (21%)</td>
+            <td width="66" align="right"><strong>265</strong> (10%)</td>
+            <td width="66" align="right"><strong>305</strong> (26%)</td>
+          </tr>
+          
+          <tr>
+            <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_HHM.html" class="txt13">Hero Motocorp</a>
+              
+              <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE158A01026','BSE','500182');"></span> 
+            </td>
+            <td width="35"><span class="green">2</span></td>
+            <td width="40">0</td>
+            <td width="40"><span class="red_13">0</span></td>
+            <td width="70" align="right"><strong>2826.25</strong></td>
+            <td width="66" align="right"><strong>3071</strong> (9%)</td>
+            <td width="66" align="right"><strong>2512</strong> (-11%)</td>
+            <td width="66" align="right"><strong>3500</strong> (24%)</td>
+          </tr>
+          
+          <tr>
+            <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_IP07.html" class="txt13">Indigo Paints</a>
+              
+              <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE09VQ01012','BSE','543258');"></span> 
+            </td>
+            <td width="35"><span class="green">3</span></td>
+            <td width="40">0</td>
+            <td width="40"><span class="red_13">0</span></td>
+            <td width="70" align="right"><strong>1433.55</strong></td>
+            <td width="66" align="right"><strong>1700</strong> (19%)</td>
+            <td width="66" align="right"><strong>1700</strong> (19%)</td>
+            <td width="66" align="right"><strong>1700</strong> (19%)</td>
+          </tr>
+          
+          <tr>
+            <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_TCI08.html" class="txt13">TCI Express</a>
+              
+              <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE586V01016','BSE','540212');"></span> 
+            </td>
+            <td width="35"><span class="green">3</span></td>
+            <td width="40">0</td>
+            <td width="40"><span class="red_13">0</span></td>
+            <td width="70" align="right"><strong>1626.75</strong></td>
+            <td width="66" align="right"><strong>1900</strong> (17%)</td>
+            <td width="66" align="right"><strong>1780</strong> (9%)</td>
+            <td width="66" align="right"><strong>2070</strong> (27%)</td>
+          </tr>
+          
+          <tr>
+            <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_GSL06.html" class="txt13">Galaxy Surfacta</a>
+              
+              <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE600K01018','BSE','540935');"></span> 
+            </td>
+            <td width="35"><span class="green">3</span></td>
+            <td width="40">0</td>
+            <td width="40"><span class="red_13">0</span></td>
+            <td width="70" align="right"><strong>2813.65</strong></td>
+            <td width="66" align="right"><strong>3392</strong> (21%)</td>
+            <td width="66" align="right"><strong>3345</strong> (19%)</td>
+            <td width="66" align="right"><strong>3415</strong> (21%)</td>
+          </tr>
+          
+          <tr>
+            <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_BNH.html" class="txt13">Barbeque Nat</a>
+              
+              <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE382M01027','BSE','543283');"></span> 
+            </td>
+            <td width="35"><span class="green">0</span></td>
+            <td width="40">3</td>
+            <td width="40"><span class="red_13">0</span></td>
+            <td width="70" align="right"><strong>651.85</strong></td>
+            <td width="66" align="right"><strong>700</strong> (7%)</td>
+            <td width="66" align="right"><strong>700</strong> (7%)</td>
+            <td width="66" align="right"><strong>700</strong> (7%)</td>
+          </tr>
+          
+          <tr>
+            <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_CUB.html" class="txt13">City Union Bank</a>
+              
+              <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE491A01021','BSE','532210');"></span> 
+            </td>
+            <td width="35"><span class="green">1</span></td>
+            <td width="40">1</td>
+            <td width="40"><span class="red_13">0</span></td>
+            <td width="70" align="right"><strong>122.40</strong></td>
+            <td width="66" align="right"><strong>157</strong> (29%)</td>
+            <td width="66" align="right"><strong>145</strong> (18%)</td>
+            <td width="66" align="right"><strong>167</strong> (36%)</td>
+          </tr>
+          
+          <tr>
+            <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_GI22.html" class="txt13">Granules India</a>
+              
+              <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE101D01020','BSE','532482');"></span> 
+            </td>
+            <td width="35"><span class="green">3</span></td>
+            <td width="40">0</td>
+            <td width="40"><span class="red_13">0</span></td>
+            <td width="70" align="right"><strong>284.30</strong></td>
+            <td width="66" align="right"><strong>354</strong> (25%)</td>
+            <td width="66" align="right"><strong>342</strong> (20%)</td>
+            <td width="66" align="right"><strong>360</strong> (27%)</td>
+          </tr>
+          
+          <tr>
+            <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_JKC03.html" class="txt13">J. K. Cement</a>
+              
+              <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE823G01014','BSE','532644');"></span> 
+            </td>
+            <td width="35"><span class="green">1</span></td>
+            <td width="40">0</td>
+            <td width="40"><span class="red_13">0</span></td>
+            <td width="70" align="right"><strong>3363.05</strong></td>
+            <td width="66" align="right"><strong>3062</strong> (-9%)</td>
+            <td width="66" align="right"><strong>2755</strong> (-18%)</td>
+            <td width="66" align="right"><strong>3675</strong> (9%)</td>
+          </tr>
+          
+          <tr>
+            <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_KC13.html" class="txt13">KNR Construct</a>
+              
+              <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE634I01029','BSE','532942');"></span> 
+            </td>
+            <td width="35"><span class="green">3</span></td>
+            <td width="40">0</td>
+            <td width="40"><span class="red_13">0</span></td>
+            <td width="70" align="right"><strong>237.00</strong></td>
+            <td width="66" align="right"><strong>313</strong> (32%)</td>
+            <td width="66" align="right"><strong>301</strong> (27%)</td>
+            <td width="66" align="right"><strong>320</strong> (35%)</td>
+          </tr>
+          
+          <tr>
+            <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_PI29.html" class="txt13">PNC Infratech</a>
+              
+              <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE195J01029','BSE','539150');"></span> 
+            </td>
+            <td width="35"><span class="green">3</span></td>
+            <td width="40">0</td>
+            <td width="40"><span class="red_13">0</span></td>
+            <td width="70" align="right"><strong>329.00</strong></td>
+            <td width="66" align="right"><strong>385</strong> (17%)</td>
+            <td width="66" align="right"><strong>382</strong> (16%)</td>
+            <td width="66" align="right"><strong>390</strong> (19%)</td>
+          </tr>
+          
+          <tr>
+            <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_II16.html" class="txt13">Insecticides</a>
+              
+              <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE070I01018','BSE','532851');"></span> 
+            </td>
+            <td width="35"><span class="green">2</span></td>
+            <td width="40">0</td>
+            <td width="40"><span class="red_13">0</span></td>
+            <td width="70" align="right"><strong>441.40</strong></td>
+            <td width="66" align="right"><strong>543</strong> (23%)</td>
+            <td width="66" align="right"><strong>540</strong> (22%)</td>
+            <td width="66" align="right"><strong>550</strong> (25%)</td>
+          </tr>
+          
+          <tr>
+            <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_LTH.html" class="txt13">Lemon Tree Hote</a>
+              
+              <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE970X01018','BSE','541233');"></span> 
+            </td>
+            <td width="35"><span class="green">3</span></td>
+            <td width="40">0</td>
+            <td width="40"><span class="red_13">0</span></td>
+            <td width="70" align="right"><strong>94.68</strong></td>
+            <td width="66" align="right"><strong>117</strong> (23%)</td>
+            <td width="66" align="right"><strong>115</strong> (21%)</td>
+            <td width="66" align="right"><strong>120</strong> (27%)</td>
+          </tr>
+          
+          <tr>
+            <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_NOC.html" class="txt13">NOCIL</a>
+              
+              <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE163A01018','BSE','500730');"></span> 
+            </td>
+            <td width="35"><span class="green">2</span></td>
+            <td width="40">1</td>
+            <td width="40"><span class="red_13">0</span></td>
+            <td width="70" align="right"><strong>223.45</strong></td>
+            <td width="66" align="right"><strong>242</strong> (8%)</td>
+            <td width="66" align="right"><strong>210</strong> (-6%)</td>
+            <td width="66" align="right"><strong>260</strong> (16%)</td>
+          </tr>
+          
+          <tr>
+            <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_BI03.html" class="txt13">Balkrishna Ind</a>
+              
+              <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE787D01026','BSE','502355');"></span> 
+            </td>
+            <td width="35"><span class="green">0</span></td>
+            <td width="40">2</td>
+            <td width="40"><span class="red_13">0</span></td>
+            <td width="70" align="right"><strong>2445.80</strong></td>
+            <td width="66" align="right"><strong>2210</strong> (-10%)</td>
+            <td width="66" align="right"><strong>2083</strong> (-15%)</td>
+            <td width="66" align="right"><strong>2446</strong> (0%)</td>
+          </tr>
+          
+          <tr>
+            <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_SD6.html" class="txt13">Sobha</a>
+              
+              <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE671H01015','BSE','532784');"></span> 
+            </td>
+            <td width="35"><span class="green">3</span></td>
+            <td width="40">0</td>
+            <td width="40"><span class="red_13">0</span></td>
+            <td width="70" align="right"><strong>530.40</strong></td>
+            <td width="66" align="right"><strong>812</strong> (53%)</td>
+            <td width="66" align="right"><strong>750</strong> (41%)</td>
+            <td width="66" align="right"><strong>935</strong> (76%)</td>
+          </tr>
+          
+          <tr>
+            <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_ONG.html" class="txt13">ONGC</a>
+              
+              <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE213A01029','BSE','500312');"></span> 
+            </td>
+            <td width="35"><span class="green">1</span></td>
+            <td width="40">1</td>
+            <td width="40"><span class="red_13">0</span></td>
+            <td width="70" align="right"><strong>157.50</strong></td>
+            <td width="66" align="right"><strong>193</strong> (22%)</td>
+            <td width="66" align="right"><strong>170</strong> (8%)</td>
+            <td width="66" align="right"><strong>215</strong> (37%)</td>
+          </tr>
+          
+          <tr>
+            <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_SAI.html" class="txt13">SAIL</a>
+              
+              <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE114A01011','BSE','500113');"></span> 
+            </td>
+            <td width="35"><span class="green">0</span></td>
+            <td width="40">2</td>
+            <td width="40"><span class="red_13">0</span></td>
+            <td width="70" align="right"><strong>84.50</strong></td>
+            <td width="66" align="right"><strong>85</strong> (1%)</td>
+            <td width="66" align="right"><strong>80</strong> (-5%)</td>
+            <td width="66" align="right"><strong>90</strong> (7%)</td>
+          </tr>
+          
+          <tr>
+            <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_GI28.html" class="txt13">Greenlam Ind</a>
+              
+              <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE544R01021','BSE','538979');"></span> 
+            </td>
+            <td width="35"><span class="green">1</span></td>
+            <td width="40">1</td>
+            <td width="40"><span class="red_13">0</span></td>
+            <td width="70" align="right"><strong>442.65</strong></td>
+            <td width="66" align="right"><strong>465</strong> (5%)</td>
+            <td width="66" align="right"><strong>410</strong> (-7%)</td>
+            <td width="66" align="right"><strong>520</strong> (17%)</td>
+          </tr>
+          
+          <tr>
+            <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_SCI05.html" class="txt13">Sudarshan Chem</a>
+              
+              <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE659A01023','BSE','506655');"></span> 
+            </td>
+            <td width="35"><span class="green">1</span></td>
+            <td width="40">0</td>
+            <td width="40"><span class="red_13">0</span></td>
+            <td width="70" align="right"><strong>490.65</strong></td>
+            <td width="66" align="right"><strong>492</strong> (0%)</td>
+            <td width="66" align="right"><strong>454</strong> (-7%)</td>
+            <td width="66" align="right"><strong>530</strong> (8%)</td>
+          </tr>
+          
+          <tr>
+            <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_SUMIC54292.html" class="txt13">SUMITOMO</a>
+              
+              <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE258G01013','BSE','542920');"></span> 
+            </td>
+            <td width="35"><span class="green">2</span></td>
+            <td width="40">0</td>
+            <td width="40"><span class="red_13">0</span></td>
+            <td width="70" align="right"><strong>423.05</strong></td>
+            <td width="66" align="right"><strong>465</strong> (10%)</td>
+            <td width="66" align="right"><strong>465</strong> (10%)</td>
+            <td width="66" align="right"><strong>465</strong> (10%)</td>
+          </tr>
+          
+          <tr>
+            <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_TCI04.html" class="txt13">Transport Corp</a>
+              
+              <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE688A01022','BSE','532349');"></span> 
+            </td>
+            <td width="35"><span class="green">2</span></td>
+            <td width="40">0</td>
+            <td width="40"><span class="red_13">0</span></td>
+            <td width="70" align="right"><strong>716.05</strong></td>
+            <td width="66" align="right"><strong>823</strong> (15%)</td>
+            <td width="66" align="right"><strong>785</strong> (10%)</td>
+            <td width="66" align="right"><strong>860</strong> (20%)</td>
+          </tr>
+          
+          <tr>
+            <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_USF.html" class="txt13">Ujjivan Small</a>
+              
+              <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE551W01018','BSE','542904');"></span> 
+            </td>
+            <td width="35"><span class="green">2</span></td>
+            <td width="40">0</td>
+            <td width="40"><span class="red_13">0</span></td>
+            <td width="70" align="right"><strong>37.04</strong></td>
+            <td width="66" align="right"><strong>50</strong> (34%)</td>
+            <td width="66" align="right"><strong>49.4</strong> (33%)</td>
+            <td width="66" align="right"><strong>50</strong> (35%)</td>
+          </tr>
+          
+          <tr>
+            <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_CI02.html" class="txt13">Cummins</a>
+              
+              <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE298A01020','BSE','500480');"></span> 
+            </td>
+            <td width="35"><span class="green">2</span></td>
+            <td width="40">0</td>
+            <td width="40"><span class="red_13">0</span></td>
+            <td width="70" align="right"><strong>1830.35</strong></td>
+            <td width="66" align="right"><strong>1815</strong> (-1%)</td>
+            <td width="66" align="right"><strong>1750</strong> (-4%)</td>
+            <td width="66" align="right"><strong>1880</strong> (3%)</td>
+          </tr>
+          
+          <tr>
+            <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_HL.html" class="txt13">HUL</a>
+              
+              <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE030A01027','BSE','500696');"></span> 
+            </td>
+            <td width="35"><span class="green">1</span></td>
+            <td width="40">0</td>
+            <td width="40"><span class="red_13">0</span></td>
+            <td width="70" align="right"><strong>2647.05</strong></td>
+            <td width="66" align="right"><strong>2775</strong> (5%)</td>
+            <td width="66" align="right"><strong>2450</strong> (-7%)</td>
+            <td width="66" align="right"><strong>3100</strong> (17%)</td>
+          </tr>
+          
+          <tr>
+            <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_NTP.html" class="txt13">NTPC</a>
+              
+              <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE733E01010','BSE','532555');"></span> 
+            </td>
+            <td width="35"><span class="green">2</span></td>
+            <td width="40">0</td>
+            <td width="40"><span class="red_13">0</span></td>
+            <td width="70" align="right"><strong>186.90</strong></td>
+            <td width="66" align="right"><strong>200</strong> (7%)</td>
+            <td width="66" align="right"><strong>200</strong> (7%)</td>
+            <td width="66" align="right"><strong>200</strong> (7%)</td>
+          </tr>
+          
+          <tr>
+            <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_HDF01.html" class="txt13">HDFC Bank</a>
+              
+              <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE040A01034','BSE','500180');"></span> 
+            </td>
+            <td width="35"><span class="green">2</span></td>
+            <td width="40">0</td>
+            <td width="40"><span class="red_13">0</span></td>
+            <td width="70" align="right"><strong>1650.95</strong></td>
+            <td width="66" align="right"><strong>1938</strong> (17%)</td>
+            <td width="66" align="right"><strong>1925</strong> (17%)</td>
+            <td width="66" align="right"><strong>1950</strong> (18%)</td>
+          </tr>
+          
+          <tr>
+            <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_NMD01.html" class="txt13">NMDC</a>
+              
+              <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE584A01023','BSE','526371');"></span> 
+            </td>
+            <td width="35"><span class="green">2</span></td>
+            <td width="40">0</td>
+            <td width="40"><span class="red_13">0</span></td>
+            <td width="70" align="right"><strong>105.20</strong></td>
+            <td width="66" align="right"><strong>130</strong> (24%)</td>
+            <td width="66" align="right"><strong>125</strong> (19%)</td>
+            <td width="66" align="right"><strong>135</strong> (28%)</td>
+          </tr>
+          
+          <tr>
+            <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_OR.html" class="txt13">Oberoi Realty</a>
+              
+              <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE093I01010','BSE','533273');"></span> 
+            </td>
+            <td width="35"><span class="green">2</span></td>
+            <td width="40">0</td>
+            <td width="40"><span class="red_13">0</span></td>
+            <td width="70" align="right"><strong>986.85</strong></td>
+            <td width="66" align="right"><strong>1175</strong> (19%)</td>
+            <td width="66" align="right"><strong>1140</strong> (16%)</td>
+            <td width="66" align="right"><strong>1210</strong> (23%)</td>
+          </tr>
+          
+          <tr>
+            <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_MB05.html" class="txt13">Metro Brands</a>
+              
+              <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE317I01021','BSE','543426');"></span> 
+            </td>
+            <td width="35"><span class="green">2</span></td>
+            <td width="40">0</td>
+            <td width="40"><span class="red_13">0</span></td>
+            <td width="70" align="right"><strong>990.20</strong></td>
+            <td width="66" align="right"><strong>589</strong> (-41%)</td>
+            <td width="66" align="right"><strong>107</strong> (-89%)</td>
+            <td width="66" align="right"><strong>1070</strong> (8%)</td>
+          </tr>
+          
+          <tr>
+            <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_IA05.html" class="txt13">Interglobe Avi</a>
+              
+              <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE646L01027','BSE','539448');"></span> 
+            </td>
+            <td width="35"><span class="green">1</span></td>
+            <td width="40">1</td>
+            <td width="40"><span class="red_13">0</span></td>
+            <td width="70" align="right"><strong>2484.45</strong></td>
+            <td width="66" align="right"><strong>2568</strong> (3%)</td>
+            <td width="66" align="right"><strong>2135</strong> (-14%)</td>
+            <td width="66" align="right"><strong>3000</strong> (21%)</td>
+          </tr>
+          
+          <tr>
+            <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_RK01.html" class="txt13">Radico Khaitan</a>
+              
+              <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE944F01028','BSE','532497');"></span> 
+            </td>
+            <td width="35"><span class="green">0</span></td>
+            <td width="40">1</td>
+            <td width="40"><span class="red_13">0</span></td>
+            <td width="70" align="right"><strong>1199.45</strong></td>
+            <td width="66" align="right"><strong>1075</strong> (-10%)</td>
+            <td width="66" align="right"><strong>1250</strong> (4%)</td>
+            <td width="66" align="right"><strong>900</strong> (-25%)</td>
+          </tr>
+          
+          <tr>
+            <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_DT07.html" class="txt13">Dixon Technolog</a>
+              
+              <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE935N01020','BSE','540699');"></span> 
+            </td>
+            <td width="35"><span class="green">0</span></td>
+            <td width="40">2</td>
+            <td width="40"><span class="red_13">0</span></td>
+            <td width="70" align="right"><strong>4400.00</strong></td>
+            <td width="66" align="right"><strong>3727</strong> (-15%)</td>
+            <td width="66" align="right"><strong>3403</strong> (-23%)</td>
+            <td width="66" align="right"><strong>4050</strong> (-8%)</td>
+          </tr>
+          
+          <tr>
+            <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_SBI.html" class="txt13">SBI</a>
+              
+              <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE062A01020','BSE','500112');"></span> 
+            </td>
+            <td width="35"><span class="green">2</span></td>
+            <td width="40">0</td>
+            <td width="40"><span class="red_13">0</span></td>
+            <td width="70" align="right"><strong>557.40</strong></td>
+            <td width="66" align="right"><strong>722</strong> (29%)</td>
+            <td width="66" align="right"><strong>700</strong> (26%)</td>
+            <td width="66" align="right"><strong>743</strong> (33%)</td>
+          </tr>
+          
+          <tr>
+            <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_VI16.html" class="txt13">V-Guard Ind</a>
+              
+              <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE951I01027','BSE','532953');"></span> 
+            </td>
+            <td width="35"><span class="green">1</span></td>
+            <td width="40">0</td>
+            <td width="40"><span class="red_13">0</span></td>
+            <td width="70" align="right"><strong>261.95</strong></td>
+            <td width="66" align="right"><strong>268</strong> (2%)</td>
+            <td width="66" align="right"><strong>235</strong> (-10%)</td>
+            <td width="66" align="right"><strong>300</strong> (15%)</td>
+          </tr>
+                            </tbody>
+      </table>
+    </div>
+    <div class="fii" id="fii" style="width: 100%; height: 80%">
+      <h5 class="text-center">Nifty & Bank Nifty Calls </h5>
+      <table width="100%" cellspacing="0" cellpadding="0" id="nifty_ban_nifty"  class="table table-striped table-hover">
+        <thead style="    background: aliceblue;">
+          <tr>
+            <td width="140"></td>
+            <td width="35"></td>
+            <td width="35"></td>
+            <td width="35"></td>
+            <td width="85"></td>
+            <td colspan="3" style="color:#fff; background:#35708a;" align="center">Target Price (% Diff from CMP)</td>
+          </tr>
+          <tr>
+            <td>Stocks</td>
+            <td>Buy</td>
+            <td>Hold</td>
+            <td>Sell</td>
+            <td>CMP</td>
+            <td width="70">Median</td>
+            <td width="70">Low</td>
+            <td width="70">High</td>
+          </tr>
+        </thead>
+        <tbody id="tradenow_tblh" class="show_most_recommended_stock">
+          
+          <tr>
+            <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_AL.html" class="txt13">Ashok Leyland</a>
+              
+              <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE208A01029','BSE','500477');"></span> 
+            </td>
+            <td width="35"><span class="green">7</span></td>
+            <td width="40">0</td>
+            <td width="40"><span class="red_13">0</span></td>
+            <td width="70" align="right"><strong>161.15</strong></td>
+            <td width="66" align="right"><strong>193</strong> (20%)</td>
+            <td width="66" align="right"><strong>180</strong> (12%)</td>
+            <td width="66" align="right"><strong>215</strong> (33%)</td>
+          </tr>
+          
+          <tr>
+            <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_MM.html" class="txt13">M&amp;M</a>
+              
+              <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE101A01026','BSE','500520');"></span> 
+            </td>
+            <td width="35"><span class="green">6</span></td>
+            <td width="40">0</td>
+            <td width="40"><span class="red_13">0</span></td>
+            <td width="70" align="right"><strong>1376.55</strong></td>
+            <td width="66" align="right"><strong>1581</strong> (15%)</td>
+            <td width="66" align="right"><strong>1500</strong> (9%)</td>
+            <td width="66" align="right"><strong>1685</strong> (22%)</td>
+          </tr>
+          
+          <tr>
+            <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_ZT.html" class="txt13">Zee Entertain</a>
+              
+              <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE256A01028','BSE','505537');"></span> 
+            </td>
+            <td width="35"><span class="green">6</span></td>
+            <td width="40">0</td>
+            <td width="40"><span class="red_13">0</span></td>
+            <td width="70" align="right"><strong>178.35</strong></td>
+            <td width="66" align="right"><strong>225</strong> (26%)</td>
+            <td width="66" align="right"><strong>210</strong> (18%)</td>
+            <td width="66" align="right"><strong>240</strong> (35%)</td>
+          </tr>
+          
+          <tr>
+            <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_IEI01.html" class="txt13">Info Edge</a>
+              
+              <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE663F01024','BSE','532777');"></span> 
+            </td>
+            <td width="35"><span class="green">2</span></td>
+            <td width="40">3</td>
+            <td width="40"><span class="red_13">0</span></td>
+            <td width="70" align="right"><strong>4382.40</strong></td>
+            <td width="66" align="right"><strong>4415</strong> (1%)</td>
+            <td width="66" align="right"><strong>4010</strong> (-8%)</td>
+            <td width="66" align="right"><strong>5170</strong> (18%)</td>
+          </tr>
+          
+          <tr>
+            <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_SPI.html" class="txt13">Sun Pharma</a>
+              
+              <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE044A01036','BSE','524715');"></span> 
+            </td>
+            <td width="35"><span class="green">5</span></td>
+            <td width="40">0</td>
+            <td width="40"><span class="red_13">0</span></td>
+            <td width="70" align="right"><strong>979.15</strong></td>
+            <td width="66" align="right"><strong>1144</strong> (17%)</td>
+            <td width="66" align="right"><strong>1123</strong> (15%)</td>
+            <td width="66" align="right"><strong>1172</strong> (20%)</td>
+          </tr>
+          
+          <tr>
+            <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_E05.html" class="txt13">Emami</a>
+              
+              <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE548C01032','BSE','531162');"></span> 
+            </td>
+            <td width="35"><span class="green">3</span></td>
+            <td width="40">0</td>
+            <td width="40"><span class="red_13">0</span></td>
+            <td width="70" align="right"><strong>410.00</strong></td>
+            <td width="66" align="right"><strong>456</strong> (11%)</td>
+            <td width="66" align="right"><strong>385</strong> (-6%)</td>
+            <td width="66" align="right"><strong>517</strong> (26%)</td>
+          </tr>
+          
+          <tr>
+            <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_SC12.html" class="txt13">Shree Cements</a>
+              
+              <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE070A01015','BSE','500387');"></span> 
+            </td>
+            <td width="35"><span class="green">0</span></td>
+            <td width="40">2</td>
+            <td width="40"><span class="red_13">0</span></td>
+            <td width="70" align="right"><strong>25358.35</strong></td>
+            <td width="66" align="right"><strong>25</strong> (-100%)</td>
+            <td width="66" align="right"><strong>23,000</strong> (-100%)</td>
+            <td width="66" align="right"><strong>27,821</strong> (-100%)</td>
+          </tr>
+          
+          <tr>
+            <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_ARB.html" class="txt13">Amara Raja Batt</a>
+              
+              <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE885A01032','BSE','500008');"></span> 
+            </td>
+            <td width="35"><span class="green">3</span></td>
+            <td width="40">2</td>
+            <td width="40"><span class="red_13">0</span></td>
+            <td width="70" align="right"><strong>628.65</strong></td>
+            <td width="66" align="right"><strong>707</strong> (12%)</td>
+            <td width="66" align="right"><strong>690</strong> (10%)</td>
+            <td width="66" align="right"><strong>762</strong> (21%)</td>
+          </tr>
+          
+          <tr>
+            <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_TEL.html" class="txt13">Tata Motors</a>
+              
+              <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE155A01022','BSE','500570');"></span> 
+            </td>
+            <td width="35"><span class="green">4</span></td>
+            <td width="40">0</td>
+            <td width="40"><span class="red_13">0</span></td>
+            <td width="70" align="right"><strong>562.80</strong></td>
+            <td width="66" align="right"><strong>623</strong> (11%)</td>
+            <td width="66" align="right"><strong>605</strong> (7%)</td>
+            <td width="66" align="right"><strong>650</strong> (15%)</td>
+          </tr>
+          
+          <tr>
+            <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_JKC.html" class="txt13">JK Lakshmi Cem</a>
+              
+              <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE786A01032','BSE','500380');"></span> 
+            </td>
+            <td width="35"><span class="green">4</span></td>
+            <td width="40">0</td>
+            <td width="40"><span class="red_13">0</span></td>
+            <td width="70" align="right"><strong>721.00</strong></td>
+            <td width="66" align="right"><strong>838</strong> (16%)</td>
+            <td width="66" align="right"><strong>815</strong> (13%)</td>
+            <td width="66" align="right"><strong>870</strong> (21%)</td>
+          </tr>
+          
+          <tr>
+            <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_CGC01.html" class="txt13">CG Consumer</a>
+              
+              <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE299U01018','BSE','539876');"></span> 
+            </td>
+            <td width="35"><span class="green">3</span></td>
+            <td width="40">0</td>
+            <td width="40"><span class="red_13">0</span></td>
+            <td width="70" align="right"><strong>285.55</strong></td>
+            <td width="66" align="right"><strong>353</strong> (24%)</td>
+            <td width="66" align="right"><strong>302</strong> (6%)</td>
+            <td width="66" align="right"><strong>400</strong> (40%)</td>
+          </tr>
+          
+          <tr>
+            <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_TP06.html" class="txt13">Torrent Pharma</a>
+              
+              <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE685A01028','BSE','500420');"></span> 
+            </td>
+            <td width="35"><span class="green">2</span></td>
+            <td width="40">2</td>
+            <td width="40"><span class="red_13">0</span></td>
+            <td width="70" align="right"><strong>1842.85</strong></td>
+            <td width="66" align="right"><strong>1840</strong> (-0%)</td>
+            <td width="66" align="right"><strong>1650</strong> (-10%)</td>
+            <td width="66" align="right"><strong>1910</strong> (4%)</td>
+          </tr>
+          
+          <tr>
+            <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_BE03.html" class="txt13">Bharat Elec</a>
+              
+              <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE263A01024','BSE','500049');"></span> 
+            </td>
+            <td width="35"><span class="green">4</span></td>
+            <td width="40">0</td>
+            <td width="40"><span class="red_13">0</span></td>
+            <td width="70" align="right"><strong>123.05</strong></td>
+            <td width="66" align="right"><strong>133</strong> (8%)</td>
+            <td width="66" align="right"><strong>125</strong> (2%)</td>
+            <td width="66" align="right"><strong>150</strong> (22%)</td>
+          </tr>
+          
+          <tr>
+            <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_AP.html" class="txt13">Aurobindo Pharm</a>
+              
+              <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE406A01037','BSE','524804');"></span> 
+            </td>
+            <td width="35"><span class="green">1</span></td>
+            <td width="40">3</td>
+            <td width="40"><span class="red_13">0</span></td>
+            <td width="70" align="right"><strong>673.20</strong></td>
+            <td width="66" align="right"><strong>660</strong> (-2%)</td>
+            <td width="66" align="right"><strong>600</strong> (-11%)</td>
+            <td width="66" align="right"><strong>716</strong> (6%)</td>
+          </tr>
+          
+          <tr>
+            <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_OI13.html" class="txt13">Oil India</a>
+              
+              <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE274J01014','BSE','533106');"></span> 
+            </td>
+            <td width="35"><span class="green">1</span></td>
+            <td width="40">3</td>
+            <td width="40"><span class="red_13">0</span></td>
+            <td width="70" align="right"><strong>246.40</strong></td>
+            <td width="66" align="right"><strong>293</strong> (19%)</td>
+            <td width="66" align="right"><strong>280</strong> (14%)</td>
+            <td width="66" align="right"><strong>330</strong> (34%)</td>
+          </tr>
+          
+          <tr>
+            <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_BB09.html" class="txt13">Bandhan Bank</a>
+              
+              <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE545U01014','BSE','541153');"></span> 
+            </td>
+            <td width="35"><span class="green">2</span></td>
+            <td width="40">1</td>
+            <td width="40"><span class="red_13">0</span></td>
+            <td width="70" align="right"><strong>241.35</strong></td>
+            <td width="66" align="right"><strong>292</strong> (21%)</td>
+            <td width="66" align="right"><strong>265</strong> (10%)</td>
+            <td width="66" align="right"><strong>305</strong> (26%)</td>
+          </tr>
+          
+          <tr>
+            <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_HHM.html" class="txt13">Hero Motocorp</a>
+              
+              <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE158A01026','BSE','500182');"></span> 
+            </td>
+            <td width="35"><span class="green">2</span></td>
+            <td width="40">0</td>
+            <td width="40"><span class="red_13">0</span></td>
+            <td width="70" align="right"><strong>2826.25</strong></td>
+            <td width="66" align="right"><strong>3071</strong> (9%)</td>
+            <td width="66" align="right"><strong>2512</strong> (-11%)</td>
+            <td width="66" align="right"><strong>3500</strong> (24%)</td>
+          </tr>
+          
+          <tr>
+            <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_IP07.html" class="txt13">Indigo Paints</a>
+              
+              <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE09VQ01012','BSE','543258');"></span> 
+            </td>
+            <td width="35"><span class="green">3</span></td>
+            <td width="40">0</td>
+            <td width="40"><span class="red_13">0</span></td>
+            <td width="70" align="right"><strong>1433.55</strong></td>
+            <td width="66" align="right"><strong>1700</strong> (19%)</td>
+            <td width="66" align="right"><strong>1700</strong> (19%)</td>
+            <td width="66" align="right"><strong>1700</strong> (19%)</td>
+          </tr>
+          
+          <tr>
+            <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_TCI08.html" class="txt13">TCI Express</a>
+              
+              <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE586V01016','BSE','540212');"></span> 
+            </td>
+            <td width="35"><span class="green">3</span></td>
+            <td width="40">0</td>
+            <td width="40"><span class="red_13">0</span></td>
+            <td width="70" align="right"><strong>1626.75</strong></td>
+            <td width="66" align="right"><strong>1900</strong> (17%)</td>
+            <td width="66" align="right"><strong>1780</strong> (9%)</td>
+            <td width="66" align="right"><strong>2070</strong> (27%)</td>
+          </tr>
+          
+          <tr>
+            <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_GSL06.html" class="txt13">Galaxy Surfacta</a>
+              
+              <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE600K01018','BSE','540935');"></span> 
+            </td>
+            <td width="35"><span class="green">3</span></td>
+            <td width="40">0</td>
+            <td width="40"><span class="red_13">0</span></td>
+            <td width="70" align="right"><strong>2813.65</strong></td>
+            <td width="66" align="right"><strong>3392</strong> (21%)</td>
+            <td width="66" align="right"><strong>3345</strong> (19%)</td>
+            <td width="66" align="right"><strong>3415</strong> (21%)</td>
+          </tr>
+          
+          <tr>
+            <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_BNH.html" class="txt13">Barbeque Nat</a>
+              
+              <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE382M01027','BSE','543283');"></span> 
+            </td>
+            <td width="35"><span class="green">0</span></td>
+            <td width="40">3</td>
+            <td width="40"><span class="red_13">0</span></td>
+            <td width="70" align="right"><strong>651.85</strong></td>
+            <td width="66" align="right"><strong>700</strong> (7%)</td>
+            <td width="66" align="right"><strong>700</strong> (7%)</td>
+            <td width="66" align="right"><strong>700</strong> (7%)</td>
+          </tr>
+          
+          <tr>
+            <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_CUB.html" class="txt13">City Union Bank</a>
+              
+              <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE491A01021','BSE','532210');"></span> 
+            </td>
+            <td width="35"><span class="green">1</span></td>
+            <td width="40">1</td>
+            <td width="40"><span class="red_13">0</span></td>
+            <td width="70" align="right"><strong>122.40</strong></td>
+            <td width="66" align="right"><strong>157</strong> (29%)</td>
+            <td width="66" align="right"><strong>145</strong> (18%)</td>
+            <td width="66" align="right"><strong>167</strong> (36%)</td>
+          </tr>
+          
+          <tr>
+            <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_GI22.html" class="txt13">Granules India</a>
+              
+              <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE101D01020','BSE','532482');"></span> 
+            </td>
+            <td width="35"><span class="green">3</span></td>
+            <td width="40">0</td>
+            <td width="40"><span class="red_13">0</span></td>
+            <td width="70" align="right"><strong>284.30</strong></td>
+            <td width="66" align="right"><strong>354</strong> (25%)</td>
+            <td width="66" align="right"><strong>342</strong> (20%)</td>
+            <td width="66" align="right"><strong>360</strong> (27%)</td>
+          </tr>
+          
+          <tr>
+            <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_JKC03.html" class="txt13">J. K. Cement</a>
+              
+              <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE823G01014','BSE','532644');"></span> 
+            </td>
+            <td width="35"><span class="green">1</span></td>
+            <td width="40">0</td>
+            <td width="40"><span class="red_13">0</span></td>
+            <td width="70" align="right"><strong>3363.05</strong></td>
+            <td width="66" align="right"><strong>3062</strong> (-9%)</td>
+            <td width="66" align="right"><strong>2755</strong> (-18%)</td>
+            <td width="66" align="right"><strong>3675</strong> (9%)</td>
+          </tr>
+          
+          <tr>
+            <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_KC13.html" class="txt13">KNR Construct</a>
+              
+              <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE634I01029','BSE','532942');"></span> 
+            </td>
+            <td width="35"><span class="green">3</span></td>
+            <td width="40">0</td>
+            <td width="40"><span class="red_13">0</span></td>
+            <td width="70" align="right"><strong>237.00</strong></td>
+            <td width="66" align="right"><strong>313</strong> (32%)</td>
+            <td width="66" align="right"><strong>301</strong> (27%)</td>
+            <td width="66" align="right"><strong>320</strong> (35%)</td>
+          </tr>
+          
+          <tr>
+            <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_PI29.html" class="txt13">PNC Infratech</a>
+              
+              <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE195J01029','BSE','539150');"></span> 
+            </td>
+            <td width="35"><span class="green">3</span></td>
+            <td width="40">0</td>
+            <td width="40"><span class="red_13">0</span></td>
+            <td width="70" align="right"><strong>329.00</strong></td>
+            <td width="66" align="right"><strong>385</strong> (17%)</td>
+            <td width="66" align="right"><strong>382</strong> (16%)</td>
+            <td width="66" align="right"><strong>390</strong> (19%)</td>
+          </tr>
+          
+          <tr>
+            <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_II16.html" class="txt13">Insecticides</a>
+              
+              <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE070I01018','BSE','532851');"></span> 
+            </td>
+            <td width="35"><span class="green">2</span></td>
+            <td width="40">0</td>
+            <td width="40"><span class="red_13">0</span></td>
+            <td width="70" align="right"><strong>441.40</strong></td>
+            <td width="66" align="right"><strong>543</strong> (23%)</td>
+            <td width="66" align="right"><strong>540</strong> (22%)</td>
+            <td width="66" align="right"><strong>550</strong> (25%)</td>
+          </tr>
+          
+          <tr>
+            <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_LTH.html" class="txt13">Lemon Tree Hote</a>
+              
+              <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE970X01018','BSE','541233');"></span> 
+            </td>
+            <td width="35"><span class="green">3</span></td>
+            <td width="40">0</td>
+            <td width="40"><span class="red_13">0</span></td>
+            <td width="70" align="right"><strong>94.68</strong></td>
+            <td width="66" align="right"><strong>117</strong> (23%)</td>
+            <td width="66" align="right"><strong>115</strong> (21%)</td>
+            <td width="66" align="right"><strong>120</strong> (27%)</td>
+          </tr>
+          
+          <tr>
+            <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_NOC.html" class="txt13">NOCIL</a>
+              
+              <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE163A01018','BSE','500730');"></span> 
+            </td>
+            <td width="35"><span class="green">2</span></td>
+            <td width="40">1</td>
+            <td width="40"><span class="red_13">0</span></td>
+            <td width="70" align="right"><strong>223.45</strong></td>
+            <td width="66" align="right"><strong>242</strong> (8%)</td>
+            <td width="66" align="right"><strong>210</strong> (-6%)</td>
+            <td width="66" align="right"><strong>260</strong> (16%)</td>
+          </tr>
+          
+          <tr>
+            <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_BI03.html" class="txt13">Balkrishna Ind</a>
+              
+              <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE787D01026','BSE','502355');"></span> 
+            </td>
+            <td width="35"><span class="green">0</span></td>
+            <td width="40">2</td>
+            <td width="40"><span class="red_13">0</span></td>
+            <td width="70" align="right"><strong>2445.80</strong></td>
+            <td width="66" align="right"><strong>2210</strong> (-10%)</td>
+            <td width="66" align="right"><strong>2083</strong> (-15%)</td>
+            <td width="66" align="right"><strong>2446</strong> (0%)</td>
+          </tr>
+          
+          <tr>
+            <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_SD6.html" class="txt13">Sobha</a>
+              
+              <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE671H01015','BSE','532784');"></span> 
+            </td>
+            <td width="35"><span class="green">3</span></td>
+            <td width="40">0</td>
+            <td width="40"><span class="red_13">0</span></td>
+            <td width="70" align="right"><strong>530.40</strong></td>
+            <td width="66" align="right"><strong>812</strong> (53%)</td>
+            <td width="66" align="right"><strong>750</strong> (41%)</td>
+            <td width="66" align="right"><strong>935</strong> (76%)</td>
+          </tr>
+          
+          <tr>
+            <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_ONG.html" class="txt13">ONGC</a>
+              
+              <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE213A01029','BSE','500312');"></span> 
+            </td>
+            <td width="35"><span class="green">1</span></td>
+            <td width="40">1</td>
+            <td width="40"><span class="red_13">0</span></td>
+            <td width="70" align="right"><strong>157.50</strong></td>
+            <td width="66" align="right"><strong>193</strong> (22%)</td>
+            <td width="66" align="right"><strong>170</strong> (8%)</td>
+            <td width="66" align="right"><strong>215</strong> (37%)</td>
+          </tr>
+          
+          <tr>
+            <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_SAI.html" class="txt13">SAIL</a>
+              
+              <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE114A01011','BSE','500113');"></span> 
+            </td>
+            <td width="35"><span class="green">0</span></td>
+            <td width="40">2</td>
+            <td width="40"><span class="red_13">0</span></td>
+            <td width="70" align="right"><strong>84.50</strong></td>
+            <td width="66" align="right"><strong>85</strong> (1%)</td>
+            <td width="66" align="right"><strong>80</strong> (-5%)</td>
+            <td width="66" align="right"><strong>90</strong> (7%)</td>
+          </tr>
+          
+          <tr>
+            <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_GI28.html" class="txt13">Greenlam Ind</a>
+              
+              <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE544R01021','BSE','538979');"></span> 
+            </td>
+            <td width="35"><span class="green">1</span></td>
+            <td width="40">1</td>
+            <td width="40"><span class="red_13">0</span></td>
+            <td width="70" align="right"><strong>442.65</strong></td>
+            <td width="66" align="right"><strong>465</strong> (5%)</td>
+            <td width="66" align="right"><strong>410</strong> (-7%)</td>
+            <td width="66" align="right"><strong>520</strong> (17%)</td>
+          </tr>
+          
+          <tr>
+            <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_SCI05.html" class="txt13">Sudarshan Chem</a>
+              
+              <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE659A01023','BSE','506655');"></span> 
+            </td>
+            <td width="35"><span class="green">1</span></td>
+            <td width="40">0</td>
+            <td width="40"><span class="red_13">0</span></td>
+            <td width="70" align="right"><strong>490.65</strong></td>
+            <td width="66" align="right"><strong>492</strong> (0%)</td>
+            <td width="66" align="right"><strong>454</strong> (-7%)</td>
+            <td width="66" align="right"><strong>530</strong> (8%)</td>
+          </tr>
+          
+          <tr>
+            <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_SUMIC54292.html" class="txt13">SUMITOMO</a>
+              
+              <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE258G01013','BSE','542920');"></span> 
+            </td>
+            <td width="35"><span class="green">2</span></td>
+            <td width="40">0</td>
+            <td width="40"><span class="red_13">0</span></td>
+            <td width="70" align="right"><strong>423.05</strong></td>
+            <td width="66" align="right"><strong>465</strong> (10%)</td>
+            <td width="66" align="right"><strong>465</strong> (10%)</td>
+            <td width="66" align="right"><strong>465</strong> (10%)</td>
+          </tr>
+          
+          <tr>
+            <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_TCI04.html" class="txt13">Transport Corp</a>
+              
+              <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE688A01022','BSE','532349');"></span> 
+            </td>
+            <td width="35"><span class="green">2</span></td>
+            <td width="40">0</td>
+            <td width="40"><span class="red_13">0</span></td>
+            <td width="70" align="right"><strong>716.05</strong></td>
+            <td width="66" align="right"><strong>823</strong> (15%)</td>
+            <td width="66" align="right"><strong>785</strong> (10%)</td>
+            <td width="66" align="right"><strong>860</strong> (20%)</td>
+          </tr>
+          
+          <tr>
+            <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_USF.html" class="txt13">Ujjivan Small</a>
+              
+              <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE551W01018','BSE','542904');"></span> 
+            </td>
+            <td width="35"><span class="green">2</span></td>
+            <td width="40">0</td>
+            <td width="40"><span class="red_13">0</span></td>
+            <td width="70" align="right"><strong>37.04</strong></td>
+            <td width="66" align="right"><strong>50</strong> (34%)</td>
+            <td width="66" align="right"><strong>49.4</strong> (33%)</td>
+            <td width="66" align="right"><strong>50</strong> (35%)</td>
+          </tr>
+          
+          <tr>
+            <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_CI02.html" class="txt13">Cummins</a>
+              
+              <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE298A01020','BSE','500480');"></span> 
+            </td>
+            <td width="35"><span class="green">2</span></td>
+            <td width="40">0</td>
+            <td width="40"><span class="red_13">0</span></td>
+            <td width="70" align="right"><strong>1830.35</strong></td>
+            <td width="66" align="right"><strong>1815</strong> (-1%)</td>
+            <td width="66" align="right"><strong>1750</strong> (-4%)</td>
+            <td width="66" align="right"><strong>1880</strong> (3%)</td>
+          </tr>
+          
+          <tr>
+            <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_HL.html" class="txt13">HUL</a>
+              
+              <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE030A01027','BSE','500696');"></span> 
+            </td>
+            <td width="35"><span class="green">1</span></td>
+            <td width="40">0</td>
+            <td width="40"><span class="red_13">0</span></td>
+            <td width="70" align="right"><strong>2647.05</strong></td>
+            <td width="66" align="right"><strong>2775</strong> (5%)</td>
+            <td width="66" align="right"><strong>2450</strong> (-7%)</td>
+            <td width="66" align="right"><strong>3100</strong> (17%)</td>
+          </tr>
+          
+          <tr>
+            <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_NTP.html" class="txt13">NTPC</a>
+              
+              <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE733E01010','BSE','532555');"></span> 
+            </td>
+            <td width="35"><span class="green">2</span></td>
+            <td width="40">0</td>
+            <td width="40"><span class="red_13">0</span></td>
+            <td width="70" align="right"><strong>186.90</strong></td>
+            <td width="66" align="right"><strong>200</strong> (7%)</td>
+            <td width="66" align="right"><strong>200</strong> (7%)</td>
+            <td width="66" align="right"><strong>200</strong> (7%)</td>
+          </tr>
+          
+          <tr>
+            <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_HDF01.html" class="txt13">HDFC Bank</a>
+              
+              <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE040A01034','BSE','500180');"></span> 
+            </td>
+            <td width="35"><span class="green">2</span></td>
+            <td width="40">0</td>
+            <td width="40"><span class="red_13">0</span></td>
+            <td width="70" align="right"><strong>1650.95</strong></td>
+            <td width="66" align="right"><strong>1938</strong> (17%)</td>
+            <td width="66" align="right"><strong>1925</strong> (17%)</td>
+            <td width="66" align="right"><strong>1950</strong> (18%)</td>
+          </tr>
+          
+          <tr>
+            <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_NMD01.html" class="txt13">NMDC</a>
+              
+              <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE584A01023','BSE','526371');"></span> 
+            </td>
+            <td width="35"><span class="green">2</span></td>
+            <td width="40">0</td>
+            <td width="40"><span class="red_13">0</span></td>
+            <td width="70" align="right"><strong>105.20</strong></td>
+            <td width="66" align="right"><strong>130</strong> (24%)</td>
+            <td width="66" align="right"><strong>125</strong> (19%)</td>
+            <td width="66" align="right"><strong>135</strong> (28%)</td>
+          </tr>
+          
+          <tr>
+            <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_OR.html" class="txt13">Oberoi Realty</a>
+              
+              <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE093I01010','BSE','533273');"></span> 
+            </td>
+            <td width="35"><span class="green">2</span></td>
+            <td width="40">0</td>
+            <td width="40"><span class="red_13">0</span></td>
+            <td width="70" align="right"><strong>986.85</strong></td>
+            <td width="66" align="right"><strong>1175</strong> (19%)</td>
+            <td width="66" align="right"><strong>1140</strong> (16%)</td>
+            <td width="66" align="right"><strong>1210</strong> (23%)</td>
+          </tr>
+          
+          <tr>
+            <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_MB05.html" class="txt13">Metro Brands</a>
+              
+              <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE317I01021','BSE','543426');"></span> 
+            </td>
+            <td width="35"><span class="green">2</span></td>
+            <td width="40">0</td>
+            <td width="40"><span class="red_13">0</span></td>
+            <td width="70" align="right"><strong>990.20</strong></td>
+            <td width="66" align="right"><strong>589</strong> (-41%)</td>
+            <td width="66" align="right"><strong>107</strong> (-89%)</td>
+            <td width="66" align="right"><strong>1070</strong> (8%)</td>
+          </tr>
+          
+          <tr>
+            <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_IA05.html" class="txt13">Interglobe Avi</a>
+              
+              <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE646L01027','BSE','539448');"></span> 
+            </td>
+            <td width="35"><span class="green">1</span></td>
+            <td width="40">1</td>
+            <td width="40"><span class="red_13">0</span></td>
+            <td width="70" align="right"><strong>2484.45</strong></td>
+            <td width="66" align="right"><strong>2568</strong> (3%)</td>
+            <td width="66" align="right"><strong>2135</strong> (-14%)</td>
+            <td width="66" align="right"><strong>3000</strong> (21%)</td>
+          </tr>
+          
+          <tr>
+            <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_RK01.html" class="txt13">Radico Khaitan</a>
+              
+              <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE944F01028','BSE','532497');"></span> 
+            </td>
+            <td width="35"><span class="green">0</span></td>
+            <td width="40">1</td>
+            <td width="40"><span class="red_13">0</span></td>
+            <td width="70" align="right"><strong>1199.45</strong></td>
+            <td width="66" align="right"><strong>1075</strong> (-10%)</td>
+            <td width="66" align="right"><strong>1250</strong> (4%)</td>
+            <td width="66" align="right"><strong>900</strong> (-25%)</td>
+          </tr>
+          
+          <tr>
+            <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_DT07.html" class="txt13">Dixon Technolog</a>
+              
+              <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE935N01020','BSE','540699');"></span> 
+            </td>
+            <td width="35"><span class="green">0</span></td>
+            <td width="40">2</td>
+            <td width="40"><span class="red_13">0</span></td>
+            <td width="70" align="right"><strong>4400.00</strong></td>
+            <td width="66" align="right"><strong>3727</strong> (-15%)</td>
+            <td width="66" align="right"><strong>3403</strong> (-23%)</td>
+            <td width="66" align="right"><strong>4050</strong> (-8%)</td>
+          </tr>
+          
+          <tr>
+            <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_SBI.html" class="txt13">SBI</a>
+              
+              <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE062A01020','BSE','500112');"></span> 
+            </td>
+            <td width="35"><span class="green">2</span></td>
+            <td width="40">0</td>
+            <td width="40"><span class="red_13">0</span></td>
+            <td width="70" align="right"><strong>557.40</strong></td>
+            <td width="66" align="right"><strong>722</strong> (29%)</td>
+            <td width="66" align="right"><strong>700</strong> (26%)</td>
+            <td width="66" align="right"><strong>743</strong> (33%)</td>
+          </tr>
+          
+          <tr>
+            <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_VI16.html" class="txt13">V-Guard Ind</a>
+              
+              <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE951I01027','BSE','532953');"></span> 
+            </td>
+            <td width="35"><span class="green">1</span></td>
+            <td width="40">0</td>
+            <td width="40"><span class="red_13">0</span></td>
+            <td width="70" align="right"><strong>261.95</strong></td>
+            <td width="66" align="right"><strong>268</strong> (2%)</td>
+            <td width="66" align="right"><strong>235</strong> (-10%)</td>
+            <td width="66" align="right"><strong>300</strong> (15%)</td>
+          </tr>
+                            </tbody>
+      </table>
+    </div>
+
+    <div class="dii" id="dii" style="width: 100%; height: 80%">
+      <div class="col-12" id="Bulleye">
+       
+        <div class="row">
+
+          <div class="col-lg-8 col-sm-12  ">
+            <h5>STOCKS WITH MAXIMUM POTENTIAL </h5>
+            <hr>
+            <p>Stock with maximum profit potential within last 3 months</p>
+    
+    
+            <ul class="smaxPon">
+    
+              <li>
+                <div class="MT10 op11_gy">
+                  <div class="smp_barBase"><span id="top_potential" style="width:100%; background:#7be5b7;"></span></div>
+                  <strong>51% &amp; Above</strong> <span class="ar_lUp"></span> potential stocks
+                  <p class="txt13 MT5">
+                    <a href="">Chola Invest.</a> |
+                    <a href="">Campus Active</a>
+                    <strong><a href="">(6 more)</a></strong>
+                  </p>
+                </div>
+              </li>
+    
+              <li>
+                <div class="MT10 op11_gy">
+                  <div class="smp_barBase"><span id="top_potential" style="width:50%; background:#7be5b7;"></span></div>
+                  <strong>26% - 50%</strong> <span class="ar_lUp"></span> potential stocks
+                  <p class="txt13 MT5">
+                    <a href="">JM Financial</a> |
+                    <a href="">Zee Entertain</a>
+                    <strong><a href="">(39 more)</a></strong>
+                  </p>
+                </div>
+              </li>
+    
+              <li>
+                <div class="MT10 op11_gy">
+                  <div class="smp_barBase"><span id="top_potential" style="width:25%; background:#bdedd8;"></span></div>
+                  <strong>Upto 25%</strong> <span class="ar_lUp"></span> potential stocks
+                  <p class="txt13 MT5">
+                    <a href="">Landmark Cars</a> |
+                    <a href="">Healthcare Glob</a>
+                    <strong><a href="">(168 more)</a></strong>
+                  </p>
+                </div>
+              </li>
+    
+            </ul>
+    
+    
+            <h5 class="mt-4">MOST RECOMMENDED STOCKS</h5>
+            <hr>
+            <p>This table provides summary of all research recommendations received for given stock. Median Target price is
+              average target price of all research reports during the selected period.</p>
+              <div class="head_desc_usage container">
+                <div class="row ">
+                  <div class="chart-header col-1" onclick="filterChart('fii_dii')" data-btn-id="1" style="font-size: 21px">
+                    2M
+                  </div>
+                  <div class="chart-header col-1" onclick="filterChart('fii')" data-btn-id="2" style="font-size: 21px">
+                    1M
+                  </div>
+                  <div class="chart-header col-1" onclick="filterChart('fii')" data-btn-id="2" style="font-size: 21px">
+                    3M
+                  </div>
+                  <div class="chart-header col-1" onclick="filterChart('fii')" data-btn-id="2" style="font-size: 21px">
+                    6M
+                  </div>
+        
+                </div>
+                <div class="main_desc_usage mt-4" id="main_desc_usage"></div>
+              </div>
+              <table width="100%" cellspacing="0" cellpadding="0" id="nifty_stock"  class="table table-striped table-hover">
+                <thead style="    background: aliceblue;">
+                  <tr>
+                    <td width="140"></td>
+                    <td width="35"></td>
+                    <td width="35"></td>
+                    <td width="35"></td>
+                    <td width="85"></td>
+                    <td colspan="3" style="color:#fff; background:#35708a;" align="center">Target Price (% Diff from CMP)</td>
+                  </tr>
+                  <tr>
+                    <td>Stocks</td>
+                    <td>Buy</td>
+                    <td>Hold</td>
+                    <td>Sell</td>
+                    <td>CMP</td>
+                    <td width="70">Median</td>
+                    <td width="70">Low</td>
+                    <td width="70">High</td>
+                  </tr>
+                </thead>
+                <tbody id="tradenow_tblh" class="show_most_recommended_stock">
+                  
+                  <tr>
+                    <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_AL.html" class="txt13">Ashok Leyland</a>
+                      
+                      <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE208A01029','BSE','500477');"></span> 
+                    </td>
+                    <td width="35"><span class="green">7</span></td>
+                    <td width="40">0</td>
+                    <td width="40"><span class="red_13">0</span></td>
+                    <td width="70" align="right"><strong>161.15</strong></td>
+                    <td width="66" align="right"><strong>193</strong> (20%)</td>
+                    <td width="66" align="right"><strong>180</strong> (12%)</td>
+                    <td width="66" align="right"><strong>215</strong> (33%)</td>
+                  </tr>
+                  
+                  <tr>
+                    <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_MM.html" class="txt13">M&amp;M</a>
+                      
+                      <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE101A01026','BSE','500520');"></span> 
+                    </td>
+                    <td width="35"><span class="green">6</span></td>
+                    <td width="40">0</td>
+                    <td width="40"><span class="red_13">0</span></td>
+                    <td width="70" align="right"><strong>1376.55</strong></td>
+                    <td width="66" align="right"><strong>1581</strong> (15%)</td>
+                    <td width="66" align="right"><strong>1500</strong> (9%)</td>
+                    <td width="66" align="right"><strong>1685</strong> (22%)</td>
+                  </tr>
+                  
+                  <tr>
+                    <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_ZT.html" class="txt13">Zee Entertain</a>
+                      
+                      <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE256A01028','BSE','505537');"></span> 
+                    </td>
+                    <td width="35"><span class="green">6</span></td>
+                    <td width="40">0</td>
+                    <td width="40"><span class="red_13">0</span></td>
+                    <td width="70" align="right"><strong>178.35</strong></td>
+                    <td width="66" align="right"><strong>225</strong> (26%)</td>
+                    <td width="66" align="right"><strong>210</strong> (18%)</td>
+                    <td width="66" align="right"><strong>240</strong> (35%)</td>
+                  </tr>
+                  
+                  <tr>
+                    <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_IEI01.html" class="txt13">Info Edge</a>
+                      
+                      <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE663F01024','BSE','532777');"></span> 
+                    </td>
+                    <td width="35"><span class="green">2</span></td>
+                    <td width="40">3</td>
+                    <td width="40"><span class="red_13">0</span></td>
+                    <td width="70" align="right"><strong>4382.40</strong></td>
+                    <td width="66" align="right"><strong>4415</strong> (1%)</td>
+                    <td width="66" align="right"><strong>4010</strong> (-8%)</td>
+                    <td width="66" align="right"><strong>5170</strong> (18%)</td>
+                  </tr>
+                  
+                  <tr>
+                    <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_SPI.html" class="txt13">Sun Pharma</a>
+                      
+                      <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE044A01036','BSE','524715');"></span> 
+                    </td>
+                    <td width="35"><span class="green">5</span></td>
+                    <td width="40">0</td>
+                    <td width="40"><span class="red_13">0</span></td>
+                    <td width="70" align="right"><strong>979.15</strong></td>
+                    <td width="66" align="right"><strong>1144</strong> (17%)</td>
+                    <td width="66" align="right"><strong>1123</strong> (15%)</td>
+                    <td width="66" align="right"><strong>1172</strong> (20%)</td>
+                  </tr>
+                  
+                  <tr>
+                    <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_E05.html" class="txt13">Emami</a>
+                      
+                      <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE548C01032','BSE','531162');"></span> 
+                    </td>
+                    <td width="35"><span class="green">3</span></td>
+                    <td width="40">0</td>
+                    <td width="40"><span class="red_13">0</span></td>
+                    <td width="70" align="right"><strong>410.00</strong></td>
+                    <td width="66" align="right"><strong>456</strong> (11%)</td>
+                    <td width="66" align="right"><strong>385</strong> (-6%)</td>
+                    <td width="66" align="right"><strong>517</strong> (26%)</td>
+                  </tr>
+                  
+                  <tr>
+                    <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_SC12.html" class="txt13">Shree Cements</a>
+                      
+                      <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE070A01015','BSE','500387');"></span> 
+                    </td>
+                    <td width="35"><span class="green">0</span></td>
+                    <td width="40">2</td>
+                    <td width="40"><span class="red_13">0</span></td>
+                    <td width="70" align="right"><strong>25358.35</strong></td>
+                    <td width="66" align="right"><strong>25</strong> (-100%)</td>
+                    <td width="66" align="right"><strong>23,000</strong> (-100%)</td>
+                    <td width="66" align="right"><strong>27,821</strong> (-100%)</td>
+                  </tr>
+                  
+                  <tr>
+                    <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_ARB.html" class="txt13">Amara Raja Batt</a>
+                      
+                      <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE885A01032','BSE','500008');"></span> 
+                    </td>
+                    <td width="35"><span class="green">3</span></td>
+                    <td width="40">2</td>
+                    <td width="40"><span class="red_13">0</span></td>
+                    <td width="70" align="right"><strong>628.65</strong></td>
+                    <td width="66" align="right"><strong>707</strong> (12%)</td>
+                    <td width="66" align="right"><strong>690</strong> (10%)</td>
+                    <td width="66" align="right"><strong>762</strong> (21%)</td>
+                  </tr>
+                  
+                  <tr>
+                    <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_TEL.html" class="txt13">Tata Motors</a>
+                      
+                      <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE155A01022','BSE','500570');"></span> 
+                    </td>
+                    <td width="35"><span class="green">4</span></td>
+                    <td width="40">0</td>
+                    <td width="40"><span class="red_13">0</span></td>
+                    <td width="70" align="right"><strong>562.80</strong></td>
+                    <td width="66" align="right"><strong>623</strong> (11%)</td>
+                    <td width="66" align="right"><strong>605</strong> (7%)</td>
+                    <td width="66" align="right"><strong>650</strong> (15%)</td>
+                  </tr>
+                  
+                  <tr>
+                    <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_JKC.html" class="txt13">JK Lakshmi Cem</a>
+                      
+                      <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE786A01032','BSE','500380');"></span> 
+                    </td>
+                    <td width="35"><span class="green">4</span></td>
+                    <td width="40">0</td>
+                    <td width="40"><span class="red_13">0</span></td>
+                    <td width="70" align="right"><strong>721.00</strong></td>
+                    <td width="66" align="right"><strong>838</strong> (16%)</td>
+                    <td width="66" align="right"><strong>815</strong> (13%)</td>
+                    <td width="66" align="right"><strong>870</strong> (21%)</td>
+                  </tr>
+                  
+                  <tr>
+                    <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_CGC01.html" class="txt13">CG Consumer</a>
+                      
+                      <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE299U01018','BSE','539876');"></span> 
+                    </td>
+                    <td width="35"><span class="green">3</span></td>
+                    <td width="40">0</td>
+                    <td width="40"><span class="red_13">0</span></td>
+                    <td width="70" align="right"><strong>285.55</strong></td>
+                    <td width="66" align="right"><strong>353</strong> (24%)</td>
+                    <td width="66" align="right"><strong>302</strong> (6%)</td>
+                    <td width="66" align="right"><strong>400</strong> (40%)</td>
+                  </tr>
+                  
+                  <tr>
+                    <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_TP06.html" class="txt13">Torrent Pharma</a>
+                      
+                      <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE685A01028','BSE','500420');"></span> 
+                    </td>
+                    <td width="35"><span class="green">2</span></td>
+                    <td width="40">2</td>
+                    <td width="40"><span class="red_13">0</span></td>
+                    <td width="70" align="right"><strong>1842.85</strong></td>
+                    <td width="66" align="right"><strong>1840</strong> (-0%)</td>
+                    <td width="66" align="right"><strong>1650</strong> (-10%)</td>
+                    <td width="66" align="right"><strong>1910</strong> (4%)</td>
+                  </tr>
+                  
+                  <tr>
+                    <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_BE03.html" class="txt13">Bharat Elec</a>
+                      
+                      <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE263A01024','BSE','500049');"></span> 
+                    </td>
+                    <td width="35"><span class="green">4</span></td>
+                    <td width="40">0</td>
+                    <td width="40"><span class="red_13">0</span></td>
+                    <td width="70" align="right"><strong>123.05</strong></td>
+                    <td width="66" align="right"><strong>133</strong> (8%)</td>
+                    <td width="66" align="right"><strong>125</strong> (2%)</td>
+                    <td width="66" align="right"><strong>150</strong> (22%)</td>
+                  </tr>
+                  
+                  <tr>
+                    <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_AP.html" class="txt13">Aurobindo Pharm</a>
+                      
+                      <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE406A01037','BSE','524804');"></span> 
+                    </td>
+                    <td width="35"><span class="green">1</span></td>
+                    <td width="40">3</td>
+                    <td width="40"><span class="red_13">0</span></td>
+                    <td width="70" align="right"><strong>673.20</strong></td>
+                    <td width="66" align="right"><strong>660</strong> (-2%)</td>
+                    <td width="66" align="right"><strong>600</strong> (-11%)</td>
+                    <td width="66" align="right"><strong>716</strong> (6%)</td>
+                  </tr>
+                  
+                  <tr>
+                    <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_OI13.html" class="txt13">Oil India</a>
+                      
+                      <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE274J01014','BSE','533106');"></span> 
+                    </td>
+                    <td width="35"><span class="green">1</span></td>
+                    <td width="40">3</td>
+                    <td width="40"><span class="red_13">0</span></td>
+                    <td width="70" align="right"><strong>246.40</strong></td>
+                    <td width="66" align="right"><strong>293</strong> (19%)</td>
+                    <td width="66" align="right"><strong>280</strong> (14%)</td>
+                    <td width="66" align="right"><strong>330</strong> (34%)</td>
+                  </tr>
+                  
+                  <tr>
+                    <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_BB09.html" class="txt13">Bandhan Bank</a>
+                      
+                      <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE545U01014','BSE','541153');"></span> 
+                    </td>
+                    <td width="35"><span class="green">2</span></td>
+                    <td width="40">1</td>
+                    <td width="40"><span class="red_13">0</span></td>
+                    <td width="70" align="right"><strong>241.35</strong></td>
+                    <td width="66" align="right"><strong>292</strong> (21%)</td>
+                    <td width="66" align="right"><strong>265</strong> (10%)</td>
+                    <td width="66" align="right"><strong>305</strong> (26%)</td>
+                  </tr>
+                  
+                  <tr>
+                    <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_HHM.html" class="txt13">Hero Motocorp</a>
+                      
+                      <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE158A01026','BSE','500182');"></span> 
+                    </td>
+                    <td width="35"><span class="green">2</span></td>
+                    <td width="40">0</td>
+                    <td width="40"><span class="red_13">0</span></td>
+                    <td width="70" align="right"><strong>2826.25</strong></td>
+                    <td width="66" align="right"><strong>3071</strong> (9%)</td>
+                    <td width="66" align="right"><strong>2512</strong> (-11%)</td>
+                    <td width="66" align="right"><strong>3500</strong> (24%)</td>
+                  </tr>
+                  
+                  <tr>
+                    <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_IP07.html" class="txt13">Indigo Paints</a>
+                      
+                      <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE09VQ01012','BSE','543258');"></span> 
+                    </td>
+                    <td width="35"><span class="green">3</span></td>
+                    <td width="40">0</td>
+                    <td width="40"><span class="red_13">0</span></td>
+                    <td width="70" align="right"><strong>1433.55</strong></td>
+                    <td width="66" align="right"><strong>1700</strong> (19%)</td>
+                    <td width="66" align="right"><strong>1700</strong> (19%)</td>
+                    <td width="66" align="right"><strong>1700</strong> (19%)</td>
+                  </tr>
+                  
+                  <tr>
+                    <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_TCI08.html" class="txt13">TCI Express</a>
+                      
+                      <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE586V01016','BSE','540212');"></span> 
+                    </td>
+                    <td width="35"><span class="green">3</span></td>
+                    <td width="40">0</td>
+                    <td width="40"><span class="red_13">0</span></td>
+                    <td width="70" align="right"><strong>1626.75</strong></td>
+                    <td width="66" align="right"><strong>1900</strong> (17%)</td>
+                    <td width="66" align="right"><strong>1780</strong> (9%)</td>
+                    <td width="66" align="right"><strong>2070</strong> (27%)</td>
+                  </tr>
+                  
+                  <tr>
+                    <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_GSL06.html" class="txt13">Galaxy Surfacta</a>
+                      
+                      <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE600K01018','BSE','540935');"></span> 
+                    </td>
+                    <td width="35"><span class="green">3</span></td>
+                    <td width="40">0</td>
+                    <td width="40"><span class="red_13">0</span></td>
+                    <td width="70" align="right"><strong>2813.65</strong></td>
+                    <td width="66" align="right"><strong>3392</strong> (21%)</td>
+                    <td width="66" align="right"><strong>3345</strong> (19%)</td>
+                    <td width="66" align="right"><strong>3415</strong> (21%)</td>
+                  </tr>
+                  
+                  <tr>
+                    <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_BNH.html" class="txt13">Barbeque Nat</a>
+                      
+                      <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE382M01027','BSE','543283');"></span> 
+                    </td>
+                    <td width="35"><span class="green">0</span></td>
+                    <td width="40">3</td>
+                    <td width="40"><span class="red_13">0</span></td>
+                    <td width="70" align="right"><strong>651.85</strong></td>
+                    <td width="66" align="right"><strong>700</strong> (7%)</td>
+                    <td width="66" align="right"><strong>700</strong> (7%)</td>
+                    <td width="66" align="right"><strong>700</strong> (7%)</td>
+                  </tr>
+                  
+                  <tr>
+                    <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_CUB.html" class="txt13">City Union Bank</a>
+                      
+                      <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE491A01021','BSE','532210');"></span> 
+                    </td>
+                    <td width="35"><span class="green">1</span></td>
+                    <td width="40">1</td>
+                    <td width="40"><span class="red_13">0</span></td>
+                    <td width="70" align="right"><strong>122.40</strong></td>
+                    <td width="66" align="right"><strong>157</strong> (29%)</td>
+                    <td width="66" align="right"><strong>145</strong> (18%)</td>
+                    <td width="66" align="right"><strong>167</strong> (36%)</td>
+                  </tr>
+                  
+                  <tr>
+                    <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_GI22.html" class="txt13">Granules India</a>
+                      
+                      <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE101D01020','BSE','532482');"></span> 
+                    </td>
+                    <td width="35"><span class="green">3</span></td>
+                    <td width="40">0</td>
+                    <td width="40"><span class="red_13">0</span></td>
+                    <td width="70" align="right"><strong>284.30</strong></td>
+                    <td width="66" align="right"><strong>354</strong> (25%)</td>
+                    <td width="66" align="right"><strong>342</strong> (20%)</td>
+                    <td width="66" align="right"><strong>360</strong> (27%)</td>
+                  </tr>
+                  
+                  <tr>
+                    <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_JKC03.html" class="txt13">J. K. Cement</a>
+                      
+                      <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE823G01014','BSE','532644');"></span> 
+                    </td>
+                    <td width="35"><span class="green">1</span></td>
+                    <td width="40">0</td>
+                    <td width="40"><span class="red_13">0</span></td>
+                    <td width="70" align="right"><strong>3363.05</strong></td>
+                    <td width="66" align="right"><strong>3062</strong> (-9%)</td>
+                    <td width="66" align="right"><strong>2755</strong> (-18%)</td>
+                    <td width="66" align="right"><strong>3675</strong> (9%)</td>
+                  </tr>
+                  
+                  <tr>
+                    <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_KC13.html" class="txt13">KNR Construct</a>
+                      
+                      <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE634I01029','BSE','532942');"></span> 
+                    </td>
+                    <td width="35"><span class="green">3</span></td>
+                    <td width="40">0</td>
+                    <td width="40"><span class="red_13">0</span></td>
+                    <td width="70" align="right"><strong>237.00</strong></td>
+                    <td width="66" align="right"><strong>313</strong> (32%)</td>
+                    <td width="66" align="right"><strong>301</strong> (27%)</td>
+                    <td width="66" align="right"><strong>320</strong> (35%)</td>
+                  </tr>
+                  
+                  <tr>
+                    <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_PI29.html" class="txt13">PNC Infratech</a>
+                      
+                      <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE195J01029','BSE','539150');"></span> 
+                    </td>
+                    <td width="35"><span class="green">3</span></td>
+                    <td width="40">0</td>
+                    <td width="40"><span class="red_13">0</span></td>
+                    <td width="70" align="right"><strong>329.00</strong></td>
+                    <td width="66" align="right"><strong>385</strong> (17%)</td>
+                    <td width="66" align="right"><strong>382</strong> (16%)</td>
+                    <td width="66" align="right"><strong>390</strong> (19%)</td>
+                  </tr>
+                  
+                  <tr>
+                    <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_II16.html" class="txt13">Insecticides</a>
+                      
+                      <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE070I01018','BSE','532851');"></span> 
+                    </td>
+                    <td width="35"><span class="green">2</span></td>
+                    <td width="40">0</td>
+                    <td width="40"><span class="red_13">0</span></td>
+                    <td width="70" align="right"><strong>441.40</strong></td>
+                    <td width="66" align="right"><strong>543</strong> (23%)</td>
+                    <td width="66" align="right"><strong>540</strong> (22%)</td>
+                    <td width="66" align="right"><strong>550</strong> (25%)</td>
+                  </tr>
+                  
+                  <tr>
+                    <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_LTH.html" class="txt13">Lemon Tree Hote</a>
+                      
+                      <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE970X01018','BSE','541233');"></span> 
+                    </td>
+                    <td width="35"><span class="green">3</span></td>
+                    <td width="40">0</td>
+                    <td width="40"><span class="red_13">0</span></td>
+                    <td width="70" align="right"><strong>94.68</strong></td>
+                    <td width="66" align="right"><strong>117</strong> (23%)</td>
+                    <td width="66" align="right"><strong>115</strong> (21%)</td>
+                    <td width="66" align="right"><strong>120</strong> (27%)</td>
+                  </tr>
+                  
+                  <tr>
+                    <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_NOC.html" class="txt13">NOCIL</a>
+                      
+                      <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE163A01018','BSE','500730');"></span> 
+                    </td>
+                    <td width="35"><span class="green">2</span></td>
+                    <td width="40">1</td>
+                    <td width="40"><span class="red_13">0</span></td>
+                    <td width="70" align="right"><strong>223.45</strong></td>
+                    <td width="66" align="right"><strong>242</strong> (8%)</td>
+                    <td width="66" align="right"><strong>210</strong> (-6%)</td>
+                    <td width="66" align="right"><strong>260</strong> (16%)</td>
+                  </tr>
+                  
+                  <tr>
+                    <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_BI03.html" class="txt13">Balkrishna Ind</a>
+                      
+                      <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE787D01026','BSE','502355');"></span> 
+                    </td>
+                    <td width="35"><span class="green">0</span></td>
+                    <td width="40">2</td>
+                    <td width="40"><span class="red_13">0</span></td>
+                    <td width="70" align="right"><strong>2445.80</strong></td>
+                    <td width="66" align="right"><strong>2210</strong> (-10%)</td>
+                    <td width="66" align="right"><strong>2083</strong> (-15%)</td>
+                    <td width="66" align="right"><strong>2446</strong> (0%)</td>
+                  </tr>
+                  
+                  <tr>
+                    <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_SD6.html" class="txt13">Sobha</a>
+                      
+                      <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE671H01015','BSE','532784');"></span> 
+                    </td>
+                    <td width="35"><span class="green">3</span></td>
+                    <td width="40">0</td>
+                    <td width="40"><span class="red_13">0</span></td>
+                    <td width="70" align="right"><strong>530.40</strong></td>
+                    <td width="66" align="right"><strong>812</strong> (53%)</td>
+                    <td width="66" align="right"><strong>750</strong> (41%)</td>
+                    <td width="66" align="right"><strong>935</strong> (76%)</td>
+                  </tr>
+                  
+                  <tr>
+                    <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_ONG.html" class="txt13">ONGC</a>
+                      
+                      <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE213A01029','BSE','500312');"></span> 
+                    </td>
+                    <td width="35"><span class="green">1</span></td>
+                    <td width="40">1</td>
+                    <td width="40"><span class="red_13">0</span></td>
+                    <td width="70" align="right"><strong>157.50</strong></td>
+                    <td width="66" align="right"><strong>193</strong> (22%)</td>
+                    <td width="66" align="right"><strong>170</strong> (8%)</td>
+                    <td width="66" align="right"><strong>215</strong> (37%)</td>
+                  </tr>
+                  
+                  <tr>
+                    <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_SAI.html" class="txt13">SAIL</a>
+                      
+                      <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE114A01011','BSE','500113');"></span> 
+                    </td>
+                    <td width="35"><span class="green">0</span></td>
+                    <td width="40">2</td>
+                    <td width="40"><span class="red_13">0</span></td>
+                    <td width="70" align="right"><strong>84.50</strong></td>
+                    <td width="66" align="right"><strong>85</strong> (1%)</td>
+                    <td width="66" align="right"><strong>80</strong> (-5%)</td>
+                    <td width="66" align="right"><strong>90</strong> (7%)</td>
+                  </tr>
+                  
+                  <tr>
+                    <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_GI28.html" class="txt13">Greenlam Ind</a>
+                      
+                      <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE544R01021','BSE','538979');"></span> 
+                    </td>
+                    <td width="35"><span class="green">1</span></td>
+                    <td width="40">1</td>
+                    <td width="40"><span class="red_13">0</span></td>
+                    <td width="70" align="right"><strong>442.65</strong></td>
+                    <td width="66" align="right"><strong>465</strong> (5%)</td>
+                    <td width="66" align="right"><strong>410</strong> (-7%)</td>
+                    <td width="66" align="right"><strong>520</strong> (17%)</td>
+                  </tr>
+                  
+                  <tr>
+                    <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_SCI05.html" class="txt13">Sudarshan Chem</a>
+                      
+                      <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE659A01023','BSE','506655');"></span> 
+                    </td>
+                    <td width="35"><span class="green">1</span></td>
+                    <td width="40">0</td>
+                    <td width="40"><span class="red_13">0</span></td>
+                    <td width="70" align="right"><strong>490.65</strong></td>
+                    <td width="66" align="right"><strong>492</strong> (0%)</td>
+                    <td width="66" align="right"><strong>454</strong> (-7%)</td>
+                    <td width="66" align="right"><strong>530</strong> (8%)</td>
+                  </tr>
+                  
+                  <tr>
+                    <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_SUMIC54292.html" class="txt13">SUMITOMO</a>
+                      
+                      <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE258G01013','BSE','542920');"></span> 
+                    </td>
+                    <td width="35"><span class="green">2</span></td>
+                    <td width="40">0</td>
+                    <td width="40"><span class="red_13">0</span></td>
+                    <td width="70" align="right"><strong>423.05</strong></td>
+                    <td width="66" align="right"><strong>465</strong> (10%)</td>
+                    <td width="66" align="right"><strong>465</strong> (10%)</td>
+                    <td width="66" align="right"><strong>465</strong> (10%)</td>
+                  </tr>
+                  
+                  <tr>
+                    <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_TCI04.html" class="txt13">Transport Corp</a>
+                      
+                      <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE688A01022','BSE','532349');"></span> 
+                    </td>
+                    <td width="35"><span class="green">2</span></td>
+                    <td width="40">0</td>
+                    <td width="40"><span class="red_13">0</span></td>
+                    <td width="70" align="right"><strong>716.05</strong></td>
+                    <td width="66" align="right"><strong>823</strong> (15%)</td>
+                    <td width="66" align="right"><strong>785</strong> (10%)</td>
+                    <td width="66" align="right"><strong>860</strong> (20%)</td>
+                  </tr>
+                  
+                  <tr>
+                    <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_USF.html" class="txt13">Ujjivan Small</a>
+                      
+                      <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE551W01018','BSE','542904');"></span> 
+                    </td>
+                    <td width="35"><span class="green">2</span></td>
+                    <td width="40">0</td>
+                    <td width="40"><span class="red_13">0</span></td>
+                    <td width="70" align="right"><strong>37.04</strong></td>
+                    <td width="66" align="right"><strong>50</strong> (34%)</td>
+                    <td width="66" align="right"><strong>49.4</strong> (33%)</td>
+                    <td width="66" align="right"><strong>50</strong> (35%)</td>
+                  </tr>
+                  
+                  <tr>
+                    <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_CI02.html" class="txt13">Cummins</a>
+                      
+                      <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE298A01020','BSE','500480');"></span> 
+                    </td>
+                    <td width="35"><span class="green">2</span></td>
+                    <td width="40">0</td>
+                    <td width="40"><span class="red_13">0</span></td>
+                    <td width="70" align="right"><strong>1830.35</strong></td>
+                    <td width="66" align="right"><strong>1815</strong> (-1%)</td>
+                    <td width="66" align="right"><strong>1750</strong> (-4%)</td>
+                    <td width="66" align="right"><strong>1880</strong> (3%)</td>
+                  </tr>
+                  
+                  <tr>
+                    <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_HL.html" class="txt13">HUL</a>
+                      
+                      <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE030A01027','BSE','500696');"></span> 
+                    </td>
+                    <td width="35"><span class="green">1</span></td>
+                    <td width="40">0</td>
+                    <td width="40"><span class="red_13">0</span></td>
+                    <td width="70" align="right"><strong>2647.05</strong></td>
+                    <td width="66" align="right"><strong>2775</strong> (5%)</td>
+                    <td width="66" align="right"><strong>2450</strong> (-7%)</td>
+                    <td width="66" align="right"><strong>3100</strong> (17%)</td>
+                  </tr>
+                  
+                  <tr>
+                    <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_NTP.html" class="txt13">NTPC</a>
+                      
+                      <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE733E01010','BSE','532555');"></span> 
+                    </td>
+                    <td width="35"><span class="green">2</span></td>
+                    <td width="40">0</td>
+                    <td width="40"><span class="red_13">0</span></td>
+                    <td width="70" align="right"><strong>186.90</strong></td>
+                    <td width="66" align="right"><strong>200</strong> (7%)</td>
+                    <td width="66" align="right"><strong>200</strong> (7%)</td>
+                    <td width="66" align="right"><strong>200</strong> (7%)</td>
+                  </tr>
+                  
+                  <tr>
+                    <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_HDF01.html" class="txt13">HDFC Bank</a>
+                      
+                      <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE040A01034','BSE','500180');"></span> 
+                    </td>
+                    <td width="35"><span class="green">2</span></td>
+                    <td width="40">0</td>
+                    <td width="40"><span class="red_13">0</span></td>
+                    <td width="70" align="right"><strong>1650.95</strong></td>
+                    <td width="66" align="right"><strong>1938</strong> (17%)</td>
+                    <td width="66" align="right"><strong>1925</strong> (17%)</td>
+                    <td width="66" align="right"><strong>1950</strong> (18%)</td>
+                  </tr>
+                  
+                  <tr>
+                    <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_NMD01.html" class="txt13">NMDC</a>
+                      
+                      <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE584A01023','BSE','526371');"></span> 
+                    </td>
+                    <td width="35"><span class="green">2</span></td>
+                    <td width="40">0</td>
+                    <td width="40"><span class="red_13">0</span></td>
+                    <td width="70" align="right"><strong>105.20</strong></td>
+                    <td width="66" align="right"><strong>130</strong> (24%)</td>
+                    <td width="66" align="right"><strong>125</strong> (19%)</td>
+                    <td width="66" align="right"><strong>135</strong> (28%)</td>
+                  </tr>
+                  
+                  <tr>
+                    <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_OR.html" class="txt13">Oberoi Realty</a>
+                      
+                      <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE093I01010','BSE','533273');"></span> 
+                    </td>
+                    <td width="35"><span class="green">2</span></td>
+                    <td width="40">0</td>
+                    <td width="40"><span class="red_13">0</span></td>
+                    <td width="70" align="right"><strong>986.85</strong></td>
+                    <td width="66" align="right"><strong>1175</strong> (19%)</td>
+                    <td width="66" align="right"><strong>1140</strong> (16%)</td>
+                    <td width="66" align="right"><strong>1210</strong> (23%)</td>
+                  </tr>
+                  
+                  <tr>
+                    <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_MB05.html" class="txt13">Metro Brands</a>
+                      
+                      <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE317I01021','BSE','543426');"></span> 
+                    </td>
+                    <td width="35"><span class="green">2</span></td>
+                    <td width="40">0</td>
+                    <td width="40"><span class="red_13">0</span></td>
+                    <td width="70" align="right"><strong>990.20</strong></td>
+                    <td width="66" align="right"><strong>589</strong> (-41%)</td>
+                    <td width="66" align="right"><strong>107</strong> (-89%)</td>
+                    <td width="66" align="right"><strong>1070</strong> (8%)</td>
+                  </tr>
+                  
+                  <tr>
+                    <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_IA05.html" class="txt13">Interglobe Avi</a>
+                      
+                      <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE646L01027','BSE','539448');"></span> 
+                    </td>
+                    <td width="35"><span class="green">1</span></td>
+                    <td width="40">1</td>
+                    <td width="40"><span class="red_13">0</span></td>
+                    <td width="70" align="right"><strong>2484.45</strong></td>
+                    <td width="66" align="right"><strong>2568</strong> (3%)</td>
+                    <td width="66" align="right"><strong>2135</strong> (-14%)</td>
+                    <td width="66" align="right"><strong>3000</strong> (21%)</td>
+                  </tr>
+                  
+                  <tr>
+                    <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_RK01.html" class="txt13">Radico Khaitan</a>
+                      
+                      <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE944F01028','BSE','532497');"></span> 
+                    </td>
+                    <td width="35"><span class="green">0</span></td>
+                    <td width="40">1</td>
+                    <td width="40"><span class="red_13">0</span></td>
+                    <td width="70" align="right"><strong>1199.45</strong></td>
+                    <td width="66" align="right"><strong>1075</strong> (-10%)</td>
+                    <td width="66" align="right"><strong>1250</strong> (4%)</td>
+                    <td width="66" align="right"><strong>900</strong> (-25%)</td>
+                  </tr>
+                  
+                  <tr>
+                    <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_DT07.html" class="txt13">Dixon Technolog</a>
+                      
+                      <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE935N01020','BSE','540699');"></span> 
+                    </td>
+                    <td width="35"><span class="green">0</span></td>
+                    <td width="40">2</td>
+                    <td width="40"><span class="red_13">0</span></td>
+                    <td width="70" align="right"><strong>4400.00</strong></td>
+                    <td width="66" align="right"><strong>3727</strong> (-15%)</td>
+                    <td width="66" align="right"><strong>3403</strong> (-23%)</td>
+                    <td width="66" align="right"><strong>4050</strong> (-8%)</td>
+                  </tr>
+                  
+                  <tr>
+                    <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_SBI.html" class="txt13">SBI</a>
+                      
+                      <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE062A01020','BSE','500112');"></span> 
+                    </td>
+                    <td width="35"><span class="green">2</span></td>
+                    <td width="40">0</td>
+                    <td width="40"><span class="red_13">0</span></td>
+                    <td width="70" align="right"><strong>557.40</strong></td>
+                    <td width="66" align="right"><strong>722</strong> (29%)</td>
+                    <td width="66" align="right"><strong>700</strong> (26%)</td>
+                    <td width="66" align="right"><strong>743</strong> (33%)</td>
+                  </tr>
+                  
+                  <tr>
+                    <td width="120"><a href="https://www.moneycontrol.com/broker-research/advice/stocks-advice_VI16.html" class="txt13">V-Guard Ind</a>
+                      
+                      <span class="ic_tradenwicn btn_tradep_pop" onclick="tradepopup('INE951I01027','BSE','532953');"></span> 
+                    </td>
+                    <td width="35"><span class="green">1</span></td>
+                    <td width="40">0</td>
+                    <td width="40"><span class="red_13">0</span></td>
+                    <td width="70" align="right"><strong>261.95</strong></td>
+                    <td width="66" align="right"><strong>268</strong> (2%)</td>
+                    <td width="66" align="right"><strong>235</strong> (-10%)</td>
+                    <td width="66" align="right"><strong>300</strong> (15%)</td>
+                  </tr>
+                                    </tbody>
+              </table>
+              
+          </div>
+    
+    
+    
+          
+    
+    
+          <div class="col-lg-4 col-sm-12 ">
+    
+            <h5>COMMUNITY SENTIMETER</h5>
+            <hr>
+            <div class="head_desc_usage container">
+              <div class="row border-bottom">
+                <div class="chart-header col-6" onclick="filterChart('fii_dii')" data-btn-id="1" style="font-size: 21px">
+                  Most Active
+                </div>
+                <div class="chart-header col-6" onclick="filterChart('fii')" data-btn-id="2" style="font-size: 21px">
+                  My Stocks
+                </div>
+    
+              </div>
+              <div class="main_desc_usage mt-4" id="main_desc_usage"></div>
+            </div>
+            <ul class="news_list" id="show_community_sentimeter1">
+              <li>
+                <p class="txt14_333B"><a class="txt14_333B"
+                    href="https://www.moneycontrol.com/india/stockpricequote/power-generationdistribution/jswenergy/JE01"
+                    title="JSW Energy"><strong>JSW Energy</strong></a></p>
+                <p class="txt13_bold"><span class="text-success">Buy 0%</span> | <span class="text-danger w-100">Sell
+                    100%</span> | Hold 0%</p>
+                <p class="csbar">
+                  <span class="bg-success" style="width:0%">
+                  </span><span class="bg-danger" style="width:100%">
+                  </span><span class="bg-secondary" style="width:0%"></span>
+                </p>
+              </li>
+    
+              <li>
+                <p class="txt14_333B"><a class="txt14_333B"
+                    href="https://www.moneycontrol.com/india/stockpricequote/lubricants/castrol/CI01"
+                    title="Castrol"><strong>Castrol</strong></a></p>
+                <p class="txt13_bold"><span class="text-success">Buy 0%</span> | <span class="text-danger">Sell 100%</span>
+                  | Hold 0%</p>
+                <p class="csbar"> <span class="bg-success" style="width:0%"></span><span class="bg-danger"
+                    style="width:100%"></span><span class="bg-secondary" style="width:0%"></span> </p>
+              </li>
+              <li>
+                <p class="txt14_333B"><a class="txt14_333B"
+                    href="https://www.moneycontrol.com/india/stockpricequote/power-transmissionequipment/kecintl/KEC04"
+                    title="KEC Intl"><strong>KEC Intl</strong></a></p>
+                <p class="txt13_bold"><span class="text-success">Buy 100%</span> | <span class="text-danger">Sell 0%</span>
+                  | Hold 0%</p>
+                <p class="csbar"> <span class="bg-success" style="width:100%"></span><span class="bg-danger"
+                    style="width:0%"></span><span class="bg-secondary" style="width:0%"></span> </p>
+              </li>
+              <li>
+                <p class="txt14_333B"><a class="txt14_333B"
+                    href="https://www.moneycontrol.com/india/stockpricequote/banks-private-sector/rblbank/RB03"
+                    title="RBL Bank"><strong>RBL Bank</strong></a></p>
+                <p class="txt13_bold"><span class="text-success">Buy 100%</span> | <span class="text-danger">Sell 0%</span>
+                  | Hold 0%</p>
+                <p class="csbar"> <span class="bg-success" style="width:100%"></span><span class="bg-danger"
+                    style="width:0%"></span><span class="bg-secondary" style="width:0%"></span> </p>
+              </li>
+              <li>
+                <p class="txt14_333B"><a class="txt14_333B"
+                    href="https://www.moneycontrol.com/india/stockpricequote/banks-private-sector/cityunionbank/CUB"
+                    title="City Union Bank"><strong>City Union Bank</strong></a></p>
+                <p class="txt13_bold"><span class="text-success">Buy 100%</span> | <span class="text-danger">Sell 0%</span>
+                  | Hold 0%</p>
+                <p class="csbar"> <span class="bg-success" style="width:100%"></span><span class="bg-danger"
+                    style="width:0%"></span><span class="bg-secondary" style="width:0%"></span> </p>
+              </li>
+              <li>
+                <p class="txt14_333B"><a class="txt14_333B"
+                    href="https://www.moneycontrol.com/india/stockpricequote/transportlogistics/aegislogistics/AL9"
+                    title="Aegis Logistics"><strong>Aegis Logistics</strong></a></p>
+                <p class="txt13_bold"><span class="text-success">Buy 100%</span> | <span class="text-danger">Sell 0%</span>
+                  | Hold 0%</p>
+                <p class="csbar"> <span class="bg-success" style="width:100%"></span><span class="bg-danger"
+                    style="width:0%"></span><span class="bg-secondary" style="width:0%"></span> </p>
+              </li>
+              <li>
+                <p class="txt14_333B"><a class="txt14_333B"
+                    href="https://www.moneycontrol.com/india/stockpricequote/miscellaneous/kddl/KDD"
+                    title="KDDL"><strong>KDDL</strong></a></p>
+                <p class="txt13_bold"><span class="text-success">Buy 100%</span> | <span class="text-danger">Sell 0%</span>
+                  | Hold 0%</p>
+                <p class="csbar"> <span class="bg-success" style="width:100%"></span><span class="bg-danger"
+                    style="width:0%"></span><span class="bg-secondary" style="width:0%"></span> </p>
+              </li>
+              <li>
+                <p class="txt14_333B"><a class="txt14_333B"
+                    href="https://www.moneycontrol.com/india/stockpricequote/computers-software/saksoft/S12"
+                    title="Saksoft"><strong>Saksoft</strong></a></p>
+                <p class="txt13_bold"><span class="text-success">Buy 100%</span> | <span class="text-danger">Sell 0%</span>
+                  | Hold 0%</p>
+                <p class="csbar"> <span class="bg-success" style="width:100%"></span><span class="bg-danger"
+                    style="width:0%"></span><span class="bg-secondary" style="width:0%"></span> </p>
+              </li>
+              <li>
+                <p class="txt14_333B"><a class="txt14_333B"
+                    href="https://www.moneycontrol.com/india/stockpricequote/aerospacedefence/datapatterns/DPI01"
+                    title="Data Patterns"><strong>Data Patterns</strong></a></p>
+                <p class="txt13_bold"><span class="text-success">Buy 100%</span> | <span class="text-danger">Sell 0%</span>
+                  | Hold 0%</p>
+                <p class="csbar"> <span class="bg-success" style="width:100%"></span><span class="bg-danger"
+                    style="width:0%"></span><span class="bg-secondary" style="width:0%"></span> </p>
+              </li>
+    
+            </ul>
+          </div>
+    
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+
+</div>
+
+<script>
+  // Function to show or hide charts based on filter selection
+  var dii_fii = document.getElementById("dii_fii");
+  var fii = document.getElementById("fii");
+  var dii = document.getElementById("dii");
+  dii_fii.style.display = "block";
+
+  fii.style.display = "none";
+  dii.style.display = "none";
+  function filterChart(filter) {
+    var dii_fii = document.getElementById("dii_fii");
+    var fii = document.getElementById("fii");
+    var dii = document.getElementById("dii");
+    var chartContainer = document.getElementById("chartContainer");
+
+    if (filter === "fii_dii") {
+      dii_fii.style.display = "block";
+
+      fii.style.display = "none";
+      dii.style.display = "none";
+    } else if (filter === "fii") {
+      dii_fii.style.display = "none";
+      fii.style.display = "block";
+      dii.style.display = "none";
+    } else if (filter === "dii") {
+      dii_fii.style.display = "none";
+      fii.style.display = "none";
+      dii.style.display = "block";
+    }
+  }
+  $(document).ready(function () {
+    $("[data-btn-id]:first-child").addClass("desc_usage_active");
+    // Filter button click event
+    $("[data-btn-id]").click(function () {
+      var btnId = $(this).attr("data-btn-id");
+      filterResults(btnId);
+      changeButtonColor($(this));
+    });
+
+    // Initial filtering (optional)
+    filterResults(1);
+    // Function to filter results
+    function filterResults(btnId) {
+      // Clear previous results
+      // Filter elements based on btnId
+    }
+
+    // Function to change button color
+    function changeButtonColor(button) {
+      // Reset color of all buttons
+      $("[data-btn-id]").removeClass("desc_usage_active");
+
+      // Add color to the clicked button
+      button.addClass("desc_usage_active");
+    }
+  });
+</script>
+
+
+{% endblock dashboard_body %}

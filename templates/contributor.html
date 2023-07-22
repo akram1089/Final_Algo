@@ -1,0 +1,966 @@
+{% extends "base_dashboard.html" %}
+{% load static %}
+{% block dashboard_body %}
+
+
+
+
+<style>
+    .filter-btn {
+        padding: 0px 10px;
+        cursor: pointer;
+        color: #2196f3 !important;
+        transition: prop time;
+    }
+
+    .active {
+        color: #666 !important;
+    }
+
+    .contributor_name {
+        color: #232222 !important;
+    }
+
+    .nifty50 .contributor_name {
+        color: blue;
+    }
+
+    .niftynext50 .contributor_name {
+        color: green;
+    }
+
+    .banknifty .contributor_name {
+        color: orange;
+    }
+
+    .finnifty .contributor_name {
+        color: purple;
+    }
+
+    .filter-btn:nth-child(-n+3) {
+        border-right: 2px solid #666 !important;
+    }
+
+    .first_title_filter_auto_refresh {
+        display: flex;
+        margin: 1rem 0;
+        padding: 0 1rem;
+        column-gap: 35rem;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .net_contrib_start_end_date {
+        padding: 0 1rem;
+        margin: 0 0 1rem 0;
+        align-items: center;
+        justify-content: center;
+        column-gap: 35rem;
+    }
+
+    .right_filter_auto {
+        font-size: 12px;
+        font-weight: 600;
+        flex-wrap: wrap;
+    }
+
+    .start_date_contrib,
+    .end_date_contrib {
+        display: flex;
+        align-items: center;
+        gap: 0.2rem;
+    }
+
+    .right_start_end_date {
+        gap: 1rem;
+        white-space: nowrap;
+    }
+
+    .main_table_contrib {
+        justify-content: center;
+        gap: 6rem;
+    }
+
+    .text-success {
+        color: rgb(7, 210, 7) !important;
+    }
+
+    #table_1_head_contrib,
+    #table_2_head_contrib {
+        padding: 12px 15px !important;
+        font-size: 12px !important;
+        text-transform: uppercase !important;
+        background: #4399eb !important;
+        color: #fff !important;
+        border-right: 1px solid rgba(255, 255, 255, 0.586) !important;
+    }
+
+    .bi-graph-up {
+        border: 0.5px solid rgba(128, 128, 128, 0.441);
+        padding: 3px 6px 3px 7px;
+        height: 28px;
+        width: 28px;
+        border-radius: 7px;
+        position: relative;
+        transition: 0.3s;
+    }
+
+    .bi-graph-up:hover {
+        background-color: dodgerblue;
+        color: white;
+        border: none;
+    }
+
+    .text-bg-success {
+        color: #fff !important;
+        background-color: lightseagreen !important;
+    }
+
+    .badge {
+        padding: 8px 14px 8px 15px !important;
+        border-radius: 14px !important;
+    }
+</style>
+
+
+<body>
+
+    <div class="first_title_filter_auto_refresh">
+        <div class="left_title">
+            <div class="contributor_name">
+                <h5></h5>
+            </div>
+        </div>
+
+        <div class="right_filter_auto d-flex">
+            <div class="btn-group">
+                <p style="margin-bottom: auto;" class=" filter-btn " data-filter="nifty50">Nifty 50</p>
+                <p style="margin-bottom: auto;" class=" filter-btn" data-filter="niftynext50">Nifty Next 50</p>
+                <p style="margin-bottom: auto;" class=" filter-btn" data-filter="banknifty">Bank Nifty</p>
+                <p style="margin-bottom: auto;" class=" filter-btn" data-filter="finnifty">Fin Nifty</p>
+            </div>
+            <div class="form-check form-switch">
+                <label class="form-check-label" for="flexSwitchCheckDefault">Auto Refresh</label>
+                <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="net_contrib_start_end_date d-flex flex-wrap ">
+        <div class="left_net_contrib">
+            <p style="margin-bottom:auto ;" class="fw-bold">Net Contribution: <span class="text-danger">-57.57</span>
+            </p>
+        </div>
+        <div class="right_start_end_date d-flex">
+            <div class="start_date_contrib">
+                <label for="dateDropdown">Start Date:</label>
+                <select id="dateDropdown" class="form-select form-select-sm"></select>
+            </div>
+            <div class="start_date_contrib">
+                <label for="dateDropdown">End Date:</label>
+                <input type="text" disabled value="" id="end_date" class="form-control form-control-sm"
+                    style="    width: 110px;">
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <div class="main_table_contrib d-flex flex-wrap">
+
+        <div class="left_positive_table " style="    overflow: auto;">
+            <div class="main_positive_contrib_value d-flex justify-content-between mb-3 align-items-center">
+                <div class="head_table_title_icon_up d-flex  text-success align-items-center ">
+                    <i class='bx bx-trending-up fs-3'></i>
+                    <p class="positive_contribution fs-5 fw-semibold" style="margin-bottom: auto;"></p>
+
+                </div>
+                <span class="badge text-bg-success">21.11</span>
+            </div>
+            <table id="table_1_contrib" class="table table-hover table-striped">
+                <thead id="" class="bg-info">
+                    <th id="table_1_head_contrib" scope="col">COMPANY</th>
+                    <th id="table_1_head_contrib" scope="col">LTP</th>
+                    <th id="table_1_head_contrib" scope="col">HIGH</th>
+                    <th id="table_1_head_contrib" scope="col">LOW</th>
+                    <th id="table_1_head_contrib" scope="col">CHANGE (%)</th>
+                    <th id="table_1_head_contrib" scope="col">CHART</th>
+                </thead>
+                <tbody>
+                    <tr class="table-placeholder d-n">
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr class="table-placeholder d-n">
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr class="table-placeholder d-n">
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr class="table-placeholder d-n">
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr class="table-placeholder d-n">
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr class="table-placeholder d-n">
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr class="table-placeholder d-n">
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr class="table-placeholder d-n">
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="right_negative" style="    overflow: auto;">
+            <div class="main_positive_contrib_value d-flex justify-content-between mb-3 align-items-center">
+                <div class="head_table_title_icon_up d-flex  text-danger align-items-center ">
+                    <i class='bx bx-trending-down fs-3'></i>
+                    <p class="negative_contribution fs-5 fw-semibold" style="margin-bottom: auto;"></p>
+
+                </div>
+                <span class="badge text-bg-danger">-78.17</span>
+            </div>
+
+
+
+            <table id="table_2_contrib" class="table table-hover table-striped">
+                <thead id="" class="bg-info">
+                    <th id="table_1_head_contrib" scope="col">COMPANY</th>
+                    <th id="table_1_head_contrib" scope="col">LTP</th>
+                    <th id="table_1_head_contrib" scope="col">HIGH</th>
+                    <th id="table_1_head_contrib" scope="col">LOW</th>
+                    <th id="table_1_head_contrib" scope="col">CHANGE (%)</th>
+                    <th id="table_1_head_contrib" scope="col">CHART</th>
+                </thead>
+                <tbody>
+                    <tr class="table-placeholder d-n">
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr class="table-placeholder d-n">
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr class="table-placeholder d-n">
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr class="table-placeholder d-n">
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr class="table-placeholder d-n">
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr class="table-placeholder d-n">
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr class="table-placeholder d-n">
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr class="table-placeholder d-n">
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+
+
+
+
+    </div>
+    </div>
+    <script>
+        $(document).ready(function () {
+            var selectedDate_contrib = localStorage.getItem('selectedDate_contrib') || '';
+            var selectedFilter_contrib = localStorage.getItem('selectedFilter_contrib') || 'nifty50'; // Set initial selected filter
+            var autoRefreshInterval;
+
+            // Update contributor_name class and text content
+            function updateContributorNameClass() {
+                var filterName = '';
+                var contributors = '';
+                switch (selectedFilter_contrib) {
+                    case 'nifty50':
+                        filterName = 'Nifty 50';
+                        contributors = ' Nifty 50 Contributors ';
+                        break;
+                    case 'niftynext50':
+                        filterName = 'Nifty Next 50';
+                        contributors = ' Nifty Next Contributors';
+                        break;
+                    case 'banknifty':
+                        filterName = 'Bank Nifty';
+                        contributors = ' Bank Nifty Contributors';
+                        break;
+                    case 'finnifty':
+                        filterName = 'Fin Nifty';
+                        contributors = ' Fin Nifty Contributors';
+                        break;
+                }
+                $('.contributor_name h5').text(contributors);
+                $('.contributor_name').removeClass().addClass('contributor_name').addClass(selectedFilter_contrib);
+            }
+
+            // Load dropdown options on page load
+            $.ajax({
+                url: "/contributors_data",
+                type: "GET",
+                dataType: "json",
+                success: function (response) {
+                    var allDates = response.all_dates;
+                    var dropdownOptions = "";
+                    for (var i = 0; i < allDates.length; i++) {
+                        var option = "<option value='" + allDates[i] + "'";
+                        if (allDates[i] === selectedDate_contrib) {
+                            option += " selected";
+                        }
+                        option += ">" + allDates[i] + "</option>";
+                        dropdownOptions += option;
+                    }
+                    $("#dateDropdown").append(dropdownOptions);
+                    selectedDate_contrib = selectedDate_contrib || allDates[1]; // Set initial selected date
+                    fetchData();
+                }
+            });
+
+            // Handle date selection change
+            $("#dateDropdown").on("change", function () {
+                selectedDate_contrib = $(this).val();
+                localStorage.setItem('selectedDate_contrib', selectedDate_contrib);
+                fetchData();
+            });
+
+            // Handle filter selection
+            $(".filter-btn").on("click", function () {
+                $(".filter-btn").removeClass("active");
+                $(this).addClass("active");
+                selectedFilter_contrib = $(this).data("filter");
+                localStorage.setItem('selectedFilter_contrib', selectedFilter_contrib);
+                fetchData();
+                updateContributorNameClass();
+            });
+
+            // Handle checkbox state change
+            $('#flexSwitchCheckDefault').on('change', function () {
+                var isChecked = $(this).is(':checked');
+                localStorage.setItem('checkboxState_contrib', isChecked);
+
+                if (isChecked) {
+                    // Start auto-refresh
+                    autoRefreshInterval = setInterval(fetchData, 15000);
+                    fetchData(); // Call immediately on checkbox check
+                } else {
+                    // Stop auto-refresh
+                    clearInterval(autoRefreshInterval);
+                }
+            });
+
+            // Fetch data based on selected date and filter
+            function fetchData() {
+                // Show the placeholders
+                $(".placeholder-glow").removeClass("d-none");
+
+                $.ajax({
+                    url: "/contributors_data",
+                    type: "GET",
+                    dataType: "json",
+                    data: {
+                        date: selectedDate_contrib,
+                        filter: selectedFilter_contrib
+                    },
+                    success: function (response) {
+                        console.log(response.stocks_data);
+                        var All_stocks_data = {};
+
+                        // Create an object to store all stock data
+                        var All_stocks_data = {};
+
+                        // Loop through stocks_data to calculate price difference and merge data
+                        for (var i = 0; i < response.stocks_data.length; i++) {
+                            var stock = response.stocks_data[i];
+                            var closingPrice = stock.closing_price || 0;
+                            var lastTradePrice = stock.last_trade_price || 0;
+                            var priceDifference = lastTradePrice - closingPrice;
+
+                            stock.price_difference = priceDifference;
+                            stock.price_difference_percent = closingPrice !== 0 ? (priceDifference / closingPrice) * 100 : 0;
+
+                            // Merge stock data into All_stocks_data using symbol_name as key
+                            All_stocks_data[stock.symbol_name] = stock;
+                        }
+
+                        console.log("All Stocks Data:", All_stocks_data);
+
+                        // Split data into positive and negative priceDifference
+                        var positiveData = [];
+                        var negativeData = [];
+
+                        for (var symbol in All_stocks_data) {
+                            if (All_stocks_data.hasOwnProperty(symbol)) {
+                                var stockData = All_stocks_data[symbol];
+                                if (stockData.price_difference >= 0) {
+                                    positiveData.push(stockData);
+                                } else {
+                                    negativeData.push(stockData);
+                                }
+                            }
+                        }
+
+                        console.log("Positive Data:", positiveData);
+                        console.log("Negative Data:", negativeData);
+
+
+                        displayPositiveData(positiveData);
+                        displayNegativeData(negativeData);
+                        $("#end_date").val(response.date_max)
+
+                        // Calculate and display index
+                        var positiveIndex = calculateIndex(positiveData);
+                        var negativeIndex = calculateIndex(negativeData);
+
+                        $(".positive_contribution").text("Positive Contributors (" + positiveIndex + ")");
+                        $(".negative_contribution").text("Negative Contributors (" + negativeIndex + ")");
+
+                        // Hide the placeholders
+                        $(".placeholder-glow").addClass("d-none");
+
+                        updateContributorNameClass();
+                    }
+                });
+            }
+
+            // Display positive_price_difference data
+            function displayPositiveData(data) {
+                var positiveTableBody = $("#table_1_contrib tbody");
+                positiveTableBody.empty();
+
+                for (var i = 0; i < data.length; i++) {
+                    var row = "<tr>" +
+                        "<td>" + data[i].symbol_name + "</td>" +
+                        "<td>" + data[i].last_trade_price + "</td>" +
+                        "<td>" + data[i].high + "</td>" +
+                        "<td>" + data[i].low + "</td>" +
+                        "<td>" + data[i].price_difference.toFixed(2) + "(" + data[i].price_difference_percent.toFixed(2) + "%) " + "</td>" +
+                        "<td><a target='_blank' href='https://www.tradingview.com/chart/?symbol=" + data[i].symbol_name + "&aff_id=113877'><i class='bi bi-graph-up'></i></a></td>" +
+                        "</tr>";
+
+                    positiveTableBody.append(row);
+                }
+            }
+
+            // Display negative_price_difference data
+            function displayNegativeData(data) {
+                var negativeTableBody = $("#table_2_contrib tbody");
+                negativeTableBody.empty();
+
+                for (var j = 0; j < data.length; j++) {
+                    var row = "<tr>" +
+                        "<td>" + data[j].symbol_name + "</td>" +
+                        "<td>" + data[j].last_trade_price + "</td>" +
+                        "<td>" + data[j].high + "</td>" +
+                        "<td>" + data[j].low + "</td>" +
+                        "<td>" + data[j].price_difference.toFixed(2) + "(" + data[j].price_difference_percent.toFixed(2) + "%) " + "</td>" +
+                        "<td><a target='_blank' href='https://www.tradingview.com/chart/?symbol=" + data[j].symbol_name + "&aff_id=113877'><i class='bi bi-graph-up'></i></a></td>" +
+                        "</tr>";
+
+                    negativeTableBody.append(row);
+                }
+            }
+
+            // Calculate index based on data length
+            function calculateIndex(data) {
+                return data.length;
+            }
+
+            // Set active filter on page load
+            $(".filter-btn[data-filter='" + selectedFilter_contrib + "']").addClass("active");
+
+            // Set checkbox state on page load
+            var savedCheckboxState_contrib = localStorage.getItem('checkboxState_contrib');
+            if (savedCheckboxState_contrib === 'true') {
+                $('#flexSwitchCheckDefault').prop('checked', true);
+                autoRefreshInterval = setInterval(fetchData, 15000);
+                fetchData();
+            } else {
+                $('#flexSwitchCheckDefault').prop('checked', false);
+            }
+
+            // Fetch data on page load
+            fetchData();
+
+            // Update contributor_name class and text content
+            updateContributorNameClass();
+        });
+
+    </script>
+</body>
+{% endblock dashboard_body %}

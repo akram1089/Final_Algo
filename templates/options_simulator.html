@@ -1,0 +1,393 @@
+{% extends "base_dashboard.html" %}
+{% load static %}
+{% block dashboard_body %}
+
+<script>
+    // Fetch data using AJAX
+    function fetchData() {
+        var selectedExpiryDate_op = $("#expiry-date").val();
+        var selectedSymbol_op = $("#symbol").val();
+
+        $.ajax({
+            url: "/new_options_data",
+            method: "GET",
+            dataType: "json",
+            data: {
+                date: selectedExpiryDate_op,
+                symbol: selectedSymbol_op
+            },
+            success: function (data) {
+                // console.log(data["spot__price"]);
+                generate_Table_simu(data.Symbol_data_op,data.spot__price);
+
+                // Populate expiry date dropdown
+                var expiryDateDropdown = $("#expiry-date");
+                expiryDateDropdown.empty();
+                $.each(data.Symbol_expiry_date_op, function (index, date) {
+                    expiryDateDropdown.append($("<option></option>").val(date).text(date));
+                });
+
+                // Populate symbol dropdown
+                var symbolDropdown = $("#symbol");
+                symbolDropdown.empty();
+                $.each(data.symbol_names, function (index, symbol) {
+                    symbolDropdown.append($("<option></option>").val(symbol).text(symbol.toUpperCase()));
+                });
+
+                // Restore selected values from local storage
+                var savedExpiryDate = localStorage.getItem("selectedExpiryDate_op");
+                if (savedExpiryDate) {
+                    expiryDateDropdown.val(savedExpiryDate);
+                }
+
+                var savedSymbol = localStorage.getItem("selectedSymbol_op");
+                if (savedSymbol) {
+                    symbolDropdown.val(savedSymbol);
+                }
+            },
+            error: function () {
+                console.log("Error occurred while fetching data.");
+            }
+        });
+    }
+
+    function generate_Table_simu(simu_args,spotPrice) {
+        console.log(spotPrice);
+        var table_simu = $("#table_simu")
+        table_simu.empty(); // Clear the table body before appending new data
+        for (var i = 0; i < simu_args.length; i++) {
+            var calls_builtup_simu = "";
+    
+           
+            if (simu_args[i].calls_builtup === "Call Short Covering" || simu_args[i].calls_builtup === "Call Buying") {
+                calls_builtup_simu = "success_cvr fw-bolder";
+            } else if (simu_args[i].calls_builtup === "No Conclusion") {
+                calls_builtup_simu = "";
+            } else if (simu_args[i].calls_builtup === "Call Long Covering" || simu_args[i].calls_builtup === "Call Writing") {
+                calls_builtup_simu = "danger_cvr fw-bolder";
+            }
+
+            var puts_builtup_simu = "";
+            if (simu_args[i].puts_builtup === "Put Short Covering" || simu_args[i].puts_builtup === "Put Buying") {
+                puts_builtup_simu = "success_cvr fw-bolder";
+            } else if (simu_args[i].puts_builtup === "No Conclusion") {
+                puts_builtup_simu = "";
+            } else if (simu_args[i].puts_builtup === "Put Long Covering" || simu_args[i].puts_builtup === "Put Writing") {
+                puts_builtup_simu = "danger_cvr fw-bolder";
+            }
+
+            var pcr_simu = simu_args[i].puts_oi / simu_args[i].calls_oi;
+            var strikePrice = simu_args[i].strike_price;
+            var spot_Price=spotPrice
+
+
+
+            // background-color: #fbf5cd;
+            var row = "<tr>" +
+                "<td><button class='btn btn-outline-success btn-sm'>BUY/SELL</button></td>" +
+                "<td style='background-color: " + (strikePrice < spot_Price ? "#fbf5cd" : "") + "'>" + simu_args[i].call_delta + "</td>" +
+                "<td class=" + calls_builtup_simu + "  style='background-color: " + (strikePrice < spot_Price ? "#fbf5cd" : "") + "'>" + simu_args[i].calls_builtup + "</td>" +
+                "<td style='background-color: " + (strikePrice < spot_Price ? "#fbf5cd" : "") + "'>" + simu_args[i].calls_oi + "</td>" +
+                "<td style='background-color: " + (strikePrice < spot_Price ? "#fbf5cd" : "") + "'>" + simu_args[i].calls_change_oi + "</td>" +
+                "<td style='background-color: " + (strikePrice < spot_Price ? "#fbf5cd" : "") + "'>" + simu_args[i].calls_iv + "</td>" +
+                "<td style='background-color: " + (strikePrice < spot_Price ? "#fbf5cd" : "") + "'>" + simu_args[i].calls_ltp + "</td>" +
+
+                "<td style='background: aliceblue;'>" + simu_args[i].strike_price + "</td>" +
+
+                "<td style='background-color: " + (strikePrice > spot_Price ? "#fbf5cd" : "") + "'>" + simu_args[i].puts_ltp + "</td>" +
+                "<td style='background-color: " + (strikePrice > spot_Price ? "#fbf5cd" : "") + "'>" + simu_args[i].puts_iv + "</td>" +
+                "<td style='background-color: " + (strikePrice > spot_Price ? "#fbf5cd" : "") + "'>" + simu_args[i].puts_change_oi + "</td>" +
+                "<td style='background-color: " + (strikePrice > spot_Price ? "#fbf5cd" : "") + "'>" + simu_args[i].puts_oi + "</td>" +
+               
+                "<td class=" + puts_builtup_simu + " style='background-color: " + (strikePrice > spot_Price ? "#fbf5cd" : "") + "'>" + simu_args[i].puts_builtup + " </td>" +
+                "<td style='background-color: " + (strikePrice > spot_Price ? "#fbf5cd" : "") + "'>" + simu_args[i].put_delta + "</td>" +
+                "<td style='background-color: " + (strikePrice > spot_Price ? "#fbf5cd" : "") + "'>" + pcr_simu.toFixed(2) + "</td>" +
+                "<td><button class='btn btn-outline-danger btn-sm'>BUY/SELL</button></td>" +
+                "</tr>";
+            table_simu.append(row);
+        }
+    }
+
+    // Event listener for dropdown change
+    $("#expiry-date").on("change", function () {
+        var selectedExpiryDate_op = $(this).val();
+        localStorage.setItem("selectedExpiryDate_op", selectedExpiryDate_op);
+        fetchData();
+    });
+
+    $("#symbol").on("change", function () {
+        var selectedSymbol_op = $(this).val();
+        localStorage.setItem("selectedSymbol_op", selectedSymbol_op);
+        fetchData();
+    });
+
+    // Initial data fetch
+    fetchData();
+</script>
+<style>
+    .main_top_simu {
+        display: flex;
+        white-space: nowrap;
+        justify-content: space-between;
+        margin: 17px 0;
+    }
+
+    .left_head_simu {
+        display: flex;
+        gap: 1rem;
+    }
+
+    .lot_simu_main,
+    .pcr_simu_main,
+    .spot_simu_main {
+        font-size: 12px;
+        font-weight: 600;
+
+    }
+
+    th,
+    td {
+        font-size: 12px !important;
+
+    }
+</style>
+<div class="top_simu d-flex justify-content-between">
+
+
+    <h4>Option Simulator</h4>
+    <p> <span class="text-primary">Plan
+            & Pricing</span></p>
+</div>
+<div class="main_top_simu">
+    <div class="left_head_simu">
+        <select class="form-select" aria-label="Default select example" id="symbol">
+<option value="nifty" selected>NIFTY</option>
+        </select>
+        <select class="form-select" aria-label="Default select example" id="expiry-date">
+
+        </select>
+
+        <div class="lot_simu_main">
+            <p style="margin-bottom: auto;"> Lot Size</p>
+            <p style="margin-bottom: auto;"> 50</p>
+
+        </div>
+        <div class="pcr_simu_main">
+
+            <p style="margin-bottom: auto;"> PRC </p>
+            <p style="margin-bottom: auto;"> 1.232</p>
+
+        </div>
+        <div class="spot_simu_main">
+
+
+            <p style="margin-bottom: auto;"> Spot </p>
+            <p style="margin-bottom: auto;"> 18810.90</p>
+
+        </div>
+
+
+
+
+
+    </div>
+
+    <div class="right_head_simu">
+        <input class="form-control form-control-solid" placeholder="Pick date rage" id="date_picker_simu"
+        data-listener-added_a06394db="true">
+    </div>
+</div>
+<script>
+    $("#date_picker_simu").daterangepicker();
+</script>
+<style>
+    .day_1 {
+        border-radius: 4px;
+        color: white;
+        background: cornflowerblue;
+        width: fit-content;
+        height: 28px;
+        padding: 0 6px 0 5px;
+        transition: 0.3s;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+    }
+
+    .day_1:hover {
+        color: cornflowerblue;
+        border: 1px solid cornflowerblue;
+        background: transparent;
+    }
+
+    .button_left_simu,
+    .button_right_simu {
+        display: flex;
+        gap: 1rem;
+
+    }
+
+    .main_all_button_filter {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .pre_built_simu {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 1rem 0;
+        gap: 0.5rem;
+    }
+
+    .strategy_simu {
+        display: flex;
+        gap: 2rem;
+    }
+
+    .straddle {
+        border: 1.5px solid cornflowerblue;
+        padding: 4px 12px;
+        border-radius: 7px;
+        color: cornflowerblue;
+        transition: 0.3s;
+
+    }
+
+    .straddle:hover {
+        background: cornflowerblue;
+        color: white;
+    }
+
+    .success_cvr {
+        background: #90eeae65 !important;
+        color: rgb(13, 162, 0);
+    }
+
+    .danger_cvr {
+        background: #ff000054 !important;
+        color: red;
+    }
+</style>
+<div class="main_all_button_filter">
+
+    <div class="button_left_simu">
+        <div class="day_1">
+            <i class="bi bi-chevron-left"></i>
+            <p style="margin-bottom: auto;">1 Day</p>
+        </div>
+        <div class="day_1">
+            <i class="bi bi-chevron-left"></i>
+            <p style="margin-bottom: auto;">30 Mint</p>
+
+        </div>
+        <div class="day_1">
+            <i class="bi bi-chevron-left"></i>
+            <p style="margin-bottom: auto;">15 Mint</p>
+
+        </div>
+        <div class="day_1">
+            <i class="bi bi-chevron-left"></i>
+            <p style="margin-bottom: auto;">5 Mint</p>
+
+        </div>
+    </div>
+    <div class="middle_simu_range d-flex flex-column text-center">
+        <p style="margin-bottom: auto;">2023-06-21 09:20:00</p>
+        <p style="margin-bottom: auto;">OI Chart</p>
+
+    </div>
+    <div class="button_right_simu">
+        <div class="day_1">
+            <i class="bi bi-chevron-left"></i>
+            5 Mint
+        </div>
+        <div class="day_1">
+            <i class="bi bi-chevron-left"></i>
+            15 Mint
+        </div>
+        <div class="day_1">
+            <i class="bi bi-chevron-left"></i>
+            30 Mint
+        </div>
+        <div class="day_1">
+            <i class="bi bi-chevron-left"></i>
+            1 Days
+        </div>
+    </div>
+
+
+</div>
+<div class="pre_built_simu">
+    <p style="margin-bottom: auto;"> Pre Built : </p>
+    <div class="strategy_simu">
+        <div class="straddle">
+            STRADDLE
+        </div>
+        <div class="straddle">
+            STRADDLE
+        </div>
+        <div class="straddle">
+            STRADDLE
+        </div>
+        <div class="straddle">
+            STRADDLE
+        </div>
+        <div class="straddle">
+            STRADDLE
+        </div>
+        <div class="straddle">
+            STRADDLE
+        </div>
+    </div>
+
+
+
+</div>
+
+
+<div class="note_simu d-flex justify-content-between">
+    <p style="margin-bottom: auto;" class="text-secondary">Note:-*For respected strike prices, the Gamma and Vega greeks
+        are the same for Calls and Puts</p>
+    <p style="margin-bottom: auto;">June 28, 2023 - Option Chain</p>
+</div>
+
+<div class="main_table_simu bg-light my-4">
+    <div class="row text-center py-2">
+        <div class="col-6">
+            <h5>CALLS</h5>
+        </div>
+        <div class="col-6">
+            <h5>PUTS</h5>
+        </div>
+    </div>
+    <table class="table">
+        <thead style="white-space: nowrap;">
+            <tr>
+                <th scope="col" style="    background: #90ee908a;">ACTIONS</th>
+                <th scope="col" style="    background: #90ee908a;"> DELTA</th>
+                <th scope="col" style="    background: #90ee908a;">BUILTUP</th>
+                <th scope="col" style="    background: #90ee908a;">OI</th>
+                <th scope="col" style="    background: #90ee908a;">CHNG IN OI %</th>
+                <th scope="col" style="    background: #90ee908a;">IV</th>
+                <th scope="col" style="    background: #90ee908a;">LTP CHNG %</th>
+
+                <th scope="col">STRIKE</th>
+
+                <th scope="col" style="background: #ff000054;">LTP CHG %</th>
+                <th scope="col" style="background: #ff000054;">IV</th>
+                <th scope="col" style="background: #ff000054;">CHNG in OI</th>
+                <th scope="col" style="background: #ff000054;">OI</th>
+                <th scope="col" style="background: #ff000054;">BUILTUP</th>
+                <th scope="col" style="background: #ff000054;">DELTA</th>
+                <th scope="col" style="background: #ff000054;">PCR</th>
+                <th scope="col" style="background: #ff000054;">ACTIONS</th>
+            </tr>
+        </thead>
+        <tbody id="table_simu">
+
+
+        </tbody>
+    </table>
+</div>
+{% endblock dashboard_body %}

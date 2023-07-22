@@ -1,0 +1,534 @@
+{% extends "base_dashboard.html" %}
+{% load static %}
+{% block dashboard_body %}
+<style>
+    @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap");
+    * {
+      padding: 0;
+      margin: 0;
+      box-sizing: border-box;
+      /* font-family: "Roboto", sans-serif; */
+    }
+    
+    .card__container {
+      position: relative;
+      width: 350px;
+      height: 260px;
+      border-radius: 0.5rem;
+      overflow: hidden;
+      cursor: pointer;
+      box-shadow: rgba(100, 100, 111, 0.08) 0px 7px 29px 0px;
+    }
+    
+    .card {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      transform-style: preserve-3d;
+      transition: all 0.7s ease;
+    }
+    
+    .card__front,
+    .card__back {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      backface-visibility: hidden;
+      box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+    }
+    
+    .card__container:hover .card {
+      transform: rotateY(180deg);
+    }
+    
+    /* card front */
+    .card__front {
+      text-align: center;
+      padding: 1.2rem;
+    }
+    
+    .card__icons {
+      display: flex;
+      justify-content: space-between;
+      align-content: center;
+    }
+    
+    .card__info {
+      margin-bottom: 1rem;
+    }
+    
+    .card__info p,
+    .card__info h2 {
+      font-size: 1.56rem;
+    }
+    
+    .card__info p,
+    .card__info h4 {
+      margin-bottom: 0.4rem;
+    }
+    
+    .card__info h2 {
+      margin-bottom: 0.5rem;
+    }
+    
+    .card__info h4 {
+      color: rgb(21, 173, 21);
+    }
+    
+    .card__info h3 {
+      font-weight: 500;
+      opacity: 0.5;
+    }
+    
+    .card__badges {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+    
+    .card__rank,
+    .card__change {
+      font-size: 0.8rem;
+      padding: 0.4rem 0.8rem;
+      border-radius: 0.2rem;
+      background-color: #e0e0e0e0;
+    }
+    
+    .card__rank p,
+    .card__change p {
+      color: rgba(0, 0, 0, 0.84);
+    }
+    
+    .card__progressbar > div {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 1rem;
+    }
+    
+    .card__progressbar span {
+      font-weight: 500;
+    }
+    
+    .card__progressbar__container {
+      width: 100%;
+      height: 10px;
+      background-color: rgb(227, 190, 190);
+    }
+    
+    .card__progressbar__container .card__progressbar__indication {
+      width: 20%;
+      height: 100%;
+      background-color: rgb(230, 10, 10);
+    }
+    
+    /* backside */
+    .card__back {
+      padding: 1.2rem;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background-color: rgb(255, 154, 154);
+      transform: rotateY(180deg);
+    }
+    
+    .card__back p {
+      font-size: 1.2rem;
+      font-weight: 400;
+      margin-bottom: 1rem;
+    }
+    
+    .card__back span {
+      text-transform: capitalize;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+    
+    /* card wrapper */
+    .cards__wrapper {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      gap: 1.5rem;
+      width: 85%;
+      margin: 0 auto;
+    }
+    
+    /* sort and filter*/
+    .option-sort-filter {
+      width: 85%;
+      margin: 0 auto;
+      margin-top: 2rem;
+      margin-bottom: 2rem;
+      font-weight: 500;
+    }
+    
+    .option-sort-filter .filter,
+    .option-sort-filter .sort {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+    }
+    
+    .option-sort-filter .container {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      flex-wrap: wrap;
+      height: 80px;
+    }
+    
+    .option-sort-filter button {
+      cursor: pointer;
+    }
+    
+    .option-sort-filter .sort p,
+    .option-sort-filter .filter p {
+      color: #808080;
+      font-size: 1.2rem;
+    }
+    
+    .option-sort-filter .filter button {
+      font-weight: 500;
+      background-color: #f5f5f5;
+      padding: 0.5rem 1rem;
+      border: none;
+      box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 2px 2px 0 rgba(0, 0, 0, 0.14),
+        0 1px 5px 0 rgba(0, 0, 0, 0.12);
+    }
+    
+    .option-sort-filter .sort button {
+      font-weight: 500;
+      background-color: #e8eaf6;
+      padding: 0.5rem 1rem;
+      border: none;
+      box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 2px 2px 0 rgba(0, 0, 0, 0.14),
+        0 1px 5px 0 rgba(0, 0, 0, 0.12);
+    }
+    
+    /* titles sort*/
+    .tiles-sort {
+      width: 85%;
+      margin: 0 auto;
+      padding-bottom: 1.7rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .tiles-sort button {
+      cursor: pointer;
+      padding: 0.6rem 1.5rem;
+      border: none;
+      font-weight: 500;
+      background-color: #455a64;
+      box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 2px 2px 0 rgba(0, 0, 0, 0.14),
+        0 1px 5px 0 rgba(0, 0, 0, 0.12);
+      color: white;
+    }
+    
+    /* dashboard-search */
+    .dashboard-search {
+      width: 85%;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      margin-top: 1rem;
+    }
+    
+    .dashboard-search h1 {
+      font-size: 3rem;
+      font-weight: 400;
+    }
+    
+    .dashboard-search input {
+      width: 300px;
+      height: 50px;
+      padding: 0 1rem;
+      background-color: #ebebeb;
+      border: none;
+      border-bottom: 1px solid black;
+      margin-right: 1.5rem;
+    }
+    
+    .dashboard-search button {
+      border: none;
+      padding: 0.5rem 1.5rem;
+      background-color: #0097a7;
+      font-weight: 500;
+      color: white;
+    }
+    
+
+</style>
+<div>
+    <section class="dashboard-search">
+      <h1>Options Dashboard</h1>
+      <div>
+        <input type="text" name="search" placeholder="Search Underlying..." />
+        <button>Information</button>
+      </div>
+    </section>
+    <section class="option-sort-filter">
+      <hr />
+      <div class="container">
+        <div class="filter">
+          <p>Filter By:</p>
+          <button>High</button>
+          <button>Earnings</button>
+          <button>Liquidity</button>
+        </div>
+        <div class="sort">
+          <p>Sort By:</p>
+          <button>IV Percentage</button>
+          <button>IV Rank</button>
+          <button>IV Charge</button>
+        </div>
+      </div>
+      <hr />
+    </section>
+    <section class="tiles-sort">
+      <p>
+        Last Updated At: 10:55 AM - 19-07-2023 | * IV/IVPs shift to next month
+        expiry in the last week of front month expiry
+      </p>
+      <i class="fa-solid fa-bars fa-2xl"></i>
+      <i class="fa-solid fa-grip fa-2xl"></i>
+      <button>Refresh</button>
+    </section>
+    <section class="cards__wrapper">
+      <article class="card__container">
+        <div class="card">
+          <div class="card__front">
+            <div class="card__icons">
+              <i class="fa-solid fa-bell"></i>
+              <i class="fa-solid fa-star" style="color: #f39512"></i>
+            </div>
+            <div class="card__info">
+              <h2>NIFTY</h2>
+              <p>&#8377; 19789.15</p>
+              <h4>+18.6 (+0.09%)</h4>
+              <h3>IV : 11.79</h3>
+            </div>
+            <div class="card__badges">
+              <div class="card__rank">
+                <p>IV Rank: 17</p>
+              </div>
+              <div class="card__change">
+                <p>IV Change: +2.08%</p>
+              </div>
+            </div>
+            <div class="card__progressbar">
+              <div>
+                <span>IVP:30</span>
+                <div class="card__progressbar__container">
+                  <div class="card__progressbar__indication"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="card__back">
+            <p>Suggested Option Strategies</p>
+            <span>Debit Spread</span>
+            <span>Calender Spread</span>
+            <span>Long Straddle</span>
+            <span>Long Strangle</span>
+          </div>
+        </div>
+      </article>
+    </section>
+  </div>
+  <script>
+    const cardObj = [
+      {
+        name: "BANKNIFTY",
+        value: 45589.5,
+        points: "+105(+0.23%)",
+        IV: 15.14,
+        rank: 26,
+        change: "+4.49%",
+        ivp: 40,
+        strategies: [
+          "Debit spread",
+          "calendar spread",
+          "Long straddle",
+          "long strangle",
+        ],
+      },
+      {
+        name: "ABB",
+        value: 45389.5,
+        points: "+46(+1.23%)",
+        IV: 31.14,
+        rank: 34,
+        change: "+4.49%",
+        ivp: 52,
+        strategies: ["Iron Condor", "Butterfly"],
+      },
+      {
+        name: "BANKNIFTY",
+        value: 45589.5,
+        points: "+105(+0.23%)",
+        IV: 15.14,
+        rank: 26,
+        change: "+4.49%",
+        ivp: 40,
+        strategies: [
+          "Debit spread",
+          "calendar spread",
+          "Long straddle",
+          "long strangle",
+        ],
+      },
+      {
+        name: "ABFRL",
+        value: 213.65,
+        points: "+1.3(+0.61%)",
+        IV: 39.34,
+        rank: 37,
+        change: "+1.49%",
+        ivp: 76,
+        strategies: [
+          "Short Straddle",
+          "Short Strangle",
+          "ratio spread",
+          "credit spread",
+        ],
+      },
+      {
+        name: "ABBOTINDIA",
+        value: 22997.65,
+        points: "+100(-0.23%)",
+        IV: 27.34,
+        rank: 45,
+        change: "+1.49%",
+        ivp: 48,
+        strategies: [
+          "Short Straddle",
+          "Short Strangle",
+          "ratio spread",
+          "credit spread",
+        ],
+      },
+      {
+        name: "ABFRL",
+        value: 213.65,
+        points: "+1.3(+0.61%)",
+        IV: 39.34,
+        rank: 37,
+        change: "+1.49%",
+        ivp: 76,
+        strategies: [
+          "Short Straddle",
+          "Short Strangle",
+          "ratio spread",
+          "credit spread",
+        ],
+      },
+      {
+        name: "BANKNIFTY",
+        value: 45589.5,
+        points: "+105(+0.23%)",
+        IV: 15.14,
+        rank: 26,
+        change: "+4.49%",
+        ivp: 40,
+        strategies: [
+          "Debit spread",
+          "calendar spread",
+          "Long straddle",
+          "long strangle",
+        ],
+      },
+      {
+        name: "ABFRL",
+        value: 213.65,
+        points: "+1.3(+0.61%)",
+        IV: 39.34,
+        rank: 37,
+        change: "+1.49%",
+        ivp: 36,
+        strategies: [
+          "Short Straddle",
+          "Short Strangle",
+          "ratio spread",
+          "credit spread",
+        ],
+      },
+      {
+        name: "ABFRL",
+        value: 213.65,
+        points: "+1.3(+0.61%)",
+        IV: 39.34,
+        rank: 37,
+        change: "+1.49%",
+        ivp: 36,
+        strategies: [
+          "Short Straddle",
+          "Short Strangle",
+          "ratio spread",
+          "credit spread",
+        ],
+      },
+    ];
+
+    const cards__wrapper = document.querySelector(".cards__wrapper");
+
+    for (let card of cardObj) {
+      cards__wrapper.innerHTML += `<article class="card__container">
+        <div class="card">
+          <div class="card__front">
+            <div class="card__icons">
+              <i class="fa-solid fa-bell"></i>
+              <i class="fa-solid fa-star" style="color: #f39512"></i>
+            </div>
+            <div class="card__info">
+              <h2>${card.name}</h2>
+              <p>&#8377; ${card.value}</p>
+              <h4>${card.points}</h4>
+              <h3>IV : ${card.IV}</h3>
+            </div>
+            <div class="card__badges">
+              <div class="card__rank">
+                <p>IV Rank: ${card.rank}</p>
+              </div>
+              <div class="card__change">
+                <p>IV Change: ${card.change}</p>
+              </div>
+            </div>
+            <div class="card__progressbar">
+              <div>
+                <span>IVP:${card.ivp}</span>
+                <div class="card__progressbar__container" ${
+                  card.ivp < 40 && 'style="background-color:#FBC6C2"'
+                }   ${
+        card.ivp >= 40 && card.ivp < 70 && 'style="background-color:#FFE0B2"'
+      }  ${card.ivp >= 70 && 'style="background-color:#C9E7CA"'}>
+                  <div class="card__progressbar__indication" 'style='width:${
+                    card.ivp
+                  }%' ${card.ivp < 40 && 'style="background-color:red"'}  ${
+        card.ivp >= 40 && card.ivp < 70 && 'style="background-color:#FF9800"'
+      }  ${card.ivp >= 70 && 'style="background-color:#4CAF50"'}></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="card__back" ${
+            card.ivp < 40 && 'style="background-color:#E57373"'
+          } ${
+        card.ivp >= 40 && card.ivp < 70 && 'style="background-color:#FFB74D"'
+      } ${card.ivp >= 70 && 'style="background-color:#D4E157"'}>
+            <p>Suggested Option Strategies</p>
+          ${card.strategies.map((e) => `<span>${e}</span>`).join("")}
+          </div>
+        </div>
+      </article>`;
+    }
+  </script>
+{% endblock dashboard_body %}

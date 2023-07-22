@@ -1,0 +1,185 @@
+{% extends "base_dashboard.html" %}
+{% load static %}
+{% block dashboard_body %}
+<style>
+
+    .inner_ban_card{
+        width: 45%;
+        text-align: center;
+        height: 30rem;
+        margin-top: 1rem;
+        color: #000000ab;
+        box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+        border-radius: 11px;
+        padding: 1rem;
+        padding-bottom: 3rem;
+
+    
+    }
+    .main_ban_card{
+        flex-wrap: wrap;
+        justify-content: space-around;
+    }
+    @media screen and (max-width: 760px) {
+        .inner_ban_card{
+            width: 100% !important;
+            text-align: center;
+            height: 30rem;
+            margin-top: 1rem;
+            color: #000000ab;
+            box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+            border-radius: 11px;
+            padding: 1rem;
+            padding-bottom: 3rem;
+    
+        
+        }
+    }
+</style>
+
+<div class="title_market_ban d-flex" style="    align-items: center;
+justify-content: space-between;
+margin-top: 2rem;
+border-bottom: 1px solid #00000033;">
+    <h4>
+        Market-Wide Position Limit
+
+    </h4>
+    <h5>
+        Last Updated: {{date_str}}
+    </h5>
+
+</div>
+<div class="main_ban_card d-flex">
+    <div class="inner_ban_card">
+    <h5>Stocks Under Ban</h5>
+
+
+        <canvas id="chart"></canvas>
+    </div>
+
+    <div class="inner_ban_card" >
+    <h5>Possible Entrants</h5>
+
+
+        <canvas id="Entrance_chart"></canvas>
+    </div>
+</div>
+
+<h4 class="text-center mt-4 border-bottom pb-2">Top 50 Market Wide Position Limit</h4>
+
+<canvas id="Ban_list"></canvas>
+
+<script>
+    var all_labels = {{ all_labels|safe }};
+    var all_values = {{ all_values|safe }};
+    var ctx = document.getElementById('Ban_list').getContext('2d');
+    var chart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: all_labels,
+            datasets: [{
+                label: 'Symbol Name',
+                data: all_values,
+                backgroundColor: 'rgba(255, 0, 0, 0.2)',  // Red background color
+                borderColor: 'rgba(255, 0, 0, 1)',  // Red border color
+                borderWidth: 1
+            }]
+        },
+        options: {
+            indexAxis: 'y',  // Display labels on the y-axis
+            scales: {
+                x: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    var labels = {{ labels| safe }};
+    var chart_data = {{ chart_data| safe }};
+
+    var ctx = document.getElementById('chart').getContext('2d');
+    var chart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: '% of MWPL ',
+                data: chart_data,
+                backgroundColor: 'rgba(255, 100, 100, 0.72)',
+                borderColor: 'rgba(255, 0, 0, 0.72)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            indexAxis: 'y',
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true
+                },
+                xAxes: [{
+                    barPercentage: 0.6
+                }]
+            },
+
+        },
+        title: {
+            display: true,
+            text: 'Chart.js Horizontal Bar Chart'
+        }
+    });
+
+    var Entrance_labels = {{ Entrance_labels| safe }};
+    var normalized_list_entrance = {{ normalized_list_entrance| safe }};
+
+    var ctx = document.getElementById('Entrance_chart').getContext('2d');
+    var chart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: Entrance_labels,
+            datasets: [{
+                label: '% of MWPL ',
+                data: normalized_list_entrance,
+                backgroundColor: 'rgba(255, 124, 0, 0.8)',
+                borderColor: 'rgba(255, 198, 0, 0.8)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            indexAxis: 'y',
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true
+                },
+                xAxes: [{
+                    barPercentage: 0.6
+                }]
+            },
+
+        },
+        title: {
+            display: true,
+            text: 'Chart.js Horizontal Bar Chart'
+        }
+    });
+
+</script>
+{% endblock dashboard_body %}
