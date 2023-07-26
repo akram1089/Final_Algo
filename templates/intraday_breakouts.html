@@ -1,0 +1,188 @@
+{% extends "base_dashboard.html" %}
+{% load static %}
+{% block dashboard_body %}
+
+<style>
+    .bi.bi-graph-up {
+        border: 1px solid #80808030;
+        border-radius: 7px;
+        padding: 6px 9px;
+        width: 33px;
+        display: block;
+        height: 29px;
+        color: gray;
+        transition: 0.3s;
+        display: inline;
+    }
+
+    .bi.bi-graph-up:hover {
+        background-color: rgb(0, 132, 255);
+        border: none;
+        color: white;
+    }
+
+    tr:hover .symbol_name_watchlist {
+        color: #2196f3;
+    }
+
+    /* Reset default margin and padding for the table */
+    table {
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    /* Style for the table header */
+    thead {
+        background-color: #f2f2f2;
+    }
+
+    th,
+    td {
+        padding: 12px 8px;
+        text-align: left;
+    }
+
+    /* Add padding to tbody tr */
+    tbody tr {
+        border-bottom: 1px solid #ddd; /* Add borders between rows */
+    }
+
+    td > div,
+    th > div {
+        padding: 9px;
+    }
+    .dataTables_length,.dataTables_filter{
+        padding: 10px 0 !important;
+        display: flex;
+    justify-content: flex-start;
+    
+    
+    
+    }
+    .main_instraday_breakout_table{
+        margin: 12px 0;
+        padding: 24px;
+    border-radius: 10px;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+    }
+</style>
+<div>
+    <h4 class="my-3">NSE Stocks – Intraday Breakouts</h4>
+    <div class="main_instraday_breakout_table mt-3" style="overflow: auto;">
+        <table id="breakoutTable" class="table table-hover">
+            <thead class="table-light">
+                <tr>
+                    <th>
+                        <div>Symbol Name</div>
+                    </th>
+                    <th>
+                        <div>Open</div>
+                    </th>
+                    <th>
+                        <div>High</div>
+                    </th>
+                    <th>
+                        <div>Low</div>
+                    </th>
+                    <th>
+                        <div>Close</div>
+                    </th>
+                    <th>
+                        <div>Last Trade Price</div>
+                    </th>
+                    <th>
+                        <div>Avg Daily Volume</div>
+                    </th>
+                    <th>
+                        <div>Total Volume</div>
+                    </th>
+                    <th>
+                        <div>Ratio</div>
+                    </th>
+                    <th>
+                        <div>Change</div>
+                    </th>
+                    <th>
+                        <div>Change Percent</div>
+                    </th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td colspan="11" class="text-center">Loading data, please wait...</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h5 class="my-2">*Data is only available during market hours.</h5>
+    </div>
+    <script>
+        // AJAX call to fetch data and populate the table
+        $(document).ready(function () {
+            $.ajax({
+                url: "/get_intraday_breakout_data", // Replace with the URL of your API endpoint
+                method: "GET",
+                dataType: "json",
+                success: function (data) {
+                    populateTable(data);
+                },
+                error: function (error) {
+                    console.error("Error fetching data:", error);
+                }
+            });
+        });
+
+        // Function to populate the table with data
+        function populateTable(data) {
+            const tableBody = $("#breakoutTable tbody");
+            tableBody.empty(); // Clear existing rows if any
+
+            // Check if data is available
+            if (data.length === 0) {
+                // If no data, display a message
+                tableBody.append(`
+                    <tr>
+                        <td colspan="11" class="text-center">No data available.</td>
+                    </tr>
+                `);
+            } else {
+                // Loop through the data and create rows for the table
+                data.forEach(item => {
+                    const row = `
+                        <tr>
+                            <td>
+                                <div>
+                                    <span><a href="https://www.tradingview.com/chart/MgiGDMYM/?symbol=${item.symbol_name}'&aff_id=113877" target='_blank'><i class="bi bi-graph-up"></i></a></span>
+                                    <span class="symbol_name_watchlist">${item.symbol_name}</span>
+                                </div>
+                            </td>
+                            <td><div>${item.open}</div></td>
+                            <td><div>${item.high}</div></td>
+                            <td><div>${item.low}</div></td>
+                            <td><div>${item.close}</div></td>
+                            <td><div>${item.last_trade_price}</div></td>
+                            <td><div>${item.avg_daily_volume}</div></td>
+                            <td><div>${item.total_volume}</div></td>
+                            <td><div>${item.ratio}</div></td>
+                            <td><div>${item.change}</div></td>
+                            <td><div>${item.change_percent}</div></td>
+                        </tr>
+                    `;
+                    tableBody.append(row);
+                });
+            }
+
+            // Initialize DataTable
+            $("#breakoutTable").DataTable({
+                "paging": true,
+                "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+                "searching": true,
+                "ordering": true,
+                "info": true,
+                "order": [] // Disable default sorting
+            });
+        }
+    </script>
+</div>
+{% endblock dashboard_body %}

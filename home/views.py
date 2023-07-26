@@ -1,3 +1,9 @@
+from .models import Watchlist
+from django.views.decorators.csrf import csrf_exempt
+from rest_framework.decorators import api_view
+from rest_framework.renderers import JSONRenderer
+from rest_framework.response import Response
+from rest_framework.decorators import api_view, renderer_classes
 import datetime
 from .models import Only_buyers
 from .models import Stock_Low_Data
@@ -1100,7 +1106,7 @@ def dashboard(request):
     # Prepare data for Chart.js
     looser_labels = top_10_losers["companyShortName"].tolist()
     looser_values = top_10_losers["percentChange"].tolist()
-    url = "https://trendlyne.com/futures-options/api-filter/futures/27-jul-2023-next/oi_gainers/"
+    url = "https://trendlyne.com/futures-options/api-filter/futures/31-aug-2023-next/oi_gainers/"
 
     headers = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
@@ -1566,7 +1572,7 @@ def volume_shocker(request):
 
 
 def oi_gainers(request):
-    url = "https://trendlyne.com/futures-options/api-filter/futures/27-jul-2023-next/oi_gainers/"
+    url = "https://trendlyne.com/futures-options/api-filter/futures/31-aug-2023-next/oi_gainers/"
 
     headers = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
@@ -2347,8 +2353,6 @@ def feedback(request):
     return render(request, "feedback.html")
 
 
-
-
 def stock_list(request):
     stock_url = "https://webapi.niftytrader.in/webapi/Symbol/stock-list"
 
@@ -2630,7 +2634,6 @@ def future_data_chart(request):
             "low": future["low"]
         })
 
-
     spot_symbol_list = spot_data["resultData"]["symbol_name"]
     spot_price_list = spot_data["resultData"]["last_trade_price"]
     spot_change_list = spot_data["resultData"]["change_per"]
@@ -2664,10 +2667,9 @@ def future_data_chart(request):
 
     return JsonResponse(data)
 
+
 def stock_future(request):
-    return render(request,"stock_future.html")
-
-
+    return render(request, "stock_future.html")
 
 
 def get_news_data(request):
@@ -2689,17 +2691,9 @@ def get_news_data(request):
     return JsonResponse(data)
 
 
-
-
 def chart_topgainer(request):
     return render(request, "chart_topgainer.html")
 
-
-
-
-from django.http import JsonResponse
-import requests
-import datetime
 
 def fetch_option_data_with_spot_price(request):
     selected_symbol = request.GET.get('symbol')
@@ -2707,10 +2701,9 @@ def fetch_option_data_with_spot_price(request):
     print(selected_symbol)
     print(selectedDate)
 
- 
     url = f"https://webapi.niftytrader.in/webapi/option/fatch-option-chain?symbol={selected_symbol}&expiryDate={selectedDate}"
     url_symbol_list = "https://webapi.niftytrader.in/webapi/symbol/psymbol-list"
-    url_india_vix = "https://webapi.niftytrader.in/webapi/Other/other-symbol-spot-data?symbol=INDIA+VIX" 
+    url_india_vix = "https://webapi.niftytrader.in/webapi/Other/other-symbol-spot-data?symbol=INDIA+VIX"
     url_spot_data = f"https://webapi.niftytrader.in/webapi/symbol/today-spot-data?symbol={'NIFTY+50' if selected_symbol == 'nifty' else selected_symbol}"
 
     headers = {
@@ -2736,7 +2729,6 @@ def fetch_option_data_with_spot_price(request):
     All_symbols = []
     India_vix_data = india_vix_data["resultData"]
     india_spot_data = india_spot_data["resultData"]
-   
 
     for symbol in symbol_data['resultData']:
         All_symbols.append(symbol["symbol_name"])
@@ -2748,9 +2740,8 @@ def fetch_option_data_with_spot_price(request):
             date_obj, "%Y-%m-%d")
         All_dates.append(formatted_date)
 
-    total_puts_change_oi= 0
+    total_puts_change_oi = 0
     total_calls_change_oi = 0
-
 
     for options_data in data['resultData']["opDatas"]:
         All_option_data.append(options_data)
@@ -2787,28 +2778,19 @@ def fetch_option_data_with_spot_price(request):
         "total_call_volume": total_call_volume,
         "put_call_ratio": put_call_ratio,
         "oi_pcr": oi_pcr,
-    
+
     }
 
     return JsonResponse(response_data)
 
 
-
 def stock_option_chain(request):
-    return render(request,'stock_option_chain.html')
+    return render(request, 'stock_option_chain.html')
+
 
 def option_dashboard(request):
-    return render(request,'option_dashboard.html')
+    return render(request, 'option_dashboard.html')
 
-
-
-
-
-
-from django.shortcuts import render
-import requests
-import pandas as pd
-from django.http import JsonResponse
 
 def breakout_data(request):
     url = "https://webapi.niftytrader.in/webapi/Resource/nse-break-out-data"
@@ -2832,6 +2814,253 @@ def breakout_data(request):
     return JsonResponse(data_dict, safe=False)
 
 
-
 def volume_socker(request):
-    return render(request,'volume_socker.html')
+    return render(request, 'volume_socker.html')
+
+
+def get_gainers_data_separate(request):
+
+    range_type = request.GET.get('range_type')
+    print(range_type)
+
+    url = f"https://webapi.niftytrader.in/webapi/Symbol/top-gainers-historical-data?range_type=gainers&range_days={range_type}"
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
+        "Accept-Language": "en-US,en;q=0.9",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive"
+    }
+
+    response = requests.get(url, headers=headers)
+    data = response.json()
+
+    top_gainers_stock = pd.DataFrame(data["resultData"])
+
+    # You can now manipulate the data using pandas functions if needed
+
+    return JsonResponse(top_gainers_stock.to_dict(orient="records"), safe=False)
+
+
+def top_gainers(request):
+    return render(request, 'top_gainer.html')
+
+
+def get_gainers_data_separate(request):
+
+    range_type = request.GET.get('range_type')
+    print(range_type)
+
+    url = f"https://webapi.niftytrader.in/webapi/Symbol/top-gainers-historical-data?range_type=gainers&range_days={range_type}"
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
+        "Accept-Language": "en-US,en;q=0.9",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive"
+    }
+
+    response = requests.get(url, headers=headers)
+    data = response.json()
+
+    top_gainers_stock = pd.DataFrame(data["resultData"])
+
+    # You can now manipulate the data using pandas functions if needed
+
+    return JsonResponse(top_gainers_stock.to_dict(orient="records"), safe=False)
+
+
+def top_loosers(request):
+    return render(request, 'top_loosers.html')
+
+
+def get_loosers_data_separate(request):
+
+    range_type = request.GET.get('range_type')
+    print(range_type)
+
+    url = f"https://webapi.niftytrader.in/webapi/Symbol/top-gainers-historical-data?range_type=loosers&range_days={range_type}"
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
+        "Accept-Language": "en-US,en;q=0.9",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive"
+    }
+
+    response = requests.get(url, headers=headers)
+    data = response.json()
+
+    top_gainers_stock = pd.DataFrame(data["resultData"])
+
+    # You can now manipulate the data using pandas functions if needed
+
+    return JsonResponse(top_gainers_stock.to_dict(orient="records"), safe=False)
+
+
+@api_view(['GET'])
+@renderer_classes([JSONRenderer])
+def get_gap_data(request):
+    date = request.GET.get('date')
+    print(date)
+    gap_date_url = "https://webapi.niftytrader.in/webapi/Resource/gap-analysis-date-list"
+    gap_data_url = f"https://webapi.niftytrader.in/webapi/Resource/gap-analysis?Date={date}"
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
+        "Accept-Language": "en-US,en;q=0.9",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive"
+    }
+
+    gap_date_response = requests.get(gap_date_url, headers=headers)
+    gap_data_response = requests.get(gap_data_url, headers=headers)
+    gap_date = gap_date_response.json()
+    gap_data = gap_data_response.json()
+
+    gap_up_all_data = gap_data["resultData"]["gap_up_stocks"]
+    gap_down_all_data = gap_data["resultData"]["gap_down_stocks"]
+
+    data = {
+        "gap_dates": gap_date["resultData"],
+        "gap_up_stocks": gap_up_all_data,
+        "gap_down_stocks": gap_down_all_data,
+    }
+
+    return Response(data)
+
+
+def gap_up_gap_down(request):
+    return render(request, 'gap_up_gap_down.html')
+
+
+
+
+# views.py
+
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+
+@csrf_exempt
+def save_to_watchlist(request):
+    if request.method == "POST":
+        data = request.POST
+        symbol_name = data.get("symbol_name")
+        prev_high = data.get("prev_high")
+        today_low = data.get("today_low")
+        today_high = data.get("today_high")
+        change_value = data.get("change_value")
+        change_percent = data.get("change_percent")
+        prev_close = data.get("prev_close")
+        today_volume = data.get("today_volume")
+        print(symbol_name)
+        existing_item = Watchlist.objects.filter(
+            user=request.user,
+            symbol_name=symbol_name
+        ).first()
+        if existing_item:
+            return JsonResponse({'message1': f' {symbol_name} already exists in your watch list'})
+        else:
+            # Save the data to the Watchlist model
+            watchlist_entry = Watchlist(
+                # Assuming the user is authenticated and you're using Django's built-in User model
+                user=request.user,
+                symbol_name=symbol_name,
+                prev_high=prev_high,
+                today_low=today_low,
+                today_high=today_high,
+                change_value=change_value,
+                change_percent=change_percent,
+                prev_close=prev_close,
+                today_volume=today_volume,
+            )
+            watchlist_entry.save()
+
+            return JsonResponse({'message2': f' {symbol_name} added to your watch list'})
+    else:
+        return JsonResponse({"error": "Invalid request method."}, status=400)
+
+
+
+
+
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+
+@csrf_exempt
+def delete_watchlist_item(request, item_id):
+    print(item_id)
+    try:
+        # Retrieve the symbol_name before deleting the watchlist item
+        symbol_name = Watchlist.objects.filter(user=request.user, symbol_name=item_id).values_list('symbol_name', flat=True).first()
+
+        # Delete the watchlist item with the given item_id from the database
+        Watchlist.objects.filter(user=request.user, symbol_name=item_id).delete()
+
+        # Return a success message along with the symbol_name
+        return JsonResponse({'message': f' {symbol_name} remove from your watchlist'})
+    except Exception as e:
+        # Return an error message if the item deletion fails
+        return JsonResponse({'error': 'Error occurred while deleting item'})
+
+
+
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+import requests
+from .models import Watchlist
+
+@csrf_exempt
+def get_watchlist_data(request):
+    if request.user.is_authenticated:
+        user_watchlist = Watchlist.objects.filter(user=request.user)
+        watchlist_data = []
+        print(user_watchlist)
+        for item in user_watchlist:
+            watchlist_url = f"https://webapi.niftytrader.in/webapi/symbol/today-spot-data?symbol={item.symbol_name}"
+            chart_watchlist_url = f"https://webapi.niftytrader.in/webapi/Symbol/symbol-ltp-chart?symbol={item.symbol_name}"
+
+            headers = {
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
+                "Accept-Language": "en-US,en;q=0.9",
+                "Accept-Encoding": "gzip, deflate, br",
+                "Connection": "keep-alive"
+            }
+
+            watchlist_response = requests.get(watchlist_url, headers=headers)
+            chart_watchlist_response = requests.get(chart_watchlist_url, headers=headers)
+
+            watchlist_data_url = watchlist_response.json()
+            chart_watchlist_data = chart_watchlist_response.json()
+            watch_list = watchlist_data_url["resultData"]
+            chart_data = chart_watchlist_data["resultData"]
+
+            # Combine watch_list and chart_data into a single dictionary
+            symbol_data = {
+               
+                'watch_list': watch_list,
+                'chart_data': chart_data
+            }
+            watchlist_data.append(symbol_data)
+
+        return JsonResponse({"watchlist_data": watchlist_data})
+    else:
+        return JsonResponse({"watchlist_data": []})
+
+
+
+@api_view(['GET'])
+def get_intraday_breakout_data(request):
+    instraday_url = "https://webapi.niftytrader.in/webapi/Resource/nse-break-out-data"
+
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
+        "Accept-Language": "en-US,en;q=0.9",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive"
+    }
+
+    instra_breakout_response = requests.get(instraday_url, headers=headers)
+    intra_breakout_data = instra_breakout_response.json()
+    main_intra_breakout_data = intra_breakout_data["resultData"]
+    return JsonResponse(main_intra_breakout_data, safe=False)
+
+
+def intraday_breakouts(request):
+    return render(request ,"intraday_breakouts.html")

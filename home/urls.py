@@ -119,6 +119,21 @@ urlpatterns = [
     path('fetch_option_data_with_spot_price', views.fetch_option_data_with_spot_price, name='fetch_option_data_with_spot_price'),
     path('breakout_data', views.breakout_data, name='breakout_data'),
     path('volume_socker', views.volume_socker, name='volume_socker'),
+    path('get_gainers_data_separate', views.get_gainers_data_separate, name='get_gainers_data_separate'),
+    path('top_gainers', views.top_gainers, name='top_gainers'),
+    path('get_loosers_data_separate', views.get_loosers_data_separate, name='get_loosers_data_separate'),
+    path('top_loosers', views.top_loosers, name='top_loosers'),
+    path('get_gap_data', views.get_gap_data, name='get_gap_data'),
+    path('gap_up_gap_down', views.gap_up_gap_down, name='gap_up_gap_down'),
+    path('save_to_watchlist', views.save_to_watchlist, name='save_to_watchlist'),
+    path('get_watchlist_data', views.get_watchlist_data, name='get_watchlist_data'),
+    path('delete_watchlist_item/<str:item_id>', views.delete_watchlist_item, name='delete_watchlist_item'),
+
+    path('get_intraday_breakout_data', views.get_intraday_breakout_data, name='get_intraday_breakout_data'),
+    path('intraday_breakouts', views.intraday_breakouts, name='intraday_breakouts'),
+
+
+
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 urlpatterns += staticfiles_urlpatterns()

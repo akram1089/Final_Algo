@@ -101,3 +101,24 @@ class Only_buyers(models.Model):
     def __str__(self):
         return str(self.pk)
 
+
+
+# models.py
+
+from django.db import models
+
+
+
+class Watchlist(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    symbol_name = models.CharField(max_length=100)
+    prev_high = models.CharField(max_length=100)
+    today_low = models.CharField(max_length=100)
+    today_high = models.CharField(max_length=100)
+    change_value = models.CharField(max_length=100)
+    change_percent = models.CharField(max_length=100)
+    prev_close = models.CharField(max_length=100)
+    today_volume = models.CharField(max_length=100)
+
+    def __str__(self):
+        return f"{self.user.full_name} - {self.symbol_name}"

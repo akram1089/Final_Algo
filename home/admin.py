@@ -11,6 +11,7 @@ from.models import SecurityBan
 from.models import StockData
 from.models import Stock_Low_Data
 from.models import Only_buyers
+from.models import Watchlist
 # from.models import StockListing
 
 
@@ -26,6 +27,7 @@ admin.site.register(SecurityBan)
 admin.site.register(StockData)
 admin.site.register(Stock_Low_Data)
 admin.site.register(Only_buyers)
+admin.site.register(Watchlist)
 # admin.site.register(StockListing)
 
 

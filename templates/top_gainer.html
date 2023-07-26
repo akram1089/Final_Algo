@@ -1,0 +1,245 @@
+{% extends "base_dashboard.html" %}
+{% load static %}
+{% block dashboard_body %}
+
+
+
+
+<style>
+
+
+    th {
+        background: -webkit-gradient(linear, left top, left bottom, from(#4399eb), to(#5cadfb)) !important;
+        background: -moz-linear-gradient(top, #4399eb 0, #5cadfb 100%) !important;
+        background: linear-gradient(180deg, #4399eb, #5cadfb) !important;
+        color: white;
+    }
+    td{
+        color: rgba(0, 0, 0, 0.595);
+    }
+
+    .filter {
+        cursor: pointer;
+        margin-right: 10px;
+    }
+
+    .active {
+        font-weight: bold;
+    }
+
+    .filter {
+        border: 1px solid #4399eb !important;
+        background-color: #fff;
+        font-family: Roboto, sans-serif;
+        font-weight: 400;
+        font-size: 13px;
+        color: #4399eb;
+        line-height: 1.923;
+        padding: 7px 14.5px;
+        margin-right: 9px;
+        min-width: 100px;
+        border-radius: 9px;
+        max-width: 150px;
+        text-align: center;
+    }
+
+    .filter:hover,
+    .active {
+        border: 1px solid #4399eb !important;
+        -webkit-box-shadow: none !important;
+        box-shadow: none !important;
+        outline: 0 !important;
+        -webkit-transition: all .2s ease-in-out !important;
+        -moz-transition: all .2s ease-in-out !important;
+        transition: all .2s ease-in-out !important;
+        background: -webkit-gradient(linear, left top, left bottom, from(#4399eb), to(#5cadfb)) !important;
+        background: -moz-linear-gradient(top, #4399eb 0, #5cadfb 100%) !important;
+        background: linear-gradient(180deg, #4399eb, #5cadfb) !important;
+        color: #fff !important;
+    }
+
+    .top_loosers {
+        padding: 4px 10px;
+        border-radius: 10px;
+        border: 1px solid #4399eb;
+        -webkit-box-shadow: none;
+        box-shadow: none;
+        outline: 0;
+        -webkit-transition: all .2s ease-in-out;
+        -moz-transition: all .2s ease-in-out;
+        transition: all .2s ease-in-out;
+        background: -webkit-gradient(linear, left top, left bottom, from(#4399eb), to(#5cadfb));
+        background: -moz-linear-gradient(top, #4399eb 0, #5cadfb 100%);
+        background: linear-gradient(180deg, #4399eb, #5cadfb);
+        color: #fff;
+        cursor: pointer;
+        text-decoration: none !important;
+    }
+
+    .top_loosers:hover {
+        border: 1px solid #4399eb !important;
+        background: #fff !important;
+        color: #4399eb !important;
+    }
+    .main_top_gainer{
+        margin: 12px 0;
+        padding: 24px;
+    border-radius: 10px;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+    }
+    .filters{
+        padding: 12px 0;
+    }
+    .dataTables_length,.dataTables_filter{
+        padding: 10px 0 !important;
+        display: flex;
+    justify-content: flex-start;
+    
+    }
+    #top_gainers_chart{
+        border: 1px solid;
+    color: #808080bd;
+    padding: 4px 5px;
+    width: auto;
+    height: auto;
+    border-radius: 6px;
+    }
+    .main_table{
+
+    overflow: auto;
+    }
+    #top_gainers_chart:hover{
+        -webkit-transition: all .2s ease-in-out !important;
+        -moz-transition: all .2s ease-in-out !important;
+        transition: all .2s ease-in-out !important;
+        background: -webkit-gradient(linear, left top, left bottom, from(#4399eb), to(#5cadfb)) !important;
+        background: -moz-linear-gradient(top, #4399eb 0, #5cadfb 100%) !important;
+        background: linear-gradient(180deg, #4399eb, #5cadfb) !important;
+        color: white !important;
+    }
+    .text-success{
+        color: rgb(73, 213, 73);
+    }
+    .symbol_name,.top_gainer_redirect{
+        display: inline !important;
+    }
+</style>
+
+<script>
+    $(document).ready(function () {
+        // Retrieve the last selected filter from local storage, or set it to "day" by default
+        var selectedFilter_topgainers = localStorage.getItem("selectedFilter_topgainers") || "day";
+        var table = $("#stock-table").DataTable({
+            "paging": true,
+            "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+            "searching": true,
+            "ordering": true,
+            "info": true,
+            "order": [] // Disable default sorting
+        });
+
+        function loadStockData(filter) {
+            $.ajax({
+                url: "/get_gainers_data_separate",
+                type: "GET",
+                dataType: "json",
+                data: { range_type: filter.toLowerCase() },
+                success: function (data) {
+                    table.clear().draw();
+                    data.forEach(function (stock) {
+                        var row = $("<tr>");
+
+                        // Add the graph link and symbol name to the table
+                        $("<td>").append('<a class="top_gainer_redirect" href="https://www.tradingview.com/chart/MgiGDMYM/?symbol=' + stock.symbol_name + '&aff_id=113877" target="_blank"><i class="bi bi-graph-up" id="top_gainers_chart"></i></a> <p style="margin-top: 0rem; margin-bottom: 0rem;" class="symbol_name">' + stock.symbol_name + '</p>').appendTo(row);
+
+                        // Add the other columns data to the table
+                        $("<td>").text(stock.today_close).appendTo(row);
+                        $("<td>").text(stock.today_high).appendTo(row);
+                        $("<td>").text(stock.today_low).appendTo(row);
+                        // $("<td>").text(stock.today_close).appendTo(row);
+                        // $("<td>").text(stock.prev_open).appendTo(row);
+                        $("<td>").text(stock.prev_high).appendTo(row);
+                        $("<td>").text(stock.prev_low).appendTo(row);
+                        $("<td>").text(stock.prev_close).appendTo(row);
+                            $("<td>").text(stock.change_percent+"%"+"("+stock.change_value+")").appendTo(row).addClass("text-success");
+                            $("<td>").text(stock.today_volume).appendTo(row);
+                                // $("<td>").text(stock.change_percent).appendTo(row);
+                                    
+                        table.row.add(row).draw(false);
+                    });
+
+                    $(".filter").removeClass("active");
+                    $(".filter[data-value='" + filter + "']").addClass("active");
+
+                    // Save the selected filter to local storage
+                    localStorage.setItem("selectedFilter_topgainers", filter);
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                    console.log("Error loading stock data:", errorThrown);
+                }
+            });
+        }
+
+        $(".filter").on("click", function () {
+            var filterValue = $(this).attr("data-value");
+            selectedFilter_topgainers = filterValue;
+            loadStockData(filterValue);
+        });
+
+        // Initial loading with the last selected filter value
+        loadStockData(selectedFilter_topgainers);
+    });
+</script>
+
+
+
+
+
+
+<div>
+    <div class="top_gainer_header d-flex justify-content-between">
+        <h5>Top Gainers Stock </h5>
+
+        <a class="top_loosers" href="{% url 'top_loosers' %}">
+            Top Looser
+        </a>
+    </div>
+    <div class="main_top_gainer" style="box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;">
+        <div class="main_filter d-flex">
+        <div class="filters" style="    display: flex;
+        overflow: auto;">
+            <span class="filter active" data-value="day">1 Day</span>
+            <span class="filter" data-value="week">1 Week</span>
+            <span class="filter" data-value="month">1 Month</span>
+            <span class="filter" data-value="year">1 Year</span>
+        </div>
+    </div>
+    <div class="upper_main_top_gainers_table">
+        <div class="main_table">
+        <table id="stock-table" class="table table-hover">
+            <thead>
+                <tr>
+                 
+                    <th>Symbol Name</th>
+                    <th>LTP </th>
+                    <th>Today High</th>
+                    <th>Today Low</th>
+                    <!-- <th>Today Close</th> -->
+                    <th>Previous High</th>
+                    <th>Previous Low</th>
+                    <th>Previous Close</th>
+                    <th>Change Value</th>
+                    <th>Today Volume</th>
+                    <!-- <th>Change Percent</th> -->
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Table data will be loaded dynamically here -->
+            </tbody>
+        </table>
+    </div>
+    </div>
+</div>
+</div>
+
+{% endblock dashboard_body %}
