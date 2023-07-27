@@ -1,101 +1,89 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Intraday Breakout Data</title>
-
-    <!-- Add DataTables CSS -->
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
-
-    <!-- Include jQuery library for AJAX -->
+    <title>Opening Clue Data</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-    <!-- Add DataTables JavaScript -->
-    <script type="text/javascript" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
-
-    <style>
-        /* Optional: Add custom styling to the table */
-
-    </style>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
 </head>
 <body>
-    <h1>Intraday Breakout Data</h1>
-    <table id="breakoutTable">
+    <h1>High Data</h1>
+    <table id="high-table">
         <thead>
             <tr>
                 <th>Symbol Name</th>
-                <th>Open</th>
-                <th>High</th>
-                <th>Low</th>
-                <th>Close</th>
-                <th>Last Trade Price</th>
-                <th>Volume</th>
-                <th>Avg Daily Volume</th>
-                <th>Total Volume</th>
-                <th>Ratio</th>
-                <th>Change</th>
-                <th>Change Percent</th>
+                <th>Today Open</th>
+                <th>Today High</th>
+                <th>Today Low</th>
             </tr>
         </thead>
-        <tbody>
-            <!-- Data rows will be added dynamically here -->
-        </tbody>
+    </table>
+
+    <h1>Low Data</h1>
+    <table id="low-table">
+        <thead>
+            <tr>
+                <th>Symbol Name</th>
+                <th>Today Open</th>
+                <th>Today High</th>
+                <th>Today Low</th>
+            </tr>
+        </thead>
     </table>
 
     <script>
-        // AJAX call to fetch data and populate the table
         $(document).ready(function() {
             $.ajax({
-                url: "/get_intraday_breakout_data", // Replace with the URL of your API endpoint
-                method: "GET",
+                url: "/opening_clue_data_view",
+                type: "GET",
                 dataType: "json",
                 success: function(data) {
-                    populateTable(data);
+                    displayHighData(data.high);
+                    displayLowData(data.low);
                 },
                 error: function(error) {
-                    console.error("Error fetching data:", error);
+                    console.log("Error fetching data:", error);
                 }
             });
+
+            function displayHighData(data) {
+                var table = $("#high-table");
+                table.DataTable().destroy(); // Destroy any existing DataTable instance
+                table.find("tbody").empty(); // Clear existing rows
+                $.each(data, function(index, item) {
+                    var row = $("<tr>");
+                    row.append($("<td>").text(item.symbol_name));
+                    row.append($("<td>").text(item.today_open));
+                    row.append($("<td>").text(item.today_high));
+                    row.append($("<td>").text(item.today_low));
+                    table.append(row);
+                });
+
+                // Initialize DataTables for the table with no default sorting
+                table.DataTable({
+                    "order": []
+                });
+            }
+
+            function displayLowData(data) {
+                var table = $("#low-table");
+                table.DataTable().destroy(); // Destroy any existing DataTable instance
+                table.find("tbody").empty(); // Clear existing rows
+                $.each(data, function(index, item) {
+                    var row = $("<tr>");
+                    row.append($("<td>").text(item.symbol_name));
+                    row.append($("<td>").text(item.today_open));
+                    row.append($("<td>").text(item.today_high));
+                    row.append($("<td>").text(item.today_low));
+                    table.append(row);
+                });
+
+                // Initialize DataTables for the table with no default sorting
+                table.DataTable({
+                    "order": []
+                });
+            }
         });
-
-        // Function to populate the table with data
-        function populateTable(data) {
-            const tableBody = $("#breakoutTable tbody");
-            tableBody.empty(); // Clear existing rows if any
-
-            // Loop through the data and create rows for the table
-            data.forEach(item => {
-                const row = `
-                    <tr>
-                        <td>${item.symbol_name}</td>
-                        <td>${item.open}</td>
-                        <td>${item.high}</td>
-                        <td>${item.low}</td>
-                        <td>${item.close}</td>
-                        <td>${item.last_trade_price}</td>
-                        <td>${item.volume || ""}</td>
-                        <td>${item.avg_daily_volume}</td>
-                        <td>${item.total_volume}</td>
-                        <td>${item.ratio}</td>
-                        <td>${item.change}</td>
-                        <td>${item.change_percent}</td>
-                    </tr>
-                `;
-                tableBody.append(row);
-            });
-
-            // Initialize DataTable
-          
-            $("#breakoutTable").DataTable({
-              "paging": true,
-              "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
-              "searching": true,
-              "ordering": true,
-              "info": true,
-              "order": [] // Disable default sorting
-          });
-        }
     </script>
 </body>
 </html>

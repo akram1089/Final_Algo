@@ -1,0 +1,271 @@
+<!-- opening_price_clues.html (your specific page template) -->
+{% extends "base_dashboard.html" %}
+{% load static %}
+{% block dashboard_body %}
+
+<style>
+    .bi.bi-graph-up {
+        border: 1px solid #80808030;
+        border-radius: 7px;
+        padding: 6px 9px;
+        width: 33px;
+        display: block;
+        height: 29px;
+        color: gray;
+        transition: 0.3s;
+        display: inline;
+    }
+
+    .bi.bi-graph-up:hover {
+        background-color: rgb(0, 132, 255);
+        border: none;
+        color: white;
+    }
+
+    tr:hover .symbol_name_watchlist {
+        color: #2196f3;
+    }
+
+    /* Reset default margin and padding for the table */
+    table {
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    /* Style for the table header */
+    thead {
+        background-color: #f2f2f2;
+    }
+
+    th,
+    td {
+        padding: 12px 8px;
+        text-align: left;
+    }
+
+    /* Add padding to tbody tr */
+    tbody tr {
+        border-bottom: 1px solid #ddd;
+        /* Add borders between rows */
+    }
+
+    td>div,
+    th>div {
+        padding: 9px;
+    }
+
+    .dataTables_length,
+    .dataTables_filter {
+        padding: 10px 0 !important;
+        display: flex;
+        justify-content: flex-start;
+
+
+
+    }
+
+    th>div {
+        color: rgba(0, 0, 0, 0.559);
+    }
+
+    .open_clue_low {
+        margin: 12px 0;
+        padding: 24px;
+        border-radius: 10px;
+        box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+    }
+
+    .high_table,
+    .low_table {
+        overflow: auto;
+    }
+    tr{
+        white-space: nowrap;
+    }
+</style>
+
+<div>
+    <h5 class="my-3">Opening Price Clues</h5>
+
+    <div class="open_clue_low">
+        <div class="low_table">
+            <table id="low-table" class="table table-hover">
+                <p>Filter Criteria : Stocks With Same Open And Low
+                </p>
+                <thead class="table-light">
+                    <tr>
+                        <th>
+                            <div>SYMBOL </div>
+                        </th>
+                        <th>
+                            <div>52W HIGH</div>
+                        </th>
+                        <th>
+                            <div>52W LOW</div>
+                        </th>
+                        <th>
+                            <div>OPEN</div>
+                        </th>
+                        <th>
+                            <div>HIGH</div>
+                        </th>
+                        <th>
+                            <div>LOW</div>
+                        </th>
+                        <th>
+                            <div>LTP</div>
+                        </th>
+                        <th>
+                            <div>VOL</div>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Low Data rows will be populated here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+
+
+
+
+
+    <div class="open_clue_low">
+        <p>Filter Criteria: Stocks With Same Open And High
+        </p>
+        <div class="high_table">
+            <table id="high-table" class="table table-hover">
+                <thead class="table-light">
+                    <tr>
+                        <th>
+                            <div>SYMBOL </div>
+                        </th>
+                        <th>
+                            <div>52W HIGH</div>
+                        </th>
+                        <th>
+                            <div>52W LOW</div>
+                        </th>
+                        <th>
+                            <div>OPEN</div>
+                        </th>
+                        <th>
+                            <div>HIGH</div>
+                        </th>
+                        <th>
+                            <div>LOW</div>
+                        </th>
+                        <th>
+                            <div>LTP</div>
+                        </th>
+                        <th>
+                            <div>VOL</div>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- High Data rows will be populated here -->
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+
+    <script>
+        $(document).ready(function () {
+            $.ajax({
+                url: "/opening_clue_data_view",
+                type: "GET",
+                dataType: "json",
+                success: function (data) {
+                    displayHighData(data.high);
+                    displayLowData(data.low);
+                },
+                error: function (error) {
+                    console.log("Error fetching data:", error);
+                }
+            });
+
+            function displayHighData(data) {
+                var table = $("#high-table tbody");
+                table.empty(); // Clear existing rows if any
+                // Populate High Data rows
+                $.each(data, function (index, item) {
+                    const row = `
+                        <tr>
+                            <td>
+                                <div>
+                                    <span><a href="https://www.tradingview.com/chart/MgiGDMYM/?symbol=${item.symbol_name}&aff_id=113877" target="_blank"><i class="bi bi-graph-up"></i></a></span>
+                                    <span class="symbol_name_watchlist">${item.symbol_name}</span>
+                                </div>
+                            </td>
+                            <td><div>${item.prev_high52}</div></td>
+                            <td><div>${item.prev_low52}</div></td>
+                            <td><div>${item.today_open}</div></td>
+                            <td><div>${item.today_high}</div></td>
+                            <td><div>${item.today_low}</div></td>
+                            <td><div>${item.today_close}</div></td>
+                            <td><div>${item.today_volume}</div></td>
+                        </tr>
+                    `;
+                    table.append(row);
+                });
+                $("#high-table").DataTable({
+                    "paging": true,
+                    "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+                    "searching": true,
+                    "ordering": true,
+                    "info": true,
+                    "order": [] // Disable default sorting
+                });
+                // Initialize DataTables for the table with no default sorting
+
+            }
+
+
+            function displayLowData(data) {
+                var table_low = $("#low-table tbody");
+                table_low.empty(); // Clear exi
+                // Populate Low Data rows
+                $.each(data, function (index, item) {
+                    const row = `
+                        <tr>
+                            <td>
+                                <div>
+                                    <span><a href="https://www.tradingview.com/chart/MgiGDMYM/?symbol=${item.symbol_name}&aff_id=113877" target="_blank"><i class="bi bi-graph-up"></i></a></span>
+                                    <span class="symbol_name_watchlist">${item.symbol_name}</span>
+                                </div>
+                            </td>
+                            <td><div>${item.prev_high52}</div></td>
+                            <td><div>${item.prev_low52}</div></td>
+                            <td><div>${item.today_open}</div></td>
+                            <td><div>${item.today_high}</div></td>
+                            <td><div>${item.today_low}</div></td>
+                            <td><div>${item.today_close}</div></td>
+                            <td><div>${item.today_volume}</div></td>
+                        </tr>
+                    `;
+                    table_low.append(row);
+                });
+
+                // Initialize Datatable_lows for the table with no default sorting
+                $("#low-table").DataTable({
+                    "paging": true,
+                    "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+                    "searching": true,
+                    "ordering": true,
+                    "info": true,
+                    "order": [] // Disable default sorting
+                });
+            }
+
+
+        });
+    </script>
+</div>
+
+{% endblock dashboard_body %}

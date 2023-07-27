@@ -3064,3 +3064,30 @@ def get_intraday_breakout_data(request):
 
 def intraday_breakouts(request):
     return render(request ,"intraday_breakouts.html")
+
+
+
+
+import requests
+from rest_framework.response import Response
+from rest_framework.decorators import api_view
+
+@api_view(['GET'])
+def opening_clue_data_view(request):
+    opening_clue_url = "https://webapi.niftytrader.in/webapi/Resource/open-analysis"
+    
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
+        "Accept-Language": "en-US,en;q=0.9",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive"
+    }
+    
+    opening_clue_response = requests.get(opening_clue_url, headers=headers)
+    opening_clue_data = opening_clue_response.json()
+    result_data = opening_clue_data["resultData"]
+    
+    return Response(result_data)
+
+def opening_price_clues(request):
+    return render(request ,"opening_price_clues.html")

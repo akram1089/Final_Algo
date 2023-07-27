@@ -131,6 +131,8 @@ urlpatterns = [
 
     path('get_intraday_breakout_data', views.get_intraday_breakout_data, name='get_intraday_breakout_data'),
     path('intraday_breakouts', views.intraday_breakouts, name='intraday_breakouts'),
+    path('opening_clue_data_view', views.opening_clue_data_view, name='opening_clue_data_view'),
+    path('opening_price_clues', views.opening_price_clues, name='opening_price_clues'),
 
 
 
