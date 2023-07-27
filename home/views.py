@@ -3067,17 +3067,18 @@ def opening_price_clues(request):
 
 
 
-
-
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .models import Border_FetchedData
 import requests
 import random
 import pandas as pd
+import json
 
 @api_view(['GET'])
 def base_api_border_top(request):
+    prited_data = Border_FetchedData.objects.all()
+    print(prited_data)
     url = "https://www.nseindia.com/api/equity-stockIndices?index=NIFTY%2050"
     headers = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
@@ -3108,7 +3109,7 @@ def base_api_border_top(request):
 
         # Convert the data to JSON and save it in the database
         Border_FetchedData.objects.all().delete()  # Delete previous data
-        fetched_data = Border_FetchedData(data=symbols)
+        fetched_data = Border_FetchedData(data=json.dumps(symbols))  # Convert to JSON string
         fetched_data.save()
 
         return Response(symbols)
@@ -3116,8 +3117,8 @@ def base_api_border_top(request):
         # If data couldn't be fetched, return the saved data from the database
         try:
             fetched_data = Border_FetchedData.objects.latest('id')
-            data = fetched_data.data
+            data = json.loads(fetched_data.data)  # Convert JSON string back to Python objects
+            # Return the data as JSON response
             return Response(data)
         except Border_FetchedData.DoesNotExist:
             return Response({"message": "Data not available."}, status=404)
-
