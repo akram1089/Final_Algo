@@ -615,7 +615,7 @@ def signUp(request):
             redirect('/')
     return render(request, 'home.html')
 
-
+@csrf_exempt
 def login_user(request):
     if request.method == 'POST':
         Email = request.POST['email']
