@@ -1,89 +1,98 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Opening Clue Data</title>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
-    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
-</head>
+{% extends "base_dashboard.html" %}
+{% load static %}
+{% block dashboard_body %}
+<style>
+    .swiper-slide {
+        width: 300px;
+        display: flex;
+        margin-right: 5px;
+        gap: 1rem;
+        align-items: center;
+        width: fit-content !important;
+        margin-right: 16px !important;
+    }
+</style>
 <body>
-    <h1>High Data</h1>
-    <table id="high-table">
-        <thead>
-            <tr>
-                <th>Symbol Name</th>
-                <th>Today Open</th>
-                <th>Today High</th>
-                <th>Today Low</th>
-            </tr>
-        </thead>
-    </table>
-
-    <h1>Low Data</h1>
-    <table id="low-table">
-        <thead>
-            <tr>
-                <th>Symbol Name</th>
-                <th>Today Open</th>
-                <th>Today High</th>
-                <th>Today Low</th>
-            </tr>
-        </thead>
-    </table>
+    <div class="swiper-container" style="overflow: hidden; background: black; color: white;">
+        <div class="swiper-wrapper">
+            <!-- Slides will be added here dynamically through AJAX -->
+        </div>
+        <div class="swiper-pagination"></div>
+    </div>
 
     <script>
-        $(document).ready(function() {
+        // AJAX call to fetch data and populate Swiper
+        function fetchDataAndPopulateSwiper() {
             $.ajax({
-                url: "/opening_clue_data_view",
-                type: "GET",
-                dataType: "json",
-                success: function(data) {
-                    displayHighData(data.high);
-                    displayLowData(data.low);
+                url: '/base_api_border_top',
+                method: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    // Clear existing slides
+                    $('.swiper-wrapper').empty();
+                    // Add new slides
+                    for (var i = 0; i < data.length; i++) {
+                        var border_color = data[i].pChange < 0 ? "text-danger" : "text-success";
+                        var icon_border = data[i].pChange < 0 ? "down" : "up";
+                        var slideHtml = `
+                            <div class="swiper-slide">
+                                <span class="d-flex align-items-center gap-1">
+                                    <p style="margin-bottom:auto;">${data[i].symbol}</p>
+                                    <p style="margin-bottom:auto;">${data[i].lastPrice}</p>
+                                </span>
+
+                                <span class="d-flex align-items-center ${border_color}">
+                                    <i class="bi bi-caret-${icon_border}-fill"></i>
+                                    <p style="margin-bottom:auto;">  ${data[i].pChange}% </p>
+                                </span>
+
+                            </div>
+                        `;
+                        $('.swiper-wrapper').append(slideHtml);
+                    }
+                    // Initialize Swiper after data is loaded and slides are added
+                    initSwiper();
                 },
-                error: function(error) {
-                    console.log("Error fetching data:", error);
+                error: function (error) {
+                    console.error('Error fetching data:', error);
                 }
             });
+        }
 
-            function displayHighData(data) {
-                var table = $("#high-table");
-                table.DataTable().destroy(); // Destroy any existing DataTable instance
-                table.find("tbody").empty(); // Clear existing rows
-                $.each(data, function(index, item) {
-                    var row = $("<tr>");
-                    row.append($("<td>").text(item.symbol_name));
-                    row.append($("<td>").text(item.today_open));
-                    row.append($("<td>").text(item.today_high));
-                    row.append($("<td>").text(item.today_low));
-                    table.append(row);
-                });
+    //     spaceBetween: 30,
+    //   centeredSlides: true,
+    //   autoplay: {
+    //     delay: 2500,
+    //     disableOnInteraction: false,
+    //   },
+        // Initialize Swiper
+        function initSwiper() {
+            var swiper = new Swiper('.swiper-container', {
+                // loop: true, // Enable infinite loop
+                slidesPerView: 'auto', // Automatically adjust the number of slides visible based on container's size
+                spaceBetween: 5, // Adjust the space between slides as needed
+                autoplay: {
+                    delay: 1000, // Adjust the delay as needed (in milliseconds)
+                    disableOnInteraction: false,
+                },
+                speed: 800, // Adjust the slide transition speed (in milliseconds)
+                effect: 'slide', // You can try other effects like 'fade', 'cube', 'coverflow', etc.
+            });
 
-                // Initialize DataTables for the table with no default sorting
-                table.DataTable({
-                    "order": []
-                });
-            }
+            // Pause swiper on hover
+            // var container = document.querySelector('.swiper-container');
+            // container.addEventListener('mouseenter', function () {
+            //     swiper.autoplay.stop();
+            // });
 
-            function displayLowData(data) {
-                var table = $("#low-table");
-                table.DataTable().destroy(); // Destroy any existing DataTable instance
-                table.find("tbody").empty(); // Clear existing rows
-                $.each(data, function(index, item) {
-                    var row = $("<tr>");
-                    row.append($("<td>").text(item.symbol_name));
-                    row.append($("<td>").text(item.today_open));
-                    row.append($("<td>").text(item.today_high));
-                    row.append($("<td>").text(item.today_low));
-                    table.append(row);
-                });
+            // // Resume swiper when the mouse leaves
+            // container.addEventListener('mouseleave', function () {
+            //     swiper.autoplay.start();
+            // });
+        }
 
-                // Initialize DataTables for the table with no default sorting
-                table.DataTable({
-                    "order": []
-                });
-            }
-        });
+        // Call fetchDataAndPopulateSwiper function to load data initially and populate Swiper
+        fetchDataAndPopulateSwiper();
     </script>
 </body>
-</html>
+{% endblock dashboard_body %}

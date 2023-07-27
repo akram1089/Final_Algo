@@ -31,7 +31,7 @@ urlpatterns = [
     path('chart_topgainer', views.chart_topgainer, name='chart_topgainer'),
     path('Futures_Buildup', views.Futures_Buildup, name='Futures_Buildup'),
     path('contact_us', views.contact_us, name='contact_us'),
-    path('base', views.base, name='base'),
+#     path('base', views.base, name='base'),
     path('option_strategies', views.option_strategies, name='option_strategies'),
     path('strategy_builder', views.strategy_builder, name='strategy_builder'),
     path('market_glance', views.market_glance, name='market_glance'),
@@ -131,8 +131,11 @@ urlpatterns = [
 
     path('get_intraday_breakout_data', views.get_intraday_breakout_data, name='get_intraday_breakout_data'),
     path('intraday_breakouts', views.intraday_breakouts, name='intraday_breakouts'),
+
+
     path('opening_clue_data_view', views.opening_clue_data_view, name='opening_clue_data_view'),
     path('opening_price_clues', views.opening_price_clues, name='opening_price_clues'),
+    path('base_api_border_top', views.base_api_border_top, name='base_api_border_top'),
 
 
 

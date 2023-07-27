@@ -983,34 +983,7 @@ def dii_fii(request):
     return render(request, 'dii_fii.html', context)
 
 
-def base(request):
 
-    url = "https://www.nseindia.com/api/equity-stockIndices?index=NIFTY%2050"
-    headers = {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
-        "Accept-Language": "en-US,en;q=0.9",
-        "Accept-Encoding": "gzip, deflate, br",
-        "Connection": "keep-alive"
-    }
-
-    response = requests.get(url, headers=headers)
-    data = response.json()
-
-    all_list = []
-    for d in data['data']:
-        if d['symbol'] != 'NIFTY 50':
-            all_list.append({
-                'symbol': d['symbol'],
-                'pChange': d['pChange']
-            })
-
-    # Randomly select 10 symbols from the top 50
-    random_symbols = random.sample(all_list, 10)
-
-    df = pd.DataFrame(random_symbols)
-    symbols = df.to_dict(orient='records')
-
-    return render(request, 'base.html', {'symbols': symbols})
 
 
 def option_strategies(request):
@@ -3091,3 +3064,60 @@ def opening_clue_data_view(request):
 
 def opening_price_clues(request):
     return render(request ,"opening_price_clues.html")
+
+
+
+
+
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from .models import Border_FetchedData
+import requests
+import random
+import pandas as pd
+
+@api_view(['GET'])
+def base_api_border_top(request):
+    url = "https://www.nseindia.com/api/equity-stockIndices?index=NIFTY%2050"
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
+        "Accept-Language": "en-US,en;q=0.9",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive"
+    }
+
+    response = requests.get(url, headers=headers)
+
+    if response.status_code == 200:
+        data = response.json()
+
+        all_list = []
+        for d in data['data']:
+            if d['symbol'] != 'NIFTY 50':
+                all_list.append({
+                    'symbol': d['symbol'],
+                    'lastPrice': d['lastPrice'],
+                    'pChange': d['pChange']
+                })
+
+        # Randomly select 10 symbols from the top 50
+        random_symbols = random.sample(all_list, 10)
+
+        df = pd.DataFrame(random_symbols)
+        symbols = df.to_dict(orient='records')
+
+        # Convert the data to JSON and save it in the database
+        Border_FetchedData.objects.all().delete()  # Delete previous data
+        fetched_data = Border_FetchedData(data=symbols)
+        fetched_data.save()
+
+        return Response(symbols)
+    else:
+        # If data couldn't be fetched, return the saved data from the database
+        try:
+            fetched_data = Border_FetchedData.objects.latest('id')
+            data = fetched_data.data
+            return Response(data)
+        except Border_FetchedData.DoesNotExist:
+            return Response({"message": "Data not available."}, status=404)
+

@@ -122,3 +122,9 @@ class Watchlist(models.Model):
 
     def __str__(self):
         return f"{self.user.full_name} - {self.symbol_name}"
+
+
+from django.db import models
+
+class Border_FetchedData(models.Model):
+    data = models.TextField()
