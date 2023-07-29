@@ -70,6 +70,65 @@
 }
 
 } */
+
+
+@-webkit-keyframes slideIn {
+0% {
+    -webkit-transform: scaleY(0);
+    transform: scaleY(0)
+}
+
+80% {
+    -webkit-transform: scaleY(1.1);
+    transform: scaleY(1.1)
+}
+
+to {
+    -webkit-transform: scaleY(1);
+    transform: scaleY(1)
+}
+}
+
+@-moz-keyframes slideIn {
+0% {
+    -moz-transform: scaleY(0);
+    transform: scaleY(0)
+}
+
+80% {
+    -moz-transform: scaleY(1.1);
+    transform: scaleY(1.1)
+}
+
+to {
+    -moz-transform: scaleY(1);
+    transform: scaleY(1)
+}
+}
+
+@keyframes slideIn {
+0% {
+    -webkit-transform: scaleY(0);
+    -moz-transform: scaleY(0);
+    transform: scaleY(0)
+}
+
+80% {
+    -webkit-transform: scaleY(1.1);
+    -moz-transform: scaleY(1.1);
+    transform: scaleY(1.1)
+}
+
+to {
+    -webkit-transform: scaleY(1);
+    -moz-transform: scaleY(1);
+    transform: scaleY(1)
+}
+}
+.slideIn {
+  -webkit-animation-name: slideIn;
+  animation-name: slideIn;
+}
 .dropdown-toggle::after{
         display:none !important;
     }
@@ -80,14 +139,38 @@
 .dropdown-toggle:hover{
   color: #2470dc;
 }
+.dropdown-menu{
+  transition: all 0.4s ease-in-out !important;
+}
     .dropdown:hover .dropdown-menu {
       display: block;
-  
+      -webkit-animation: slideIn .3s ease-in-out forwards !important;
+    -moz-animation: slideIn .3s ease-in-out forwards !important;
+    animation: slideIn .3s ease-in-out forwards !important;
+    -webkit-animation: slideIn .3s ease-in-out forwards !important;
+    -moz-animation: slideIn .3s ease-in-out forwards !important;
+    animation: slideIn .3s ease-in-out forwards !important;
+    -webkit-transform-origin: top center !important;
+    -moz-transform-origin: top center !important;
+    transform-origin: top center !important;
+    }
+    .nav-link:hover .dropdown-menu {
+      display: block;
+      -webkit-animation: slideIn .3s ease-in-out forwards;
+    -moz-animation: slideIn .3s ease-in-out forwards;
+    animation: slideIn .3s ease-in-out forwards;
+    -webkit-animation: slideIn .3s ease-in-out forwards;
+    -moz-animation: slideIn .3s ease-in-out forwards;
+    animation: slideIn .3s ease-in-out forwards;
+    -webkit-transform-origin: top center;
+    -moz-transform-origin: top center;
+    transform-origin: top center;
     }
     .dropdown:hover #resources_dropdown {
       display: block;
     left:-60rem !important;
     width: 76rem !important;
+    transition: all 0.4s ease-in-out !important;
 
     }
     .dropdown-menu[data-bs-popper] {
@@ -247,9 +330,9 @@
 
       #dashboard_nav_dropdown,#Blog_news,#dashboard_nav_dropdown_user{
         background-color: transparent !important;
-        color: black ;
-        border: none !important;
-        font-size: 19px !important;
+    color: #000000c7;
+    border: none !important;
+    font-size: 17px !important;
     font-weight: 500 !important;
     
     }
@@ -450,10 +533,10 @@
           slidesPerView: 'auto', // Automatically adjust the number of slides visible based on container's size
           spaceBetween: 5, // Adjust the space between slides as needed
           autoplay: {
-              delay: 80, // Adjust the delay as needed (in milliseconds)
+              delay: 100, // Adjust the delay as needed (in milliseconds)
               disableOnInteraction: false, // Autoplay continues even when user interacts with slides
           },
-          speed: 8000, // Adjust the slide transition speed (in milliseconds)
+          speed: 4000, // Adjust the slide transition speed (in milliseconds)
           effect: 'slide', // You can try other effects like 'fade', 'cube', 'coverflow', etc.
       });
 
@@ -493,7 +576,7 @@
         Services
       </a>
     
-      <ul class="dropdown-menu" id="resources_dropdown_dashboard_markets">
+      <ul class="dropdown-menu animate slideIn" id="resources_dropdown_dashboard_markets">
         
 <div class="item_resources">
   <div class="row px-2">
@@ -529,10 +612,10 @@
           <i class='bx bx-chevron-right fw-bolder'></i>
           Stock Scanner
         </a>
-        <a style="margin-bottom: auto;" class="drop_down_navigations" href=" {% url 'rocket_call' %}">
+        <!-- <a style="margin-bottom: auto;" class="drop_down_navigations" href=" {% url 'rocket_call' %}">
           <i class='bx bx-chevron-right fw-bolder'></i>
           Rocker Call
-        </a>
+        </a> -->
         <a style="margin-bottom: auto;" class="drop_down_navigations" href=" {% url 'broking_details' %}">
           <i class='bx bx-chevron-right fw-bolder'></i>
           Broking Details
@@ -1215,7 +1298,7 @@ color: #2470dc;
     padding: 0.2rem!important;
 }
 </style>
-<div class="nav-item dropdown d-none d-sm-block d-lg-block"><a class="nav-link dropdown-toggle py-3"
+<div class="nav-item dropdown d-none d-sm-block d-lg-block"><a class="nav-link dropdown  py-3"
   data-bs-toggle="dropdown"><svg class="menu-icon" width="19" height="14" viewBox="0 0 19 14">
       <defs>
           <style>
@@ -1836,8 +1919,8 @@ color: #2470dc;
 
   
    <ul class="dropdown-menu user-mega-menu mt-1 notification-icon overflow-auto" aria-labelledby="navbarDropdown" style="    max-height: 473px;">
-    <li class="border-bottom"><a class="dropdown-item py-2 cursor-pointer"><div class="d-flex justify-content-between"><span class="pe-5 label-color-4 fw-600" style="font-size: 16px; font-weight: 600;">Advanced Stock Screener</span><span class="ps-3 label-color-5" style="font-size: 15px;">18-07-2023 07:12 PM</span></div><span class="label-color-4 text-wrap" style="font-size: 14px;">Stocks alerts processed data updated on Advanced stock screener</span></a></li>
-    <li class="border-bottom"><a class="dropdown-item py-2 cursor-pointer"><div class="d-flex justify-content-between"><span class="pe-5 label-color-4 fw-600" style="font-size: 16px; font-weight: 600;">EOD Data Update</span><span class="ps-3 label-color-5" style="font-size: 15px;">18-07-2023 06:15 PM</span></div><span class="label-color-4 text-wrap" style="font-size: 14px;">The nifty EOD data has been updated successfully.</span></a></li>
+    <li ><a class="dropdown-item py-2 cursor-pointer"><div class="d-flex justify-content-between"><span class="pe-5 label-color-4 fw-600" style="font-size: 16px; font-weight: 600;">Advanced Stock Screener</span><span class="ps-3 label-color-5" style="font-size: 15px;">18-07-2023 07:12 PM</span></div><span class="label-color-4 text-wrap" style="font-size: 14px;">Stocks alerts processed data updated on Advanced stock screener</span></a></li>
+    <!-- <li class="border-bottom"><a class="dropdown-item py-2 cursor-pointer"><div class="d-flex justify-content-between"><span class="pe-5 label-color-4 fw-600" style="font-size: 16px; font-weight: 600;">EOD Data Update</span><span class="ps-3 label-color-5" style="font-size: 15px;">18-07-2023 06:15 PM</span></div><span class="label-color-4 text-wrap" style="font-size: 14px;">The nifty EOD data has been updated successfully.</span></a></li>
     <li class="border-bottom"><a class="dropdown-item py-2 cursor-pointer"><div class="d-flex justify-content-between"><span class="pe-5 label-color-4 fw-600" style="font-size: 16px; font-weight: 600;">Advanced Stock Screener</span><span class="ps-3 label-color-5" style="font-size: 15px;">17-07-2023 07:12 PM</span></div><span class="label-color-4 text-wrap" style="font-size: 14px;">Stocks alerts processed data updated on Advanced stock screener</span></a></li>
     <li class="border-bottom"><a class="dropdown-item py-2 cursor-pointer"><div class="d-flex justify-content-between"><span class="pe-5 label-color-4 fw-600" style="font-size: 16px; font-weight: 600;">EOD Data Update</span><span class="ps-3 label-color-5" style="font-size: 15px;">17-07-2023 06:15 PM</span></div><span class="label-color-4 text-wrap" style="font-size: 14px;">The nifty EOD data has been updated successfully.</span></a></li>
     <li class="border-bottom"><a class="dropdown-item py-2 cursor-pointer"><div class="d-flex justify-content-between"><span class="pe-5 label-color-4 fw-600" style="font-size: 16px; font-weight: 600;">BNSAR</span><span class="ps-3 label-color-5" style="font-size: 15px;">17-07-2023 01:33 PM</span></div><span class="label-color-4 text-wrap" style="font-size: 14px;">BNSAR has been triggered 'Upside' at '44892' Based on the short term Price Action 'Momentum suggesting Rangebound movement'</span></a></li>
@@ -1847,7 +1930,7 @@ color: #2470dc;
     <li class="border-bottom"><a class="dropdown-item py-2 cursor-pointer"><div class="d-flex justify-content-between"><span class="pe-5 label-color-4 fw-600" style="font-size: 16px; font-weight: 600;">Advanced Stock Screener</span><span class="ps-3 label-color-5" style="font-size: 15px;">18-07-2023 07:12 PM</span></div><span class="label-color-4 text-wrap" style="font-size: 14px;">Stocks alerts processed data updated on Advanced stock screener</span></a></li>
     <li class="border-bottom"><a class="dropdown-item py-2 cursor-pointer"><div class="d-flex justify-content-between"><span class="pe-5 label-color-4 fw-600" style="font-size: 16px; font-weight: 600;">Advanced Stock Screener</span><span class="ps-3 label-color-5" style="font-size: 15px;">18-07-2023 07:12 PM</span></div><span class="label-color-4 text-wrap" style="font-size: 14px;">Stocks alerts processed data updated on Advanced stock screener</span></a></li>
     <li class="border-bottom"><a class="dropdown-item py-2 cursor-pointer"><div class="d-flex justify-content-between"><span class="pe-5 label-color-4 fw-600" style="font-size: 16px; font-weight: 600;">Advanced Stock Screener</span><span class="ps-3 label-color-5" style="font-size: 15px;">18-07-2023 07:12 PM</span></div><span class="label-color-4 text-wrap" style="font-size: 14px;">Stocks alerts processed data updated on Advanced stock screener</span></a></li>
-    <li class="border-bottom"><a class="dropdown-item py-2 cursor-pointer"><div class="d-flex justify-content-between"><span class="pe-5 label-color-4 fw-600" style="font-size: 16px; font-weight: 600;">Advanced Stock Screener</span><span class="ps-3 label-color-5" style="font-size: 15px;">18-07-2023 07:12 PM</span></div><span class="label-color-4 text-wrap" style="font-size: 14px;">Stocks alerts processed data updated on Advanced stock screener</span></a></li>
+    <li class="border-bottom"><a class="dropdown-item py-2 cursor-pointer"><div class="d-flex justify-content-between"><span class="pe-5 label-color-4 fw-600" style="font-size: 16px; font-weight: 600;">Advanced Stock Screener</span><span class="ps-3 label-color-5" style="font-size: 15px;">18-07-2023 07:12 PM</span></div><span class="label-color-4 text-wrap" style="font-size: 14px;">Stocks alerts processed data updated on Advanced stock screener</span></a></li> -->
    
 
 
@@ -1957,7 +2040,7 @@ color: #2470dc;
         
          <ul class="dropdown-menu user-mega-menu mt-1 notification-icon overflow-auto" aria-labelledby="navbarDropdown" style="  max-width: 345px; right: auto !important;     translate: -188px;  max-height: 473px;">
           <li class="border-bottom"><a class="dropdown-item py-2 cursor-pointer"><div class="d-flex justify-content-between"><span class="pe-5 label-color-4 fw-600" style="font-size: 16px; font-weight: 600;">Advanced Stock Screener</span><span class="ps-3 label-color-5" style="font-size: 15px;">18-07-2023 07:12 PM</span></div><span class="label-color-4 text-wrap" style="font-size: 14px;">Stocks alerts processed data updated on Advanced stock screener</span></a></li>
-          <li class="border-bottom"><a class="dropdown-item py-2 cursor-pointer"><div class="d-flex justify-content-between"><span class="pe-5 label-color-4 fw-600" style="font-size: 16px; font-weight: 600;">EOD Data Update</span><span class="ps-3 label-color-5" style="font-size: 15px;">18-07-2023 06:15 PM</span></div><span class="label-color-4 text-wrap" style="font-size: 14px;">The nifty EOD data has been updated successfully.</span></a></li>
+          <!-- <li class="border-bottom"><a class="dropdown-item py-2 cursor-pointer"><div class="d-flex justify-content-between"><span class="pe-5 label-color-4 fw-600" style="font-size: 16px; font-weight: 600;">EOD Data Update</span><span class="ps-3 label-color-5" style="font-size: 15px;">18-07-2023 06:15 PM</span></div><span class="label-color-4 text-wrap" style="font-size: 14px;">The nifty EOD data has been updated successfully.</span></a></li>
           <li class="border-bottom"><a class="dropdown-item py-2 cursor-pointer"><div class="d-flex justify-content-between"><span class="pe-5 label-color-4 fw-600" style="font-size: 16px; font-weight: 600;">Advanced Stock Screener</span><span class="ps-3 label-color-5" style="font-size: 15px;">17-07-2023 07:12 PM</span></div><span class="label-color-4 text-wrap" style="font-size: 14px;">Stocks alerts processed data updated on Advanced stock screener</span></a></li>
           <li class="border-bottom"><a class="dropdown-item py-2 cursor-pointer"><div class="d-flex justify-content-between"><span class="pe-5 label-color-4 fw-600" style="font-size: 16px; font-weight: 600;">EOD Data Update</span><span class="ps-3 label-color-5" style="font-size: 15px;">17-07-2023 06:15 PM</span></div><span class="label-color-4 text-wrap" style="font-size: 14px;">The nifty EOD data has been updated successfully.</span></a></li>
           <li class="border-bottom"><a class="dropdown-item py-2 cursor-pointer"><div class="d-flex justify-content-between"><span class="pe-5 label-color-4 fw-600" style="font-size: 16px; font-weight: 600;">BNSAR</span><span class="ps-3 label-color-5" style="font-size: 15px;">17-07-2023 01:33 PM</span></div><span class="label-color-4 text-wrap" style="font-size: 14px;">BNSAR has been triggered 'Upside' at '44892' Based on the short term Price Action 'Momentum suggesting Rangebound movement'</span></a></li>
@@ -1968,7 +2051,7 @@ color: #2470dc;
           <li class="border-bottom"><a class="dropdown-item py-2 cursor-pointer"><div class="d-flex justify-content-between"><span class="pe-5 label-color-4 fw-600" style="font-size: 16px; font-weight: 600;">Advanced Stock Screener</span><span class="ps-3 label-color-5" style="font-size: 15px;">18-07-2023 07:12 PM</span></div><span class="label-color-4 text-wrap" style="font-size: 14px;">Stocks alerts processed data updated on Advanced stock screener</span></a></li>
           <li class="border-bottom"><a class="dropdown-item py-2 cursor-pointer"><div class="d-flex justify-content-between"><span class="pe-5 label-color-4 fw-600" style="font-size: 16px; font-weight: 600;">Advanced Stock Screener</span><span class="ps-3 label-color-5" style="font-size: 15px;">18-07-2023 07:12 PM</span></div><span class="label-color-4 text-wrap" style="font-size: 14px;">Stocks alerts processed data updated on Advanced stock screener</span></a></li>
           <li class="border-bottom"><a class="dropdown-item py-2 cursor-pointer"><div class="d-flex justify-content-between"><span class="pe-5 label-color-4 fw-600" style="font-size: 16px; font-weight: 600;">Advanced Stock Screener</span><span class="ps-3 label-color-5" style="font-size: 15px;">18-07-2023 07:12 PM</span></div><span class="label-color-4 text-wrap" style="font-size: 14px;">Stocks alerts processed data updated on Advanced stock screener</span></a></li>
-         
+          -->
       
       
       
@@ -2102,10 +2185,10 @@ color: #2470dc;
           <i class='bx bx-chevron-right fw-bolder'></i>
           Stock Scanner
         </a>
-        <a style="margin-bottom: auto;" class="drop_down_navigations" href=" {% url 'rocket_call' %}">
+        <!-- <a style="margin-bottom: auto;" class="drop_down_navigations" href=" {% url 'rocket_call' %}">
           <i class='bx bx-chevron-right fw-bolder'></i>
           Rocker Call
-        </a>
+        </a> -->
         <a style="margin-bottom: auto;" class="drop_down_navigations" href=" {% url 'broking_details' %}">
           <i class='bx bx-chevron-right fw-bolder'></i>
           Broking Details
@@ -3567,10 +3650,10 @@ font-weight: 100;
             class="list-group-item list-group-item-action list-group-item-light  d-flex gap-2    {% if request.path == "/stock_scanner"  %} active_dash {% endif %} " href={% url 'stock_scanner' %} style="   padding: 10px 0 0px 23px;">          
             <i class="bi bi-search"></i><p>Stock Scanner  </p>
           </a>
-            <a
+            <!-- <a
             class="list-group-item list-group-item-action list-group-item-light  d-flex gap-2    {% if request.path == "/rocket_call"  %} active_dash {% endif %} " href={% url 'rocket_call' %} style="   padding: 10px 0 0px 23px;">          
             <i class="bi bi-lock"></i><p>Rocket call</p>
-          </a>
+          </a> -->
 
 
 
