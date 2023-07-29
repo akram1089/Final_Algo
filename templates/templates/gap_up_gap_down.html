@@ -1,0 +1,806 @@
+{% extends "base_dashboard.html" %}
+{% load static %}
+{% block dashboard_body %}
+
+
+
+
+<style>
+    .filter-link {
+        border: 1px solid #4399eb !important;
+        background-color: #fff;
+        font-family: Roboto, sans-serif;
+        font-weight: 400;
+        font-size: 13px;
+        color: #4399eb;
+        line-height: 1.923;
+        padding: 10px 14.5px;
+        margin-right: 9px;
+        min-width: 100px;
+        max-width: 150px;
+        text-align: center;
+        border-radius: 6px;
+        text-decoration: none;
+    }
+
+    .active {
+        background: -webkit-gradient(linear, left top, left bottom, from(#4399eb), to(#5cadfb));
+        background: -moz-linear-gradient(top, #4399eb 0, #5cadfb 100%);
+        background: linear-gradient(180deg, #4399eb, #5cadfb);
+        color: #fff;
+    }
+
+    .symbol_name,
+    .top_gainer_redirect {
+        display: inline !important;
+    }
+
+    #top_gainers_chart {
+        border: 1px solid;
+        color: #808080bd;
+        padding: 4px 5px;
+        width: auto;
+        height: auto;
+        border-radius: 6px;
+    }
+
+    .main_table {
+
+        overflow: auto;
+    }
+
+    #top_gainers_chart:hover {
+        -webkit-transition: all .2s ease-in-out !important;
+        -moz-transition: all .2s ease-in-out !important;
+        transition: all .2s ease-in-out !important;
+        background: -webkit-gradient(linear, left top, left bottom, from(#4399eb), to(#5cadfb)) !important;
+        background: -moz-linear-gradient(top, #4399eb 0, #5cadfb 100%) !important;
+        background: linear-gradient(180deg, #4399eb, #5cadfb) !important;
+        color: white !important;
+    }
+
+    .main_gap {
+        margin: 12px 0;
+        padding: 24px;
+        border-radius: 10px;
+        box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+    }
+    .green_background{
+        background-color: white;
+        border-bottom: transparent;
+      
+    }
+    .red_background{
+        background-color: white;
+        border-bottom: transparent;
+    }
+    /* tr:hover{
+        background-color: white !important;
+    } */
+    tr:hover .symbol_name {
+        color: #5cadfb;
+    }
+    .symbol_name,.price{
+        color: rgba(0, 0, 0, 0.686) ;
+    }
+    .text-success{
+        color: rgb(0, 255, 0) !important;
+    }
+    td{
+        font-size: 14px !important;
+        color: rgba(0, 0, 0, 0.597);
+    }
+    th{
+        font-size: 16px !important;
+     
+    }
+    a{
+        cursor: pointer;
+    }
+    .placeholder{
+        height:2rem !important;
+    }
+    
+    .table-striped-custom>tbody>tr:nth-child(2n)>td,
+    .table-striped-custom>tbody>tr:nth-child(2n)>th {
+        background-color: rgb(240, 247, 253) !important;
+    }
+    thead{
+      padding: 12px 15px !important;
+      font-size: 12px !important;
+   
+      background: #4399eb !important;
+      color: #fff !important;
+    }
+
+
+</style>
+<div>
+    <h4>Gap Up, Gap Down Stocks</h4>
+    <div class="main_gap">
+        <div class="top_gap_stocks_head d-flex justify-content-between align-items-center mb-3">
+
+            <div>
+                <a  class="filter-link active" data-filter="gap_up">Gap Up</a>
+                <a  class="filter-link" data-filter="gap_down">Gap Down</a>
+            </div>
+
+            <div class="d-flex align-items-center gap-2">
+                <label for="date-dropdown">Date:</label>
+                <select id="date-dropdown" class="form-select form-select-sm">
+                    <!-- Dropdown will be populated using JavaScript -->
+                </select>
+            </div>
+
+
+        </div>
+
+
+
+
+        <div id="gap-up-table">
+
+            <table class="table table-striped-custom">
+                <thead class='text-light' >
+                    <tr>
+                        <th>Symbol Name</th>
+                        <th>Price</th>
+                        <th>Open</th>
+                        <th>High</th>
+                        <th>Low</th>
+                        <th>Prev High</th>
+
+                        <th>Prev Close</th>
+                        <th>Gap Up</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody id="gap-up-table-body">
+                    <!-- Table data will be populated using JavaScript -->
+                    <tr >
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                    </tr>
+                    <tr >
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                    </tr>
+                    <tr >
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                    </tr>
+                    <tr >
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                    </tr>
+                    <tr >
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                    </tr>
+                    <tr >
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                    </tr>
+                    <tr >
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                    </tr>
+                    <tr >
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                    </tr>
+                
+                </tbody>
+            </table>
+            <div id="spinner" class="spinner-border text-primary" style="display: none;" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+        <div id="gap-down-table" style="display: none;">
+
+            <table class="table table-striped-custom">
+                <thead >
+                    <tr>
+                        <th>Symbol Name</th>
+                        <th>Price</th>
+                        <th>open</th>
+                        <th>High</th>
+                        <th>Low</th>
+                        <th>Prev High</th>
+
+                        <th>Prev Close</th>
+                        <th>Gap Up</th>
+                        <th>Status</th>
+
+                    </tr>
+                </thead>
+                <tbody id="gap-down-table-body">
+                    <!-- Table data will be populated using JavaScript -->
+                    <tr >
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                    </tr>
+                    <tr >
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                    </tr>
+                    <tr >
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                    </tr>
+                    <tr >
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                    </tr>
+                    <tr >
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                    </tr>
+                    <tr >
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                    </tr>
+                    <tr >
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                    </tr>
+                    <tr >
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                        <td  class="text-center"><p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                          </p></td>
+                    </tr>
+      
+                </tbody>
+            </table>
+            <div id="spinner" class="spinner-border text-primary" style="display: none;" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+
+    </div>
+    <script>
+        $(document).ready(function () {
+            $(document).ajaxStart(function () {
+                $("#spinner").show();
+            });
+    
+            // Hide the spinner when the AJAX call completes
+            $(document).ajaxStop(function () {
+                $("#spinner").hide();
+            });
+            function loadDropdownData() {
+                $.ajax({
+                    url: "/get_gap_data", // Replace with the actual URL to get the date dropdown data
+                    type: "GET",
+                    dataType: "json",
+                    success: function (data) {
+                        populateDateDropdown(data.gap_dates); // Populate the date dropdown
+                        // After loading the dropdown data, now load the initial table data
+                        loadGapData(data.gap_dates[0]);
+                        // Retrieve and set the selected date and filter from local storage
+                        var selectedDate_gap = localStorage.getItem("selectedDate_gap");
+                        var selectedFilter_gap = localStorage.getItem("selectedFilter_gap");
+                        if (selectedDate_gap) {
+                            $("#date-dropdown").val(selectedDate_gap);
+                            loadGapData(selectedDate_gap);
+                        }
+                        if (selectedFilter_gap === "gap_down") {
+                            $(".filter-link").removeClass("active");
+                            $("[data-filter='gap_down']").addClass("active");
+                            $("#gap-up-table").hide();
+                            $("#gap-down-table").show();
+                        }
+                    },
+                    error: function (xhr, textStatus, errorThrown) {
+                        console.log("Error loading dropdown data:", errorThrown);
+                    }
+                });
+            }
+
+            function loadGapData(date) {
+                
+                $.ajax({
+                    url: "/get_gap_data", // Replace with the actual URL to get the table data
+                    type: "GET",
+                    dataType: "json",
+                    data: { date: date },
+                    success: function (data) {
+                        populateGapUpTable(data.gap_up_stocks, "#gap-up-table-body");
+                        populateGapDownTable(data.gap_down_stocks, "#gap-down-table-body");
+                    },
+                    error: function (xhr, textStatus, errorThrown) {
+                        console.log("Error loading gap data:", errorThrown);
+                    }
+                });
+            }
+
+            function populateGapUpTable(stocks, tableBody) {
+                $(tableBody).empty();
+                stocks.forEach(function (stock) {
+                    var status = stock.prev_high > stock.today_open ? "Gap Filled" : "Gap UnFilled"
+                    var status_background = status !=="Gap Filled" ? "green_background": "red_background"
+                    var row = $("<tr>").addClass(status_background);
+                    $("<td>").append('<a class="top_gainer_redirect pe-1" href="https://www.tradingview.com/chart/MgiGDMYM/?symbol=' + stock.symbol_name + '&aff_id=113877" target="_blank"><i class="bi bi-graph-up" id="top_gainers_chart"></i></a> <p style="margin-top: 0rem; margin-bottom: 0rem;" class="symbol_name">' + stock.symbol_name + '</p>').appendTo(row);
+
+                    $("<td>").text(stock.today_close).addClass("price").appendTo(row);
+                    $("<td>").text(stock.today_open).appendTo(row);
+
+                    $("<td>").text(stock.today_high).appendTo(row);
+                    $("<td>").text(stock.today_low).appendTo(row);
+
+                    $("<td>").text(stock.prev_high).appendTo(row);
+
+                    $("<td>").text(stock.prev_close).appendTo(row);
+                    $("<td>").text(stock.prev_high + "~" + stock.today_open).appendTo(row);
+                    $("<td>").text(status).appendTo(row);
+
+                    $(tableBody).append(row);
+                });
+            }
+            function populateGapDownTable(stocks, tableBody) {
+                $(tableBody).empty();
+                stocks.forEach(function (stock) {
+                    var status = stock.prev_high > stock.today_open ? "Gap Filled" : "Gap UnFilled"
+                    var status_background = status !=="Gap Filled" ? "green_background": "red_background"
+                    var row = $("<tr>").addClass(status_background);
+                    $("<td>").append('<a class="top_gainer_redirect" href="https://www.tradingview.com/chart/MgiGDMYM/?symbol=' + stock.symbol_name + '&aff_id=113877" target="_blank"><i class="bi bi-graph-up" id="top_gainers_chart"></i></a> <p style="margin-top: 0rem; margin-bottom: 0rem;" class="symbol_name">' + stock.symbol_name + '</p>').appendTo(row);
+
+                    $("<td>").text(stock.today_close).addClass("price").appendTo(row);
+                    $("<td>").text(stock.today_open).appendTo(row);
+
+                    $("<td>").text(stock.today_high).appendTo(row);
+                    $("<td>").text(stock.today_low).appendTo(row);
+
+                    $("<td>").text(stock.prev_high).appendTo(row);
+
+                    $("<td>").text(stock.prev_close).appendTo(row);
+                    $("<td>").text(stock.prev_high + "~" + stock.today_open).appendTo(row);
+                    $("<td>").text(status).appendTo(row);
+
+                    $(tableBody).append(row);
+                });
+            }
+
+            function populateDateDropdown(dates) {
+                var dateDropdown = $("#date-dropdown");
+                dateDropdown.empty();
+                dates.forEach(function (date) {
+                    var option = $("<option>").attr("value", date).text(date);
+                    dateDropdown.append(option);
+                });
+            }
+
+            $("#date-dropdown").on("change", function () {
+                var selectedDate_gap = $(this).val();
+                // Save the selected date to local storage
+                localStorage.setItem("selectedDate_gap", selectedDate_gap);
+                loadGapData(selectedDate_gap);
+            });
+
+            $(".filter-link").on("click", function () {
+                $(".filter-link").removeClass("active");
+                $(this).addClass("active");
+                var selectedFilter_gap = $(this).data("filter");
+                if (selectedFilter_gap === "gap_up") {
+                    $("#gap-up-table").show();
+                    $("#gap-down-table").hide();
+                } else {
+                    $("#gap-up-table").hide();
+                    $("#gap-down-table").show();
+                }
+                // Save the selected filter to local storage
+                localStorage.setItem("selectedFilter_gap", selectedFilter_gap);
+            });
+
+            // Initial loading of dropdown data and gap up table data
+            loadDropdownData();
+        });
+    </script>
+</div>
+
+
+
+
+
+
+
+{% endblock dashboard_body %}
