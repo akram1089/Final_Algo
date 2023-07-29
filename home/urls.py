@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django.urls import path
+from django.shortcuts import render, redirect, HttpResponse
 from . import views
 from django.conf import settings
 from django.conf.urls.static import static
@@ -136,6 +137,9 @@ urlpatterns = [
     path('opening_clue_data_view', views.opening_clue_data_view, name='opening_clue_data_view'),
     path('opening_price_clues', views.opening_price_clues, name='opening_price_clues'),
     path('base_api_border_top', views.base_api_border_top, name='base_api_border_top'),
+    path('get_derivative_data', views.get_derivative_data, name='get_derivative_data'),
+    path('derivative_summary', views.derivative_summary, name='derivative_summary'),
+    path('future_dashboard_charts', views.future_dashboard_charts, name='future_dashboard_charts'),
 
 
 
@@ -146,3 +150,18 @@ urlpatterns += staticfiles_urlpatterns()
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL,
                           document_root=settings.MEDIA_ROOT)
+
+
+
+
+# Import your app's views here
+# For example, if your app is named 'myapp':
+# from myapp import views
+
+
+
+# Custom 404 page
+def custom_404_view(request, exception=None):
+    return render(request, '404/404.html', status=404)
+
+handler404 = custom_404_view
