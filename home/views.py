@@ -3102,7 +3102,7 @@ def base_api_border_top(request):
                 })
 
         # Randomly select 10 symbols from the top 50
-        random_symbols = random.sample(all_list, 10)
+        random_symbols = random.sample(all_list, 50)
 
         df = pd.DataFrame(random_symbols)
         symbols = df.to_dict(orient='records')
@@ -3192,13 +3192,13 @@ def derivative_summary(request):
     return render(request ,"derivative_summary.html")
 
 
-
-
-
+# Import necessary modules
 from django.shortcuts import render
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+import requests
 
+# Define the view function
 @api_view(['GET'])
 def future_dashboard_charts(request):
     url = "https://webapi.niftytrader.in/webapi/Symbol/future-expiry-current-month-all"
@@ -3212,13 +3212,17 @@ def future_dashboard_charts(request):
     response = requests.get(url, headers=headers)
     data = response.json()
 
-    All_derivative_data = data["resultData"]
 
-    for i, item in enumerate(All_derivative_data):
-        oi = item['oi']
-        prev_oi = item['prev_oi']
-        last_price = item['last_price']
-        prev_close = item['prev_close']
+
+    All_derivative_data = data.get("resultData", [])
+
+
+
+    for item in All_derivative_data:
+        oi = item.get('oi', 0)
+        prev_oi = item.get('prev_oi', 0)
+        last_price = item.get('last_price', 0)
+        prev_close = item.get('prev_close', 0)
 
         item['change_in_OI'] = oi - prev_oi
         item['change_in_LTP'] = last_price - prev_close
@@ -3251,9 +3255,144 @@ def future_dashboard_charts(request):
     filtered_data_by_filter = {}
 
     for filter_param in unique_filters:
-        filtered_data = [item for item in All_derivative_data if item['filter'] == filter_param]
-        # Sort the filtered data based on change_in_OI and change_in_LTP in descending order
-        sorted_data = sorted(filtered_data, key=lambda item: (-item['change_in_OI'], -item['change_in_LTP']))
+        filtered_data = [
+            {'symbol_name': item['symbol_name'], 'percentage_change_in_OI': item['percentage_change_in_OI'],'percentage_change_in_LTP':item['percentage_change_in_LTP']}
+            for item in All_derivative_data if item['filter'] == filter_param
+        ]
+        # Sort the filtered data based on percentage_change_in_OI in descending order
+        sorted_data = sorted(filtered_data, key=lambda item: -item['percentage_change_in_OI'])
         filtered_data_by_filter[filter_param] = sorted_data
 
     return Response(filtered_data_by_filter)
+
+from django.http import JsonResponse
+import requests
+from .models import VolumeGainer
+
+def nse_volume_shocker(request):
+    url = "https://www.nseindia.com/api/live-analysis-volume-gainers"
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
+        "Accept-Language": "en-US,en;q=0.9",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive"
+    }
+
+    try:
+        response = requests.get(url, headers=headers)
+        response.raise_for_status()
+        data = response.json()
+
+        sorted_data = sorted(data['data'], key=lambda x: x['pChange'], reverse=True)
+
+
+        filtered_data = [{'symbol': item['symbol'], 'pChange': item['pChange']} for item in sorted_data]
+
+        VolumeGainer.objects.all().delete()
+     
+        volume_gainer_obj = VolumeGainer(data_json=json.dumps(filtered_data))
+        volume_gainer_obj.save()
+
+        return JsonResponse(filtered_data, safe=False)
+    except requests.exceptions.RequestException as e:
+        volume_gainer_obj = VolumeGainer.objects.first()
+        if volume_gainer_obj:
+            data = json.loads(volume_gainer_obj.data_json)
+            return JsonResponse(data, safe=False)
+        else:
+            return JsonResponse([], safe=False)
+
+
+
+
+
+
+
+from django.http import JsonResponse
+import requests
+from .models import MostActiveStock
+
+def nse_most_active_stock(request):
+    url = "https://www.nseindia.com/api/equity-stockIndices?index=NIFTY%2050"
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
+        "Accept-Language": "en-US,en;q=0.9",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive"
+    }
+
+    try:
+        response = requests.get(url, headers=headers)
+        response.raise_for_status()
+        data = response.json()
+
+        All_most_active_value = []
+        for value_data in data["data"]:
+            symbol = value_data["symbol"]
+            totalTradedValue = value_data["totalTradedValue"]
+            if symbol != 'NIFTY 50':
+                All_most_active_value.append({"symbol": symbol, "totalTradedValue": totalTradedValue})
+
+   
+        All_most_active_value = sorted(All_most_active_value, key=lambda x: x["totalTradedValue"], reverse=True)
+
+        MostActiveStock.objects.all().delete()
+        most_active_stock_obj = MostActiveStock(data_json=json.dumps(All_most_active_value))
+        most_active_stock_obj.save()
+
+        return JsonResponse(All_most_active_value, safe=False)
+
+    except requests.exceptions.RequestException as e:
+        most_active_stock_obj = MostActiveStock.objects.first()
+        if most_active_stock_obj:
+            data = json.loads(most_active_stock_obj.data_json)
+            return JsonResponse(data, safe=False)
+        else:
+            return JsonResponse([], safe=False)
+
+
+
+
+
+
+from django.http import JsonResponse
+import requests
+from .models import MostSpreadStock
+
+def nse_most_spread_stock(request):
+    url = "https://www.nseindia.com/api/liveEquity-derivatives?index=top20_spread_contracts"
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
+        "Accept-Language": "en-US,en;q=0.9",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive"
+    }
+
+    try:
+        response = requests.get(url, headers=headers)
+        response.raise_for_status()
+        data = response.json()
+        print(data)
+
+        All_most_spread_value = []
+        for value_data in data["data"]:
+            symbol = value_data["symbol"]
+            spread = value_data["spread"]
+            All_most_spread_value.append({"symbol": symbol, "spread": spread})
+
+
+        All_most_spread_value = sorted(All_most_spread_value, key=lambda x: x["spread"], reverse=True)
+
+        MostSpreadStock.objects.all().delete()
+        most_spread_stock_obj = MostSpreadStock(data_json=json.dumps(All_most_spread_value))
+        most_spread_stock_obj.save()
+
+        return JsonResponse(All_most_spread_value, safe=False)
+
+    except requests.exceptions.RequestException as e:
+        most_spread_stock_obj = MostSpreadStock.objects.first()
+        if most_spread_stock_obj:
+            data = json.loads(most_spread_stock_obj.data_json)
+            return JsonResponse(data, safe=False)
+        else:
+            return JsonResponse([], safe=False)

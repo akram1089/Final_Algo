@@ -140,6 +140,9 @@ urlpatterns = [
     path('get_derivative_data', views.get_derivative_data, name='get_derivative_data'),
     path('derivative_summary', views.derivative_summary, name='derivative_summary'),
     path('future_dashboard_charts', views.future_dashboard_charts, name='future_dashboard_charts'),
+    path('nse_volume_shocker', views.nse_volume_shocker, name='nse_volume_shocker'),
+    path('nse_most_active_stock', views.nse_most_active_stock, name='nse_most_active_stock'),
+    path('nse_most_spread_stock', views.nse_most_spread_stock, name='nse_most_spread_stock'),
 
 
 

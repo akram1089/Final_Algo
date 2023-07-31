@@ -1,132 +1,47 @@
-
-
 {% extends "base_dashboard.html" %} {% load static %}
-<script
-  type="text/javascript"
-  src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"
-></script>
-<script
-  type="text/javascript"
-  src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"
-></script>
-<script
-  type="text/javascript"
-  src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"
-></script>
-<link
-  rel="stylesheet"
-  type="text/css"
-  href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css"
-/>
-{% block dashboard_body %}
-<script
-  type="text/javascript"
-  src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"
-></script>
-<script
-  type="text/javascript"
-  src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"
-></script>
-<script
-  type="text/javascript"
-  src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"
-></script>
-<link
-  rel="stylesheet"
-  type="text/css"
-  href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css"
-/>
 
-<script>
-  $(function () {
-    $('input[name="daterange"]').daterangepicker(
-      {
-        opens: "left",
-      },
-      function (start, end, label) {
-        console.log(
-          "A new date selection was made: " +
-            start.format("YYYY-MM-DD") +
-            " to " +
-            end.format("YYYY-MM-DD")
-        );
-      }
-    );
-  });
-</script>
-<div class="container">
-  <div
-    class="top_gainer_loser_graph d-flex mt-5"
-    style="flex-wrap: wrap; gap: 2rem;"
-  >
-    <div
-      class="chart-container"
-      style="
-        position: relative;
-        border-radius: 10px;
-        text-align: center;
-        width: 23rem;
-        height: 24rem;
-        box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-        padding: 19px 31px 45px 33px;
-      "
-    >
+{% block dashboard_body %}
+
+<style>
+  .chart-container {
+    position: relative;
+    border-radius: 10px;
+    text-align: center;
+    width: 22rem;
+    height: 24rem;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+    padding: 26px 9px 34px 9px;
+  }
+</style>
+
+
+<div class="">
+  <div class="top_gainer_loser_graph d-flex mt-5 gap-3 justify-content-center" style="flex-wrap: wrap; ">
+    <div class="chart-container">
       <h5>Top Price Gainers</h5>
       <canvas id="gainersChart"></canvas>
     </div>
 
-    <div
-      class="chart-container"
-      style="
-        position: relative;
-        border-radius: 10px;
-        text-align: center;
-        width: 23rem;
-        height: 24rem;
-        box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-        padding: 19px 31px 45px 33px;
-      "
-    >
+    <div class="chart-container">
       <h5>Top Price Loosers</h5>
       <canvas id="losersChart"></canvas>
     </div>
 
 
 
-    <div
-      class="chart-container"
-      style="
-        position: relative;
-        border-radius: 10px;
-        text-align: center;
-        width: 23rem;
-        height: 24rem;
-        box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-        padding: 19px 31px 45px 33px;
-      "
-    >
+    <div class="chart-container">
       <h5>Top OI Gainers</h5>
       <canvas id="symbolChart"></canvas>
     </div>
-    <div
-      class="chart-container"
-      style="
-        position: relative;
-        border-radius: 10px;
-        text-align: center;
-        width: 23rem;
-        height: 24rem;
-        box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-        padding: 19px 31px 45px 33px;
-      "
-    >
+    <div class="chart-container">
       <h5>Top OI Loosers</h5>
       <canvas id="symbolChart_looser"></canvas>
     </div>
- {% comment %}
-    <div
-      class="chart-container"
-      style="
+
+
+
+    {% comment %}
+    <div class="chart-container" style="
         position: relative;
         border-radius: 10px;
         text-align: center;
@@ -134,20 +49,404 @@
         height: 24rem;
         box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
         padding: 19px 31px 45px 33px;
-      "
-    >
+      ">
       <h5>Top Volume Buzzers</h5>
       <canvas id="symbol_volume_buzzers"></canvas>
     </div>
     {% endcomment %}
   </div>
 
+  <style>
+    .Chart_long_short,
+    #charts-volume,
+    #charts-value,
+    #charts-spread {
+      position: relative;
+      border-radius: 10px;
+      text-align: center;
+      width: 22rem;
+      height: 27.3rem;
+      box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+      padding: 15px 21px 0px 21px;
+    }
+  </style>
+
+  <div>
+    <div id="charts-container" class="d-flex gap-3 my-3 flex-wrap justify-content-center">
+      <!-- Charts will be displayed here -->
+    </div>
+    <div class="bottom_chart mb-3 d-flex gap-3 flex-wrap ">
+      <div id="charts-volume" class="">
+        <h5>Top Volume Shocker</h5>
+        <div id="chart_volume">
+          <!-- Chart will be displayed here -->
+        </div>
+
+      </div>
+      <div id="charts-value" class="">
+        <h5>Top Value Gainer</h5>
+        <div id="chart_value">
+          <!-- Chart will be displayed here -->
+        </div>
+      </div>
+      <div id="charts-spread" class="">
+        <h5>Top Spreaded Stocks</h5>
+        <div id="chart_spread">
+          <!-- Chart will be displayed here -->
+        </div>
+      </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
 
 
-  <div
-    class="Trading_volume_prifit_loss mt-3 d-flex flex-wrap"
-    style="justify-content: space-between; row-gap: 1rem"
-  >
+    <script>
+      function fetch_spread_Chart() {
+        $.ajax({
+          url: "{% url 'nse_most_spread_stock' %}",
+          type: 'GET',
+          dataType: 'json',
+          success: function (data) {
+            // Slice the data to keep only the top 10 values
+            var top10Data = data.slice(0, 10);
+            console.log(top10Data)
+
+            // Extract the 'symbol' and 'pChange' values from the data
+            var labels = top10Data.map(item => item.symbol);
+            var pChanges = top10Data.map(item => item.spread); // Format to two decimal places
+
+
+            // Create the chart using Chart.js
+            var canvas = document.createElement('canvas');
+            canvas.id = "chartVolumeGainer";
+            canvas.width = 400;
+            canvas.height = 500;
+
+            var chartContainer = document.getElementById('chart_spread');
+            chartContainer.innerHTML = ''; // Clear any previous content
+            chartContainer.appendChild(canvas);
+
+            new Chart(canvas, {
+              type: 'bar',
+              data: {
+                labels: labels,
+                datasets: [{
+                  label: 'Spread Stocks',
+                  data: pChanges,
+                  backgroundColor: 'rgba(47, 109, 186, 1)',
+                  borderWidth: 1
+                }]
+              },
+              options: {
+
+                indexAxis: 'y', // Set the bar chart to be vertical
+                scales: {
+                  y: {
+                    grid: {
+                      display: false, // Hide y-axis background border
+                    },
+                  },
+                  x: {
+                    beginAtZero: true
+                  }
+                }
+              }
+            });
+          },
+          error: function (error) {
+            console.error('Error fetching data:', error);
+          }
+        });
+      }
+
+      // Call the function to fetch data and display the chart when the page loads
+      $(document).ready(function () {
+        fetch_spread_Chart();
+      });
+    </script>
+    <script>
+      function fetch_value_Chart() {
+        $.ajax({
+          url: "{% url 'nse_most_active_stock' %}",
+          type: 'GET',
+          dataType: 'json',
+          success: function (data) {
+            // Slice the data to keep only the top 10 values
+            var top10Data = data.slice(0, 10);
+            console.log(top10Data)
+
+            // Extract the 'symbol' and 'pChange' values from the data
+            var labels = top10Data.map(item => item.symbol);
+            var pChanges = top10Data.map(item => (item.totalTradedValue / 100000).toFixed(2)); // Format to two decimal places
+
+
+            // Create the chart using Chart.js
+            var canvas = document.createElement('canvas');
+            canvas.id = "chartVolumeGainer";
+            canvas.width = 400;
+            canvas.height = 500;
+
+            var chartContainer = document.getElementById('chart_value');
+            chartContainer.innerHTML = ''; // Clear any previous content
+            chartContainer.appendChild(canvas);
+
+            new Chart(canvas, {
+              type: 'bar',
+              data: {
+                labels: labels,
+                datasets: [{
+                  label: 'Price in Lakhs',
+                  data: pChanges,
+                  backgroundColor: 'rgba(47, 109, 186, 1)',
+                  borderWidth: 1
+                }]
+              },
+              options: {
+
+                indexAxis: 'y', // Set the bar chart to be vertical
+                scales: {
+                  y: {
+                    grid: {
+                      display: false, // Hide y-axis background border
+                    },
+                  },
+                  x: {
+                    beginAtZero: true
+                  }
+                }
+              }
+            });
+          },
+          error: function (error) {
+            console.error('Error fetching data:', error);
+          }
+        });
+      }
+
+      // Call the function to fetch data and display the chart when the page loads
+      $(document).ready(function () {
+        fetch_value_Chart();
+      });
+    </script>
+
+
+
+
+    <script>
+      function fetchDataAndDisplayChart() {
+        $.ajax({
+          url: "{% url 'nse_volume_shocker' %}",
+          type: 'GET',
+          dataType: 'json',
+          success: function (data) {
+            // Slice the data to keep only the top 10 values
+            var top10Data = data.slice(0, 10);
+            console.log(top10Data)
+
+            // Extract the 'symbol' and 'pChange' values from the data
+            var labels = top10Data.map(item => item.symbol);
+            var pChanges = top10Data.map(item => item.pChange);
+
+            // Create the chart using Chart.js
+            var canvas = document.createElement('canvas');
+            canvas.id = "chartVolumeGainer";
+            canvas.width = 400;
+            canvas.height = 500;
+
+            var chartContainer = document.getElementById('chart_volume');
+            chartContainer.innerHTML = ''; // Clear any previous content
+            chartContainer.appendChild(canvas);
+
+            new Chart(canvas, {
+              type: 'bar',
+              data: {
+                labels: labels,
+                datasets: [{
+                  label: '% Volume Change',
+                  data: pChanges,
+                  backgroundColor: 'rgba(47, 109, 186, 1)',
+                  borderWidth: 1
+                }]
+              },
+              options: {
+
+                indexAxis: 'y', // Set the bar chart to be vertical
+                scales: {
+                  y: {
+                    grid: {
+                      display: false, // Hide y-axis background border
+                    },
+                  },
+                  x: {
+                    beginAtZero: true
+                  }
+                }
+              }
+            });
+          },
+          error: function (error) {
+            console.error('Error fetching data:', error);
+          }
+        });
+      }
+
+      // Call the function to fetch data and display the chart when the page loads
+      $(document).ready(function () {
+        fetchDataAndDisplayChart();
+      });
+    </script>
+
+
+
+
+
+
+
+    <script>
+      // Function to fetch data from Django view using AJAX
+      function fetchData() {
+        $.ajax({
+          url: '/future_dashboard_charts',
+          type: 'GET',
+          dataType: 'json',
+          success: function (data) {
+            createCharts(data);
+          },
+          error: function (error) {
+            console.error('Error fetching data:', error);
+          }
+        });
+      }
+
+      // Function to create and display the chart for a specific filter using Chart.js
+      function createChartForFilter(filter, chartData) {
+        // Skip creating chart if the filter is "None"
+        if (filter === "None") {
+          return;
+        }
+
+        // Limit the number of bars to 10
+        chartData = chartData.slice(0, 10);
+
+        // Sort chartData based on the absolute value of percentage_change_in_LTP in descending order
+        chartData.sort((a, b) => Math.abs(b.percentage_change_in_LTP) - Math.abs(a.percentage_change_in_LTP));
+
+        const chartDiv = document.createElement('div');
+        chartDiv.classList.add('Chart_long_short'); // Add the class 'Chart_long_short' to the div element
+
+        const chartHeading = document.createElement('h5'); // Create a heading element for the filter name
+        chartHeading.textContent = filter; // Set the heading text to the filter name
+        chartDiv.appendChild(chartHeading); // Append heading to the chartDiv
+
+        const canvas = document.createElement('canvas');
+        canvas.width = 400;
+        canvas.height = 500; // Set a greater height for the vertical chart
+        canvas.id = `chart-${filter}`;
+        chartDiv.appendChild(canvas); // Append canvas to the div element
+
+        document.getElementById('charts-container').appendChild(chartDiv); // Append the div element to the charts-container
+
+        const chartLabels = chartData.map(item => item.symbol_name);
+        const chartValuesOI = chartData.map(item => item.percentage_change_in_OI.toFixed(2));
+        const chartValuesLTP = chartData.map(item => item.percentage_change_in_LTP.toFixed(2));
+
+        new Chart(canvas.getContext('2d'), {
+          type: 'bar',
+          data: {
+            labels: chartLabels,
+            datasets: [
+              {
+                label: `${filter} % Change OI`,
+                data: chartValuesOI,
+                backgroundColor: 'rgba(47, 109, 186, 1)',
+                borderWidth: 1
+              },
+              {
+                label: `${filter} % Change Price`,
+                data: chartValuesLTP,
+                backgroundColor: 'rgba(221, 0, 0, 1)',
+                borderWidth: 1
+              }
+            ]
+          },
+          options: {
+            indexAxis: 'y', // Set the bar chart to be vertical
+            scales: {
+              y: {
+                grid: {
+                  display: false, // Hide y-axis background border
+                },
+              },
+              x: {
+                beginAtZero: true,
+
+              }
+            },
+            plugins: {
+              legend: {
+                labels: {
+                  usePointStyle: true,
+                  fontColor: "black"
+                }
+              },
+              tooltip: {
+                callbacks: {
+                  label: function (context) {
+                    var label = context.dataset.label || "";
+                    if (label) {
+                      label += ": ";
+                    }
+                    label += context.parsed.y;
+                    return label;
+                  },
+                  title: function (context) {
+                    var title = "";
+                    if (context.length > 0) {
+                      var dataIndex = context[0].dataIndex;
+                      title =
+                        "Symbol: " + chartLabels[dataIndex] +
+                        "\n% Change OI: " + chartValuesOI[dataIndex] +
+                        "\n% Change Price: " + chartValuesLTP[dataIndex];
+                    }
+                    return title;
+                  }
+                }
+              },
+              datalabels: {
+                display: true,
+                align: "end",
+                anchor: "end",
+                color: "black",
+                rotation: 270, // Set rotation to 0 for horizontal chart, 270 for vertical chart
+                font: {
+                  weight: "bold"
+                },
+                formatter: function (value, context) {
+                  return value;
+                }
+              }
+            }
+          }
+        });
+      }
+
+      // Function to create and display charts for all filters
+      function createCharts(data) {
+        for (const filter in data) {
+          const chartData = data[filter];
+          createChartForFilter(filter, chartData);
+        }
+      }
+
+      // Call the fetchData function when the page loads
+      $(document).ready(function () {
+        fetchData();
+      });
+    </script>
+  </div>
+
+  <!-- 
+  <div class="Trading_volume_prifit_loss mt-3 d-flex flex-wrap" style="justify-content: space-between; row-gap: 1rem">
     <div class="card border-1" style="width: 37rem; height: 30rem">
       <div class="trading_volume_head">
         <div class="first_volume_main">
@@ -180,7 +479,7 @@
       </div>
 
       <div class="data_not_found_section">
-        <img src="{% static "/img/course_not_found_icon.png" %}" style=" width:
+        <img src="{% static " /img/course_not_found_icon.png" %}" style=" width:
         13rem;" alt="">
         <h5>No Trading Volume data found</h5>
         <p>Run some strategies to visualize data here</p>
@@ -213,191 +512,206 @@
       </table>
 
       <div class="data_not_found_section">
-        <img src="{% static "/img/course_not_found_icon.png" %}" style=" width:
+        <img src="{% static " /img/course_not_found_icon.png" %}" style=" width:
         13rem;" alt="">
         <h5>No P&L & Trading Volume data found</h5>
         <p>Run some strategies to visualize data here</p>
         <button class="button btn btn-primary">Explore Marketplace</button>
       </div>
-    </div>
-  </div>
+    </div> -->
+</div>
 </div>
 
 
 <script>
 
-     var top_gainer_labels = {{ top_gainer_labels|safe }};
-     var top_gainer_values = {{ top_gainer_values|safe }};
+  var top_gainer_labels = {{ top_gainer_labels| safe }};
+  var top_gainer_values = {{ top_gainer_values| safe }};
 
-     var ctx = document.getElementById('gainersChart').getContext('2d');
-     var chart = new Chart(ctx, {
-         type: 'bar',
-         data: {
-             labels: top_gainer_labels,
-             datasets: [{
-                 label: '% Price Change',
-                 data: top_gainer_values,
-                 backgroundColor: 'rgba(54, 162, 235, 0.5)',
-                 borderColor: 'rgba(54, 162, 235, 1)',
-                 borderWidth: 1
-             }]
-         },
-         options: {
-             indexAxis: 'y',
-             responsive: true,
-             maintainAspectRatio: false,
-             scales: {
-                 y: {
-                     beginAtZero: true
-                 },
-                 xAxes: [{
-                     barPercentage: 0.4
-                 }]
-             },
+  var ctx = document.getElementById('gainersChart').getContext('2d');
+  var chart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: top_gainer_labels,
+      datasets: [{
+        label: '% Price Change',
+        data: top_gainer_values,
+        backgroundColor: 'rgba(47, 109, 186, 1)',
 
-         },
-         title: {
-             display: true,
-             text: 'Chart.js Horizontal Bar Chart'
-           }
-     });
+        borderWidth: 1
+      }]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        y: {
+          beginAtZero: true,
+
+          grid: {
+            display: false, // Hide y-axis background border
+          },
+
+        },
+        xAxes: [{
+          barPercentage: 0.4
+        }]
+      },
+
+    },
+    title: {
+      display: true,
+      text: 'Chart.js Horizontal Bar Chart'
+    }
+  });
 
 
 
-  var looser_labels= {{ looser_labels|safe }};
-     var looser_values= {{ looser_values|safe }};
-
-     var ctx = document.getElementById('losersChart').getContext('2d');
-     var chart = new Chart(ctx, {
-         type: 'bar',
-         data: {
-             labels: looser_labels,
-             datasets: [{
-                 label: 'Loss Percentage',
-                 data:looser_values,
-                 backgroundColor: 'rgba(255, 99, 132, 0.5)',  // Red color for bars
-                 borderColor: 'rgba(255, 99, 132, 1)',
-                 borderWidth: 1
-             }]
-         },
-         options: {
-             indexAxis: 'y',
-             responsive: true,
-             maintainAspectRatio: false,
-             scales: {
-                 y: {
-                     beginAtZero: true
-                 },
-                 xAxes: [{
-                     barPercentage: 0.4
-                 }]
-             },
-
-         },
-         title: {
-             display: true,
-             text: 'Chart.js Horizontal Bar Chart'
-           }
-     });
-
-  var labels_oi_gainer= {{ labels_oi_gainer|safe }};
-     var values_oi_losers= {{ values_oi_losers|safe }};
-
-     var ctx = document.getElementById('symbolChart').getContext('2d');
-     var chart = new Chart(ctx, {
-         type: 'bar',
-         data: {
-             labels: labels_oi_gainer,
-             datasets: [{
-                 label: 'Loss Percentage',
-                 data:values_oi_losers,
-                 backgroundColor: 'rgba(0, 128, 0, 0.2)', // Green background color
-                 borderColor: 'rgba(0, 128, 0, 1)', // Green border color
-                 borderWidth: 1
-             }]
-         },
-         options: {
-             indexAxis: 'y',
-             responsive: true,
-             maintainAspectRatio: false,
-             scales: {
-                 y: {
-                     beginAtZero: true
-                 },
-                 xAxes: [{
-                     barPercentage: 0.4
-                 }]
-             },
-
-         },
-         title: {
-             display: true,
-             text: 'Chart.js Horizontal Bar Chart'
-           }
-     });
-  var labels_oi_loser= {{ labels_oi_loser|safe }};
-     var values_oi_loser= {{ values_oi_loser|safe }};
-
-     var ctx = document.getElementById('symbolChart_looser').getContext('2d');
-     var chart = new Chart(ctx, {
-         type: 'bar',
-         data: {
-             labels: labels_oi_loser,
-             datasets: [{
-                 label: 'Loss Percentage',
-                 data:values_oi_loser,
-                 backgroundColor: 'rgba(101, 67, 33, 0.2)', // Dark brown background color
-                    borderColor: 'rgba(101, 67, 33, 1)', // Dark brown border color
-                 borderWidth: 1
-             }]
-         },
-         options: {
-             indexAxis: 'y',
-             responsive: true,
-             maintainAspectRatio: false,
-             scales: {
-                 y: {
-                     beginAtZero: true
-                 },
-                 xAxes: [{
-                     barPercentage: 0.4
-                 }]
-             },
-
-         },
-         title: {
-             display: true,
-             text: 'Chart.js Horizontal Bar Chart'
-           }
-     });
-</script>
-{% comment %}
-<script>
-  var symbols_loser = {{ symbols_loser|safe }};
-  var percentages = {{ percentages_loser|safe }};
+  var looser_labels = {{ looser_labels| safe }};
+  var looser_values = {{ looser_values| safe }};
 
   var ctx = document.getElementById('losersChart').getContext('2d');
   var chart = new Chart(ctx, {
-      type: 'bar',
-      data: {
-          labels: symbols_loser,
-          datasets: [{
-              label: 'Loss Percentage',
-              data: percentages_loser,
-              backgroundColor: 'rgba(255, 99, 132, 0.5)',  // Red color for bars
-              borderColor: 'rgba(255, 99, 132, 1)',
-              borderWidth: 1
-          }]
+    type: 'bar',
+    data: {
+      labels: looser_labels,
+      datasets: [{
+        label: 'Loss Percentage',
+        data: looser_values,
+        backgroundColor: 'rgba(221, 0, 0, 1)',  // Red color for bars
+
+        borderWidth: 1
+      }]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        y: {
+          beginAtZero: true,
+          grid: {
+            display: false, // Hide y-axis background border
+          },
+        },
+        xAxes: [{
+          barPercentage: 0.4
+        }]
       },
-      options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          scales: {
-              y: {
-                  beginAtZero: true
-              }
-          }
+
+    },
+    title: {
+      display: true,
+      text: 'Chart.js Horizontal Bar Chart'
+    }
+  });
+
+  var labels_oi_gainer = {{ labels_oi_gainer| safe }};
+  var values_oi_losers = {{ values_oi_losers| safe }};
+
+  var ctx = document.getElementById('symbolChart').getContext('2d');
+  var chart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: labels_oi_gainer,
+      datasets: [{
+        label: 'Loss Percentage',
+        data: values_oi_losers,
+        backgroundColor: 'rgba(47, 109, 186, 1)',
+        borderWidth: 1
+      }]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        y: {
+          beginAtZero: true,
+          grid: {
+            display: false, // Hide y-axis background border
+          },
+        },
+        xAxes: [{
+          barPercentage: 0.4
+        }]
+      },
+
+    },
+    title: {
+      display: true,
+      text: 'Chart.js Horizontal Bar Chart'
+    }
+  });
+  var labels_oi_loser = {{ labels_oi_loser| safe }};
+  var values_oi_loser = {{ values_oi_loser| safe }};
+
+  var ctx = document.getElementById('symbolChart_looser').getContext('2d');
+  var chart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: labels_oi_loser,
+      datasets: [{
+        label: 'Loss Percentage',
+        data: values_oi_loser,
+        backgroundColor: 'rgba(221, 0, 0, 1)',  // Red color for bars
+        borderWidth: 1
+      }]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        y: {
+          beginAtZero: true,
+          grid: {
+            display: false, // Hide y-axis background border
+          },
+        },
+        xAxes: [{
+          barPercentage: 0.4
+        }]
+      },
+
+    },
+    title: {
+      display: true,
+      text: 'Chart.js Horizontal Bar Chart'
+    }
+  });
+</script>
+{% comment %}
+<script>
+  var symbols_loser = {{ symbols_loser| safe }};
+  var percentages = {{ percentages_loser| safe }};
+
+  var ctx = document.getElementById('losersChart').getContext('2d');
+  var chart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: symbols_loser,
+      datasets: [{
+        label: 'Loss Percentage',
+        data: percentages_loser,
+        backgroundColor: 'rgba(255, 99, 132, 0.5)',  // Red color for bars
+        borderColor: 'rgba(255, 99, 132, 1)',
+        borderWidth: 1
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        y: {
+          beginAtZero: true,
+          grid: {
+            display: false, // Hide y-axis background border
+          },
+        }
       }
+    }
   });
 </script>
 {% endcomment %} {% endblock dashboard_body %}

@@ -13,6 +13,10 @@ from.models import Stock_Low_Data
 from.models import Only_buyers
 from.models import Watchlist
 from.models import Border_FetchedData
+from.models import All_stock_underlying
+from.models import VolumeGainer
+from.models import MostActiveStock
+from.models import MostSpreadStock
 # from.models import StockListing
 
 
@@ -30,6 +34,10 @@ admin.site.register(Stock_Low_Data)
 admin.site.register(Only_buyers)
 admin.site.register(Watchlist)
 admin.site.register(Border_FetchedData)
+admin.site.register(All_stock_underlying)
+admin.site.register(VolumeGainer)
+admin.site.register(MostActiveStock)
+admin.site.register(MostSpreadStock)
 # admin.site.register(StockListing)
 
 

@@ -128,3 +128,34 @@ from django.db import models
 
 class Border_FetchedData(models.Model):
     data = models.TextField()
+
+
+
+from django.db import models
+
+class All_stock_underlying(models.Model):
+    data = models.TextField()
+
+
+from django.db import models
+
+class VolumeGainer(models.Model):
+    data_json = models.TextField()
+
+
+from django.db import models
+
+class MostActiveStock(models.Model):
+    data_json = models.TextField()
+
+    def __str__(self):
+        return f"Most Active Stock (ID: {self.id})"
+
+
+
+from django.db import models
+
+class MostSpreadStock(models.Model):
+    data_json = models.TextField()
+
+
