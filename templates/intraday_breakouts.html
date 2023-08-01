@@ -29,15 +29,10 @@
     }
 
     /* Reset default margin and padding for the table */
-    table {
-        border-collapse: collapse;
-        width: 100%;
-    }
+
 
     /* Style for the table header */
-    thead {
-        background-color: #f2f2f2;
-    }
+
 
     th,
     td {
@@ -68,12 +63,144 @@
     border-radius: 10px;
     box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
     }
+    thead {
+        padding: 12px 15px !important;
+        font-size: 17px !important;
+        background: #4399eb !important;
+        color: #fff !important;
+        border-right: 1px solid var(--border-gray) !important;
+    }
 </style>
-<div>
+<style>
+    .filter-btn {
+      border: 1px solid #4399eb !important;
+      background-color: #fff;
+      font-family: Roboto, sans-serif;
+      font-weight: 400;
+      font-size: 13px;
+      color: #4399eb;
+      line-height: 1.923;
+      padding: 4px 13.5px;
+      margin-right: 9px;
+      min-width: 100px;
+      max-width: 150px;
+      text-align: center;
+      border-radius: 10px;
+    }
+  
+    .active {
+      background: -webkit-gradient(linear, left top, left bottom, from(#4399eb), to(#5cadfb));
+      background: -moz-linear-gradient(top, #4399eb 0, #5cadfb 100%);
+      background: linear-gradient(180deg, #4399eb, #5cadfb);
+      color: #fff;
+    }
+  
+
+  
+    .table-striped-custom>tbody>tr:nth-child(2n)>td,
+    .table-striped-custom>tbody>tr:nth-child(2n)>th {
+      background-color: rgb(240, 247, 253) !important;
+    }
+  
+    /* Custom CSS to change the background color of placeholder-glow */
+    .placeholder-glow:focus::placeholder {
+      background-color: red !important;
+      /* Add any other custom styles you want for the placeholder */
+    }
+  
+    /* Optionally, change the color of the glowing effect */
+    .placeholder-glow:focus::placeholder:after {
+      background-color: blue !important;
+    }
+  
+    .placeholder {
+      height: 2rem !important;
+    }
+  
+    .long_buildup {
+      background: green;
+      color: white;
+      border-radius: 50px;
+      font-weight: 600;
+      padding: 5px 15px 7px 30px;
+      font-size: 14px;
+    }
+  
+    .short_buildup {
+      background: lightcoral;
+      color: white;
+      border-radius: 50px;
+      font-weight: 600;
+      padding: 5px 15px 7px 30px;
+      font-size: 14px;
+    }
+  
+    .short_covering {
+      background: #c9c900;
+      ;
+      color: white;
+      border-radius: 50px;
+      font-weight: 600;
+      padding: 5px 15px 7px 30px;
+      font-size: 14px;
+    }
+  
+    .long_unwinding {
+      background: #ff9900;
+      ;
+      color: rgb(255, 255, 255);
+      border-radius: 50px;
+      font-weight: 600;
+      padding: 5px 15px 7px 30px;
+      font-size: 14px;
+    }
+  
+    table.dataTable tbody tr {
+      background-color: transparent;
+      border-bottom: transparent;
+    }
+  
+    table.dataTable thead th,
+    table.dataTable thead td {
+      padding: 10px;
+      border-bottom: 0px solid rgb(0 0 0 / 0%) !important;
+    }
+  
+    table.dataTable tbody td {
+      border: none !important;
+      border-top: 0 !important;
+    }
+  
+    /* #bulk_data_wrapper{
+    overflow: auto;
+  }
+  #bulk_data_length{
+    position: fixed;
+  }
+  .dataTables_filter{
+    margin-top: 2.5em !important;
+    position: fixed;
+  } */
+  /* Custom CSS for DataTable's search input and length dropdown */
+  .table-container {
+    position: relative;
+  }
+  
+  
+  .parent_table{
+    overflow: auto;
+  }
+  #bulk_data_wrapper{
+    display: flex;
+      flex-direction: column;
+  }
+  
+  </style>
+<div class="table-container">
     <h4 class="my-3">NSE Stocks – Intraday Breakouts</h4>
-    <div class="main_instraday_breakout_table mt-3" style="overflow: auto;">
-        <table id="breakoutTable" class="table table-hover">
-            <thead class="table-light">
+    <div class="main_instraday_breakout_table mt-3" >
+        <table id="breakoutTable_main" class="table table-hover table-striped-custom">
+            <thead >
                 <tr>
                     <th>
                         <div>Symbol Name</div>
@@ -123,6 +250,7 @@
     <script>
         // AJAX call to fetch data and populate the table
         $(document).ready(function () {
+           
             $.ajax({
                 url: "/get_intraday_breakout_data", // Replace with the URL of your API endpoint
                 method: "GET",
@@ -134,11 +262,14 @@
                     console.error("Error fetching data:", error);
                 }
             });
+            $("#breakoutTable").removeClass("dataTable")
+        $('#breakoutTable_main').wrapAll('<div class="parent_table"></div>');
+        $('#breakoutTable_length, #breakoutTable_filter').wrapAll('<div class="parent_search_length"></div>');
         });
 
         // Function to populate the table with data
         function populateTable(data) {
-            const tableBody = $("#breakoutTable tbody");
+            const tableBody = $("#breakoutTable_main tbody");
             tableBody.empty(); // Clear existing rows if any
 
             // Check if data is available
@@ -186,6 +317,7 @@
                 "order": [] // Disable default sorting
             });
         }
+  
     </script>
 </div>
 {% endblock dashboard_body %}

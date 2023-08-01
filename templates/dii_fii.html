@@ -78,8 +78,8 @@
 
     var labels_dii = {{ labels_dii|safe }};
     var values_dii = {{ values_dii|safe }};
-    var colors = values_dii.map(value => value >= 0 ? 'rgba(0, 243, 0, 0.2)' : 'rgba(255, 0, 0, 0.2)');
-    var borderColors = values_dii.map(value => value >= 0 ? 'rgba(0, 243, 0, 1)' : 'rgba(255, 0, 0, 1)');
+    var colors = values_dii.map(value => value >= 0 ? 'rgb(33,150,243)' : 'rgb(249,108,146)');
+
 
     var ctx = document.getElementById('diiChart').getContext('2d');
     var chart = new Chart(ctx, {
@@ -90,7 +90,7 @@
           label: 'Net Value',
           data: values_dii,
           backgroundColor: colors,
-          borderColor: borderColors,
+         
           borderWidth: 1
         }]
       },
@@ -99,11 +99,14 @@
         maintainAspectRatio: false,
         indexAxis: 'y', // Display labels on the y-axis
         scales: {
-          x: {
-            beginAtZero: true,
+          y:{
             grid: {
               display: false, // Hide y-axis background border
             },
+          },
+          x: {
+            beginAtZero: true,
+            
           }
         },
         plugins: {
@@ -161,7 +164,7 @@
 
     var labels_fii = {{ labels_fii|safe }};
     var values_fii = {{ values_fii|safe }};
-    var colors = values_fii.map(value => value >= 0 ? 'rgba(0, 243, 0, 0.2)' : 'rgba(255, 0, 0, 0.2)');
+    var colors = values_fii.map(value => value >= 0 ? 'rgb(33,150,243)' : 'rgb(249,108,146)');
     var borderColors = values_fii.map(value => value >= 0 ? 'rgba(0, 243, 0, 1)' : 'rgba(255, 0, 0, 1)');
 
     var ctx = document.getElementById('fiiChart').getContext('2d');
@@ -173,7 +176,7 @@
                 label: 'Net Value',
                 data: values_fii,
                 backgroundColor: colors,
-                borderColor: borderColors,
+         
                 borderWidth: 1
             }]
         },
@@ -182,11 +185,15 @@
 
           maintainAspectRatio: false,
             indexAxis: 'y', // Display labels on the y-axis
+
             scales: {
+              y:{
+                grid: {
+                  display: false, // Hide y-axis background border
+                },
+              },
                 x: {
-                  grid: {
-                    display: false, // Hide y-axis background border
-                  },
+               
                     beginAtZero: true
                 }
             }
@@ -195,7 +202,7 @@
 
     var labels = {{ labels|safe }};
         var values = {{ values|safe }};
-        var colors = values.map(value => value >= 0 ? 'rgba(0, 243, 0, 0.2)' : 'rgba(255, 0, 0, 0.2)');
+        var colors = values.map(value => value >= 0 ? 'rgb(33,150,243)' : 'rgb(249,108,146)');
         var borderColors = values.map(value => value >= 0 ? 'rgba(0, 243, 0, 1)' : 'rgba(255, 0, 0, 1)');
 
         var ctx = document.getElementById('fii_diiChart').getContext('2d');
@@ -207,7 +214,7 @@
                     label: 'Net Value',
                     data: values,
                     backgroundColor: colors,
-                    borderColor: borderColors,
+    
                     borderWidth: 1
                 }]
             },
@@ -216,15 +223,19 @@
 
               maintainAspectRatio: false,
                 indexAxis: 'y', // Display labels on the y-axis
+                
+
                 scales: {
-               
+                  y:{
+                    grid: {
+                      display: false, // Hide y-axis background border
+                    },
+                  },
                     
               
                     x: {
                         beginAtZero: true,
-                        grid: {
-                          display: false, // Hide y-axis background border
-                        },
+                      
                     }
                 }
             }

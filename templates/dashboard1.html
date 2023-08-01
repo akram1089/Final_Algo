@@ -830,14 +830,68 @@ right: 0;">
       <hr>
 
       <div class="bottom_card">
-        <a href="{% url 'put_call_ratio' %}" id="market_top">Analytics</a>
-        <a href="{% url 'put_call_ratio' %}" id="market_top">Options</a>
+        <a href="{% url 'put_call_ratio' %}" id="market_top" >Analytics</a>
+        <a href="{% url 'put_call_ratio' %}" id="market_top" class="nifty_oi">Options</a>
         <a href="{% url 'put_call_ratio' %}" id="market_top">PCR</a>
-        <a href="stock_option_chain" id="market_top">Chain</a>
+        <a href="stock_option_chain" id="market_top"  class="nifty_option_chain">Chain</a>
         <a href="{% url 'put_call_ratio' %}" id="market_top">Max pain</a>
-        <a href="{% url 'contributor' %}" id="market_top">Contributors</a>
+        <a href="{% url 'contributor' %}" id="market_top" class="nifty_50_contributor">Contributors</a>
       </div>
     </div>
+
+    <script>
+$(document).ready(function () {
+  $(".nifty_50_contributor").click(function () {
+    localStorage.setItem("selectedFilter_contrib", "nifty50");
+  });
+  $(".nifty_option_chain").click(function () {
+    localStorage.setItem("symbol_Option_chain", "NIFTY");
+  });
+  $(".nifty_oi").click(function () {
+  var selectedSymbol = {"nifty":"niftyoilist","spot":"NIFTY+50"};
+  localStorage.setItem("selectedSymbol", JSON.stringify(selectedSymbol));
+});
+
+
+
+
+
+
+
+
+  $(".niftybank_contributor").click(function () {
+    localStorage.setItem("selectedFilter_contrib", "banknifty");
+  });
+  $(".banknifty_option_chain").click(function () {
+    localStorage.setItem("symbol_Option_chain", "BANKNIFTY");
+  });
+  $(".banknifty_oi").click(function () {
+  var selectedSymbol = {"nifty":"bankniftyoi","spot":"NIFTY+BANK"};
+  localStorage.setItem("selectedSymbol", JSON.stringify(selectedSymbol));
+});
+
+
+
+
+
+
+
+
+
+  $(".finnifty_contributor").click(function () {
+    localStorage.setItem("selectedFilter_contrib", "finnifty");
+  });
+  $(".finnifty_option_chain").click(function () {
+    localStorage.setItem("symbol_Option_chain", "FINNIFTY");
+  });
+  $(".finnifty_oi").click(function () {
+  var selectedSymbol = {"nifty":"finniftyoilist","spot":"NIFTY+FIN+SERVICE"};
+  localStorage.setItem("selectedSymbol", JSON.stringify(selectedSymbol));
+});
+
+});
+
+    </script>
     <div class="nifty_main shadow"
       style="box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;">
 
@@ -870,11 +924,11 @@ right: 0;">
 
       <div class="bottom_card">
         <a href="{% url 'put_call_ratio' %}" id="market_top">Analytics</a>
-        <a href="{% url 'put_call_ratio' %}" id="market_top">Options</a>
+        <a href="{% url 'put_call_ratio' %}" id="market_top" class="banknifty_oi">Options</a>
         <a href="{% url 'put_call_ratio' %}" id="market_top">PCR</a>
-        <a href="stock_option_chain" id="market_top">Chain</a>
+        <a href="stock_option_chain" id="market_top" class="banknifty_option_chain">Chain</a>
         <a href="{% url 'put_call_ratio' %}" id="market_top">Max pain</a>
-        <a href="{% url 'contributor' %}" id="market_top">Contributors</a>
+        <a href="{% url 'contributor' %}" id="market_top" class="niftybank_contributor">Contributors</a>
       </div>
     </div>
     <div class="nifty_main shadow"
@@ -909,11 +963,11 @@ right: 0;">
 
       <div class="bottom_card">
         <a href="{% url 'put_call_ratio' %}" id="market_top">Analytics</a>
-        <a href="{% url 'put_call_ratio' %}" id="market_top">Options</a>
+        <a href="{% url 'put_call_ratio' %}" id="market_top" class="finnifty_oi">Options</a>
         <a href="{% url 'put_call_ratio' %}" id="market_top">PCR</a>
-        <a href="stock_option_chain" id="market_top">Chain</a>
+        <a href="stock_option_chain" id="market_top" class="finnifty_option_chain">Chain</a>
         <a href="{% url 'put_call_ratio' %}" id="market_top">Max pain</a>
-        <a href="{% url 'contributor' %}" id="market_top">Contributors</a>
+        <a href="{% url 'contributor' %}" id="market_top" class="finnifty_contributor">Contributors</a>
       </div>
     </div>
 

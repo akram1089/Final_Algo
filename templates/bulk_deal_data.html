@@ -1,134 +1,378 @@
 {% extends "base_dashboard.html" %}
 {% load static %}
 {% block dashboard_body %}
+<style>
+  .text-success {
+    color: rgb(0, 217, 0) !important;
+  }
+
+  .text-danger {
+    color: red !important;
+  }
+
+  tr {
+    white-space: nowrap;
+  }
+
+  .bi.bi-graph-up {
+    border: 1px solid #80808030;
+    border-radius: 7px;
+    padding: 6px 9px;
+    width: 33px;
+    display: block;
+    height: 29px;
+    color: gray;
+    transition: 0.3s;
+    display: inline;
+  }
+
+  .bi.bi-graph-up:hover {
+    background-color: rgb(0, 132, 255);
+    border: none;
+    color: white;
+  }
+
+  tbody tr:hover .symbol_name_watchlist {
+    color: #2196f3;
+  }
+
+  /* Reset default margin and padding for the table */
+  table {
+    border-collapse: collapse;
+    width: 100%;
+  }
+
+  /* Style for the table header */
+  thead {
+    background-color: #f2f2f2;
+  }
+
+  th,
+  td {
+    padding: 12px 8px;
+    text-align: left;
+  }
+
+  /* Add padding to tbody tr */
+
+
+  td>div,
+  th>div {
+    padding: 9px;
+  }
+
+  .dataTables_length,
+  .dataTables_filter {
+    padding: 10px 0 !important;
+    display: flex;
+    justify-content: flex-start;
+
+
+
+  }
+
+  .main_bulk_table {
+    margin: 12px 0;
+    padding: 24px;
+    border-radius: 10px;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+  }
+
+  th {
+    font-size: 16px;
+    font-weight: 500;
+  }
+
+  td {
+    color: darkslategray !important;
+    font-size: 14px;
+    font-weight: 500;
+  }
+</style>
+<style>
+  .filter-btn {
+    border: 1px solid #4399eb !important;
+    background-color: #fff;
+    font-family: Roboto, sans-serif;
+    font-weight: 400;
+    font-size: 13px;
+    color: #4399eb;
+    line-height: 1.923;
+    padding: 4px 13.5px;
+    margin-right: 9px;
+    min-width: 100px;
+    max-width: 150px;
+    text-align: center;
+    border-radius: 10px;
+  }
+
+  .active {
+    background: -webkit-gradient(linear, left top, left bottom, from(#4399eb), to(#5cadfb));
+    background: -moz-linear-gradient(top, #4399eb 0, #5cadfb 100%);
+    background: linear-gradient(180deg, #4399eb, #5cadfb);
+    color: #fff;
+  }
+
+  thead {
+    padding: 12px 15px !important;
+    font-size: 12px !important;
+
+    background: #4399eb !important;
+    color: #fff !important;
+    border-right: 1px solid var(--border-gray) !important;
+  }
+
+  .table-striped-custom>tbody>tr:nth-child(2n)>td,
+  .table-striped-custom>tbody>tr:nth-child(2n)>th {
+    background-color: rgb(240, 247, 253) !important;
+  }
+
+  /* Custom CSS to change the background color of placeholder-glow */
+  .placeholder-glow:focus::placeholder {
+    background-color: red !important;
+    /* Add any other custom styles you want for the placeholder */
+  }
+
+  /* Optionally, change the color of the glowing effect */
+  .placeholder-glow:focus::placeholder:after {
+    background-color: blue !important;
+  }
+
+  .placeholder {
+    height: 2rem !important;
+  }
+
+  .long_buildup {
+    background: green;
+    color: white;
+    border-radius: 50px;
+    font-weight: 600;
+    padding: 5px 15px 7px 30px;
+    font-size: 14px;
+  }
+
+  .short_buildup {
+    background: lightcoral;
+    color: white;
+    border-radius: 50px;
+    font-weight: 600;
+    padding: 5px 15px 7px 30px;
+    font-size: 14px;
+  }
+
+  .short_covering {
+    background: #c9c900;
+    ;
+    color: white;
+    border-radius: 50px;
+    font-weight: 600;
+    padding: 5px 15px 7px 30px;
+    font-size: 14px;
+  }
+
+  .long_unwinding {
+    background: #ff9900;
+    ;
+    color: rgb(255, 255, 255);
+    border-radius: 50px;
+    font-weight: 600;
+    padding: 5px 15px 7px 30px;
+    font-size: 14px;
+  }
+
+  table.dataTable tbody tr {
+    background-color: transparent;
+    border-bottom: transparent;
+  }
+
+  table.dataTable thead th,
+  table.dataTable thead td {
+    padding: 10px;
+    border-bottom: 0px solid rgb(0 0 0 / 0%) !important;
+  }
+
+  table.dataTable tbody td {
+    border: none !important;
+    border-top: 0 !important;
+  }
+
+  /* #bulk_data_wrapper{
+  overflow: auto;
+}
+#bulk_data_length{
+  position: fixed;
+}
+.dataTables_filter{
+  margin-top: 2.5em !important;
+  position: fixed;
+} */
+/* Custom CSS for DataTable's search input and length dropdown */
+.table-container {
+  position: relative;
+}
+
+
+.parent_table{
+  overflow: auto;
+}
+#bulk_data_wrapper{
+  display: flex;
+    flex-direction: column;
+}
+
+</style>
 <div class="main_head_strategies border-bottom my-4">
-    <div
-      class="strategies d-flex mt-4"
-      style="align-items: center; gap: 0.3rem"
-    >
-      <h4 class="">Bulk Deal Data </h4>
-      <span>
-        <i
-          class="bi bi-exclamation-circle"
-          data-bs-toggle="collapse"
-          data-bs-target="#collapseExample"
-          aria-expanded="false"
-          aria-controls="collapseExample"
-        ></i>
-      </span>
+  <div class="strategies d-flex mt-4" style="align-items: center; gap: 0.3rem">
+    <h4 class="">Bulk Deal Data </h4>
+    <span>
+      <i class="bi bi-exclamation-circle" data-bs-toggle="collapse" data-bs-target="#collapseExample"
+        aria-expanded="false" aria-controls="collapseExample"></i>
+    </span>
+  </div>
+</div>
+<div class="collapse" id="collapseExample" style="margin-bottom: 25px">
+  <div class="card card-body">
+    <div class="antd-pro-components-markdown-index-markdownStyle">
+      <p>Strategies</p>
+      <ul>
+        <li>Bear Call, Put, Spread</li>
+        <li>Bull Call, Put, Spread</li>
+      </ul>
     </div>
   </div>
-  <div class="collapse" id="collapseExample" style="margin-bottom: 25px">
-    <div class="card card-body">
-      <div class="antd-pro-components-markdown-index-markdownStyle">
-        <p>Strategies</p>
-        <ul>
-          <li>Bear Call, Put, Spread</li>
-          <li>Bull Call, Put, Spread</li>
-        </ul>
-      </div>
-    </div>
-  </div>
-
-
-<div class="date_filter d-flex my-2" style="justify-content: flex-end;">
-    <label for="date">Select Date:</label>
-<select id="date" name="date" class=''>
-    
-</select>
-
 </div>
 
-<table id="bulk_data" class="display py-3" >
-    <thead style='    background: #4399eb!important; color:white;
+<div class="main_bulk_table">
+  <div class="date_filter d-flex my-2" style="justify-content: flex-end;">
+    <label for="date">Select Date:</label>
+    <select id="date" name="date" class=''>
+
+    </select>
+
+  </div>
+  <div class="table-container">
+  <div class="table_data">
+    <table id="bulk_data" class="display py-3 table-striped-custom table-responsive ">
+      <thead style='    background: #4399eb!important; color:white;
    '>
         <tr>
-            <th>Symbol Name</th>
-            <th>Security Name</th>
-            <th>Client Name</th>
-            <th>Type</th>
-            <th>Trade Quantity</th>
-            <th>Trade Price</th>
-            <th>Total Value</th>
-            <th>Date</th>
+          <th>
+            <div>Date</div>
+          </th>
+          <th>
+            <div>Symbol Name</div>
+          </th>
+          <th>
+            <div>Security Name</div>
+          </th>
+          <th>
+            <div>Client Name</div>
+          </th>
+          <th>
+            <div>Type</div>
+          </th>
+          <th>
+            <div>Trade Quantity</div>
+          </th>
+          <th>
+            <div>Trade Price</div>
+          </th>
+          <th>
+            <div>Total Value</div>
+          </th>
         </tr>
-    </thead>
-    <tbody id="data-table-body"></tbody>
-</table>
+      </thead>
+      <tbody id="data-table-body"></tbody>
+    </table>
+  </div>
+</div>
 
+
+
+</div>
 <!-- ...existing HTML code... -->
 
 <script>
-    $(document).ready(function() {
-        // Initialize DataTable with options
-        var dataTable = $('#bulk_data').DataTable({
-            "pageLength": 25
-        });
-
-        // Function to generate table rows
-        function generateTableRows(data) {
-            var rows = "";
-            for (var i = 0; i < data.length; i++) {
-                var row = "<tr>" +
-                    "<td>" + data[i].symbol_name + "</td>" +
-                    "<td>" + data[i].security_name + "</td>" +
-                    "<td>" + data[i].client_name + "</td>" +
-                    "<td>" + data[i].type + "</td>" +
-                    "<td>" + data[i].trade_quantity + "</td>" +
-                    "<td>" + data[i].trade_price + "</td>" +
-                    "<td>" + data[i].totaL_VALUE + "</td>" +
-                    "<td>" + data[i].created_at + "</td>" +
-                    "</tr>";
-                rows += row;
-            }
-            return rows;
-        }
-
-        // Function to populate date options in the select element
-        function populateDateOptions(dates) {
-            var options = "";
-            for (var i = 0; i < dates.length; i++) {
-                options += "<option value='" + dates[i] + "'>" + dates[i] + "</option>";
-            }
-            $('#date').html(options);
-        }
-
-        $('#date').change(function() {
-            var selectedDate = $(this).val();
-            $.ajax({
-                url: '/bulk_deal_data',
-                type: 'GET',
-                data: { date: selectedDate },
-                dataType: 'json',
-                success: function(response) {
-                    var dealData = response.deal_data;
-                    var tableRows = generateTableRows(dealData);
-                    dataTable.clear().rows.add($(tableRows)).draw(); // Clear existing data and add new data
-                }
-            });
-        });
-
-        // Retrieve initial data on page load
-        $.ajax({
-            url: '/bulk_deal_data',
-            type: 'GET',
-            dataType: 'json',
-            success: function(response) {
-                var dealData = response.deal_data;
-                var tableRows = generateTableRows(dealData);
-                dataTable.clear().rows.add($(tableRows)).draw(); // Add initial data
-
-                var dealDates = response.deal_dates;
-                populateDateOptions(dealDates);
-            }
-        });
+  $(document).ready(function () {
+   
+    // Initialize DataTable with options
+    var dataTable = $('#bulk_data').DataTable({
+      "pageLength": 25
     });
+
+    // Function to generate table rows
+    function generateTableRows(data) {
+      var rows = "";
+      for (var i = 0; i < data.length; i++) {
+
+        var Null_value = null
+        if (data[i].totaL_VALUE == null) {
+          Null_value = "Null"
+        }
+
+        var row = "<tr>" +
+          "<td><div>" + data[i].created_at + "</div></td>" +
+          "<td class='symbol_name_watchlist'><div>" + data[i].symbol_name + "</div></td>" +
+          "<td><div>" + data[i].security_name + "</div></td>" +
+          "<td><div>" + data[i].client_name + "</div></td>" +
+          "<td><div>" + data[i].type + "</div></td>" +
+          "<td><div>" + data[i].trade_quantity + "</div></td>" +
+          "<td><div>" + data[i].trade_price + "</div></td>" +
+          "<td><div>" + Null_value + "</div></td>" +
+          "</tr>";
+
+        rows += row;
+      }
+      return rows;
+    }
+
+    // Function to populate date options in the select element
+    function populateDateOptions(dates) {
+      var options = "";
+      for (var i = 0; i < dates.length; i++) {
+        options += "<option value='" + dates[i] + "'>" + dates[i] + "</option>";
+      }
+      $('#date').html(options);
+    }
+
+    $('#date').change(function () {
+      var selectedDate = $(this).val();
+      $.ajax({
+        url: '/bulk_deal_data',
+        type: 'GET',
+        data: { date: selectedDate },
+        dataType: 'json',
+        success: function (response) {
+          var dealData = response.deal_data;
+          var tableRows = generateTableRows(dealData);
+          dataTable.clear().rows.add($(tableRows)).draw(); // Clear existing data and add new data
+        }
+      });
+    });
+
+    // Retrieve initial data on page load
+    $.ajax({
+      url: '/bulk_deal_data',
+      type: 'GET',
+      dataType: 'json',
+      success: function (response) {
+        var dealData = response.deal_data;
+        var tableRows = generateTableRows(dealData);
+        dataTable.clear().rows.add($(tableRows)).draw(); // Add initial data
+
+        var dealDates = response.deal_dates;
+        populateDateOptions(dealDates);
+      }
+    });
+ 
+    $('#bulk_data_length, #bulk_data_filter').wrapAll('<div class="parent_search_length"></div>');
+    $('#bulk_data').wrapAll('<div class="parent_table"></div>');
+
+
+ });
 </script>
 
 <!-- ...remaining HTML code... -->
 
 
 {% endblock dashboard_body %}
-
-
-
