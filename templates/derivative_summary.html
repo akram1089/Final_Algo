@@ -3,7 +3,7 @@
 {% block dashboard_body %}
 <style>
     .text-success {
-        color: rgb(0, 217, 0) !important;
+        color: rgb(0, 217, 0) ;
     }
 
     .text-danger {
@@ -186,6 +186,14 @@
     padding: 10px;
     border-bottom: 0px solid rgb(0 0 0 / 0%);
 }
+.parent_table{
+    overflow: auto;
+}
+
+#data-table_wrapper{
+    display: flex;
+    flex-direction: column;
+}
 
 </style>
 
@@ -193,7 +201,10 @@
     <h4>Derivative Summary
     </h4>
     <div class="main_derivative_table">
-        <div class="my-3">
+        <div class="my-3" style="    display: flex;
+        row-gap: 1rem;
+        white-space: nowrap;
+        flex-wrap: wrap;">
             <button class="filter-btn" data-filter="Long Build Up">
                 Long Build Up
             </button>
@@ -755,8 +766,10 @@
                             "order": [] // Disable default sorting
                         });
                         // Initialize DataTables on the table
-
+                        $('#data-table').wrap('<div class="parent_table"></div>');
+                        $('#data-table_length,#data-table_filter').wrapAll('<div class="parent_search_length"></div>');
                         // Add active class to the selected filter button
+
                         $(".filter-btn").removeClass("active");
                         if (filter) {
                             $(`.filter-btn[data-filter="${filter}"]`).addClass("active");
@@ -781,7 +794,10 @@
             } else {
                 fetchAndPopulateData("Long Build Up");
             }
+
+         
         });
     </script>
+
     </div>
     {% endblock dashboard_body %}

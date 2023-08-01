@@ -3,7 +3,204 @@
 {% block dashboard_body %}
 
 
+<style>
+    .text-success {
+        color: rgb(0, 217, 0) ;
+    }
 
+    .text-danger {
+        color: red !important;
+    }
+
+    tr {
+        white-space: nowrap;
+    }
+
+    .bi.bi-graph-up {
+        border: 1px solid #80808030;
+        border-radius: 7px;
+        padding: 6px 9px;
+        width: 33px;
+        display: block;
+        height: 29px;
+        color: gray;
+        transition: 0.3s;
+        display: inline;
+    }
+
+    .bi.bi-graph-up:hover {
+        background-color: rgb(0, 132, 255);
+        border: none;
+        color: white;
+    }
+
+    tr:hover .symbol_name_watchlist {
+        color: #2196f3;
+    }
+
+    /* Reset default margin and padding for the table */
+    table {
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    /* Style for the table header */
+    thead {
+        background-color: #f2f2f2;
+    }
+
+    th,
+    td {
+        padding: 12px 8px;
+        text-align: left;
+    }
+
+    /* Add padding to tbody tr */
+
+
+    td>div,
+    th>div {
+        padding: 9px;
+    }
+
+    .dataTables_length,
+    .dataTables_filter {
+        padding: 10px 0 !important;
+        display: flex;
+        justify-content: flex-start;
+
+
+
+    }
+
+    .main_derivative_table {
+        margin: 12px 0;
+        padding: 24px;
+        border-radius: 10px;
+        box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+    }
+
+    th {
+        font-size: 16px;
+        font-weight: 500;
+    }
+
+    td {
+        color: darkslategray !important;
+        font-size: 14px;
+        font-weight: 500;
+    }
+</style>
+<style>
+    .filter-btn {
+        border: 1px solid #4399eb !important;
+        background-color: #fff;
+        font-family: Roboto, sans-serif;
+        font-weight: 400;
+        font-size: 13px;
+        color: #4399eb;
+        line-height: 1.923;
+        padding: 4px 13.5px;
+        margin-right: 9px;
+        min-width: 100px;
+        max-width: 150px;
+        text-align: center;
+        border-radius: 10px;
+    }
+
+    .active {
+        background: -webkit-gradient(linear, left top, left bottom, from(#4399eb), to(#5cadfb));
+        background: -moz-linear-gradient(top, #4399eb 0, #5cadfb 100%);
+        background: linear-gradient(180deg, #4399eb, #5cadfb);
+        color: #fff;
+    }
+
+    thead {
+        padding: 12px 15px !important;
+        font-size: 12px !important;
+     
+        background: #4399eb !important;
+        color: #fff !important;
+        border-right: 1px solid var(--border-gray) !important;
+    }
+
+    .table-striped-custom>tbody>tr:nth-child(2n)>td,
+    .table-striped-custom>tbody>tr:nth-child(2n)>th {
+        background-color: rgb(240, 247, 253) !important;
+    }
+
+    /* Custom CSS to change the background color of placeholder-glow */
+    .placeholder-glow:focus::placeholder {
+        background-color: red !important;
+        /* Add any other custom styles you want for the placeholder */
+    }
+
+    /* Optionally, change the color of the glowing effect */
+    .placeholder-glow:focus::placeholder:after {
+        background-color: blue !important;
+    }
+
+    .placeholder {
+        height: 2rem !important;
+    }
+
+    .long_buildup {
+        background: #c1f8c1a6;
+    color: #167f18e0;
+    border-radius: 50px;
+    font-weight: 600;
+    padding: 5px 15px 7px 30px;
+    font-size: 14px;
+    }
+
+    .short_buildup {
+
+
+    background: #ffa0a047;
+    color: #f52c2cc4;
+    border-radius: 50px;
+    font-weight: 600;
+    padding: 5px 15px 7px 30px;
+    font-size: 14px;
+    }
+
+    .short_covering {
+        background: #c9c90030;
+    color: #7a7a02;
+    border-radius: 50px;
+    font-weight: 600;
+    padding: 5px 15px 7px 30px;
+    font-size: 14px;
+    }
+    .long_unwinding {
+        background: #ff990026;
+    color: rgb(255 139 0);
+    border-radius: 50px;
+    font-weight: 600;
+    padding: 5px 15px 7px 30px;
+    font-size: 14px;
+    }
+    table.dataTable tbody tr {
+        background-color: transparent;
+        border-bottom:transparent;
+    }
+    table.dataTable thead th, table.dataTable thead td {
+    padding: 10px;
+    border-bottom: 0px solid rgb(0 0 0 / 0%);
+}
+.parent_table{
+    overflow: auto;
+}
+
+#data-table_wrapper{
+    display: flex;
+    flex-direction: column;
+}
+#stock-table_wrapper{
+    display: flex;
+    flex-direction: column;
+}
+</style>
 
 <style>
 
@@ -137,7 +334,8 @@
             "info": true,
             "order": [] // Disable default sorting
         });
-
+        $('#stock-table').wrap('<div class="parent_table"></div>');
+        $('#stock-table_length,#stock-table_filter').wrapAll('<div class="parent_search_length"></div>');
         function loadStockData(filter) {
             $.ajax({
                 url: "/get_gainers_data_separate",
@@ -216,7 +414,7 @@
     </div>
     <div class="upper_main_top_gainers_table">
         <div class="main_table">
-        <table id="stock-table" class="table table-hover">
+        <table id="stock-table" class="table table-hover table-striped-custom" style='    white-space: nowrap;'>
             <thead>
                 <tr>
                  

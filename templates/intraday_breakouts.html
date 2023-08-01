@@ -194,12 +194,15 @@
     display: flex;
       flex-direction: column;
   }
-  
+  #breakoutTable_wrapper{
+    display: flex;
+    flex-direction: column;
+  }
   </style>
-<div class="table-container">
+<div>
     <h4 class="my-3">NSE Stocks – Intraday Breakouts</h4>
     <div class="main_instraday_breakout_table mt-3" >
-        <table id="breakoutTable_main" class="table table-hover table-striped-custom">
+        <table id="breakoutTable" class="table table-hover table-striped-custom">
             <thead >
                 <tr>
                     <th>
@@ -262,62 +265,62 @@
                     console.error("Error fetching data:", error);
                 }
             });
-            $("#breakoutTable").removeClass("dataTable")
-        $('#breakoutTable_main').wrapAll('<div class="parent_table"></div>');
-        $('#breakoutTable_length, #breakoutTable_filter').wrapAll('<div class="parent_search_length"></div>');
+            function populateTable(data) {
+                const tableBody = $("#breakoutTable tbody");
+                tableBody.empty(); // Clear existing rows if any
+    
+                // Check if data is available
+                if (data.length === 0) {
+                    // If no data, display a message
+                    tableBody.append(`
+                        <tr>
+                            <td colspan="11" class="text-center">No data available.</td>
+                        </tr>
+                    `);
+                } else {
+                    // Loop through the data and create rows for the table
+                    data.forEach(item => {
+                        const row = `
+                            <tr>
+                                <td>
+                                    <div>
+                                        <span><a href="https://www.tradingview.com/chart/MgiGDMYM/?symbol=${item.symbol_name}'&aff_id=113877" target='_blank'><i class="bi bi-graph-up"></i></a></span>
+                                        <span class="symbol_name_watchlist">${item.symbol_name}</span>
+                                    </div>
+                                </td>
+                                <td><div>${item.open}</div></td>
+                                <td><div>${item.high}</div></td>
+                                <td><div>${item.low}</div></td>
+                                <td><div>${item.close}</div></td>
+                                <td><div>${item.last_trade_price}</div></td>
+                                <td><div>${item.avg_daily_volume}</div></td>
+                                <td><div>${item.total_volume}</div></td>
+                                <td><div>${item.ratio}</div></td>
+                                <td><div>${item.change}</div></td>
+                                <td><div>${item.change_percent}</div></td>
+                            </tr>
+                        `;
+                        tableBody.append(row);
+                    });
+                }
+    
+                // Initialize DataTable
+                $("#breakoutTable").DataTable({
+                    "paging": true,
+                    "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+                    "searching": true,
+                    "ordering": true,
+                    "info": true,
+                    "order": [] // Disable default sorting
+                });
+                $('#breakoutTable').wrap('<div class="parent_table"></div>');
+                $('#breakoutTable_length,#breakoutTable_filter').wrapAll('<div class="parent_search_length"></div>');
+            }
+         
         });
 
         // Function to populate the table with data
-        function populateTable(data) {
-            const tableBody = $("#breakoutTable_main tbody");
-            tableBody.empty(); // Clear existing rows if any
-
-            // Check if data is available
-            if (data.length === 0) {
-                // If no data, display a message
-                tableBody.append(`
-                    <tr>
-                        <td colspan="11" class="text-center">No data available.</td>
-                    </tr>
-                `);
-            } else {
-                // Loop through the data and create rows for the table
-                data.forEach(item => {
-                    const row = `
-                        <tr>
-                            <td>
-                                <div>
-                                    <span><a href="https://www.tradingview.com/chart/MgiGDMYM/?symbol=${item.symbol_name}'&aff_id=113877" target='_blank'><i class="bi bi-graph-up"></i></a></span>
-                                    <span class="symbol_name_watchlist">${item.symbol_name}</span>
-                                </div>
-                            </td>
-                            <td><div>${item.open}</div></td>
-                            <td><div>${item.high}</div></td>
-                            <td><div>${item.low}</div></td>
-                            <td><div>${item.close}</div></td>
-                            <td><div>${item.last_trade_price}</div></td>
-                            <td><div>${item.avg_daily_volume}</div></td>
-                            <td><div>${item.total_volume}</div></td>
-                            <td><div>${item.ratio}</div></td>
-                            <td><div>${item.change}</div></td>
-                            <td><div>${item.change_percent}</div></td>
-                        </tr>
-                    `;
-                    tableBody.append(row);
-                });
-            }
-
-            // Initialize DataTable
-            $("#breakoutTable").DataTable({
-                "paging": true,
-                "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
-                "searching": true,
-                "ordering": true,
-                "info": true,
-                "order": [] // Disable default sorting
-            });
-        }
-  
+   
     </script>
 </div>
 {% endblock dashboard_body %}

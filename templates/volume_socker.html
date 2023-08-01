@@ -3,300 +3,344 @@
 {% block dashboard_body %}
 
 <style>
-    .bi-graph-up{
-        color: #80808094;
-        outline: 1px solid;
-        padding: 6px 6px;
+  .bi-graph-up {
+    color: #80808094;
+    outline: 1px solid;
+    padding: 6px 6px;
     border-radius: 9px;
     height: 27px;
     width: 27px;
-transition: 0.3s;
-    }
-    .bi-graph-up:hover{
-        color: white;
-        outline: 1px solid;
-        background-color: cornflowerblue;
-    }
-    .dataTables_length{
-        margin-bottom: 1rem;
-    }
-    tr:hover .symbol_name{
-        color: cornflowerblue;
-    }
-    th{
-        font-weight: 500 !important;
-    }
-    td{
-        color: #686868 !important;
+    transition: 0.3s;
+  }
 
-    }
-    #volume_shocker_table_wrapper{
-      overflow:auto !important ;
-    }
+  .bi-graph-up:hover {
+    color: white;
+    outline: 1px solid;
+    background-color: cornflowerblue;
+  }
+
+  .dataTables_length {
+    margin-bottom: 1rem;
+  }
+
+  tr:hover .symbol_name {
+    color: cornflowerblue;
+  }
+
+
+</style>
+
+<style>
+  tr {
+    white-space: nowrap;
+  }
+
+  .bi.bi-graph-up {
+    border: 1px solid #80808030;
+    border-radius: 7px;
+    padding: 6px 9px;
+    width: 33px;
+    display: block;
+    height: 29px;
+    color: gray;
+    transition: 0.3s;
+    display: inline;
+  }
+
+  .bi.bi-graph-up:hover {
+    background-color: rgb(0, 132, 255);
+    border: none;
+    color: white;
+  }
+
+  tr:hover .symbol_name_watchlist {
+    color: #2196f3;
+  }
+
+  /* Reset default margin and padding for the table */
+
+
+  /* Style for the table header */
+
+
+  th,
+  td {
+    padding: 12px 8px;
+    text-align: left;
+  }
+
+  /* Add padding to tbody tr */
+  tbody tr {
+    border-bottom: 1px solid #ddd;
+    /* Add borders between rows */
+  }
+
+  td>div,
+  th>div {
+    padding: 9px;
+  }
+
+  .dataTables_length,
+  .dataTables_filter {
+    padding: 10px 0 !important;
+    display: flex;
+    justify-content: flex-start;
+
+
+
+  }
+
+  #main_volume_socker {
+    margin: 12px 0;
+    padding: 24px;
+    border-radius: 10px;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+  }
+
+  thead {
+    padding: 12px 15px !important;
+    font-size: 17px !important;
+    background: #4399eb !important;
+    color: #fff !important;
+    border-right: 1px solid var(--border-gray) !important;
+  }
+</style>
+<style>
+  .filter-btn {
+    border: 1px solid #4399eb !important;
+    background-color: #fff;
+    font-family: Roboto, sans-serif;
+    font-weight: 400;
+    font-size: 13px;
+    color: #4399eb;
+    line-height: 1.923;
+    padding: 4px 13.5px;
+    margin-right: 9px;
+    min-width: 100px;
+    max-width: 150px;
+    text-align: center;
+    border-radius: 10px;
+  }
+
+  .active {
+    background: -webkit-gradient(linear, left top, left bottom, from(#4399eb), to(#5cadfb));
+    background: -moz-linear-gradient(top, #4399eb 0, #5cadfb 100%);
+    background: linear-gradient(180deg, #4399eb, #5cadfb);
+    color: #fff;
+  }
+
+
+
+  .table-striped-custom>tbody>tr:nth-child(2n)>td,
+  .table-striped-custom>tbody>tr:nth-child(2n)>th {
+    background-color: rgb(240, 247, 253) !important;
+  }
+
+  /* Custom CSS to change the background color of placeholder-glow */
+  .placeholder-glow:focus::placeholder {
+    background-color: red !important;
+    /* Add any other custom styles you want for the placeholder */
+  }
+
+  /* Optionally, change the color of the glowing effect */
+  .placeholder-glow:focus::placeholder:after {
+    background-color: blue !important;
+  }
+
+  .placeholder {
+    height: 2rem !important;
+  }
+
+  .long_buildup {
+    background: green;
+    color: white;
+    border-radius: 50px;
+    font-weight: 600;
+    padding: 5px 15px 7px 30px;
+    font-size: 14px;
+  }
+
+  .short_buildup {
+    background: lightcoral;
+    color: white;
+    border-radius: 50px;
+    font-weight: 600;
+    padding: 5px 15px 7px 30px;
+    font-size: 14px;
+  }
+
+  .short_covering {
+    background: #c9c900;
+    ;
+    color: white;
+    border-radius: 50px;
+    font-weight: 600;
+    padding: 5px 15px 7px 30px;
+    font-size: 14px;
+  }
+
+  .long_unwinding {
+    background: #ff9900;
+    ;
+    color: rgb(255, 255, 255);
+    border-radius: 50px;
+    font-weight: 600;
+    padding: 5px 15px 7px 30px;
+    font-size: 14px;
+  }
+
+  table.dataTable tbody tr {
+    background-color: transparent;
+    border-bottom: transparent;
+  }
+
+  table.dataTable thead th,
+  table.dataTable thead td {
+    padding: 10px;
+    border-bottom: 0px solid rgb(0 0 0 / 0%) !important;
+  }
+
+  table.dataTable tbody td {
+    border: none !important;
+    border-top: 0 !important;
+  }
+
+  /* #bulk_data_wrapper{
+  overflow: auto;
+}
+#bulk_data_length{
+  position: fixed;
+}
+.dataTables_filter{
+  margin-top: 2.5em !important;
+  position: fixed;
+} */
+  /* Custom CSS for DataTable's search input and length dropdown */
+  .table-container {
+    position: relative;
+  }
+
+
+  .parent_table {
+    overflow: auto;
+  }
+
+  #bulk_data_wrapper {
+    display: flex;
+    flex-direction: column;
+  }
+
+  #breakoutTable_wrapper {
+    display: flex;
+    flex-direction: column;
+  }
+
+  #volume_shocker_table_wrapper{
+    display: flex;
+    flex-direction: column;
+  }
 </style>
 <div>
+  <div>
 
 
-    <div class="container">
-        <h4 class="my-3">Volume Shockers Intraday | NSE Stocks | NiftyTrader</h4>
-        <div class="row justify-content-center mt-5">
-            <div class="col-md-12">
-               
-                <table border="1" class="table table-hover mb-4" id="volume_shocker_table" >
-                    <thead class="table-light text-secondary">
-                        <tr> 
-                            <th>SYMBOL</th>
-                            <th>LTP</th>
-                            <th>HIGH</th>
-                            <th>LOW</th>
-                            <th>AVG DAILY VOLUME(LACS)</th>
-                            <th>(TODAY/AVG VOLUME)</th>
-                        </tr>
-                    </thead>
-           
-                    <tbody id="breakout-table"  style="display: none;"></tbody>
-                </table>
-                <div class=""  id="loader" style="display: none;">
-                <p class="container row placeholder-glow gap-1 justify-content-center" style="height: 2rem;">
-                    <span class="placeholder col-3"></span>
-                    <span class="placeholder col-1"></span>
-                    <span class="placeholder col-1"></span>
-                    <span class="placeholder col-1"></span>
-                    <span class="placeholder col-3"></span>
-                    <span class="placeholder " style="width: 23.3% ;"></span>
-                    
-                  </p>
-                <p class="container row placeholder-glow gap-1 justify-content-center" style="height: 2rem;">
-                    <span class="placeholder col-3"></span>
-                    <span class="placeholder col-1"></span>
-                    <span class="placeholder col-1"></span>
-                    <span class="placeholder col-1"></span>
-                    <span class="placeholder col-3"></span>
-                    <span class="placeholder " style="width: 23.3% ;"></span>
-                    
-                  </p>
-                <p class="container row placeholder-glow gap-1 justify-content-center" style="height: 2rem;">
-                    <span class="placeholder col-3"></span>
-                    <span class="placeholder col-1"></span>
-                    <span class="placeholder col-1"></span>
-                    <span class="placeholder col-1"></span>
-                    <span class="placeholder col-3"></span>
-                    <span class="placeholder " style="width: 23.3% ;"></span>
-                    
-                  </p>
-                <p class="container row placeholder-glow gap-1 justify-content-center" style="height: 2rem;">
-                    <span class="placeholder col-3"></span>
-                    <span class="placeholder col-1"></span>
-                    <span class="placeholder col-1"></span>
-                    <span class="placeholder col-1"></span>
-                    <span class="placeholder col-3"></span>
-                    <span class="placeholder " style="width: 23.3% ;"></span>
-                    
-                  </p>
-                <p class="container row placeholder-glow gap-1 justify-content-center" style="height: 2rem;">
-                    <span class="placeholder col-3"></span>
-                    <span class="placeholder col-1"></span>
-                    <span class="placeholder col-1"></span>
-                    <span class="placeholder col-1"></span>
-                    <span class="placeholder col-3"></span>
-                    <span class="placeholder " style="width: 23.3% ;"></span>
-                    
-                  </p>
-                <p class="container row placeholder-glow gap-1 justify-content-center" style="height: 2rem;">
-                    <span class="placeholder col-3"></span>
-                    <span class="placeholder col-1"></span>
-                    <span class="placeholder col-1"></span>
-                    <span class="placeholder col-1"></span>
-                    <span class="placeholder col-3"></span>
-                    <span class="placeholder " style="width: 23.3% ;"></span>
-                    
-                  </p>
-                <p class="container row placeholder-glow gap-1 justify-content-center" style="height: 2rem;">
-                    <span class="placeholder col-3"></span>
-                    <span class="placeholder col-1"></span>
-                    <span class="placeholder col-1"></span>
-                    <span class="placeholder col-1"></span>
-                    <span class="placeholder col-3"></span>
-                    <span class="placeholder " style="width: 23.3% ;"></span>
-                    
-                  </p>
-                <p class="container row placeholder-glow gap-1 justify-content-center" style="height: 2rem;">
-                    <span class="placeholder col-3"></span>
-                    <span class="placeholder col-1"></span>
-                    <span class="placeholder col-1"></span>
-                    <span class="placeholder col-1"></span>
-                    <span class="placeholder col-3"></span>
-                    <span class="placeholder " style="width: 23.3% ;"></span>
-                    
-                  </p>
-                <p class="container row placeholder-glow gap-1 justify-content-center" style="height: 2rem;">
-                    <span class="placeholder col-3"></span>
-                    <span class="placeholder col-1"></span>
-                    <span class="placeholder col-1"></span>
-                    <span class="placeholder col-1"></span>
-                    <span class="placeholder col-3"></span>
-                    <span class="placeholder " style="width: 23.3% ;"></span>
-                    
-                  </p>
-                <p class="container row placeholder-glow gap-1 justify-content-center" style="height: 2rem;">
-                    <span class="placeholder col-3"></span>
-                    <span class="placeholder col-1"></span>
-                    <span class="placeholder col-1"></span>
-                    <span class="placeholder col-1"></span>
-                    <span class="placeholder col-3"></span>
-                    <span class="placeholder " style="width: 23.3% ;"></span>
-                    
-                  </p>
-                <p class="container row placeholder-glow gap-1 justify-content-center" style="height: 2rem;">
-                    <span class="placeholder col-3"></span>
-                    <span class="placeholder col-1"></span>
-                    <span class="placeholder col-1"></span>
-                    <span class="placeholder col-1"></span>
-                    <span class="placeholder col-3"></span>
-                    <span class="placeholder " style="width: 23.3% ;"></span>
-                    
-                  </p>
-                <p class="container row placeholder-glow gap-1 justify-content-center" style="height: 2rem;">
-                    <span class="placeholder col-3"></span>
-                    <span class="placeholder col-1"></span>
-                    <span class="placeholder col-1"></span>
-                    <span class="placeholder col-1"></span>
-                    <span class="placeholder col-3"></span>
-                    <span class="placeholder " style="width: 23.3% ;"></span>
-                    
-                  </p>
-                <p class="container row placeholder-glow gap-1 justify-content-center" style="height: 2rem;">
-                    <span class="placeholder col-3"></span>
-                    <span class="placeholder col-1"></span>
-                    <span class="placeholder col-1"></span>
-                    <span class="placeholder col-1"></span>
-                    <span class="placeholder col-3"></span>
-                    <span class="placeholder " style="width: 23.3% ;"></span>
-                    
-                  </p>
-                <p class="container row placeholder-glow gap-1 justify-content-center" style="height: 2rem;">
-                    <span class="placeholder col-3"></span>
-                    <span class="placeholder col-1"></span>
-                    <span class="placeholder col-1"></span>
-                    <span class="placeholder col-1"></span>
-                    <span class="placeholder col-3"></span>
-                    <span class="placeholder " style="width: 23.3% ;"></span>
-                    
-                  </p>
-                <p class="container row placeholder-glow gap-1 justify-content-center" style="height: 2rem;">
-                    <span class="placeholder col-3"></span>
-                    <span class="placeholder col-1"></span>
-                    <span class="placeholder col-1"></span>
-                    <span class="placeholder col-1"></span>
-                    <span class="placeholder col-3"></span>
-                    <span class="placeholder " style="width: 23.3% ;"></span>
-                    
-                  </p>
-                <p class="container row placeholder-glow gap-1 justify-content-center" style="height: 2rem;">
-                    <span class="placeholder col-3"></span>
-                    <span class="placeholder col-1"></span>
-                    <span class="placeholder col-1"></span>
-                    <span class="placeholder col-1"></span>
-                    <span class="placeholder col-3"></span>
-                    <span class="placeholder " style="width: 23.3% ;"></span>
-                    
-                  </p>
-                <p class="container row placeholder-glow gap-1 justify-content-center" style="height: 2rem;">
-                    <span class="placeholder col-3"></span>
-                    <span class="placeholder col-1"></span>
-                    <span class="placeholder col-1"></span>
-                    <span class="placeholder col-1"></span>
-                    <span class="placeholder col-3"></span>
-                    <span class="placeholder " style="width: 23.3% ;"></span>
-                    
-                  </p>
-                <p class="container row placeholder-glow gap-1 justify-content-center" style="height: 2rem;">
-                    <span class="placeholder col-3"></span>
-                    <span class="placeholder col-1"></span>
-                    <span class="placeholder col-1"></span>
-                    <span class="placeholder col-1"></span>
-                    <span class="placeholder col-3"></span>
-                    <span class="placeholder " style="width: 23.3% ;"></span>
-                    
-                  </p>
-                <p class="container row placeholder-glow gap-1 justify-content-center" style="height: 2rem;">
-                    <span class="placeholder col-3"></span>
-                    <span class="placeholder col-1"></span>
-                    <span class="placeholder col-1"></span>
-                    <span class="placeholder col-1"></span>
-                    <span class="placeholder col-3"></span>
-                    <span class="placeholder " style="width: 23.3% ;"></span>
-                    
-                  </p>
-                <p class="container row placeholder-glow gap-1 justify-content-center" style="height: 2rem;">
-                    <span class="placeholder col-3"></span>
-                    <span class="placeholder col-1"></span>
-                    <span class="placeholder col-1"></span>
-                    <span class="placeholder col-1"></span>
-                    <span class="placeholder col-3"></span>
-                    <span class="placeholder " style="width: 23.3% ;"></span>
-                    
-                  </p>
-             
-              
-                </div>
-              
-            </div>
+    <div class="">
+      <h4 class="my-3">Volume Shockers Intraday | NSE Stocks | NiftyTrader</h4>
+      <div class="row justify-content-center mt-2">
+        <div class="col-md-12" id="main_volume_socker">
+
+          <table border="1" class="table table-hover mb-4 table-striped-custom" id="volume_shocker_table"
+            style="width:-webkit-fill-available;">
+            <thead>
+              <tr>
+                <td>
+                  <div>SYMBOL</div>
+                </td>
+                <td>
+                  <div>LTP</div>
+                </td>
+                <td>
+                  <div>HIGH</div>
+                </td>
+                <td>
+                  <div>LOW</div>
+                </td>
+                <td>
+                  <div>AVG DAILY VOLUME(LACS)</div>
+                </td>
+                <td>
+                  <div>(TODAY/AVG VOLUME)</div>
+                </td>
+              </tr>
+
+            </thead>
+
+            <tbody id="breakout-table" style="display: none;"></tbody>
+          </table>
+
         </div>
+      </div>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-        // Function to create the table rows from the JSON data
-        function createTableRows(data) {
-            let table = $("#breakout-table");
-            for (let item of data) {
-                let row = $("<tr>");
-                $("<td style='display: flex; align-items: center; gap: 0.4rem;'>").append('<a href="https://www.tradingview.com/chart/MgiGDMYM/?symbol=' + item.symbol_name + '&aff_id=113877" target="_blank"><i class="bi bi-graph-up"></i></a> <p style="margin-top: 0rem; margin-bottom: 0rem;" class="symbol_name">' + item.symbol_name + '</p>').appendTo(row);
-                $("<td>").text(item.last_trade_price).appendTo(row);
-                $("<td>").text(item.high).appendTo(row);
-                $("<td>").text(item.low).appendTo(row);
-                $("<td>").text(item.avg_daily_volume).addClass('text-center').appendTo(row);
-                $("<td>").text(item.ratio).addClass('text-center').appendTo(row);
-                table.append(row);
-            }
-
-            $("#loader").hide(); // Hide the loader once data is loaded
-            $("#breakout-table").show(); // Show the table after data is loaded
-            if ($.fn.DataTable.isDataTable("#volume_shocker_table")) {
-                $("#volume_shocker_table").DataTable().destroy();
-            }
-
-            $('#volume_shocker_table').DataTable({
-          "pageLength": 25
-        });
-  
+      // Function to create the table rows from the JSON data
+      function createTableRows(data) {
+        let table = $("#breakout-table");
+        for (let item of data) {
+          let row = $("<tr>");
+          $("<td>").append(
+            $('<div style="display: flex; align-items: center; gap: 0.4rem;">').append(
+              '<a href="https://www.tradingview.com/chart/MgiGDMYM/?symbol=' + item.symbol_name + '&aff_id=113877" target="_blank"><i class="bi bi-graph-up"></i></a>',
+              '<div style="margin-top: 0rem; margin-bottom: 0rem;" class="symbol_name">' + item.symbol_name + '</div>'
+            )
+          ).appendTo(row);
+          $("<td>").append($('<div>').text(item.last_trade_price)).appendTo(row);
+          $("<td>").append($('<div>').text(item.high)).appendTo(row);
+          $("<td>").append($('<div>').text(item.low)).appendTo(row);
+          $("<td>").append($('<div>').text(item.avg_daily_volume).addClass('text-center')).appendTo(row);
+          $("<td>").append($('<div>').text(item.ratio).addClass('text-center')).appendTo(row);
+          table.append(row);
         }
 
-        // Make an AJAX request to fetch the breakout data
-        function volume_shocker_data() {
-            
-            $("#loader").show(); 
-        $.ajax({
-            url: '/breakout_data',
-            method: 'GET',
-            dataType: 'json',
-            beforeSend: function () {
-                $("#loader").show(); // Show the loader before AJAX call
-            },
-            success: function (data) {
-                console.log(data);
-                createTableRows(data);
-            },
-            error: function (xhr, status, error) {
-                console.error('Request failed. Status: ' + xhr.status);
-                $("#loader").hide(); // Hide the loader in case of an error
-            }
-        });
-    }
-    volume_shocker_data();
-        setInterval(volume_shocker_data, 150000);
-    </script>
-</div>
 
-{% endblock dashboard_body %}
+        $("#loader").hide(); // Hide the loader once data is loaded
+        $("#breakout-table").show(); // Show the table after data is loaded
+        if ($.fn.DataTable.isDataTable("#volume_shocker_table")) {
+          $("#volume_shocker_table").DataTable().destroy();
+        }
+
+        $('#volume_shocker_table').DataTable({
+          "pageLength": 25
+        });
+        $('#volume_shocker_table').wrap('<div class="parent_table"></div>');
+        $('#volume_shocker_table_length,#volume_shocker_table_filter').wrapAll('<div class="parent_search_length"></div>');
+      }
+
+      // Make an AJAX request to fetch the breakout data
+      function volume_shocker_data() {
+
+        $("#loader").show();
+        $.ajax({
+          url: '/breakout_data',
+          method: 'GET',
+          dataType: 'json',
+          beforeSend: function () {
+            $("#loader").show(); // Show the loader before AJAX call
+          },
+          success: function (data) {
+            console.log(data);
+            createTableRows(data);
+          },
+          error: function (xhr, status, error) {
+            console.error('Request failed. Status: ' + xhr.status);
+            $("#loader").hide(); // Hide the loader in case of an error
+          }
+        });
+      }
+      volume_shocker_data();
+      setInterval(volume_shocker_data, 150000);
+    </script>
+  </div>
+
+  {% endblock dashboard_body %}
