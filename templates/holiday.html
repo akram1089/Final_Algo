@@ -4,7 +4,36 @@
 {% load static %}
 {% block dashboard_body %}
 <style>
+.parent_table{
+  overflow: auto;
+}
+#example{
+  
+  white-space: nowrap;
 
+}
+#example_wrapper{
+  display: flex;
+  flex-direction: column;
+}
+
+.table-striped-custom>tbody>tr:nth-child(2n)>td,
+    .table-striped-custom>tbody>tr:nth-child(2n)>th {
+        background-color: rgb(240, 247, 253) !important;
+    }
+    table.dataTable tbody tr {
+        background-color: transparent;
+        border-bottom:transparent;
+    }
+    table.dataTable thead th, table.dataTable thead td {
+    padding: 10px;
+    border-bottom: 0px solid rgb(0 0 0 / 0%);
+}
+  
+table.dataTable tbody td {
+      border: none !important;
+      border-top: 0 !important;
+    }
 </style>
 
 <div class="main_head_strategies border-bottom my-4">
@@ -38,7 +67,7 @@
 
 
 
-    <table id="example" class="display pt-3" width="100%">
+    <table id="example" class="display pt-3 table-striped-custom" width="100%">
 
 <thead style='    background: #4399eb!important;
 color: white; margin-top:1rem;'>
@@ -61,7 +90,13 @@ color: white; margin-top:1rem;'>
     </tr>
     {% endfor %}
 
-   
+   <script>
+
+    $('#example').wrap('<div class="parent_table"></div>');
+    $('#example_length,#example_filter').wrapAll('<div class="parent_search_length"></div>');
+
+
+   </script>
 
    
 </tbody>

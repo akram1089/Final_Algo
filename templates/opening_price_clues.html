@@ -65,7 +65,8 @@
     }
 
     th>div {
-        color: rgba(0, 0, 0, 0.559);
+        color: rgb(255 255 255);
+        font-size: 15px;
     }
 
     .open_clue_low {
@@ -75,13 +76,37 @@
         box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
     }
 
-    .high_table,
-    .low_table {
+    
+    .parent_table {
         overflow: auto;
     }
     tr{
         white-space: nowrap;
     }
+    #high-table_wrapper,#low-table_wrapper{
+        display: flex;
+    flex-direction: column;
+    }
+    thead {
+        padding: 12px 15px !important;
+        font-size: 12px !important;
+     
+        background: #4399eb !important;
+        color: #fff !important;
+        border-right: 1px solid var(--border-gray) !important;
+    }
+    .table-striped-custom>tbody>tr:nth-child(2n)>td,
+    .table-striped-custom>tbody>tr:nth-child(2n)>th {
+        background-color: rgb(240, 247, 253) !important;
+    }
+    table.dataTable tbody tr {
+        background-color: transparent;
+        border-bottom:transparent;
+    }
+    table.dataTable thead th, table.dataTable thead td {
+    padding: 10px;
+    border-bottom: 0px solid rgb(0 0 0 / 0%);
+}
 </style>
 
 <div>
@@ -89,10 +114,10 @@
 
     <div class="open_clue_low">
         <div class="low_table">
-            <table id="low-table" class="table table-hover">
+            <table id="low-table" class="table table-hover table-striped-custom">
                 <p>Filter Criteria : Stocks With Same Open And Low
                 </p>
-                <thead class="table-light">
+                <thead class="text-light">
                     <tr>
                         <th>
                             <div>SYMBOL </div>
@@ -137,8 +162,8 @@
         <p>Filter Criteria: Stocks With Same Open And High
         </p>
         <div class="high_table">
-            <table id="high-table" class="table table-hover">
-                <thead class="table-light">
+            <table id="high-table" class="table table-hover table-striped-custom">
+                <thead >
                     <tr>
                         <th>
                             <div>SYMBOL </div>
@@ -223,20 +248,21 @@
                     "order": [] // Disable default sorting
                 });
                 // Initialize DataTables for the table with no default sorting
-
+                $('#high-table').wrap('<div class="parent_table"></div>');
+                $('#high-table_filter,#high-table_length').wrapAll('<div class="parent_search_length"></div>');
             }
-
-
+            
+            
             function displayLowData(data) {
                 var table_low = $("#low-table tbody");
                 table_low.empty(); // Clear exi
                 // Populate Low Data rows
                 $.each(data, function (index, item) {
                     const row = `
-                        <tr>
-                            <td>
-                                <div>
-                                    <span><a href="https://www.tradingview.com/chart/MgiGDMYM/?symbol=${item.symbol_name}&aff_id=113877" target="_blank"><i class="bi bi-graph-up"></i></a></span>
+                    <tr>
+                        <td>
+                            <div>
+                                <span><a href="https://www.tradingview.com/chart/MgiGDMYM/?symbol=${item.symbol_name}&aff_id=113877" target="_blank"><i class="bi bi-graph-up"></i></a></span>
                                     <span class="symbol_name_watchlist">${item.symbol_name}</span>
                                 </div>
                             </td>
@@ -248,19 +274,21 @@
                             <td><div>${item.today_close}</div></td>
                             <td><div>${item.today_volume}</div></td>
                         </tr>
-                    `;
-                    table_low.append(row);
-                });
-
-                // Initialize Datatable_lows for the table with no default sorting
-                $("#low-table").DataTable({
-                    "paging": true,
-                    "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
-                    "searching": true,
-                    "ordering": true,
-                    "info": true,
-                    "order": [] // Disable default sorting
-                });
+                        `;
+                        table_low.append(row);
+                    });
+                    
+                    // Initialize Datatable_lows for the table with no default sorting
+                    $("#low-table").DataTable({
+                        "paging": true,
+                        "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+                        "searching": true,
+                        "ordering": true,
+                        "info": true,
+                        "order": [] // Disable default sorting
+                    });
+                    $('#low-table').wrap('<div class="parent_table"></div>');
+                    $('#low-table_filter,#low-table_length').wrapAll('<div class="parent_search_length"></div>');
             }
 
 
