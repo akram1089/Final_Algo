@@ -143,6 +143,7 @@ urlpatterns = [
     path('nse_volume_shocker', views.nse_volume_shocker, name='nse_volume_shocker'),
     path('nse_most_active_stock', views.nse_most_active_stock, name='nse_most_active_stock'),
     path('nse_most_spread_stock', views.nse_most_spread_stock, name='nse_most_spread_stock'),
+    path('dashboard_news_feed', views.dashboard_news_feed, name='dashboard_news_feed'),
 
 
 

@@ -1,81 +1,152 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Volume Gainer Chart</title>
-    <style>
-        .Chart_volume_gainer {
-            position: relative;
-            border-radius: 10px;
-            text-align: center;
-            width: 600px;
-            height: 400px;
-            box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-            padding: 15px;
-            margin: 20px auto;
-        }
-    </style>
-</head>
-<body>
-    <div id="charts-container" class="Volume_socker">
-        <!-- Chart will be displayed here -->
-    </div>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>
-        function fetchDataAndDisplayChart() {
+
+<!DOCTYPE html>
+<html lang="en">
+    
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog News</title>
+    <!-- Add Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+    <!-- Add Bootstrap Icons CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.19.0/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <!-- Add Swiper CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
+</head>
+
+<style>
+    .swiper-horizontal>.swiper-pagination-bullets,
+    .swiper-pagination-bullets.swiper-pagination-horizontal,
+    .swiper-pagination-custom,
+    .swiper-pagination-fraction {
+        bottom: auto !important;
+         width: auto !important;
+    }
+    .swiper-horizontal>.swiper-pagination-bullets, .swiper-pagination-bullets.swiper-pagination-horizontal{
+        left: 82px !important;
+    }
+</style>
+
+<body>
+    <h1>Blog News</h1>
+
+
+
+    <!-- Add Swiper container -->
+    <div class="main_swiper_container" style="width: 370px; border: 1px solid; border-radius: 10px; padding: 10px; height: 500px; ">
+        <div class="top_news_feed d-flex">
+<h5>LATEST NEWS</h5>
+<button class="btn btn-outline-primary">Hindi News</button>
+        </div>
+        <div class="swiper-container" id="blog-news-slider" style="overflow: hidden;     height: 423px;">
+            <div class="swiper-wrapper">
+                <!-- Blog news items will be dynamically added here -->
+            </div>
+            <!-- Add pagination -->
+            <div class="swiper-pagination"></div>
+        </div>
+    </div>
+
+
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Add Swiper JS -->
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+<!-- ... Previous code ... -->
+<script>
+    $(document).ready(function () {
+        // Function to get blog news data from API using AJAX
+        function getBlogNewsData() {
             $.ajax({
-                url: "{% url 'nse_most_active_stock' %}",
+                url: '/dashboard_news_feed', // Replace this with the actual API endpoint
                 type: 'GET',
                 dataType: 'json',
                 success: function (data) {
-                    // Slice the data to keep only the top 10 values
-                    var top10Data = data.slice(0, 10);
-
-                    // Extract the 'symbol' and 'pChange' values from the data
-                    var labels = top10Data.map(item => item.symbol);
-                    var pChanges = top10Data.map(item => item.totalTradedValue / 100000);
-
-                    // Create the chart using Chart.js
-                    var canvas = document.createElement('canvas');
-                    canvas.id = "chartVolumeGainer";
-                    canvas.width = 600;
-                    canvas.height = 400;
-                    document.getElementById('charts-container').appendChild(canvas);
-
-                    new Chart(canvas, {
-                        type: 'bar',
-                        data: {
-                            labels: labels,
-                            datasets: [{
-                                label: 'Price in Lakhs',
-                                data: pChanges,
-                                backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                                borderColor: 'rgba(75, 192, 192, 1)',
-                                borderWidth: 1
-                            }]
-                        },
-                        options: {
-                            responsive: true,
-              maintainAspectRatio: false,
-                            scales: {
-                                y: {
-                                    beginAtZero: true
-                                }
-                            }
-                        }
-                    });
+                    updateBlogNewsData(data.resultData);
                 },
                 error: function (error) {
-                    console.error('Error fetching data:', error);
+                    console.log(error);
                 }
             });
         }
 
-        // Call the function to fetch data and display the chart when the page loads
-        $(document).ready(function () {
-            fetchDataAndDisplayChart();
-        });
-    </script>
+        // Function to update the blog news data on the page
+        function updateBlogNewsData(data) {
+            var blogNewsContainer = $('#blog-news-slider .swiper-wrapper');
+            blogNewsContainer.empty();
+
+            // Assuming the API response contains an array of blog news objects
+            data.forEach(function (blogNewsItem) {
+                // Check if the source is "The Economic Times"
+                if (blogNewsItem.source === "The Economic Times") {
+                    var blogItem = $('<div class="swiper-slide blog-item"></div>');
+
+                    var title = $('<h5 class="blog-title"></h5>').text(blogNewsItem.title);
+                    blogItem.append(title); // Add title to the top of the swiper-slide
+
+                    // Add image if available
+                    if (blogNewsItem.imageUrl) {
+                        var imageElement = $('<img class="card-img-top">').attr('src', blogNewsItem.imageUrl);
+                        blogItem.append(imageElement);
+                    }
+
+                    var publishDate = $('<p style="margin-bottom:auto" class="card-text d-flex align-items-center"></p>');
+                    var clockIcon = $('<i class="bi bi-clock"></i>');
+
+                    function getTimeAgo(publishDate) {
+                        // ... Previous getTimeAgo function ...
+                        var currentDate = new Date();
+                            var newsDate = new Date(publishDate);
+
+                            var timeDiff = Math.abs(currentDate.getTime() - newsDate.getTime());
+                            var minutesDiff = Math.floor(timeDiff / (1000 * 60));
+                            var hoursDiff = Math.floor(timeDiff / (1000 * 60 * 60));
+                            var daysDiff = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+
+                            if (minutesDiff < 60) {
+                                return minutesDiff + ' minutes ago';
+                            } else if (hoursDiff < 24) {
+                                return hoursDiff + ' hours ago';
+                            } else {
+                                return daysDiff + ' days ago';
+                            }
+                    }
+
+                    publishDate.append(clockIcon).append('   ' + getTimeAgo(blogNewsItem.publishDate) + ' / ' + blogNewsItem.source);
+                    var description = blogNewsItem.description;
+                // Remove HTML tags from description using regular expression
+                var plainText = description.replace(/<[^>]+>/g, '');
+                // Trim the text to a specific length (e.g., 150 characters)
+                var maxLength = 75;
+                var truncatedDescription = plainText.length > maxLength ? plainText.substr(0, maxLength) + '...' : plainText;
+                console.log(truncatedDescription);
+                    var content = $('<p class="blog-content"></p>').text(truncatedDescription);
+
+                    blogItem.append(publishDate, content); // Move publishDate and content below the title
+                    blogNewsContainer.append(blogItem);
+                }
+            });
+
+            // Initialize Swiper slider
+            var swiper = new Swiper('#blog-news-slider', {
+        slidesPerView: 1,
+        spaceBetween: 20,
+        pagination: {
+            el: '.swiper-pagination',
+            clickable: true,
+        },
+        loop: true, // Set infinite loop to true
+    });
+        }
+
+        // Call the function to get blog news data on page load
+        getBlogNewsData();
+    });
+</script>
+<!-- ... Rest of the code ... -->
+
 </body>
+
 </html>

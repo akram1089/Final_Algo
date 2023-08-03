@@ -29,7 +29,7 @@
 
     .news-container {
         margin-bottom: 20px;
-      
+
     }
 
 
@@ -88,24 +88,53 @@
         cursor: pointer;
         width: 29px;
         height: 28px;
-    
+
     }
 
     @media screen and (max-width: 780px) {
         #news-container {
-    
-    flex-wrap: wrap;
-}
-.main_top_header{
-    margin-bottom:1rem !important;
-}
+
+            flex-wrap: wrap;
+        }
+
+        .main_top_header {
+            margin-bottom: 1rem !important;
+        }
+
+    }
+</style>
+<style>
+    .card-body:hover .card-title {
+        color: #2196f3;
+    }
+
+    .card:hover {
+        --bs-card-border-color: #2196f3 !important;
+        box-shadow: rgba(3, 115, 171, 0.388) 0px 1px 4px;
+    }
+
+    .main_top_header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+
+    .right_news_head {
+        display: flex;
+        align-items: center;
+        gap: 0.3rem;
 
     }
 
+    .main_icon_trim_expand {
+        gap: 0.3rem;
+        transition: 0.3s;
+    }
 </style>
 <script>
     $(document).ready(function () {
-       
+
         $('#filter-indian').click(function () {
             var filter = 'IndianNews';
             $('#filter-indian').addClass('active');
@@ -119,7 +148,7 @@
             $('.grid_icon').addClass('activek');
         });
 
-       
+
         $('#filter-world').click(function () {
             var filter = 'WorldNews';
             $('#filter-indian').removeClass('active');
@@ -141,14 +170,14 @@
             getNewsData(url);
         });
 
-        
+
         function saveSettings(filter, language, displayMode) {
             localStorage.setItem('newsFilter', filter);
             localStorage.setItem('newsLanguage', language);
             localStorage.setItem('displayMode', displayMode);
         }
 
-    
+
         function getNewsData(url) {
             $.ajax({
                 url: url,
@@ -157,7 +186,7 @@
                     $('#news-container').html('<div class="text-center py-5 w-100 h-100"><div class="spinner-border text-info" role="status"></div></div>');
                 },
                 success: function (data) {
-                    updateNewsData(data); 
+                    updateNewsData(data);
                 },
                 error: function (error) {
                     console.log(error);
@@ -167,28 +196,28 @@
 
         function updateNewsData(data) {
             var newsContainer = $('#news-container');
-            newsContainer.empty(); 
+            newsContainer.empty();
 
-          
+
             var sortedData = data.resultData.sort(function (a, b) {
                 var dateA = new Date(a.publishDate);
                 var dateB = new Date(b.publishDate);
                 return dateB - dateA;
             });
 
-    
+
             var column1 = $('<div class="news-column"></div>');
             var column2 = $('<div class="news-column"></div>');
             var column3 = $('<div class="news-column"></div>');
 
-          
+
             $.each(sortedData, function (index, newsData) {
                 var newsItem = $('<div class="card mb-2"></div>');
                 var cardBody = $('<div class="card-body"></div>');
 
                 var title = $('<h5 class="card-title"></h5>').text(newsData.title);
 
-            
+
                 if (newsData.imageUrl) {
                     var image = newsData.imageUrl;
                     var imageElement = $('<img class="card-img-top">').attr('src', image);
@@ -196,7 +225,7 @@
                 }
 
                 var clockIcon = $('<i class="bi bi-clock"></i>');
-              
+
                 function getTimeAgo(publishDate) {
                     var currentDate = new Date();
                     var newsDate = new Date(publishDate);
@@ -215,7 +244,7 @@
                     }
                 }
 
-          
+
                 var publishDate = $('<p style="margin-bottom:auto"  class="card-text d-flex align-items-center"></p>').append(clockIcon).append(' ' + getTimeAgo(newsData.publishDate));
 
                 var source = $('<p style="margin-bottom:auto" class="card-text d-flex align-items-center"></p>').append(newsData.source);
@@ -230,12 +259,12 @@
                 cardBody.append(title, main_pub_source_icon, description);
                 newsItem.append(cardBody);
 
-                
+
                 newsItem.click(function () {
                     window.open(newsData.url, '_blank');
                 });
 
-               
+
                 if (index % 3 === 0) {
                     column1.append(newsItem);
                 } else if (index % 3 === 1) {
@@ -245,11 +274,11 @@
                 }
             });
 
-         
+
             newsContainer.append(column1, column2, column3);
         }
 
-      
+
         function updateDisplayMode() {
             var displayMode = localStorage.getItem('displayMode');
             if (displayMode === 'list') {
@@ -259,7 +288,7 @@
             }
         }
 
-    
+
         var savedFilter = localStorage.getItem('newsFilter');
         var savedLanguage = localStorage.getItem('newsLanguage');
         if (savedFilter && savedLanguage) {
@@ -277,7 +306,7 @@
             getNewsData(url);
         }
 
-        
+
         var savedDisplayMode = localStorage.getItem('displayMode');
         if (!savedDisplayMode) {
             savedDisplayMode = 'grid';
@@ -287,10 +316,10 @@
         }
 
 
-    
+
         updateDisplayMode();
 
-     
+
 
 
         $('.list_icon').on('click', function () {
@@ -308,35 +337,10 @@
         getNewsData('/get-news-data/?filter=IndianNews&language=English');
     });
 </script>
-</head>
-<style>
-.card-body:hover .card-title{
-    color: #2196f3;
-}
-.card:hover {
-    --bs-card-border-color: #2196f3 !important;
-    box-shadow: rgba(3, 115, 171, 0.388) 0px 1px 4px;
-}
-.main_top_header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-}
 
-.right_news_head {
-    display: flex;
-    align-items: center;
-    gap: 0.3rem;
 
-}
-.main_icon_trim_expand{
-    gap: 0.3rem;
-    transition: 0.3s;
-}
-</style>
 
-<body>
+
 <div class="container py-4">
     <div class="main_top_header">
         <div class="left_news_head">
