@@ -3888,12 +3888,12 @@ import requests
 from django.http import JsonResponse
 
 def option_simulator_data(request):
-    if request.method == 'POST':
-        index = request.POST.get('index', "Nifty")
+    if request.method == 'GET':
+        index = request.GET.get('index', "Nifty")
         print(index)
-        expiry_date = request.POST.get('expiryDate')
-        start_date = request.POST.get('startDate')
-        createTime = request.POST.get('createTime', "09:20:00")
+        expiry_date = request.GET.get('expiryDate')
+        start_date = request.GET.get('startDate')
+        createTime = request.GET.get('createTime', "09:20:00")
         print(index, expiry_date, start_date, createTime)
 
         spot_url = f'https://webapi.niftytrader.in/webapi/symbol/today-spot-data?symbol={index}'
