@@ -3413,3 +3413,514 @@ def dashboard_news_feed(request):
     return JsonResponse(data)
 
 
+
+from django.shortcuts import render
+import pandas as pd
+import yfinance as yf
+import numpy as np
+from django.http import JsonResponse
+
+def fetch_stock_data(ticker, start_date, end_date):
+    data = yf.download(ticker, start=start_date, end=end_date)
+    return data
+
+def strangle_backtest(stock_data, call_strike, put_strike, expiration_date, initial_capital):
+    # Check if the expiration_date is in the stock_data DataFrame
+    if expiration_date not in stock_data.index:
+        raise ValueError(f"Expiration date {expiration_date} is not available in the stock_data.")
+
+    # Buy the call and put options at the specified strike prices and expiration date
+    call_option = stock_data.loc[stock_data.index == expiration_date, 'Open'].values[0] - call_strike
+    put_option = put_strike - stock_data.loc[stock_data.index == expiration_date, 'Open'].values[0]
+
+    # Calculate total investment cost
+    total_cost = call_option + put_option
+
+    # Compute the profit/loss for each trading day
+    stock_data['Strangle_PnL'] = stock_data['Open'] - (stock_data['Open'].shift(1) + total_cost)
+
+    # Calculate cumulative PnL
+    stock_data['Cumulative_PnL'] = stock_data['Strangle_PnL'].cumsum()
+
+    # Calculate the number of contracts we can buy with initial capital
+    num_contracts = int(initial_capital // total_cost)
+
+    # Calculate the final PnL
+    final_pnl = num_contracts * stock_data.iloc[-1]['Strangle_PnL']
+
+    # Calculate max profit and max loss
+    max_profit = np.inf if call_strike > stock_data['Open'].max() else final_pnl
+    max_loss = -total_cost
+
+    # Calculate breakeven points
+    breakeven_upper = call_strike + total_cost
+    breakeven_lower = put_strike - total_cost
+
+    # Calculate reward-risk ratio
+    reward_risk_ratio = max_profit / abs(max_loss)
+
+    return stock_data, final_pnl, max_profit, max_loss, breakeven_upper, breakeven_lower, reward_risk_ratio
+
+def strangle_chart(request):
+    # Define the parameters
+    ticker = '^NSEI'
+    start_date = '2023-07-20'
+    end_date = '2023-07-31'
+    call_strike = 20000  # Adjust this to the desired call strike price
+    put_strike = 19500  # Adjust this to the desired put strike price
+    expiration_date = '2023-07-27'  # Adjust this to the desired expiration date
+    initial_capital = 10000  # Adjust this to your desired initial capital
+
+    # Fetch historical stock data
+    stock_data = fetch_stock_data(ticker, start_date, end_date)
+
+    # Run the strangle backtest
+    try:
+        backtest_data, final_pnl, max_profit, max_loss, breakeven_upper, breakeven_lower, reward_risk_ratio = strangle_backtest(stock_data, call_strike, put_strike, expiration_date, initial_capital)
+    except ValueError as e:
+        error_message = str(e)
+        return render(request, 'strangle_app/strangle_chart.html', {'error_message': error_message})
+
+    # Create JSON representation of stock_data for the chart
+    stock_data_json = stock_data.reset_index().to_json(orient='records')
+
+    context = {
+        'stock_data_json': stock_data_json,
+        'final_pnl': final_pnl,
+        'max_profit': max_profit,
+        'max_loss': max_loss,
+        'breakeven_upper': breakeven_upper,
+        'breakeven_lower': breakeven_lower,
+        'reward_risk_ratio': reward_risk_ratio,
+    }
+
+    return render(request, 'strangle_app/strangle_chart.html', context)
+
+def strangle_chart_data(request):
+    # Define the parameters
+    ticker = '^NSEI'
+    start_date = '2023-07-20'
+    end_date = '2023-07-31'
+    call_strike = 20000  # Adjust this to the desired call strike price
+    put_strike = 19500  # Adjust this to the desired put strike price
+    expiration_date = '2023-07-27'  # Adjust this to the desired expiration date
+    initial_capital = 10000  # Adjust this to your desired initial capital
+
+    # Fetch historical stock data
+    stock_data = fetch_stock_data(ticker, start_date, end_date)
+
+    # Run the strangle backtest
+    try:
+        backtest_data, final_pnl, max_profit, max_loss, breakeven_upper, breakeven_lower, reward_risk_ratio = strangle_backtest(stock_data, call_strike, put_strike, expiration_date, initial_capital)
+    except ValueError as e:
+        return JsonResponse({'error': str(e)})
+
+    # Create JSON representation of stock_data for the chart
+    stock_data_json = stock_data.reset_index().to_dict(orient='records')
+
+    data = {
+        'stock_data': stock_data_json,
+        'final_pnl': final_pnl,
+        'max_profit': max_profit,
+        'max_loss': max_loss,
+        'breakeven_upper': breakeven_upper,
+        'breakeven_lower': breakeven_lower,
+        'reward_risk_ratio': reward_risk_ratio,
+    }
+
+    return JsonResponse(data)
+
+
+
+from django.shortcuts import render
+from django.http import JsonResponse
+import pandas as pd
+import yfinance as yf
+import numpy as np
+
+def fetch_stock_data(ticker, start_date, end_date):
+    data = yf.download(ticker, start=start_date, end=end_date)
+    return data
+
+def strangle_backtest(stock_data, call_strike, put_strike, expiration_date, initial_capital):
+    # Check if the expiration_date is in the stock_data DataFrame
+    if expiration_date not in stock_data.index:
+        raise ValueError(f"Expiration date {expiration_date} is not available in the stock_data.")
+
+    # Buy the call and put options at the specified strike prices and expiration date
+    call_option = stock_data.loc[stock_data.index == expiration_date, 'Open'].values[0] - call_strike
+    put_option = put_strike - stock_data.loc[stock_data.index == expiration_date, 'Open'].values[0]
+
+    # Calculate total investment cost
+    total_cost = call_option + put_option
+
+    # Compute the profit/loss for each trading day
+    stock_data['Strangle_PnL'] = stock_data['Open'] - (stock_data['Open'].shift(1) + total_cost)
+
+    # Calculate cumulative PnL
+    stock_data['Cumulative_PnL'] = stock_data['Strangle_PnL'].cumsum()
+
+    # Calculate the number of contracts we can buy with initial capital
+    num_contracts = int(initial_capital // total_cost)
+
+    # Calculate the final PnL
+    final_pnl = num_contracts * stock_data.iloc[-1]['Strangle_PnL']
+
+    # Calculate max profit and max loss
+    max_profit = np.inf if call_strike > stock_data['Open'].max() else final_pnl
+    max_loss = -total_cost
+
+    # Calculate breakeven points
+    breakeven_upper = call_strike + total_cost
+    breakeven_lower = put_strike - total_cost
+
+    # Calculate reward-risk ratio
+    reward_risk_ratio = max_profit / abs(max_loss)
+
+    return stock_data, final_pnl, max_profit, max_loss, breakeven_upper, breakeven_lower, reward_risk_ratio
+
+    # ... (same as before)
+
+def strangle_chart(request):
+    # Define the parameters (same as before)
+    ticker = '^NSEI'
+    start_date = '2023-07-20'
+    end_date = '2023-07-31'
+    call_strike = 20000  # Adjust this to the desired call strike price
+    put_strike = 19500  # Adjust this to the desired put strike price
+    expiration_date = '2023-07-27'  # Adjust this to the desired expiration date
+    initial_capital = 10000  # Adjust this to your desired initial capital
+
+    # Fetch historical stock data
+    stock_data = fetch_stock_data(ticker, start_date, end_date)
+
+    # Run the strangle backtest
+    try:
+        backtest_data, final_pnl, max_profit, max_loss, breakeven_upper, breakeven_lower, reward_risk_ratio = strangle_backtest(stock_data, call_strike, put_strike, expiration_date, initial_capital)
+    except ValueError as e:
+        return JsonResponse({'error_message': str(e)})
+
+    # Convert Infinity and NaN to None in the backtest data
+    backtest_data.replace([np.inf, -np.inf, np.nan], [None, None, None], inplace=True)
+
+    # Convert the date values to a more readable format
+    backtest_data['BacktestDate'] = backtest_data.index.strftime('%Y-%m-%d')
+
+    # Create a dictionary for each row in the DataFrame (orient='records') and store them in a list
+    stock_data_json = backtest_data.to_dict(orient='records')
+
+    context = {
+        'stock_data_json': stock_data_json,
+        'final_pnl': final_pnl,
+        'max_profit': max_profit.item() if np.isfinite(max_profit) else None,
+        'max_loss': max_loss.item(),
+        'breakeven_upper': breakeven_upper.item(),
+        'breakeven_lower': breakeven_lower.item(),
+        'reward_risk_ratio': reward_risk_ratio.item() if np.isfinite(reward_risk_ratio) else None,
+    }
+
+    return JsonResponse(context)
+
+
+
+
+
+from django.shortcuts import render
+import pandas as pd
+import yfinance as yf
+from django.http import JsonResponse
+
+def fetch_stock_data(ticker, start_date, end_date):
+    data = yf.download(ticker, start=start_date, end=end_date)
+    return data
+
+def straddle_backtest(stock_data, call_strike, put_strike, initial_capital):
+    # Buy the call and put options at the specified strike prices
+    stock_data['Call_PnL'] = stock_data['Open'] - call_strike
+    stock_data['Put_PnL'] = put_strike - stock_data['Open']
+
+    # Calculate the total investment cost
+    total_cost = stock_data['Call_PnL'].abs() + stock_data['Put_PnL'].abs()
+
+    # Calculate the profit/loss for each trading day
+    stock_data['Straddle_PnL'] = stock_data['Call_PnL'] + stock_data['Put_PnL']
+
+    # Calculate cumulative PnL
+    stock_data['Cumulative_PnL'] = stock_data['Straddle_PnL'].cumsum()
+
+    # Calculate max profit and max loss
+    max_profit = stock_data['Straddle_PnL'].max()
+    max_loss = stock_data['Straddle_PnL'].min()
+
+    # Calculate breakevens
+    breakeven_upper = call_strike + total_cost.min()
+    breakeven_lower = put_strike - total_cost.min()
+
+    # Calculate reward-risk ratio
+    reward_risk_ratio = max_profit / max_loss
+
+    # Calculate the final PnL
+    final_pnl = stock_data.iloc[-1]['Cumulative_PnL']
+
+    return stock_data, final_pnl, max_profit, max_loss, breakeven_upper, breakeven_lower, reward_risk_ratio
+
+def straddle_view(request):
+    return render(request, 'straddle_app/straddle.html')
+
+def get_straddle_backtest_data(request):
+    ticker = 'RELIANCE.NS'
+    start_date = '2023-01-01'
+    end_date = '2023-12-31'
+    call_strike = 2500  # Set the desired call strike price
+    put_strike = 2500  # Set the desired put strike price
+    initial_capital = 100000  # Set your desired initial capital
+
+    stock_data = fetch_stock_data(ticker, start_date, end_date)
+
+    try:
+        backtest_data, final_pnl, max_profit, max_loss, breakeven_upper, breakeven_lower, reward_risk_ratio = straddle_backtest(stock_data, call_strike, put_strike, initial_capital)
+    except ValueError as e:
+        return JsonResponse({'error': str(e)})
+
+    # Reset the index and convert the Date column to string format for the chart
+    backtest_data.reset_index(inplace=True)
+    backtest_data['Date'] = backtest_data['Date'].dt.strftime('%Y-%m-%d')
+
+    chart_data = backtest_data[['Date', 'Open', 'Straddle_PnL', 'Cumulative_PnL']].to_dict(orient='records')
+
+    data = {
+        'chart_data': chart_data,
+        'final_pnl': final_pnl,
+        'max_profit': max_profit,
+        'max_loss': max_loss,
+        'breakeven_upper': breakeven_upper,
+        'breakeven_lower': breakeven_lower,
+        'reward_risk_ratio': reward_risk_ratio,
+    }
+
+    return JsonResponse(data)
+
+
+
+
+
+
+
+
+from django.http import JsonResponse
+import numpy as np
+
+def call_payoff(sT, strike_price, premium):
+    return np.where(sT > strike_price, sT - strike_price, 0) - premium
+
+def put_payoff(sT, strike_price, premium):
+    return np.where(sT < strike_price, strike_price - sT, 0) - premium
+
+def straddle_payoff(request):
+    spot_price = 19479.65
+    strike_price_long_put = 19550
+    premium_long_put = 193.25 
+    strike_price_long_call = 19550
+    premium_long_call = 203.8
+    sT = np.arange(0, 2 * spot_price, 1)
+
+    payoff_long_call = call_payoff(sT, strike_price_long_call, premium_long_call)
+    payoff_long_put = put_payoff(sT, strike_price_long_put, premium_long_put)
+    payoff_straddle = payoff_long_call + payoff_long_put
+
+    max_profit = "Unlimited"
+    max_loss = min(payoff_straddle)
+
+    data = {
+        'sT': sT.tolist(),
+        'payoff_long_call': payoff_long_call.tolist(),
+        'payoff_long_put': payoff_long_put.tolist(),
+        'payoff_straddle': payoff_straddle.tolist(),
+        'max_profit': max_profit,
+        'max_loss': max_loss,
+    }
+    return JsonResponse(data)
+
+
+
+
+
+# views.py
+from django.shortcuts import render
+import requests
+
+def fetch_expiry_data_option_strategies(symbol):
+    stock_url = "https://webapi.niftytrader.in/webapi/Option/option-simulator-expiry-list"
+
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
+        "Accept-Language": "en-US,en;q=0.9",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive"
+    }
+
+    payload = {
+        "symbol": symbol,
+    }
+
+    stock_data = requests.post(stock_url, json=payload, headers=headers)
+    stock_json = stock_data.json()
+    
+    Option_strategies_expiry_date = stock_json['resultData']["expiry_all"]
+    
+    return Option_strategies_expiry_date
+
+
+
+# views.py
+from django.shortcuts import render
+import requests
+from datetime import datetime
+
+def fetch_expiry_data(symbol):
+    stock_url = "https://webapi.niftytrader.in/webapi/Option/option-simulator-expiry-list"
+
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
+        "Accept-Language": "en-US,en;q=0.9",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive"
+    }
+
+    payload = {
+        "symbol": symbol,
+    }
+
+    stock_data = requests.post(stock_url, json=payload, headers=headers)
+    stock_json = stock_data.json()
+    
+    Option_strategies_expiry_date = stock_json['resultData']["expiry_all"]
+    
+    # Convert date format from "2023-10-26T00:00:00" to "2023-10-26"
+    formatted_expiry_dates = [datetime.strptime(date, '%Y-%m-%dT%H:%M:%S').strftime('%Y-%m-%d') for date in Option_strategies_expiry_date]
+    
+    return formatted_expiry_dates
+
+
+
+# views.py
+from django.http import JsonResponse
+
+def get_expiry_data(request, symbol):
+    Option_strategies_expiry_date = fetch_expiry_data(symbol)
+    return JsonResponse(Option_strategies_expiry_date, safe=False)
+
+
+
+
+
+from django.http import JsonResponse
+
+def option_simulator_data(request):
+    if request.method == 'POST':
+        index = request.POST.get('index')
+        expiry_date = request.POST.get('expiryDate')
+        start_date = request.POST.get('startDate')
+
+        # Perform further processing with the received data
+
+        response_data = {
+            'message': 'Data received successfully!',
+            'index': index,
+            'expiry_date': expiry_date,
+            'start_date': start_date,
+        }
+        print(response_data)
+
+        return JsonResponse(response_data)
+    else:
+        # Handle GET requests if needed
+        # For this example, we only handle POST requests
+        return JsonResponse({'error': 'Invalid request method.'})
+
+
+from django.http import JsonResponse
+import numpy as np
+import json
+
+def calculate_long_straddle(call_premium, put_premium, strike_price, stock_price_min, stock_price_max, stock_price_step):
+    def long_straddle(call_premium, put_premium, strike_price, stock_price_range):
+        call_profit = np.maximum(stock_price_range - strike_price, 0) - call_premium
+        put_profit = np.maximum(strike_price - stock_price_range, 0) - put_premium
+        total_profit = call_profit + put_profit
+        return total_profit
+
+    # Define the stock price range for analysis
+    stock_price_range = np.arange(stock_price_min, stock_price_max + stock_price_step, stock_price_step)
+
+    # Calculate the profit or loss for each stock price in the range
+    profits = long_straddle(call_premium, put_premium, strike_price, stock_price_range)
+
+    # Create a dictionary to store the data
+    data = {
+        'stock_price_range': stock_price_range.tolist(),
+        'profits': profits.tolist()
+    }
+
+    return data
+
+def straddle_data(request):
+    # Define option prices and strike price
+    call_premium = 146.8
+    put_premium = 91.6
+    strike_price = 19850
+
+    # Define the stock price range for analysis
+    stock_price_min = 19000
+    stock_price_max = 21000
+    stock_price_step = 50
+
+    # Calculate the long straddle data
+    data = calculate_long_straddle(call_premium, put_premium, strike_price, stock_price_min, stock_price_max, stock_price_step)
+
+    # Return the data as a JSON response
+    return JsonResponse(data)
+
+
+
+
+import requests
+from django.http import JsonResponse
+
+def option_simulator_data(request):
+    if request.method == 'POST':
+        index = request.POST.get('index', "Nifty")
+        print(index)
+        expiry_date = request.POST.get('expiryDate')
+        start_date = request.POST.get('startDate')
+        createTime = request.POST.get('createTime', "09:20:00")
+        print(index, expiry_date, start_date, createTime)
+
+        spot_url = f'https://webapi.niftytrader.in/webapi/symbol/today-spot-data?symbol={index}'
+        stock_url = "https://webapi.niftytrader.in/webapi/Option/option-simulator-expiry-data"
+
+        headers = {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
+            "Accept-Language": "en-US,en;q=0.9",
+            "Accept-Encoding": "gzip, deflate, br",
+            "Connection": "keep-alive"
+        }
+
+        payload = {
+            "symbol": index,
+            "expiryDate": expiry_date,
+            "createdAt": start_date,
+            "createdTime": createTime
+        }
+
+        stock_data = requests.post(stock_url, json=payload, headers=headers)
+        stock_json = stock_data.json()
+
+        spot_data = requests.get(spot_url, headers=headers)
+        spot_json = spot_data.json()
+        print(spot_json["resultData"])
+
+        return JsonResponse({
+            "stock_data": stock_json["resultData"],
+            "spot_data": spot_json["resultData"]
+        }, safe=False)
