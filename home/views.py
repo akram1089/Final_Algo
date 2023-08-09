@@ -3775,7 +3775,7 @@ def fetch_expiry_data_option_strategies(symbol):
 # views.py
 from django.shortcuts import render
 import requests
-from datetime import datetime
+
 
 def fetch_expiry_data(symbol):
     stock_url = "https://webapi.niftytrader.in/webapi/Option/option-simulator-expiry-list"
@@ -3797,7 +3797,7 @@ def fetch_expiry_data(symbol):
     Option_strategies_expiry_date = stock_json['resultData']["expiry_all"]
     
     # Convert date format from "2023-10-26T00:00:00" to "2023-10-26"
-    formatted_expiry_dates = [datetime.strptime(date, '%Y-%m-%dT%H:%M:%S').strftime('%Y-%m-%d') for date in Option_strategies_expiry_date]
+    formatted_expiry_dates = [datetime.datetime.strptime(date, '%Y-%m-%dT%H:%M:%S').strftime('%Y-%m-%d') for date in Option_strategies_expiry_date]
     
     return formatted_expiry_dates
 
