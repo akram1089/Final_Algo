@@ -3924,3 +3924,25 @@ def option_simulator_data(request):
             "stock_data": stock_json["resultData"],
             "spot_data": spot_json["resultData"]
         }, safe=False)
+
+
+def long_call_option(request):
+    return render(request,'long_call_option.html')
+def long_put_option(request):
+    return render(request,'long_put_option.html')
+def covered_call(request):
+    return render(request,'covered_call.html')
+def short_call_option(request):
+    return render(request,'short_call_option.html')
+def synthetic_long_call(request):
+    return render(request,'synthetic_long_call.html')
+def covered_put(request):
+    return render(request,'covered_put.html')
+def long_combo(request):
+    return render(request,'long_combo.html')
+def long_straddle(request):
+    return render(request,'long_straddle.html')
+def short_straddle(request):
+    return render(request,'short_straddle.html')
+def pretective_call(request):
+    return render(request,'pretective_call.html')

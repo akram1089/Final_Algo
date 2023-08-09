@@ -151,6 +151,16 @@ urlpatterns = [
     path('get_expiry_data/<str:symbol>/', views.get_expiry_data, name='get_expiry_data'),
     path('option_simulator_data', views.option_simulator_data, name='option_simulator_data'),
     path('straddle_data', views.straddle_data, name='straddle_data'),
+    path('option_strategies/long_call_option', views.long_call_option, name='long_call_option'),
+    path('option_strategies/long_put_option', views.long_put_option, name='long_put_option'),
+    path('option_strategies/covered_call', views.covered_call, name='covered_call'),
+    path('option_strategies/short_call_option', views.short_call_option, name='short_call_option'),
+    path('option_strategies/synthetic_long_call', views.synthetic_long_call, name='synthetic_long_call'),
+    path('option_strategies/covered_put', views.covered_put, name='covered_put'),
+    path('option_strategies/long_combo', views.long_combo, name='long_combo'),
+    path('option_strategies/long_straddle', views.long_straddle, name='long_straddle'),
+    path('option_strategies/short_straddle', views.short_straddle, name='short_straddle'),
+    path('option_strategies/pretective_call', views.pretective_call, name='pretective_call'),
 
 
 
