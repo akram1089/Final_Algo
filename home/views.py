@@ -3946,3 +3946,5 @@ def short_straddle(request):
     return render(request,'short_straddle.html')
 def pretective_call(request):
     return render(request,'pretective_call.html')
+def aaaa(request):
+    return render(request,'aaaa.html')

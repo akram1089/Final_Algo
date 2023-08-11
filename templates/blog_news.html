@@ -250,7 +250,7 @@
                 var source = $('<p style="margin-bottom:auto" class="card-text d-flex align-items-center"></p>').append(newsData.source);
                 var main_pub_source_icon = $('<p class="main_pub_source_icon"></p>').append(publishDate).append(' / ').append(source);
 
-                var description = $('<p class="card-text description"></p>').text(newsData.description);
+                var description = $('<p class="card-text description_news"></p>').text(newsData.description);
                 if (description.text().split(' ').length > 50) {
                     var shortDescription = description.text().split(' ').slice(0, 50).join(' ') + '...';
                     description.text(shortDescription);
@@ -282,9 +282,9 @@
         function updateDisplayMode() {
             var displayMode = localStorage.getItem('displayMode');
             if (displayMode === 'list') {
-                $('.description').hide();
+                $('.description_news').hide();
             } else {
-                $('.description').show();
+                $('.description_news').show();
             }
         }
 
@@ -325,13 +325,13 @@
         $('.list_icon').on('click', function () {
             $('.list_icon').addClass('activek');
             $('.grid_icon').removeClass('activek');
-            $('.description').hide();
+            $('.description_news').hide();
         })
 
         $('.grid_icon').on('click', function () {
             $('.list_icon').removeClass('activek');
             $('.grid_icon').addClass('activek');
-            $('.description').show();
+            $('.description_news').show();
         })
         $('.grid_icon').addClass('activek');
         getNewsData('/get-news-data/?filter=IndianNews&language=English');

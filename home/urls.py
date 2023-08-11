@@ -161,6 +161,7 @@ urlpatterns = [
     path('option_strategies/long_straddle', views.long_straddle, name='long_straddle'),
     path('option_strategies/short_straddle', views.short_straddle, name='short_straddle'),
     path('option_strategies/pretective_call', views.pretective_call, name='pretective_call'),
+    path('aaaa', views.aaaa, name='aaaa'),
 
 
 

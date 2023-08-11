@@ -6,21 +6,21 @@
 <script>
     $(document).ready(function () {
         function getCurrentTime() {
-        var now = new Date();
-        var hours = now.getHours();
-        var minutes = now.getMinutes();
-        minutes = minutes < 10 ? "0" + minutes : minutes; // Add leading zero if minutes < 10
-        var currentTime =now 
-        return currentTime;
-    }
+            var now = new Date();
+            var hours = now.getHours();
+            var minutes = now.getMinutes();
+            minutes = minutes < 10 ? "0" + minutes : minutes; // Add leading zero if minutes < 10
+            var currentTime = now
+            return currentTime;
+        }
 
-    // Update the current time element initially
-    document.getElementById("currentTime").textContent = getCurrentTime();
-
-    // Update the current time every hour
-    setInterval(function () {
+        // Update the current time element initially
         document.getElementById("currentTime").textContent = getCurrentTime();
-    }, 3600000); // Refresh every 1 hour
+
+        // Update the current time every hour
+        setInterval(function () {
+            document.getElementById("currentTime").textContent = getCurrentTime();
+        }, 3600000); // Refresh every 1 hour
         // Retrieve the stored buildupType from local storage
         var storedBuildupType = localStorage.getItem("buildupType");
 
@@ -119,7 +119,7 @@
 
                     // Draw the DataTable with updated data
                     dataTable.draw();
-                    },
+                },
                 error: function (xhr, status, error) {
                     // Handle error
                     console.error(error);
@@ -129,38 +129,42 @@
     });
 </script>
 <style>
-
-.long_buildup{
+    .long_buildup {
         background: lightgreen;
-    color: white;
-    border-radius: 50px;
-    font-weight: 600;
-    padding: 5px 15px 7px 18px;
-    font-size: 14px;
+        color: white;
+        border-radius: 50px;
+        font-weight: 600;
+        padding: 5px 15px 7px 18px;
+        font-size: 14px;
     }
-    .short_buildup{
+
+    .short_buildup {
         background: lightcoral;
-    color: white;
-    border-radius: 50px;
-    font-weight: 600;
-    padding: 5px 15px 7px 18px;
-    font-size: 14px;
+        color: white;
+        border-radius: 50px;
+        font-weight: 600;
+        padding: 5px 15px 7px 18px;
+        font-size: 14px;
     }
-    .short_covering{
-        background:   #c9c900;;
-    color: white;
-    border-radius: 50px;
-    font-weight: 600;
-    padding: 5px 15px 7px 18px;
-    font-size: 14px;
+
+    .short_covering {
+        background: #c9c900;
+        ;
+        color: white;
+        border-radius: 50px;
+        font-weight: 600;
+        padding: 5px 15px 7px 18px;
+        font-size: 14px;
     }
-    .long_unwinding{
-        background:   #ff9900;;
-    color: rgb(255, 255, 255);
-    border-radius: 50px;
-    font-weight: 600;
-    padding: 5px 15px 7px 18px;
-    font-size: 14px;
+
+    .long_unwinding {
+        background: #ff9900;
+        ;
+        color: rgb(255, 255, 255);
+        border-radius: 50px;
+        font-weight: 600;
+        padding: 5px 15px 7px 18px;
+        font-size: 14px;
     }
 
 
@@ -184,18 +188,27 @@
     .sorting::before {
         display: none !important;
     }
-    #buildupTable_length{
+
+    #buildupTable_length {
         padding: 0 0 18px 0 !important;
     }
- 
+    
+    .form-group>label {
+    padding-bottom: 5px;
+    font-weight: 600;
+    font-size: 14px;
+    color: #5685ff ;
+    font-weight: 100 !important;
+}
 </style>
 
 <div class="">
-    <div class="last_update_more_refresh d-flex" style="justify-content: space-between; align-items: center; margin-top: 2rem;">
+    <div class="last_update_more_refresh d-flex"
+        style="justify-content: space-between; align-items: center; margin-top: 2rem;">
         <h5 id="lastUpdatedTime">Last Updated At: <span id="currentTime"></span></h5>
         <div class="btn_refresh_more">
-            <button class="button btn btn-primary">MORE INFO</button>
-            <button id="refreshButton" class="button btn btn-secondary">REFRESH</button>
+            {% comment %} <button class="button btn btn-primary">MORE INFO</button>
+            <button id="refreshButton" class="button btn btn-secondary">REFRESH</button> {% endcomment %}
         </div>
     </div>
 
@@ -209,27 +222,24 @@
         <div class="filters d-flex" style="gap: 0.5rem">
             <div class="container">
                 <div class="form-group">
-                    <label class="form-check-label">
-                        <input type="radio" name="buildupType" class="form-check-input" value="all" checked /> All
-                    </label>
-                    <label class="form-check-label">
-                        <input type="radio" name="buildupType"  class="form-check-input" value="long_build_up" /> Long
-                        Build Up
-                    </label>
-                    <label class="form-check-label">
-                        <input type="radio" name="buildupType"  class="form-check-input" value="short_build_up" />
-                        Short Build Up
-                    </label>
-                    <label class="form-check-label">
-                        <input type="radio" name="buildupType"  class="form-check-input" value="long_unwinding" />
-                        Long Unwinding
-                    </label>
-                    <label class="form-check-label">
-                        <input type="radio" name="buildupType"  class="form-check-input" value="short_covering" />
-                        Short Covering
-                    </label>
+                    
+                    <input type="radio" class="btn-check form-check-input" name="buildupType" value="all" id="primary-outlined" autocomplete="off" checked>
+                    <label class="btn btn-outline-primary" for="primary-outlined">All</label>
+            
+                    <input type="radio" class="btn-check form-check-input" name="buildupType" value="long_build_up" id="long-build-outlined" autocomplete="off">
+                    <label class="btn btn-outline-primary" for="long-build-outlined">Long Build Up</label>
+            
+                    <input type="radio" class="btn-check form-check-input" name="buildupType" value="short_build_up" id="short-build-outlined" autocomplete="off">
+                    <label class="btn btn-outline-primary" for="short-build-outlined">Short Build Up</label>
+            
+                    <input type="radio" class="btn-check form-check-input" name="buildupType" value="long_unwinding" id="long-unwinding-outlined" autocomplete="off">
+                    <label class="btn btn-outline-primary" for="long-unwinding-outlined">Long Unwinding</label>
+            
+                    <input type="radio" class="btn-check form-check-input" name="buildupType" value="short_covering" id="short-covering-outlined" autocomplete="off">
+                    <label class="btn btn-outline-primary" for="short-covering-outlined">Short Covering</label>
                 </div>
             </div>
+            
         </div>
     </div>
 </div>
