@@ -1,0 +1,1105 @@
+{% extends "base_dashboard.html" %}
+{% load static %}
+{% block dashboard_body %}
+<style>
+    .day_1 {
+        border-radius: 4px;
+        color: white;
+        background: cornflowerblue;
+        width: fit-content;
+        height: 28px;
+        padding: 0 6px 0 5px;
+        transition: 0.3s;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+    }
+
+    .day_1:hover {
+        color: cornflowerblue;
+        border: 1px solid cornflowerblue;
+        background: transparent;
+    }
+
+    .button_left_simu,
+    .button_right_simu {
+        display: flex;
+        gap: 1rem;
+
+    }
+
+    .main_all_button_filter {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .pre_built_simu {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 1rem 0;
+        gap: 0.5rem;
+        padding: 17px 0px;
+    }
+
+    .strategy_simu {
+        display: flex;
+        gap: 2rem;
+    }
+
+    .straddle {
+        border: 1.5px solid cornflowerblue;
+        padding: 4px 12px;
+        border-radius: 7px;
+        color: cornflowerblue;
+        transition: 0.3s;
+        cursor: pointer;
+
+    }
+
+    .straddle:hover {
+        background: cornflowerblue;
+        color: white;
+    }
+
+    .option_strategies_active {
+        background: cornflowerblue !important;
+        color: white !important;
+    }
+
+    .success_cvr {
+        background: #90eeae65 !important;
+        color: rgb(13, 162, 0);
+    }
+
+    .danger_cvr {
+        background: #ff000054 !important;
+        color: red;
+    }
+</style>
+<style>
+    p {
+        margin-bottom: auto !important;
+    }
+
+    .main_option_chain_table {
+        height: 400px;
+        overflow: auto;
+        margin: 1rem 0;
+    }
+
+    .bg-light-green {
+        background-color: #c9ffed !important;
+    }
+
+    .bg-light-red {
+        background-color: #ffd2cf !important;
+    }
+
+    #put_call_put {
+        right: 0;
+    }
+
+    .put_call_btns {
+        outline: none;
+        border: none !important;
+        height: 30px !important;
+        margin: 2px 0 0 0 !important;
+        color: black !important;
+    }
+
+    .call-pul-ltp-btns {
+        gap: 0.5rem !important;
+        display: none;
+    }
+
+    .call_put_tr:hover .call-pul-ltp-btns {
+        display: flex !important;
+    }
+
+    .strategy_table_input {
+        padding-bottom: 1rem !important;
+        display: block !important;
+    }
+
+    .add-btn {
+        font-size: 22px;
+        position: relative;
+        /* background: linear-gradient(180deg,#4399eb,#5cadfb)!important;  */
+        color: #4399eb;
+        height: auto;
+        width: auto;
+    }
+
+    .delete-btn {
+        margin-left: 9px;
+        font-size: 22px;
+        color: #ed0000;
+    }
+</style>
+
+<div class="title my-2">
+    <h5>Option Strategy Optimizer</h5>
+</div>
+<div class="top_content_option_chain p-3 shadow">
+    <div class="main_top_all_left_right d-flex align-items-center justify-content-between">
+        <div class="left_side_top_strategies">
+
+            <div class="main_top_strategies d-flex align-items-center gap-4">
+
+                <select id="stockDropdown" class="form-select w-auto">
+                    <optgroup label="Indices">
+                        <option value="NIFTY">NIFTY</option>
+                        <option value="BANKNIFTY">BANKNIFTY</option>
+                        <option value="FINNIFTY">FINNIFTY</option>
+                    </optgroup>
+                    <optgroup label="Stocks"></optgroup>
+                </select>
+                <div class="option_chain_strategies d-flex align-items-center gap-1">
+                    <p>Option Chain </p>
+                    <i class='bx bx-link-external'></i>
+                </div>
+                <div class="main_max_pain_strategies d-block">
+                    <div class="max_pain_strategies d-flex align-items-center gap-1">
+                        <p>Max Pain</p>
+                        <i class='bx bx-link-external'></i>
+
+                    </div>
+                    <div id="max_pain_value"></div>
+                </div>
+                <div class="lot_size_strategies d-block">
+                    <p>Lot Size</p>
+                    <div id="lot_size_value"></div>
+                </div>
+
+                <div class="spot_strategies">
+
+                    <p>Spot</p>
+
+                    <div id="spot_value"></div>
+
+                </div>
+
+
+
+            </div>
+        </div>
+        <div class="right_side_top_strategies">
+
+            <button class="btn btn-outline-primary" type="button" data-bs-toggle="collapse"
+                data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                Option Chain
+                <i class="bx bx-chevron-down"></i>
+            </button>
+
+            <button class="btn btn-outline-primary">Future</button>
+            <button class="btn btn-outline-primary">Saved Strategies</button>
+
+            <i class="bi bi-arrow-clockwise"></i>
+
+
+
+        </div>
+
+    </div>
+    <div class="collapse my-3" id="collapseExample">
+
+        <div class="main_option_inner d-flex justify-content-between align-items-center">
+            <p class="text-secondary">*Note: OI IN QUANTITY</p>
+            <select id="optionExpiryDropdown" class="form-select w-auto">
+                <!-- Options will be populated dynamically from AJAX response -->
+            </select>
+        </div>
+
+        <div class="main_option_chain_table">
+
+            <table class="table table-hover">
+                <thead>
+                    <th class="text-end bg-light-green">CALL IV</th>
+                    <th class="text-end bg-light-green">CALL OI</th>
+                    <th class="text-end bg-light-green">CALL LTP</th>
+                    <th class="text-center bg-light">STRIKE PRICE</th>
+                    <th class="text-start bg-light-red">PUT LTP</th>
+                    <th class="text-start bg-light-red">PUT OI</th>
+                    <th class="text-start bg-light-red">PUT IV</th>
+                </thead>
+
+                <tbody class="strategy_option_chain">
+
+
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+</div>
+<div class="All_option_startegies_builder shadow">
+    <div class="pre_built_simu">
+        <p style="margin-bottom: auto;"> Pre Built : </p>
+        <div class="strategy_simu">
+            <div class="straddle option_strategies_active" id="straddle" onclick="selectStrategy('straddle')">
+                STRADDLE
+            </div>
+            <div class="straddle" id="strangle" onclick="selectStrategy('strangle')">
+                STRANGLE
+            </div>
+            <div class="straddle" id="spread" onclick="selectStrategy('spread')">
+                SPREAD
+            </div>
+            <div class="straddle" id="iron_fly" onclick="selectStrategy('iron_fly')">
+                IRON FLY
+            </div>
+            <div class="straddle" id="iron_condor" onclick="selectStrategy('iron_condor')">
+                IRON CONDOR
+            </div>
+            <div class="straddle" id="jaze_lizard" onclick="selectStrategy('jaze_lizard')">
+                JAZE LIZARD
+            </div>
+        </div>
+
+
+
+
+    </div>
+</div>
+
+<div class="Option_startegies_data_display shadow py-3">
+    <div class="display_table p-3">
+        <div class="main_add_table d-flex justify-content-between my-1">
+            <div class="empty_left"></div>
+
+            <i class="add-btn bi bi-plus-square-fill"></i>
+        </div>
+        <style>
+            .textOnInput {
+                position: relative;
+                width: 14rem;
+            }
+
+            .textOnInput label {
+                position: absolute;
+                top: -9px;
+                font-weight: 700;
+                left: 10px;
+                padding: 2px;
+                color: rgb(56, 56, 56);
+                z-index: 1;
+                font-size: 12px;
+                white-space: nowrap;
+            }
+
+            .textOnInput label:after {
+                content: " ";
+                background-color: #fff;
+                width: 100%;
+                height: 13px;
+                position: absolute;
+                left: 0;
+                bottom: 0;
+                z-index: -1;
+            }
+
+            label {
+                font-size: 16px;
+                font-weight: 500;
+                display: inline-block;
+                margin-bottom: .5rem;
+            }
+
+            .form-control {
+                box-shadow: none !important;
+            }
+
+            .data-display-table {
+                display: flex;
+                justify-content: center;
+                flex-direction: column;
+
+            }
+        </style>
+        <table class="data-display-table">
+            <!-- Initial empty row -->
+            <tr class="strategy_table_input">
+                <td>
+                    <div class="textOnInput">
+                        <label for="optionSide">Instruments</label>
+                        <select class="option_side_input form-select">
+                            <option value="Select">Select</option>
+                            <option value="">Long</option>
+                            <option value="">Put</option>
+                            <option value="">Future</option>
+                        </select>
+                    </div>
+                </td>
+                <td>
+                    <div class="textOnInput">
+                        <label for="expiryDate">Expiry Date</label>
+                        <select class="expiry_date_input form-select">
+                            <option value="Select">Select</option>
+
+                        </select>
+                    </div>
+                </td>
+                <td>
+                    <div class="textOnInput">
+                        <label for="strikePrice">Strike Price</label>
+                        <select class="strike_price_input form-select">
+                            <option value="Select">Select</option>
+
+                        </select>
+                    </div>
+                </td>
+                <td>
+                    <div class="textOnInput">
+                        <label for="action">Position</label>
+                        <select class="action_input form-select">
+                            <option value="Select">Select</option>
+                            <option value="Short">Short</option>
+                            <option value="Long">Long</option>
+                        </select>
+                    </div>
+                </td>
+                <td>
+                    <div class="textOnInput">
+                        <label for="action">No. of Lots</label>
+                        <input type="number" class="option_lot_size_input form-control" value="1">
+                    </div>
+                </td>
+                <td>
+                    <div class="textOnInput">
+                        <label for="action">Traded Price</label>
+                        <input type="number" class="ltpValue_input form-control" value="0">
+                    </div>
+                </td>
+                <td>
+
+                    <i class="delete-btn bi bi-trash-fill"></i>
+                </td>
+            </tr>
+
+        </table>
+
+        <div class="save_calculates_button d-flex justify-content-between my-3">
+            <div class="right_calc_empty">
+
+            </div>
+            <div class="calc_save_btns d-flex gap-1">
+
+                <button class="btn btn-outline-primary" id="save">SAVE</button><button class="btn btn-outline-primary"
+                    id="calculate">CALCULATE</button>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="table_pl_greek shadow p-2 mt-3">
+    <table id="resultTable" class="table table-hover">
+        <thead class="bg-light ">
+            <tr>
+                <th>LEG</th>
+                <th>POSITION</th>
+                <th>IV</th>
+                <th>DELTA</th>
+                <th>THETA</th>
+                <th>GAMMA</th>
+                <th>VEGA</th>
+                <th>RHO</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+
+
+
+
+
+
+    <div id="table-PL_main">
+        <table class="PL-table table table-hover">
+            <thead>
+                <tr>
+                    <th>LEG</th>
+                    <th>POSITION</th>
+                    <th>TRADED PRICE</th>
+                    <th>CURRENT PRICE</th>
+                    <th>LOTS</th>
+                    <th>QTY.</th>
+                    <th>TOTAL CUR. COST</th>
+                    <th>P/L</th>
+                </tr>
+            </thead>
+            <tbody id="table-PL"></tbody>
+        </table>
+    </div>
+
+
+
+
+
+</div>
+<script>
+
+    $(document).ready(function () {
+        // After adding data row
+        // Function to update empty message visibility based on data rows
+        function updateEmptyMessageVisibility() {
+            var numRows = $(".data-display-table tr.data-row").length;
+            if (numRows === 0) {
+                $(".empty_message").show();
+            } else {
+                $(".empty_message").hide();
+            }
+        }
+
+        // After removing a data row, update the empty message visibility
+        updateEmptyMessageVisibility();
+
+
+
+        // Load spot data for "NIFTY" initially
+        var selectedOption = $("#stockDropdown").val();
+        $(".selectedOption").text(selectedOption)
+        $("#calculate").click(function () {
+            var dataRows = $(".data-display-table").find("tr");
+            var allData = [];
+            var conditionOrder = 1;
+
+            dataRows.each(function () {
+                var row = $(this);
+                var optionSide = row.find(".option_side_input").val();
+                var expiryDate = row.find(".expiry_date_input").val();
+                var strikePrice = row.find(".strike_price_input").val();
+                var action = row.find(".action_input").val();
+                var quantity = row.find(".option_lot_size_input").val();
+                var ltpValue = row.find(".ltpValue_input").val();
+                var option_lot_size = $("#lot_size_value").text();
+                var main_conditionOrder = conditionOrder++;
+
+                // Check if any field is empty
+                if (
+                    optionSide === "Select" ||
+                    expiryDate === "Select" ||
+                    strikePrice === "Select" ||
+                    action === "Select" ||
+                    quantity === "" ||
+                    ltpValue === ""
+                ) {
+                    // Display a Bootstrap alert
+                    alert("Please fill in all fields.");
+                    return false; // Stop processing further rows
+                } else {
+                    // Convert quantity to negative if action is "Short"
+                    // if (action === "Short") {
+                    //     quantity = -Math.abs(quantity);
+                    // }
+
+                    // Collect data for this row
+                    allData.push({
+                        selectedOption: selectedOption,
+                        optionSide: optionSide,
+                        option_lot_size: option_lot_size,
+                        expiryDate: expiryDate,
+                        strikePrice: strikePrice,
+                        action: action,
+                        quantity: parseInt(quantity),
+                        conditionOrder: main_conditionOrder,
+                        ltpValue: ltpValue
+                    });
+                }
+                if (allData.length === dataRows.length) {
+                    $.ajax({
+                        type: "POST",
+                        url: "/filter_iv_data",
+                        data: JSON.stringify(allData),
+                        contentType: "application/json",
+                        success: function (response) {
+                            console.log("Data sent to Django:", response);
+                            console.log(response.stock_data.resultData);
+
+                            // Clear previous table data
+                            $("#resultTable tbody").empty();
+
+                            // Process response data and populate the table
+                            const resultData = response.iv_data.resultData;
+                            let totalDelta = 0;
+                            let totalTheta = 0;
+                            let totalGamma = 0;
+                            let totalVega = 0;
+                            let totalRho = 0;
+                            let leg = 1
+
+                            for (const item of resultData) {
+                                const optionType = item.optiontype;
+                                const symbol = item.symbol;
+                                const strikePrice = item.strikeprice;
+                                const expiry = item.expiry;
+                                const position = item.position;
+                                const iv = item.calls_iv || item.puts_iv;
+                                const delta = optionType === "Call" ? item.call_delta : item.put_delta;
+                                const theta = optionType === "Call" ? item.call_theta : item.put_theta;
+                                const gamma = optionType === "Call" ? item.call_gamma : item.put_gamma;
+                                const vega = optionType === "Call" ? item.call_vega : item.put_vega;
+                                const rho = optionType === "Call" ? item.call_rho : item.put_rho;
+
+                                // Create the table row for each option
+                                const tableRow = `
+                            <tr>
+                                <td>LEG${leg++}</td>
+                                <td>${position.toUpperCase()} ${strikePrice}${optionType.toUpperCase()}(${expiry})</td>
+
+
+                                <td>${iv.toFixed(2)}</td>
+                                <td>${delta.toFixed(2)}</td>
+                                <td>${theta.toFixed(4)}</td>
+
+                                <td>${gamma.toFixed(4)}</td>
+                                <td>${vega.toFixed(2)}</td>
+                                <td>${rho.toFixed(2)}</td>
+                            </tr>
+                        `;
+
+                                $("#resultTable tbody").append(tableRow);
+
+                                // Calculate positional Greeks
+                                totalDelta += parseFloat(delta);
+                                totalTheta += parseFloat(theta);
+                                totalGamma += parseFloat(gamma);
+                                totalVega += parseFloat(vega);
+                                totalRho += parseFloat(rho);
+                            }
+
+                            // Add the row for positional Greeks
+                            const totalRow = `
+                        <tr>
+                            <td>POSITIONAL GREEKS</td>
+                            <td></td>
+                            <td></td>
+                            <td>${totalDelta.toFixed(2)}</td>
+                            <td>${totalTheta.toFixed(4)}</td>
+                            <td>${totalGamma.toFixed(4)}</td>
+                            <td>${totalVega.toFixed(2)}</td>
+                            <td>${totalRho.toFixed(2)}</td>
+                        </tr>
+                    `;
+
+                            $("#resultTable tbody").append(totalRow);
+
+                            // Assuming response.stock_data.resultData is an array containing the data
+                            const updatedResultData = response.stock_data.resultData.map((item, index) => {
+                                const ltpValue = $(".strategy_table_input")
+                                    .eq(index)
+                                    .find(".ltpValue_input")
+                                    .val();
+
+                                return { ...item, ltpValue: parseFloat(ltpValue) };
+                            });
+                            console.log(updatedResultData);
+                            function createTable(data) {
+                                let tableHTML = "";
+
+                                let netCost = 0;
+                                let netPL = 0;
+
+                                for (let i = 0; i < data.length; i++) {
+                                    const item = data[i];
+
+                                    // Adjust lotSize based on position
+                                    const adjustedLotSize = item.position.toLowerCase() === 'short' ? -item.lotSize : item.lotSize;
+                                    const absoluteQuantity = Math.abs(item.quantity);
+                                    const totalCurrentCost = item.unitPrice * adjustedLotSize * absoluteQuantity;
+                                    const totalPL = item.ltpValue * adjustedLotSize * absoluteQuantity;
+                                    var final_P_L = totalPL - totalCurrentCost
+
+
+                                    const legRow = `
+                                                                <tr>
+                                                                    <td>LEG ${i + 1}</td>
+                                                                    <td>${item.position.toUpperCase()} ${item.strikePrice}${item.optionType.toUpperCase()}(${item.expiry})</td>
+                                                                    <td>${item.ltpValue}</td>
+                                                                    <td>${item.unitPrice}</td>
+                                                                    <td>${adjustedLotSize}</td>
+                                                                    <td>${absoluteQuantity}</td>
+                                                                    <td>${totalCurrentCost}</td>
+                                                                    <td>${final_P_L}</td>
+                                                                </tr>
+                                                            `;
+                                    tableHTML += legRow;
+                                    netCost += parseFloat(totalCurrentCost);
+                                    netPL += parseFloat(final_P_L);
+                                }
+
+
+                                tableHTML += `
+                                                                <tr>
+                                                                    <td colspan="6">NET COST OF STRATEGY :</td>
+                                                                    <td>${netCost}</td>
+                                                                    <td colspan="7">${netPL}</td>
+                                                                
+                                                                </tr>
+                                                            `;
+
+                                return tableHTML;
+                            }
+
+                            const tableBody = document.getElementById("table-PL");
+                            tableBody.innerHTML = createTable(updatedResultData);
+
+
+
+                        },
+
+                        error: function (xhr, status, error) {
+                            console.error("Error sending data to Django:", error);
+                        }
+                    });
+
+                }
+
+            });
+
+            // If all data is valid, log all the data at once
+            if (allData.length === dataRows.length) {
+                console.log("All Data:", allData);
+            }
+        });
+
+        var isFirstTime = true;
+        $("#collapseExample").on('show.bs.collapse', function () {
+            $(".bx-chevron-down").removeClass("bx-chevron-down").addClass("bx-chevron-up");
+        });
+
+        $("#collapseExample").on('hide.bs.collapse', function () {
+            $(".bx-chevron-up").removeClass("bx-chevron-up").addClass("bx-chevron-down");
+        });
+        loadStocks()
+        loadSpotData("NIFTY");
+        loadExpiryData("NIFTY");
+        loadOptionData("NIFTY", "");
+
+        // Handle stock dropdown change
+        $("#stockDropdown").change(function () {
+            var selectedOption = $(this).val();
+
+            $(".data-display-table").empty()
+            if (selectedOption) {
+                loadSpotData(selectedOption);
+                loadOptionData(selectedOption, "");
+                loadExpiryData(selectedOption)
+            }
+        });
+
+        // Function to load spot data
+        function loadSpotData(selectedOption) {
+            console.log(selectedOption);
+
+            $.ajax({
+                url: '{% url "get_option_strategy_optimizer_spot_data" %}?selected_option=' + selectedOption,
+                type: 'GET',
+                success: function (response) {
+                    // Handle the response as needed
+                    console.log(response.spot_data.resultData);
+                    $("#max_pain_value").text(response.spot_data.resultData.max_pain)
+                    $("#lot_size_value").text(response.spot_data.resultData.lot_size)
+                    var spot_check_strategies = response.spot_data.resultData.change_per
+                    var valid_spot_value_strategies = spot_check_strategies > 0 ? "text-success" : "text-danger"
+                    var arrow_valid = spot_check_strategies > 0 ? "up" : "down"
+                    $("#spot_value").empty().append(`
+                        <div class="${valid_spot_value_strategies} d-flex align-items-center gap-1">
+                            <p>${response.spot_data.resultData.last_trade_price}</p>
+                            <i class='bx bxs-${arrow_valid}-arrow'></i>
+                            <p>${response.spot_data.resultData.change_value}(${response.spot_data.resultData.change_per})</p>
+                            
+                            </div>
+                        `)
+                }
+            });
+        }
+
+
+        $("#optionExpiryDropdown").change(function () {
+            var selectedOption = $("#stockDropdown").val();
+            var selectedExpiry = $("#optionExpiryDropdown").val();
+            var selectedOptionExpiry = $(this).val();
+            if (selectedOption) {
+                loadOptionData(selectedOption, selectedOptionExpiry);
+            }
+        });
+
+        function loadOptionData(selectedOption, selectedExpiry) {
+
+            $.ajax({
+                url: '{% url "get_option_strategy_optimizer_option_data" %}?selected_option=' + selectedOption + '&selected_expiry=' + selectedExpiry,
+                type: 'GET',
+                success: function (response) {
+
+                    console.log(response.option_data.resultData.opExpiryDates);
+                    var optionExpiryDropdown = $("#optionExpiryDropdown");
+                    optionExpiryDropdown.empty();
+                    $.each(response.option_data.resultData.opExpiryDates, function (index, expiryDate) {
+                        var option = $("<option>").text(expiryDate.split("T")[0]);
+                        optionExpiryDropdown.append(option);
+                    });
+                    if (selectedExpiry) {
+                        $("#optionExpiryDropdown").val(selectedExpiry);
+                    }
+                    var option_chain_data = response.option_data.resultData.opDatas
+                    console.log(option_chain_data[0]);
+                    console.log($("#optionExpiryDropdown").val());
+                    var option_expiry_date = $("#optionExpiryDropdown").val()
+                    var lot_size_value_option = $("#lot_size_value").text()
+                    console.log(lot_size_value_option);
+                    console.log(selectedOption);
+
+
+
+                    // console.log(selectedExpiry)
+
+                    var optionChainTable = $(".strategy_option_chain");
+                    optionChainTable.empty();
+                    $.each(response.option_data.resultData.opDatas, function (index, optionChain) {
+
+
+                        var rowContent = `
+                                <tr class="call_put_tr">
+                                    <td class="text-end">${optionChain.calls_iv}</td>
+                                    <td class="text-end">${optionChain.calls_oi}</td>
+                                    <td class="text-end call-ltp cursor-pointer  position-relative">
+                                        <div class="d-flex position-absolute top-0 call-pul-ltp-btns d-none call-row">
+                                            <button title="Short" data-action="Short" data-side="call" type="button" class="px-lg-3 py-lg-1 mx-1 bg-light-green put_call_btns common-border shadow-none fs-13 fw-600 btn btn-primary">S</button>
+                                            <button title="Long" data-action="Long" data-side="call" type="button" class="px-lg-3 py-lg-1 mx-1 bg-light-red put_call_btns  shadow-none fs-13 fw-600 btn btn-primary">L</button>
+                                            </div>
+                                        <p class="calls_ltp">
+                                        ${optionChain.calls_ltp} </p></td>
+                                    <td class="text-center  bg-light">
+                        <div class='strike_price'> 
+                            ${optionChain.strike_price}
+                            </div>
+                                        
+                                        <div class=d-none>
+                                            
+                                            <div class="expiry_date">${option_expiry_date}</div>
+                                            <div class="opiton_lot_size">${lot_size_value_option}</div>
+                                            <div class="opiton_selected">${selectedOption}</div>
+
+                                                </div>
+                                  
+                                       
+                                        </td>
+                          
+                                    <td class="text-start put-ltp cursor-pointer  position-relative">
+                                        <p class="puts_ltp">${optionChain.puts_ltp}</p>
+                                        <div class="d-flex position-absolute top-0 call-pul-ltp-btns  d-none" id="put_call_put">
+                                            <button title="Short" type="button" data-action="Short" data-side="put" class="px-lg-3 py-lg-1 mx-1 bg-light-green put_call_btns common-border shadow-none fs-13 fw-600 btn btn-primary">S</button>
+                                            <button title="Long" data-action="Long" data-side="put" type="button" class="px-lg-3 bg-light-red put_call_btns py-lg-1 mx-1  shadow-none fs-13 fw-600 btn btn-primary">L</button>
+                                            </div>
+                                        </td>
+                                    <td class="text-start">${optionChain.puts_oi}</td>
+                                    <td class="text-start">${optionChain.puts_iv}</td>
+                                </tr>
+                            `;
+
+                        optionChainTable.append(rowContent);
+                    });
+
+                    var isTableEmpty = true;
+
+
+
+                    $(".put_call_btns").click(function () {
+                        loadExpiryData()
+                        if (isTableEmpty) {
+                            $(".data-display-table").empty();
+                            isTableEmpty = false;
+                        }
+                        var row = $(this).closest("tr"); // Find the closest table row
+                        var action = $(this).attr("data-action"); // Get the action (Short/Long) from the button's data attribute
+                        var side = $(this).attr("data-side"); // Get the side (Call/Put) from the button's data attribute
+
+                        var ltpValue = side === "call" ? row.find(".calls_ltp").text() : row.find(".puts_ltp").text();
+
+                        // Now you can access the data from the row and log it as needed
+                        if (side === "call") {
+                            var calls_iv = row.find(".text-end").eq(0).text();
+                            var calls_oi = row.find(".text-end").eq(1).text();
+                            var expiry_date = row.find(".expiry_date").text();
+                            var strike_price = row.find(".strike_price").text();
+                            var opiton_lot_size = row.find(".opiton_lot_size").text();
+                            var opiton_selected = row.find(".opiton_selected").text();
+                            var option_side = "Call"
+
+                            // console.log(option_side);
+                            // console.log("Call Side - Action:", action);
+                            // console.log("Call Side - calls_iv:", calls_iv);
+                            // console.log("Call Side - calls_oi:", calls_oi);
+                            // console.log("Call Side - calls_ltp:", ltpValue);
+                            // console.log("Call Side - strike_price:", strike_price);
+                            // console.log(expiry_date);
+                            // console.log(opiton_lot_size);
+                            populateInputTable(option_side, expiry_date, strike_price, action, opiton_lot_size, ltpValue, opiton_selected)
+
+                        } else {
+                            var option_side = "Put"
+                            var puts_oi = row.find(".text-start").eq(1).text();
+                            var puts_iv = row.find(".text-start").eq(2).text();
+                            var expiry_date = row.find(".expiry_date").text();
+                            var strike_price = row.find(".strike_price").text();
+                            var opiton_lot_size = row.find(".opiton_lot_size").text();
+                            var opiton_selected = row.find(".opiton_selected").text();
+                            // console.log(option_side);
+                            // console.log("Put Side - Action:", action);
+                            // console.log("Put Side - puts_ltp:", ltpValue);
+                            // console.log("Put Side - puts_oi:", puts_oi);
+                            // console.log("Put Side - puts_iv:", puts_iv);
+                            // console.log(expiry_date);
+                            // console.log(opiton_lot_size);
+                            // console.log(strike_price);
+                            populateInputTable(option_side, expiry_date, strike_price, action, opiton_lot_size, ltpValue, opiton_selected)
+                        }
+                    });
+
+                    $(".add-btn").off("click");
+                    $(".add-btn").click(function (event) {
+                        event.preventDefault(); // Prevent default behavior
+
+                        var selectedOption = $("#stockDropdown").val();
+                        loadExpiryData(selectedOption);
+
+                        var newRow = $("<tr>").addClass("strategy_table_input");
+
+                        newRow.append($("<td>").html(`
+                <div class="textOnInput">
+                    <label for="optionSide">Option Side</label>
+                    <select class="option_side_input form-select">
+                        <option value="Select">Select</option>
+                        <option value="Call">Call</option>
+                        <option value="Put">Put</option>
+                        <option value="Future">Future</option>
+                    </select>
+                </div>
+            `));
+
+                        newRow.append($("<td>").html(`
+                <div class="textOnInput">
+                    <label for="expiryDate">Expiry Date</label>
+                    <select class="expiry_date_input form-select">
+                        <option value="Select">Select</option>
+                        <option value=""></option>
+                    </select>
+                </div>
+            `));
+
+                        newRow.append($("<td>").html(`
+                <div class="textOnInput">
+                    <label for="strikePrice">Strike Price</label>
+                    <select class="strike_price_input form-select">
+                        <option value="Select">Select</option>
+                        <option value=""></option>
+                    </select>
+                </div>
+            `));
+
+                        newRow.append($("<td>").html(`
+                <div class="textOnInput">
+                    <label for="action">Position</label>
+                    <select class="action_input form-select">
+                        <option value="Select">Select</option>
+                        <option value="Short">Short</option>
+                        <option value="Long">Long</option>
+                    </select>
+                </div>
+            `));
+
+                        newRow.append($("<td>").html(`
+                <div class="textOnInput">
+                    <label for="optionLots">Option Lot Size</label>
+                    <input type="number" class="option_lot_size_input form-control" value="1">
+                </div>
+            `));
+
+                        newRow.append($("<td>").html(`
+                <div class="textOnInput">
+                    <label for="ltpValue">LTP Value</label>
+                    <input type="number" class="ltpValue_input form-control" value="">
+                </div>
+            `));
+
+                        newRow.append($("<td>").html(`   <i class="delete-btn bi bi-trash-fill"></i>`));
+
+                        $(".data-display-table").append(newRow);
+                    });
+                    function populateInputTable(option_side, expiry_date, strike_price, action, option_lot_size, ltpValue, opiton_selected) {
+
+
+                        console.log("Option Side:", option_side);
+                        console.log("Expiry Date:", expiry_date);
+                        console.log("Strike Price:", strike_price);
+                        console.log("Action:", action);
+
+                        console.log("Option Lot Size:", option_lot_size);
+                        console.log("LTP Value:", ltpValue);
+                        console.log("opiton_selected:", opiton_selected);
+                        var newRow = $(`
+    <tr class="strategy_table_input">
+        <td>
+            <div class="textOnInput">
+                <label for="optionSide">Option Side</label>
+                <select class="option_side_input form-select">
+                    <option value="Select">Select</option>
+                    <option value="Call" ${option_side === 'Call' ? 'selected' : ''}>Call</option>
+                    <option value="Put" ${option_side === 'Put' ? 'selected' : ''}>Put</option>
+                    <option value="Future" ${option_side === 'Future' ? 'selected' : ''}>Future</option>
+                </select>
+            </div>
+        </td>
+        <td>
+            <div class="textOnInput">
+                <label for="expiryDate">Expiry Date</label>
+                <select class="expiry_date_input form-select">
+                    <option value="${expiry_date}">${expiry_date}</option>
+                </select>
+            </div>
+        </td>
+        <td>
+            <div class="textOnInput">
+                <label for="strikePrice">Strike Price</label>
+                <select class="strike_price_input form-select">
+                    <option value="${parseFloat(strike_price)}">${parseFloat(strike_price)}</option>
+                </select>
+            </div>
+        </td>
+        <td>
+            <div class="textOnInput">
+                <label for="action">Action</label>
+                <select class="action_input form-select">
+                    
+
+                    <option value="Select">Select</option>
+         
+                    <option value="Long" ${action === 'Long' ? 'selected' : ''}>Long</option>
+                    <option value="Short" ${action === 'Short' ? 'selected' : ''}>Short</option>
+                </select>
+            </div>
+        </td>
+        <td>
+            <div class="textOnInput">
+                <label for="action">No. of Lots</label>
+                <input type="number" class="option_lot_size_input form-control" value="1">
+            </div>
+        </td>
+        <td>
+            <div class="textOnInput">
+                <label for="action">Traded Price</label>
+                <input type="number" class="ltpValue_input form-control" value="${parseFloat(ltpValue)}">
+            </div>
+        </td>
+        <td>   <i class="delete-btn bi bi-trash-fill"></i></td>
+    </tr>
+`);
+                        $(".data-display-table").append(newRow);
+
+
+
+
+
+
+
+
+
+                    }
+
+
+                    // Delete button click handler
+                    $(".data-display-table").on("click", ".delete-btn", function () {
+                        $(this).closest("tr").remove();
+                    });
+
+
+                }
+            });
+        }
+
+
+
+
+        function loadExpiryData(selectedOption) {
+            console.log("Hi there" + selectedOption);
+            $.ajax({
+                url: "/option_strategies_expiry",
+                method: "GET",
+                data: {
+                    selected_option: selectedOption
+                },
+                success: function (response) {
+                    // Process the response from the server here
+                    var expiryDates = response.option_date.optionExpiryDate;
+                    var expiryStrikes = response.option_strike;
+                    populateExpiry_Strike(expiryDates, expiryStrikes)
+                },
+                error: function (error) {
+                    console.error("Error loading expiry data:", error);
+                }
+            });
+        }
+        function populateExpiry_Strike(expiryDates, expiryStrikes) {
+            // Get the existing selected values before appending new options
+
+
+            // Populate the select element with expiry dates
+            var expirySelect = $(".expiry_date_input");
+            var strikeSelect = $(".strike_price_input");
+
+
+            // Clear existing options
+
+            // Add a default "Select" option
+
+
+            // Add each expiry date as an option
+            expiryDates.forEach(expiry => {
+                expirySelect.append($("<option>", {
+                    value: expiry.expiry_date.split("T")[0],
+                    text: expiry.expiry_date.split("T")[0],
+
+                }));
+            });
+
+            // Add each strike as an option
+            expiryStrikes.forEach(strike => {
+                strikeSelect.append($("<option>", {
+                    value: strike,
+                    text: strike,
+
+                }));
+            });
+        }
+
+
+
+        function loadStocks(selectedOption) {
+            $.ajax({
+                url: '{% url "get_stock_symbol" %}',
+                type: 'GET',
+                success: function (data) {
+                    var stocksOptgroup = $("#stockDropdown optgroup[label='Stocks']");
+                    stocksOptgroup.empty();
+                    $.each(data, function (index, stock) {
+                        var option = $("<option>").text(stock.symbol_name);
+                        stocksOptgroup.append(option);
+                    });
+
+                    // If a selectedOption is provided, set it as selected
+                    if (selectedOption) {
+                        $("#stockDropdown").val(selectedOption);
+                    }
+                }
+            });
+        }
+
+    });
+
+
+</script>
+
+{% endblock dashboard_body %}

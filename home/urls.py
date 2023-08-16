@@ -162,6 +162,13 @@ urlpatterns = [
     path('option_strategies/short_straddle', views.short_straddle, name='short_straddle'),
     path('option_strategies/pretective_call', views.pretective_call, name='pretective_call'),
     path('aaaa', views.aaaa, name='aaaa'),
+    path('option_strategy_optimizer', views.option_strategy_optimizer, name='option_strategy_optimizer'),
+    path('get_stock_symbol', views.get_stock_symbol, name='get_stock_symbol'),
+    path('get_option_strategy_optimizer_spot_data', views.get_option_strategy_optimizer_spot_data, name='get_option_strategy_optimizer_spot_data'),
+    path('get_option_strategy_optimizer_option_data', views.get_option_strategy_optimizer_option_data, name='get_option_strategy_optimizer_option_data'),
+    path('option_strategies_expiry', views.option_strategies_expiry, name='option_strategies_expiry'),
+    path('get_payoff_data/', views.get_payoff_data, name='get_payoff_data'),
+    path('filter_iv_data', views.filter_iv_data, name='filter_iv_data'),
 
 
 

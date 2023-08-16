@@ -3948,3 +3948,279 @@ def pretective_call(request):
     return render(request,'pretective_call.html')
 def aaaa(request):
     return render(request,'aaaa.html')
+
+
+
+
+
+
+
+
+
+def option_strategy_optimizer(request):
+    return render(request,'option_strategy_optimizer.html')
+
+
+import requests
+import pandas as pd
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+
+@api_view(['GET'])
+def get_stock_symbol(request):
+    stock_url = "https://webapi.niftytrader.in/webapi/symbol/psymbol-list"
+
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
+        "Accept-Language": "en-US,en;q=0.9",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive"
+    }
+
+    stock_data = requests.get(stock_url, headers=headers)
+    stock_json = stock_data.json()
+
+    nifty_stocks = []
+    other_stocks = []
+
+    for stock in stock_json["resultData"]:
+        stock_info = {
+            "symbol_name": stock["symbol_name"],
+        }
+        
+        if stock_info["symbol_name"] in ["NIFTY", "BANKNIFTY", "FINNIFTY"]:
+            nifty_stocks.append(stock_info)
+        else:
+            other_stocks.append(stock_info)
+
+    # Create DataFrame
+    df = pd.DataFrame(other_stocks)
+
+    # Serialize DataFrame data
+    response_data = df.to_dict(orient='records')
+
+    return Response(response_data)
+
+
+
+# stocks/views.py
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+
+@api_view(['GET'])
+def get_option_strategy_optimizer_spot_data(request):
+    selected_option = request.GET.get('selected_option',"NIFTY")
+    print(selected_option)
+    strategy_stop_url=f"https://webapi.niftytrader.in/webapi/symbol/today-spot-data?symbol={selected_option}"
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
+        "Accept-Language": "en-US,en;q=0.9",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive"
+    }
+
+    stock_data = requests.get(strategy_stop_url, headers=headers)
+    stock_json = stock_data.json()
+    # Do something with the selected_option, process the data, and prepare a response
+    response_data = {
+        'spot_data': stock_json,
+        # Add more data as needed
+    }
+    return Response(response_data)
+
+
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+
+@api_view(['GET'])
+def get_option_strategy_optimizer_option_data(request):
+    selected_option = request.GET.get('selected_option',"NIFTY")
+    selected_option_date = request.GET.get('selected_expiry')
+    print(selected_option,selected_option_date)
+    strategy_option_url=f"https://webapi.niftytrader.in/webapi/option/fatch-option-chain?symbol={selected_option}&expiryDate={selected_option_date}"
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
+        "Accept-Language": "en-US,en;q=0.9",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive"
+    }
+
+    stock_data = requests.get(strategy_option_url, headers=headers)
+    stock_json = stock_data.json()
+    # Do something with the selected_option, process the data, and prepare a response
+    response_data = {
+        'option_data': stock_json,
+        # Add more data as needed
+    }
+    return Response(response_data)
+@api_view(['GET'])
+def option_strategies_expiry(request):
+    # selected_option = request.GET.get('selected_option',"NIFTY")
+    # selected_option_date = request.GET.get('selected_expiry')
+    # print(selected_option,selected_option_date)
+    selected_option = request.GET.get("selected_option","NIFTY")
+    strategy_expiry_url=f"https://webapi.niftytrader.in/webapi/Option/option-strategy-expiry-list?symbol={selected_option}"
+    strategy_strike_url=f"https://webapi.niftytrader.in/webapi/Symbol/symbol-strike-price-list?symbol={selected_option}"
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
+        "Accept-Language": "en-US,en;q=0.9",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive"
+    }
+
+    expiry_data = requests.get(strategy_expiry_url, headers=headers)
+    strike_data = requests.get(strategy_strike_url, headers=headers)
+    expiry_json = expiry_data.json()
+    strike_json = strike_data.json()
+    final_expiry_json = expiry_json["resultData"]
+    final_strike_json = strike_json["resultData"]
+
+
+
+    # Do something with the selected_option, process the data, and prepare a response
+    response_date = {
+        'option_date': final_expiry_json,
+        'option_strike': final_strike_json,
+        # Add more data as needed
+    }
+    return Response(response_date)
+
+
+
+import numpy as np
+from django.http import JsonResponse
+from django.shortcuts import render
+
+def get_payoff_data(request):
+    spot_price = 19400
+    strike_price_long_put = 19400
+    premium_long_put = 50
+    strike_price_long_call = 19400
+    premium_long_call = 90
+    sT = np.arange(18800, 2 * spot_price, 50)
+
+    def call_payoff(sT, strike_price, premium):
+        return np.where(sT > strike_price, sT - strike_price, 18800) - premium
+
+    payoff_long_call = call_payoff(sT, strike_price_long_call, premium_long_call)
+
+    def put_payoff(sT, strike_price, premium):
+        return np.where(sT < strike_price, strike_price - sT, 18800) - premium
+
+    payoff_long_put = put_payoff(sT, strike_price_long_put, premium_long_put)
+
+    payoff_straddle = payoff_long_call + payoff_long_put
+
+    data = {
+        'sT': sT.tolist(),
+        'payoff_long_call': payoff_long_call.tolist(),
+        'payoff_long_put': payoff_long_put.tolist(),
+        'payoff_straddle': payoff_straddle.tolist(),
+    }
+
+    return JsonResponse(data)
+
+
+
+import json
+import requests
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+
+@csrf_exempt
+def filter_iv_data(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body.decode('utf-8'))  # Parse the JSON data from the request body
+
+            # Define the URLs for sending requests
+            filter_data_url = "https://webapi.niftytrader.in/webapi/Option/option-strategy-filter-data"
+            iv_data_url = "https://webapi.niftytrader.in/webapi/Option/option-strategy-iv-data"
+
+            # Define headers for the requests
+            headers = {
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
+                "Accept-Language": "en-US,en;q=0.9",
+                "Accept-Encoding": "gzip, deflate, br",
+                "Connection": "keep-alive"
+            }
+
+            # Create the payload structure for the POST request to filter_data_url
+            stock_payload = {
+                "getFrom": data[0]['selectedOption'],
+                "data": []
+            }
+
+            # Create the payload structure for the POST request to iv_data_url
+            iv_payload = {
+                "data": []
+            }
+
+            # Loop through the received data and create payload items
+            for item in data:
+                selectedOption = item.get('selectedOption')
+                optionSide = item.get('optionSide')
+                option_lot_size = item.get('option_lot_size')
+                expiryDate = item.get('expiryDate')
+                strikePrice = item.get('strikePrice')
+                action = item.get('action')
+                quantity = item.get('quantity')
+                conditionOrder = item.get('conditionOrder')
+                ltpValue = item.get('ltpValue')
+
+                # Create an item for the stock payload
+                stock_payload_item = {
+                    "symbol": selectedOption,
+                    "optionType": optionSide,
+                    "expiry": expiryDate,
+                    "strikePrice": strikePrice,
+                    "position": action,
+                    "quantity": quantity,
+                    "conditionOrder": conditionOrder,
+                    "iv": 0
+                }
+
+                stock_payload["data"].append(stock_payload_item)
+
+                # Create an item for the IV payload
+                iv_payload_item = {
+                    "optionType": optionSide,
+                    "strikePrice": strikePrice,
+                    "symbol": selectedOption,
+                    "expiry": expiryDate,
+                    "quantity": quantity,
+                    "position": action,
+                    "conditionOrder": conditionOrder,
+                    "unitPrice": ltpValue,
+                    "lotSize": option_lot_size
+                }
+
+                iv_payload["data"].append(iv_payload_item)
+
+            # Send POST requests to retrieve data from two different URLs
+            stock_data = requests.post(filter_data_url, json=stock_payload, headers=headers)
+            iv_data = requests.post(iv_data_url, json=iv_payload, headers=headers)
+
+            # Convert the responses to JSON
+            stock_json = stock_data.json()
+            iv_json = iv_data.json()
+
+            print("Stock Data:")
+            print(json.dumps(stock_json, indent=4))
+            print("===================")
+
+            print("IV Data:")
+            print(json.dumps(iv_json, indent=4))
+            print("===================")
+            response_data = {
+                "stock_data": stock_json,
+                "iv_data": iv_json
+            }
+
+            return JsonResponse(response_data) 
+
+             # Send a response back to the frontend
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
+    else:
+        return JsonResponse({'error': 'Invalid request method'}, status=400)
