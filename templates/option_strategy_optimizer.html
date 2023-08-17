@@ -313,7 +313,9 @@
                 font-size: 13px !important;
                 color: #21d052 !important;
             }
-            .long_max_loss,.breakever_probaility_profit {
+
+            .long_max_loss,
+            .breakever_probaility_profit {
                 font-weight: 600;
                 font-size: 13px !important;
             }
@@ -576,17 +578,17 @@
 
                                 // Create the table row for each option
                                 const tableRow = `
-                <tr>
-                    <td>LEG${leg++}</td>
-                    <td>${position.toUpperCase()} ${strikePrice}${optionType.toUpperCase()}(${expiry})</td>
-                
-                    <td>${iv !== null ? iv.toFixed(2) : 0}</td>
-                    <td>${delta !== null ? delta.toFixed(2) : 0}</td>
-                    <td>${theta !== null ? theta.toFixed(4) : 0}</td>
-                    <td>${gamma !== null ? gamma.toFixed(4) : 0}</td>
-                    <td>${vega !== null ? vega.toFixed(2) : 0}</td>
-                    <td>${rho !== null ? rho.toFixed(2) : 0}</td>
-                </tr>
+                                        <tr>
+                                            <td>LEG${leg++}</td>
+                                            <td>${position.toUpperCase()} ${strikePrice}${optionType.toUpperCase()}(${expiry})</td>
+                                        
+                                            <td>${iv !== null ? iv.toFixed(2) : 0}</td>
+                                            <td>${delta !== null ? delta.toFixed(2) : 0}</td>
+                                            <td>${theta !== null ? theta.toFixed(4) : 0}</td>
+                                            <td>${gamma !== null ? gamma.toFixed(4) : 0}</td>
+                                            <td>${vega !== null ? vega.toFixed(2) : 0}</td>
+                                            <td>${rho !== null ? rho.toFixed(2) : 0}</td>
+                                        </tr>
                 
 
                         `;
@@ -787,7 +789,7 @@
             $(".data-display-table").empty();
             if (selectedOption) {
                 loadSpotData(selectedOption);
-                loadOptionData(selectedOption, "");
+                setTimeout(loadOptionData(selectedOption, ""), 8000);
                 loadExpiryData(selectedOption);
             }
         });
@@ -812,7 +814,7 @@
                     var arrow_valid = spot_check_strategies > 0 ? "up" : "down";
                     $("#spot_value").empty().append(`
                         <div class="${valid_spot_value_strategies} d-flex align-items-center gap-1">
-                            <p>${response.spot_data.resultData.last_trade_price}</p>
+                            <p class="last_traded_price">${response.spot_data.resultData.last_trade_price}</p>
                             <i class='bx bxs-${arrow_valid}-arrow'></i>
                             <p>${response.spot_data.resultData.change_value}(${response.spot_data.resultData.change_per})</p>
                             
@@ -865,16 +867,31 @@
 
                     var optionChainTable = $(".strategy_option_chain");
                     optionChainTable.empty();
+
+
+                    var spot_strike_price = $(".last_traded_price").text()
+
+                    var closestStrikePrice = null;
+                    var closestDiff = Number.MAX_VALUE;
+
                     $.each(
                         response.option_data.resultData.opDatas,
                         function (index, optionChain) {
+
+                            var strike_price = parseFloat(optionChain.strike_price);
+                            var diff = Math.abs(spot_strike_price - strike_price);
+
+                            if (diff < closestDiff) {
+                                closestDiff = diff;
+                                closestStrikePrice = strike_price;
+                            }
                             var rowContent = `
                                 <tr class="call_put_tr">
                                     <td class="text-end">${optionChain.calls_iv}</td>
                                     <td class="text-end">${optionChain.calls_oi}</td>
                                     <td class="text-end call-ltp cursor-pointer  position-relative">
                                         <div class="d-flex position-absolute top-0 call-pul-ltp-btns d-none call-row">
-                                            <button title="Short" data-action="Short" data-side="call" type="button" class="px-lg-3 py-lg-1 mx-1 bg-light-green put_call_btns common-border shadow-none fs-13 fw-600 btn btn-primary">S</button>
+                                            <button id="Auto_calls_short_click" title="Short" data-action="Short" data-side="call" type="button" class="px-lg-3 py-lg-1 mx-1 bg-light-green put_call_btns common-border shadow-none fs-13 fw-600 btn btn-primary">S</button>
                                             <button title="Long" data-action="Long" data-side="call" type="button" class="px-lg-3 py-lg-1 mx-1 bg-light-red put_call_btns  shadow-none fs-13 fw-600 btn btn-primary">L</button>
                                             </div>
                                         <p class="calls_ltp">
@@ -898,7 +915,7 @@
                                     <td class="text-start put-ltp cursor-pointer  position-relative">
                                         <p class="puts_ltp">${optionChain.puts_ltp}</p>
                                         <div class="d-flex position-absolute top-0 call-pul-ltp-btns  d-none" id="put_call_put">
-                                            <button title="Short" type="button" data-action="Short" data-side="put" class="px-lg-3 py-lg-1 mx-1 bg-light-green put_call_btns common-border shadow-none fs-13 fw-600 btn btn-primary">S</button>
+                                            <button id="Auto_puts_short_click" title="Short" type="button" data-action="Short" data-side="put" class="px-lg-3 py-lg-1 mx-1 bg-light-green put_call_btns common-border shadow-none fs-13 fw-600 btn btn-primary">S</button>
                                             <button title="Long" data-action="Long" data-side="put" type="button" class="px-lg-3 bg-light-red put_call_btns py-lg-1 mx-1  shadow-none fs-13 fw-600 btn btn-primary">L</button>
                                             </div>
                                         </td>
@@ -908,8 +925,21 @@
                             `;
 
                             optionChainTable.append(rowContent);
+
                         }
                     );
+                    console.log("Nearest Strike Price:", closestStrikePrice);
+                    optionChainTable.find(".strike_price").each(function () {
+                        var rowStrikePrice = parseFloat($(this).text());
+                        if (rowStrikePrice === closestStrikePrice) {
+                            setTimeout(function () {
+                                $(this).closest(".call_put_tr")
+                                    .find("#Auto_calls_short_click, #Auto_puts_short_click")
+                                    .click();
+                                    $("#calculate").click(); 
+                            }.bind(this), 100); // Delay of 100ms
+                        }
+                    });
 
                     var isTableEmpty = true;
 
@@ -1160,7 +1190,7 @@
                 },
             });
         }
-
+        setTimeout(loadOptionData(selectedOption, selectedExpiry), 8000);
         function loadExpiryData(selectedOption) {
             console.log("Hi there" + selectedOption);
             $.ajax({
