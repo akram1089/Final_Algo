@@ -4177,6 +4177,7 @@ def filter_iv_data(request):
                     "position": action,
                     "quantity": quantity,
                     "conditionOrder": conditionOrder,
+                    "tradedPrice": ltpValue,
                     "iv": 0
                 }
 
