@@ -36,31 +36,34 @@
         align-items: center;
         margin: 1rem 0;
         gap: 0.5rem;
-        padding: 17px 0px;
+        padding: 17px 14px;
     }
 
-    .strategy_simu {
-        display: flex;
-        gap: 2rem;
-    }
+
 
     .straddle {
-        border: 1.5px solid cornflowerblue;
-        padding: 4px 12px;
-        border-radius: 7px;
-        color: cornflowerblue;
-        transition: 0.3s;
+        color: #4399eb;
+        border: 1px solid #4399eb;
+        background-color: #fff;
+        -webkit-box-shadow: none;
+        box-shadow: none;
+        -webkit-transition: .3s;
+        -moz-transition: .3s;
+        transition: .3s;
+        outline: 0;
+        padding: 5px 7px;
         cursor: pointer;
+        border-radius: 5px;
     }
 
     .straddle:hover {
-        background: cornflowerblue;
-        color: white;
+        background: linear-gradient(180deg, #4399eb, #5cadfb) !important;
+        color: #fff !important;
     }
 
     .option_strategies_active {
-        background: cornflowerblue !important;
-        color: white !important;
+        background: linear-gradient(180deg, #4399eb, #5cadfb) !important;
+        color: #fff !important;
     }
 
     .success_cvr {
@@ -129,7 +132,12 @@
 
     .strategy_table_input {
         padding-bottom: 1rem !important;
-        display: block !important;
+        display: flex;
+        row-gap: 0.5rem;
+        column-gap: 1rem;
+        justify-content: center;
+        flex-wrap: wrap;
+        align-items: center;
     }
 
     .add-btn {
@@ -147,7 +155,39 @@
         color: #ed0000;
     }
 </style>
+<style>
+    .option_chain_strategies,
+    .main_max_pain_strategies,
+    .lot_size_strategies,
+    .spot_strategies {
+        font-size: 12px;
+        font-weight: 700;
+        color: #00000099;
+    }
 
+    .main_top_all_left_right {
+        flex-wrap: wrap;
+        row-gap: 1rem;
+    }
+
+    .main_top_strategies {
+        flex-wrap: wrap;
+    }
+
+    .strategy_simu {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+
+    .right_side_top_strategies {
+
+        display: flex;
+        flex-wrap: wrap;
+        row-gap: 0.5rem;
+        column-gap: 1rem;
+    }
+</style>
 <div class="title my-2">
     <h5>Option Strategy Optimizer</h5>
 </div>
@@ -228,22 +268,22 @@
     <div class="pre_built_simu">
         <p style="margin-bottom: auto">Pre Built :</p>
         <div class="strategy_simu">
-            <div class="straddle option_strategies_active" id="straddle" onclick="selectStrategy('straddle')">
+            <div class="straddle" id="straddle">
                 STRADDLE
             </div>
-            <div class="straddle" id="strangle" onclick="selectStrategy('strangle')">
+            <div class="straddle" id="strangle">
                 STRANGLE
             </div>
-            <div class="straddle" id="spread" onclick="selectStrategy('spread')">
+            <div class="straddle" id="spread">
                 SPREAD
             </div>
-            <div class="straddle" id="iron_fly" onclick="selectStrategy('iron_fly')">
+            <div class="straddle" id="iron_fly">
                 IRON FLY
             </div>
-            <div class="straddle" id="iron_condor" onclick="selectStrategy('iron_condor')">
+            <div class="straddle" id="iron_condor">
                 IRON CONDOR
             </div>
-            <div class="straddle" id="jaze_lizard" onclick="selectStrategy('jaze_lizard')">
+            <div class="straddle" id="jaze_lizard">
                 JAZE LIZARD
             </div>
         </div>
@@ -260,7 +300,7 @@
         <style>
             .textOnInput {
                 position: relative;
-                width: 14rem;
+                width: 11rem;
             }
 
             .textOnInput label {
@@ -318,6 +358,28 @@
             .breakever_probaility_profit {
                 font-weight: 600;
                 font-size: 13px !important;
+            }
+
+            .strategy_cost_table,
+            .greek_table {
+                padding: 6px 0;
+                cursor: pointer;
+                font-family: system-ui;
+                color: #000000b3;
+                font-weight: 600;
+            }
+
+            #resultTable thead tr th,
+            .PL-table thead tr th {
+                color: #000000ad;
+                font-size: 13px;
+            }
+
+            #resultTable tbody tr td,
+            .PL-table tbody tr td {
+                color: #000000ad !important;
+                font-size: 12px !important;
+                font-weight: 600 !important;
             }
         </style>
         <table class="data-display-table">
@@ -406,7 +468,7 @@
 
     .greek_strategy_active {
         color: #2196f3 !important;
-        border-bottom: 2px solid #2196f3 !important;
+        border-bottom: 3px solid #2196f3 !important;
     }
 </style>
 <div class="table_pl_greek shadow p-2 mt-3">
@@ -416,25 +478,25 @@
             <p class="greek_table">GREEKS</p>
         </div>
     </div>
-
-    <table id="resultTable" class="table table-hover">
-        <thead class="bg-light">
-            <tr>
-                <th>LEG</th>
-                <th>POSITION</th>
-                <th>IV</th>
-                <th>DELTA</th>
-                <th>THETA</th>
-                <th>GAMMA</th>
-                <th>VEGA</th>
-                <th>RHO</th>
-            </tr>
-        </thead>
-        <tbody></tbody>
-    </table>
-
-    <div id="table-PL_main">
-        <table class="PL-table table table-hover">
+    <div id="table-Greeks" class="table-responsive">
+        <table id="resultTable" class="table table-hover ">
+            <thead class="bg-light">
+                <tr>
+                    <th>LEG</th>
+                    <th>POSITION</th>
+                    <th>IV</th>
+                    <th>DELTA</th>
+                    <th>THETA</th>
+                    <th>GAMMA</th>
+                    <th>VEGA</th>
+                    <th>RHO</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+    <div id="table-PL_main" class="table-responsive">
+        <table class="PL-table table table-hover ">
             <thead class="bg-light">
                 <tr>
                     <th>LEG</th>
@@ -658,7 +720,9 @@
                                 let minStrikePrice = Number.POSITIVE_INFINITY;
                                 // Determine the position label based on the majority
                                 const positionLabel = shortCount > longCount ? "SHORT" : "LONG";
-
+                                let totalStrikePrice = 0;
+                                let itemCount = 0;
+                                let premiumPain = 0;
                                 for (let i = 0; i < data.length; i++) {
                                     const item = data[i];
 
@@ -696,8 +760,20 @@
                                     tableHTML += legRow;
                                     netCost += parseFloat(totalCurrentCost);
                                     netPL += parseFloat(final_P_L);
+                                    totalStrikePrice += parseFloat(item.strikePrice);
+                                    itemCount++;
+                                    premiumPain += parseFloat(item.unitPrice)
+
                                 }
+                                console.log(totalStrikePrice);
+                                const averageStrikePrice = totalStrikePrice / itemCount;
+                                console.log("Average of the :" + averageStrikePrice);
                                 console.log(positionLabel);
+                                var min_breakPoints = averageStrikePrice - premiumPain
+                                var max_breakPoints = averageStrikePrice + premiumPain
+
+
+
                                 var Put_position_label =
                                     positionLabel == "SHORT"
                                         ? Math.abs(netCost + -netPL)
@@ -737,7 +813,7 @@
                                                                                 
                                                                                 <div class="breakever_probaility_profit">
                                                                                     
-                                                                                    <p>Min Breakeven :  ~ Max Breakeven : </p>
+                                                                                    <p>Min Breakeven : ${min_breakPoints.toFixed(2)} ~ Max Breakeven : ${max_breakPoints.toFixed(2)}</p>
                                                                                     <p>Probability of Profit: 10.00%</p>
                                                                                     </div>
                                                                                 </td>
@@ -787,6 +863,8 @@
             var selectedOption = $(this).val();
 
             $(".data-display-table").empty();
+            $("#table-PL").empty();
+            $("#resultTable tbody").empty();
             if (selectedOption) {
                 loadSpotData(selectedOption);
                 setTimeout(loadOptionData(selectedOption, ""), 8000);
@@ -828,6 +906,9 @@
             var selectedOption = $("#stockDropdown").val();
             var selectedExpiry = $("#optionExpiryDropdown").val();
             var selectedOptionExpiry = $(this).val();
+            $(".data-display-table").empty();
+            $("#table-PL").empty();
+            $("#resultTable tbody").empty();
             if (selectedOption) {
                 loadOptionData(selectedOption, selectedOptionExpiry);
             }
@@ -892,7 +973,7 @@
                                     <td class="text-end call-ltp cursor-pointer  position-relative">
                                         <div class="d-flex position-absolute top-0 call-pul-ltp-btns d-none call-row">
                                             <button id="Auto_calls_short_click" title="Short" data-action="Short" data-side="call" type="button" class="px-lg-3 py-lg-1 mx-1 bg-light-green put_call_btns common-border shadow-none fs-13 fw-600 btn btn-primary">S</button>
-                                            <button title="Long" data-action="Long" data-side="call" type="button" class="px-lg-3 py-lg-1 mx-1 bg-light-red put_call_btns  shadow-none fs-13 fw-600 btn btn-primary">L</button>
+                                            <button id="Auto_calls_long_click" title="Long" data-action="Long" data-side="call" type="button" class="px-lg-3 py-lg-1 mx-1 bg-light-red put_call_btns  shadow-none fs-13 fw-600 btn btn-primary">L</button>
                                             </div>
                                         <p class="calls_ltp">
                                         ${optionChain.calls_ltp} </p></td>
@@ -916,7 +997,7 @@
                                         <p class="puts_ltp">${optionChain.puts_ltp}</p>
                                         <div class="d-flex position-absolute top-0 call-pul-ltp-btns  d-none" id="put_call_put">
                                             <button id="Auto_puts_short_click" title="Short" type="button" data-action="Short" data-side="put" class="px-lg-3 py-lg-1 mx-1 bg-light-green put_call_btns common-border shadow-none fs-13 fw-600 btn btn-primary">S</button>
-                                            <button title="Long" data-action="Long" data-side="put" type="button" class="px-lg-3 bg-light-red put_call_btns py-lg-1 mx-1  shadow-none fs-13 fw-600 btn btn-primary">L</button>
+                                            <button id="Auto_puts_long_click" title="Long" data-action="Long" data-side="put" type="button" class="px-lg-3 bg-light-red put_call_btns py-lg-1 mx-1  shadow-none fs-13 fw-600 btn btn-primary">L</button>
                                             </div>
                                         </td>
                                     <td class="text-start">${optionChain.puts_oi}</td>
@@ -929,17 +1010,319 @@
                         }
                     );
                     console.log("Nearest Strike Price:", closestStrikePrice);
-                    optionChainTable.find(".strike_price").each(function () {
-                        var rowStrikePrice = parseFloat($(this).text());
-                        if (rowStrikePrice === closestStrikePrice) {
-                            setTimeout(function () {
-                                $(this).closest(".call_put_tr")
-                                    .find("#Auto_calls_short_click, #Auto_puts_short_click")
-                                    .click();
-                                    $("#calculate").click(); 
-                            }.bind(this), 100); // Delay of 100ms
+
+                    function selectStrategy(filter_arg_strategy) {
+                        $(".data-display-table").empty();
+                        $("#table-PL").empty();
+                        $("#resultTable tbody").empty();
+                        if (filter_arg_strategy === "straddle") {
+                            $("#straddle").addClass("option_strategies_active")
+                            $("#strangle").removeClass("option_strategies_active")
+                            $("#iron_fly").removeClass("option_strategies_active")
+                            $("#spread").removeClass("option_strategies_active")
+                            $("#iron_condor").removeClass("option_strategies_active")
+                            $("#jaze_lizard").removeClass("option_strategies_active")
+                            $(".data-display-table").empty();
+                            $("#table-PL").empty();
+                            $("#resultTable tbody").empty();
+                            optionChainTable.find(".strike_price").each(function () {
+                                var rowStrikePrice = parseFloat($(this).text());
+                                if (rowStrikePrice === closestStrikePrice) {
+                                    setTimeout(function () {
+                                        $(this).closest(".call_put_tr")
+                                            .find("#Auto_calls_short_click, #Auto_puts_short_click")
+                                            .click();
+                                        $("#calculate").click();
+                                    }.bind(this), 200); // Delay of 100ms
+                                }
+                            });
                         }
+                        else if (filter_arg_strategy === 'strangle') {
+                            $("#straddle").removeClass("option_strategies_active")
+                            $("#strangle").addClass("option_strategies_active")
+                            $("#iron_fly").removeClass("option_strategies_active")
+                            $("#spread").removeClass("option_strategies_active")
+                            $("#iron_condor").removeClass("option_strategies_active")
+                            $("#jaze_lizard").removeClass("option_strategies_active")
+                            $(".data-display-table").empty();
+                            $("#table-PL").empty();
+                            $("#resultTable tbody").empty();
+                            optionChainTable.find(".strike_price").each(function () {
+                                var rowStrikePrice = parseFloat($(this).text());
+                                var adjustedStrikePlus300 = closestStrikePrice + 200;
+                                var adjustedStrikeMinus200 = closestStrikePrice - 300;
+
+                                if (rowStrikePrice === adjustedStrikePlus300) {
+                                    setTimeout(function () {
+                                        $(this).closest(".call_put_tr")
+                                            .find("#Auto_calls_short_click")
+                                            .click();
+                                        $("#calculate").click();
+                                    }.bind(this),);
+                                }
+
+                                if (rowStrikePrice === adjustedStrikeMinus200) {
+                                    setTimeout(function () {
+                                        $(this).closest(".call_put_tr")
+                                            .find("#Auto_puts_short_click")
+                                            .click();
+                                        $("#calculate").click();
+                                    }.bind(this),);
+                                }
+                            });
+
+                        } else if (filter_arg_strategy === 'spread') {
+                            $("#straddle").removeClass("option_strategies_active")
+                            $("#strangle").removeClass("option_strategies_active")
+                            $("#iron_fly").removeClass("option_strategies_active")
+                            $("#spread").addClass("option_strategies_active")
+                            $("#iron_condor").removeClass("option_strategies_active")
+                            $("#jaze_lizard").removeClass("option_strategies_active")
+                            $(".data-display-table").empty();
+                            $("#table-PL").empty();
+                            $("#resultTable tbody").empty();
+
+                            optionChainTable.find(".strike_price").each(function () {
+                                var rowStrikePrice = parseFloat($(this).text());
+                                var adjustedStrikePlus300 = closestStrikePrice;
+                                var adjustedStrikeMinus200 = closestStrikePrice + 150;
+
+                                if (rowStrikePrice === adjustedStrikePlus300) {
+                                    setTimeout(function () {
+                                        $(this).closest(".call_put_tr")
+                                            .find("#Auto_calls_short_click")
+                                            .click();
+                                        $("#calculate").click();
+                                    }.bind(this),);
+                                }
+
+                                if (rowStrikePrice === adjustedStrikeMinus200) {
+                                    setTimeout(function () {
+                                        $(this).closest(".call_put_tr")
+                                            .find("#Auto_calls_long_click")
+                                            .click();
+                                        $("#calculate").click();
+                                    }.bind(this),);
+                                }
+                            });
+
+                        }
+                        else if (filter_arg_strategy === 'iron_fly') {
+
+                            $("#straddle").removeClass("option_strategies_active")
+                            $("#strangle").removeClass("option_strategies_active")
+                            $("#iron_fly").addClass("option_strategies_active")
+                            $("#spread").removeClass("option_strategies_active")
+                            $("#iron_condor").removeClass("option_strategies_active")
+                            $("#jaze_lizard").removeClass("option_strategies_active")
+                            $(".data-display-table").empty();
+                            $("#table-PL").empty();
+                            $("#resultTable tbody").empty();
+                            optionChainTable.find(".strike_price").each(function () {
+                                var rowStrikePrice = parseFloat($(this).text());
+                                var adjustedStrikePlus300 = closestStrikePrice + 200;
+                                var adjustedStrikeMinus200 = closestStrikePrice - 200;
+                                if (rowStrikePrice === closestStrikePrice) {
+                                    setTimeout(function () {
+                                        $(this).closest(".call_put_tr")
+                                            .find("#Auto_calls_short_click, #Auto_puts_short_click")
+                                            .click();
+                                        $("#calculate").click();
+                                    }.bind(this),); // Delay of 100ms
+                                }
+
+                                if (rowStrikePrice === adjustedStrikePlus300) {
+                                    setTimeout(function () {
+                                        $(this).closest(".call_put_tr")
+                                            .find("#Auto_calls_long_click")
+                                            .click();
+                                        $("#calculate").click();
+                                    }.bind(this),);
+                                }
+
+                                if (rowStrikePrice === adjustedStrikeMinus200) {
+                                    setTimeout(function () {
+                                        $(this).closest(".call_put_tr")
+                                            .find("#Auto_puts_long_click")
+                                            .click();
+                                        $("#calculate").click();
+                                    }.bind(this),);
+                                }
+                            });
+                        } else if (filter_arg_strategy === 'iron_condor') {
+
+                            $("#straddle").removeClass("option_strategies_active")
+                            $("#strangle").removeClass("option_strategies_active")
+                            $("#iron_fly").removeClass("option_strategies_active")
+                            $("#spread").removeClass("option_strategies_active")
+                            $("#iron_condor").addClass("option_strategies_active")
+                            $("#jaze_lizard").removeClass("option_strategies_active")
+                            $(".data-display-table").empty();
+                            $("#table-PL").empty();
+                            $("#resultTable tbody").empty();
+                            optionChainTable.find(".strike_price").each(function () {
+                                var rowStrikePrice = parseFloat($(this).text());
+                                var adjustedStrikeMinus150 = closestStrikePrice - 150;
+                                var adjustedStrikeMinus200 = closestStrikePrice - 200;
+                                var adjustedStrikePlus150 = closestStrikePrice + 150;
+                                var adjustedStrikePlus200 = closestStrikePrice + 200;
+
+                                if (rowStrikePrice === adjustedStrikeMinus200) {
+                                    setTimeout(function () {
+                                        $(this).closest(".call_put_tr")
+                                            .find("#Auto_puts_long_click")
+                                            .click();
+                                        $("#calculate").click();
+                                    }.bind(this),); // Delay of 100ms
+                                }
+                                if (rowStrikePrice === adjustedStrikeMinus150) {
+                                    setTimeout(function () {
+                                        $(this).closest(".call_put_tr")
+                                            .find("#Auto_puts_short_click")
+                                            .click();
+                                        $("#calculate").click();
+                                    }.bind(this),); // Delay of 100ms
+                                }
+                                if (rowStrikePrice === adjustedStrikePlus150) {
+                                    setTimeout(function () {
+                                        $(this).closest(".call_put_tr")
+                                            .find("#Auto_calls_short_click")
+                                            .click();
+                                        $("#calculate").click();
+                                    }.bind(this),);
+                                }
+
+                                if (rowStrikePrice === adjustedStrikePlus200) {
+                                    setTimeout(function () {
+                                        $(this).closest(".call_put_tr")
+                                            .find("#Auto_calls_long_click")
+                                            .click();
+                                        $("#calculate").click();
+                                    }.bind(this),);
+                                }
+                            });
+                        } else if (filter_arg_strategy === 'jaze_lizard') {
+                            $("#straddle").removeClass("option_strategies_active")
+                            $("#strangle").removeClass("option_strategies_active")
+                            $("#iron_fly").removeClass("option_strategies_active")
+                            $("#spread").removeClass("option_strategies_active")
+                            $("#iron_condor").removeClass("option_strategies_active")
+                            $("#jaze_lizard").addClass("option_strategies_active")
+                            $(".data-display-table").empty();
+                            $("#table-PL").empty();
+                            $("#resultTable tbody").empty();
+
+
+
+
+                            optionChainTable.find(".strike_price").each(function () {
+                                var rowStrikePrice = parseFloat($(this).text());
+                                var adjustedStrikeMinus200 = closestStrikePrice - 200;
+                                var adjustedStrikePlus100 = closestStrikePrice + 100;
+
+                                var adjustedStrikePlus200 = closestStrikePrice + 200;
+
+                                if (rowStrikePrice === adjustedStrikePlus100) {
+                                    setTimeout(function () {
+                                        $(this).closest(".call_put_tr")
+                                            .find("#Auto_calls_short_click")
+                                            .click();
+                                        $("#calculate").click();
+                                    }.bind(this),); // Delay of 100ms
+                                }
+                                if (rowStrikePrice === adjustedStrikePlus200) {
+                                    setTimeout(function () {
+                                        $(this).closest(".call_put_tr")
+                                            .find("#Auto_calls_long_click")
+                                            .click();
+                                        $("#calculate").click();
+                                    }.bind(this),); // Delay of 100ms
+                                }
+                                if (rowStrikePrice === adjustedStrikeMinus200) {
+                                    setTimeout(function () {
+                                        $(this).closest(".call_put_tr")
+                                            .find("#Auto_puts_short_click")
+                                            .click();
+                                        $("#calculate").click();
+                                    }.bind(this),);
+                                }
+
+
+                            });
+
+
+
+
+
+
+
+                        }
+
+                    }
+
+
+                    $("#straddle").click(function () {
+                        $(".data-display-table").empty();
+                        $("#table-PL").empty();
+                        $("#resultTable tbody").empty();
+
+                        // Unbind previous click events
+                        $(this).off("click");
+                        selectStrategy("straddle");
                     });
+
+                    $("#strangle").click(function () {
+                        $(".data-display-table").empty();
+                        $("#table-PL").empty();
+                        $("#resultTable tbody").empty();
+
+                        // Unbind previous click events
+                        $(this).off("click");
+                        selectStrategy("strangle");
+                    });
+
+                    $("#iron_fly").click(function () {
+                        $(".data-display-table").empty();
+                        $("#table-PL").empty();
+                        $("#resultTable tbody").empty();
+
+                        // Unbind previous click events
+                        $(this).off("click");
+                        selectStrategy("iron_fly");
+                    });
+
+                    // Attach click event handlers to other strategy buttons
+                    $("#spread").click(function () {
+                        $(".data-display-table").empty();
+                        $("#table-PL").empty();
+                        $("#resultTable tbody").empty();
+
+                        // Unbind previous click events
+                        $(this).off("click");
+                        selectStrategy("spread");
+                    });
+
+                    $("#iron_condor").click(function () {
+                        $(".data-display-table").empty();
+                        $("#table-PL").empty();
+                        $("#resultTable tbody").empty();
+
+                        // Unbind previous click events
+                        $(this).off("click");
+                        selectStrategy("iron_condor");
+                    });
+
+                    $("#jaze_lizard").click(function () {
+                        $(".data-display-table").empty();
+                        $("#table-PL").empty();
+                        $("#resultTable tbody").empty();
+
+                        // Unbind previous click events
+                        $(this).off("click");
+                        selectStrategy("jaze_lizard");
+                    });
+
+
 
                     var isTableEmpty = true;
 
@@ -1012,6 +1395,11 @@
                             );
                         }
                     });
+
+
+
+
+
 
                     $(".add-btn").off("click");
                     $(".add-btn").click(function (event) {
