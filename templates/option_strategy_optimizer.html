@@ -187,6 +187,20 @@
         row-gap: 0.5rem;
         column-gap: 1rem;
     }
+
+    #spot_arrow {
+        font-family: boxicons !important;
+        font-weight: 600;
+        font-style: normal;
+        font-variant: normal;
+        line-height: 1;
+        text-rendering: auto;
+        display: inline-block;
+        font-size: 10px !important;
+        text-transform: none;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
 </style>
 <div class="title my-2">
     <h5>Option Strategy Optimizer</h5>
@@ -515,6 +529,13 @@
 </div>
 <script>
     $(document).ready(function () {
+
+        loadStocks();
+        loadSpotData("NIFTY");
+        loadExpiryData("NIFTY");
+        setTimeout(function () {
+            loadOptionData("NIFTY", "");
+        }, 1000);
         $("#table-PL_main").show();
         $("#resultTable").hide();
 
@@ -546,9 +567,12 @@
         updateEmptyMessageVisibility();
 
         // Load spot data for "NIFTY" initially
-        var selectedOption = $("#stockDropdown").val();
-        $(".selectedOption").text(selectedOption);
+
+
         $("#calculate").click(function () {
+            var selectedOption = $("#stockDropdown").val();
+            console.log("ca=" + selectedOption);
+            loadExpiryData(selectedOption)
             $("#table-PL").empty();
             $("#resultTable tbody").empty();
 
@@ -853,10 +877,7 @@
                 .removeClass("bx-chevron-up")
                 .addClass("bx-chevron-down");
         });
-        loadStocks();
-        loadSpotData("NIFTY");
-        loadExpiryData("NIFTY");
-        loadOptionData("NIFTY", "");
+
 
         // Handle stock dropdown change
         $("#stockDropdown").change(function () {
@@ -867,8 +888,11 @@
             $("#resultTable tbody").empty();
             if (selectedOption) {
                 loadSpotData(selectedOption);
-                setTimeout(loadOptionData(selectedOption, ""), 8000);
-                loadExpiryData(selectedOption);
+
+              setTimeout(function () {
+            loadOptionData(selectedOption, "");
+        }, 1000);
+
             }
         });
 
@@ -893,7 +917,7 @@
                     $("#spot_value").empty().append(`
                         <div class="${valid_spot_value_strategies} d-flex align-items-center gap-1">
                             <p class="last_traded_price">${response.spot_data.resultData.last_trade_price}</p>
-                            <i class='bx bxs-${arrow_valid}-arrow'></i>
+                            <i class='bx bxs-${arrow_valid}-arrow' id="spot_arrow"></i>
                             <p>${response.spot_data.resultData.change_value}(${response.spot_data.resultData.change_per})</p>
                             
                             </div>
@@ -1047,31 +1071,67 @@
                             $(".data-display-table").empty();
                             $("#table-PL").empty();
                             $("#resultTable tbody").empty();
-                            optionChainTable.find(".strike_price").each(function () {
-                                var rowStrikePrice = parseFloat($(this).text());
-                                var adjustedStrikePlus300 = closestStrikePrice + 200;
-                                var adjustedStrikeMinus200 = closestStrikePrice - 300;
 
-                                if (rowStrikePrice === adjustedStrikePlus300) {
+                            // Ensure you are selecting the correct elements with .strike_price
+                            var strikePrices = optionChainTable.find(".strike_price").map(function () {
+                                return parseFloat($(this).text());
+                            }).get();
+
+                            // Find the index of the row where strikePrice is closestStrikePrice
+                            var currentIndex = strikePrices.indexOf(closestStrikePrice);
+
+                            // Calculate the previous 5 strike prices
+                            var prev5 = [];
+                            for (var i = currentIndex - 1; i >= 0 && prev5.length < 5; i--) {
+                                var rowStrikePrice = strikePrices[i];
+                                if (!isNaN(rowStrikePrice)) {
+                                    prev5.push(rowStrikePrice);
+                                }
+                            }
+
+                            // Calculate the next 5 strike prices
+                            var forw5 = [];
+                            for (var j = currentIndex + 1; j < strikePrices.length && forw5.length < 5; j++) {
+                                var rowStrikePrice = strikePrices[j];
+                                if (!isNaN(rowStrikePrice)) {
+                                    forw5.push(rowStrikePrice);
+                                }
+                            }
+
+                            console.log("Previous 5 Strike Prices:", prev5);
+                            console.log("Next 5 Strike Prices:", forw5);
+
+                            if (prev5.length === 5 && forw5.length === 5) {
+                                // Get the values of lastIndexPrev and lastIndexForw
+                                var lastIndexPrev = prev5[prev5.length - 1];
+                                var lastIndexForw = forw5[forw5.length - 1];
+
+                                // Find the closest row for lastIndexPrev and click on Auto_puts_short_click
+                                var closestRowPrev = optionChainTable.find(".strike_price:contains(" + lastIndexPrev + ")").closest(".call_put_tr");
+                                if (closestRowPrev.length) {
                                     setTimeout(function () {
-                                        $(this).closest(".call_put_tr")
-                                            .find("#Auto_calls_short_click")
-                                            .click();
-                                        $("#calculate").click();
+                                        closestRowPrev.find("#Auto_puts_short_click").click();
                                     }.bind(this),);
                                 }
 
-                                if (rowStrikePrice === adjustedStrikeMinus200) {
+                                // Find the closest row for lastIndexForw and click on Auto_calls_short_click
+                                var closestRowForw = optionChainTable.find(".strike_price:contains(" + lastIndexForw + ")").closest(".call_put_tr");
+                                if (closestRowForw.length) {
                                     setTimeout(function () {
-                                        $(this).closest(".call_put_tr")
-                                            .find("#Auto_puts_short_click")
-                                            .click();
-                                        $("#calculate").click();
-                                    }.bind(this),);
+                                        closestRowForw.find("#Auto_calls_short_click").click();
+                                    }.bind(this), 500); // Adjust the delay as needed
                                 }
-                            });
 
-                        } else if (filter_arg_strategy === 'spread') {
+                                // Click on #calculate after a longer delay
+                                setTimeout(function () {
+                                    $("#calculate").click();
+                                }, 1000); // Adjust the delay as needed
+                            }
+                        }
+
+
+
+                        else if (filter_arg_strategy === 'spread') {
                             $("#straddle").removeClass("option_strategies_active")
                             $("#strangle").removeClass("option_strategies_active")
                             $("#iron_fly").removeClass("option_strategies_active")
@@ -1107,8 +1167,8 @@
                             });
 
                         }
-                        else if (filter_arg_strategy === 'iron_fly') {
 
+                        else if (filter_arg_strategy === 'iron_fly') {
                             $("#straddle").removeClass("option_strategies_active")
                             $("#strangle").removeClass("option_strategies_active")
                             $("#iron_fly").addClass("option_strategies_active")
@@ -1118,38 +1178,78 @@
                             $(".data-display-table").empty();
                             $("#table-PL").empty();
                             $("#resultTable tbody").empty();
+
+                            // Ensure you are selecting the correct elements with .strike_price
+                            var strikePrices = optionChainTable.find(".strike_price").map(function () {
+                                return parseFloat($(this).text());
+                            }).get();
+
+                            // Find the index of the row where strikePrice is closestStrikePrice
+                            var currentIndex = strikePrices.indexOf(closestStrikePrice);
+
+                            // Calculate the previous 4 and forward 4 strike prices
+                            var prev4 = [];
+                            var forw4 = [];
+
+                            for (var i = currentIndex - 1; i >= 0 && prev4.length < 4; i--) {
+                                var rowStrikePrice = strikePrices[i];
+                                if (!isNaN(rowStrikePrice)) {
+                                    prev4.push(rowStrikePrice);
+                                }
+                            }
+
+                            for (var j = currentIndex + 1; j < strikePrices.length && forw4.length < 4; j++) {
+                                var rowStrikePrice = strikePrices[j];
+                                if (!isNaN(rowStrikePrice)) {
+                                    forw4.push(rowStrikePrice);
+                                }
+                            }
+
+                            console.log("Previous 4 Strike Prices:", prev4);
+                            console.log("Next 4 Strike Prices:", forw4);
+
+                            // Keep the existing logic for closestStrikePrice
                             optionChainTable.find(".strike_price").each(function () {
                                 var rowStrikePrice = parseFloat($(this).text());
-                                var adjustedStrikePlus300 = closestStrikePrice + 200;
-                                var adjustedStrikeMinus200 = closestStrikePrice - 200;
                                 if (rowStrikePrice === closestStrikePrice) {
                                     setTimeout(function () {
                                         $(this).closest(".call_put_tr")
                                             .find("#Auto_calls_short_click, #Auto_puts_short_click")
                                             .click();
                                         $("#calculate").click();
-                                    }.bind(this),); // Delay of 100ms
-                                }
-
-                                if (rowStrikePrice === adjustedStrikePlus300) {
-                                    setTimeout(function () {
-                                        $(this).closest(".call_put_tr")
-                                            .find("#Auto_calls_long_click")
-                                            .click();
-                                        $("#calculate").click();
-                                    }.bind(this),);
-                                }
-
-                                if (rowStrikePrice === adjustedStrikeMinus200) {
-                                    setTimeout(function () {
-                                        $(this).closest(".call_put_tr")
-                                            .find("#Auto_puts_long_click")
-                                            .click();
-                                        $("#calculate").click();
-                                    }.bind(this),);
+                                    }.bind(this), 200); // Delay of 100ms
                                 }
                             });
-                        } else if (filter_arg_strategy === 'iron_condor') {
+
+                            // Get the values of lastIndexPrev and lastIndexForw
+                            var lastIndexPrev = prev4[prev4.length - 1];
+                            var lastIndexForw = forw4[forw4.length - 1];
+
+                            // Find the closest row for lastIndexPrev and click on Auto_puts_short_click
+                            var closestRowPrev = optionChainTable.find(".strike_price:contains(" + lastIndexPrev + ")").closest(".call_put_tr");
+                            if (closestRowPrev.length) {
+                                setTimeout(function () {
+                                    closestRowPrev.find("#Auto_puts_long_click").click();
+                                }.bind(this), 100);
+                            }
+
+                            // Find the closest row for lastIndexForw and click on Auto_calls_short_click
+                            var closestRowForw = optionChainTable.find(".strike_price:contains(" + lastIndexForw + ")").closest(".call_put_tr");
+                            if (closestRowForw.length) {
+                                setTimeout(function () {
+                                    closestRowForw.find("#Auto_calls_long_click").click();
+                                }.bind(this), 300); // Adjust the delay as needed
+                            }
+
+                            // Click on #calculate after a longer delay
+                            setTimeout(function () {
+                                $("#calculate").click();
+                            }, 1000); // Adjust the delay as needed
+                        }
+
+
+
+                        else if (filter_arg_strategy === 'iron_condor') {
 
                             $("#straddle").removeClass("option_strategies_active")
                             $("#strangle").removeClass("option_strategies_active")
@@ -1260,24 +1360,24 @@
 
                     }
 
-// Common function to handle strategy button click
-function attachButtonClickEvent($button, strategy) {
-    $button.off("click").on("click", function() {
-        $(".data-display-table").empty();
-        $("#table-PL").empty();
-        $("#resultTable tbody").empty();
-        selectStrategy(strategy);
-    });
-}
+                    // Common function to handle strategy button click
+                    function attachButtonClickEvent($button, strategy) {
+                        $button.off("click").on("click", function () {
+                            $(".data-display-table").empty();
+                            $("#table-PL").empty();
+                            $("#resultTable tbody").empty();
+                            selectStrategy(strategy);
+                        });
+                    }
 
 
-    // Attach click event handlers to strategy buttons
-    attachButtonClickEvent($("#straddle"), "straddle");
-    attachButtonClickEvent($("#strangle"), "strangle");
-    attachButtonClickEvent($("#iron_fly"), "iron_fly");
-    attachButtonClickEvent($("#spread"), "spread");
-    attachButtonClickEvent($("#iron_condor"), "iron_condor");
-    attachButtonClickEvent($("#jaze_lizard"), "jaze_lizard");
+                    // Attach click event handlers to strategy buttons
+                    attachButtonClickEvent($("#straddle"), "straddle");
+                    attachButtonClickEvent($("#strangle"), "strangle");
+                    attachButtonClickEvent($("#iron_fly"), "iron_fly");
+                    attachButtonClickEvent($("#spread"), "spread");
+                    attachButtonClickEvent($("#iron_condor"), "iron_condor");
+                    attachButtonClickEvent($("#jaze_lizard"), "jaze_lizard");
 
 
 
@@ -1286,7 +1386,7 @@ function attachButtonClickEvent($button, strategy) {
                     var isTableEmpty = true;
 
                     $(".put_call_btns").click(function () {
-                        loadExpiryData();
+
                         if (isTableEmpty) {
                             $(".data-display-table").empty();
                             isTableEmpty = false;
@@ -1565,7 +1665,8 @@ function attachButtonClickEvent($button, strategy) {
             var strikeSelect = $(".strike_price_input");
 
             // Clear existing options
-
+            //             expirySelect.empty();
+            // strikeSelect.empty();
             // Add a default "Select" option
 
             // Add each expiry date as an option
