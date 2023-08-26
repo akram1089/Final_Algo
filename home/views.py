@@ -2675,9 +2675,10 @@ def fetch_option_data_with_spot_price(request):
     print(selectedDate)
 
     url = f"https://webapi.niftytrader.in/webapi/option/fatch-option-chain?symbol={selected_symbol}&expiryDate={selectedDate}"
+
     url_symbol_list = "https://webapi.niftytrader.in/webapi/symbol/psymbol-list"
     url_india_vix = "https://webapi.niftytrader.in/webapi/Other/other-symbol-spot-data?symbol=INDIA+VIX"
-    url_spot_data = f"https://webapi.niftytrader.in/webapi/symbol/today-spot-data?symbol={'NIFTY+50' if selected_symbol == 'nifty' else selected_symbol}"
+    url_spot_data = f"https://webapi.niftytrader.in/webapi/symbol/today-spot-data?symbol={selected_symbol}"
 
     headers = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
@@ -4058,7 +4059,8 @@ def option_strategies_expiry(request):
     # selected_option = request.GET.get('selected_option',"NIFTY")
     # selected_option_date = request.GET.get('selected_expiry')
     # print(selected_option,selected_option_date)
-    selected_option = request.GET.get("selected_option","NIFTY")
+    selected_option = request.GET.get("selected_option")
+    print(selected_option)
     strategy_expiry_url=f"https://webapi.niftytrader.in/webapi/Option/option-strategy-expiry-list?symbol={selected_option}"
     strategy_strike_url=f"https://webapi.niftytrader.in/webapi/Symbol/symbol-strike-price-list?symbol={selected_option}"
     headers = {
@@ -4206,13 +4208,13 @@ def filter_iv_data(request):
             stock_json = stock_data.json()
             iv_json = iv_data.json()
 
-            print("Stock Data:")
-            print(json.dumps(stock_json, indent=4))
-            print("===================")
+            # print("Stock Data:")
+            # print(json.dumps(stock_json, indent=4))
+            # print("===================")
 
-            print("IV Data:")
-            print(json.dumps(iv_json, indent=4))
-            print("===================")
+            # print("IV Data:")
+            # print(json.dumps(iv_json, indent=4))
+            # print("===================")
             response_data = {
                 "stock_data": stock_json,
                 "iv_data": iv_json

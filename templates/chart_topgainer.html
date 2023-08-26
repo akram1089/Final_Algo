@@ -237,6 +237,13 @@
         color: #fff;
     }
 
+    .simulator_active_strategy {
+        background: -webkit-gradient(linear, left top, left bottom, from(#4399eb), to(#5cadfb));
+        background: -moz-linear-gradient(top, #4399eb, #5cadfb);
+        background: linear-gradient(180deg, #4399eb, #5cadfb);
+        color: #fff;
+    }
+
     .main_top_strategy_optimizer {
         display: flex !important;
         column-gap: 1rem !important;
@@ -315,244 +322,1720 @@
         z-index: -1 !important;
         background: rgba(248, 249, 250);
     }
-    .modal{
+
+    .modal {
         z-index: 999999999999 !important;
+    }
+
+    .edit-button,
+    .delete-button {
+
+
+        color: #767f88;
+        transition: 0.3s;
+    }
+
+    .edit-button:hover {
+        color: #4399eb !important;
+    }
+
+    .delete-button:hover {
+        color: #c70000 !important;
+    }
+
+    .main_option_strategy {
+        box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+        padding: 10px 15px;
+    }
+
+    .placeholder-glow {
+        height: 1rem !important;
+    }
+
+    .placeholder.col-12 {
+        height: 25px !important;
     }
 </style>
 
 <body>
-    <div class=" mt-4 mb-2 d-flex flex-wrap justify-content-between main_top_strategy_optimizer">
-        <div class="left_top_option_simulator">
-            <div class="textOnInput">
-                <label for="indexDropdown" class="form-label">Symbol:</label>
-                <select class="option_side_input form-select" id="indexDropdown">
-                    <option value="NIFTY">NIFTY</option>
-                    <option value="BANKNIFTY">BANKNIFTY</option>
-                    <option value="FINNIFTY">FINNIFTY</option>
-                </select>
+    <h5 class="fw-bold">Options Simulator</h5>
+    <div class="main_option_strategy">
+        <div class=" mt-4 mb-2 d-flex flex-wrap justify-content-between main_top_strategy_optimizer">
+            <div class="left_top_option_simulator">
+                <div class="textOnInput">
+                    <label for="indexDropdown" class="form-label">Symbol:</label>
+                    <select class="option_side_input form-select" id="indexDropdown">
+                        <option value="NIFTY">NIFTY</option>
+                        <option value="BANKNIFTY">BANKNIFTY</option>
+                        <option value="FINNIFTY">FINNIFTY</option>
+                    </select>
 
 
 
-
-            </div>
-            <div class="textOnInput">
-                <label for="expiryDropdown" class="form-label">Expiry:</label>
-                <select class="form-select" id="expiryDropdown">
-                    <!-- Data from AJAX will be inserted here -->
-                </select>
-            </div>
-            <div class="lot_size d-block">
-                <div class="title_lot_size">Lot Size</div>
-                <div class="lot_size_value">
 
                 </div>
+                <div class="textOnInput">
+                    <label for="expiryDropdown" class="form-label">Expiry:</label>
+                    <select class="form-select" id="expiryDropdown">
+                        <!-- Data from AJAX will be inserted here -->
+                    </select>
+                </div>
+                <div class="lot_size d-block">
+                    <div class="title_lot_size">Lot Size</div>
+                    <div class="lot_size_value">
+
+                    </div>
+                </div>
+                <div class="pcr d-block">
+                    <div class="title_pcr">PCR</div>
+                    <div class="pcr_value">
+                        1.89
+                    </div>
+                </div>
+
+                <div class="spot d-block">
+                    <div class="title_spot">Spot</div>
+                    <div class="spot_value">
+                    </div>
+                </div>
+                <div class="closest_value"></div>
+
+
+
             </div>
-            <div class="pcr d-block">
-                <div class="title_pcr">PCR</div>
-                <div class="pcr_value">
-                    1.89
+            <div class="right_top_option_simulator">
+                <div class="textOnInput">
+                    <div class="form-group input-box date-simulator">
+                        <label class="form-label fs-13 fw-500 label-color-6">Start Date</label>
+                        <input type="date" name="startDate" id="startDate"
+                            class="border rounded oi-select cursor-pointer fw-500 pt-2 bg-white optimizer-date">
+                    </div>
+                </div>
+
+            </div>
+
+
+
+
+        </div>
+
+
+
+
+
+
+        <div class=" time_buttons" style="display: flex; justify-content: space-between; align-items: center">
+
+
+            <div class="left_option_simulator_btn">
+
+                <button id="btnOneDayBack"> <i class='bx bx-chevron-left'></i>1 Day</button>
+                <button id="btn30MintBack"><i class='bx bx-chevron-left'></i>30 Min</button>
+                <button id="btn15MintBack"><i class='bx bx-chevron-left'></i>15 Min</button>
+                <button id="btn5MintBack"><i class='bx bx-chevron-left'></i>5 Min</button>
+            </div>
+            <div class="middle_date_time">
+                <div class="date_formated">
+
+
+                </div>
+                <div class="time_formated">
+
+                </div>
+
+            </div>
+
+            <div class="right_option_simulator_btn">
+
+                <button id="btn5MintForward">5 Min <i class='bx bx-chevron-right'></i></button>
+                <button id="btn15MintForward">15 Min <i class='bx bx-chevron-right'></i></button>
+                <button id="btn30MintForward">30 Min <i class='bx bx-chevron-right'></i></button>
+                <button id="btnOneDayForward">1 Day <i class='bx bx-chevron-right'></i> </button>
+
+            </div>
+
+        </div>
+
+        <div class=" d-flex justify-content-center All_strategy_builder">
+
+            <h6 class="fw-bold" style="color: #495057;">Pre Built :</h6>
+
+            <div class="option_simulator_strategy straddle">
+                STRADDLE
+            </div>
+            <div class="option_simulator_strategy strangle">
+                STRANGLE
+            </div>
+            <div class="option_simulator_strategy spread">
+                SPREAD
+            </div>
+            <div class="option_simulator_strategy iron_fly">
+                IRON FLY
+            </div>
+            <div class="option_simulator_strategy iron_condor">
+                IRON CONDOR
+            </div>
+            <div class="option_simulator_strategy jaze_lizard">
+                JADE LIZARD
+            </div>
+
+
+
+
+
+        </div>
+
+        <style>
+            .main_table_instruments_data {
+                gap: 1rem;
+                justify-content: center;
+            }
+
+            .main_logic {
+                border-bottom: 1px solid #8080803b;
+                padding: 9px 0;
+                align-items: center;
+            }
+
+            .instument_type_slot_strike_premium {
+                font-size: 14px;
+                font-weight: 600;
+                font-family: system-ui;
+                color: #666;
+
+            }
+
+            .action_option_strategy {
+                font-size: 19px !important;
+                gap: 0.5rem !important;
+            }
+
+            .text-light-green {
+                color: #00b865 !important;
+            }
+
+            .bx.bxs-circle {
+                font-size: 19px !important;
+
+            }
+
+            #reset_icon {
+                all: unset !important;
+            }
+
+            .reset_button {
+                display: flex !important;
+                align-items: center !important;
+                background: linear-gradient(180deg, #4399eb, #5cadfb);
+                color: #fff;
+                padding: 0px 7px;
+                text-align: center;
+                height: 29px;
+                font-weight: 500;
+                border-radius: 4px;
+                border: 1px solid #4399eb !important;
+                -webkit-box-shadow: none !important;
+                box-shadow: none !important;
+                outline: 0 !important;
+                -webkit-transition: all .2s ease-in-out !important;
+                -moz-transition: all .2s ease-in-out !important;
+                transition: all .2s ease-in-out !important;
+                cursor: pointer;
+
+                font-weight: 600;
+            }
+
+            .reset_button:hover {
+                background: #fff !important;
+                color: #4399eb !important;
+            }
+
+            .filter_active_pl_greeks {
+                color: #4399eb !important;
+                border-bottom: 2px solid !important;
+            }
+
+            .nav_pl_table,
+            .nav_greeks_table {
+                font-weight: 600;
+                color: #767f88;
+                font-size: 15px;
+                padding: 7px;
+                font-family: system-ui;
+                cursor: pointer;
+            }
+
+            .filter_main_pl_greeks {
+                background-color: #f1f5fa;
+                margin-bottom: 1rem;
+            }
+
+            .real_pl_table thead,
+            .real_greek_table thead {
+                background: #4399EB;
+                color: white;
+                font-size: 12px;
+                font-weight: 600;
+                font-family: system-ui;
+            }
+
+            .table-striped-custom>tbody>tr:nth-child(2n)>td,
+            .table-striped-custom>tbody>tr:nth-child(2n)>th {
+                background-color: rgb(240, 247, 253) !important;
+            }
+
+            .real_pl_table tbody tr td,
+            .real_greek_table tbody tr td {
+                font-size: 14px;
+            }
+
+            .real_pl_table tbody tr,
+            .real_greek_table tbody tr {
+                border-color: inherit;
+                border-style: hidden !important;
+                border-width: 0;
+            }
+
+            .left_main_strategy,
+            .right_table_greeks {
+                box-shadow: #4399eb29 0px 1px 4px;
+                padding: 18px 18px;
+            }
+
+            #ltpInput,
+            #exitPriceInput,
+            #counterValueInput {
+                height: 42px !important;
+            }
+        </style>
+
+        <div class="row main_table_instruments_data mt-4">
+            <div class="col-md-5 col-lg-5 col-sm-12 left_main_strategy">
+                <div class="left_inner_data_edit_del d-flex justify-content-between">
+                    <p class="fw-bold">Strategy Positions</p>
+                    <div class="reset_button d-flex gap-1 align-items-center">
+                        <i class="bi bi-arrow-clockwise" id="reset_icon"></i>
+                        <p style="margin-bottom: auto; margin-top: auto;     font-size: 12px;">Reset</p>
+                    </div>
+                </div>
+                <div id="myTable"></div>
+
+                <div class="d-flex align-items-center justify-content-between mt-2">
+                    <p class="fs-14 fw-500 label-color-6">Max. Profit</p>
+                    <p class="fs-14 fw-500 text-green" id="max_profit"></p>
+                </div>
+                <div class="d-flex align-items-center justify-content-between">
+                    <p class="fs-14 fw-500 label-color-6">Max. Loss</p>
+                    <p class="fs-14 fw-500 text-danger" id="max_loss"></p>
+                </div>
+                <div class="d-flex align-items-center justify-content-between">
+                    <p class="fs-14 fw-500 label-color-6">Breakevens</p>
+                    <p class="fs-14 fw-500 label-color-6" id="break_evens"> 19,611.6 - 20,088.4</p>
+                </div>
+                <div class="d-flex align-items-center justify-content-between">
+                    <p class="fs-14 fw-500 label-color-6">Reward Risk:</p>
+                    <p class="fs-14 fw-500 label-color-6">Not defined</p>
                 </div>
             </div>
+            <div class="col-md-6 col-lg-6 col-sm-12 right_table_greeks">
 
-            <div class="spot d-block">
-                <div class="title_spot">Spot</div>
-                <div class="spot_value">
+                <div class="filter_main_pl_greeks d-flex gap-2">
+                    <div class="nav_pl_table filter_active_pl_greeks">P&L TABLE</div>
+                    <div class="nav_greeks_table">GREEKS</div>
+                </div>
 
+
+                <div class="real_pl_table">
+
+
+                    <table class="table table-striped-custom">
+                        <thead>
+                            <tr>
+                                <td>POSITION</td>
+                                <td>ENTRY PRICE </td>
+                                <td>CURRENT PRICE</td>
+                                <td>EXIT PRICE</td>
+                                <td>P&L</td>
+                            </tr>
+                        </thead>
+
+                        <tbody class="p_l_table">
+
+                        </tbody>
+                    </table>
+                </div>
+
+
+                <div class="real_greek_table">
+
+                    <table class="table table-striped-custom">
+                        <thead>
+
+                            <tr>
+
+                                <td>POSITION</td>
+                                <td>DELTA</td>
+                                <td>THETA</td>
+                                <td>GAMMA</td>
+                                <td>VEGA</td>
+                            </tr>
+                        </thead>
+                        <tbody class="real_greek_table_body">
+
+                        </tbody>
+
+                    </table>
                 </div>
             </div>
-
-
-
         </div>
-        <div class="right_top_option_simulator">
-            <div class="textOnInput">
-                <div class="form-group input-box date-simulator">
-                    <label class="form-label fs-13 fw-500 label-color-6">Start Date</label>
-                    <input type="date" name="startDate" id="startDate"
-                        class="border rounded oi-select cursor-pointer fw-500 pt-2 bg-white optimizer-date">
-                </div>
+
+
+
+
+
+        <div class=" expiry_Note d-flex justify-content-between my-2 fw-bold flex-wrap">
+
+            <h6>Note:-*For respected strike prices, the Gamma and Vega greeks are the same for Calls and Puts</h6>
+            <div class="option_chain_expiry d-flex">
+
+                <h6 class="expiry_inner_option_chain"></h6>
+
+                <h6>- Option Chain</h6>
             </div>
 
         </div>
 
+        <div class=" option_chain_optimiser table-responsive">
+
+            <table class="table nifty-table" id="table-hover">
+                <thead>
+                    <tr class="simulator-main-header bg-light">
+                        <th colspan="9">
+                            <div class="simulator-header text-center"><span
+                                    class="label-color-5 fw-500 fs-14 mb-0">CALLS</span>
+                            </div>
+                        </th>
+                        <th colspan="1"></th>
+                        <th colspan="10">
+                            <div class="simulator-header text-center"><span
+                                    class="label-color-5 fw-500 fs-14 mb-0">PUTS</span>
+                            </div>
+                        </th>
+                    </tr>
+                    <tr>
+                        <th class="bg-light-green fw-500 text-center">ACTIONS</th>
+                        <th class="bg-light-green fw-500 text-end">RHO</th>
+                        <th class="bg-light-green fw-500 text-end">THETA</th>
+                        <th class="bg-light-green fw-500 text-end">DELTA</th>
+                        <th class="bg-light-green fw-500 text-end">OI</th>
+                        <th class="bg-light-green fw-500 text-end">CHG OI</th>
+                        <th class="bg-light-green fw-500 text-end">LTP</th>
+
+                        <th class="bg-light fw-500 text-center">VEGA*</th>
+                        <th class="bg-light fw-500 text-center">STRIKE</th>
+                        <th class="bg-light fw-500 text-center">GAMMA*</th>
+
+                        <th class="bg-light-red fw-500 text-end">LTP</th>
+                        <th class="bg-light-red fw-500 text-end">CHG OI</th>
+                        <th class="bg-light-red fw-500 text-end">OI</th>
+                        <th class="bg-light-red fw-500 text-end">DELTA</th>
+                        <th class="bg-light-red fw-500 text-end">THETA</th>
+                        <th class="bg-light-red fw-500 text-end">RHO</th>
+                        <th class="bg-light-red fw-500 text-end">PCR</th>
+                        <th class="bg-light-red fw-500 text-center">ACTIONS</th>
+                    </tr>
+                </thead>
+                <tbody class="option_simulator_body">
 
 
+                    <tr>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
 
-    </div>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
 
+                    </tr>
+                    <tr>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
 
+                    </tr>
+                    <tr>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
 
-    </div>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
 
+                    </tr>
+                    <tr>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
 
-    <div class=" time_buttons" style="display: flex; justify-content: space-between; align-items: center">
+                    </tr>
+                    <tr>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
 
+                    </tr>
+                    <tr>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
 
-        <div class="left_option_simulator_btn">
+                    </tr>
+                    <tr>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
 
-            <button id="btnOneDayBack"> <i class='bx bx-chevron-left'></i>1 Day</button>
-            <button id="btn30MintBack"><i class='bx bx-chevron-left'></i>30 Min</button>
-            <button id="btn15MintBack"><i class='bx bx-chevron-left'></i>15 Min</button>
-            <button id="btn5MintBack"><i class='bx bx-chevron-left'></i>5 Min</button>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+
+                    </tr>
+                    <tr>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p class="placeholder-glow">
+                                <span class="placeholder col-12"></span>
+                            </p>
+                        </td>
+
+                    </tr>
+
+                </tbody>
+            </table>
         </div>
-        <div class="middle_date_time">
-            <div class="date_formated">
 
 
-            </div>
-            <div class="time_formated">
 
-            </div>
 
+
+
+
+
+
+        <style>
+            #callCounterValue,
+            #putCounterValue {
+                all: unset;
+                background: aliceblue;
+                width: 22px;
+                text-align: center;
+                border: 1px solid #00000036;
+                padding: 3px 6px 3px 6px;
+
+            }
+
+            #callMinusBtn,
+            #callPlusBtn {
+                all: unset;
+                background: linear-gradient(180deg, #4399eb, #5cadfb);
+                color: #fff;
+                padding: 0 13px 0 13px !important;
+                transition: 0.3s;
+                cursor: pointer;
+            }
+
+            #putMinusBtn,
+            #putPlusBtn {
+                all: unset;
+                background: linear-gradient(180deg, #4399eb, #5cadfb);
+                color: #fff;
+                padding: 3.5px 13px 3.5px 13px !important;
+                transition: 0.3s;
+                cursor: pointer;
+            }
+
+            #callMinusBtn:hover,
+            #callPlusBtn:hover,
+            #putMinusBtn:hover,
+            #putPlusBtn:hover {
+                background: transparent;
+                color: #4399eb;
+                outline: 1px solid;
+            }
+
+            .counter {
+                gap: 0.5rem;
+            }
+
+            .main_call_modal_body {
+                gap: 1.5rem;
+                align-items: baseline;
+                justify-content: center;
+            }
+
+            #call_action_modal {
+                display: flex;
+                justify-content: center;
+
+            }
+
+            #call_action_modal_content {
+                width: 22rem;
+            }
+
+            #modal_header {
+
+                border-bottom: none !important;
+            }
+
+            #call_inst_type,
+            #put_inst_type {
+                all: unset;
+                background: transparent !important;
+                margin-bottom: 1rem !important;
+                font-size: 20px !important;
+            }
+
+            #call_add_position,
+            #put_add_position {
+                background: linear-gradient(180deg, #4399eb, #5cadfb);
+                color: white;
+                border: none;
+                padding: 5px 10px;
+                border-radius: 4px;
+                font-size: 12px;
+                font-weight: 600;
+                margin-top: 1rem;
+                transition: 0.3s;
+            }
+
+            #call_add_position:hover,
+            #put_add_position:hover,
+            .saveChanges:hover {
+                background: transparent;
+                color: #4399EB;
+                outline: 1px solid;
+            }
+
+            .saveChanges {
+                background: linear-gradient(180deg, #4399eb, #5cadfb);
+                color: white;
+                border: none;
+                padding: 5px 10px;
+                border-radius: 4px;
+                font-size: 12px;
+                font-weight: 600;
+                margin-top: 1rem;
+                transition: 0.3s;
+                width: 7rem;
+                height: 2rem;
+            }
+
+            #callBuyRadio,
+            #putBuyRadio {
+
+                border-radius: 13% !important;
+                cursor: pointer;
+            }
+
+            #callBuyRadio:checked,
+            #putBuyRadio:checked {
+                background-color: #00b865 !important;
+                border-color: #00b865 !important;
+            }
+
+            #callBuyRadio:focus,
+            #putBuyRadio:focus {
+                box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+                background-color: #00b865 !important;
+                border-color: #00b865 !important;
+            }
+
+            #callSellRadio,
+            #putSellRadio {
+
+                border-radius: 13% !important;
+                cursor: pointer;
+
+            }
+
+            #callSellRadio:focus,
+            #putSellRadio:focus {
+                background-color: #e6191e !important;
+                border-color: #e6191e !important;
+                box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+            }
+
+            #callSellRadio:checked,
+            #putSellRadio:checked {
+                background-color: #e6191e !important;
+                border-color: #e6191e !important;
+
+            }
+
+            .textOnInput_edit {
+                position: relative;
+                width: 100%;
+            }
+
+            .textOnInput_edit label {
+                position: absolute;
+                top: -9px;
+                font-weight: 700;
+                left: 10px;
+                padding: 2px;
+                color: rgb(56, 56, 56);
+                z-index: 1;
+                font-size: 12px;
+                white-space: nowrap;
+            }
+
+            .textOnInput_edit label:after {
+                content: " ";
+                background-color: #fff;
+                width: 100%;
+                height: 13px;
+                position: absolute;
+                left: 0;
+                bottom: 0;
+                z-index: -1;
+            }
+
+            label {
+                font-size: 16px;
+                font-weight: 500;
+                display: inline-block;
+                margin-bottom: 0.5rem;
+            }
+
+            .form-control {
+                box-shadow: none !important;
+            }
+
+            #modal_body {
+                display: flex;
+                flex-direction: column;
+                row-gap: 1rem;
+
+            }
+
+            .form-control:disabled {
+                background-color: transparent !important;
+            }
+
+            #modal_header_edit {
+                border: none !important;
+                padding: 10px 12px !important;
+                margin: 0 !important;
+            }
+
+            #modal_title_edit {
+                font-size: 21px !important;
+
+                color: #333333bf !important;
+                text-align: center;
+            }
+
+            #modal_footer_edit {
+                padding: 7px 20px !important;
+                border: none !important;
+
+            }
+
+            .right_top_option_simulator {
+                margin-right: 14px;
+            }
+
+            #startDate:focus {
+
+                border: 1px solid #4399EB !important;
+                outline: none !important;
+            }
+        </style>
+
+
+
+
+
+        <div id="noDataMessage" class="mt-3 text-center" style="display: none;">
+            Data is not available.
         </div>
-
-        <div class="right_option_simulator_btn">
-
-            <button id="btn5MintForward">5 Min <i class='bx bx-chevron-right'></i></button>
-            <button id="btn15MintForward">15 Min <i class='bx bx-chevron-right'></i></button>
-            <button id="btn30MintForward">30 Min <i class='bx bx-chevron-right'></i></button>
-            <button id="btnOneDayForward">1 Day <i class='bx bx-chevron-right'></i> </button>
-
-        </div>
-
     </div>
-
-    <div class=" d-flex justify-content-center All_strategy_builder">
-
-        <h6 class="fw-bold" style="color: #495057;">Pre Built :</h6>
-
-        <div class="option_simulator_strategy straddle">
-            STRADDLE
-        </div>
-        <div class="option_simulator_strategy straddle">
-            STRANGLE
-        </div>
-        <div class="option_simulator_strategy straddle">
-            SPREAD
-        </div>
-        <div class="option_simulator_strategy straddle">
-            IRON FLY
-        </div>
-        <div class="option_simulator_strategy straddle">
-            IRON CONDOR
-        </div>
-        <div class="option_simulator_strategy straddle">
-            JADE LIZARD
-        </div>
-
-
-
-
-
-    </div>
-
-    <div class=" expiry_Note d-flex justify-content-between my-2 fw-bold flex-wrap">
-
-        <h6>Note:-*For respected strike prices, the Gamma and Vega greeks are the same for Calls and Puts</h6>
-        <div class="option_chain_expiry d-flex">
-
-            <h6 class="expiry_inner_option_chain"></h6>
-
-            <h6>- Option Chain</h6>
-        </div>
-
-    </div>
-
-    <div class=" option_chain_optimiser table-responsive">
-
-        <table class="table nifty-table" id="table-hover">
-            <thead>
-                <tr class="simulator-main-header bg-light">
-                    <th colspan="9">
-                        <div class="simulator-header text-center"><span
-                                class="label-color-5 fw-500 fs-14 mb-0">CALLS</span>
-                        </div>
-                    </th>
-                    <th colspan="1"></th>
-                    <th colspan="10">
-                        <div class="simulator-header text-center"><span
-                                class="label-color-5 fw-500 fs-14 mb-0">PUTS</span>
-                        </div>
-                    </th>
-                </tr>
-                <tr>
-                    <th class="bg-light-green fw-500 text-center">ACTIONS</th>
-                    <th class="bg-light-green fw-500 text-end">RHO</th>
-                    <th class="bg-light-green fw-500 text-end">THETA</th>
-                    <th class="bg-light-green fw-500 text-end">DELTA</th>
-                    <th class="bg-light-green fw-500 text-end">OI</th>
-                    <th class="bg-light-green fw-500 text-end">CHG OI</th>
-                    <th class="bg-light-green fw-500 text-end">LTP</th>
-
-                    <th class="bg-light fw-500 text-center">VEGA*</th>
-                    <th class="bg-light fw-500 text-center">STRIKE</th>
-                    <th class="bg-light fw-500 text-center">GAMMA*</th>
-
-                    <th class="bg-light-red fw-500 text-end">LTP</th>
-                    <th class="bg-light-red fw-500 text-end">CHG OI</th>
-                    <th class="bg-light-red fw-500 text-end">OI</th>
-                    <th class="bg-light-red fw-500 text-end">DELTA</th>
-                    <th class="bg-light-red fw-500 text-end">THETA</th>
-                    <th class="bg-light-red fw-500 text-end">RHO</th>
-                    <th class="bg-light-red fw-500 text-end">PCR</th>
-                    <th class="bg-light-red fw-500 text-center">ACTIONS</th>
-                </tr>
-            </thead>
-
-            <tbody class="option_simulator_body"></tbody>
-        </table>
-    </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <table id="myTable"></table>
-    <div class="main_profit" class="d-flex">
-        <h5>Max Profit :</h5>
-        <p id="max_profit"></p>
-    </div>
-    <div class="main_loss" class="d-flex">
-        <h5>Max Loss :</h5>
-        <p id="max_loss">Unlimited</p>
-    </div>
-
-    <div class="min_breakeven d-flex">
-        <h5>Min Breakeven</h5>
-        <p id="min_breakeven"></p>
-    </div>
-    <div class="max_breakeven d-flex">
-        <h5>Max Breakeven</h5>
-        <p id="max_breakeven"></p>
-    </div>
-
-
-
-    <div id="noDataMessage" class="mt-3 text-center" style="display: none;">
-        Data is not available.
-    </div>
-    </div> -->
     <!-- Modal for "CALL ACTIONS" -->
-    <div class="modal" tabindex="-1" role="dialog" id="callModal">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Call Actions</h5>
+    <div class="modal fade" tabindex="-1" role="dialog" id="callModal">
+        <div class="modal-dialog modal-dialog-centered" role="document" id="call_action_modal">
+            <div class="modal-content" id="call_action_modal_content">
+                <div class="modal-header" id="modal_header">
+
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                
+
                 </div>
                 <div class="modal-body">
-                    <div class="form-group">
+                    <div class="form-group d-none">
                         <label for="call_inst_type">Call_inst_type</label>
-                        <input type="text" id="call_inst_type" class="form-control" min="1" disabled>
+                        <!-- <input type="text" id="call_inst_type" class="form-control" min="1" disabled> -->
                     </div>
                     <div class="form-group d-none">
                         <label for="callLotSizeInput">Lot Size:</label>
@@ -566,32 +2049,55 @@
                         <label for="call_strike">Call Strike:</label>
                         <input type="number" id="call_strike" class="form-control" min="1" disabled>
                     </div>
+                    <div class="form-group d-none">
+                        <label for="calls_delta">Call Delta:</label>
+                        <input type="number" id="calls_delta" class="form-control" min="1" disabled>
+                    </div>
+                    <div class="form-group d-none">
+                        <label for="calls_theta">Call Theta:</label>
+                        <input type="number" id="calls_theta" class="form-control" min="1" disabled>
+                    </div>
+                    <div class="form-group d-none">
+                        <label for="calls_gamma">Call Gamma:</label>
+                        <input type="number" id="calls_gamma" class="form-control" min="1" disabled>
+                    </div>
+                    <div class="form-group d-none">
+                        <label for="calls_vega">Call Gamma:</label>
+                        <input type="number" id="calls_vega" class="form-control" min="1" disabled>
+                    </div>
 
+
+                    <div class="mb-2">
+                        <h5>Buy/Sell Action</h5>
+                    </div>
+                    <input type="text" id="call_inst_type" class="form-control" min="1" disabled>
                     <div class="main_call_modal_body d-flex">
                         <div class="form-check">
-                            <input class="form-check-input" type="radio" name="callAction" id="callBuyRadio" value="buy" checked>
+                            <input class="form-check-input" type="radio" name="callAction" id="callBuyRadio" value="buy"
+                                checked>
                             <label class="form-check-label" for="callBuyRadio">
                                 Buy
                             </label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input" type="radio" name="callAction" id="callSellRadio" value="sell">
+                            <input class="form-check-input" type="radio" name="callAction" id="callSellRadio"
+                                value="sell">
                             <label class="form-check-label" for="callSellRadio">
                                 Sell
                             </label>
                         </div>
                         <!-- Add additional form fields for "CALL ACTIONS" here -->
-                        <div class="counter">
-                            <button class="btn btn-counter" id="callMinusBtn">-</button>
-                            <input type="number" class="form-control" id="callCounterValue" value="0" min="0">
-                            <div id="callCounterValue"></div>
-                            <button class="btn btn-counter" id="callPlusBtn">+</button>
+                        <div class="counter d-flex">
+                            <button class=" btn-counter" id="callMinusBtn">-</button>
+                            <input type="text" class="form-control" id="callCounterValue" value="0" min="0">
+
+                            <button class=" btn-counter" id="callPlusBtn">+</button>
                         </div>
 
 
                     </div>
-                 
-                    <button class="btn btn-primary" id="call_add_position">Add position</button>
+
+                    <button class="" id="call_add_position">Add position</button>
                 </div>
 
             </div>
@@ -599,162 +2105,483 @@
     </div>
 
     <!-- Modal for "PUT ACTIONS" -->
-    <div class="modal" tabindex="-1" role="dialog" id="putModal">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Put Actions</h5>
+    <div class="modal fade" tabindex="-1" role="dialog" id="putModal">
+        <div class="modal-dialog modal-dialog-centered" role="document" id="call_action_modal">
+            <div class="modal-content" id="call_action_modal_content">
+                <div class="modal-header" id="modal_header">
+
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                  
+
                 </div>
                 <div class="modal-body">
-                    <div class="form-group">
+                    <div class="form-group d-none">
                         <label for="put_inst_type">put_inst_type</label>
-                        <input type="text" id="put_inst_type" class="form-control" min="1" disabled>
+
                     </div>
-                    <div class="form-group">
+                    <div class="form-group d-none">
                         <label for="putLotSizeInput">Lot Size:</label>
                         <input type="number" id="putLotSizeInput" class="form-control" min="1" disabled>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group d-none">
                         <label for="puts_ltp">puts_ltp:</label>
                         <input type="number" id="puts_ltp" class="form-control" min="1" disabled>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group d-none">
                         <label for="puts_strike">puts_strike:</label>
                         <input type="number" id="puts_strike" class="form-control" min="1" disabled>
                     </div>
+                    <div class="form-group d-none">
+                        <label for="puts_delta">puts Delta:</label>
+                        <input type="number" id="puts_delta" class="form-control" min="1" disabled>
+                    </div>
+                    <div class="form-group d-none">
+                        <label for="puts_theta">puts Theta:</label>
+                        <input type="number" id="puts_theta" class="form-control" min="1" disabled>
+                    </div>
+                    <div class="form-group d-none">
+                        <label for="puts_strike">puts Gamma:</label>
+                        <input type="number" id="puts_gamma" class="form-control" min="1" disabled>
+                    </div>
+                    <div class="form-group d-none">
+                        <label for="puts_strike">puts Gamma:</label>
+                        <input type="number" id="puts_vega" class="form-control" min="1" disabled>
+                    </div>
 
 
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="putAction" id="putBuyRadio" value="buy">
-                        <label class="form-check-label" for="putBuyRadio">
-                            Buy
-                        </label>
+                    <div class="mb-2">
+                        <h5>Buy/Sell Action</h5>
                     </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="putAction" id="putSellRadio" value="sell">
-                        <label class="form-check-label" for="putSellRadio">
-                            Sell
-                        </label>
+
+                    <input type="text" id="put_inst_type" class="form-control" min="1" disabled>
+                    <div class="main_call_modal_body d-flex">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="putAction" id="putBuyRadio" value="buy"
+                                checked>
+                            <label class="form-check-label" for="putBuyRadio">
+                                Buy
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="putAction" id="putSellRadio"
+                                value="sell">
+                            <label class="form-check-label" for="putSellRadio">
+                                Sell
+                            </label>
+                        </div>
+                        <!-- Add additional form fields for "PUT ACTIONS" here -->
+                        <div class="counter">
+                            <button class="btn-counter" id="putMinusBtn">-</button>
+                            <input type="text" class="form-control" id="putCounterValue" value="0" min="0">
+                            <button class="btn-counter" id="putPlusBtn">+</button>
+                        </div>
                     </div>
-                    <!-- Add additional form fields for "PUT ACTIONS" here -->
-                    <div class="counter">
-                        <button class="btn btn-counter" id="putMinusBtn">-</button>
-                        <input type="number" class="form-control" id="putCounterValue" value="0" min="0">
-                        <button class="btn btn-counter" id="putPlusBtn">+</button>
-                    </div>
+                    <button class=" btn-primary" id="put_add_position">Add position</button>
                 </div>
-                <button class="btn btn-primary" id="put_add_position">Add position</button>
 
             </div>
         </div>
     </div>
 
+    <!-- Bootstrap Modal -->
+    <div class="modal fade" id="editPositionModal">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header" id="modal_header_edit">
+                    <h5 class="modal-title" id="modal_title_edit">Edit Position</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="modal_body">
+                    <div class="form-group textOnInput_edit">
+                        <label for="ltpInput">Entry Price</label>
+                        <input type="number" class="form-control" id="ltpInput" disabled>
+                    </div>
+                    <div class="form-group textOnInput_edit">
+                        <label for="exitPriceInput">Enter Exit Price</label>
+                        <input type="number" class="form-control" id="exitPriceInput" value="0">
+                    </div>
+                    <div class="form-group textOnInput_edit">
+                        <label for="counterValueInput">Enter No. of Lots</label>
+                        <input type="number" class="form-control" id="counterValueInput">
+                    </div>
+                </div>
+                <div class="modal-footer" id="modal_footer_edit">
+                    <button type="button" class="saveChanges" data-bs-dismiss="modal" id="saveChangesButton">Save
+                    </button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    </div>
+
+
     <script>
 
+        $(".real_pl_table").show();
+        $(".real_greek_table").hide();
+        $(".main_table_instruments_data ").hide();
 
-        function calculateMaxProfit() {
-            // Get all rows from the table
-            var tableRows = document.querySelectorAll("#myTable tr");
+        $(".nav_pl_table").on('click', function () {
+            $(".nav_pl_table").addClass('filter_active_pl_greeks');
+            $(".nav_greeks_table").removeClass('filter_active_pl_greeks');
+            $(".real_pl_table").show();
+            $(".real_greek_table").hide();
+        });
 
-            // Initialize max profit to 0, min breakeven to Infinity, and max breakeven to -Infinity
-            var maxProfit = 0;
-            var minBreakeven = Infinity;
-            var maxBreakeven = -Infinity;
+        $(".nav_greeks_table").on('click', function () {
+            $(".nav_pl_table").removeClass('filter_active_pl_greeks');
+            $(".nav_greeks_table").addClass('filter_active_pl_greeks');
+            $(".real_pl_table").hide();
+            $(".real_greek_table").show();
+        });
+        $(".reset_button").on('click', function () {
+            $(".main_table_instruments_data").hide();
+            $(".p_l_table").empty();
+            $(".real_greek_table_body").empty();
+            $("#myTable").empty();
+            $(".option_simulator_strategy").removeClass("simulator_active_strategy");
+            $("#putCounterValue").val(1);
+            $("#callCounterValue").val(1);
 
-            // Loop through the rows and calculate the profit
-            for (var i = 0; i < tableRows.length; i++) {
-                var row = tableRows[i];
-                var actionCell = row.children[3].textContent; // Assuming the action cell is the 4th cell (index 3)
-                var ltpCell = row.children[1].textContent; // Assuming the ltp cell is the 2nd cell (index 1)
-                var lotSizeCell = row.children[2].textContent; // Assuming the lotSize cell is the 3rd cell (index 2)
-                var strikePriceCell = row.children[5].textContent; // Assuming the strike price cell is the 6th cell (index 5)
+            // Check the "putBuyRadio" and "callBuyRadio" inputs
+            $("#putBuyRadio").prop('checked', true);
+            $("#callBuyRadio").prop('checked', true);
+        });
 
-                var ltp = parseFloat(ltpCell);
-                var lotSize = parseInt(lotSizeCell);
-                var strikePrice = parseFloat(strikePriceCell);
+        var right_unique = 1
+        var left_unique = 1
+        var greek_unique = 1
 
-                if (actionCell === "sell" || actionCell === "Sell") { // Consider both "sell" and "Sell"
-                    var profit = ltp * lotSize;
-                    maxProfit += profit;
+        var indicator = $(".indicator_edit").text()
+        var loss_profit = parseInt(indicator) < 0 ? "text-danger" : "text-light-green";
+        function addPosition(inst_type, lotSize, ltp, action, counterValue, strike_price, delta, theta, gamma, vega) {
+            console.log(inst_type, lotSize, ltp, action, counterValue, strike_price);
 
-                    var minBreakevenValue = strikePrice - ltp;
-                    var maxBreakevenValue = strikePrice + ltp;
+            var lot_size_filter = action === "sell" ? "-" : "+";
 
-                    if (minBreakevenValue < minBreakeven) {
-                        minBreakeven = minBreakevenValue;
-                    }
 
-                    if (maxBreakevenValue > maxBreakeven) {
-                        maxBreakeven = maxBreakevenValue;
-                    }
+            // Create container for position
+            var positionContainer = $('<div class="main_logic d-flex justify-content-between"></div>');
+
+            // Create elements for displaying position information
+            var positionInfo = `
+                <div class="instument_type_slot_strike_premium" id=${left_unique++}><span class="main_lot_size_option_simulator"><span class="short_long">${lot_size_filter}</span><span class="lot_size_option_simulator">${counterValue}</span>x</span> <span class="instrument_type_edit">${inst_type}</span> - ₹ <span class="ltp_edit">${ltp}</span> (<span class="indicator_edit">0</span>)
+                  <span class="exit_price d-none">0</span> </div>
+                <div class="action_option_strategy d-flex justify-content-center align-items-center gap-1">
+                    <i class="bi bi-pencil-square edit-button" data-bs-toggle="modal" data-bs-target="#editPositionModal"></i>
+                    <i class="bi bi-trash-fill delete-button"></i>
+                    <i class='bx bxs-circle text-light-green'></i>
+                </div>
+            `;
+
+            var table_PL = `
+            <tr id=${right_unique++}>
+                
+                        <td>   <div class="instument_type_slot_strike_premium">
+                            
+                            <span class="main_lot_size_option_simulator"><span class="short_long">${lot_size_filter}</span><span class="lot_size_option_simulator">${counterValue}</span>x</span>
+                             <span class="instrument_type_edit">${inst_type}</span></td>
+                        <td> <span class="ltp_edit">${ltp}</span> </td>
+                        <td> <span class="ltp_edit">${ltp}</span> </td>
+                        <td><span class="exit_price">0</span></td>
+                        <td><span class="indicator_edit_table">0</span></td>
+  
+        </tr>
+     
+
+
+`
+
+            var table_greek = `
+<tr id=${greek_unique++}>
+    <td>   <div class="instument_type_slot_strike_premium"><span class="main_lot_size_option_simulator"><span class="short_long">${lot_size_filter}</span><span class="lot_size_option_simulator">${counterValue}</span>x</span> <span class="instrument_type_edit">${inst_type}</span></td>
+    <td> <span class="delta">${parseFloat(delta).toFixed(3)}</span></td>
+    <td> <span class="theta">${parseFloat(theta).toFixed(3)}</span></td>
+    <td> <span class="gamma">${parseFloat(gamma).toFixed(3)}</span></td>
+    <td> <span class="vega">${parseFloat(vega).toFixed(3)}</span></td>
+    </tr>
+
+
+`
+
+
+            $(".p_l_table").append(table_PL)
+            $(".real_greek_table_body").append(table_greek)
+
+
+
+            // Append position information to the container
+            positionContainer.append(positionInfo);
+
+            // Append the container to the table using jQuery
+            $('#myTable').append(positionContainer);
+            positionContainer.on('click', '.delete-button', function () {
+                var clickedRow = $(this).closest('.main_logic');
+                var idValue = clickedRow.find('.instument_type_slot_strike_premium').attr('id');
+
+                // Remove the corresponding <tr> element by its ID using .find()
+                $(".p_l_table").find("tr#" + idValue).remove();
+                $(".real_greek_table_body").find("tr#" + idValue).remove();
+
+                // Check and log the length of children in #myTable
+                var childrenLength = $('#myTable').children().length;
+                console.log("Children length in #myTable:", childrenLength);
+
+
+                // Check if #myTable has no child elements
+                if (childrenLength < 2) {
+                    // If it has no children, hide .main_table_instruments_data
+                    $('.main_table_instruments_data').hide();
+                    $(".option_simulator_strategy ").removeClass("simulator_active_strategy")
+                }
+
+                // Remove the clickedRow <div> element
+                clickedRow.remove();
+                straddle_calculation()
+                updateTotalPAndL();
+                greeks_total();
+
+            });
+
+
+
+            // Attach an event listener to the Edit button in the modal
+            positionContainer.on('click', '.edit-button', function () {
+                var position = $(this).closest('.main_logic');
+                var currentLTP = position.find('.ltp_edit').text();
+                var currentExitPrice = position.find('.indicator_edit').text();
+                var currentCounterValue = position.find('.lot_size_option_simulator').text();
+                var exit_price = position.find('.exit_price').text()
+
+                $('#ltpInput').val(currentLTP);
+                $('#exitPriceInput').val(exit_price);
+                $('#counterValueInput').val(parseFloat(currentCounterValue));
+                $('#editPositionModal').data('position', position);
+            });
+
+            // Attach an event listener to the Save Changes button in the modal
+
+
+
+
+            $('#saveChangesButton').click(function () {
+                var modal = $('#editPositionModal');
+                var newLtp = $('#ltpInput').val();
+                var newExitPrice = $('#exitPriceInput').val();
+                var newCounterValue = $('#counterValueInput').val();
+
+                // Update the displayed position information in the selected position
+                var position = modal.data('position');
+                position.find('.ltp_edit').text(newLtp);
+                position.find('.exit_price').text(newExitPrice);
+
+                var added_exit = 0;
+                if (newExitPrice != 0) {
+                    added_exit = newLtp * lotSize * newCounterValue - newExitPrice * lotSize * newCounterValue;
+                    position.find('.bxs-circle').removeClass('text-light-green').addClass('text-danger');
+                } else {
+                    position.find('.bxs-circle').removeClass('text-danger').addClass('text-light-green');
+                }
+
+                position.find('.indicator_edit').text(added_exit);
+                position.find('.lot_size_option_simulator').text(newCounterValue);
+
+                var idmodaLSIDE = position.find('.instument_type_slot_strike_premium').attr('id');
+                var tableSide = $(".p_l_table").find("tr#" + idmodaLSIDE);
+                tableSide.find('.ltp_edit').text(newLtp);
+                tableSide.find('.exit_price').text(newExitPrice);
+                tableSide.find('.indicator_edit_table').text(added_exit);
+                tableSide.find('.lot_size_option_simulator').text(newCounterValue);
+                var greekTable = $(".real_greek_table_body").find("tr#" + idmodaLSIDE);
+                greekTable.find('.lot_size_option_simulator').text(newCounterValue);
+                var edit_delta = greekTable.find('.delta').text();
+                var edit_theta = greekTable.find('.theta').text();
+                var edit_gamma = greekTable.find('.gamma').text();
+                var edit_vega = greekTable.find('.vega').text();
+                greekTable.find('.delta').text((parseFloat(edit_delta) * newCounterValue).toFixed(3));
+                greekTable.find('.theta').text((parseFloat(edit_theta) * newCounterValue).toFixed(3));
+                greekTable.find('.gamma').text((parseFloat(edit_gamma) * newCounterValue).toFixed(3));
+                greekTable.find('.vega').text((parseFloat(edit_vega) * newCounterValue).toFixed(3));
+
+
+                // Call the function to update total_p_l initially
+
+                // Then, whenever you want to update it again, call the function like this:
+                // updateTotalPAndL();
+
+
+
+
+                updateTotalPAndL();
+                greeks_total()
+                straddle_calculation()
+                // Close the modal
+                modal.modal('hide');
+            });
+
+
+
+            // Update the total cell with the calculated sum
+            $(".p_l_table tr.total-row").remove();
+            $(".real_greek_table_body tr.total-greeks").remove();
+
+            // Add your positions here...
+
+            // Add the "Total" row at the end of the table
+            $(".p_l_table").append("<tr class='total-row'><td></td><td></td><td></td><td>Total P&L</td><td id='total_p_l'>0</td></tr>");
+            $(".real_greek_table_body").append("<tr class='total-greeks'><td>Total (in Decimals)</td><td id='delta_total'>0</td><td id='theta_total'>0</td><td id='gamma_total'>0</td><td id='vega_total'>0</td></tr>");
+            // Calculate and update max profit when a new position is added
+
+            updateTotalPAndL()
+            greeks_total()
+        }
+
+
+
+        function updateTotalPAndL() {
+            var final_p_and_l = 0;
+            var indicatorElements = $('.indicator_edit_table');
+            console.log(indicatorElements);
+
+            for (var i = 0; i < indicatorElements.length; i++) {
+                var currentValue = parseFloat(indicatorElements[i].textContent);
+
+                console.log(i);
+                if (!isNaN(currentValue)) {
+                    final_p_and_l += currentValue;
                 }
             }
+            $(".p_l_table tr.total-row").remove();
 
-            // Update the "max_profit" element with the calculated maxProfit
-            document.getElementById("max_profit").textContent = "Max Profit: " + maxProfit;
+            // Add your positions here...
 
-            // Update the "min_breakeven" element with the calculated minBreakeven
-            document.getElementById("min_breakeven").textContent = "Min Breakeven: " + minBreakeven;
-
-            // Update the "max_breakeven" element with the calculated maxBreakeven
-            document.getElementById("max_breakeven").textContent = "Max Breakeven: " + maxBreakeven;
+            // Add the "Total" row at the end of the table
+            $(".p_l_table").append("<tr class='total-row'><td></td><td></td><td></td><td>Total P&L</td><td id='total_p_l'>0</td></tr>");
+            console.log("Updated final_p_and_l:", final_p_and_l);
+            $("#total_p_l").text(final_p_and_l.toFixed(2)); // Display it with 2 decimal places
         }
+        function greeks_total() {
+            // Initialize variables to store the sum of each class
+            var totalDelta = 0;
+            var totalTheta = 0;
+            var totalGamma = 0;
+            var totalVega = 0;
 
-        function addPosition(inst_type, lotSize, ltp, action, counterValue, strike_price) {
-            // Create table row
-            var tableRow = document.createElement("tr");
+            // Loop through all elements with the 'delta' class
+            $('.delta').each(function () {
+                // Parse the text content of the element as a float
+                var deltaValue = parseFloat($(this).text());
 
-            // Create table cells and add values
-            var inst_typeCell = document.createElement("td");
-            inst_typeCell.textContent = inst_type;
-            tableRow.appendChild(inst_typeCell);
-
-            var ltpCell = document.createElement("td");
-            ltpCell.textContent = ltp;
-            tableRow.appendChild(ltpCell);
-
-            var lotSizeCell = document.createElement("td");
-            lotSizeCell.textContent = lotSize;
-            tableRow.appendChild(lotSizeCell);
-
-            var actionCell = document.createElement("td");
-            actionCell.textContent = action;
-            tableRow.appendChild(actionCell);
-
-            var counterValueCell = document.createElement("td");
-            counterValueCell.textContent = counterValue;
-            tableRow.appendChild(counterValueCell);
-
-            var Strike_price_Cell = document.createElement("td");
-            Strike_price_Cell.textContent = strike_price;
-            tableRow.appendChild(Strike_price_Cell);
-
-            // Create edit and delete buttons
-            var editButton = document.createElement("button");
-            editButton.textContent = "Edit";
-            editButton.addEventListener("click", function () {
-                // Add code to edit row here
+                // Check if it's a valid number
+                if (!isNaN(deltaValue)) {
+                    // Add the delta value to the totalDelta variable
+                    totalDelta += deltaValue;
+                }
             });
-            tableRow.appendChild(editButton);
 
-            var deleteButton = document.createElement("button");
-            deleteButton.textContent = "Delete";
-            deleteButton.addEventListener("click", function () {
-                // Add code to delete row here
-                this.parentNode.parentNode.removeChild(this.parentNode);
-                // Recalculate max profit when a row is deleted
-                calculateMaxProfit();
+            // Repeat the same process for other classes (theta, gamma, vega)
+            $('.theta').each(function () {
+                var thetaValue = parseFloat($(this).text());
+                if (!isNaN(thetaValue)) {
+                    totalTheta += thetaValue;
+                }
             });
-            tableRow.appendChild(deleteButton);
 
-            // Append row to table
-            document.getElementById("myTable").appendChild(tableRow);
+            $('.gamma').each(function () {
+                var gammaValue = parseFloat($(this).text());
+                if (!isNaN(gammaValue)) {
+                    totalGamma += gammaValue;
+                }
+            });
+
+            $('.vega').each(function () {
+                var vegaValue = parseFloat($(this).text());
+                if (!isNaN(vegaValue)) {
+                    totalVega += vegaValue;
+                }
+            });
+
+            // Set the total values to the respective <td> elements using their IDs
+            $('#delta_total').text(parseFloat(totalDelta.toFixed(3)));
+            $('#theta_total').text(parseFloat(totalTheta.toFixed(3)));
+            $('#gamma_total').text(parseFloat(totalGamma.toFixed(3)));
+            $('#vega_total').text(parseFloat(totalVega.toFixed(3)));
+
+
+
+            // You now have the totals displayed in the respective <td> elements.
+
+            $(".real_greek_table_body tr.total-greeks").remove();
+            // Add your positions here...
+            // Add the "Total" row at the end of the table
+            $(".real_greek_table_body").append("<tr class='total-greeks'><td>Total (in Decimals)</td><td id='delta_total'>" + totalDelta.toFixed(3) + "</td><td id='theta_total'>" + totalTheta.toFixed(3) + "</td><td id='gamma_total'>" + totalGamma.toFixed(3) + "</td><td id='vega_total'>" + totalVega.toFixed(3) + "</td></tr>");
 
             // Calculate and update max profit when a new position is added
-            calculateMaxProfit();
         }
+
+
+
+
+
+
+
+        // function calculateMaxProfit() {
+        //     // Get all rows from the table
+        //     var tableRows = document.querySelectorAll("#myTable tr");
+        //     if ($(".p_l_table tr.total-row").length === 0) {
+        //         // If it doesn't exist, add the total row as the last row
+        //         $("<tr class='total-row'><td></td><td></td><td></td><td>Total</td><td></td></tr>").appendTo(".p_l_table");
+        //     }
+
+        //     // Initialize max profit to 0, min breakeven to Infinity, and max breakeven to -Infinity
+        //     var maxProfit = 0;
+        //     var minBreakeven = Infinity;
+        //     var maxBreakeven = -Infinity;
+
+        //     // Loop through the rows and calculate the profit
+        //     for (var i = 0; i < tableRows.length; i++) {
+        //         var row = dtableRows[i];
+        //         var actionCell = row.children[3].textContent; // Assuming the action cell is the 4th cell (index 3)
+        //         var ltpCell = row.children[1].textContent; // Assuming the ltp cell is the 2nd cell (index 1)
+        //         var lotSizeCell = row.children[2].textContent; // Assuming the lotSize cell is the 3rd cell (index 2)
+        //         var strikePericeCell = row.children[5].textContent; // Assuming the strike price cell is the 6th cell (index 5)
+
+        //         var ltp = parseFloat(ltpCell);
+        //         var lotSize = parseInt(lotSizeCell);
+        //         var strikePrice = parseFloat(strikePriceCell);
+
+        //         if (actionCell === "sell" || actionCell === "Sell") { // Consider both "sell" and "Sell"
+        //             var profit = ltp * lotSize;
+        //             maxProfit += profit;
+
+        //             var minBreakevenValue = strikePrice - ltp;
+        //             var maxBreakevenValue = strikePrice + ltp;
+
+        //             if (minBreakevenValue < minBreakeven) {
+        //                 minBreakeven = minBreakevenValue;
+        //             }
+
+        //             if (maxBreakevenValue > maxBreakeven) {
+        //                 maxBreakeven = maxBreakevenValue;
+        //             }
+        //         }
+        //     }
+
+        //     // Update the "max_profit" element with the calculated maxProfit
+        //     document.getElementById("max_profit").textContent = "Max Profit: " + maxProfit;
+
+        //     // Update the "min_breakeven" element with the calculated minBreakeven
+        //     document.getElementById("min_breakeven").textContent = "Min Breakeven: " + minBreakeven;
+
+        //     // Update the "max_breakeven" element with the calculated maxBreakeven
+        //     document.getElementById("max_breakeven").textContent = "Max Breakeven: " + maxBreakeven;
+        // }
+
+
+
+
+
 
         document.getElementById("put_add_position").addEventListener("click", function () {
             // Get values from form
@@ -764,9 +2591,16 @@
             var putAction = document.querySelector('input[name="putAction"]:checked').value;
             var putCounterValue = document.getElementById("putCounterValue").value;
             var puts_strike = document.getElementById("puts_strike").value;
-
+            var puts_delta = document.getElementById("puts_delta").value;
+            var puts_theta = document.getElementById("puts_theta").value;
+            var puts_gamma = document.getElementById("puts_gamma").value;
+            var puts_vega = document.getElementById("puts_vega").value;
+            greeks_total()
+            $(".main_table_instruments_data").show()
             // Call the function to add the position to the table
-            addPosition(put_inst_type, putLotSize, puts_ltp, putAction, putCounterValue, puts_strike);
+            addPosition(put_inst_type, putLotSize, puts_ltp, putAction, putCounterValue, puts_strike, puts_delta, puts_theta, puts_gamma, puts_vega);
+            $(".modal-header .btn-close").click()
+            straddle_calculation()
         });
 
         document.getElementById("call_add_position").addEventListener("click", function () {
@@ -777,9 +2611,16 @@
             var callAction = document.querySelector('input[name="callAction"]:checked').value;
             var callCounterValue = document.getElementById("callCounterValue").value;
             var call_strike = document.getElementById("call_strike").value;
-
+            var calls_delta = document.getElementById("calls_delta").value;
+            var calls_theta = document.getElementById("calls_theta").value;
+            var calls_gamma = document.getElementById("calls_gamma").value;
+            var calls_vega = document.getElementById("calls_vega").value;
+            greeks_total()
+            $(".main_table_instruments_data").show()
             // Call the function to add the position to the table
-            addPosition(call_inst_type, callLotSize, call_ltp, callAction, callCounterValue, call_strike);
+            addPosition(call_inst_type, callLotSize, call_ltp, callAction, callCounterValue, call_strike, calls_delta, calls_theta, calls_gamma, calls_vega);
+            $(".modal-header .btn-close").click()
+            straddle_calculation()
         });
 
 
@@ -858,8 +2699,13 @@
         });
 
         // Event listener for expiry dropdown change
+
+
         $('#expiryDropdown').change(function () {
             // Call the function to send the data to Django view
+
+            var expiry_option = $("#expiryDropdown").val()
+            $(".expiry_inner_option_chain").text(expiry_option)
             sendDataToDjango();
         });
 
@@ -1073,7 +2919,7 @@
                 url: '/option_simulator_data',  // Replace with your Django view URL
                 data: data,
                 success: function (response) {
-                    console.log(response["stock_data"]);
+                    console.log(response);
                     var response_spot = response["spot_data"]
 
 
@@ -1107,20 +2953,97 @@
                 }
             });
         }
-        function updateCallLotSize(lotSize, call_inst_type, call_ltp, strike_price) {
+        function getMonthAbbreviation(monthNumber) {
+            const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+            return months[parseInt(monthNumber) - 1] || '';
+        }
+        function updateCallLotSize(lotSize, call_inst_type, call_ltp, strike_price, calls_delta, calls_theta, calls_gamma, calls_vega) {
+            // Remove "NFO:" from the beginning of call_inst_type
+            const firstPart = call_inst_type.replace(/^NFO:/, '');
+
+            // Extract the first part dynamically
+            const dynamicFirstPart = firstPart.split(/[^a-zA-Z]+/)[0];
+
+            // Create a separate variable without firstPart and dynamicFirstPart
+            const cleanCallInstType = call_inst_type.replace(/^NFO:/, '').replace(dynamicFirstPart, '');
+
+            // Remove the first two characters from cleanCallInstType
+            const trimmedCleanCallInstType = cleanCallInstType.substring(2);
+            const month = trimmedCleanCallInstType[0]
+            const monthString = getMonthAbbreviation(month)
+            const strike_instrument = trimmedCleanCallInstType.slice(-7);
+            const day = trimmedCleanCallInstType.replace(strike_instrument, '').replace(month, '')
+
+
+
+            // Set the values in the corresponding input elements
             $('#callLotSizeInput').val(lotSize);
-            $('#call_inst_type').val(call_inst_type);
+            $('#call_inst_type').val(`${dynamicFirstPart}${day}${monthString.toUpperCase()} ${strike_instrument}`);
             $('#call_ltp').val(call_ltp);
             $('#call_strike').val(strike_price);
+
+            $('#calls_delta').val(calls_delta);
+            $('#calls_theta').val(calls_theta);
+            $('#calls_gamma').val(calls_gamma);
+            $('#calls_vega').val(calls_vega);
+
+            // Use trimmedCleanCallInstType for your separate value
+            // console.log(day);
+            // console.log(month);
+            // console.log(monthString);
+            // console.log(trimmedCleanCallInstType);
+            // console.log(strike_instrument);
+            // console.log(call_inst_type);
+            console.log(calls_delta, calls_theta, calls_gamma, calls_vega);
+        }
+
+        function putMonthAbbreviation(monthNumber) {
+            const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+            return months[parseInt(monthNumber) - 1] || '';
         }
 
         // Function to update the lot size in the input field for Put Actions modal
-        function updatePutLotSize(lotSize, put_inst_type, puts_ltp, strike_price) {
+        function updatePutLotSize(lotSize, put_inst_type, puts_ltp, strike_price, puts_delta, puts_theta, puts_gamma, puts_vega) {
+
+
+            const firstPart = put_inst_type.replace(/^NFO:/, '');
+
+            // Extract the first part dynamically
+            const dynamicFirstPart = firstPart.split(/[^a-zA-Z]+/)[0];
+
+            // Create a separate variable without firstPart and dynamicFirstPart
+            const cleanCallInstType = put_inst_type.replace(/^NFO:/, '').replace(dynamicFirstPart, '');
+
+            // Remove the first two characters from cleanCallInstType
+            const trimmedCleanCallInstType = cleanCallInstType.substring(2);
+            const month = trimmedCleanCallInstType[0]
+            const monthString = putMonthAbbreviation(month)
+            const strike_instrument = trimmedCleanCallInstType.slice(-7);
+            const day = trimmedCleanCallInstType.replace(strike_instrument, '').replace(month, '')
+
+
+
+
+
+
             $('#putLotSizeInput').val(lotSize);
-            $('#put_inst_type').val(put_inst_type);
+            $('#put_inst_type').val(`${dynamicFirstPart}${day}${monthString.toUpperCase()} ${strike_instrument}`);
+
             $('#puts_ltp').val(puts_ltp);
             $('#puts_strike').val(strike_price);
+            $('#puts_delta').val(puts_delta);
+            $('#puts_theta').val(puts_theta);
+            $('#puts_gamma').val(puts_gamma);
+            $('#puts_vega').val(puts_vega);
+
+            console.log(puts_delta, puts_theta, puts_gamma, puts_vega);
         }
+
+
+
+
+
+
         function displayTable(data, lot_size, spot_strike) {
             console.log(lot_size);
             const tableBody = $('.option_simulator_body');
@@ -1132,23 +3055,43 @@
             }
 
             $('#noDataMessage').hide();
-            $(".spot_data").text();
+            // $(".spot_data").text();
+
+
+
+            var closestStrikePrice = null;
+            var closestDiff = Number.MAX_VALUE;
+            console.log('closestDiff'+closestDiff);
+            
+
             data.forEach(row => {
+
+
+                var strike_price = parseFloat(row.strike_price);
+                var diff = Math.abs(spot_strike - strike_price);
+
+                if (diff < closestDiff) {
+                    closestDiff = diff;
+                    closestStrikePrice = strike_price;
+                    $(".closest_value").text(strike_price)
+                }
+
+
                 var top_bg_left = row.strike_price < spot_strike ? "bg-above" : "";
                 var bottom_bg_right = row.strike_price > spot_strike ? "bg-below" : "";
-                const newRow = $('<tr>');
+                const newRow = $('<tr>').addClass("simulator_option_tr");
                 var text_center = "text-center"
                 var text_end = "text-end"
                 // Add buttons for "CALL ACTIONS"
                 const callActionsBtn = $('<button>').addClass("calls_action_btn").text('BUY/SELL').attr('data-bs-toggle', 'modal').attr('data-bs-target', '#callModal');
                 callActionsBtn.on('click', function () {
-                    updateCallLotSize(lot_size, row.call_inst_type, row.calls_ltp, row.strike_price); // Update callLotSizeInput with calls_ltp for this row
+                    updateCallLotSize(lot_size, row.call_inst_type, row.calls_ltp, row.strike_price, row.calls_delta, row.calls_theta, row.calls_gamma, row.calls_vega); // Update callLotSizeInput with calls_ltp for this row
                 });
 
                 // Add buttons for "PUT ACTIONS"
                 const putActionsBtn = $('<button>').addClass("puts_action_btn").text('BUY/SELL').attr('data-bs-toggle', 'modal').attr('data-bs-target', '#putModal');
                 putActionsBtn.on('click', function () {
-                    updatePutLotSize(lot_size, row.put_inst_type, row.puts_ltp, row.strike_price); // Update putLotSizeInput with puts_ltp for this row
+                    updatePutLotSize(lot_size, row.put_inst_type, row.puts_ltp, row.strike_price, row.puts_delta, row.puts_theta, row.puts_gamma, row.puts_vega); // Update putLotSizeInput with puts_ltp for this row
                 });
 
                 $("#callLotSizeInput").val(row.calls_ltp);
@@ -1168,7 +3111,7 @@
                 newRow.append($('<td>').addClass(top_bg_left + ' ' + text_end).append(replaceZeroWithDash(row.calls_ltp)));
 
                 newRow.append($('<td>').addClass("bg-light text-center").text(replaceZeroWithDash(row.calls_vega)));
-                newRow.append($('<td>').addClass("bg-light text-center").text(replaceZeroWithDash(row.strike_price)));
+                newRow.append($('<td>').addClass("bg-light text-center simulator_strike").text(replaceZeroWithDash(row.strike_price)));
                 newRow.append($('<td>').addClass("bg-light text-center").text(replaceZeroWithDash(row.puts_gamma)));
 
                 newRow.append($('<td>').addClass(bottom_bg_right + ' ' + text_end).text(replaceZeroWithDash(row.puts_ltp)));
@@ -1193,7 +3136,192 @@
                 // Add more cells for other properties
                 tableBody.append(newRow);
             });
+            console.log("Closest Strike Price" + closestStrikePrice);
+            var optionChainTable = $(".option_simulator_body");
+
+
+            $(".straddle").on("click", function () {
+                console.log('closestStrikePrice_main'+closestStrikePrice);
+                var  clostest_strike_value=$(".closest_value").text()
+                var $straddle = $(this);
+
+                if (!$straddle.hasClass("simulator_active_strategy")) {
+                    // Remove and set the active class
+                    $(".option_simulator_strategy").removeClass("simulator_active_strategy");
+                    $straddle.addClass("simulator_active_strategy");
+            
+                    // Delayed actions
+                    optionChainTable.find(".simulator_strike").each(function () {
+                        var rowStrikePrice = parseFloat($(this).text());
+                        if (rowStrikePrice === parseFloat(clostest_strike_value)) {
+                            
+                            var $this = $(this);
+
+                            setTimeout(function () {
+                                $this.closest(".simulator_option_tr")
+                                    .find(".calls_action_btn, .puts_action_btn")
+                                    .one("click", function (e) {
+                                        e.preventDefault();
+                                        $(".modal").hide();
+                                    })
+                                    .click();
+
+                                $("#call_add_position").click();
+                                $("#put_add_position").click();
+
+                                straddle_calculation()
+                            }, 100); // Delay of 100ms
+                        }
+                    });
+                }
+            });
+
+
+
+
+
+
         }
+       
+       
+        function straddle_calculation() {
+            var leftMyTable = $("#myTable");
+            // Now, attempt to get the value
+            var lot_size_simulator = $(".lot_size_value").text();
+            console.log("Lot Size Simulator: " + parseInt(lot_size_simulator));
+
+            // Now, attempt to get the instrument type
+            var max_profit = $("#max_profit");
+            var max_loss = $("#max_loss");
+            var break_evens = $("#break_evens");
+            var max_profit_value = "Unlimited";
+
+
+            var max_loss_value = 0;
+
+            var premiumElements = leftMyTable.find(".ltp_edit");
+            var lotSizeElements = leftMyTable.find(".lot_size_option_simulator");
+
+            // Check if there are an equal number of elements for both classes
+            if (premiumElements.length === lotSizeElements.length) {
+                for (var i = 0; i < premiumElements.length; i++) {
+                    var premium = parseFloat($(premiumElements[i]).text());
+                    var lot_size = parseFloat($(lotSizeElements[i]).text());
+
+                    console.log("Premium: " + premium);
+                    console.log("Lot Size: " + lot_size);
+
+                    max_loss_value += premium * lot_size;
+                }
+            } else {
+                console.log("Unequal number of premium and lot_size elements.");
+            }
+
+            console.log("Max Loss Value: " + max_loss_value);
+
+
+
+
+            var breakeven = 0;
+
+            leftMyTable.find(".ltp_edit").each(function () {
+
+                var breakeven_premium = $(this).text()
+                breakeven += parseFloat(breakeven_premium)
+            })
+
+
+
+
+
+
+
+
+
+
+            var strike_price_all = 0;
+            var count = 0;
+
+            leftMyTable.find(".instrument_type_edit").each(function () {
+                var strike_price = $(this).text();
+
+                // Extract the numeric part using substr
+                var substr_strike_price = strike_price.substr(11, 5);
+
+                strike_price_all += parseFloat(substr_strike_price);
+                count++;
+            });
+
+            // Calculate the average
+            var average_strike_price = strike_price_all / count;
+
+            console.log("Average Strike Price: " + average_strike_price);
+
+            // Calculate break-even values
+            var lower_break_even = average_strike_price - breakeven;
+            var upper_break_even = average_strike_price + breakeven;
+
+            // Set the text for break_evens
+            break_evens.text(lower_break_even.toFixed(2) + " - " + upper_break_even.toFixed(2));
+
+            var All_calls = [];
+
+            leftMyTable.find(".short_long").each(function () {
+                var lots = $(this).text();
+                console.log(lots);
+                // Extract the numeric part using substr
+                var calls = lots.replace(/\s+/g, '').toString();
+
+                All_calls.push(calls);
+            });
+            console.log(All_calls);
+            // Initialize flags to keep track of the first occurrence of +1x and -1x
+            var plusFirst = false;
+            var minusFirst = false;
+
+            // Loop through the All_calls array and determine which type comes first
+            for (var i = 0; i < All_calls.length; i++) {
+                var callType = All_calls[i];
+                if (callType === "+" && !plusFirst) {
+                    plusFirst = true;
+                } else if (callType === "-" && !minusFirst) {
+                    minusFirst = true;
+                }
+            }
+
+            // Check if both +1x and -1x were found and if they are equal in number
+            if (plusFirst && minusFirst && All_calls.filter(call => call === "+").length === All_calls.filter(call => call === "-").length) {
+
+                if (plusFirst) {
+                    console.log("+ comes first. MORE +");
+
+                    max_profit.text(max_profit_value);
+                    max_loss.text((max_loss_value * parseFloat(lot_size_simulator)).toFixed(2));
+                } else if (minusFirst) {
+                    console.log("- comes first. MORE -");
+
+                    max_profit.text((max_loss_value * parseFloat(lot_size_simulator)).toFixed(2));
+                    max_loss.text(max_profit_value);
+                }
+            } else if (plusFirst) {
+                console.log("MORE +");
+
+                max_profit.text(max_profit_value);
+                max_loss.text((max_loss_value * parseFloat(lot_size_simulator)).toFixed(2));
+            } else if (minusFirst) {
+                console.log("MORE -");
+                max_profit.text((max_loss_value * parseFloat(lot_size_simulator)).toFixed(2));
+                max_loss.text(max_profit_value);
+            } else {
+                console.log("No + or - found.");
+            }
+
+
+        }
+
+
+
+
 
         $(document).ready(function () {
             // For "Call Actions" modal
