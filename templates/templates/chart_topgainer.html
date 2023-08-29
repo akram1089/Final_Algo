@@ -288,7 +288,6 @@
         border-top: 1px solid #dee2e6;
         white-space: nowrap;
         font-weight: 400;
-        vertical-align: middle;
     }
 
     .bg-above {
@@ -511,12 +510,8 @@
                 gap: 0.5rem !important;
             }
 
-            .green-option-indicator {
+            .text-light-green {
                 color: #00b865 !important;
-            }
-
-            .red-option-indicator {
-                color: rgb(255, 40, 40) !important;
             }
 
             .bx.bxs-circle {
@@ -2254,121 +2249,12 @@
             $("#callBuyRadio").prop('checked', true);
         });
 
-
-
-
-
-        function time_current_price(All_data) {
-            $(".inst_type_current_price").each(function (index) {
-                console.log('Hii ');
-
-                var strike_price = $(this).text();
-                var reversed_string = strike_price.split('').reverse().join('');
-                var first_two_letters = reversed_string.substring(0, 2);
-                var reversed_first_two_letters = first_two_letters.split('').reverse().join('');
-                var numeric_part = reversed_string.match(/\d+/);
-                var numeric_value = numeric_part ? parseFloat(numeric_part[0].split('').reverse().join('')) : 0;
-                console.log('strike_price: ' + numeric_value);
-
-                // Find the corresponding object in All_data["stock_data"]
-                var matchingObject = All_data["stock_data"].find(function (x) {
-                    return x.strike_price === numeric_value; // Assuming strike_price matches numeric_value
-                });
-
-                // Select the corresponding .current_edit element based on index
-                var current_edit = $(".current_edit").eq(index);
-                var delta_curr = $(".delta").eq(index);
-                var theta_curr = $(".theta").eq(index);
-                var gamma_curr = $(".gamma").eq(index);
-                var vega_curr = $(".vega").eq(index);
-
-                if (matchingObject) {
-                    // Check reversed_first_two_letters and update the appropriate value
-                    if (reversed_first_two_letters === 'PE') {
-                        console.log('puts_ltp:', matchingObject.puts_ltp);
-                        current_edit.text(matchingObject.puts_ltp);
-
-                        delta_curr.text(parseFloat(matchingObject.puts_delta));
-                        theta_curr.text(parseFloat(matchingObject.puts_theta));
-                        gamma_curr.text(parseFloat(matchingObject.puts_gamma));
-                        vega_curr.text(parseFloat(matchingObject.puts_vega));
-                    } else if (reversed_first_two_letters === 'CE') {
-                        console.log('calls_ltp:', matchingObject.calls_ltp);
-                        current_edit.text(matchingObject.calls_ltp);
-
-                        delta_curr.text(parseFloat(matchingObject.calls_delta));
-                        theta_curr.text(parseFloat(matchingObject.calls_theta));
-                        gamma_curr.text(parseFloat(matchingObject.calls_gamma));
-                        vega_curr.text(parseFloat(matchingObject.calls_vega));
-                    }
-                    else {
-                        console.log('Neither PE nor CE.');
-                        current_edit.text(''); // Clear the text if it doesn't match PE or CE
-                    }
-                } else {
-                    console.log('No matching object found in All_data["stock_data"].');
-                }
-                edit_final_p_l()
-                updateTotalPAndL();
-                greeks_total()
-            });
-        }
-
-
-
-
-        function edit_final_p_l() {
-            var ltp_values = [];
-            var current_values = [];
-
-            // Iterate over elements with classes "ltp_edit_curr," "current_edit_curr," and "exit_edit_curr"
-            $(".ltp_edit_curr, .current_edit_curr, .exit_edit_curr ,.indicator_edit_table").each(function () {
-                var $this = $(this);
-                var value = parseInt($this.text());
-                var lot_size = $(".lot_size_value").text()
-                if ($this.hasClass("ltp_edit_curr")) {
-                    ltp_values.push(value);
-                } else if ($this.hasClass("current_edit_curr")) {
-                    current_values.push(value);
-                } else if ($this.hasClass("exit_edit_curr")) {
-                    if (value === 0) {
-                        // If exit_edit_curr is zero, add ltp_edit_curr and current_edit_curr
-                        var ltp = ltp_values.pop() || 0; // Get the last value from ltp_values or 0 if empty
-                        var current = current_values.pop() || 0; // Get the last value from current_values or 0 if empty
-                        current_values.push(ltp * parseFloat(lot_size) - current * parseFloat(lot_size));
-                    }
-                }
-            });
-
-            // Iterate over elements with class "indicator_edit_table"
-            $(".indicator_edit_table").each(function (index) {
-                var $this = $(this);
-
-                // Check if the corresponding exit_edit_curr is zero before calculating
-                if (index < current_values.length && $(".exit_edit_curr").eq(index).text() === "0") {
-                    var value = current_values[index].toFixed(2);
-                    $this.text(value);
-                    console.log("$     " + value);
-
-                    // Set the value in the corresponding .indicator_edit element using index
-                    $(".indicator_edit").eq(index).text(value);
-                }
-            });
-
-        }
-
-        // Call the function when needed
-
-
-
-
-
         var right_unique = 1
         var left_unique = 1
         var greek_unique = 1
 
         var indicator = $(".indicator_edit").text()
-        var loss_profit = parseInt(indicator) < 0 ? "red-option-indicator" : "green-option-indicator";
+        var loss_profit = parseInt(indicator) < 0 ? "text-danger" : "text-light-green";
         function addPosition(inst_type, lotSize, ltp, action, counterValue, strike_price, delta, theta, gamma, vega) {
             console.log(inst_type, lotSize, ltp, action, counterValue, strike_price);
 
@@ -2380,14 +2266,12 @@
 
             // Create elements for displaying position information
             var positionInfo = `
-                <div class="instument_type_slot_strike_premium" id=${left_unique++}>
-                    <span class="main_lot_size_option_simulator" id="short_long"><span class="short_long" >${lot_size_filter}</span><span class="lot_size_option_simulator">${counterValue}</span>x</span>
-                     <span class="instrument_type_edit" >${inst_type}</span> - ₹ <span class="ltp_edit">${ltp}</span> (<span class="indicator_edit">0</span>)
+                <div class="instument_type_slot_strike_premium" id=${left_unique++}><span class="main_lot_size_option_simulator"><span class="short_long">${lot_size_filter}</span><span class="lot_size_option_simulator">${counterValue}</span>x</span> <span class="instrument_type_edit">${inst_type}</span> - ₹ <span class="ltp_edit">${ltp}</span> (<span class="indicator_edit">0</span>)
                   <span class="exit_price d-none">0</span> </div>
                 <div class="action_option_strategy d-flex justify-content-center align-items-center gap-1">
                     <i class="bi bi-pencil-square edit-button" data-bs-toggle="modal" data-bs-target="#editPositionModal"></i>
                     <i class="bi bi-trash-fill delete-button"></i>
-                    <i class='bx bxs-circle green-option-indicator'></i>
+                    <i class='bx bxs-circle text-light-green'></i>
                 </div>
             `;
 
@@ -2397,10 +2281,10 @@
                         <td>   <div class="instument_type_slot_strike_premium">
                             
                             <span class="main_lot_size_option_simulator"><span class="short_long">${lot_size_filter}</span><span class="lot_size_option_simulator">${counterValue}</span>x</span>
-                             <span class="instrument_type_edit inst_type_current_price" >${inst_type}</span></td>
-                        <td> <span class="ltp_edit ltp_edit_curr">${ltp}</span> </td>
-                        <td> <span class="current_edit current_edit_curr">${ltp}</span> </td>
-                        <td><span class="exit_price exit_edit_curr">0</span></td>
+                             <span class="instrument_type_edit">${inst_type}</span></td>
+                        <td> <span class="ltp_edit">${ltp}</span> </td>
+                        <td> <span class="ltp_edit">${ltp}</span> </td>
+                        <td><span class="exit_price">0</span></td>
                         <td><span class="indicator_edit_table">0</span></td>
   
         </tr>
@@ -2457,7 +2341,6 @@
                 straddle_calculation()
                 updateTotalPAndL();
                 greeks_total();
-                edit_final_p_l()
 
             });
 
@@ -2479,77 +2362,63 @@
 
             // Attach an event listener to the Save Changes button in the modal
 
-            function updatePositionData(modal) {
-                var newLtp = $('#ltpInput').val();
-                var newExitPrice = $('#exitPriceInput').val();
-                var newCounterValue = $('#counterValueInput').val();
-                var position = modal.data('position');
-                // Update the displayed position information in the selected position
-
-
-                    var added_exit = 0;
-            
-                    if (newExitPrice != 0) {
-                        added_exit = newLtp * lotSize * newCounterValue - newExitPrice * lotSize * newCounterValue;
-                        position.find('.bxs-circle').removeClass('green-option-indicator').addClass('red-option-indicator');
-                    } else {
-                        position.find('.bxs-circle').removeClass('red-option-indicator').addClass('green-option-indicator');
-                    }
-
-
-                  
-                    position.find('.ltp_edit').text(newLtp);
-                    position.find('.exit_price').text(newExitPrice);
-
-
-                    position.find('.indicator_edit').text(added_exit);
-                    position.find('.lot_size_option_simulator').text(newCounterValue);
-
-                    var idmodaLSIDE = position.find('.instument_type_slot_strike_premium').attr('id');
-                    var tableSide = $(".p_l_table").find("tr#" + idmodaLSIDE);
-                    tableSide.find('.ltp_edit').text(newLtp);
-                    tableSide.find('.exit_price').text(newExitPrice);
-                    tableSide.find('.indicator_edit_table').text(added_exit);
-                    tableSide.find('.lot_size_option_simulator').text(newCounterValue);
-                    var greekTable = $(".real_greek_table_body").find("tr#" + idmodaLSIDE);
-                    greekTable.find('.lot_size_option_simulator').text(newCounterValue);
-                    var edit_delta = greekTable.find('.delta').text();
-                    var edit_theta = greekTable.find('.theta').text();
-                    var edit_gamma = greekTable.find('.gamma').text();
-                    var edit_vega = greekTable.find('.vega').text();
-                    greekTable.find('.delta').text((parseFloat(edit_delta) * newCounterValue).toFixed(3));
-                    greekTable.find('.theta').text((parseFloat(edit_theta) * newCounterValue).toFixed(3));
-                    greekTable.find('.gamma').text((parseFloat(edit_gamma) * newCounterValue).toFixed(3));
-                    greekTable.find('.vega').text((parseFloat(edit_vega) * newCounterValue).toFixed(3));
-
-                    edit_final_p_l()
-                }
-
-
-
-            
-
-
-
-
 
 
 
             $('#saveChangesButton').click(function () {
                 var modal = $('#editPositionModal');
+                var newLtp = $('#ltpInput').val();
+                var newExitPrice = $('#exitPriceInput').val();
+                var newCounterValue = $('#counterValueInput').val();
 
-                // Call the function to update position data
-                updatePositionData(modal);
+                // Update the displayed position information in the selected position
+                var position = modal.data('position');
+                position.find('.ltp_edit').text(newLtp);
+                position.find('.exit_price').text(newExitPrice);
 
-                // Call other functions
+                var added_exit = 0;
+                if (newExitPrice != 0) {
+                    added_exit = newLtp * lotSize * newCounterValue - newExitPrice * lotSize * newCounterValue;
+                    position.find('.bxs-circle').removeClass('text-light-green').addClass('text-danger');
+                } else {
+                    position.find('.bxs-circle').removeClass('text-danger').addClass('text-light-green');
+                }
+
+                position.find('.indicator_edit').text(added_exit);
+                position.find('.lot_size_option_simulator').text(newCounterValue);
+
+                var idmodaLSIDE = position.find('.instument_type_slot_strike_premium').attr('id');
+                var tableSide = $(".p_l_table").find("tr#" + idmodaLSIDE);
+                tableSide.find('.ltp_edit').text(newLtp);
+                tableSide.find('.exit_price').text(newExitPrice);
+                tableSide.find('.indicator_edit_table').text(added_exit);
+                tableSide.find('.lot_size_option_simulator').text(newCounterValue);
+                var greekTable = $(".real_greek_table_body").find("tr#" + idmodaLSIDE);
+                greekTable.find('.lot_size_option_simulator').text(newCounterValue);
+                var edit_delta = greekTable.find('.delta').text();
+                var edit_theta = greekTable.find('.theta').text();
+                var edit_gamma = greekTable.find('.gamma').text();
+                var edit_vega = greekTable.find('.vega').text();
+                greekTable.find('.delta').text((parseFloat(edit_delta) * newCounterValue).toFixed(3));
+                greekTable.find('.theta').text((parseFloat(edit_theta) * newCounterValue).toFixed(3));
+                greekTable.find('.gamma').text((parseFloat(edit_gamma) * newCounterValue).toFixed(3));
+                greekTable.find('.vega').text((parseFloat(edit_vega) * newCounterValue).toFixed(3));
+
+
+                // Call the function to update total_p_l initially
+
+                // Then, whenever you want to update it again, call the function like this:
+                // updateTotalPAndL();
+
+
+
+
                 updateTotalPAndL();
-                greeks_total();
-                straddle_calculation();
-            
+                greeks_total()
+                straddle_calculation()
                 // Close the modal
                 modal.modal('hide');
             });
-
 
 
 
@@ -2592,9 +2461,6 @@
             console.log("Updated final_p_and_l:", final_p_and_l);
             $("#total_p_l").text(final_p_and_l.toFixed(2)); // Display it with 2 decimal places
         }
-
-
-
         function greeks_total() {
             // Initialize variables to store the sum of each class
             var totalDelta = 0;
@@ -2951,42 +2817,31 @@
         // Event listener for "30 mint" backward button
         $('#btn30MintBack').click(function () {
             changeStartTimeMinutes(-30);
-
-
         });
 
         // Event listener for "15 mint" backward button
         $('#btn15MintBack').click(function () {
             changeStartTimeMinutes(-15);
-
-
         });
 
         // Event listener for "5 mint" backward button
         $('#btn5MintBack').click(function () {
             changeStartTimeMinutes(-5);
-
-
         });
 
         // Event listener for "5 mint" forward button
         $('#btn5MintForward').click(function () {
             changeStartTimeMinutes(5);
-
-
         });
 
         // Event listener for "15 mint" forward button
         $('#btn15MintForward').click(function () {
             changeStartTimeMinutes(15);
-
-
         });
 
         // Event listener for "30 mint" forward button
         $('#btn30MintForward').click(function () {
             changeStartTimeMinutes(30);
-
         });
 
         function changeStartTimeMinutes(minutesDelta) {
@@ -3065,9 +2920,6 @@
                 data: data,
                 success: function (response) {
                     console.log(response);
-                    // Call the function to run it only once
-                    time_current_price(response);
-
                     var response_spot = response["spot_data"]
 
 
@@ -3101,8 +2953,6 @@
                 }
             });
         }
-
-
         function getMonthAbbreviation(monthNumber) {
             const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
             return months[parseInt(monthNumber) - 1] || '';
@@ -3211,8 +3061,8 @@
 
             var closestStrikePrice = null;
             var closestDiff = Number.MAX_VALUE;
-            console.log('closestDiff' + closestDiff);
-
+            console.log('closestDiff'+closestDiff);
+            
 
             data.forEach(row => {
 
@@ -3291,20 +3141,20 @@
 
 
             $(".straddle").on("click", function () {
-                console.log('closestStrikePrice_main' + closestStrikePrice);
-                var clostest_strike_value = $(".closest_value").text()
+                console.log('closestStrikePrice_main'+closestStrikePrice);
+                var  clostest_strike_value=$(".closest_value").text()
                 var $straddle = $(this);
 
                 if (!$straddle.hasClass("simulator_active_strategy")) {
                     // Remove and set the active class
                     $(".option_simulator_strategy").removeClass("simulator_active_strategy");
                     $straddle.addClass("simulator_active_strategy");
-
+            
                     // Delayed actions
                     optionChainTable.find(".simulator_strike").each(function () {
                         var rowStrikePrice = parseFloat($(this).text());
                         if (rowStrikePrice === parseFloat(clostest_strike_value)) {
-
+                            
                             var $this = $(this);
 
                             setTimeout(function () {
@@ -3332,11 +3182,9 @@
 
 
         }
-
-
+       
+       
         function straddle_calculation() {
-
-
             var leftMyTable = $("#myTable");
             // Now, attempt to get the value
             var lot_size_simulator = $(".lot_size_value").text();
@@ -3350,57 +3198,37 @@
 
 
             var max_loss_value = 0;
-var breakeven = 0;
-var strike_price_all = 0;
-var count = 0;
 
-leftMyTable.find(".main_logic").each(function(index) {
-    var $parent = $(this);
+            var premiumElements = leftMyTable.find(".ltp_edit");
+            var lotSizeElements = leftMyTable.find(".lot_size_option_simulator");
 
-    // Check if the parent has the red-option-indicator class
-    if (!$parent.hasClass("red-option-indicator")) {
-        var premium = parseFloat($parent.find(".ltp_edit").text());
-        var lot_size = parseFloat($parent.find(".lot_size_option_simulator").text());
-        var breakeven_premium = parseFloat($parent.find(".ltp_edit").text());
+            // Check if there are an equal number of elements for both classes
+            if (premiumElements.length === lotSizeElements.length) {
+                for (var i = 0; i < premiumElements.length; i++) {
+                    var premium = parseFloat($(premiumElements[i]).text());
+                    var lot_size = parseFloat($(lotSizeElements[i]).text());
 
-        console.log("Premium: " + premium);
-        console.log("Lot Size: " + lot_size);
-        console.log("Break-Even Premium: " + breakeven_premium);
+                    console.log("Premium: " + premium);
+                    console.log("Lot Size: " + lot_size);
 
-        max_loss_value += premium * lot_size;
-        breakeven += breakeven_premium;
+                    max_loss_value += premium * lot_size;
+                }
+            } else {
+                console.log("Unequal number of premium and lot_size elements.");
+            }
 
-        var strike_price = $parent.find(".instrument_type_edit").text();
+            console.log("Max Loss Value: " + max_loss_value);
 
-        // Reverse the strike_price value
-        var reversed_string = strike_price.split('').reverse().join('');
 
-        // Extract the numeric part using regular expression
-        var numeric_part = reversed_string.match(/\d+/); // This extracts one or more consecutive digits
-        var numeric_value = numeric_part ? parseFloat(numeric_part[0].split('').reverse().join('')) : 0; // Reverse back and convert to a numeric value
 
-        console.log('numeric_value: ' + numeric_value);
 
-        strike_price_all += numeric_value;
-        count++;
-    } else {
-        console.log("Skipping calculation for element at index " + index);
-    }
-});
+            var breakeven = 0;
 
-console.log("Max Loss Value: " + max_loss_value);
+            leftMyTable.find(".ltp_edit").each(function () {
 
-// Calculate the average
-var average_strike_price = strike_price_all / count;
-
-console.log("Average Strike Price: " + average_strike_price);
-
-// Calculate break-even values
-var lower_break_even = average_strike_price - breakeven;
-var upper_break_even = average_strike_price + breakeven;
-
-// Set the text for break_evens
-break_evens.text(lower_break_even.toFixed(2) + " - " + upper_break_even.toFixed(2));
+                var breakeven_premium = $(this).text()
+                breakeven += parseFloat(breakeven_premium)
+            })
 
 
 
@@ -3408,6 +3236,33 @@ break_evens.text(lower_break_even.toFixed(2) + " - " + upper_break_even.toFixed(
 
 
 
+
+
+
+            var strike_price_all = 0;
+            var count = 0;
+
+            leftMyTable.find(".instrument_type_edit").each(function () {
+                var strike_price = $(this).text();
+
+                // Extract the numeric part using substr
+                var substr_strike_price = strike_price.substr(11, 5);
+
+                strike_price_all += parseFloat(substr_strike_price);
+                count++;
+            });
+
+            // Calculate the average
+            var average_strike_price = strike_price_all / count;
+
+            console.log("Average Strike Price: " + average_strike_price);
+
+            // Calculate break-even values
+            var lower_break_even = average_strike_price - breakeven;
+            var upper_break_even = average_strike_price + breakeven;
+
+            // Set the text for break_evens
+            break_evens.text(lower_break_even.toFixed(2) + " - " + upper_break_even.toFixed(2));
 
             var All_calls = [];
 

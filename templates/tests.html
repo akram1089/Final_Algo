@@ -1,131 +1,103 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
-    <title>Long Straddle Strategy Profit/Loss Chart</title>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-annotation/1.0.2/chartjs-plugin-annotation.min.js"></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bootstrap Placeholder Gallery</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+    <style>
+        .row1,
+        .row2,
+        .row3 {
+            width: 32% ;
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        .main_placeholder_container {
+            gap: 0.8rem;
+        }
+        @media (max-width: 768px) {
+            .row1,
+        .row2,
+        .row3 {
+            width: 100% !important;
+            
+        }
+        .main_placeholder_container{
+flex-wrap: wrap;
+        }
+        }
+    </style>
 </head>
+
 <body>
-    <h1>Long Straddle Strategy Profit/Loss Chart</h1>
-    <div class="main_chart" style="width: 80vw; height: 50vh;">
-        <canvas id="straddleChart"></canvas>
-    </div>
-    <script>
-        $(document).ready(function() {
-            // Function to update the chart with new data
-            function updateChart(data) {
-                var assetPrices = data.stock_price_range;
-                var profits = data.profits;
+    <div class="main_placeholder_container flex-sm-wrap d-flex">
 
-                var chartData = {
-                    labels: assetPrices,
-                    datasets: [{
-                        label: 'Profit/Loss',
-                        data: profits,
-                        borderColor: 'rgba(75, 192, 192, 1)',
-                        borderWidth: 2,
-                        borderDash: [5, 5], // Border style - dashed
-                        pointRadius: 0,
-                        fill: false,
-                    }, {
-                        // Horizontal line at zero profit
-                        type: 'line',
-                        label: 'Zero Profit',
-                        data: Array(assetPrices.length).fill(0),
-                        borderColor: 'black',
-                        borderWidth: 1,
-                 
-                        fill: false,
-                    }]
-                };
+        <div class="row1">
+            <div class="main_placeholder">
+                <div class="placeholder-glow">
+                    <span class="placeholder col-12" style="height: 250px;"></span>
+                </div>
+            </div>
 
-                var options = {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        x: {
-                            type: 'linear',
-                            position: 'bottom',
-                            title: {
-                                display: true,
-                                text: 'Asset Price'
-                            }
-                        },
-                        y: {
-                            title: {
-                                display: true,
-                                text: 'Profit/Loss'
-                            }
-                        }
-                    },
-                    plugins: {
-                        tooltip: {
-                            intersect: false,
-                            mode: 'index',
-                            callbacks: {
-                                title: function(context) {
-                                    return 'Asset Price: ' + context[0].label;
-                                },
-                                label: function(context) {
-                                    var datasetLabel = context.dataset.label || '';
-                                    return datasetLabel + ': ' + context.parsed.y.toFixed(2);
-                                }
-                            }
-                        },
-                        legend: {
-                            display: true,
-                            position: 'top'
-                        },
-                        annotation: {
-                            drawTime: 'afterDatasetsDraw',
-                            annotations: []
-                        }
-                    }
-                };
+            <div class="main_placeholder">
+                <div class="placeholder-glow">
+                    <span class="placeholder col-12" style="height: 250px;"></span>
+                </div>
+            </div>
 
-                var ctx = document.getElementById('straddleChart').getContext('2d');
-                var myChart = new Chart(ctx, {
-                    type: 'line',
-                    data: chartData,
-                    options: options
-                });
 
-                // Add a vertical line at the current asset value
-                var currentValue = data.current_asset_value;
-                var index = assetPrices.indexOf(currentValue);
+            <div class="main_placeholder">
+                <div class="placeholder-glow">
+                    <span class="placeholder col-12" style="height: 250px;"></span>
+                </div>
+            </div>
 
-                if (index >= 0) {
-                    var xPos = myChart.scales.x.getPixelForValue(currentValue);
-                    var drawVerticalLine = function() {
-                        var linePos = myChart.scales.x.left + xPos;
-                        ctx.beginPath();
-                        ctx.moveTo(linePos, myChart.scales.y.top);
-                        ctx.lineTo(linePos, myChart.scales.y.bottom);
-                        ctx.lineWidth = 1;
-                        ctx.strokeStyle = 'rgba(0, 0, 0, 0.7)';
-                        ctx.stroke();
-                    };
-                    drawVerticalLine();
 
-                    myChart.options.animation.onComplete = drawVerticalLine;
-                    myChart.update();
-                }
-            }
+        </div>
+        <div class="row2">
+            <div class="main_placeholder">
+                <div class="placeholder-glow">
+                    <span class="placeholder col-12" style="height: 350px;"></span>
+                </div>
+            </div>
+            <div class="main_placeholder">
+                <div class="placeholder-glow">
+                    <span class="placeholder col-12" style="height: 350px;"></span>
+                </div>
+            </div>
+            <div class="main_placeholder">
+                <div class="placeholder-glow">
+                    <span class="placeholder col-12" style="height: 350px;"></span>
+                </div>
+            </div>
+        </div>
+        <div class="row3">
 
-            // Fetch data using Ajax
-            $.ajax({
-                url: '/straddle_data',
-                method: 'GET',
-                dataType: 'json',
-                success: function(data) {
-                    updateChart(data);
-                },
-                error: function() {
-                    alert('Failed to fetch data.');
-                }
-            });
-        });
-    </script>
+            <div class="main_placeholder">
+                <div class="placeholder-glow">
+                    <span class="placeholder col-12" style="height: 250px;"></span>
+                </div>
+            </div>
+            <div class="main_placeholder">
+                <div class="placeholder-glow">
+                    <span class="placeholder col-12" style="height: 250px;"></span>
+                </div>
+            </div>
+            <div class="main_placeholder">
+                <div class="placeholder-glow">
+                    <span class="placeholder col-12" style="height: 250px;"></span>
+                </div>
+            </div>
+        </div>
+        </div>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
+            crossorigin="anonymous"></script>
 </body>
+
 </html>

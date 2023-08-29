@@ -2449,7 +2449,7 @@ def contributor(request):
 
 
 def get_all_dates():
-    url_date = "https://webapi.niftytrader.in/webapi/Resource/nifty50-date-List"
+    url_date = "https://webapi.niftytrader.in/webapi/Resource/contrubutors-date-list?symbol=nifty"
     headers = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
         "Accept-Language": "en-US,en;q=0.9",
@@ -2459,8 +2459,9 @@ def get_all_dates():
     response_date = requests.get(url_date, headers=headers)
     data_date = response_date.json()
     all_dates = []
-    for date in data_date["resultData"]["date"]:
+    for date in data_date["resultData"]["start_date"]:
         all_dates.append(date)
+    print(all_dates)     
 
     return all_dates
 
@@ -2468,19 +2469,21 @@ def get_all_dates():
 def contributors_data(request):
     try:
         selected_date = request.GET.get('date')
-        selected_filter = request.GET.get('filter', 'nifty50')
+        selected_filter = request.GET.get('filter', 'nifty')
         if not selected_date:
             # Set initial selected date
             # Replace this with your code to fetch all available dates
             all_dates = get_all_dates()
+            print(all_dates)
             if all_dates:
                 selected_date = all_dates[1]
 
         print("Selected Date:", selected_date)
         print("Selected Filter:", selected_filter)
 
-        url = f'https://webapi.niftytrader.in/webapi/Resource/{selected_filter}-float-data?Date={selected_date}'
-        url_date = f"https://webapi.niftytrader.in/webapi/Resource/{selected_filter}-date-List"
+
+        url = f'https://webapi.niftytrader.in/webapi/Resource/contributors-data?symbol={selected_filter}&expiryDate={selected_date}'
+        url_date = f"https://webapi.niftytrader.in/webapi/Resource/contrubutors-date-list?symbol={selected_filter}"
         print(url)
         print(url_date)
 
@@ -2498,18 +2501,18 @@ def contributors_data(request):
             data = response.json()
             data_date = response_date.json()
 
-            all_dates = data_date.get("resultData", {}).get("date", [])
+            all_dates = data_date.get("resultData", {}).get("start_date", [])
             if not all_dates:
                 error_dict = {
                     "error": "No dates available"
                 }
                 return JsonResponse(error_dict, status=500)
 
-            print(all_dates[1])
+            # print(all_dates[1])
 
             date_max = data_date.get("resultData", {}).get("max_date")
 
-            stocks_data = data.get("resultData", {}).get("startdate", [])
+            stocks_data = data.get("resultData", {}).get("contributor_data", [])
             stocks_data_ltp = data.get("resultData", {}).get("enddate", [])
             # print(date_max)
 

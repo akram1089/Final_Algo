@@ -106,6 +106,10 @@
 <style>
     .card-body:hover .card-title {
         color: #2196f3;
+       
+    }
+    .card-title{
+        font-weight: 600;
     }
 
     .card:hover {
@@ -130,6 +134,42 @@
     .main_icon_trim_expand {
         gap: 0.3rem;
         transition: 0.3s;
+    }
+</style>
+<style>
+    .row1,
+    .row2,
+    .row3 {
+        width: 32% !important;
+        display: flex;
+        flex-direction: column;
+        gap: 0.8rem;
+        flex-wrap: wrap;
+    }
+
+    .main_placeholder_container {
+        gap: 0.8rem;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+
+    .main_placeholder .placeholder-glow .placeholder {
+        border-radius: 5px;
+    }
+
+    @media (max-width: 768px) {
+
+        .row1,
+        .row2,
+        .row3 {
+            width: 100% !important;
+
+        }
+
+        .main_placeholder_container {
+            flex-wrap: wrap;
+        }
     }
 </style>
 <script>
@@ -183,7 +223,88 @@
                 url: url,
                 type: 'GET',
                 beforeSend: function () {
-                    $('#news-container').html('<div class="text-center py-5 w-100 h-100"><div class="spinner-border text-info" role="status"></div></div>');
+                    $('#news-container').html(`<div class="text-center  w-100 h-100">
+                        
+                        <div class="main_placeholder_container  d-flex">
+
+<div class="row1">
+    <div class="main_placeholder">
+        <div class="placeholder-glow">
+            <span class="placeholder  bg-secondary-subtle col-12" style="height: 250px;"></span>
+        </div>
+    </div>
+
+    <div class="main_placeholder">
+        <div class="placeholder-glow">
+            <span class="placeholder  bg-secondary-subtle col-12" style="height: 250px;"></span>
+        </div>
+    </div>
+
+
+    <div class="main_placeholder">
+        <div class="placeholder-glow">
+            <span class="placeholder  bg-secondary-subtle col-12" style="height: 250px;"></span>
+        </div>
+    </div>
+
+    <div class="main_placeholder">
+        <div class="placeholder-glow">
+            <span class="placeholder  bg-secondary-subtle col-12" style="height: 250px;"></span>
+        </div>
+    </div>
+
+
+</div>
+<div class="row2">
+    <div class="main_placeholder">
+        <div class="placeholder-glow">
+            <span class="placeholder  bg-secondary-subtle col-12" style="height: 350px;"></span>
+        </div>
+    </div>
+    <div class="main_placeholder">
+        <div class="placeholder-glow">
+            <span class="placeholder  bg-secondary-subtle col-12" style="height: 350px;"></span>
+        </div>
+    </div>
+    <div class="main_placeholder">
+        <div class="placeholder-glow">
+            <span class="placeholder  bg-secondary-subtle col-12" style="height: 350px;"></span>
+        </div>
+    </div>
+    <div class="main_placeholder">
+        <div class="placeholder-glow">
+            <span class="placeholder  bg-secondary-subtle col-12" style="height: 350px;"></span>
+        </div>
+    </div>
+</div>
+<div class="row3">
+
+    <div class="main_placeholder">
+        <div class="placeholder-glow">
+            <span class="placeholder  bg-secondary-subtle col-12" style="height: 250px;"></span>
+        </div>
+    </div>
+    <div class="main_placeholder">
+        <div class="placeholder-glow">
+            <span class="placeholder  bg-secondary-subtle col-12" style="height: 250px;"></span>
+        </div>
+    </div>
+    <div class="main_placeholder">
+        <div class="placeholder-glow">
+            <span class="placeholder  bg-secondary-subtle col-12" style="height: 250px;"></span>
+        </div>
+    </div>
+    <div class="main_placeholder">
+        <div class="placeholder-glow">
+            <span class="placeholder  bg-secondary-subtle col-12" style="height: 250px;"></span>
+        </div>
+    </div>
+</div>
+</div>
+                        
+                        
+                        
+                        </div>`);
                 },
                 success: function (data) {
                     updateNewsData(data);
@@ -248,7 +369,7 @@
                 var publishDate = $('<p style="margin-bottom:auto"  class="card-text d-flex align-items-center"></p>').append(clockIcon).append(' ' + getTimeAgo(newsData.publishDate));
 
                 var source = $('<p style="margin-bottom:auto" class="card-text d-flex align-items-center"></p>').append(newsData.source);
-                var main_pub_source_icon = $('<p class="main_pub_source_icon"></p>').append(publishDate).append(' / ').append(source);
+                var main_pub_source_icon = $('<p class="main_pub_source_icon"></p>').append(publishDate).append(`  /  `).append(source);
 
                 var description = $('<p class="card-text description_news"></p>').text(newsData.description);
                 if (description.text().split(' ').length > 50) {

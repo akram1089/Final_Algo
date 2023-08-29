@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Straddle Option Chart</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <canvas id="shortStraddleChart" width="400" height="200"></canvas>
+
+    <script>
+    // Sample data
+const strikePrices = [];
+const pnlData = [];
+
+// Premiums for the short call and short put options at each strike price
+const callPremiums = [-150, -140, -130, -120, -110, -100];
+const putPremiums = [-160, -150, -140, -130, -120, -110];
+
+// Calculate P&L for each strike price
+for (let i = 0; i < callPremiums.length; i++) {
+    const strikePrice = 17500 + i * 100;
+    strikePrices.push(strikePrice);
+    
+    // Calculate P&L for the short straddle at this strike price
+    const callPnl = callPremiums[i];
+    const putPnl = putPremiums[i];
+    const totalPnl = callPnl + putPnl;
+    pnlData.push(totalPnl);
+}
+
+// Create a Chart.js chart
+const ctx = document.getElementById('shortStraddleChart').getContext('2d');
+const chart = new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: strikePrices.map(price => price.toString()),
+        datasets: [
+            {
+                label: 'P&L for Short Straddle',
+                data: pnlData,
+                borderColor: 'blue',
+                backgroundColor: 'rgba(0, 0, 255, 0.2)',
+            },
+        ],
+    },
+    options: {
+        responsive: true,
+        scales: {
+            x: {
+                display: true,
+                title: {
+                    display: true,
+                    text: 'Strike Price',
+                },
+            },
+            y: {
+                display: true,
+                title: {
+                    display: true,
+                    text: 'P&L',
+                },
+            },
+        },
+    },
+});
+
+    </script>
+</body>
+</html>
