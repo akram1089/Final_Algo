@@ -347,18 +347,7 @@ to {
     right: 1 !important;
 }
 
-  #spinner {
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity .5s ease-out, visibility 0s linear .5s;
-  z-index: 99999;
-}
 
-#spinner.show {
-  transition: opacity .5s ease-out, visibility 0s linear 0s;
-  visibility: visible;
-  opacity: 1;
-}
 
 #resources_dropdown_dashboard_markets{
   left: -8rem  !important;
@@ -378,10 +367,38 @@ to {
     <link href="dashboard.css" rel="stylesheet">
   </head>
   <body monica-version="1.7.4" monica-id="ofpnmcalabcbjgholdjcjblkibolbppb">
-    <div id="spinner"
-    class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
-    <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;"></div>
-</div>
+    <style>
+      #spinner{
+          display: flex;
+          width: 100vw;
+          height: 100vh;
+      
+      }
+      #spinner_inner{
+          color: #0080ff !important;
+          width: 3rem !important;
+          height: 3rem !important;
+      }
+      
+      </style>
+      <div id="spinner" class="d-flex justify-content-center align-items-center">
+          <div class="spinner-border" role="status" id="spinner_inner">
+              <span class="visually-hidden">Loading...</span>
+          </div>
+      </div>
+      
+      <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+      <script>
+          var spinner = function () {
+              setTimeout(function () {
+                  if ($('#spinner').length > 0) {
+                      $('#spinner').removeClass('d-flex justify-content-center').addClass("d-none");
+                  }
+              }, 500); // Adjust the timeout to match your CSS transition delay
+          };
+      
+          spinner();
+      </script>
 
 
 
@@ -4389,15 +4406,8 @@ font-weight: 100;
    * Copyright 2011-2023 The Bootstrap Authors
    * Licensed under the Creative Commons Attribution 3.0 Unported License.
    */
-   var spinner = function () {
-    setTimeout(function () {
-        if ($('#spinner').length > 0) {
-            $('#spinner').removeClass('show');
-        }
-    }, 1);
-  };
-  spinner();
-  
+
+
 
   $(function() {
     $('input[name="daterange"]').daterangepicker({
