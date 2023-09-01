@@ -400,7 +400,6 @@
                     </div>
                 </div>
                 <div class="closest_value"></div>
-                <div class="Strategy_parmeters">straddle</div>
 
 
 
@@ -477,7 +476,7 @@
             <div class="option_simulator_strategy iron_condor">
                 IRON CONDOR
             </div>
-            <div class="option_simulator_strategy jade_lizard">
+            <div class="option_simulator_strategy jaze_lizard">
                 JADE LIZARD
             </div>
 
@@ -640,7 +639,7 @@
                 </div>
                 <div class="d-flex align-items-center justify-content-between">
                     <p class="fs-14 fw-500 label-color-6">Reward Risk:</p>
-                    <p class="fs-14 fw-500 label-color-6" id='ratio'>Not defined</p>
+                    <p class="fs-14 fw-500 label-color-6">Not defined</p>
                 </div>
             </div>
             <div class="col-md-6 col-lg-6 col-sm-12 right_table_greeks">
@@ -699,7 +698,7 @@
 
 
 
-        <div class=" expiry_Note d-flex justify-content-between my-4 fw-bold flex-wrap">
+        <div class=" expiry_Note d-flex justify-content-between my-2 fw-bold flex-wrap">
 
             <h6>Note:-*For respected strike prices, the Gamma and Vega greeks are the same for Calls and Puts</h6>
             <div class="option_chain_expiry d-flex">
@@ -2249,7 +2248,7 @@
                 $(".option_simulator_strategy").removeClass("simulator_active_strategy");
                 $("#putCounterValue").val(1);
                 $("#callCounterValue").val(1);
-                $(".Strategy_parmeters").text("straddle")
+
                 // Check the "putBuyRadio" and "callBuyRadio" inputs
                 $("#putBuyRadio").prop('checked', true);
                 $("#callBuyRadio").prop('checked', true);
@@ -2261,7 +2260,7 @@
 
             function time_current_price(All_data) {
                 $(".inst_type_current_price").each(function (index) {
-                    //console.log('Hii ');
+                    console.log('Hii ');
 
                     var strike_price = $(this).text();
                     var reversed_string = strike_price.split('').reverse().join('');
@@ -2269,7 +2268,7 @@
                     var reversed_first_two_letters = first_two_letters.split('').reverse().join('');
                     var numeric_part = reversed_string.match(/\d+/);
                     var numeric_value = numeric_part ? parseFloat(numeric_part[0].split('').reverse().join('')) : 0;
-                    //console.log('strike_price: ' + numeric_value);
+                    console.log('strike_price: ' + numeric_value);
 
                     // Find the corresponding object in All_data["stock_data"]
                     var matchingObject = All_data["stock_data"].find(function (x) {
@@ -2286,7 +2285,7 @@
                     if (matchingObject) {
                         // Check reversed_first_two_letters and update the appropriate value
                         if (reversed_first_two_letters === 'PE') {
-                            //console.log('puts_ltp:', matchingObject.puts_ltp);
+                            console.log('puts_ltp:', matchingObject.puts_ltp);
                             current_edit.text(matchingObject.puts_ltp);
 
                             delta_curr.text(parseFloat(matchingObject.puts_delta));
@@ -2294,7 +2293,7 @@
                             gamma_curr.text(parseFloat(matchingObject.puts_gamma));
                             vega_curr.text(parseFloat(matchingObject.puts_vega));
                         } else if (reversed_first_two_letters === 'CE') {
-                            //console.log('calls_ltp:', matchingObject.calls_ltp);
+                            console.log('calls_ltp:', matchingObject.calls_ltp);
                             current_edit.text(matchingObject.calls_ltp);
 
                             delta_curr.text(parseFloat(matchingObject.calls_delta));
@@ -2303,11 +2302,11 @@
                             vega_curr.text(parseFloat(matchingObject.calls_vega));
                         }
                         else {
-                            //console.log('Neither PE nor CE.');
+                            console.log('Neither PE nor CE.');
                             current_edit.text(''); // Clear the text if it doesn't match PE or CE
                         }
                     } else {
-                        //console.log('No matching object found in All_data["stock_data"].');
+                        console.log('No matching object found in All_data["stock_data"].');
                     }
                     edit_final_p_l()
                     updateTotalPAndL();
@@ -2349,7 +2348,7 @@
                     if (index < current_values.length && $(".exit_edit_curr").eq(index).text() === "0") {
                         var value = current_values[index].toFixed(2);
                         $this.text(value);
-                        //console.log("$     " + value);
+                        console.log("$     " + value);
 
                         // Set the value in the corresponding .indicator_edit element using index
                         $(".indicator_edit").eq(index).text(value);
@@ -2371,7 +2370,7 @@
             var indicator = $(".indicator_edit").text()
             var loss_profit = parseInt(indicator) < 0 ? "red-option-indicator" : "green-option-indicator";
             function addPosition(inst_type, lotSize, ltp, action, counterValue, strike_price, delta, theta, gamma, vega) {
-                //console.log(inst_type, lotSize, ltp, action, counterValue, strike_price);
+                console.log(inst_type, lotSize, ltp, action, counterValue, strike_price);
 
                 var lot_size_filter = action === "sell" ? "-" : "+";
 
@@ -2443,7 +2442,7 @@
 
                     // Check and log the length of children in #myTable
                     var childrenLength = $('#myTable').children().length;
-                    //console.log("Children length in #myTable:", childrenLength);
+                    console.log("Children length in #myTable:", childrenLength);
 
 
                     // Check if #myTable has no child elements
@@ -2451,13 +2450,11 @@
                         // If it has no children, hide .main_table_instruments_data
                         $('.main_table_instruments_data').hide();
                         $(".option_simulator_strategy ").removeClass("simulator_active_strategy")
-                        $(".Strategy_parmeters").text("straddle")
                     }
 
                     // Remove the clickedRow <div> element
                     clickedRow.remove();
-                    var Strategy_parmeters = $(".Strategy_parmeters").text()
-                    straddle_calculation(Strategy_parmeters);
+                    straddle_calculation()
                     updateTotalPAndL();
                     greeks_total();
                     edit_final_p_l()
@@ -2547,8 +2544,7 @@
                     // Call other functions
                     updateTotalPAndL();
                     greeks_total();
-                    var Strategy_parmeters = $(".Strategy_parmeters").text()
-                    straddle_calculation(Strategy_parmeters);
+                    straddle_calculation();
 
                     // Close the modal
                     modal.modal('hide');
@@ -2577,12 +2573,12 @@
             function updateTotalPAndL() {
                 var final_p_and_l = 0;
                 var indicatorElements = $('.indicator_edit_table');
-                //console.log(indicatorElements);
+                console.log(indicatorElements);
 
                 for (var i = 0; i < indicatorElements.length; i++) {
                     var currentValue = parseFloat(indicatorElements[i].textContent);
 
-                    //console.log(i);
+                    console.log(i);
                     if (!isNaN(currentValue)) {
                         final_p_and_l += currentValue;
                     }
@@ -2593,7 +2589,7 @@
 
                 // Add the "Total" row at the end of the table
                 $(".p_l_table").append("<tr class='total-row'><td></td><td></td><td></td><td>Total P&L</td><td id='total_p_l'>0</td></tr>");
-                //console.log("Updated final_p_and_l:", final_p_and_l);
+                console.log("Updated final_p_and_l:", final_p_and_l);
                 $("#total_p_l").text(final_p_and_l.toFixed(2)); // Display it with 2 decimal places
             }
 
@@ -2738,8 +2734,7 @@
                 // Call the function to add the position to the table
                 addPosition(put_inst_type, putLotSize, puts_ltp, putAction, putCounterValue, puts_strike, puts_delta, puts_theta, puts_gamma, puts_vega);
                 $(".modal-header .btn-close").click()
-                var Strategy_parmeters = $(".Strategy_parmeters").text()
-                straddle_calculation(Strategy_parmeters);
+                straddle_calculation()
             });
 
             document.getElementById("call_add_position").addEventListener("click", function () {
@@ -2759,8 +2754,7 @@
                 // Call the function to add the position to the table
                 addPosition(call_inst_type, callLotSize, call_ltp, callAction, callCounterValue, call_strike, calls_delta, calls_theta, calls_gamma, calls_vega);
                 $(".modal-header .btn-close").click()
-                var Strategy_parmeters = $(".Strategy_parmeters").text()
-                straddle_calculation(Strategy_parmeters);
+                straddle_calculation()
             });
 
 
@@ -2825,7 +2819,7 @@
                     // Trigger the AJAX request with initial data when page loads
 
                 }).fail(function (error) {
-                    //console.error('Error:', error);
+                    console.error('Error:', error);
                 });
             }
             loadExpiryDates('NIFTY');
@@ -2886,7 +2880,7 @@
                 // Use setTimeout to capture the initial value after 1 second
                 setTimeout(function () {
                     updatePrevBtn = startDateInput.val();
-                    //console.log("initial_date (after 1 second delay): " + updatePrevBtn);
+                    console.log("initial_date (after 1 second delay): " + updatePrevBtn);
 
                     const btnOneDayBack = $('#btnOneDayBack');
 
@@ -2904,7 +2898,7 @@
             function prevOneDay_disable() {
                 const startDateInput = $("#startDate");
                 const startDateValue = startDateInput.val();
-                //console.log("current_date: " + startDateValue);
+                console.log("current_date: " + startDateValue);
 
                 const btnOneDayBack = $('#btnOneDayBack');
 
@@ -2927,7 +2921,7 @@
 
 
                 // Format both dates to be in yyyy-mm-dd format for comparison
-                //console.log(expiryDropdownValue, startDateValue);
+                console.log(expiryDropdownValue, startDateValue);
 
                 return expiryDropdownValue === startDateValue;
             }
@@ -3005,8 +2999,8 @@
                     });
 
                     // Log the closest and previous closest dates
-                    //console.log("Previous Closest Date:", previousClosestDate);
-                    //console.log("Closest Date:", closestDate);
+                    console.log("Previous Closest Date:", previousClosestDate);
+                    console.log("Closest Date:", closestDate);
                     $(".expiry_inner_option_chain").text(closestDate)
                     $("#startDate").val(previousClosestDate)
                     var formatedString = previousClosestDate
@@ -3019,7 +3013,7 @@
                             day: 'numeric'
                         })
                         : '';
-                    //console.log(formattedPreviousClosestDate);
+                    console.log(formattedPreviousClosestDate);
                     $(".date_formated").text(formattedPreviousClosestDate)
 
                     // Populate the dropdown options and set 'selected' property
@@ -3031,7 +3025,7 @@
 
                     sendDataToDjango();
                 }).fail(function (error) {
-                    //console.error('Error:', error);
+                    console.error('Error:', error);
                 });
             }
 
@@ -3078,9 +3072,9 @@
             });
 
             function changeStartTimeMinutes(minutesDelta) {
-                //console.log(minutesDelta);
+                console.log(minutesDelta);
                 var time = $(".time_formated").text();
-                //console.log(typeof (time));
+                console.log(typeof (time));
                 const timeParts = time.split(':');
                 let hours = parseInt(timeParts[0]);
                 let minutes = parseInt(timeParts[1]);
@@ -3127,7 +3121,7 @@
                 const paddedMinutes = minutes.toString().padStart(2, '0');
 
                 createTime = `${paddedHours}:${paddedMinutes}:00`; // Update the createTime variable
-                //console.log(createTime);
+                console.log(createTime);
                 // Call the function to send the updated data to Django view
                 sendDataToDjango(createTime);
             }
@@ -3152,7 +3146,7 @@
                     url: '/option_simulator_data',  // Replace with your Django view URL
                     data: data,
                     success: function (response) {
-                        //console.log(response);
+                        console.log(response);
                         // Call the function to run it only once
                         time_current_price(response);
 
@@ -3160,7 +3154,7 @@
 
 
                         var lot_size = response_spot["lot_size"]
-                        //console.log(response_spot);
+                        console.log(response_spot);
                         $(".lot_size_value").text(lot_size)
 
 
@@ -3170,14 +3164,14 @@
                         var index_close = response.map((x) => {
                             return x.index_close
                         })
-                        //console.log(index_close);
+                        console.log(index_close);
                         $(".spot_value").text(index_close[0])
                         $(".spot_data").text(index_close[0])
 
                         var cteateTime = response.map((currtime) => {
                             return currtime.time
                         })
-                        //console.log(cteateTime[0]);
+                        console.log(cteateTime[0]);
                         $(".time_formated").text(cteateTime[0])
                         // Handle the response from Django view
 
@@ -3185,7 +3179,7 @@
                         displayTable(response, lot_size, index_close[0]);
                     },
                     error: function (error) {
-                        //console.error('Error:', error);
+                        console.error('Error:', error);
                     }
                 });
             }
@@ -3229,13 +3223,13 @@
                 $('#calls_vega').val(calls_vega);
 
                 // Use trimmedCleanCallInstType for your separate value
-                //// console.log(day);
-                //// console.log(month);
-                //// console.log(monthString);
-                //// console.log(trimmedCleanCallInstType);
-                //// console.log(strike_instrument);
-                //// console.log(call_inst_type);
-                //console.log(calls_delta, calls_theta, calls_gamma, calls_vega);
+                // console.log(day);
+                // console.log(month);
+                // console.log(monthString);
+                // console.log(trimmedCleanCallInstType);
+                // console.log(strike_instrument);
+                // console.log(call_inst_type);
+                console.log(calls_delta, calls_theta, calls_gamma, calls_vega);
             }
 
             function putMonthAbbreviation(monthNumber) {
@@ -3277,7 +3271,7 @@
                 $('#puts_gamma').val(puts_gamma);
                 $('#puts_vega').val(puts_vega);
 
-                //console.log(puts_delta, puts_theta, puts_gamma, puts_vega);
+                console.log(puts_delta, puts_theta, puts_gamma, puts_vega);
             }
 
 
@@ -3286,7 +3280,7 @@
 
 
             function displayTable(data, lot_size, spot_strike) {
-                //console.log(lot_size);
+                console.log(lot_size);
                 const tableBody = $('.option_simulator_body');
                 tableBody.empty();
 
@@ -3302,7 +3296,7 @@
 
                 var closestStrikePrice = null;
                 var closestDiff = Number.MAX_VALUE;
-                //console.log('closestDiff' + closestDiff);
+                console.log('closestDiff' + closestDiff);
 
 
                 data.forEach(row => {
@@ -3377,13 +3371,13 @@
                     // Add more cells for other properties
                     tableBody.append(newRow);
                 });
-                //console.log("Closest Strike Price" + closestStrikePrice);
+                console.log("Closest Strike Price" + closestStrikePrice);
                 var optionChainTable = $(".option_simulator_body");
 
 
                 $(".straddle").on("click", function () {
 
-                    //console.log('closestStrikePrice_main' + closestStrikePrice);
+                    console.log('closestStrikePrice_main' + closestStrikePrice);
                     var clostest_strike_value = $(".closest_value").text()
                     var $straddle = $(this);
 
@@ -3412,7 +3406,7 @@
                                     $("#call_add_position").click();
                                     $("#put_add_position").click();
 
-                                    straddle_calculation("straddle")
+                                    straddle_calculation()
                                 },); // Delay of 100ms
                             }
                         });
@@ -3423,7 +3417,7 @@
 
                 $(".strangle").on("click", function () {
 
-                    //console.log('closestStrikePrice_main' + closestStrikePrice);
+                    console.log('closestStrikePrice_main' + closestStrikePrice);
                     var closestStrikePrice = parseFloat($(".closest_value").text()); // Corrected variable name
 
                     var $strangle = $(this);
@@ -3459,13 +3453,13 @@
                             }
                         }
 
-                        //console.log("Previous 5 Strike Prices:", prev5);
-                        //console.log("Next 5 Strike Prices:", forw5);
+                        console.log("Previous 5 Strike Prices:", prev5);
+                        console.log("Next 5 Strike Prices:", forw5);
 
                         if (prev5.length === 5 && forw5.length === 5) {
                             var lastIndexPrev = prev5[prev5.length - 1];
                             var lastIndexForw = forw5[forw5.length - 1];
-                            //console.log(lastIndexForw, lastIndexPrev);
+                            console.log(lastIndexForw, lastIndexPrev);
 
                             // Find the closest row for lastIndexPrev and click on Auto_puts_short_click
                             var closestRowPrev = optionChainTable.find(".simulator_strike:contains(" + lastIndexPrev + ")").closest(".simulator_option_tr");
@@ -3484,7 +3478,7 @@
                             $("#call_add_position").click();
                             $("#put_add_position").click();
 
-                            straddle_calculation("strangle");
+                            straddle_calculation();
                         }
                     }
                 });
@@ -3529,7 +3523,7 @@
 
                         // Click the add position button
                         $("#call_add_position").click();
-
+                      
 
                         // Find the index of the row where strikePrice is new_closestStrikePrice
                         var currentIndex = strikePrices.indexOf(new_closestStrikePrice);
@@ -3547,7 +3541,7 @@
                         }
 
 
-                        //console.log("Next 5 Strike Prices:", forw5);
+                        console.log("Next 5 Strike Prices:", forw5);
 
 
 
@@ -3556,7 +3550,7 @@
                         if (forw5.length === 3) {
 
                             var lastIndexForw = forw5[forw5.length - 1];
-                            //console.log(lastIndexForw);
+                            console.log(lastIndexForw);
 
 
                             $("#callBuyRadio").prop('checked', true);
@@ -3573,364 +3567,12 @@
 
                             $("#call_add_position").click();
 
-                            straddle_calculation("spread");
+                            straddle_calculation();
                         }
                     }
                     $("#putBuyRadio").prop('checked', true);
-                    $("#callBuyRadio").prop('checked', true);
+                $("#callBuyRadio").prop('checked', true);
                 });
-
-
-
-                $(".iron_fly").on("click", function () {
-
-
-                    var new_closestStrikePrice = parseFloat($(".closest_value").text()); // Corrected variable name
-
-                    var $spread = $(this);
-
-                    if (!$spread.hasClass("simulator_active_strategy")) {
-                        clearPreviousSelections()
-                        // Remove and set the active class
-                        $(".option_simulator_strategy").removeClass("simulator_active_strategy");
-                        $spread.addClass("simulator_active_strategy");
-
-
-
-
-
-                        var strikePrices = optionChainTable.find(".simulator_strike").map(function () {
-                            var rowStrikePrice = parseFloat($(this).text());
-                            if (rowStrikePrice === parseFloat(new_closestStrikePrice)) {
-                                var $this = $(this);
-                                $this.closest(".simulator_option_tr")
-                                    .find(".calls_action_btn,.puts_action_btn")
-                                    .one("click", function (e) {
-                                        e.preventDefault();
-                                        $(".modal").hide();
-                                    })
-                                    .click();
-
-                                // Check the radio button here
-                                $("#callSellRadio")
-                                    .prop("checked", true);
-                                $("#putSellRadio")
-                                    .prop("checked", true);
-                            }
-
-                            return parseFloat($(this).text());
-                        }).get();
-
-                        // Click the add position button
-                        $("#call_add_position").click();
-                        $("#put_add_position").click();
-
-                        var currentIndex = strikePrices.indexOf(new_closestStrikePrice);
-
-                        // Find the index of the row where strikePrice is new_closestStrikePrice
-
-                        // Calculate the previous 5 strike prices
-
-
-                        // Calculate the next 5 strike prices
-                        var forw5 = [];
-                        for (var j = currentIndex + 1; j < strikePrices.length && forw5.length < 3; j++) {
-                            var rowStrikePrice = strikePrices[j];
-                            if (!isNaN(rowStrikePrice)) {
-                                forw5.push(rowStrikePrice);
-                            }
-                        }
-
-
-                        //console.log("Next 5 Strike Prices:", forw5);
-
-                        var prev3 = [];
-                        for (var i = currentIndex - 1; i >= 0 && prev3.length < 3; i--) {
-                            var rowStrikePrice = strikePrices[i];
-                            if (!isNaN(rowStrikePrice)) {
-                                prev3.push(rowStrikePrice);
-                            }
-                        }
-
-
-
-
-                        if (forw5.length === 3 && prev3.length === 3) {
-
-                            var lastIndexForw = forw5[forw5.length - 1];
-                            var lastIndexPrev = prev3[prev3.length - 1];
-                            //console.log(lastIndexForw);
-
-
-                            $("#callBuyRadio").prop('checked', true);
-                            $("#putBuyRadio").prop('checked', true);
-
-
-
-                            // Find the closest row for lastIndexForw and click on Auto_calls_short_click
-                            var closestRowForw = optionChainTable.find(".simulator_strike:contains(" + lastIndexForw + ")").closest(".simulator_option_tr");
-                            closestRowForw.find(".calls_action_btn").one("click", function (e) {
-                                e.preventDefault();
-                                $(".modal").hide();
-                            }).click();
-                            var closestRowForw = optionChainTable.find(".simulator_strike:contains(" + lastIndexPrev + ")").closest(".simulator_option_tr");
-                            closestRowForw.find(".puts_action_btn").one("click", function (e) {
-                                e.preventDefault();
-                                $(".modal").hide();
-                            }).click();
-
-
-                            $("#call_add_position").click();
-                            $("#put_add_position").click();
-
-                            straddle_calculation("iron_fly");
-                        }
-                    }
-                    $("#putBuyRadio").prop('checked', true);
-                    $("#callBuyRadio").prop('checked', true);
-                });
-
-
-                $(".iron_condor").on("click", function () {
-
-
-                    var new_closestStrikePrice = parseFloat($(".closest_value").text()); // Corrected variable name
-
-                    var $spread = $(this);
-
-                    if (!$spread.hasClass("simulator_active_strategy")) {
-                        clearPreviousSelections()
-                        // Remove and set the active class
-                        $(".option_simulator_strategy").removeClass("simulator_active_strategy");
-                        $spread.addClass("simulator_active_strategy");
-
-
-
-
-
-                        var strikePrices = optionChainTable.find(".simulator_strike").map(function () {
-
-
-                            return parseFloat($(this).text());
-                        }).get();
-
-                        // Click the add position button
-
-
-                        var currentIndex = strikePrices.indexOf(new_closestStrikePrice);
-
-                        // Find the index of the row where strikePrice is new_closestStrikePrice
-
-                        // Calculate the previous 5 strike prices
-
-
-                        // Calculate the next 5 strike prices
-                        var forw3 = [];
-                        for (var j = currentIndex + 1; j < strikePrices.length && forw3.length < 3; j++) {
-                            var rowStrikePrice = strikePrices[j];
-                            if (!isNaN(rowStrikePrice)) {
-                                forw3.push(rowStrikePrice);
-                            }
-                        }
-                        var forw4 = [];
-                        for (var a = currentIndex + 1; a < strikePrices.length && forw4.length < 4; a++) {
-                            var rowStrikePrice = strikePrices[a];
-                            if (!isNaN(rowStrikePrice)) {
-                                forw4.push(rowStrikePrice);
-                            }
-                        }
-
-
-                        //console.log("Next 5 Strike Prices:", forw3, forw4);
-
-                        var prev3 = [];
-                        for (var k = currentIndex - 1; k >= 0 && prev3.length < 3; k--) {
-                            var rowStrikePrice = strikePrices[k];
-                            if (!isNaN(rowStrikePrice)) {
-                                prev3.push(rowStrikePrice);
-                            }
-                        }
-                        var prev4 = [];
-                        for (var i = currentIndex - 1; i >= 0 && prev4.length < 4; i--) {
-                            var rowStrikePrice = strikePrices[i];
-                            if (!isNaN(rowStrikePrice)) {
-                                prev4.push(rowStrikePrice);
-                            }
-                        }
-
-                        //console.log("Next 5 Strike Prices:", prev3, prev4);
-                        // First Condition
-                        if (forw3.length === 3 && prev3.length === 3) {
-                            var lastIndexForw = forw3[forw3.length - 1];
-                            var lastIndexPrev = prev3[prev3.length - 1];
-                            //console.log(lastIndexForw);
-                            $("#putSellRadio").prop('checked', true);
-                            $("#callSellRadio").prop('checked', true);
-
-                            var closestRowForw = optionChainTable.find(".simulator_strike:contains(" + lastIndexPrev + ")").closest(".simulator_option_tr");
-
-                            closestRowForw.find(".puts_action_btn").one("click", function (e) {
-                                e.preventDefault();
-                                $(".modal").hide();
-                            }).click();
-                            var closestRowForw = optionChainTable.find(".simulator_strike:contains(" + lastIndexForw + ")").closest(".simulator_option_tr");
-                            closestRowForw.find(".calls_action_btn").one("click", function (e) {
-                                e.preventDefault();
-                                $(".modal").hide();
-                            }).click();
-
-
-
-                            $("#put_add_position").click();
-                            $("#call_add_position").click();
-                        }
-
-                        // Second Condition
-                        if (prev4.length === 4 && forw4.length === 4) {
-                            var lastIndexPrev4 = prev4[prev4.length - 1];
-                            var lastIndexForw4 = forw4[forw4.length - 1];
-                            $("#callBuyRadio").prop('checked', true);
-                            $("#putBuyRadio").prop('checked', true);
-                            var closestRowForw4 = optionChainTable.find(".simulator_strike:contains(" + lastIndexForw4 + ")").closest(".simulator_option_tr");
-                            closestRowForw4.find(".calls_action_btn").one("click", function (e) {
-                                e.preventDefault();
-                                $(".modal").hide();
-                            }).click();
-
-                            var closestRowForw4 = optionChainTable.find(".simulator_strike:contains(" + lastIndexPrev4 + ")").closest(".simulator_option_tr");
-
-                            closestRowForw4.find(".puts_action_btn").one("click", function (e) {
-                                e.preventDefault();
-                                $(".modal").hide();
-                            }).click();
-
-                            $("#call_add_position").click();
-                            $("#put_add_position").click();
-                        }
-
-                        straddle_calculation("iron_fly");
-
-
-
-                    }
-                    $("#putBuyRadio").prop('checked', true);
-                    $("#callBuyRadio").prop('checked', true);
-                });
-
-                $(".jade_lizard").on("click", function () {
-
-
-var new_closestStrikePrice = parseFloat($(".closest_value").text()); // Corrected variable name
-
-var $spread = $(this);
-
-if (!$spread.hasClass("simulator_active_strategy")) {
-    clearPreviousSelections()
-    // Remove and set the active class
-    $(".option_simulator_strategy").removeClass("simulator_active_strategy");
-    $spread.addClass("simulator_active_strategy");
-
-
-
-
-
-    var strikePrices = optionChainTable.find(".simulator_strike").map(function () {
-
-
-        return parseFloat($(this).text());
-    }).get();
-
-    // Click the add position button
-
-
-    var currentIndex = strikePrices.indexOf(new_closestStrikePrice);
-
-    // Find the index of the row where strikePrice is new_closestStrikePrice
-
-    // Calculate the previous 5 strike prices
-
-
-    // Calculate the next 5 strike prices
-    var forw2 = [];
-    for (var j = currentIndex + 1; j < strikePrices.length && forw2.length < 2; j++) {
-        var rowStrikePrice = strikePrices[j];
-        if (!isNaN(rowStrikePrice)) {
-            forw2.push(rowStrikePrice);
-        }
-    }
-    var forw4 = [];
-    for (var a = currentIndex + 1; a < strikePrices.length && forw4.length < 4; a++) {
-        var rowStrikePrice = strikePrices[a];
-        if (!isNaN(rowStrikePrice)) {
-            forw4.push(rowStrikePrice);
-        }
-    }
-
-
-    //console.log("Next 5 Strike Prices:", forw2, forw4);
-
-   
-    var prev4 = [];
-    for (var i = currentIndex - 1; i >= 0 && prev4.length < 4; i--) {
-        var rowStrikePrice = strikePrices[i];
-        if (!isNaN(rowStrikePrice)) {
-            prev4.push(rowStrikePrice);
-        }
-    }
-
-    //console.log("Next 5 Strike Prices:", prev4);
-    // First Condition
-    if (forw2.length === 2 && prev4.length === 4) {
-        var lastIndexForw = forw2[forw2.length - 1];
-        var lastIndexPrev = prev4[prev4.length - 1];
-        //console.log(lastIndexForw);
-        $("#putSellRadio").prop('checked', true);
-        $("#callSellRadio").prop('checked', true);
-
-        var closestRowForw = optionChainTable.find(".simulator_strike:contains(" + lastIndexPrev + ")").closest(".simulator_option_tr");
-
-        closestRowForw.find(".puts_action_btn").one("click", function (e) {
-            e.preventDefault();
-            $(".modal").hide();
-        }).click();
-        var closestRowForw = optionChainTable.find(".simulator_strike:contains(" + lastIndexForw + ")").closest(".simulator_option_tr");
-        closestRowForw.find(".calls_action_btn").one("click", function (e) {
-            e.preventDefault();
-            $(".modal").hide();
-        }).click();
-
-
-
-        $("#put_add_position").click();
-        $("#call_add_position").click();
-    }
-
-    // Second Condition
-    if (forw4.length === 4) {
-      
-        var lastIndexForw4 = forw4[forw4.length - 1];
-        $("#callBuyRadio").prop('checked', true);
-      
-        var closestRowForw4 = optionChainTable.find(".simulator_strike:contains(" + lastIndexForw4 + ")").closest(".simulator_option_tr");
-        closestRowForw4.find(".calls_action_btn").one("click", function (e) {
-            e.preventDefault();
-            $(".modal").hide();
-        }).click();
-
-   
-
-        $("#call_add_position").click();
-    
-    }
-
-    straddle_calculation("jade_lizard");
-
-
-
-}
-$("#putBuyRadio").prop('checked', true);
-$("#callBuyRadio").prop('checked', true);
-});
 
 
 
@@ -3972,492 +3614,132 @@ $("#callBuyRadio").prop('checked', true);
             }
 
 
-            function straddle_calculation(Strategy_args) {
-                var Strategy_parmeters = $(".Strategy_parmeters").text(Strategy_args)
-
-                if (Strategy_args === "straddle" || Strategy_args === "strangle") {
-
-                    var leftMyTable = $("#myTable");
-                    // Now, attempt to get the value
-                    var lot_size_simulator = $(".lot_size_value").text();
-                    //console.log("Lot Size Simulator: " + parseInt(lot_size_simulator));
-
-                    // Now, attempt to get the instrument type
-                    var max_profit = $("#max_profit");
-                    var max_loss = $("#max_loss");
-                    var break_evens = $("#break_evens");
-                    var max_profit_value = "Unlimited";
+            function straddle_calculation() {
 
 
-                    var max_loss_value = 0;
-                    var breakeven = 0;
-                    var strike_price_all = 0;
-                    var count = 0;
+                var leftMyTable = $("#myTable");
+                // Now, attempt to get the value
+                var lot_size_simulator = $(".lot_size_value").text();
+                console.log("Lot Size Simulator: " + parseInt(lot_size_simulator));
 
-                    leftMyTable.find(".main_logic").each(function (index) {
-                        var $parent = $(this);
+                // Now, attempt to get the instrument type
+                var max_profit = $("#max_profit");
+                var max_loss = $("#max_loss");
+                var break_evens = $("#break_evens");
+                var max_profit_value = "Unlimited";
 
-                        // Check if the parent has the red-option-indicator class
-                        if (!$parent.hasClass("red-option-indicator")) {
-                            var premium = parseFloat($parent.find(".ltp_edit").text());
-                            var lot_size = parseFloat($parent.find(".lot_size_option_simulator").text());
-                            var breakeven_premium = parseFloat($parent.find(".ltp_edit").text());
 
-                            //console.log("Premium: " + premium);
-                            //console.log("Lot Size: " + lot_size);
-                            //console.log("Break-Even Premium: " + breakeven_premium);
+                var max_loss_value = 0;
+                var breakeven = 0;
+                var strike_price_all = 0;
+                var count = 0;
 
-                            max_loss_value += premium * lot_size;
+                leftMyTable.find(".main_logic").each(function (index) {
+                    var $parent = $(this);
 
-                            //console.log("max_loss_value " + max_loss_value);
-                            breakeven += breakeven_premium;
+                    // Check if the parent has the red-option-indicator class
+                    if (!$parent.hasClass("red-option-indicator")) {
+                        var premium = parseFloat($parent.find(".ltp_edit").text());
+                        var lot_size = parseFloat($parent.find(".lot_size_option_simulator").text());
+                        var breakeven_premium = parseFloat($parent.find(".ltp_edit").text());
 
-                            var strike_price = $parent.find(".instrument_type_edit").text();
+                        console.log("Premium: " + premium);
+                        console.log("Lot Size: " + lot_size);
+                        console.log("Break-Even Premium: " + breakeven_premium);
 
-                            // Reverse the strike_price value
-                            var reversed_string = strike_price.split('').reverse().join('');
+                        max_loss_value += premium * lot_size;
+                        breakeven += breakeven_premium;
 
-                            // Extract the numeric part using regular expression
-                            var numeric_part = reversed_string.match(/\d+/); // This extracts one or more consecutive digits
-                            var numeric_value = numeric_part ? parseFloat(numeric_part[0].split('').reverse().join('')) : 0; // Reverse back and convert to a numeric value
+                        var strike_price = $parent.find(".instrument_type_edit").text();
 
-                            //console.log('numeric_value: ' + numeric_value);
+                        // Reverse the strike_price value
+                        var reversed_string = strike_price.split('').reverse().join('');
 
-                            strike_price_all += numeric_value;
-                            count++;
-                        } else {
-                            //console.log("Skipping calculation for element at index " + index);
-                        }
-                    });
+                        // Extract the numeric part using regular expression
+                        var numeric_part = reversed_string.match(/\d+/); // This extracts one or more consecutive digits
+                        var numeric_value = numeric_part ? parseFloat(numeric_part[0].split('').reverse().join('')) : 0; // Reverse back and convert to a numeric value
 
-                    //console.log("Max Loss Value: " + max_loss_value);
+                        console.log('numeric_value: ' + numeric_value);
 
-                    // Calculate the average
-                    var average_strike_price = strike_price_all / count;
+                        strike_price_all += numeric_value;
+                        count++;
+                    } else {
+                        console.log("Skipping calculation for element at index " + index);
+                    }
+                });
 
-                    //console.log("Average Strike Price: " + average_strike_price);
+                console.log("Max Loss Value: " + max_loss_value);
 
-                    // Calculate break-even values
-                    var lower_break_even = average_strike_price - breakeven;
-                    var upper_break_even = average_strike_price + breakeven;
+                // Calculate the average
+                var average_strike_price = strike_price_all / count;
 
-                    // Set the text for break_evens
-                    break_evens.text(lower_break_even.toFixed(2) + " - " + upper_break_even.toFixed(2));
+                console.log("Average Strike Price: " + average_strike_price);
+
+                // Calculate break-even values
+                var lower_break_even = average_strike_price - breakeven;
+                var upper_break_even = average_strike_price + breakeven;
+
+                // Set the text for break_evens
+                break_evens.text(lower_break_even.toFixed(2) + " - " + upper_break_even.toFixed(2));
 
 
 
 
 
 
-                    // Initialize an array to store all values
-                    var allValues = [];
 
-                    // Initialize arrays to store "-" and "+" values
-                    var negativeValues = [];
-                    var positiveValues = [];
 
-                    // Loop through elements with class "short_long"
-                    leftMyTable.find(".short_long").each(function () {
-                        var value = $(this).text().trim(); // Get the text and remove any leading/trailing spaces
-                        allValues.push(value); // Add the value to the allValues array
-                        if (value === "-") {
-                            negativeValues.push(value); // Add "-" values to the negativeValues array
-                        } else if (value === "+") {
-                            positiveValues.push(value); // Add "+" values to the positiveValues array
-                        }
-                    });
+                var All_calls = [];
 
-                    // Check the lengths of negativeValues and positiveValues
-                    var negativeLength = negativeValues.length;
-                    var positiveLength = positiveValues.length;
+                leftMyTable.find(".short_long").each(function () {
+                    var lots = $(this).text();
+                    console.log(lots);
+                    // Extract the numeric part using substr
+                    var calls = lots.replace(/\s+/g, '').toString();
 
-                    // Log which one is longer or if they are equal
-                    if (negativeLength > positiveLength) {
-                        max_profit.text((max_loss_value * parseFloat(lot_size_simulator)).toFixed(2));
-                        max_loss.text(max_profit_value);
-                    } else if (positiveLength > negativeLength) {
+                    All_calls.push(calls);
+                });
+                console.log(All_calls);
+                // Initialize flags to keep track of the first occurrence of +1x and -1x
+                var plusFirst = false;
+                var minusFirst = false;
+
+                // Loop through the All_calls array and determine which type comes first
+                for (var i = 0; i < All_calls.length; i++) {
+                    var callType = All_calls[i];
+                    if (callType === "+" && !plusFirst) {
+                        plusFirst = true;
+                    } else if (callType === "-" && !minusFirst) {
+                        minusFirst = true;
+                    }
+                }
+
+                // Check if both +1x and -1x were found and if they are equal in number
+                if (plusFirst && minusFirst && All_calls.filter(call => call === "+").length === All_calls.filter(call => call === "-").length) {
+
+                    if (plusFirst) {
+                        console.log("+ comes first. MORE +");
 
                         max_profit.text(max_profit_value);
                         max_loss.text((max_loss_value * parseFloat(lot_size_simulator)).toFixed(2));
-                    } else {
+                    } else if (minusFirst) {
+                        console.log("- comes first. MORE -");
 
-                        if (negativeValues[0] === "+") {
-                            max_profit.text(max_profit_value);
-                            max_loss.text((max_loss_value * parseFloat(lot_size_simulator)).toFixed(2));
-                        } else {
-                            max_profit.text((max_loss_value * parseFloat(lot_size_simulator)).toFixed(2));
-                            max_loss.text(max_profit_value);
-                        }
-                    }
-
-                    // Now, you have all values in the allValues array,
-                    // "-" values in negativeValues, and "+" values in positiveValues
-                    //console.log("All Values:", allValues);
-                    //console.log("Negative Values:", negativeValues);
-                    //console.log("Positive Values:", positiveValues);
-                    $("#ratio").text("No Defined")
-
-
-                } else if (Strategy_args === "spread" || Strategy_args === "iron_fly") {
-
-                    var leftMyTable = $("#myTable");
-                    // Now, attempt to get the value
-                    var lot_size_simulator = $(".lot_size_value").text();
-                    //console.log("Lot Size Simulator: " + parseInt(lot_size_simulator));
-
-                    // Now, attempt to get the instrument type
-                    var max_profit = $("#max_profit");
-                    var max_loss = $("#max_loss");
-                    var break_evens = $("#break_evens");
-                    var max_profit_value = 0;
-
-
-                    var max_loss_value = 0;
-                    var breakeven = 0;
-                    var strike_price_all = 0;
-                    var count = 0;
-                    var premiumsArray = [];
-                    var numericValuesArray = [];
-                    var lot_size = $(".lot_size_value").text()
-                    leftMyTable.find(".main_logic").each(function (index) {
-                        var $parent = $(this);
-
-                        // Check if the parent has the red-option-indicator class
-                        if (!$parent.hasClass("red-option-indicator")) {
-                            var premium = parseFloat($parent.find(".ltp_edit").text());
-                            var breakeven_premium = parseFloat($parent.find(".ltp_edit").text());
-                            var lot_size = parseFloat($parent.find(".lot_size_option_simulator").text());
-                            var short_long = $parent.find(".short_long").text();
-                            //console.log('Short Long' + short_long);
-
-
-                            //console.log("Premium: " + premium);
-                            //console.log("Lot Size: " + lot_size);
-                            //console.log("Break-Even Premium: " + breakeven_premium);
-
-
-
-                            breakeven += breakeven_premium;
-
-                            var strike_price = $parent.find(".instrument_type_edit").text();
-
-                            // Reverse the strike_price value
-                            var reversed_string = strike_price.split('').reverse().join('');
-
-                            // Extract the numeric part using regular expression
-                            var numeric_part = reversed_string.match(/\d+/); // This extracts one or more consecutive digits
-                            var numeric_value = numeric_part ? parseFloat(numeric_part[0].split('').reverse().join('')) : 0; // Reverse back and convert to a numeric value
-
-                            //console.log('numeric_value: ' + numeric_value);
-
-                            strike_price_all += numeric_value;
-
-                            if (short_long === "+") {
-
-                                premiumsArray.push(-premium * lot_size);
-                                //console.log('HIi there negative premium');
-
-
-                            } else {
-                                premiumsArray.push(premium * lot_size);
-                                //console.log('HIi there positive premium');
-
-                            }
-                            numericValuesArray.push(parseFloat(numeric_value));
-                            count++;
-                        } else {
-                            //console.log("Skipping calculation for element at index " + index);
-                        }
-                    });
-                    //console.log(premiumsArray);
-                    //console.log(numericValuesArray);
-
-
-                    var premiumDifferences = 0
-                    var numericDifferences = 0
-
-                    // Calculate the differences for premiumsArray
-                    for (var i = 0; i < premiumsArray.length; i++) {
-
-                        var difference = premiumsArray[i]
-
-
-                        premiumDifferences += difference;
-
-                    }
-
-                    // Calculate the differences for numericValuesArray
-                    for (var i = 0; i < numericValuesArray.length; i++) {
-                        for (var j = i + 1; j < numericValuesArray.length; j++) {
-                            var difference = numericValuesArray[i] - numericValuesArray[j];
-                            numericDifferences += difference;
-                        }
-                    }
-
-                    //console.log("Premium Differences: " + premiumDifferences);
-                    //console.log("Numeric Differences: " + numericDifferences);
-
-                    max_profit_value = numericDifferences - premiumDifferences * lot_size_simulator
-
-
-                    max_loss_value = premiumDifferences
-                    var ratio = Math.abs(max_profit_value) / Math.abs(max_loss_value * lot_size_simulator);
-
-                    $("#ratio").text(ratio.toFixed(2))
-
-
-
-                    // Calculate the average
-                    var average_strike_price = strike_price_all / count;
-
-                    //console.log("Average Strike Price: " + average_strike_price);
-
-                    // Calculate break-even values
-                    var lower_break_even = average_strike_price - breakeven;
-                    var upper_break_even = average_strike_price + breakeven;
-
-                    // Set the text for break_evens
-                    break_evens.text(lower_break_even.toFixed(2) + " - " + upper_break_even.toFixed(2));
-
-
-
-
-
-
-                    // Initialize an array to store all values
-                    var allValues = [];
-
-                    // Initialize arrays to store "-" and "+" values
-                    var negativeValues = [];
-                    var positiveValues = [];
-
-                    // Loop through elements with class "short_long"
-                    leftMyTable.find(".short_long").each(function () {
-                        var value = $(this).text().trim(); // Get the text and remove any leading/trailing spaces
-                        allValues.push(value); // Add the value to the allValues array
-                        if (value === "-") {
-                            negativeValues.push(value); // Add "-" values to the negativeValues array
-                        } else if (value === "+") {
-                            positiveValues.push(value); // Add "+" values to the positiveValues array
-                        }
-                    });
-
-                    // Check the lengths of negativeValues and positiveValues
-                    var negativeLength = negativeValues.length;
-                    var positiveLength = positiveValues.length;
-
-                    // Log which one is longer or if they are equal
-                    if (negativeLength > positiveLength) {
                         max_profit.text((max_loss_value * parseFloat(lot_size_simulator)).toFixed(2));
-                        max_loss.text(max_profit_value.toFixed(2));
-                    } else if (positiveLength > negativeLength) {
-
-                        max_profit.text(max_profit_value.toFixed(2));
-                        max_loss.text((max_loss_value * parseFloat(lot_size_simulator)).toFixed(2));
-                    } else {
-
-                        if (negativeValues[0] === "+") {
-                            max_profit.text(max_profit_value.toFixed(2));
-                            max_loss.text((max_loss_value * parseFloat(lot_size_simulator)).toFixed(2));
-                        } else {
-                            max_profit.text((max_loss_value * parseFloat(lot_size_simulator)).toFixed(2));
-                            max_loss.text(max_profit_value.toFixed(2));
-                        }
+                        max_loss.text(max_profit_value);
                     }
+                } else if (plusFirst) {
+                    console.log("MORE +");
 
-                    // Now, you have all values in the allValues array,
-                    // "-" values in negativeValues, and "+" values in positiveValues
-                    //console.log("All Values:", allValues);
-                    //console.log("Negative Values:", negativeValues);
-                    //console.log("Positive Values:", positiveValues);
-
-
-
+                    max_profit.text(max_profit_value);
+                    max_loss.text((max_loss_value * parseFloat(lot_size_simulator)).toFixed(2));
+                } else if (minusFirst) {
+                    console.log("MORE -");
+                    max_profit.text((max_loss_value * parseFloat(lot_size_simulator)).toFixed(2));
+                    max_loss.text(max_profit_value);
+                } else {
+                    console.log("No + or - found.");
                 }
-
-                else if (Strategy_args === "jade_lizard") {
-
-var leftMyTable = $("#myTable");
-// Now, attempt to get the value
-var lot_size_simulator = $(".lot_size_value").text();
-//console.log("Lot Size Simulator: " + parseInt(lot_size_simulator));
-
-// Now, attempt to get the instrument type
-var max_profit = $("#max_profit");
-var max_loss = $("#max_loss");
-var break_evens = $("#break_evens");
-var max_profit_value = 0;
-
-
-var max_loss_value = 0;
-var breakeven = 0;
-var strike_price_all = 0;
-var count = 0;
-var premiumsArray = [];
-var numericValuesArray = [];
-var lot_size = $(".lot_size_value").text()
-leftMyTable.find(".main_logic").each(function (index) {
-    var $parent = $(this);
-
-    // Check if the parent has the red-option-indicator class
-    if (!$parent.hasClass("red-option-indicator")) {
-        var premium = parseFloat($parent.find(".ltp_edit").text());
-        var breakeven_premium = parseFloat($parent.find(".ltp_edit").text());
-        var lot_size = parseFloat($parent.find(".lot_size_option_simulator").text());
-        var short_long = $parent.find(".short_long").text();
-        //console.log('Short Long' + short_long);
-
-
-        //console.log("Premium: " + premium);
-        //console.log("Lot Size: " + lot_size);
-        //console.log("Break-Even Premium: " + breakeven_premium);
-
-
-
-        breakeven += breakeven_premium;
-
-        var strike_price = $parent.find(".instrument_type_edit").text();
-
-        // Reverse the strike_price value
-        var reversed_string = strike_price.split('').reverse().join('');
-
-        // Extract the numeric part using regular expression
-        var numeric_part = reversed_string.match(/\d+/); // This extracts one or more consecutive digits
-        var numeric_value = numeric_part ? parseFloat(numeric_part[0].split('').reverse().join('')) : 0; // Reverse back and convert to a numeric value
-
-        //console.log('numeric_value: ' + numeric_value);
-
-        strike_price_all += numeric_value;
-
-        if (short_long === "+") {
-
-            premiumsArray.push(-premium * lot_size);
-            //console.log('HIi there negative premium');
-
-
-        } else {
-            premiumsArray.push(premium * lot_size);
-            //console.log('HIi there positive premium');
-
-        }
-        numericValuesArray.push(parseFloat(numeric_value));
-        count++;
-    } else {
-        //console.log("Skipping calculation for element at index " + index);
-    }
-});
-//console.log(premiumsArray);
-//console.log(numericValuesArray);
-
-
-var premiumDifferences = 0
-var numericDifferences = 0
-
-// Calculate the differences for premiumsArray
-for (var i = 0; i < premiumsArray.length; i++) {
-
-    var difference = premiumsArray[i]
-
-
-    premiumDifferences += difference;
-
-}
-
-// Calculate the differences for numericValuesArray
-for (var i = 0; i < numericValuesArray.length; i++) {
-    for (var j = i + 1; j < numericValuesArray.length; j++) {
-        var difference = numericValuesArray[i] - numericValuesArray[j];
-        numericDifferences += difference;
-    }
-}
-
-//console.log("Premium Differences: " + premiumDifferences);
-//console.log("Numeric Differences: " + numericDifferences);
-
-max_profit_value = "Unlimited"
-
-
-max_loss_value = premiumDifferences
-var ratio = Math.abs(max_profit_value) / Math.abs(max_loss_value * lot_size_simulator);
-
-$("#ratio").text(ratio.toFixed(2))
-
-
-
-// Calculate the average
-var average_strike_price = strike_price_all / count;
-
-//console.log("Average Strike Price: " + average_strike_price);
-
-// Calculate break-even values
-var lower_break_even = average_strike_price - breakeven;
-var upper_break_even = average_strike_price + breakeven;
-
-// Set the text for break_evens
-break_evens.text(lower_break_even.toFixed(2) + " - " + upper_break_even.toFixed(2));
-
-
-
-
-
-
-// Initialize an array to store all values
-var allValues = [];
-
-// Initialize arrays to store "-" and "+" values
-var negativeValues = [];
-var positiveValues = [];
-
-// Loop through elements with class "short_long"
-leftMyTable.find(".short_long").each(function () {
-    var value = $(this).text().trim(); // Get the text and remove any leading/trailing spaces
-    allValues.push(value); // Add the value to the allValues array
-    if (value === "-") {
-        negativeValues.push(value); // Add "-" values to the negativeValues array
-    } else if (value === "+") {
-        positiveValues.push(value); // Add "+" values to the positiveValues array
-    }
-});
-
-// Check the lengths of negativeValues and positiveValues
-var negativeLength = negativeValues.length;
-var positiveLength = positiveValues.length;
-
-// Log which one is longer or if they are equal
-if (negativeLength > positiveLength) {
-    max_profit.text((max_loss_value * parseFloat(lot_size_simulator)).toFixed(2));
-    max_loss.text(max_profit_value);
-} else if (positiveLength > negativeLength) {
-
-    max_profit.text(max_profit_value);
-    max_loss.text((max_loss_value * parseFloat(lot_size_simulator)).toFixed(2));
-} else {
-
-    if (negativeValues[0] === "+") {
-        max_profit.text(max_profit_value);
-        max_loss.text((max_loss_value * parseFloat(lot_size_simulator)).toFixed(2));
-    } else {
-        max_profit.text((max_loss_value * parseFloat(lot_size_simulator)).toFixed(2));
-        max_loss.text(max_profit_value);
-    }
-}
-
-// Now, you have all values in the allValues array,
-// "-" values in negativeValues, and "+" values in positiveValues
-//console.log("All Values:", allValues);
-//console.log("Negative Values:", negativeValues);
-//console.log("Positive Values:", positiveValues);
-
-
-
-}
-
-
-
-
-
-
-
 
 
             }
