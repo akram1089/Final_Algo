@@ -2811,7 +2811,8 @@
                     });
 
                     // Initialize the datepicker with the selected value
-                    const expiryDateInput = $('#startDate');
+                    const expiryDateInput = $('#startDate')
+                    
                     expiryDateInput.val(data[0]);
 
                     // Attach the datepicker to the startDate input field
@@ -2852,71 +2853,109 @@
             // Event listener for start date change
             $('#startDate').on('input', function () {
                 // Call the function to send the data to Django view
+               
+                var previousClosestDate=$(this).val()
+                    var formatedString = previousClosestDate
+
+
+                    const formattedPreviousClosestDate = formatedString
+                        ? new Date(formatedString).toLocaleDateString('en-US', {
+                            year: 'numeric',
+                            month: 'short',
+                            day: 'numeric'
+                        })
+                        : '';
+                    //console.log(formattedPreviousClosestDate);
+                    $(".date_formated").text(formattedPreviousClosestDate)
                 sendDataToDjango();
+          
             });
 
 
             $('#btnOneDayBack').click(function () {
-
                 changeStartDate(-1);
                 updateButtonState(); // Update the button state after changing the date
                 prevOneDay_disable()
+                DateFormatted()
             });
             // Handle click on the button
             $('#btnOneDayForward').click(function () {
                 // Check if the button is disabled before calling changeStartDate
+            
                 if (!$(this).prop('disabled')) {
                     changeStartDate(1);
                     updateButtonState(); // Update the button state after changing the date
                     prevOneDay_disable()
                 }
+                DateFormatted()
             });
+
+
+            function DateFormatted() {
+                var previousClosestDate=$("#startDate").val()
+                    var formatedString = previousClosestDate
+
+
+                    const formattedPreviousClosestDate = formatedString
+                        ? new Date(formatedString).toLocaleDateString('en-US', {
+                            year: 'numeric',
+                            month: 'short',
+                            day: 'numeric'
+                        })
+                        : '';
+                    //console.log(formattedPreviousClosestDate);
+                    $(".date_formated").text(formattedPreviousClosestDate)
+            }
             var updatePrevBtn;
 
-            // Define a function to set up the event listener
-            function setupStartDateListener() {
-                const startDateInput = $("#startDate");
+// Define a function to set up the event listener
+function setupStartDateListener() {
+    const startDateInput = $("#startDate");
 
-                // Wait for the element to be available in the DOM
-                if (startDateInput.length === 0) {
-                    setTimeout(setupStartDateListener, 100);
-                    return;
-                }
+    // Wait for the element to be available in the DOM
+    if (startDateInput.length === 0) {
+        setTimeout(setupStartDateListener, 100);
+        return;
+    }
 
-                // Use setTimeout to capture the initial value after 1 second
-                setTimeout(function () {
-                    updatePrevBtn = startDateInput.val();
-                    //console.log("initial_date (after 1 second delay): " + updatePrevBtn);
+    // Use setTimeout to capture the initial value after 1 second
+    setTimeout(function () {
+        updatePrevBtn = startDateInput.val();
+        // Call prevOneDay_disable to initially disable the button
+        prevOneDay_disable();
+        // Now, you can log the initial value
+        console.log("initial_date (after 1 second delay): " + updatePrevBtn);
 
-                    const btnOneDayBack = $('#btnOneDayBack');
+        const btnOneDayBack = $('#btnOneDayBack');
 
-                    // Set up an event listener to update the prevOneDay_disable function whenever #startDate changes
-                    startDateInput.on("change", function () {
-                        updatePrevBtn = startDateInput.val(); // Save the new initial value
-                        prevOneDay_disable(); // Run the function
-                    });
+        // Set up an event listener to update the prevOneDay_disable function whenever #startDate changes
+        startDateInput.on("change", function () {
+            updatePrevBtn = startDateInput.val(); // Save the new initial value
+            prevOneDay_disable(); // Run the function
+        });
+    }, 1000); // Delay capturing the initial value by 1 second
+}
 
-                    // Call prevOneDay_disable to initially disable the button
-                    prevOneDay_disable();
-                }, 1000); // Delay capturing the initial value by 1 second
-            }
+function prevOneDay_disable() {
 
-            function prevOneDay_disable() {
-                const startDateInput = $("#startDate");
-                const startDateValue = startDateInput.val();
-                //console.log("current_date: " + startDateValue);
+    //console.log("current_date: " + startDateValue);
 
-                const btnOneDayBack = $('#btnOneDayBack');
+    const btnOneDayBack = $('#btnOneDayBack');
 
-                if (updatePrevBtn === startDateValue) {
-                    btnOneDayBack.prop('disabled', true);
-                } else {
-                    btnOneDayBack.prop('disabled', false);
-                }
-            }
+    if (isUpdatePrevBtnEqualToStartDate) {
+        btnOneDayBack.prop('disabled', true);
+    } else {
+        btnOneDayBack.prop('disabled', false);
+    }
+}
+function isUpdatePrevBtnEqualToStartDate() {
+    const startDateInput = $("#startDate");
+    const startDateValue = startDateInput.val();
+    return updatePrevBtn === startDateValue;
+}
 
-            // Call the function to set up the event listener
-            setupStartDateListener();
+// Call the function to set up the event listener
+
 
 
 
@@ -3021,7 +3060,7 @@
                         : '';
                     //console.log(formattedPreviousClosestDate);
                     $(".date_formated").text(formattedPreviousClosestDate)
-
+console.log(formattedPreviousClosestDate);
                     // Populate the dropdown options and set 'selected' property
                     data.forEach(date => {
                         const option = $('<option>').val(date).text(date);
@@ -3034,6 +3073,11 @@
                     //console.error('Error:', error);
                 });
             }
+
+
+
+
+
 
 
             // Event listener for "30 mint" backward button
@@ -3102,16 +3146,34 @@
                     hours = 9;
                     minutes = 20;
                     // Disable backward buttons
-                    $('#btn30MintBack').prop('disabled', true);
+                    if (isUpdatePrevBtnEqualToStartDate()) {
+                        $('#btn30MintBack').prop('disabled', true);
                     $('#btn15MintBack').prop('disabled', true);
-                    $('#btn5MintBack').prop('disabled', true);
+                   $('#btn5MintBack').prop('disabled', true);
+                    } else {
+                        $('#btn30MintBack').prop('disabled', false);
+                    $('#btn15MintBack').prop('disabled', false);
+                   $('#btn5MintBack').prop('disabled', false);
+                        $("#btnOneDayBack").click()
+                    }
+                   
+
+                   
+
+            
                 } else if (hours > 15 || (hours === 15 && minutes > 30)) {
                     hours = 15;
                     minutes = 30;
                     // Disable forward buttons
-                    $('#btn5MintForward').prop('disabled', true);
-                    $('#btn15MintForward').prop('disabled', true);
-                    $('#btn30MintForward').prop('disabled', true);
+           
+            if (areDatesEqual()) {
+                         $('#btn5MintForward').prop('disabled', true);
+                 $('#btn15MintForward').prop('disabled', true);
+                  $('#btn30MintForward').prop('disabled', true);
+            } else {
+                
+                $("#btnOneDayForward").click()
+            }
                 } else {
                     // Enable all buttons if the time is within the range
                     $('#btn30MintBack').prop('disabled', false);
@@ -3376,11 +3438,12 @@
 
                     // Add more cells for other properties
                     tableBody.append(newRow);
+                 
                 });
                 //console.log("Closest Strike Price" + closestStrikePrice);
                 var optionChainTable = $(".option_simulator_body");
 
-
+                setupStartDateListener();
                 $(".straddle").on("click", function () {
 
                     //console.log('closestStrikePrice_main' + closestStrikePrice);
