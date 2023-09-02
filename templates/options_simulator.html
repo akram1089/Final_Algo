@@ -2320,27 +2320,36 @@
 
             function edit_final_p_l() {
                 var ltp_values = [];
-                var current_values = [];
+var current_values = [];
 
-                // Iterate over elements with classes "ltp_edit_curr," "current_edit_curr," and "exit_edit_curr"
-                $(".ltp_edit_curr, .current_edit_curr, .exit_edit_curr ,.indicator_edit_table").each(function () {
-                    var $this = $(this);
-                    var value = parseInt($this.text());
-                    var lot_size = $(".lot_size_value").text()
-                    if ($this.hasClass("ltp_edit_curr")) {
-                        ltp_values.push(value);
-                    } else if ($this.hasClass("current_edit_curr")) {
-                        current_values.push(value);
-                    } else if ($this.hasClass("exit_edit_curr")) {
-                        if (value === 0) {
-                            // If exit_edit_curr is zero, add ltp_edit_curr and current_edit_curr
-                            var ltp = ltp_values.pop() || 0; // Get the last value from ltp_values or 0 if empty
-                            var current = current_values.pop() || 0; // Get the last value from current_values or 0 if empty
-                            current_values.push(ltp * parseFloat(lot_size) - current * parseFloat(lot_size));
-                        }
-                    }
-                });
+$(".ltp_edit_curr, .current_edit_curr, .exit_edit_curr, .indicator_edit_table, .short_long").each(function () {
+    var $this = $(this);
+    var value = parseInt($this.text());
+    var lot_size = $(".lot_size_value").text();
 
+    if ($this.hasClass("ltp_edit_curr")) {
+        ltp_values.push(value);
+    } else if ($this.hasClass("current_edit_curr")) {
+        current_values.push(value);
+    } else if ($this.hasClass("exit_edit_curr")) {
+        if (value === 0) {
+            // If exit_edit_curr is zero, calculate and push the difference
+            var ltp = ltp_values.pop() || 0; // Get the last value from ltp_values or 0 if empty
+            var current = current_values.pop() || 0; // Get the last value from current_values or 0 if empty
+            var difference = (ltp - current) * parseFloat(lot_size);
+
+            // Check the .short_long class for "+" or "-"
+            var shortLongClass = $this.closest('tr').find('.short_long');
+            if (shortLongClass.text().includes('+')) {
+                difference = Math.abs(difference); // Make the difference positive if "+" is present
+            }
+
+            current_values.push(difference);
+        }
+    }
+});
+
+console.log(current_values);
                 // Iterate over elements with class "indicator_edit_table"
                 $(".indicator_edit_table").each(function (index) {
                     var $this = $(this);
@@ -2575,27 +2584,40 @@
 
 
             function updateTotalPAndL() {
-                var final_p_and_l = 0;
-                var indicatorElements = $('.indicator_edit_table');
-                //console.log(indicatorElements);
+    var final_p_and_l = 0;
+    var p_l_table = $(".p_l_table"); // Cache the parent element
+    var indicatorElements = p_l_table.find('.indicator_edit_table');
 
-                for (var i = 0; i < indicatorElements.length; i++) {
-                    var currentValue = parseFloat(indicatorElements[i].textContent);
+    for (var i = 0; i < indicatorElements.length; i++) {
+        var currentValue = parseFloat(indicatorElements[i].textContent);
 
-                    //console.log(i);
-                    if (!isNaN(currentValue)) {
-                        final_p_and_l += currentValue;
-                    }
-                }
-                $(".p_l_table tr.total-row").remove();
+        // Find the corresponding .short_long element within the same parent
+        var shortLongElement = $(indicatorElements[i]).closest('tr').find('.short_long');
 
-                // Add your positions here...
+        // Check if the .short_long element contains "+", make currentValue positive
+        if (shortLongElement.text().includes('+')) {
+            currentValue = Math.abs(currentValue);
+        }
+        // Check if it contains "-", make currentValue negative
+        else if (shortLongElement.text().includes('-')) {
+            currentValue = -Math.abs(currentValue);
+        }
 
-                // Add the "Total" row at the end of the table
-                $(".p_l_table").append("<tr class='total-row'><td></td><td></td><td></td><td>Total P&L</td><td id='total_p_l'>0</td></tr>");
-                //console.log("Updated final_p_and_l:", final_p_and_l);
-                $("#total_p_l").text(final_p_and_l.toFixed(2)); // Display it with 2 decimal places
-            }
+        // Add currentValue to final_p_and_l if it's a valid number
+        if (!isNaN(currentValue)) {
+            final_p_and_l += currentValue;
+        }
+    }
+
+    p_l_table.find("tr.total-row").remove();
+
+    // Add your positions here...
+
+    // Add the "Total" row at the end of the table within the same parent
+    p_l_table.append("<tr class='total-row'><td></td><td></td><td></td><td>Total P&L</td><td id='total_p_l'>0</td></tr>");
+
+    p_l_table.find("#total_p_l").text(final_p_and_l.toFixed(2)); // Display it with 2 decimal places
+}
 
 
 
