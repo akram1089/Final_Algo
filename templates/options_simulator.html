@@ -2933,7 +2933,7 @@ function setupStartDateListener() {
             updatePrevBtn = startDateInput.val(); // Save the new initial value
             prevOneDay_disable(); // Run the function
         });
-    }, 1000); // Delay capturing the initial value by 1 second
+    }, 8000); // Delay capturing the initial value by 1 second
 }
 
 function prevOneDay_disable() {
@@ -2942,10 +2942,13 @@ function prevOneDay_disable() {
 
     const btnOneDayBack = $('#btnOneDayBack');
 
-    if (isUpdatePrevBtnEqualToStartDate) {
+    if (isUpdatePrevBtnEqualToStartDate()) {
         btnOneDayBack.prop('disabled', true);
     } else {
         btnOneDayBack.prop('disabled', false);
+         $('#btn30MintBack').prop('disabled', false);
+                    $('#btn15MintBack').prop('disabled', false);
+                   $('#btn5MintBack').prop('disabled', false);
     }
 }
 function isUpdatePrevBtnEqualToStartDate() {
@@ -2955,7 +2958,7 @@ function isUpdatePrevBtnEqualToStartDate() {
 }
 
 // Call the function to set up the event listener
-
+setupStartDateListener();
 
 
 
@@ -3083,14 +3086,14 @@ console.log(formattedPreviousClosestDate);
             // Event listener for "30 mint" backward button
             $('#btn30MintBack').click(function () {
                 changeStartTimeMinutes(-30);
-
+                setupStartDateListener();
 
             });
 
             // Event listener for "15 mint" backward button
             $('#btn15MintBack').click(function () {
                 changeStartTimeMinutes(-15);
-
+                setupStartDateListener();
 
             });
 
@@ -3098,27 +3101,27 @@ console.log(formattedPreviousClosestDate);
             $('#btn5MintBack').click(function () {
                 changeStartTimeMinutes(-5);
 
-
+                setupStartDateListener();
             });
 
             // Event listener for "5 mint" forward button
             $('#btn5MintForward').click(function () {
                 changeStartTimeMinutes(5);
 
-
+                setupStartDateListener();
             });
 
             // Event listener for "15 mint" forward button
             $('#btn15MintForward').click(function () {
                 changeStartTimeMinutes(15);
 
-
+                setupStartDateListener();
             });
 
             // Event listener for "30 mint" forward button
             $('#btn30MintForward').click(function () {
                 changeStartTimeMinutes(30);
-
+                setupStartDateListener();
             });
 
             function changeStartTimeMinutes(minutesDelta) {
@@ -3151,9 +3154,7 @@ console.log(formattedPreviousClosestDate);
                     $('#btn15MintBack').prop('disabled', true);
                    $('#btn5MintBack').prop('disabled', true);
                     } else {
-                        $('#btn30MintBack').prop('disabled', false);
-                    $('#btn15MintBack').prop('disabled', false);
-                   $('#btn5MintBack').prop('disabled', false);
+                       
                         $("#btnOneDayBack").click()
                     }
                    
@@ -3438,12 +3439,11 @@ console.log(formattedPreviousClosestDate);
 
                     // Add more cells for other properties
                     tableBody.append(newRow);
-                 
                 });
                 //console.log("Closest Strike Price" + closestStrikePrice);
                 var optionChainTable = $(".option_simulator_body");
 
-                setupStartDateListener();
+
                 $(".straddle").on("click", function () {
 
                     //console.log('closestStrikePrice_main' + closestStrikePrice);
