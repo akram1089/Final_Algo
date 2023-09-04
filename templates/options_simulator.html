@@ -2019,6 +2019,12 @@
                 border: 1px solid #4399EB !important;
                 outline: none !important;
             }
+
+            .indicator_edit {
+                font-family: system-ui;
+                font-weight: 700;
+                font-size: 10px;
+            }
         </style>
 
 
@@ -2320,36 +2326,40 @@
 
             function edit_final_p_l() {
                 var ltp_values = [];
-var current_values = [];
+                var current_values = [];
 
-$(".ltp_edit_curr, .current_edit_curr, .exit_edit_curr, .indicator_edit_table, .short_long").each(function () {
-    var $this = $(this);
-    var value = parseInt($this.text());
-    var lot_size = $(".lot_size_value").text();
+                $(".ltp_edit_curr, .current_edit_curr, .exit_edit_curr, .indicator_edit_table, .short_long").each(function () {
+                    var $this = $(this);
+                    var value = parseFloat($this.text());
+                    var lot_size = $(".lot_size_value").text();
 
-    if ($this.hasClass("ltp_edit_curr")) {
-        ltp_values.push(value);
-    } else if ($this.hasClass("current_edit_curr")) {
-        current_values.push(value);
-    } else if ($this.hasClass("exit_edit_curr")) {
-        if (value === 0) {
-            // If exit_edit_curr is zero, calculate and push the difference
-            var ltp = ltp_values.pop() || 0; // Get the last value from ltp_values or 0 if empty
-            var current = current_values.pop() || 0; // Get the last value from current_values or 0 if empty
-            var difference = (ltp - current) * parseFloat(lot_size);
+                    if ($this.hasClass("ltp_edit_curr")) {
+                        ltp_values.push(parseFloat(value));
+                        // console.log("ltp" + value);
+                    } else if ($this.hasClass("current_edit_curr")) {
+                        current_values.push(parseFloat(value));
+                        // console.log("current_val" + value);
+                    } else if ($this.hasClass("exit_edit_curr")) {
+                        if (value === 0) {
+                            // If exit_edit_curr is zero, calculate and push the difference
+                            var ltp = ltp_values.pop() || 0; // Get the last value from ltp_values or 0 if empty
+                            var current = current_values.pop() || 0; // Get the last value from current_values or 0 if empty
+                            var difference = (ltp - current) * parseInt(lot_size);
+                            // console.log("difference" + difference);
 
-            // Check the .short_long class for "+" or "-"
-            var shortLongClass = $this.closest('tr').find('.short_long');
-            if (shortLongClass.text().includes('+')) {
-                difference = Math.abs(difference); // Make the difference positive if "+" is present
-            }
 
-            current_values.push(difference);
-        }
-    }
-});
+                            // Check the .short_long class for "+" or "-"
+                            var shortLongClass = $this.closest('tr').find('.short_long');
+                            if (shortLongClass.text().includes('+')) {
+                                difference = -difference // Make the difference positive if "+" is present
+                            }
 
-console.log(current_values);
+                            current_values.push(difference);
+                        }
+                    }
+                });
+
+                // console.log(current_values);
                 // Iterate over elements with class "indicator_edit_table"
                 $(".indicator_edit_table").each(function (index) {
                     var $this = $(this);
@@ -2361,7 +2371,7 @@ console.log(current_values);
                         //console.log("$     " + value);
 
                         // Set the value in the corresponding .indicator_edit element using index
-                        $(".indicator_edit").eq(index).text(value);
+                        $(".indicator_edit").eq(index).text(value)
                     }
                 });
 
@@ -2584,40 +2594,35 @@ console.log(current_values);
 
 
             function updateTotalPAndL() {
-    var final_p_and_l = 0;
-    var p_l_table = $(".p_l_table"); // Cache the parent element
-    var indicatorElements = p_l_table.find('.indicator_edit_table');
+                var final_p_and_l = 0;
+                var p_l_table = $(".p_l_table"); // Cache the parent element
+                var indicatorElements = p_l_table.find('.indicator_edit_table');
 
-    for (var i = 0; i < indicatorElements.length; i++) {
-        var currentValue = parseFloat(indicatorElements[i].textContent);
+                for (var i = 0; i < indicatorElements.length; i++) {
+                    var currentValue = parseFloat(indicatorElements[i].textContent);
 
-        // Find the corresponding .short_long element within the same parent
-        var shortLongElement = $(indicatorElements[i]).closest('tr').find('.short_long');
+                    // console.log("currentValue" + currentValue);
+                    // Find the corresponding .short_long element within the same parent
 
-        // Check if the .short_long element contains "+", make currentValue positive
-        if (shortLongElement.text().includes('+')) {
-            currentValue = Math.abs(currentValue);
-        }
-        // Check if it contains "-", make currentValue negative
-        else if (shortLongElement.text().includes('-')) {
-            currentValue = -Math.abs(currentValue);
-        }
 
-        // Add currentValue to final_p_and_l if it's a valid number
-        if (!isNaN(currentValue)) {
-            final_p_and_l += currentValue;
-        }
-    }
+                    // Check if the .short_long element contains "+", make currentValue positive
 
-    p_l_table.find("tr.total-row").remove();
 
-    // Add your positions here...
+                    // Add currentValue to final_p_and_l if it's a valid number
+                    if (!isNaN(currentValue)) {
+                        final_p_and_l += currentValue;
+                    }
+                }
 
-    // Add the "Total" row at the end of the table within the same parent
-    p_l_table.append("<tr class='total-row'><td></td><td></td><td></td><td>Total P&L</td><td id='total_p_l'>0</td></tr>");
+                p_l_table.find("tr.total-row").remove();
 
-    p_l_table.find("#total_p_l").text(final_p_and_l.toFixed(2)); // Display it with 2 decimal places
-}
+                // Add your positions here...
+
+                // Add the "Total" row at the end of the table within the same parent
+                p_l_table.append("<tr class='total-row'><td></td><td></td><td></td><td>Total P&L</td><td id='total_p_l'>0</td></tr>");
+
+                p_l_table.find("#total_p_l").text(final_p_and_l); // Display it with 2 decimal places
+            }
 
 
 
@@ -2834,7 +2839,7 @@ console.log(current_values);
 
                     // Initialize the datepicker with the selected value
                     const expiryDateInput = $('#startDate')
-                    
+
                     expiryDateInput.val(data[0]);
 
                     // Attach the datepicker to the startDate input field
@@ -2875,22 +2880,22 @@ console.log(current_values);
             // Event listener for start date change
             $('#startDate').on('input', function () {
                 // Call the function to send the data to Django view
-               
-                var previousClosestDate=$(this).val()
-                    var formatedString = previousClosestDate
+
+                var previousClosestDate = $(this).val()
+                var formatedString = previousClosestDate
 
 
-                    const formattedPreviousClosestDate = formatedString
-                        ? new Date(formatedString).toLocaleDateString('en-US', {
-                            year: 'numeric',
-                            month: 'short',
-                            day: 'numeric'
-                        })
-                        : '';
-                    //console.log(formattedPreviousClosestDate);
-                    $(".date_formated").text(formattedPreviousClosestDate)
+                const formattedPreviousClosestDate = formatedString
+                    ? new Date(formatedString).toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'short',
+                        day: 'numeric'
+                    })
+                    : '';
+                //console.log(formattedPreviousClosestDate);
+                $(".date_formated").text(formattedPreviousClosestDate)
                 sendDataToDjango();
-          
+
             });
 
 
@@ -2903,7 +2908,7 @@ console.log(current_values);
             // Handle click on the button
             $('#btnOneDayForward').click(function () {
                 // Check if the button is disabled before calling changeStartDate
-            
+
                 if (!$(this).prop('disabled')) {
                     changeStartDate(1);
                     updateButtonState(); // Update the button state after changing the date
@@ -2914,73 +2919,73 @@ console.log(current_values);
 
 
             function DateFormatted() {
-                var previousClosestDate=$("#startDate").val()
-                    var formatedString = previousClosestDate
+                var previousClosestDate = $("#startDate").val()
+                var formatedString = previousClosestDate
 
 
-                    const formattedPreviousClosestDate = formatedString
-                        ? new Date(formatedString).toLocaleDateString('en-US', {
-                            year: 'numeric',
-                            month: 'short',
-                            day: 'numeric'
-                        })
-                        : '';
-                    //console.log(formattedPreviousClosestDate);
-                    $(".date_formated").text(formattedPreviousClosestDate)
+                const formattedPreviousClosestDate = formatedString
+                    ? new Date(formatedString).toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'short',
+                        day: 'numeric'
+                    })
+                    : '';
+                //console.log(formattedPreviousClosestDate);
+                $(".date_formated").text(formattedPreviousClosestDate)
             }
             var updatePrevBtn;
 
-// Define a function to set up the event listener
-function setupStartDateListener() {
-    const startDateInput = $("#startDate");
+            // Define a function to set up the event listener
+            function setupStartDateListener() {
+                const startDateInput = $("#startDate");
 
-    // Wait for the element to be available in the DOM
-    if (startDateInput.length === 0) {
-        setTimeout(setupStartDateListener, 100);
-        return;
-    }
+                // Wait for the element to be available in the DOM
+                if (startDateInput.length === 0) {
+                    setTimeout(setupStartDateListener, 100);
+                    return;
+                }
 
-    // Use setTimeout to capture the initial value after 1 second
-    setTimeout(function () {
-        updatePrevBtn = startDateInput.val();
-        // Call prevOneDay_disable to initially disable the button
-        prevOneDay_disable();
-        // Now, you can log the initial value
-        console.log("initial_date (after 1 second delay): " + updatePrevBtn);
+                // Use setTimeout to capture the initial value after 1 second
+                setTimeout(function () {
+                    updatePrevBtn = startDateInput.val();
+                    // Call prevOneDay_disable to initially disable the button
+                    prevOneDay_disable();
+                    // Now, you can log the initial value
+                    // console.log("initial_date (after 1 second delay): " + updatePrevBtn);
 
-        const btnOneDayBack = $('#btnOneDayBack');
+                    const btnOneDayBack = $('#btnOneDayBack');
 
-        // Set up an event listener to update the prevOneDay_disable function whenever #startDate changes
-        startDateInput.on("change", function () {
-            updatePrevBtn = startDateInput.val(); // Save the new initial value
-            prevOneDay_disable(); // Run the function
-        });
-    }, 8000); // Delay capturing the initial value by 1 second
-}
+                    // Set up an event listener to update the prevOneDay_disable function whenever #startDate changes
+                    startDateInput.on("change", function () {
+                        updatePrevBtn = startDateInput.val(); // Save the new initial value
+                        prevOneDay_disable(); // Run the function
+                    });
+                }, 8000); // Delay capturing the initial value by 1 second
+            }
 
-function prevOneDay_disable() {
+            function prevOneDay_disable() {
 
-    //console.log("current_date: " + startDateValue);
+                //console.log("current_date: " + startDateValue);
 
-    const btnOneDayBack = $('#btnOneDayBack');
+                const btnOneDayBack = $('#btnOneDayBack');
 
-    if (isUpdatePrevBtnEqualToStartDate()) {
-        btnOneDayBack.prop('disabled', true);
-    } else {
-        btnOneDayBack.prop('disabled', false);
-         $('#btn30MintBack').prop('disabled', false);
+                if (isUpdatePrevBtnEqualToStartDate()) {
+                    btnOneDayBack.prop('disabled', true);
+                } else {
+                    btnOneDayBack.prop('disabled', false);
+                    $('#btn30MintBack').prop('disabled', false);
                     $('#btn15MintBack').prop('disabled', false);
-                   $('#btn5MintBack').prop('disabled', false);
-    }
-}
-function isUpdatePrevBtnEqualToStartDate() {
-    const startDateInput = $("#startDate");
-    const startDateValue = startDateInput.val();
-    return updatePrevBtn === startDateValue;
-}
+                    $('#btn5MintBack').prop('disabled', false);
+                }
+            }
+            function isUpdatePrevBtnEqualToStartDate() {
+                const startDateInput = $("#startDate");
+                const startDateValue = startDateInput.val();
+                return updatePrevBtn === startDateValue;
+            }
 
-// Call the function to set up the event listener
-setupStartDateListener();
+            // Call the function to set up the event listener
+            setupStartDateListener();
 
 
 
@@ -3085,7 +3090,7 @@ setupStartDateListener();
                         : '';
                     //console.log(formattedPreviousClosestDate);
                     $(".date_formated").text(formattedPreviousClosestDate)
-console.log(formattedPreviousClosestDate);
+                    // console.log(formattedPreviousClosestDate);
                     // Populate the dropdown options and set 'selected' property
                     data.forEach(date => {
                         const option = $('<option>').val(date).text(date);
@@ -3173,30 +3178,30 @@ console.log(formattedPreviousClosestDate);
                     // Disable backward buttons
                     if (isUpdatePrevBtnEqualToStartDate()) {
                         $('#btn30MintBack').prop('disabled', true);
-                    $('#btn15MintBack').prop('disabled', true);
-                   $('#btn5MintBack').prop('disabled', true);
+                        $('#btn15MintBack').prop('disabled', true);
+                        $('#btn5MintBack').prop('disabled', true);
                     } else {
-                       
+
                         $("#btnOneDayBack").click()
                     }
-                   
 
-                   
 
-            
+
+
+
                 } else if (hours > 15 || (hours === 15 && minutes > 30)) {
                     hours = 15;
                     minutes = 30;
                     // Disable forward buttons
-           
-            if (areDatesEqual()) {
-                         $('#btn5MintForward').prop('disabled', true);
-                 $('#btn15MintForward').prop('disabled', true);
-                  $('#btn30MintForward').prop('disabled', true);
-            } else {
-                
-                $("#btnOneDayForward").click()
-            }
+
+                    if (areDatesEqual()) {
+                        $('#btn5MintForward').prop('disabled', true);
+                        $('#btn15MintForward').prop('disabled', true);
+                        $('#btn30MintForward').prop('disabled', true);
+                    } else {
+
+                        $("#btnOneDayForward").click()
+                    }
                 } else {
                     // Enable all buttons if the time is within the range
                     $('#btn30MintBack').prop('disabled', false);
@@ -3719,7 +3724,7 @@ console.log(formattedPreviousClosestDate);
 
                         // Calculate the next 5 strike prices
                         var forw5 = [];
-                        for (var j = currentIndex + 1; j < strikePrices.length && forw5.length < 3; j++) {
+                        for (var j = currentIndex + 1; j < strikePrices.length && forw5.length < 4; j++) {
                             var rowStrikePrice = strikePrices[j];
                             if (!isNaN(rowStrikePrice)) {
                                 forw5.push(rowStrikePrice);
@@ -3730,7 +3735,7 @@ console.log(formattedPreviousClosestDate);
                         //console.log("Next 5 Strike Prices:", forw5);
 
                         var prev3 = [];
-                        for (var i = currentIndex - 1; i >= 0 && prev3.length < 3; i--) {
+                        for (var i = currentIndex - 1; i >= 0 && prev3.length < 4; i--) {
                             var rowStrikePrice = strikePrices[i];
                             if (!isNaN(rowStrikePrice)) {
                                 prev3.push(rowStrikePrice);
@@ -3740,7 +3745,7 @@ console.log(formattedPreviousClosestDate);
 
 
 
-                        if (forw5.length === 3 && prev3.length === 3) {
+                        if (forw5.length === 4 && prev3.length === 4) {
 
                             var lastIndexForw = forw5[forw5.length - 1];
                             var lastIndexPrev = prev3[prev3.length - 1];
@@ -3893,7 +3898,7 @@ console.log(formattedPreviousClosestDate);
                             $("#put_add_position").click();
                         }
 
-                        straddle_calculation("iron_fly");
+                        straddle_calculation("iron_condor");
 
 
 
@@ -3905,117 +3910,117 @@ console.log(formattedPreviousClosestDate);
                 $(".jade_lizard").on("click", function () {
 
 
-var new_closestStrikePrice = parseFloat($(".closest_value").text()); // Corrected variable name
+                    var new_closestStrikePrice = parseFloat($(".closest_value").text()); // Corrected variable name
 
-var $spread = $(this);
+                    var $spread = $(this);
 
-if (!$spread.hasClass("simulator_active_strategy")) {
-    clearPreviousSelections()
-    // Remove and set the active class
-    $(".option_simulator_strategy").removeClass("simulator_active_strategy");
-    $spread.addClass("simulator_active_strategy");
-
-
+                    if (!$spread.hasClass("simulator_active_strategy")) {
+                        clearPreviousSelections()
+                        // Remove and set the active class
+                        $(".option_simulator_strategy").removeClass("simulator_active_strategy");
+                        $spread.addClass("simulator_active_strategy");
 
 
 
-    var strikePrices = optionChainTable.find(".simulator_strike").map(function () {
 
 
-        return parseFloat($(this).text());
-    }).get();
-
-    // Click the add position button
+                        var strikePrices = optionChainTable.find(".simulator_strike").map(function () {
 
 
-    var currentIndex = strikePrices.indexOf(new_closestStrikePrice);
+                            return parseFloat($(this).text());
+                        }).get();
 
-    // Find the index of the row where strikePrice is new_closestStrikePrice
-
-    // Calculate the previous 5 strike prices
-
-
-    // Calculate the next 5 strike prices
-    var forw2 = [];
-    for (var j = currentIndex + 1; j < strikePrices.length && forw2.length < 2; j++) {
-        var rowStrikePrice = strikePrices[j];
-        if (!isNaN(rowStrikePrice)) {
-            forw2.push(rowStrikePrice);
-        }
-    }
-    var forw4 = [];
-    for (var a = currentIndex + 1; a < strikePrices.length && forw4.length < 4; a++) {
-        var rowStrikePrice = strikePrices[a];
-        if (!isNaN(rowStrikePrice)) {
-            forw4.push(rowStrikePrice);
-        }
-    }
+                        // Click the add position button
 
 
-    //console.log("Next 5 Strike Prices:", forw2, forw4);
+                        var currentIndex = strikePrices.indexOf(new_closestStrikePrice);
 
-   
-    var prev4 = [];
-    for (var i = currentIndex - 1; i >= 0 && prev4.length < 4; i--) {
-        var rowStrikePrice = strikePrices[i];
-        if (!isNaN(rowStrikePrice)) {
-            prev4.push(rowStrikePrice);
-        }
-    }
+                        // Find the index of the row where strikePrice is new_closestStrikePrice
 
-    //console.log("Next 5 Strike Prices:", prev4);
-    // First Condition
-    if (forw2.length === 2 && prev4.length === 4) {
-        var lastIndexForw = forw2[forw2.length - 1];
-        var lastIndexPrev = prev4[prev4.length - 1];
-        //console.log(lastIndexForw);
-        $("#putSellRadio").prop('checked', true);
-        $("#callSellRadio").prop('checked', true);
-
-        var closestRowForw = optionChainTable.find(".simulator_strike:contains(" + lastIndexPrev + ")").closest(".simulator_option_tr");
-
-        closestRowForw.find(".puts_action_btn").one("click", function (e) {
-            e.preventDefault();
-            $(".modal").hide();
-        }).click();
-        var closestRowForw = optionChainTable.find(".simulator_strike:contains(" + lastIndexForw + ")").closest(".simulator_option_tr");
-        closestRowForw.find(".calls_action_btn").one("click", function (e) {
-            e.preventDefault();
-            $(".modal").hide();
-        }).click();
+                        // Calculate the previous 5 strike prices
 
 
+                        // Calculate the next 5 strike prices
+                        var forw2 = [];
+                        for (var j = currentIndex + 1; j < strikePrices.length && forw2.length < 2; j++) {
+                            var rowStrikePrice = strikePrices[j];
+                            if (!isNaN(rowStrikePrice)) {
+                                forw2.push(rowStrikePrice);
+                            }
+                        }
+                        var forw4 = [];
+                        for (var a = currentIndex + 1; a < strikePrices.length && forw4.length < 4; a++) {
+                            var rowStrikePrice = strikePrices[a];
+                            if (!isNaN(rowStrikePrice)) {
+                                forw4.push(rowStrikePrice);
+                            }
+                        }
 
-        $("#put_add_position").click();
-        $("#call_add_position").click();
-    }
 
-    // Second Condition
-    if (forw4.length === 4) {
-      
-        var lastIndexForw4 = forw4[forw4.length - 1];
-        $("#callBuyRadio").prop('checked', true);
-      
-        var closestRowForw4 = optionChainTable.find(".simulator_strike:contains(" + lastIndexForw4 + ")").closest(".simulator_option_tr");
-        closestRowForw4.find(".calls_action_btn").one("click", function (e) {
-            e.preventDefault();
-            $(".modal").hide();
-        }).click();
+                        //console.log("Next 5 Strike Prices:", forw2, forw4);
 
-   
 
-        $("#call_add_position").click();
-    
-    }
+                        var prev4 = [];
+                        for (var i = currentIndex - 1; i >= 0 && prev4.length < 4; i--) {
+                            var rowStrikePrice = strikePrices[i];
+                            if (!isNaN(rowStrikePrice)) {
+                                prev4.push(rowStrikePrice);
+                            }
+                        }
 
-    straddle_calculation("jade_lizard");
+                        //console.log("Next 5 Strike Prices:", prev4);
+                        // First Condition
+                        if (forw2.length === 2 && prev4.length === 4) {
+                            var lastIndexForw = forw2[forw2.length - 1];
+                            var lastIndexPrev = prev4[prev4.length - 1];
+                            //console.log(lastIndexForw);
+                            $("#putSellRadio").prop('checked', true);
+                            $("#callSellRadio").prop('checked', true);
+
+                            var closestRowForw = optionChainTable.find(".simulator_strike:contains(" + lastIndexPrev + ")").closest(".simulator_option_tr");
+
+                            closestRowForw.find(".puts_action_btn").one("click", function (e) {
+                                e.preventDefault();
+                                $(".modal").hide();
+                            }).click();
+                            var closestRowForw = optionChainTable.find(".simulator_strike:contains(" + lastIndexForw + ")").closest(".simulator_option_tr");
+                            closestRowForw.find(".calls_action_btn").one("click", function (e) {
+                                e.preventDefault();
+                                $(".modal").hide();
+                            }).click();
 
 
 
-}
-$("#putBuyRadio").prop('checked', true);
-$("#callBuyRadio").prop('checked', true);
-});
+                            $("#put_add_position").click();
+                            $("#call_add_position").click();
+                        }
+
+                        // Second Condition
+                        if (forw4.length === 4) {
+
+                            var lastIndexForw4 = forw4[forw4.length - 1];
+                            $("#callBuyRadio").prop('checked', true);
+
+                            var closestRowForw4 = optionChainTable.find(".simulator_strike:contains(" + lastIndexForw4 + ")").closest(".simulator_option_tr");
+                            closestRowForw4.find(".calls_action_btn").one("click", function (e) {
+                                e.preventDefault();
+                                $(".modal").hide();
+                            }).click();
+
+
+
+                            $("#call_add_position").click();
+
+                        }
+
+                        straddle_calculation("jade_lizard");
+
+
+
+                    }
+                    $("#putBuyRadio").prop('checked', true);
+                    $("#callBuyRadio").prop('checked', true);
+                });
 
 
 
@@ -4183,7 +4188,546 @@ $("#callBuyRadio").prop('checked', true);
                     $("#ratio").text("No Defined")
 
 
-                } else if (Strategy_args === "spread" || Strategy_args === "iron_fly") {
+                } 
+                else if (Strategy_args === "spread") {
+
+                    var leftMyTable = $("#myTable");
+                    // Now, attempt to get the value
+                    var lot_size_simulator = $(".lot_size_value").text();
+                    //console.log("Lot Size Simulator: " + parseInt(lot_size_simulator));
+
+                    // Now, attempt to get the instrument type
+                    var max_profit = $("#max_profit");
+                    var max_loss = $("#max_loss");
+                    var break_evens = $("#break_evens");
+                    var max_profit_value = 0;
+
+
+                    var max_loss_value = 0;
+                    var breakeven = 0;
+                    var strike_price_all = 0;
+                    var count = 0;
+                    var premiumsArray = [];
+                    var numericValuesArray = [];
+                    var lot_size = $(".lot_size_value").text()
+                    leftMyTable.find(".main_logic").each(function (index) {
+                        var $parent = $(this);
+
+                        // Check if the parent has the red-option-indicator class
+                        if (!$parent.hasClass("red-option-indicator")) {
+                            var premium = parseFloat($parent.find(".ltp_edit").text());
+                            var breakeven_premium = parseFloat($parent.find(".ltp_edit").text());
+                            var lot_size = parseFloat($parent.find(".lot_size_option_simulator").text());
+                            var short_long = $parent.find(".short_long").text();
+                            //console.log('Short Long' + short_long);
+
+
+                            //console.log("Premium: " + premium);
+                            //console.log("Lot Size: " + lot_size);
+                            //console.log("Break-Even Premium: " + breakeven_premium);
+
+
+
+                            breakeven += breakeven_premium;
+
+                            var strike_price = $parent.find(".instrument_type_edit").text();
+
+                            // Reverse the strike_price value
+                            var reversed_string = strike_price.split('').reverse().join('');
+
+                            // Extract the numeric part using regular expression
+                            var numeric_part = reversed_string.match(/\d+/); // This extracts one or more consecutive digits
+                            var numeric_value = numeric_part ? parseFloat(numeric_part[0].split('').reverse().join('')) : 0; // Reverse back and convert to a numeric value
+
+                            //console.log('numeric_value: ' + numeric_value);
+
+                            strike_price_all += numeric_value;
+
+                            if (short_long === "+") {
+
+                                premiumsArray.push(-premium * lot_size);
+                                //console.log('HIi there negative premium');
+
+
+                            } else {
+                                premiumsArray.push(premium * lot_size);
+                                //console.log('HIi there positive premium');
+
+                            }
+                            numericValuesArray.push(parseFloat(numeric_value));
+                            count++;
+                        } else {
+                            //console.log("Skipping calculation for element at index " + index);
+                        }
+                    });
+                    // console.log(premiumsArray);
+                    // console.log(numericValuesArray)
+
+
+                    var premiumDifferences = 0
+
+
+                    // Calculate the differences for premiumsArray
+                    for (var i = 0; i < premiumsArray.length; i++) {
+
+                        var difference = premiumsArray[i]
+
+
+                        premiumDifferences += difference;
+
+                    }
+                    var numericDifferences = 0
+                    var numericDifferencesIndex = []
+                    // Calculate the differences for numericValuesArray
+                    for (var i = 0; i < numericValuesArray.length; i++) {
+                        for (var j = i + 1; j < numericValuesArray.length; j++) {
+                            var difference = numericValuesArray[i] - numericValuesArray[j];
+                            numericDifferences += difference;
+                            numericDifferencesIndex.push(difference)
+                        }
+                    }
+
+                    // console.log("Premium Differences: " + premiumDifferences);
+                    // console.log("Numeric Differences: " + numericDifferences);
+                    // console.log("numericDifferencesIndex: " + numericDifferencesIndex);
+
+                    max_profit_value = (Math.abs(numericDifferences) - premiumDifferences) * lot_size_simulator
+
+
+                    max_loss_value = premiumDifferences
+                    var ratio = Math.abs(max_profit_value) / Math.abs(max_loss_value * lot_size_simulator);
+
+                    $("#ratio").text(ratio.toFixed(2))
+
+
+
+                    // Calculate the average
+                    var average_strike_price = strike_price_all / count;
+
+                    //console.log("Average Strike Price: " + average_strike_price);
+
+                    // Calculate break-even values
+                    var lower_break_even = average_strike_price - breakeven;
+                    var upper_break_even = average_strike_price + breakeven;
+
+                    // Set the text for break_evens
+                    break_evens.text(lower_break_even.toFixed(2) + " - " + upper_break_even.toFixed(2));
+
+
+
+
+
+
+                    // Initialize an array to store all values
+                    var allValues = [];
+
+                    // Initialize arrays to store "-" and "+" values
+                    var negativeValues = [];
+                    var positiveValues = [];
+
+                    // Loop through elements with class "short_long"
+                    leftMyTable.find(".short_long").each(function () {
+                        var value = $(this).text().trim(); // Get the text and remove any leading/trailing spaces
+                        allValues.push(value); // Add the value to the allValues array
+                        if (value === "-") {
+                            negativeValues.push(value); // Add "-" values to the negativeValues array
+                        } else if (value === "+") {
+                            positiveValues.push(value); // Add "+" values to the positiveValues array
+                        }
+                    });
+
+                    // Check the lengths of negativeValues and positiveValues
+                    var negativeLength = negativeValues.length;
+                    var positiveLength = positiveValues.length;
+
+                    // Log which one is longer or if they are equal
+                    if (negativeLength > positiveLength) {
+                        max_profit.text((max_loss_value * parseFloat(lot_size_simulator)).toFixed(2));
+                        max_loss.text(-Math.abs(max_profit_value.toFixed(2)));
+                    } else if (positiveLength > negativeLength) {
+
+                        max_profit.text(-Math.abs(max_profit_value.toFixed(2)));
+                        max_loss.text((max_loss_value * parseFloat(lot_size_simulator)).toFixed(2));
+                    } else {
+
+                        if (negativeValues[0] === "+") {
+                            max_profit.text(-Math.abs(max_profit_value.toFixed(2)));
+                            max_loss.text((max_loss_value * parseFloat(lot_size_simulator)).toFixed(2));
+                        } else {
+                            max_profit.text((max_loss_value * parseFloat(lot_size_simulator)).toFixed(2));
+                            max_loss.text(-Math.abs(max_profit_value.toFixed(2)));
+                        }
+                    }
+
+                    // Now, you have all values in the allValues array,
+                    // "-" values in negativeValues, and "+" values in positiveValues
+                    //console.log("All Values:", allValues);
+                    //console.log("Negative Values:", negativeValues);
+                    //console.log("Positive Values:", positiveValues);
+
+
+
+                }
+                else if (Strategy_args === "iron_fly") {
+
+                    var leftMyTable = $("#myTable");
+                    // Now, attempt to get the value
+                    var lot_size_simulator = $(".lot_size_value").text();
+                    //console.log("Lot Size Simulator: " + parseInt(lot_size_simulator));
+
+                    // Now, attempt to get the instrument type
+                    var max_profit = $("#max_profit");
+                    var max_loss = $("#max_loss");
+                    var break_evens = $("#break_evens");
+                    var max_profit_value = 0;
+
+
+                    var max_loss_value = 0;
+                    var breakeven = 0;
+                    var strike_price_all = 0;
+                    var count = 0;
+                    var premiumsArray = [];
+                    var numericValuesArray = [];
+                    var lot_size = $(".lot_size_value").text()
+                    leftMyTable.find(".main_logic").each(function (index) {
+                        var $parent = $(this);
+
+                        // Check if the parent has the red-option-indicator class
+                        if (!$parent.hasClass("red-option-indicator")) {
+                            var premium = parseFloat($parent.find(".ltp_edit").text());
+                            var breakeven_premium = parseFloat($parent.find(".ltp_edit").text());
+                            var lot_size = parseFloat($parent.find(".lot_size_option_simulator").text());
+                            var short_long = $parent.find(".short_long").text();
+                            //console.log('Short Long' + short_long);
+
+
+                            //console.log("Premium: " + premium);
+                            //console.log("Lot Size: " + lot_size);
+                            //console.log("Break-Even Premium: " + breakeven_premium);
+
+
+
+                            breakeven += breakeven_premium;
+
+                            var strike_price = $parent.find(".instrument_type_edit").text();
+
+                            // Reverse the strike_price value
+                            var reversed_string = strike_price.split('').reverse().join('');
+
+                            // Extract the numeric part using regular expression
+                            var numeric_part = reversed_string.match(/\d+/); // This extracts one or more consecutive digits
+                            var numeric_value = numeric_part ? parseFloat(numeric_part[0].split('').reverse().join('')) : 0; // Reverse back and convert to a numeric value
+
+                            //console.log('numeric_value: ' + numeric_value);
+
+                            strike_price_all += numeric_value;
+
+                            if (short_long === "+") {
+
+                                premiumsArray.push(-premium * lot_size);
+                                //console.log('HIi there negative premium');
+
+
+                            } else {
+                                premiumsArray.push(premium * lot_size);
+                                //console.log('HIi there positive premium');
+
+                            }
+                            numericValuesArray.push(parseFloat(numeric_value));
+                            count++;
+                        } else {
+                            //console.log("Skipping calculation for element at index " + index);
+                        }
+                    });
+                    // console.log(premiumsArray);
+                    // console.log(numericValuesArray)
+
+
+                    var premiumDifferences = 0
+
+
+                    // Calculate the differences for premiumsArray
+                    for (var i = 0; i < premiumsArray.length; i++) {
+
+                        var difference = premiumsArray[i]
+
+
+                        premiumDifferences += difference;
+
+                    }
+                    var numericDifferences = 0
+                    var numericDifferencesIndex = []
+                    // Calculate the differences for numericValuesArray
+                    for (var i = 0; i < numericValuesArray.length; i++) {
+                        for (var j = i + 1; j < numericValuesArray.length; j++) {
+                            var difference = numericValuesArray[i] - numericValuesArray[j];
+                            numericDifferences += difference;
+                            numericDifferencesIndex.push(difference)
+                        }
+                    }
+
+                    // console.log("Premium Differences: " + premiumDifferences);
+                    // console.log("Numeric Differences: " + numericDifferences);
+                    // console.log("numericDifferencesIndex: " + numericDifferencesIndex);
+
+                    max_profit_value = (Math.abs(200) - premiumDifferences) * lot_size_simulator
+
+
+                    max_loss_value = premiumDifferences
+                    var ratio = Math.abs(max_profit_value) / Math.abs(max_loss_value * lot_size_simulator);
+
+                    $("#ratio").text(ratio.toFixed(2))
+
+
+
+                    // Calculate the average
+                    var average_strike_price = strike_price_all / count;
+
+                    //console.log("Average Strike Price: " + average_strike_price);
+
+                    // Calculate break-even values
+                    var lower_break_even = average_strike_price - breakeven;
+                    var upper_break_even = average_strike_price + breakeven;
+
+                    // Set the text for break_evens
+                    break_evens.text(lower_break_even.toFixed(2) + " - " + upper_break_even.toFixed(2));
+
+
+
+
+
+
+                    // Initialize an array to store all values
+                    var allValues = [];
+
+                    // Initialize arrays to store "-" and "+" values
+                    var negativeValues = [];
+                    var positiveValues = [];
+
+                    // Loop through elements with class "short_long"
+                    leftMyTable.find(".short_long").each(function () {
+                        var value = $(this).text().trim(); // Get the text and remove any leading/trailing spaces
+                        allValues.push(value); // Add the value to the allValues array
+                        if (value === "-") {
+                            negativeValues.push(value); // Add "-" values to the negativeValues array
+                        } else if (value === "+") {
+                            positiveValues.push(value); // Add "+" values to the positiveValues array
+                        }
+                    });
+
+                    // Check the lengths of negativeValues and positiveValues
+                    var negativeLength = negativeValues.length;
+                    var positiveLength = positiveValues.length;
+
+                    // Log which one is longer or if they are equal
+                    if (negativeLength > positiveLength) {
+                        max_profit.text((max_loss_value * parseFloat(lot_size_simulator)).toFixed(2));
+                        max_loss.text(-Math.abs(max_profit_value.toFixed(2)));
+                    } else if (positiveLength > negativeLength) {
+
+                        max_profit.text(-Math.abs(max_profit_value.toFixed(2)));
+                        max_loss.text((max_loss_value * parseFloat(lot_size_simulator)).toFixed(2));
+                    } else {
+
+                        if (negativeValues[0] === "+") {
+                            max_profit.text(-Math.abs(max_profit_value.toFixed(2)));
+                            max_loss.text((max_loss_value * parseFloat(lot_size_simulator)).toFixed(2));
+                        } else {
+                            max_profit.text((max_loss_value * parseFloat(lot_size_simulator)).toFixed(2));
+                            max_loss.text(-Math.abs(max_profit_value.toFixed(2)));
+                        }
+                    }
+
+                    // Now, you have all values in the allValues array,
+                    // "-" values in negativeValues, and "+" values in positiveValues
+                    //console.log("All Values:", allValues);
+                    //console.log("Negative Values:", negativeValues);
+                    //console.log("Positive Values:", positiveValues);
+
+
+
+                }
+                else if (Strategy_args === "iron_condor") {
+
+                    var leftMyTable = $("#myTable");
+                    // Now, attempt to get the value
+                    var lot_size_simulator = $(".lot_size_value").text();
+                    //console.log("Lot Size Simulator: " + parseInt(lot_size_simulator));
+
+                    // Now, attempt to get the instrument type
+                    var max_profit = $("#max_profit");
+                    var max_loss = $("#max_loss");
+                    var break_evens = $("#break_evens");
+                    var max_profit_value = 0;
+
+
+                    var max_loss_value = 0;
+                    var breakeven = 0;
+                    var strike_price_all = 0;
+                    var count = 0;
+                    var premiumsArray = [];
+                    var numericValuesArray = [];
+                    var lot_size = $(".lot_size_value").text()
+                    leftMyTable.find(".main_logic").each(function (index) {
+                        var $parent = $(this);
+
+                        // Check if the parent has the red-option-indicator class
+                        if (!$parent.hasClass("red-option-indicator")) {
+                            var premium = parseFloat($parent.find(".ltp_edit").text());
+                            var breakeven_premium = parseFloat($parent.find(".ltp_edit").text());
+                            var lot_size = parseFloat($parent.find(".lot_size_option_simulator").text());
+                            var short_long = $parent.find(".short_long").text();
+                            //console.log('Short Long' + short_long);
+
+
+                            //console.log("Premium: " + premium);
+                            //console.log("Lot Size: " + lot_size);
+                            //console.log("Break-Even Premium: " + breakeven_premium);
+
+
+
+                            breakeven += breakeven_premium;
+
+                            var strike_price = $parent.find(".instrument_type_edit").text();
+
+                            // Reverse the strike_price value
+                            var reversed_string = strike_price.split('').reverse().join('');
+
+                            // Extract the numeric part using regular expression
+                            var numeric_part = reversed_string.match(/\d+/); // This extracts one or more consecutive digits
+                            var numeric_value = numeric_part ? parseFloat(numeric_part[0].split('').reverse().join('')) : 0; // Reverse back and convert to a numeric value
+
+                            //console.log('numeric_value: ' + numeric_value);
+
+                            strike_price_all += numeric_value;
+
+                            if (short_long === "+") {
+
+                                premiumsArray.push(-premium * lot_size);
+                                //console.log('HIi there negative premium');
+
+
+                            } else {
+                                premiumsArray.push(premium * lot_size);
+                                //console.log('HIi there positive premium');
+
+                            }
+                            numericValuesArray.push(parseFloat(numeric_value));
+                            count++;
+                        } else {
+                            //console.log("Skipping calculation for element at index " + index);
+                        }
+                    });
+                    // console.log(premiumsArray);
+                    // console.log(numericValuesArray)
+
+
+                    var premiumDifferences = 0
+
+
+                    // Calculate the differences for premiumsArray
+                    for (var i = 0; i < premiumsArray.length; i++) {
+
+                        var difference = premiumsArray[i]
+
+
+                        premiumDifferences += difference;
+
+                    }
+                    var numericDifferences = 0
+                    var numericDifferencesIndex = []
+                    // Calculate the differences for numericValuesArray
+                    for (var i = 0; i < numericValuesArray.length; i++) {
+                        for (var j = i + 1; j < numericValuesArray.length; j++) {
+                            var difference = numericValuesArray[i] - numericValuesArray[j];
+                            numericDifferences += difference;
+                            numericDifferencesIndex.push(difference)
+                        }
+                    }
+
+                    // console.log("Premium Differences: " + premiumDifferences);
+                    // console.log("Numeric Differences: " + numericDifferences);
+                    // console.log("numericDifferencesIndex: " + numericDifferencesIndex);
+
+                    max_profit_value = (Math.abs(50) - premiumDifferences) * lot_size_simulator
+
+
+                    max_loss_value = premiumDifferences
+                    var ratio = Math.abs(max_profit_value) / Math.abs(max_loss_value * lot_size_simulator);
+
+                    $("#ratio").text(ratio.toFixed(2))
+
+
+
+                    // Calculate the average
+                    var average_strike_price = strike_price_all / count;
+
+                    //console.log("Average Strike Price: " + average_strike_price);
+
+                    // Calculate break-even values
+                    var lower_break_even = average_strike_price - breakeven;
+                    var upper_break_even = average_strike_price + breakeven;
+
+                    // Set the text for break_evens
+                    break_evens.text(lower_break_even.toFixed(2) + " - " + upper_break_even.toFixed(2));
+
+
+
+
+
+
+                    // Initialize an array to store all values
+                    var allValues = [];
+
+                    // Initialize arrays to store "-" and "+" values
+                    var negativeValues = [];
+                    var positiveValues = [];
+
+                    // Loop through elements with class "short_long"
+                    leftMyTable.find(".short_long").each(function () {
+                        var value = $(this).text().trim(); // Get the text and remove any leading/trailing spaces
+                        allValues.push(value); // Add the value to the allValues array
+                        if (value === "-") {
+                            negativeValues.push(value); // Add "-" values to the negativeValues array
+                        } else if (value === "+") {
+                            positiveValues.push(value); // Add "+" values to the positiveValues array
+                        }
+                    });
+
+                    // Check the lengths of negativeValues and positiveValues
+                    var negativeLength = negativeValues.length;
+                    var positiveLength = positiveValues.length;
+
+                    // Log which one is longer or if they are equal
+                    if (negativeLength > positiveLength) {
+                        max_profit.text((max_loss_value * parseFloat(lot_size_simulator)).toFixed(2));
+                        max_loss.text(-Math.abs(max_profit_value.toFixed(2)));
+                    } else if (positiveLength > negativeLength) {
+
+                        max_profit.text(-Math.abs(max_profit_value.toFixed(2)));
+                        max_loss.text((max_loss_value * parseFloat(lot_size_simulator)).toFixed(2));
+                    } else {
+
+                        if (negativeValues[0] === "+") {
+                            max_profit.text(-Math.abs(max_profit_value.toFixed(2)));
+                            max_loss.text((max_loss_value * parseFloat(lot_size_simulator)).toFixed(2));
+                        } else {
+                            max_profit.text((max_loss_value * parseFloat(lot_size_simulator)).toFixed(2));
+                            max_loss.text(-Math.abs(max_profit_value.toFixed(2)));
+                        }
+                    }
+
+                    // Now, you have all values in the allValues array,
+                    // "-" values in negativeValues, and "+" values in positiveValues
+                    //console.log("All Values:", allValues);
+                    //console.log("Negative Values:", negativeValues);
+                    //console.log("Positive Values:", positiveValues);
+
+
+
+                }
+
+                else if (Strategy_args === "jade_lizard") {
 
                     var leftMyTable = $("#myTable");
                     // Now, attempt to get the value
@@ -4282,7 +4826,7 @@ $("#callBuyRadio").prop('checked', true);
                     //console.log("Premium Differences: " + premiumDifferences);
                     //console.log("Numeric Differences: " + numericDifferences);
 
-                    max_profit_value = numericDifferences - premiumDifferences * lot_size_simulator
+                    max_profit_value = "Unlimited"
 
 
                     max_loss_value = premiumDifferences
@@ -4334,19 +4878,19 @@ $("#callBuyRadio").prop('checked', true);
                     // Log which one is longer or if they are equal
                     if (negativeLength > positiveLength) {
                         max_profit.text((max_loss_value * parseFloat(lot_size_simulator)).toFixed(2));
-                        max_loss.text(max_profit_value.toFixed(2));
+                        max_loss.text(max_profit_value);
                     } else if (positiveLength > negativeLength) {
 
-                        max_profit.text(max_profit_value.toFixed(2));
+                        max_profit.text(max_profit_value);
                         max_loss.text((max_loss_value * parseFloat(lot_size_simulator)).toFixed(2));
                     } else {
 
                         if (negativeValues[0] === "+") {
-                            max_profit.text(max_profit_value.toFixed(2));
+                            max_profit.text(max_profit_value);
                             max_loss.text((max_loss_value * parseFloat(lot_size_simulator)).toFixed(2));
                         } else {
                             max_profit.text((max_loss_value * parseFloat(lot_size_simulator)).toFixed(2));
-                            max_loss.text(max_profit_value.toFixed(2));
+                            max_loss.text(max_profit_value);
                         }
                     }
 
@@ -4359,183 +4903,6 @@ $("#callBuyRadio").prop('checked', true);
 
 
                 }
-
-                else if (Strategy_args === "jade_lizard") {
-
-var leftMyTable = $("#myTable");
-// Now, attempt to get the value
-var lot_size_simulator = $(".lot_size_value").text();
-//console.log("Lot Size Simulator: " + parseInt(lot_size_simulator));
-
-// Now, attempt to get the instrument type
-var max_profit = $("#max_profit");
-var max_loss = $("#max_loss");
-var break_evens = $("#break_evens");
-var max_profit_value = 0;
-
-
-var max_loss_value = 0;
-var breakeven = 0;
-var strike_price_all = 0;
-var count = 0;
-var premiumsArray = [];
-var numericValuesArray = [];
-var lot_size = $(".lot_size_value").text()
-leftMyTable.find(".main_logic").each(function (index) {
-    var $parent = $(this);
-
-    // Check if the parent has the red-option-indicator class
-    if (!$parent.hasClass("red-option-indicator")) {
-        var premium = parseFloat($parent.find(".ltp_edit").text());
-        var breakeven_premium = parseFloat($parent.find(".ltp_edit").text());
-        var lot_size = parseFloat($parent.find(".lot_size_option_simulator").text());
-        var short_long = $parent.find(".short_long").text();
-        //console.log('Short Long' + short_long);
-
-
-        //console.log("Premium: " + premium);
-        //console.log("Lot Size: " + lot_size);
-        //console.log("Break-Even Premium: " + breakeven_premium);
-
-
-
-        breakeven += breakeven_premium;
-
-        var strike_price = $parent.find(".instrument_type_edit").text();
-
-        // Reverse the strike_price value
-        var reversed_string = strike_price.split('').reverse().join('');
-
-        // Extract the numeric part using regular expression
-        var numeric_part = reversed_string.match(/\d+/); // This extracts one or more consecutive digits
-        var numeric_value = numeric_part ? parseFloat(numeric_part[0].split('').reverse().join('')) : 0; // Reverse back and convert to a numeric value
-
-        //console.log('numeric_value: ' + numeric_value);
-
-        strike_price_all += numeric_value;
-
-        if (short_long === "+") {
-
-            premiumsArray.push(-premium * lot_size);
-            //console.log('HIi there negative premium');
-
-
-        } else {
-            premiumsArray.push(premium * lot_size);
-            //console.log('HIi there positive premium');
-
-        }
-        numericValuesArray.push(parseFloat(numeric_value));
-        count++;
-    } else {
-        //console.log("Skipping calculation for element at index " + index);
-    }
-});
-//console.log(premiumsArray);
-//console.log(numericValuesArray);
-
-
-var premiumDifferences = 0
-var numericDifferences = 0
-
-// Calculate the differences for premiumsArray
-for (var i = 0; i < premiumsArray.length; i++) {
-
-    var difference = premiumsArray[i]
-
-
-    premiumDifferences += difference;
-
-}
-
-// Calculate the differences for numericValuesArray
-for (var i = 0; i < numericValuesArray.length; i++) {
-    for (var j = i + 1; j < numericValuesArray.length; j++) {
-        var difference = numericValuesArray[i] - numericValuesArray[j];
-        numericDifferences += difference;
-    }
-}
-
-//console.log("Premium Differences: " + premiumDifferences);
-//console.log("Numeric Differences: " + numericDifferences);
-
-max_profit_value = "Unlimited"
-
-
-max_loss_value = premiumDifferences
-var ratio = Math.abs(max_profit_value) / Math.abs(max_loss_value * lot_size_simulator);
-
-$("#ratio").text(ratio.toFixed(2))
-
-
-
-// Calculate the average
-var average_strike_price = strike_price_all / count;
-
-//console.log("Average Strike Price: " + average_strike_price);
-
-// Calculate break-even values
-var lower_break_even = average_strike_price - breakeven;
-var upper_break_even = average_strike_price + breakeven;
-
-// Set the text for break_evens
-break_evens.text(lower_break_even.toFixed(2) + " - " + upper_break_even.toFixed(2));
-
-
-
-
-
-
-// Initialize an array to store all values
-var allValues = [];
-
-// Initialize arrays to store "-" and "+" values
-var negativeValues = [];
-var positiveValues = [];
-
-// Loop through elements with class "short_long"
-leftMyTable.find(".short_long").each(function () {
-    var value = $(this).text().trim(); // Get the text and remove any leading/trailing spaces
-    allValues.push(value); // Add the value to the allValues array
-    if (value === "-") {
-        negativeValues.push(value); // Add "-" values to the negativeValues array
-    } else if (value === "+") {
-        positiveValues.push(value); // Add "+" values to the positiveValues array
-    }
-});
-
-// Check the lengths of negativeValues and positiveValues
-var negativeLength = negativeValues.length;
-var positiveLength = positiveValues.length;
-
-// Log which one is longer or if they are equal
-if (negativeLength > positiveLength) {
-    max_profit.text((max_loss_value * parseFloat(lot_size_simulator)).toFixed(2));
-    max_loss.text(max_profit_value);
-} else if (positiveLength > negativeLength) {
-
-    max_profit.text(max_profit_value);
-    max_loss.text((max_loss_value * parseFloat(lot_size_simulator)).toFixed(2));
-} else {
-
-    if (negativeValues[0] === "+") {
-        max_profit.text(max_profit_value);
-        max_loss.text((max_loss_value * parseFloat(lot_size_simulator)).toFixed(2));
-    } else {
-        max_profit.text((max_loss_value * parseFloat(lot_size_simulator)).toFixed(2));
-        max_loss.text(max_profit_value);
-    }
-}
-
-// Now, you have all values in the allValues array,
-// "-" values in negativeValues, and "+" values in positiveValues
-//console.log("All Values:", allValues);
-//console.log("Negative Values:", negativeValues);
-//console.log("Positive Values:", positiveValues);
-
-
-
-}
 
 
 
