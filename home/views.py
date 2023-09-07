@@ -1079,7 +1079,7 @@ def dashboard(request):
     # Prepare data for Chart.js
     looser_labels = top_10_losers["companyShortName"].tolist()
     looser_values = top_10_losers["percentChange"].tolist()
-    url = "https://trendlyne.com/futures-options/api-filter/futures/31-aug-2023-next/oi_gainers/"
+    url = "https://trendlyne.com/futures-options/api-filter/futures/28-sep-2023-near/oi_gainers/"
 
     headers = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
@@ -1545,7 +1545,7 @@ def volume_shocker(request):
 
 
 def oi_gainers(request):
-    url = "https://trendlyne.com/futures-options/api-filter/futures/31-aug-2023-next/oi_gainers/"
+    url = "https://trendlyne.com/futures-options/api-filter/futures/28-sep-2023-near/oi_gainers/"
 
     headers = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
