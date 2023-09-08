@@ -2672,7 +2672,7 @@ def chart_topgainer(request):
 
 
 def fetch_option_data_with_spot_price(request):
-    selected_symbol = request.GET.get('symbol')
+    selected_symbol = request.GET.get('symbol','NIFTY')
     selectedDate = request.GET.get('selectedDate')
     print(selected_symbol)
     print(selectedDate)
@@ -2682,6 +2682,7 @@ def fetch_option_data_with_spot_price(request):
     url_symbol_list = "https://webapi.niftytrader.in/webapi/symbol/psymbol-list"
     url_india_vix = "https://webapi.niftytrader.in/webapi/Other/other-symbol-spot-data?symbol=INDIA+VIX"
     url_spot_data = f"https://webapi.niftytrader.in/webapi/symbol/today-spot-data?symbol={selected_symbol}"
+    
 
     headers = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
@@ -2711,11 +2712,14 @@ def fetch_option_data_with_spot_price(request):
         All_symbols.append(symbol["symbol_name"])
 
     for options_date in data['resultData']["opExpiryDates"]:
-        date_str = options_date.split("T")[0]
-        date_obj = datetime.datetime.strptime(date_str, "%Y-%m-%d")
-        formatted_date = datetime.datetime.strftime(
-            date_obj, "%Y-%m-%d")
-        All_dates.append(formatted_date)
+        if options_date is not None and isinstance(options_date, str):
+            date_str = options_date.split("T")[0]
+            date_obj = datetime.datetime.strptime(date_str, "%Y-%m-%d")
+            formatted_date = date_obj.strftime("%Y-%m-%d")
+            print(options_date)
+            print(formatted_date)
+            All_dates.append(formatted_date)
+    print(All_dates)        
 
     total_puts_change_oi = 0
     total_calls_change_oi = 0
