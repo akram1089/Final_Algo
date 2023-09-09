@@ -390,7 +390,7 @@
                 <div class="pcr d-block">
                     <div class="title_pcr">PCR</div>
                     <div class="pcr_value">
-                        1.89
+              
                     </div>
                 </div>
 
@@ -401,6 +401,7 @@
                 </div>
                 <div class="closest_value" style="display: none;"></div>
                 <div class="Strategy_parmeters" style="display: none;">straddle</div>
+                <input class="sample_startdate" style="display: inline;"></input>
 
 
 
@@ -2045,35 +2046,35 @@
 
                 </div>
                 <div class="modal-body">
-                    <div class="form-group d-none">
+                    <div class="form-group" style="display: none;">
                         <label for="call_inst_type">Call_inst_type</label>
                         <!-- <input type="text" id="call_inst_type" class="form-control" min="1" disabled> -->
                     </div>
-                    <div class="form-group d-none">
+                    <div class="form-group"style="display: none;">
                         <label for="callLotSizeInput">Lot Size:</label>
                         <input type="number" id="callLotSizeInput" class="form-control" min="1" disabled>
                     </div>
-                    <div class="form-group d-none">
+                    <div class="form-group"style="display: none;">
                         <label for="call_ltp">Call LTP:</label>
                         <input type="number" id="call_ltp" class="form-control" min="1" disabled>
                     </div>
-                    <div class="form-group d-none">
+                    <div class="form-group"style="display: none;">
                         <label for="call_strike">Call Strike:</label>
                         <input type="number" id="call_strike" class="form-control" min="1" disabled>
                     </div>
-                    <div class="form-group d-none">
+                    <div class="form-group"style="display: none;">
                         <label for="calls_delta">Call Delta:</label>
                         <input type="number" id="calls_delta" class="form-control" min="1" disabled>
                     </div>
-                    <div class="form-group d-none">
+                    <div class="form-group"style="display: none;">
                         <label for="calls_theta">Call Theta:</label>
                         <input type="number" id="calls_theta" class="form-control" min="1" disabled>
                     </div>
-                    <div class="form-group d-none">
+                    <div class="form-group"style="display: none;">
                         <label for="calls_gamma">Call Gamma:</label>
                         <input type="number" id="calls_gamma" class="form-control" min="1" disabled>
                     </div>
-                    <div class="form-group d-none">
+                    <div class="form-group"style="display: none;">
                         <label for="calls_vega">Call Gamma:</label>
                         <input type="number" id="calls_vega" class="form-control" min="1" disabled>
                     </div>
@@ -2904,6 +2905,7 @@
                 updateButtonState(); // Update the button state after changing the date
                 prevOneDay_disable()
                 DateFormatted()
+                setupStartDateListener();
             });
             // Handle click on the button
             $('#btnOneDayForward').click(function () {
@@ -2915,6 +2917,7 @@
                     prevOneDay_disable()
                 }
                 DateFormatted()
+                setupStartDateListener();
             });
 
 
@@ -2946,7 +2949,7 @@
                 }
 
                 // Use setTimeout to capture the initial value after 1 second
-                setTimeout(function () {
+
                     updatePrevBtn = startDateInput.val();
                     // Call prevOneDay_disable to initially disable the button
                     prevOneDay_disable();
@@ -2958,9 +2961,11 @@
                     // Set up an event listener to update the prevOneDay_disable function whenever #startDate changes
                     startDateInput.on("change", function () {
                         updatePrevBtn = startDateInput.val(); // Save the new initial value
+                        console.log(updatePrevBtn);
+                        $(".sample_startdate").val(updatePrevBtn)
                         prevOneDay_disable(); // Run the function
                     });
-                }, 8000); // Delay capturing the initial value by 1 second
+        
             }
 
             function prevOneDay_disable() {
@@ -2979,8 +2984,7 @@
                 }
             }
             function isUpdatePrevBtnEqualToStartDate() {
-                const startDateInput = $("#startDate");
-                const startDateValue = startDateInput.val();
+               const startDateValue= $(".sample_startdate").val()
                 return updatePrevBtn === startDateValue;
             }
 
@@ -3150,7 +3154,9 @@
                 changeStartTimeMinutes(30);
                 setupStartDateListener();
             });
-
+            $('#btn30MintBack').prop('disabled', true);
+                        $('#btn15MintBack').prop('disabled', true);
+                        $('#btn5MintBack').prop('disabled', true);
             function changeStartTimeMinutes(minutesDelta) {
                 //console.log(minutesDelta);
                 var time = $(".time_formated").text();
@@ -3393,7 +3399,8 @@
                 var closestStrikePrice = null;
                 var closestDiff = Number.MAX_VALUE;
                 //console.log('closestDiff' + closestDiff);
-
+var callOI=0
+var putOI=0
 
                 data.forEach(row => {
 
@@ -3454,7 +3461,8 @@
                     newRow.append($('<td>').addClass(bottom_bg_right + ' ' + text_end).text(replaceZeroWithDash(row.pcr)));
 
                     newRow.append($('<td>').addClass(bottom_bg_right).append(putActionsBtn));
-
+                        callOI+=row.calls_oi
+                        putOI+=row.puts_oi
                     // Disable buttons when puts_ltp is 0 or calls_ltp is 0
                     if (row.puts_ltp === 0) {
                         putActionsBtn.prop('disabled', true);
@@ -3468,6 +3476,16 @@
                     tableBody.append(newRow);
                 });
                 //console.log("Closest Strike Price" + closestStrikePrice);
+
+                // console.log('Putcall_ratio'+ putOI/callOI);
+                $(".pcr_value").text((putOI/callOI).toFixed(3))
+           
+                // Check if .sample_startdate has a value before setting it
+if (!$(".sample_startdate").val()) {
+    $(".sample_startdate").val($("#startDate").val());
+}
+
+                
                 var optionChainTable = $(".option_simulator_body");
 
 
