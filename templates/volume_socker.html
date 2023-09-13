@@ -33,6 +33,7 @@
 <style>
   tr {
     white-space: nowrap;
+    
   }
 
   .bi.bi-graph-up {
@@ -55,6 +56,7 @@
 
   tr:hover .symbol_name_watchlist {
     color: #2196f3;
+    
   }
 
   /* Reset default margin and padding for the table */
@@ -71,7 +73,11 @@
 
   /* Add padding to tbody tr */
   tbody tr {
+
+    border-bottom: .5px solid #0000006d !important;
+
     border-bottom: 1px solid #0f0f0f !important;
+
     /* Add borders between rows */
   }
 
@@ -100,9 +106,10 @@
   thead {
     padding: 12px 15px !important;
     font-size: 17px !important;
-    background: #4399eb !important;
-    color: #fff !important;
-    border-right: 1px solid var(--border-gray) !important;
+    background: #eff9ff;
+    color: #081a76 !important;
+    font-weight: bold !important;
+    /* border-right: 1px solid var(--border-gray) !important; */
   }
 </style>
 <style>
@@ -131,10 +138,12 @@
 
 
 
-  .table-striped-custom>tbody>tr:nth-child(2n)>td,
+  /* .table-striped-custom>tbody>tr:nth-child(2n)>td,
   .table-striped-custom>tbody>tr:nth-child(2n)>th {
     background-color: rgb(240, 247, 253) !important;
-  }
+   
+  } */
+  
 
   /* Custom CSS to change the background color of placeholder-glow */
   .placeholder-glow:focus::placeholder {
@@ -201,7 +210,7 @@
   }
 
   table.dataTable tbody td {
-    border: none !important;
+    /* border: none !important; */
     border-top: 0 !important;
   }
 
@@ -238,6 +247,18 @@
   #volume_shocker_table_wrapper{
     display: flex;
     flex-direction: column;
+  }
+
+  .dataTables_filter input{
+    all:unset !important;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.611) !important;
+  }
+  .dataTables_filter label{
+   position: relative;
+  }
+  .dataTables_filter label i{
+   position: absolute;
+   right: 2px;
   }
 
 
@@ -353,6 +374,40 @@
 
 
 
+        $('#volume_shocker_table').DataTable({
+          "pageLength": 25
+        });
+        $('#volume_shocker_table').wrap('<div class="parent_table"></div>');
+        $('#volume_shocker_table_length,#volume_shocker_table_filter').wrapAll('<div class="parent_search_length"></div>');
+        
+        var icon = $("<i>").addClass("bi bi-search").attr('id',"magnifying_glass");
+         $(".dataTables_filter label").append(icon);
+         
+      }
+
+      // Make an AJAX request to fetch the breakout data
+      function volume_shocker_data() {
+
+        $("#loader").show();
+        $.ajax({
+          url: '/breakout_data',
+          method: 'GET',
+          dataType: 'json',
+          beforeSend: function () {
+            $("#loader").show(); // Show the loader before AJAX call
+          },
+          success: function (data) {
+            console.log(data);
+            createTableRows(data);
+          },
+          error: function (xhr, status, error) {
+            console.error('Request failed. Status: ' + xhr.status);
+            $("#loader").hide(); // Hide the loader in case of an error
+          }
+        });
+      }
+ 
+
 
 
 
@@ -365,6 +420,7 @@
     
         // Add CSS to position the icon absolutely
   
+
 
 
     </script>
