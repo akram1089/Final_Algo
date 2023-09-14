@@ -4186,13 +4186,15 @@ def filter_iv_data(request):
                     "position": action,
                     "quantity": quantity,
                     "conditionOrder": conditionOrder,
-                    "tradedPrice": ltpValue,
-                    "iv": 0
+                    "iv": 0,
+                    "tradedPrice": ltpValue
                 }
 
                 stock_payload["data"].append(stock_payload_item)
+                print(stock_payload_item)
 
                 # Create an item for the IV payload
+                
                 iv_payload_item = {
                     "optionType": optionSide,
                     "strikePrice": strikePrice,
@@ -4234,3 +4236,25 @@ def filter_iv_data(request):
             return JsonResponse({'error': str(e)}, status=500)
     else:
         return JsonResponse({'error': 'Invalid request method'}, status=400)
+
+
+import requests
+def bse_spot_data(request):
+    url_date = "https://webapi.niftytrader.in/webapi/symbol/today-spot-data?symbol=SENSEX&exchange=bse"
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
+        "Accept-Language": "en-US,en;q=0.9",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive"
+    }
+    response_date = requests.get(url_date, headers=headers)
+    data_date = response_date.json()
+    
+
+ 
+
+    return JsonResponse(data_date["resultData"])
+
+
+def option_strategy_tester(request):
+    return render(request,"option_strategy_tester.html")
