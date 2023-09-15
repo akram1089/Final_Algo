@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django.urls import path
+from django.shortcuts import render, redirect, HttpResponse
 from . import views
 from django.conf import settings
 from django.conf.urls.static import static
@@ -31,7 +32,7 @@ urlpatterns = [
     path('chart_topgainer', views.chart_topgainer, name='chart_topgainer'),
     path('Futures_Buildup', views.Futures_Buildup, name='Futures_Buildup'),
     path('contact_us', views.contact_us, name='contact_us'),
-    path('base', views.base, name='base'),
+#     path('base', views.base, name='base'),
     path('option_strategies', views.option_strategies, name='option_strategies'),
     path('strategy_builder', views.strategy_builder, name='strategy_builder'),
     path('market_glance', views.market_glance, name='market_glance'),
@@ -117,6 +118,63 @@ urlpatterns = [
 
 
     path('fetch_option_data_with_spot_price', views.fetch_option_data_with_spot_price, name='fetch_option_data_with_spot_price'),
+    path('breakout_data', views.breakout_data, name='breakout_data'),
+    path('volume_socker', views.volume_socker, name='volume_socker'),
+    path('get_gainers_data_separate', views.get_gainers_data_separate, name='get_gainers_data_separate'),
+    path('top_gainers', views.top_gainers, name='top_gainers'),
+    path('get_loosers_data_separate', views.get_loosers_data_separate, name='get_loosers_data_separate'),
+    path('top_loosers', views.top_loosers, name='top_loosers'),
+    path('get_gap_data', views.get_gap_data, name='get_gap_data'),
+    path('gap_up_gap_down', views.gap_up_gap_down, name='gap_up_gap_down'),
+    path('save_to_watchlist', views.save_to_watchlist, name='save_to_watchlist'),
+    path('get_watchlist_data', views.get_watchlist_data, name='get_watchlist_data'),
+    path('delete_watchlist_item/<str:item_id>', views.delete_watchlist_item, name='delete_watchlist_item'),
+
+    path('get_intraday_breakout_data', views.get_intraday_breakout_data, name='get_intraday_breakout_data'),
+    path('intraday_breakouts', views.intraday_breakouts, name='intraday_breakouts'),
+
+
+    path('opening_clue_data_view', views.opening_clue_data_view, name='opening_clue_data_view'),
+    path('opening_price_clues', views.opening_price_clues, name='opening_price_clues'),
+    path('base_api_border_top', views.base_api_border_top, name='base_api_border_top'),
+    path('get_derivative_data', views.get_derivative_data, name='get_derivative_data'),
+    path('derivative_summary', views.derivative_summary, name='derivative_summary'),
+    path('future_dashboard_charts', views.future_dashboard_charts, name='future_dashboard_charts'),
+    path('nse_volume_shocker', views.nse_volume_shocker, name='nse_volume_shocker'),
+    path('nse_most_active_stock', views.nse_most_active_stock, name='nse_most_active_stock'),
+    path('nse_most_spread_stock', views.nse_most_spread_stock, name='nse_most_spread_stock'),
+    path('dashboard_news_feed', views.dashboard_news_feed, name='dashboard_news_feed'),
+#     path('strangle_chart', views.strangle_chart, name='strangle_chart'),
+#     path('get_straddle_backtest_data', views.get_straddle_backtest_data, name='get_straddle_backtest_data'),
+#     path('straddle_payoff', views.straddle_payoff, name='straddle_payoff'),
+#     path('fetch_expiry_data_option_strategies', views.fetch_expiry_data_option_strategies, name='fetch_expiry_data_option_strategies'),
+    path('get_expiry_data/<str:symbol>/', views.get_expiry_data, name='get_expiry_data'),
+    path('option_simulator_data', views.option_simulator_data, name='option_simulator_data'),
+    path('straddle_data', views.straddle_data, name='straddle_data'),
+    path('option_strategies/long_call_option', views.long_call_option, name='long_call_option'),
+    path('option_strategies/long_put_option', views.long_put_option, name='long_put_option'),
+    path('option_strategies/covered_call', views.covered_call, name='covered_call'),
+    path('option_strategies/short_call_option', views.short_call_option, name='short_call_option'),
+    path('option_strategies/synthetic_long_call', views.synthetic_long_call, name='synthetic_long_call'),
+    path('option_strategies/covered_put', views.covered_put, name='covered_put'),
+    path('option_strategies/long_combo', views.long_combo, name='long_combo'),
+    path('option_strategies/long_straddle', views.long_straddle, name='long_straddle'),
+    path('option_strategies/short_straddle', views.short_straddle, name='short_straddle'),
+    path('option_strategies/pretective_call', views.pretective_call, name='pretective_call'),
+    path('aaaa', views.aaaa, name='aaaa'),
+    path('option_strategy_optimizer', views.option_strategy_optimizer, name='option_strategy_optimizer'),
+    path('get_stock_symbol', views.get_stock_symbol, name='get_stock_symbol'),
+    path('get_option_strategy_optimizer_spot_data', views.get_option_strategy_optimizer_spot_data, name='get_option_strategy_optimizer_spot_data'),
+    path('get_option_strategy_optimizer_option_data', views.get_option_strategy_optimizer_option_data, name='get_option_strategy_optimizer_option_data'),
+    path('option_strategies_expiry', views.option_strategies_expiry, name='option_strategies_expiry'),
+    path('get_payoff_data/', views.get_payoff_data, name='get_payoff_data'),
+    path('filter_iv_data', views.filter_iv_data, name='filter_iv_data'),
+    path('bse_spot_data', views.bse_spot_data, name='bse_spot_data'),
+    path('option_strategy_tester', views.option_strategy_tester, name='option_strategy_tester'),
+
+
+
+
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 urlpatterns += staticfiles_urlpatterns()
@@ -124,3 +182,18 @@ urlpatterns += staticfiles_urlpatterns()
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL,
                           document_root=settings.MEDIA_ROOT)
+
+
+
+
+# Import your app's views here
+# For example, if your app is named 'myapp':
+# from myapp import views
+
+
+
+# Custom 404 page
+def custom_404_view(request, exception=None):
+    return render(request, '404/404.html', status=404)
+
+handler404 = custom_404_view
