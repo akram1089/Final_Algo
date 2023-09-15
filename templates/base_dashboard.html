@@ -85,10 +85,16 @@
  color: #4399eb !important;
  border:  1px solid #4399eb !important;
 }
+.social_icons{
+  margin-top: 2rem;
+}
 .social_icons ul li a{
   text-decoration: none;
   color: white;
   
+}
+.link-highlighter{
+  text-decoration:none;
 }
 .social_icons ul li{
   width: 36px;
@@ -4126,7 +4132,7 @@ font-weight: 100;
               src="/static/img/logos/phone.782354bc.svg" alt="phone"></a><a><img src="/static/img/logos/email.62a27ea7.svg"
               alt="feedback"></a></div>
   
-  <div class="container-fluid">
+  <div class="container-fluid p-0">
   <div class="row">
     <div class="sidebar border border-right col-md-3 col-lg-2 p-0 bg-body-tertiary d-none" style="    position: fixed;
     width: 16.6%;
@@ -4456,7 +4462,8 @@ font-weight: 100;
             <div class="col-lg-3 col-md-12">
               <div class="logo">
                <!-- <h2>Algo <span>Trade</span></h2> -->
-               <img src="{% static '/img/footer_logo.png' %}" alt="" style="    width: 140px !important; margin-bottom: 5px;">
+     
+               <img src="{% static '/img/footer_logo.png' %}" alt="Footer-Icon" style="width: 140px !important; margin-bottom: 20px;">
                <p class="fw-light">The team at AlgoTrade.com is always endeavoring to improve education about technical analysis approach to decipher the movement of stock market.</p>
                <div class="social_icons">
                  <ul class="ps-0 d-flex list-unstyled">
@@ -4553,16 +4560,50 @@ font-weight: 100;
         </div>
         <div class="text-right">
           <script>
-       $('.subscribe_input').focus(function () {
+
+            $(document).ready(function() {
+              $('.subscribe_input').focus(function () {
                 $('#subscribe_main').addClass("border_change");
             });
             $('.subscribe_input').blur(function () {
                 $('#subscribe_main').removeClass("border_change");
             });
-          
+            $(window).scroll(function() {
+              if ($(this).scrollTop() >= 200) {
+                  $('.arrow_for_top').show();
+              } else {
+                  $('.arrow_for_top').hide();
+              }
+          });
+      
+          // Scroll to top when the button is clicked
+          $('.arrow_for_top').click(function() {
+     
+              $('html, body').animate({
+                  scrollTop: 0
+              }, 100); // You can adjust the scroll speed here (in milliseconds)
+          });
+});
+
+
           </script>
-          <div class="arrow_for_top" style="background-color:rgba(33,150,243,.2); border-radius:50%; height: 40px; width:41px; position: relative;">
-            <i class="bi bi-chevron-up fw-bolder" style="position: absolute; top:50%; left:50%; transform:translate(-50% , -50%); color: #2196f3!important;"></i>
+          <style>
+.arrow_for_top{
+  background-color: rgba(33,150,243,.2);
+    border-radius: 50%;
+    height: 40px;
+    width: 41px;
+    position: fixed;
+    left: 1rem;
+    bottom: 2rem;
+    z-index: 9999999999;
+    cursor: pointer;
+    display: none;
+}
+
+          </style>
+          <div class="arrow_for_top">
+            <i class="bx bxs-chevron-up fw-bolder" style="position: absolute; top:50%; left:50%; transform:translate(-50% , -50%); color: #2196f3!important;"></i>
           </div>
         </div>
         <div class="lower_footer text-center d-flex justify-content-center align-items-center">

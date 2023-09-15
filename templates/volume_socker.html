@@ -33,9 +33,7 @@
 <style>
   tr {
     white-space: nowrap;
- Deepak-Khatei
     font-size: 16px;
-
   }
 
   .bi.bi-graph-up {
@@ -58,6 +56,7 @@
 
   tr:hover .symbol_name_watchlist {
     color: #2196f3;
+    
   }
 
   /* Reset default margin and padding for the table */
@@ -72,13 +71,10 @@
     text-align: left;
   }
 
-  /* Add padding to tbody tr */
   tbody tr {
-
-    border-bottom: .5px solid #0000006d !important;
+    border-bottom: .5px solid #00000024 !important;
     font-size: 14px;
-
-    /* Add borders between rows */
+  
   }
 
   td>div,
@@ -106,9 +102,10 @@
   thead {
     padding: 10px 15px !important;
     font-size: 17px !important;
-    background: #4399eb !important;
-    color: #fff !important;
-    border-right: 1px solid var(--border-gray) !important;
+    background: #eff9ff;
+    color: #081a76 !important;
+    font-weight: bold !important;
+    /* border-right: 1px solid var(--border-gray) !important; */
   }
 </style>
 <style>
@@ -137,10 +134,12 @@
 
 
 
-  .table-striped-custom>tbody>tr:nth-child(2n)>td,
+  /* .table-striped-custom>tbody>tr:nth-child(2n)>td,
   .table-striped-custom>tbody>tr:nth-child(2n)>th {
     background-color: rgb(240, 247, 253) !important;
-  }
+   
+  } */
+  
 
   /* Custom CSS to change the background color of placeholder-glow */
   .placeholder-glow:focus::placeholder {
@@ -207,7 +206,7 @@
   }
 
   table.dataTable tbody td {
-    border: none !important;
+    /* border: none !important; */
     border-top: 0 !important;
   }
 
@@ -222,9 +221,6 @@
   position: fixed;
 } */
   /* Custom CSS for DataTable's search input and length dropdown */
-  .table-container {
-    position: relative;
-  }
 
 
   .parent_table {
@@ -245,7 +241,6 @@
     display: flex;
     flex-direction: column;
   }
-
   .dataTables_filter input{
     all:unset !important;
     text-align: left !important;
@@ -255,12 +250,20 @@
    position: relative;
   }
   .dataTables_filter label i{
-   position: absolute;
-   right: 2px;
+    position: absolute;
+    font-size: 16px;
+    right: 8px;
+    top: 5px;
+    color: gray;
+    font-weight: 800 !important;
   }
-=======
-
-
+#breakout-table tr:hover{
+  background-color: rgba(199, 237, 250, 0.203);
+  
+}
+#volume_shocker_table_filter label input::placeholder {
+    content: "Search stocks:";
+}
 
 </style>
 <div>
@@ -272,7 +275,7 @@
       <div class="row justify-content-center mt-2">
         <div class="col-md-12" id="main_volume_socker">
 
-          <table border="1" class="table table-hover mb-4 table-striped-custom" id="volume_shocker_table"
+          <table border="1" class="table mb-4 table-striped-custom" id="volume_shocker_table"
             style="width:-webkit-fill-available;">
             <thead>
               <tr>
@@ -308,74 +311,23 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
       // Function to create the table rows from the JSON data
-
-     // Select the input field within .dataTables_wrapper .dataTables_filter
-
-
-
-
-// Add an icon to the search input
-
-    
-        // Add CSS to position the icon absolutely
-        function createTableRows(data) {
-          let table = $("#breakout-table");
-          for (let item of data) {
-            let row = $("<tr>");
-            $("<td>").append(
-              $('<div style="display: flex; align-items: center; gap: 0.4rem;">').append(
-                '<a href="https://www.tradingview.com/chart/MgiGDMYM/?symbol=' + item.symbol_name + '&aff_id=113877" target="_blank"><i class="bi bi-graph-up"></i></a>',
-                '<div style="margin-top: 0rem; margin-bottom: 0rem;" class="symbol_name">' + item.symbol_name + '</div>'
-              )
-            ).appendTo(row);
-            $("<td>").append($('<div>').text(item.last_trade_price)).appendTo(row);
-            $("<td>").append($('<div>').text(item.high)).appendTo(row);
-            $("<td>").append($('<div>').text(item.low)).appendTo(row);
-            $("<td>").append($('<div>').text(item.avg_daily_volume).addClass('text-center')).appendTo(row);
-            $("<td>").append($('<div>').text(item.ratio).addClass('text-center')).appendTo(row);
-            table.append(row);
-          }
-  
-  
-          $("#loader").hide(); // Hide the loader once data is loaded
-          $("#breakout-table").show(); // Show the table after data is loaded
-          if ($.fn.DataTable.isDataTable("#volume_shocker_table")) {
-            $("#volume_shocker_table").DataTable().destroy();
-          }
-  
-          $('#volume_shocker_table').DataTable({
-            "pageLength": 25
-          });
-          $('#volume_shocker_table').wrap('<div class="parent_table"></div>');
-          $('#volume_shocker_table_length,#volume_shocker_table_filter').wrapAll('<div class="parent_search_length"></div>');
-
-          $(".dataTables_filter input").css('background',"red")
-          var icon = $("<i>").addClass("bi bi-search").attr('id',"magnifying_glass");
-    $(".dataTables_filter label").append(icon);
-
-        }
-  
-        // Make an AJAX request to fetch the breakout data
-        function volume_shocker_data() {
-  
-          $("#loader").show();
-          $.ajax({
-            url: '/breakout_data',
-            method: 'GET',
-            dataType: 'json',
-            beforeSend: function () {
-              $("#loader").show(); // Show the loader before AJAX call
-            },
-            success: function (data) {
-              console.log(data);
-              createTableRows(data);
-            },
-            error: function (xhr, status, error) {
-              console.error('Request failed. Status: ' + xhr.status);
-              $("#loader").hide(); // Hide the loader in case of an error
-            }
-          });
- 
+   
+      function createTableRows(data) {
+        let table = $("#breakout-table");
+        for (let item of data) {
+          let row = $("<tr>");
+          $("<td>").append(
+            $('<div style="display: flex; align-items: center; gap: 0.4rem;">').append(
+              '<a href="https://www.tradingview.com/chart/MgiGDMYM/?symbol=' + item.symbol_name + '&aff_id=113877" target="_blank"><i class="bi bi-graph-up"></i></a>',
+              '<div style="margin-top: 0rem; margin-bottom: 0rem;" class="symbol_name">' + item.symbol_name + '</div>'
+            )
+          ).appendTo(row);
+          $("<td>").append($('<div>').text(item.last_trade_price)).appendTo(row);
+          $("<td>").append($('<div>').text(item.high)).appendTo(row);
+          $("<td>").append($('<div>').text(item.low)).appendTo(row);
+          $("<td>").append($('<div>').text(item.avg_daily_volume).addClass('text-center')).appendTo(row);
+          $("<td>").append($('<div>').text(item.ratio).addClass('text-center')).appendTo(row);
+          table.append(row);
         }
 
 
@@ -385,16 +337,20 @@
           $("#volume_shocker_table").DataTable().destroy();
         }
 
-
         $('#volume_shocker_table').DataTable({
           "pageLength": 25
         });
         $('#volume_shocker_table').wrap('<div class="parent_table"></div>');
         $('#volume_shocker_table_length,#volume_shocker_table_filter').wrapAll('<div class="parent_search_length"></div>');
         
-        var icon = $("<i>").addClass("bi bi-search").attr('id',"magnifying_glass");
+        var icon = $("<i>").addClass("bx bx-search").attr('id',"magnifying_glass");
          $(".dataTables_filter label").append(icon);
-         
+       
+         $('#volume_shocker_table_filter label').contents().filter(function() {
+        return this.nodeType === 3; // Filter out text nodes
+    }).remove();
+    $('#volume_shocker_table_filter label input').attr('placeholder', 'Search stocks:');
+
       }
 
       // Make an AJAX request to fetch the breakout data
@@ -420,21 +376,7 @@
       }
       volume_shocker_data();
       setInterval(volume_shocker_data, 150000);
-
- 
-
-
-
-
-        
-    });
-    
-    
-        // Add CSS to position the icon absolutely
-  
-
-
     </script>
   </div>
 
-  {% endblock dashboard_body %}
+  {% endblock dashboard_body %}
