@@ -71,7 +71,7 @@
 
   /* Add padding to tbody tr */
   tbody tr {
-    border-bottom: 1px solid #ddd;
+    border-bottom: 1px solid #0f0f0f !important;
     /* Add borders between rows */
   }
 
@@ -191,7 +191,7 @@
 
   table.dataTable tbody tr {
     background-color: transparent;
-    border-bottom: transparent;
+    border-bottom: red !important;
   }
 
   table.dataTable thead th,
@@ -239,6 +239,10 @@
     display: flex;
     flex-direction: column;
   }
+.dataTables_filter input{
+  all: unset !important;
+}
+
 </style>
 <div>
   <div>
@@ -285,61 +289,94 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
       // Function to create the table rows from the JSON data
-      function createTableRows(data) {
-        let table = $("#breakout-table");
-        for (let item of data) {
-          let row = $("<tr>");
-          $("<td>").append(
-            $('<div style="display: flex; align-items: center; gap: 0.4rem;">').append(
-              '<a href="https://www.tradingview.com/chart/MgiGDMYM/?symbol=' + item.symbol_name + '&aff_id=113877" target="_blank"><i class="bi bi-graph-up"></i></a>',
-              '<div style="margin-top: 0rem; margin-bottom: 0rem;" class="symbol_name">' + item.symbol_name + '</div>'
-            )
-          ).appendTo(row);
-          $("<td>").append($('<div>').text(item.last_trade_price)).appendTo(row);
-          $("<td>").append($('<div>').text(item.high)).appendTo(row);
-          $("<td>").append($('<div>').text(item.low)).appendTo(row);
-          $("<td>").append($('<div>').text(item.avg_daily_volume).addClass('text-center')).appendTo(row);
-          $("<td>").append($('<div>').text(item.ratio).addClass('text-center')).appendTo(row);
-          table.append(row);
-        }
+      $(document).ready(function () {
+        // Create the icon element
+     // Select the input field within .dataTables_wrapper .dataTables_filter
 
 
-        $("#loader").hide(); // Hide the loader once data is loaded
-        $("#breakout-table").show(); // Show the table after data is loaded
-        if ($.fn.DataTable.isDataTable("#volume_shocker_table")) {
-          $("#volume_shocker_table").DataTable().destroy();
-        }
 
-        $('#volume_shocker_table').DataTable({
-          "pageLength": 25
-        });
-        $('#volume_shocker_table').wrap('<div class="parent_table"></div>');
-        $('#volume_shocker_table_length,#volume_shocker_table_filter').wrapAll('<div class="parent_search_length"></div>');
-      }
 
-      // Make an AJAX request to fetch the breakout data
-      function volume_shocker_data() {
+// Add an icon to the search input
 
-        $("#loader").show();
-        $.ajax({
-          url: '/breakout_data',
-          method: 'GET',
-          dataType: 'json',
-          beforeSend: function () {
-            $("#loader").show(); // Show the loader before AJAX call
-          },
-          success: function (data) {
-            console.log(data);
-            createTableRows(data);
-          },
-          error: function (xhr, status, error) {
-            console.error('Request failed. Status: ' + xhr.status);
-            $("#loader").hide(); // Hide the loader in case of an error
+    
+        // Add CSS to position the icon absolutely
+        function createTableRows(data) {
+          let table = $("#breakout-table");
+          for (let item of data) {
+            let row = $("<tr>");
+            $("<td>").append(
+              $('<div style="display: flex; align-items: center; gap: 0.4rem;">').append(
+                '<a href="https://www.tradingview.com/chart/MgiGDMYM/?symbol=' + item.symbol_name + '&aff_id=113877" target="_blank"><i class="bi bi-graph-up"></i></a>',
+                '<div style="margin-top: 0rem; margin-bottom: 0rem;" class="symbol_name">' + item.symbol_name + '</div>'
+              )
+            ).appendTo(row);
+            $("<td>").append($('<div>').text(item.last_trade_price)).appendTo(row);
+            $("<td>").append($('<div>').text(item.high)).appendTo(row);
+            $("<td>").append($('<div>').text(item.low)).appendTo(row);
+            $("<td>").append($('<div>').text(item.avg_daily_volume).addClass('text-center')).appendTo(row);
+            $("<td>").append($('<div>').text(item.ratio).addClass('text-center')).appendTo(row);
+            table.append(row);
           }
-        });
-      }
-      volume_shocker_data();
-      setInterval(volume_shocker_data, 150000);
+  
+  
+          $("#loader").hide(); // Hide the loader once data is loaded
+          $("#breakout-table").show(); // Show the table after data is loaded
+          if ($.fn.DataTable.isDataTable("#volume_shocker_table")) {
+            $("#volume_shocker_table").DataTable().destroy();
+          }
+  
+          $('#volume_shocker_table').DataTable({
+            "pageLength": 25
+          });
+          $('#volume_shocker_table').wrap('<div class="parent_table"></div>');
+          $('#volume_shocker_table_length,#volume_shocker_table_filter').wrapAll('<div class="parent_search_length"></div>');
+
+          $(".dataTables_filter input").css('background',"red")
+          var icon = $("<i>").addClass("bi bi-search").attr('id',"magnifying_glass");
+    $(".dataTables_filter label").append(icon);
+
+        }
+  
+        // Make an AJAX request to fetch the breakout data
+        function volume_shocker_data() {
+  
+          $("#loader").show();
+          $.ajax({
+            url: '/breakout_data',
+            method: 'GET',
+            dataType: 'json',
+            beforeSend: function () {
+              $("#loader").show(); // Show the loader before AJAX call
+            },
+            success: function (data) {
+              console.log(data);
+              createTableRows(data);
+            },
+            error: function (xhr, status, error) {
+              console.error('Request failed. Status: ' + xhr.status);
+              $("#loader").hide(); // Hide the loader in case of an error
+            }
+          });
+        }
+
+
+
+
+ 
+
+
+
+
+        
+        volume_shocker_data();
+        setInterval(volume_shocker_data, 150000);
+    });
+    
+    
+        // Add CSS to position the icon absolutely
+  
+
+
     </script>
   </div>
 

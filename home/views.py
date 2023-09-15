@@ -880,7 +880,7 @@ def market_wide_position(request):
     for d in data["resultData"]["all_list_result"]:
         all_list.append(d)
 
-    df = pd.DataFrame(all_list).head(50)
+    df = pd.DataFrame(all_list).head(25)
     # Select only "symbol_name" and "current_percent" columns
     df = df[["symbol_name", "current_percent"]]
 
@@ -1079,7 +1079,7 @@ def dashboard(request):
     # Prepare data for Chart.js
     looser_labels = top_10_losers["companyShortName"].tolist()
     looser_values = top_10_losers["percentChange"].tolist()
-    url = "https://trendlyne.com/futures-options/api-filter/futures/31-aug-2023-next/oi_gainers/"
+    url = "https://trendlyne.com/futures-options/api-filter/futures/28-sep-2023-near/oi_gainers/"
 
     headers = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
@@ -1545,7 +1545,7 @@ def volume_shocker(request):
 
 
 def oi_gainers(request):
-    url = "https://trendlyne.com/futures-options/api-filter/futures/31-aug-2023-next/oi_gainers/"
+    url = "https://trendlyne.com/futures-options/api-filter/futures/28-sep-2023-near/oi_gainers/"
 
     headers = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
@@ -2449,7 +2449,7 @@ def contributor(request):
 
 
 def get_all_dates():
-    url_date = "https://webapi.niftytrader.in/webapi/Resource/nifty50-date-List"
+    url_date = "https://webapi.niftytrader.in/webapi/Resource/contrubutors-date-list?symbol=nifty"
     headers = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
         "Accept-Language": "en-US,en;q=0.9",
@@ -2459,8 +2459,9 @@ def get_all_dates():
     response_date = requests.get(url_date, headers=headers)
     data_date = response_date.json()
     all_dates = []
-    for date in data_date["resultData"]["date"]:
+    for date in data_date["resultData"]["start_date"]:
         all_dates.append(date)
+    print(all_dates)     
 
     return all_dates
 
@@ -2468,19 +2469,21 @@ def get_all_dates():
 def contributors_data(request):
     try:
         selected_date = request.GET.get('date')
-        selected_filter = request.GET.get('filter', 'nifty50')
+        selected_filter = request.GET.get('filter', 'nifty')
         if not selected_date:
             # Set initial selected date
             # Replace this with your code to fetch all available dates
             all_dates = get_all_dates()
+            print(all_dates)
             if all_dates:
                 selected_date = all_dates[1]
 
         print("Selected Date:", selected_date)
         print("Selected Filter:", selected_filter)
 
-        url = f'https://webapi.niftytrader.in/webapi/Resource/{selected_filter}-float-data?Date={selected_date}'
-        url_date = f"https://webapi.niftytrader.in/webapi/Resource/{selected_filter}-date-List"
+
+        url = f'https://webapi.niftytrader.in/webapi/Resource/contributors-data?symbol={selected_filter}&expiryDate={selected_date}'
+        url_date = f"https://webapi.niftytrader.in/webapi/Resource/contrubutors-date-list?symbol={selected_filter}"
         print(url)
         print(url_date)
 
@@ -2498,18 +2501,18 @@ def contributors_data(request):
             data = response.json()
             data_date = response_date.json()
 
-            all_dates = data_date.get("resultData", {}).get("date", [])
+            all_dates = data_date.get("resultData", {}).get("start_date", [])
             if not all_dates:
                 error_dict = {
                     "error": "No dates available"
                 }
                 return JsonResponse(error_dict, status=500)
 
-            print(all_dates[1])
+            # print(all_dates[1])
 
             date_max = data_date.get("resultData", {}).get("max_date")
 
-            stocks_data = data.get("resultData", {}).get("startdate", [])
+            stocks_data = data.get("resultData", {}).get("contributor_data", [])
             stocks_data_ltp = data.get("resultData", {}).get("enddate", [])
             # print(date_max)
 
@@ -2669,15 +2672,17 @@ def chart_topgainer(request):
 
 
 def fetch_option_data_with_spot_price(request):
-    selected_symbol = request.GET.get('symbol')
+    selected_symbol = request.GET.get('symbol','NIFTY')
     selectedDate = request.GET.get('selectedDate')
     print(selected_symbol)
     print(selectedDate)
 
     url = f"https://webapi.niftytrader.in/webapi/option/fatch-option-chain?symbol={selected_symbol}&expiryDate={selectedDate}"
+
     url_symbol_list = "https://webapi.niftytrader.in/webapi/symbol/psymbol-list"
     url_india_vix = "https://webapi.niftytrader.in/webapi/Other/other-symbol-spot-data?symbol=INDIA+VIX"
-    url_spot_data = f"https://webapi.niftytrader.in/webapi/symbol/today-spot-data?symbol={'NIFTY+50' if selected_symbol == 'nifty' else selected_symbol}"
+    url_spot_data = f"https://webapi.niftytrader.in/webapi/symbol/today-spot-data?symbol={selected_symbol}"
+    
 
     headers = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
@@ -2707,11 +2712,14 @@ def fetch_option_data_with_spot_price(request):
         All_symbols.append(symbol["symbol_name"])
 
     for options_date in data['resultData']["opExpiryDates"]:
-        date_str = options_date.split("T")[0]
-        date_obj = datetime.datetime.strptime(date_str, "%Y-%m-%d")
-        formatted_date = datetime.datetime.strftime(
-            date_obj, "%Y-%m-%d")
-        All_dates.append(formatted_date)
+        if options_date is not None and isinstance(options_date, str):
+            date_str = options_date.split("T")[0]
+            date_obj = datetime.datetime.strptime(date_str, "%Y-%m-%d")
+            formatted_date = date_obj.strftime("%Y-%m-%d")
+            print(options_date)
+            print(formatted_date)
+            All_dates.append(formatted_date)
+    print(All_dates)        
 
     total_puts_change_oi = 0
     total_calls_change_oi = 0
@@ -3396,3 +3404,857 @@ def nse_most_spread_stock(request):
             return JsonResponse(data, safe=False)
         else:
             return JsonResponse([], safe=False)
+
+
+def dashboard_news_feed(request):
+    url = "https://webapi.niftytrader.in/webapi/other/dashboard-rss-feeds"
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
+        "Accept-Language": "en-US,en;q=0.9",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive"
+    }
+
+    response = requests.get(url, headers=headers)
+    data = response.json()
+    print(data)
+    return JsonResponse(data)
+
+
+
+# from django.shortcuts import render
+# import pandas as pd
+# import yfinance as yf
+# import numpy as np
+# from django.http import JsonResponse
+
+# def fetch_stock_data(ticker, start_date, end_date):
+#     data = yf.download(ticker, start=start_date, end=end_date)
+#     return data
+
+# def strangle_backtest(stock_data, call_strike, put_strike, expiration_date, initial_capital):
+#     # Check if the expiration_date is in the stock_data DataFrame
+#     if expiration_date not in stock_data.index:
+#         raise ValueError(f"Expiration date {expiration_date} is not available in the stock_data.")
+
+#     # Buy the call and put options at the specified strike prices and expiration date
+#     call_option = stock_data.loc[stock_data.index == expiration_date, 'Open'].values[0] - call_strike
+#     put_option = put_strike - stock_data.loc[stock_data.index == expiration_date, 'Open'].values[0]
+
+#     # Calculate total investment cost
+#     total_cost = call_option + put_option
+
+#     # Compute the profit/loss for each trading day
+#     stock_data['Strangle_PnL'] = stock_data['Open'] - (stock_data['Open'].shift(1) + total_cost)
+
+#     # Calculate cumulative PnL
+#     stock_data['Cumulative_PnL'] = stock_data['Strangle_PnL'].cumsum()
+
+#     # Calculate the number of contracts we can buy with initial capital
+#     num_contracts = int(initial_capital // total_cost)
+
+#     # Calculate the final PnL
+#     final_pnl = num_contracts * stock_data.iloc[-1]['Strangle_PnL']
+
+#     # Calculate max profit and max loss
+#     max_profit = np.inf if call_strike > stock_data['Open'].max() else final_pnl
+#     max_loss = -total_cost
+
+#     # Calculate breakeven points
+#     breakeven_upper = call_strike + total_cost
+#     breakeven_lower = put_strike - total_cost
+
+#     # Calculate reward-risk ratio
+#     reward_risk_ratio = max_profit / abs(max_loss)
+
+#     return stock_data, final_pnl, max_profit, max_loss, breakeven_upper, breakeven_lower, reward_risk_ratio
+
+# def strangle_chart(request):
+#     # Define the parameters
+#     ticker = '^NSEI'
+#     start_date = '2023-07-20'
+#     end_date = '2023-07-31'
+#     call_strike = 20000  # Adjust this to the desired call strike price
+#     put_strike = 19500  # Adjust this to the desired put strike price
+#     expiration_date = '2023-07-27'  # Adjust this to the desired expiration date
+#     initial_capital = 10000  # Adjust this to your desired initial capital
+
+#     # Fetch historical stock data
+#     stock_data = fetch_stock_data(ticker, start_date, end_date)
+
+#     # Run the strangle backtest
+#     try:
+#         backtest_data, final_pnl, max_profit, max_loss, breakeven_upper, breakeven_lower, reward_risk_ratio = strangle_backtest(stock_data, call_strike, put_strike, expiration_date, initial_capital)
+#     except ValueError as e:
+#         error_message = str(e)
+#         return render(request, 'strangle_app/strangle_chart.html', {'error_message': error_message})
+
+#     # Create JSON representation of stock_data for the chart
+#     stock_data_json = stock_data.reset_index().to_json(orient='records')
+
+#     context = {
+#         'stock_data_json': stock_data_json,
+#         'final_pnl': final_pnl,
+#         'max_profit': max_profit,
+#         'max_loss': max_loss,
+#         'breakeven_upper': breakeven_upper,
+#         'breakeven_lower': breakeven_lower,
+#         'reward_risk_ratio': reward_risk_ratio,
+#     }
+
+#     return render(request, 'strangle_app/strangle_chart.html', context)
+
+# def strangle_chart_data(request):
+#     # Define the parameters
+#     ticker = '^NSEI'
+#     start_date = '2023-07-20'
+#     end_date = '2023-07-31'
+#     call_strike = 20000  # Adjust this to the desired call strike price
+#     put_strike = 19500  # Adjust this to the desired put strike price
+#     expiration_date = '2023-07-27'  # Adjust this to the desired expiration date
+#     initial_capital = 10000  # Adjust this to your desired initial capital
+
+#     # Fetch historical stock data
+#     stock_data = fetch_stock_data(ticker, start_date, end_date)
+
+#     # Run the strangle backtest
+#     try:
+#         backtest_data, final_pnl, max_profit, max_loss, breakeven_upper, breakeven_lower, reward_risk_ratio = strangle_backtest(stock_data, call_strike, put_strike, expiration_date, initial_capital)
+#     except ValueError as e:
+#         return JsonResponse({'error': str(e)})
+
+#     # Create JSON representation of stock_data for the chart
+#     stock_data_json = stock_data.reset_index().to_dict(orient='records')
+
+#     data = {
+#         'stock_data': stock_data_json,
+#         'final_pnl': final_pnl,
+#         'max_profit': max_profit,
+#         'max_loss': max_loss,
+#         'breakeven_upper': breakeven_upper,
+#         'breakeven_lower': breakeven_lower,
+#         'reward_risk_ratio': reward_risk_ratio,
+#     }
+
+#     return JsonResponse(data)
+
+
+
+# from django.shortcuts import render
+# from django.http import JsonResponse
+# import pandas as pd
+# import yfinance as yf
+# import numpy as np
+
+# def fetch_stock_data(ticker, start_date, end_date):
+#     data = yf.download(ticker, start=start_date, end=end_date)
+#     return data
+
+# def strangle_backtest(stock_data, call_strike, put_strike, expiration_date, initial_capital):
+#     # Check if the expiration_date is in the stock_data DataFrame
+#     if expiration_date not in stock_data.index:
+#         raise ValueError(f"Expiration date {expiration_date} is not available in the stock_data.")
+
+#     # Buy the call and put options at the specified strike prices and expiration date
+#     call_option = stock_data.loc[stock_data.index == expiration_date, 'Open'].values[0] - call_strike
+#     put_option = put_strike - stock_data.loc[stock_data.index == expiration_date, 'Open'].values[0]
+
+#     # Calculate total investment cost
+#     total_cost = call_option + put_option
+
+#     # Compute the profit/loss for each trading day
+#     stock_data['Strangle_PnL'] = stock_data['Open'] - (stock_data['Open'].shift(1) + total_cost)
+
+#     # Calculate cumulative PnL
+#     stock_data['Cumulative_PnL'] = stock_data['Strangle_PnL'].cumsum()
+
+#     # Calculate the number of contracts we can buy with initial capital
+#     num_contracts = int(initial_capital // total_cost)
+
+#     # Calculate the final PnL
+#     final_pnl = num_contracts * stock_data.iloc[-1]['Strangle_PnL']
+
+#     # Calculate max profit and max loss
+#     max_profit = np.inf if call_strike > stock_data['Open'].max() else final_pnl
+#     max_loss = -total_cost
+
+#     # Calculate breakeven points
+#     breakeven_upper = call_strike + total_cost
+#     breakeven_lower = put_strike - total_cost
+
+#     # Calculate reward-risk ratio
+#     reward_risk_ratio = max_profit / abs(max_loss)
+
+#     return stock_data, final_pnl, max_profit, max_loss, breakeven_upper, breakeven_lower, reward_risk_ratio
+
+#     # ... (same as before)
+
+# def strangle_chart(request):
+#     # Define the parameters (same as before)
+#     ticker = '^NSEI'
+#     start_date = '2023-07-20'
+#     end_date = '2023-07-31'
+#     call_strike = 20000  # Adjust this to the desired call strike price
+#     put_strike = 19500  # Adjust this to the desired put strike price
+#     expiration_date = '2023-07-27'  # Adjust this to the desired expiration date
+#     initial_capital = 10000  # Adjust this to your desired initial capital
+
+#     # Fetch historical stock data
+#     stock_data = fetch_stock_data(ticker, start_date, end_date)
+
+#     # Run the strangle backtest
+#     try:
+#         backtest_data, final_pnl, max_profit, max_loss, breakeven_upper, breakeven_lower, reward_risk_ratio = strangle_backtest(stock_data, call_strike, put_strike, expiration_date, initial_capital)
+#     except ValueError as e:
+#         return JsonResponse({'error_message': str(e)})
+
+#     # Convert Infinity and NaN to None in the backtest data
+#     backtest_data.replace([np.inf, -np.inf, np.nan], [None, None, None], inplace=True)
+
+#     # Convert the date values to a more readable format
+#     backtest_data['BacktestDate'] = backtest_data.index.strftime('%Y-%m-%d')
+
+#     # Create a dictionary for each row in the DataFrame (orient='records') and store them in a list
+#     stock_data_json = backtest_data.to_dict(orient='records')
+
+#     context = {
+#         'stock_data_json': stock_data_json,
+#         'final_pnl': final_pnl,
+#         'max_profit': max_profit.item() if np.isfinite(max_profit) else None,
+#         'max_loss': max_loss.item(),
+#         'breakeven_upper': breakeven_upper.item(),
+#         'breakeven_lower': breakeven_lower.item(),
+#         'reward_risk_ratio': reward_risk_ratio.item() if np.isfinite(reward_risk_ratio) else None,
+#     }
+
+#     return JsonResponse(context)
+
+
+
+
+
+# from django.shortcuts import render
+# import pandas as pd
+# import yfinance as yf
+# from django.http import JsonResponse
+
+# def fetch_stock_data(ticker, start_date, end_date):
+#     data = yf.download(ticker, start=start_date, end=end_date)
+#     return data
+
+# def straddle_backtest(stock_data, call_strike, put_strike, initial_capital):
+#     # Buy the call and put options at the specified strike prices
+#     stock_data['Call_PnL'] = stock_data['Open'] - call_strike
+#     stock_data['Put_PnL'] = put_strike - stock_data['Open']
+
+#     # Calculate the total investment cost
+#     total_cost = stock_data['Call_PnL'].abs() + stock_data['Put_PnL'].abs()
+
+#     # Calculate the profit/loss for each trading day
+#     stock_data['Straddle_PnL'] = stock_data['Call_PnL'] + stock_data['Put_PnL']
+
+#     # Calculate cumulative PnL
+#     stock_data['Cumulative_PnL'] = stock_data['Straddle_PnL'].cumsum()
+
+#     # Calculate max profit and max loss
+#     max_profit = stock_data['Straddle_PnL'].max()
+#     max_loss = stock_data['Straddle_PnL'].min()
+
+#     # Calculate breakevens
+#     breakeven_upper = call_strike + total_cost.min()
+#     breakeven_lower = put_strike - total_cost.min()
+
+#     # Calculate reward-risk ratio
+#     reward_risk_ratio = max_profit / max_loss
+
+#     # Calculate the final PnL
+#     final_pnl = stock_data.iloc[-1]['Cumulative_PnL']
+
+#     return stock_data, final_pnl, max_profit, max_loss, breakeven_upper, breakeven_lower, reward_risk_ratio
+
+# def straddle_view(request):
+#     return render(request, 'straddle_app/straddle.html')
+
+# def get_straddle_backtest_data(request):
+#     ticker = 'RELIANCE.NS'
+#     start_date = '2023-01-01'
+#     end_date = '2023-12-31'
+#     call_strike = 2500  # Set the desired call strike price
+#     put_strike = 2500  # Set the desired put strike price
+#     initial_capital = 100000  # Set your desired initial capital
+
+#     stock_data = fetch_stock_data(ticker, start_date, end_date)
+
+#     try:
+#         backtest_data, final_pnl, max_profit, max_loss, breakeven_upper, breakeven_lower, reward_risk_ratio = straddle_backtest(stock_data, call_strike, put_strike, initial_capital)
+#     except ValueError as e:
+#         return JsonResponse({'error': str(e)})
+
+#     # Reset the index and convert the Date column to string format for the chart
+#     backtest_data.reset_index(inplace=True)
+#     backtest_data['Date'] = backtest_data['Date'].dt.strftime('%Y-%m-%d')
+
+#     chart_data = backtest_data[['Date', 'Open', 'Straddle_PnL', 'Cumulative_PnL']].to_dict(orient='records')
+
+#     data = {
+#         'chart_data': chart_data,
+#         'final_pnl': final_pnl,
+#         'max_profit': max_profit,
+#         'max_loss': max_loss,
+#         'breakeven_upper': breakeven_upper,
+#         'breakeven_lower': breakeven_lower,
+#         'reward_risk_ratio': reward_risk_ratio,
+#     }
+
+#     return JsonResponse(data)
+
+
+
+
+
+
+
+
+# from django.http import JsonResponse
+# import numpy as np
+
+# def call_payoff(sT, strike_price, premium):
+#     return np.where(sT > strike_price, sT - strike_price, 0) - premium
+
+# def put_payoff(sT, strike_price, premium):
+#     return np.where(sT < strike_price, strike_price - sT, 0) - premium
+
+# def straddle_payoff(request):
+#     spot_price = 19479.65
+#     strike_price_long_put = 19550
+#     premium_long_put = 193.25 
+#     strike_price_long_call = 19550
+#     premium_long_call = 203.8
+#     sT = np.arange(0, 2 * spot_price, 1)
+
+#     payoff_long_call = call_payoff(sT, strike_price_long_call, premium_long_call)
+#     payoff_long_put = put_payoff(sT, strike_price_long_put, premium_long_put)
+#     payoff_straddle = payoff_long_call + payoff_long_put
+
+#     max_profit = "Unlimited"
+#     max_loss = min(payoff_straddle)
+
+#     data = {
+#         'sT': sT.tolist(),
+#         'payoff_long_call': payoff_long_call.tolist(),
+#         'payoff_long_put': payoff_long_put.tolist(),
+#         'payoff_straddle': payoff_straddle.tolist(),
+#         'max_profit': max_profit,
+#         'max_loss': max_loss,
+#     }
+#     return JsonResponse(data)
+
+
+
+
+
+# views.py
+from django.shortcuts import render
+import requests
+
+def fetch_expiry_data_option_strategies(symbol):
+    stock_url = "https://webapi.niftytrader.in/webapi/Option/option-simulator-expiry-list"
+
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
+        "Accept-Language": "en-US,en;q=0.9",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive"
+    }
+
+    payload = {
+        "symbol": symbol,
+    }
+
+    stock_data = requests.post(stock_url, json=payload, headers=headers)
+    stock_json = stock_data.json()
+    
+    Option_strategies_expiry_date = stock_json['resultData']["expiry_all"]
+    
+    return Option_strategies_expiry_date
+
+
+
+# views.py
+from django.shortcuts import render
+import requests
+
+
+def fetch_expiry_data(symbol):
+    stock_url = "https://webapi.niftytrader.in/webapi/Option/option-simulator-expiry-list"
+
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
+        "Accept-Language": "en-US,en;q=0.9",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive"
+    }
+
+    payload = {
+        "symbol": symbol,
+    }
+
+    stock_data = requests.post(stock_url, json=payload, headers=headers)
+    stock_json = stock_data.json()
+    
+    Option_strategies_expiry_date = stock_json['resultData']["expiry_all"]
+    
+    # Convert date format from "2023-10-26T00:00:00" to "2023-10-26"
+    formatted_expiry_dates = [datetime.datetime.strptime(date, '%Y-%m-%dT%H:%M:%S').strftime('%Y-%m-%d') for date in Option_strategies_expiry_date]
+    
+    return formatted_expiry_dates
+
+
+
+# views.py
+from django.http import JsonResponse
+
+def get_expiry_data(request, symbol):
+    Option_strategies_expiry_date = fetch_expiry_data(symbol)
+    return JsonResponse(Option_strategies_expiry_date, safe=False)
+
+
+
+
+
+from django.http import JsonResponse
+
+def option_simulator_data(request):
+    if request.method == 'POST':
+        index = request.POST.get('index')
+        expiry_date = request.POST.get('expiryDate')
+        start_date = request.POST.get('startDate')
+
+        # Perform further processing with the received data
+
+        response_data = {
+            'message': 'Data received successfully!',
+            'index': index,
+            'expiry_date': expiry_date,
+            'start_date': start_date,
+        }
+        print(response_data)
+
+        return JsonResponse(response_data)
+    else:
+        # Handle GET requests if needed
+        # For this example, we only handle POST requests
+        return JsonResponse({'error': 'Invalid request method.'})
+
+
+from django.http import JsonResponse
+import numpy as np
+import json
+
+def calculate_long_straddle(call_premium, put_premium, strike_price, stock_price_min, stock_price_max, stock_price_step):
+    def long_straddle(call_premium, put_premium, strike_price, stock_price_range):
+        call_profit = np.maximum(stock_price_range - strike_price, 0) - call_premium
+        put_profit = np.maximum(strike_price - stock_price_range, 0) - put_premium
+        total_profit = call_profit + put_profit
+        return total_profit
+
+    # Define the stock price range for analysis
+    stock_price_range = np.arange(stock_price_min, stock_price_max + stock_price_step, stock_price_step)
+
+    # Calculate the profit or loss for each stock price in the range
+    profits = long_straddle(call_premium, put_premium, strike_price, stock_price_range)
+
+    # Create a dictionary to store the data
+    data = {
+        'stock_price_range': stock_price_range.tolist(),
+        'profits': profits.tolist()
+    }
+
+    return data
+
+def straddle_data(request):
+    # Define option prices and strike price
+    call_premium = 146.8
+    put_premium = 91.6
+    strike_price = 19850
+
+    # Define the stock price range for analysis
+    stock_price_min = 19000
+    stock_price_max = 21000
+    stock_price_step = 50
+
+    # Calculate the long straddle data
+    data = calculate_long_straddle(call_premium, put_premium, strike_price, stock_price_min, stock_price_max, stock_price_step)
+
+    # Return the data as a JSON response
+    return JsonResponse(data)
+
+
+
+
+import requests
+from django.http import JsonResponse
+
+def option_simulator_data(request):
+    if request.method == 'GET':
+        index = request.GET.get('index', "Nifty")
+        print(index)
+        expiry_date = request.GET.get('expiryDate')
+        start_date = request.GET.get('startDate')
+        createTime = request.GET.get('createTime', "09:20:00")
+        print(index, expiry_date, start_date, createTime)
+
+        spot_url = f'https://webapi.niftytrader.in/webapi/symbol/today-spot-data?symbol={index}'
+        stock_url = "https://webapi.niftytrader.in/webapi/Option/option-simulator-expiry-data"
+
+        headers = {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
+            "Accept-Language": "en-US,en;q=0.9",
+            "Accept-Encoding": "gzip, deflate, br",
+            "Connection": "keep-alive"
+        }
+
+        payload = {
+            "symbol": index,
+            "expiryDate": expiry_date,
+            "createdAt": start_date,
+            "createdTime": createTime
+        }
+
+        stock_data = requests.post(stock_url, json=payload, headers=headers)
+        stock_json = stock_data.json()
+
+        spot_data = requests.get(spot_url, headers=headers)
+        spot_json = spot_data.json()
+        print(spot_json["resultData"])
+
+        return JsonResponse({
+            "stock_data": stock_json["resultData"],
+            "spot_data": spot_json["resultData"]
+        }, safe=False)
+
+
+def long_call_option(request):
+    return render(request,'long_call_option.html')
+def long_put_option(request):
+    return render(request,'long_put_option.html')
+def covered_call(request):
+    return render(request,'covered_call.html')
+def short_call_option(request):
+    return render(request,'short_call_option.html')
+def synthetic_long_call(request):
+    return render(request,'synthetic_long_call.html')
+def covered_put(request):
+    return render(request,'covered_put.html')
+def long_combo(request):
+    return render(request,'long_combo.html')
+def long_straddle(request):
+    return render(request,'long_straddle.html')
+def short_straddle(request):
+    return render(request,'short_straddle.html')
+def pretective_call(request):
+    return render(request,'pretective_call.html')
+def aaaa(request):
+    return render(request,'aaaa.html')
+
+
+
+
+
+
+
+
+
+def option_strategy_optimizer(request):
+    return render(request,'option_strategy_optimizer.html')
+
+
+import requests
+import pandas as pd
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+
+@api_view(['GET'])
+def get_stock_symbol(request):
+    stock_url = "https://webapi.niftytrader.in/webapi/symbol/psymbol-list"
+
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
+        "Accept-Language": "en-US,en;q=0.9",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive"
+    }
+
+    stock_data = requests.get(stock_url, headers=headers)
+    stock_json = stock_data.json()
+
+    nifty_stocks = []
+    other_stocks = []
+
+    for stock in stock_json["resultData"]:
+        stock_info = {
+            "symbol_name": stock["symbol_name"],
+        }
+        
+        if stock_info["symbol_name"] in ["NIFTY", "BANKNIFTY", "FINNIFTY"]:
+            nifty_stocks.append(stock_info)
+        else:
+            other_stocks.append(stock_info)
+
+    # Create DataFrame
+    df = pd.DataFrame(other_stocks)
+
+    # Serialize DataFrame data
+    response_data = df.to_dict(orient='records')
+
+    return Response(response_data)
+
+
+
+# stocks/views.py
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+
+@api_view(['GET'])
+def get_option_strategy_optimizer_spot_data(request):
+    selected_option = request.GET.get('selected_option',"NIFTY")
+    print(selected_option)
+    strategy_stop_url=f"https://webapi.niftytrader.in/webapi/symbol/today-spot-data?symbol={selected_option}"
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
+        "Accept-Language": "en-US,en;q=0.9",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive"
+    }
+
+    stock_data = requests.get(strategy_stop_url, headers=headers)
+    stock_json = stock_data.json()
+    # Do something with the selected_option, process the data, and prepare a response
+    response_data = {
+        'spot_data': stock_json,
+        # Add more data as needed
+    }
+    return Response(response_data)
+
+
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+
+@api_view(['GET'])
+def get_option_strategy_optimizer_option_data(request):
+    selected_option = request.GET.get('selected_option',"NIFTY")
+    selected_option_date = request.GET.get('selected_expiry')
+    print(selected_option,selected_option_date)
+    strategy_option_url=f"https://webapi.niftytrader.in/webapi/option/fatch-option-chain?symbol={selected_option}&expiryDate={selected_option_date}"
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
+        "Accept-Language": "en-US,en;q=0.9",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive"
+    }
+
+    stock_data = requests.get(strategy_option_url, headers=headers)
+    stock_json = stock_data.json()
+    # Do something with the selected_option, process the data, and prepare a response
+    response_data = {
+        'option_data': stock_json,
+        # Add more data as needed
+    }
+    return Response(response_data)
+@api_view(['GET'])
+def option_strategies_expiry(request):
+    # selected_option = request.GET.get('selected_option',"NIFTY")
+    # selected_option_date = request.GET.get('selected_expiry')
+    # print(selected_option,selected_option_date)
+    selected_option = request.GET.get("selected_option")
+    print(selected_option)
+    strategy_expiry_url=f"https://webapi.niftytrader.in/webapi/Option/option-strategy-expiry-list?symbol={selected_option}"
+    strategy_strike_url=f"https://webapi.niftytrader.in/webapi/Symbol/symbol-strike-price-list?symbol={selected_option}"
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
+        "Accept-Language": "en-US,en;q=0.9",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive"
+    }
+
+    expiry_data = requests.get(strategy_expiry_url, headers=headers)
+    strike_data = requests.get(strategy_strike_url, headers=headers)
+    expiry_json = expiry_data.json()
+    strike_json = strike_data.json()
+    final_expiry_json = expiry_json["resultData"]
+    final_strike_json = strike_json["resultData"]
+
+
+
+    # Do something with the selected_option, process the data, and prepare a response
+    response_date = {
+        'option_date': final_expiry_json,
+        'option_strike': final_strike_json,
+        # Add more data as needed
+    }
+    return Response(response_date)
+
+
+
+import numpy as np
+from django.http import JsonResponse
+from django.shortcuts import render
+
+def get_payoff_data(request):
+    spot_price = 19400
+    strike_price_long_put = 19400
+    premium_long_put = 50
+    strike_price_long_call = 19400
+    premium_long_call = 90
+    sT = np.arange(18800, 2 * spot_price, 50)
+
+    def call_payoff(sT, strike_price, premium):
+        return np.where(sT > strike_price, sT - strike_price, 18800) - premium
+
+    payoff_long_call = call_payoff(sT, strike_price_long_call, premium_long_call)
+
+    def put_payoff(sT, strike_price, premium):
+        return np.where(sT < strike_price, strike_price - sT, 18800) - premium
+
+    payoff_long_put = put_payoff(sT, strike_price_long_put, premium_long_put)
+
+    payoff_straddle = payoff_long_call + payoff_long_put
+
+    data = {
+        'sT': sT.tolist(),
+        'payoff_long_call': payoff_long_call.tolist(),
+        'payoff_long_put': payoff_long_put.tolist(),
+        'payoff_straddle': payoff_straddle.tolist(),
+    }
+
+    return JsonResponse(data)
+
+
+
+import json
+import requests
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+
+@csrf_exempt
+def filter_iv_data(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body.decode('utf-8'))  # Parse the JSON data from the request body
+
+            # Define the URLs for sending requests
+            filter_data_url = "https://webapi.niftytrader.in/webapi/Option/option-strategy-filter-data"
+            iv_data_url = "https://webapi.niftytrader.in/webapi/Option/option-strategy-iv-data"
+
+            # Define headers for the requests
+            headers = {
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
+                "Accept-Language": "en-US,en;q=0.9",
+                "Accept-Encoding": "gzip, deflate, br",
+                "Connection": "keep-alive"
+            }
+
+            # Create the payload structure for the POST request to filter_data_url
+            stock_payload = {
+                "getFrom": data[0]['selectedOption'],
+                "data": []
+            }
+
+            # Create the payload structure for the POST request to iv_data_url
+            iv_payload = {
+                "data": []
+            }
+
+            # Loop through the received data and create payload items
+            for item in data:
+                selectedOption = item.get('selectedOption')
+                optionSide = item.get('optionSide')
+                option_lot_size = item.get('option_lot_size')
+                expiryDate = item.get('expiryDate')
+                strikePrice = item.get('strikePrice')
+                action = item.get('action')
+                quantity = item.get('quantity')
+                conditionOrder = item.get('conditionOrder')
+                ltpValue = item.get('ltpValue')
+
+                # Create an item for the stock payload
+                stock_payload_item = {
+                    "symbol": selectedOption,
+                    "optionType": optionSide,
+                    "expiry": expiryDate,
+                    "strikePrice": strikePrice,
+                    "position": action,
+                    "quantity": quantity,
+                    "conditionOrder": conditionOrder,
+                    "iv": 0,
+                    "tradedPrice": ltpValue
+                }
+
+                stock_payload["data"].append(stock_payload_item)
+                print(stock_payload_item)
+
+                # Create an item for the IV payload
+                
+                iv_payload_item = {
+                    "optionType": optionSide,
+                    "strikePrice": strikePrice,
+                    "symbol": selectedOption,
+                    "expiry": expiryDate,
+                    "quantity": quantity,
+                    "position": action,
+                    "conditionOrder": conditionOrder,
+                    "unitPrice": ltpValue,
+                    "lotSize": option_lot_size
+                }
+
+                iv_payload["data"].append(iv_payload_item)
+
+            # Send POST requests to retrieve data from two different URLs
+            stock_data = requests.post(filter_data_url, json=stock_payload, headers=headers)
+            iv_data = requests.post(iv_data_url, json=iv_payload, headers=headers)
+
+            # Convert the responses to JSON
+            stock_json = stock_data.json()
+            iv_json = iv_data.json()
+
+            # print("Stock Data:")
+            # print(json.dumps(stock_json, indent=4))
+            # print("===================")
+
+            # print("IV Data:")
+            # print(json.dumps(iv_json, indent=4))
+            # print("===================")
+            response_data = {
+                "stock_data": stock_json,
+                "iv_data": iv_json
+            }
+
+            return JsonResponse(response_data) 
+
+             # Send a response back to the frontend
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
+    else:
+        return JsonResponse({'error': 'Invalid request method'}, status=400)
+
+
+import requests
+def bse_spot_data(request):
+    url_date = "https://webapi.niftytrader.in/webapi/symbol/today-spot-data?symbol=SENSEX&exchange=bse"
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
+        "Accept-Language": "en-US,en;q=0.9",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive"
+    }
+    response_date = requests.get(url_date, headers=headers)
+    data_date = response_date.json()
+    
+
+ 
+
+    return JsonResponse(data_date["resultData"])
+
+
+def option_strategy_tester(request):
+    return render(request,"option_strategy_tester.html")

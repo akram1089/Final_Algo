@@ -1,0 +1,668 @@
+{% extends "base_dashboard.html" %} {% load static %}
+
+{% block dashboard_body %}
+<style>
+
+
+    .bi.bi-graph-up {
+        border: 1px solid #80808030;
+        border-radius: 7px;
+        padding: 6px 9px;
+        width: 33px;
+        display: block;
+        height: 29px;
+        color: gray;
+        transition: 0.3s;
+    }
+
+    .bi.bi-graph-up:hover {
+        background-color: rgb(0, 132, 255);
+        border: none;
+        color: white;
+    }
+
+    .table-info {
+        background-color: #f1f5fa !important;
+    }
+
+    .chart1,
+    .chart2,
+    .chart3 {
+        display: flex;
+        justify-content: flex-end;
+        align-items: flex-end;
+        right: -68px;
+        position: relative;
+    }
+
+    .active {
+        color: rgb(0, 132, 255) !important;
+        border-bottom: 2px solid !important;
+
+    }
+
+    .filterBtn {
+        border: none;
+        background: transparent;
+        color: #2c2b2b;
+        font-size: 18px;
+        font-weight: 500;
+        transition: 0.3s
+    }
+</style>
+<script>
+    $(document).ready(function () {
+        // Fetch initial data from Django view using AJAX
+        fetchData();
+
+        var chart; // Variable to store the chart instance
+        var chart1; // Variable to store the chart instance
+        var chart2; // Variable to store the chart instance
+        var chart3; // Variable to store the chart instance
+
+        // Handle dropdown change event
+        $('#symbolDropdown').on('change', function () {
+            var selectedSymbol = $(this).val();
+            saveSelectedSymbol(selectedSymbol);
+            fetchData(selectedSymbol);
+            Filter_spot_future()
+        });
+
+        // On page load, retrieve the selected symbol from local storage and fetch data
+        var selectedSymbol = getSelectedSymbol();
+        if (selectedSymbol) {
+            $('#symbolDropdown').val(selectedSymbol);
+        }
+        fetchData(selectedSymbol);
+
+        function fetchData(symbol) {
+            $.ajax({
+                url: '/future_data_chart',
+                type: 'GET',
+                data: { symbol: symbol },
+                dataType: 'json',
+                success: function (data) {
+                    // Update dropdown
+                    // console.log(data.chart1);
+
+                    chart1_future(data.chart1, data.future_expiry_list[0].change_price)
+                    chart2_future(data.chart2, data.future_expiry_list[1].change_price)
+                    chart3_future(data.chart3, data.future_expiry_list[2].change_price)
+                    // chart3_future(data.chart3)
+                    Filter_spot_future(data.chart_data_list);
+                    var dropdown = $('#symbolDropdown');
+                    dropdown.empty();
+
+                    // Filter NIFTY, BANKNIFTY, and FINIFTY from All_symbol and move them to the top
+                    var filteredSymbols = ['NIFTY', 'BANKNIFTY', 'FINNIFTY'];
+                    var remainingSymbols = data.All_symbol.filter(function (symbol) {
+                        return !filteredSymbols.includes(symbol);
+                    });
+
+                    // Add filtered symbols to the dropdown
+                    $.each(filteredSymbols, function (index, symbol) {
+                        dropdown.append($('<option></option>').text(symbol));
+                    });
+
+                    // Add remaining symbols to the dropdown
+                    $.each(remainingSymbols, function (index, symbol) {
+                        dropdown.append($('<option></option>').text(symbol));
+                    });
+
+                    // Update spot data
+                    $('#spotSymbol').empty().text(data.spot_symbol_list + ":");
+                    $(".icon_charts").empty().append($('<a><i class="bi bi-graph-up"></i></a>').attr('href', 'https://www.tradingview.com/chart/MgiGDMYM/?symbol=' + data.spot_symbol_list + '&aff_id=113877').attr('target', '_blank'));
+                    var spot_change_list_clr = data.spot_change_list > 0 ? "text-success" : "text-danger";
+                    var spotPriceElement = $('#spotPrice');
+                    var spotChangeElement = $('#spotChange');
+
+                    spotPriceElement.empty().text(data.spot_price_list).removeClass("text-success text-danger").addClass(spot_change_list_clr);
+                    spotChangeElement.empty().text("(" + data.spot_change_list + "%)").removeClass("text-success text-danger").addClass(spot_change_list_clr);
+
+
+                    // Retrieve selected symbol from local storage
+                    var selectedSymbol = getSelectedSymbol();
+                    if (selectedSymbol) {
+                        dropdown.val(selectedSymbol);
+                    }
+
+                    // Update future expiry data
+                    $('#expiry1').text(data.future_expiry_list[0].expiry);
+                    $('#oi1').text(data.future_expiry_list[0].oi);
+                    $('#changeOi1').text(data.future_expiry_list[0].oi_change + "(" + data.future_expiry_list[0].oi_percent_change.toFixed(2) + "%)");
+                    $('#lastPrice1').text(data.future_expiry_list[0].last_price);
+                    $('#changePrice1').text(data.future_expiry_list[0].change_price.toFixed(2) + "(" + data.future_expiry_list[0].change_percent.toFixed(2) + "%)");
+                    $('#high1').text(data.future_expiry_list[0].high);
+                    $('#low1').text(data.future_expiry_list[0].low);
+                    if (data.future_expiry_list[0].change_percent < 0) {
+                        $('#changePrice1').removeClass('text-danger text-success').addClass('text-danger');
+
+                    } else {
+                        $('#changePrice1').removeClass('text-danger text-success').addClass('text-success');
+
+                    }
+                    if (data.future_expiry_list[0].oi_change < 0) {
+                        $('#changeOi1').removeClass('text-danger text-success').addClass('text-danger');
+                    } else {
+                        $('#changeOi1').removeClass('text-danger text-success').addClass('text-success');
+                    }
+
+                    $('#expiry2').text(data.future_expiry_list[1].expiry);
+                    $('#oi2').text(data.future_expiry_list[1].oi);
+                    $('#changeOi2').text(data.future_expiry_list[1].oi_change + "(" + data.future_expiry_list[1].oi_percent_change.toFixed(2) + "%)");
+                    $('#lastPrice2').text(data.future_expiry_list[1].last_price);
+                    $('#changePrice2').text(data.future_expiry_list[1].change_price.toFixed(2) + "(" + data.future_expiry_list[1].change_percent.toFixed(2) + "%)");
+                    $('#high2').text(data.future_expiry_list[1].high);
+                    $('#low2').text(data.future_expiry_list[1].low);
+
+                    if (data.future_expiry_list[1].change_percent < 0) {
+                        $('#changePrice2').removeClass('text-danger text-success').addClass('text-danger');
+
+                    } else {
+                        $('#changePrice2').removeClass('text-danger text-success').addClass('text-success');
+
+                    }
+
+                    if (data.future_expiry_list[1].oi_change < 0) {
+                        $('#changeOi2').removeClass('text-danger text-success').addClass('text-danger');
+                    } else {
+                        $('#changeOi2').removeClass('text-danger text-success').addClass('text-success');
+                    }
+                    $('#expiry3').text(data.future_expiry_list[2].expiry);
+                    $('#oi3').text(data.future_expiry_list[2].oi);
+                    $('#changeOi3').text(data.future_expiry_list[2].oi_change + "(" + data.future_expiry_list[2].oi_percent_change.toFixed(2) + "%)");
+                    $('#lastPrice3').text(data.future_expiry_list[2].last_price);
+                    $('#changePrice3').text(data.future_expiry_list[2].change_price.toFixed(2) + "(" + data.future_expiry_list[2].change_percent.toFixed(2) + "%)");
+                    $('#high3').text(data.future_expiry_list[2].high);
+                    $('#low3').text(data.future_expiry_list[2].low);
+                    if (data.future_expiry_list[2].change_percent < 0) {
+                        $('#changePrice3').addClass('text-danger');
+
+                    } else {
+                        $('#changePrice3').addClass('text-success');
+
+                    }
+
+                    if (data.future_expiry_list[2].oi_change < 0) {
+                        $('#changeOi3').addClass('text-danger');
+                    } else {
+                        $('#changeOi3').addClass('text-success');
+                    }
+                    // Update chart using chart_data_list
+                    if (data.chart_data_list.length > 0) {
+                        createChart(data.chart_data_list[0]);
+                    }
+                }
+            });
+        }
+
+        function saveSelectedSymbol(symbol) {
+            localStorage.setItem('future_symbol', symbol);
+        }
+
+        function getSelectedSymbol() {
+            return localStorage.getItem('future_symbol');
+        }
+
+        function Filter_spot_future(get_chart_data) {
+            var filterContainer1 = $('.filter1');
+            var filterContainer2 = $('.filter2');
+            var filterContainer3 = $('.filter3');
+
+            filterContainer1.empty();
+            filterContainer2.empty();
+            filterContainer3.empty();
+
+            var button1 = $('<button class="filterBtn"></button>').text(get_chart_data[0].expiry_date);
+            var button2 = $('<button class="filterBtn"></button>').text(get_chart_data[1].expiry_date);
+            var button3 = $('<button class="filterBtn"></button>').text(get_chart_data[2].expiry_date);
+
+            filterContainer1.append(button1);
+            filterContainer2.append(button2);
+            filterContainer3.append(button3);
+
+            // Click event handler for filter buttons
+            button1.on('click', function () {
+                if (get_chart_data.length > 0) {
+                    createChart(get_chart_data[0]);
+                    // Add/remove 'active' class on click
+                    $(this).addClass('active');
+                    button2.removeClass('active');
+                    button3.removeClass('active');
+                }
+            });
+
+            button2.on('click', function () {
+                if (get_chart_data.length > 1) {
+                    createChart(get_chart_data[1]);
+                    // Add/remove 'active' class on click
+                    $(this).addClass('active');
+                    button1.removeClass('active');
+                    button3.removeClass('active');
+                }
+            });
+
+            button3.on('click', function () {
+                if (get_chart_data.length > 2) {
+                    createChart(get_chart_data[2]);
+                    // Add/remove 'active' class on click
+                    $(this).addClass('active');
+                    button1.removeClass('active');
+                    button2.removeClass('active');
+                }
+            });
+
+            // Set the initial active filter button
+            button1.addClass('active');
+
+            if (get_chart_data.length > 0) {
+                createChart(get_chart_data[0]);
+            }
+        }
+
+        function createChart(chartData) {
+            if (chart) {
+                chart.destroy(); // Destroy the existing chart if it exists
+            }
+
+            // console.log(chartData);
+            // console.log(parseFloat(chartData.spot_price_chart_data));
+
+            var ctx = document.getElementById('myChart').getContext('2d');
+
+            // Convert future_price_chart_data to integers
+            var futurePriceData = [];
+            var spotPriceData = [];
+            // console.log(futurePriceData);
+            // console.log(spotPriceData);
+
+            var futurePriceValues = chartData.future_price_chart_data.split(',');
+            var spotPriceValues = chartData.spot_price_chart_data.split(',');
+
+            for (var i = 0; i < futurePriceValues.length; i++) {
+                futurePriceData.push(parseFloat(futurePriceValues[i].replace(/'/g, "")));
+            }
+
+            for (var j = 0; j < spotPriceValues.length; j++) {
+                spotPriceData.push(parseFloat(spotPriceValues[j].replace(/'/g, "")));
+            }
+
+            var labels = chartData.created_at.replace(/"/g, "").split(',').map(function (label) {
+                return label.slice(0, -3);
+            });
+
+
+            var maxFuturePrice = Math.max(...futurePriceData) + 40;
+            var minFuturePrice = Math.min(...futurePriceData) - 30;
+            var difference = 10;
+
+            var final_min = Math.floor(minFuturePrice / difference) * difference;
+            var final_max = Math.ceil(maxFuturePrice / difference) * difference;
+
+            chart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Spot Price',
+                            data: spotPriceData,
+
+                            borderColor: 'rgba(255, 70, 70, 0.8)',
+                            fill: false
+                        },
+                        {
+                            label: 'Future Price',
+                            data: futurePriceData,
+                            borderColor: 'rgba(81, 252, 127, 0.8)',
+                            fill: false
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                           
+                         
+                            title: {
+                                display: true,
+                                text: 'Created At'
+                            },
+                            grid: {
+                                offset: true,
+                                display: false, // Hide // Add padding to the inner x-axis
+                            }
+                        },
+                        y: {
+                            display: true,
+                            title: {
+                                display: true,
+                                text: 'Price'
+                            },
+                            ticks: {
+                                min: final_min,
+                                max: final_max,
+                                stepSize: difference
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function chart1_future(chart1_args, chart1_oi) {
+
+            if (chart1) {
+                chart1.destroy(); // Destroy the existing chart if it exists
+            }
+
+            var Chart1PriceData = [];
+            var Chart1Values = chart1_args.chart_data.split(',');
+
+            for (var i = 0; i < Chart1Values.length; i++) {
+                Chart1PriceData.push(parseFloat(Chart1Values[i].replace(/'/g, "")));
+            }
+            // console.log(Chart1PriceData);
+
+            var ctx1 = document.getElementById('myChart1').getContext('2d');
+
+            chart1 = new Chart(ctx1, {
+                type: 'line',
+                data: {
+                    labels: Chart1PriceData, // Provide the labels for the x-axis
+                    datasets: [{
+                        data: Chart1PriceData,
+                        borderColor: chart1_oi > 0 ? 'rgba(81, 252, 127, 0.8)' : 'rgba(255, 70, 70, 0.8)',
+                        backgroundColor: chart1_oi > 0 ? 'rgba(81, 252, 127, 0.2)' : 'rgba(255, 70, 70, 0.2)',
+                        fill: true,
+                        pointRadius: 0,
+
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            grid: {
+                                display: false, // Hide y-axis background border
+                              },
+                            display: false // Hide x-axis
+                        },
+                        y: {
+                            display: false,
+                            ticks: {
+                                min: 0, // Set the minimum value for the y-axis
+                                max: 100, // Set the maximum value for the y-axis
+                                stepSize: 20 // Set the step size for the y-axis
+                            }
+                        }
+                    },
+                    plugins: {
+                        tooltip: {
+                            enabled: false // Disable tooltips
+                        },
+                        legend: {
+                            display: false // Hide legend
+                        }
+                    }
+                }
+            });
+        }
+
+
+        function chart2_future(chart2_args, chart1_oi) {
+            if (chart2) {
+                chart2.destroy(); // Destroy the existing chart if it exists
+            }
+
+            var Chart2PriceData = [];
+            var Chart2Values = chart2_args.chart_data.split(',');
+
+            for (var i = 0; i < Chart2Values.length; i++) {
+                Chart2PriceData.push(parseFloat(Chart2Values[i].replace(/'/g, "")));
+            }
+            // console.log(Chart2PriceData);
+
+            var ctx2 = document.getElementById('myChart2').getContext('2d');
+
+            chart2 = new Chart(ctx2, {
+                type: 'line',
+                data: {
+                    labels: Chart2PriceData, // Provide the labels for the x-axis
+                    datasets: [{
+                        data: Chart2PriceData,
+                        borderColor: chart1_oi > 0 ? 'rgba(81, 252, 127, 0.8)' : 'rgba(255, 70, 70, 0.8)',
+                        backgroundColor: chart1_oi > 0 ? 'rgba(81, 252, 127, 0.2)' : 'rgba(255, 70, 70, 0.2)',
+                        fill: true,
+                        pointRadius: 0,
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            grid: {
+                                display: false, // Hide y-axis background border
+                              },
+                            display: false // Hide x-axis
+                        },
+                        y: {
+                            display: false,
+                            ticks: {
+                                min: 0, // Set the minimum value for the y-axis
+                                max: 100, // Set the maximum value for the y-axis
+                                stepSize: 20 // Set the step size for the y-axis
+                            }
+                        }
+                    },
+                    plugins: {
+                        tooltip: {
+                            enabled: false // Disable tooltips
+                        },
+                        legend: {
+                            display: false // Hide legend
+                        }
+                    }
+                }
+            });
+        }
+        function chart3_future(chart3_args, chart1_oi) {
+            if (chart3) {
+                chart3.destroy(); // Destroy the existing chart if it exists
+            }
+
+            var Chart3PriceData = [];
+            var Chart3Values = chart3_args.chart_data.split(',');
+
+            for (var i = 0; i < Chart3Values.length; i++) {
+                Chart3PriceData.push(parseFloat(Chart3Values[i].replace(/'/g, "")));
+            }
+            // console.log(Chart3PriceData);
+
+            var ctx3 = document.getElementById('myChart3').getContext('2d');
+
+            chart3 = new Chart(ctx3, {
+                type: 'line',
+                data: {
+                    labels: Chart3PriceData, // Provide the labels for the x-axis
+                    datasets: [{
+                        data: Chart3PriceData,
+                        borderColor: chart1_oi > 0 ? 'rgba(81, 252, 127, 0.8)' : 'rgba(255, 70, 70, 0.8)',
+                        backgroundColor: chart1_oi > 0 ? 'rgba(81, 252, 127, 0.2)' : 'rgba(255, 70, 70, 0.2)',
+                        fill: true,
+                        pointRadius: 0,
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            grid: {
+                                display: false, // Hide y-axis background border
+                              },
+                            display: false // Hide x-axis
+                        },
+                        y: {
+                            display: false,
+                            ticks: {
+                                min: 0, // Set the minimum value for the y-axis
+                                max: 100, // Set the maximum value for the y-axis
+                                stepSize: 20 // Set the step size for the y-axis
+                            }
+                        }
+                    },
+                    plugins: {
+                        tooltip: {
+                            enabled: false // Disable tooltips
+                        },
+                        legend: {
+                            display: false // Hide legend
+                        }
+                    }
+                }
+            });
+        }
+        // Set initial active filter
+        $('.filterBtn:first').addClass('active');
+
+        // Handle filter click events
+        $('.filterBtn').click(function () {
+            $('.filterBtn').removeClass('active');
+            $(this).addClass('active');
+
+            // Get the selected filter value
+            var selectedFilter = $(this).text();
+
+            // Perform any desired actions based on the selected filter value
+            // Example: Display the selected filter in the console
+            console.log('Selected Filter:', selectedFilter);
+        });
+
+        Filter_spot_future();
+    });
+</script>
+
+<div class="container mt-3">
+
+    <h4 class=" my-2">Stock Futures</h4>
+    <div class="main_container mt-2">
+        <div class="future_head_title d-flex align-items-center gap-2">
+            <select id="symbolDropdown" class="form-select" style="width: fit-content;">
+                <!-- King OF NYC -->
+            </select>
+            <div class="icon_charts ps-3">
+
+            </div>
+            <div class="symbol_details_top d-flex gap-1">
+                <h6 id="spotSymbol" class="fw-bolder"></h6>
+                <h6 id="spotPrice"></h6>
+                <h6 id="spotChange"></h6>
+            </div>
+        </div>
+
+    </div>
+<style>
+.table_blue{
+    background-color: #4399eb!important;
+    color: #fff!important;}
+</style>
+    <div class="table_main_three_futures mt-3">
+        <table id="futureTable" class="table" style="white-space: nowrap;">
+            <thead class="table_blue">
+                <tr>
+                    <th class="text-start">Expiry</th>
+                    <th class="text-end">OI</th>
+                    <th class="text-end">Change in OI</th>
+                    <th class="text-end">Last Price</th>
+                    <th class="text-end">Change in Price</th>
+                    <th class="text-end">High</th>
+                    <th class="text-end">Low</th>
+                    <th class="text-end">Chart</th>
+                </tr>
+            </thead>
+            <tbody id="futureTableBody">
+                <!-- Rows will be populated using JavaScript -->
+                <tr>
+                    <td id="expiry1" style="vertical-align: middle;" class="text-start"></td>
+                    <td id="oi1" style="vertical-align: middle;" class="text-end"></td>
+                    <td id="changeOi1" style="vertical-align: middle;" class="text-end"></td>
+                    <td id="lastPrice1" style="vertical-align: middle;" class="text-end"></td>
+                    <td id="changePrice1" style="vertical-align: middle;" class="text-end"></td>
+                    <td id="high1" style="vertical-align: middle;" class="text-end"></td>
+                    <td id="low1" style="vertical-align: middle;" class="text-end"></td>
+                    <td style="vertical-align:baseline ;">
+
+                        <div class="chart1" style="width: 157px;height: 59px;">
+
+                            <canvas id="myChart1"></canvas>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td id="expiry2" style="vertical-align: middle;" class="text-start"></td>
+                    <td id="oi2" style="vertical-align: middle;" class="text-end"></td>
+                    <td id="changeOi2" style="vertical-align: middle;" class="text-end"></td>
+                    <td id="lastPrice2" style="vertical-align: middle;" class="text-end"></td>
+                    <td id="changePrice2" style="vertical-align: middle;" class="text-end"></td>
+                    <td id="high2" style="vertical-align: middle;" class="text-end"></td>
+                    <td id="low2" style="vertical-align: middle;" class="text-end"></td>
+                    <td style="vertical-align:baseline ;" class="text-end">
+                        <div class="chart2" style="width: 157px;height: 59px;">
+
+                            <canvas id="myChart2"></canvas>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td id="expiry3" style="vertical-align: middle;" class="text-start"></td>
+                    <td id="oi3" style="vertical-align: middle;" class="text-end"></td>
+                    <td id="changeOi3" style="vertical-align: middle;" class="text-end"></td>
+                    <td id="lastPrice3" style="vertical-align: middle;" class="text-end"></td>
+                    <td id="changePrice3" style="vertical-align: middle;" class="text-end"></td>
+                    <td id="high3" style="vertical-align: middle;" class="text-end"></td>
+                    <td id="low3" style="vertical-align: middle;" class="text-end"></td>
+                    <td style="vertical-align:baseline ;">
+                        <div class="chart3" style="width: 157px;height: 59px;">
+
+                            <canvas id="myChart3"></canvas>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="Compare_Future_and_Spot_Price my-5">
+        <h4 class="">Compare Future and Spot Price</h4>
+
+
+    </div>
+
+
+
+
+
+
+
+
+
+
+    <div class="filter_date d-flex mt-3">
+        <div class="filter1"></div>
+        <div class="filter2"></div>
+        <div class="filter3"></div>
+    </div>
+    <div class="chart_main_future_spiot" style="height: 70vh;">
+        <canvas id="myChart"></canvas>
+    </div>
+
+</div>
+{% endblock dashboard_body %}

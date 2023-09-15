@@ -1,56 +1,83 @@
-from django.shortcuts import render
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
-import requests
+# Straddle Options Trading Strategy
+Import libraries
 
-@api_view(['GET'])
-def future_dashboard_charts(request):
-    url = "https://webapi.niftytrader.in/webapi/Symbol/future-expiry-current-month-all"
-    headers = {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
-        "Accept-Language": "en-US,en;q=0.9",
-        "Accept-Encoding": "gzip, deflate, br",
-        "Connection": "keep-alive"
-    }
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn
+Define parameters
 
-    response = requests.get(url, headers=headers)
-    data = response.json()
+# PNB stock price 
+spot_price = 117.05 
+​
+# Long put
+strike_price_long_put = 110 
+premium_long_put = 8.3
+​
+# Long call
+strike_price_long_call = 110 
+premium_long_call = 16.05
+​
+# Stock price range at expiration of the put
+sT = np.arange(0,2*spot_price,1) 
+Call payoff
+We define a function that calculates the payoff from buying a call option. The function takes sT which is a range of possible values of stock price at expiration, strike price of the call option and premium of the call option as input. It returns the call option payoff.
 
-    All_derivative_data = data["resultData"]
 
-    for item in All_derivative_data:
-        oi = item['oi']
-        prev_oi = item['prev_oi']
+def call_payoff(sT, strike_price, premium):
+    return np.where(sT > strike_price, sT - strike_price, 0) - premium
 
-        if prev_oi != 0:
-            item['percentage_change_in_OI'] = (oi - prev_oi) / prev_oi * 100
-        else:
-            item['percentage_change_in_OI'] = 0
+payoff_long_call = call_payoff (sT, strike_price_long_call, premium_long_call)
+# Plot
+fig, ax = plt.subplots()
+ax.spines['top'].set_visible(False) # Top border removed 
+ax.spines['right'].set_visible(False) # Right border removed
+ax.spines['bottom'].set_position('zero') # Sets the X-axis in the center
+ax.plot(sT,payoff_long_call,label='Long Call',color='r')
+plt.xlabel('Stock Price')
+plt.ylabel('Profit and loss')
+plt.legend()
+plt.show()
 
-        if item['change_in_OI'] > 0 and item['change_in_LTP'] > 0:
-            item['filter'] = 'Long Build Up'
-        elif item['change_in_OI'] < 0 and item['change_in_LTP'] < 0:
-            item['filter'] = 'Long Unwinding'
-        elif item['change_in_OI'] > 0 and item['change_in_LTP'] < 0:
-            item['filter'] = 'Short Build Up'
-        elif item['change_in_OI'] < 0 and item['change_in_LTP'] > 0:
-            item['filter'] = 'Short Covering'
-        else:
-            item['filter'] = 'None'
+Put payoff
+We define a function that calculates the payoff from buying a put option. The function takes sT which is a range of possible values of stock price at expiration, strike price of the put option and premium of the put option as input. It returns the put option payoff.
 
-    # Get all unique filters
-    unique_filters = set(item['filter'] for item in All_derivative_data)
 
-    # Create a dictionary to store filtered data for each unique filter
-    filtered_data_by_filter = {}
+def put_payoff(sT, strike_price, premium):
+    return np.where(sT < strike_price, strike_price - sT, 0) - premium 
 
-    for filter_param in unique_filters:
-        filtered_data = [
-            {'symbol_name': item['symbol_name'], 'percentage_change_in_OI': item['percentage_change_in_OI']}
-            for item in All_derivative_data if item['filter'] == filter_param
-        ]
-        # Sort the filtered data based on percentage_change_in_OI in descending order
-        sorted_data = sorted(filtered_data, key=lambda item: -item['percentage_change_in_OI'])
-        filtered_data_by_filter[filter_param] = sorted_data
+payoff_long_put = put_payoff(sT, strike_price_long_put, premium_long_put)
+# Plot
+fig, ax = plt.subplots()
+ax.spines['top'].set_visible(False) # Top border removed 
+ax.spines['right'].set_visible(False) # Right border removed
+ax.spines['bottom'].set_position('zero') # Sets the X-axis in the center
+ax.plot(sT,payoff_long_put,label='Long Put',color='g')
+plt.xlabel('Stock Price')
+plt.ylabel('Profit and loss')
+plt.legend()
+plt.show()
 
-    return Response(filtered_data_by_filter)
+
+Straddle
+# Straddle payoff
+
+payoff_straddle = payoff_long_call + payoff_long_put
+​
+print ("Max Profit: Unlimited")
+print ("Max Loss:", min(payoff_straddle))
+# Plot
+fig, ax = plt.subplots()
+ax.spines['top'].set_visible(False) # Top border removed 
+ax.spines['right'].set_visible(False) # Right border removed
+ax.spines['bottom'].set_position('zero') # Sets the X-axis in the center
+​
+ax.plot(sT,payoff_long_call,'--',label='Long Call',color='r')
+ax.plot(sT,payoff_long_put,'--',label='Long Put',color='g')
+​
+ax.plot(sT,payoff_straddle,label='Straddle')
+plt.xlabel('Stock Price', ha='left')
+plt.ylabel('Profit and loss')
+plt.legend()
+plt.show()
+Max Profit: Unlimited
+Max Loss: -24.35

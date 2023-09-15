@@ -1,13 +1,17 @@
 {% extends "base_dashboard.html" %} {% load static %} {% block dashboard_body %}
 <style>
   .desc_usage_active {
-    color: #011490;
+    color: #4399eb !important;
     text-align: center;
-    border-bottom: 2px solid #011490;
+    border-bottom: 2px solid #4399eb !important;
     font-size: 21px;
     font-weight: 600;
   }
-
+  .card-img-top {
+    width: 100%;
+    max-height: 279px !important;
+    min-height: 270px !important;
+}
   .col-4 {
     text-align: center;
     transition: 0.3s;
@@ -18,286 +22,521 @@
     .head_image {
       width: fit-content !important;
     }
+
     canvas[Attributes Style] {
       aspect-ratio: auto 400 / 400 !important;
     }
   }
-</style>
 
-<body>
-  <div class="container">
-    <h5 class="text-center mt-3">
-      FII/FPI and DII Trading Activity in Cash Market (Provisional)
-    </h5>
-  </div>
-  <div class="description_usage my-4">
-    <div class="head_desc_usage">
-      <div class="row border-bottom">
-        <div
-          class="chart-header col-4"
-          onclick="filterChart('fii_dii')"
-          data-btn-id="1"
-          style="font-size: 21px"
-        >
-          FII/DII Chart
-        </div>
-        <div
-          class="chart-header col-4"
-          onclick="filterChart('fii')"
-          data-btn-id="2"
-          style="font-size: 21px"
-        >
-          FII Chart
-        </div>
-        <div
-          class="chart-header col-4"
-          onclick="filterChart('dii')"
-          data-btn-id="3"
-          style="font-size: 21px"
-        >
-          DII Chart
+  .head_desc_usage {
+    display: flex;
+    justify-content: center;
+
+  }
+
+  .row.border-bottom {
+    width: 100%;
+  }
+
+  #chartContainer {
+    padding: 0 37px !important;
+  }
+
+  .left_side_panel_fii_dii,
+  .left_side_panel_fii_dii {
+    border-radius: 10px;
+  }
+</style>
+<h5 class="my-2">
+  FII/FPI and DII Trading Activity in Cash Market (Provisional)
+</h5>
+<div class="main_fii_dii d-flex gap-2 mt-3 mb-5" style="    justify-content: center;">
+
+  <div class="main_left_content">
+
+    <div class="left_side_panel_fii_dii shadow">
+      <div class="container">
+
+      </div>
+      <div class="description_usage py-4">
+        <div class="head_desc_usage">
+          <div class="row border-bottom">
+            <div class="chart-header col-4" onclick="filterChart('fii_dii')" data-btn-id="1" style="font-size: 21px">
+              FII/DII Chart
+            </div>
+            <div class="chart-header col-4" onclick="filterChart('fii')" data-btn-id="2" style="font-size: 21px">
+              FII Chart
+            </div>
+            <div class="chart-header col-4" onclick="filterChart('dii')" data-btn-id="3" style="font-size: 21px">
+              DII Chart
+            </div>
+          </div>
+          <div class="main_desc_usage mt-4" id="main_desc_usage"></div>
         </div>
       </div>
-      <div class="main_desc_usage mt-4" id="main_desc_usage"></div>
-    </div>
-  </div>
-  <div id="chartContainer " style="height: 100%">
-    <div class="dii_fii" id="dii_fii" style="width: 100%; height: 70vh">
-      <canvas id="fii_diiChart" style="display: block; box-sizing: border-box; height: 487px; width: 974px;"></canvas>
-    </div>
-    <div class="fii" id="fii" style="width: 100%; height: 70vh">
-      <canvas id="fiiChart" style="display: block; box-sizing: border-box; height: 487px; width: 974px;"></canvas>
-    </div>
+      <div id="chartContainer">
+        <div class="dii_fii" id="dii_fii" style="width: 100%; height: 70vh">
+          <canvas id="fii_diiChart"
+            style="display: block; box-sizing: border-box; height: 487px; width: 974px;"></canvas>
+        </div>
+        <div class="fii" id="fii" style="width: 100%; height: 70vh">
+          <canvas id="fiiChart" style="display: block; box-sizing: border-box; height: 487px; width: 974px;"></canvas>
+        </div>
 
-    <div class="dii" id="dii" style="width: 100%; height: 70vh">
-      <canvas id="diiChart" style="display: block; box-sizing: border-box; height: 487px; width: 974px;"></canvas>
-    </div>
-  </div>
+        <div class="dii" id="dii" style="width: 100%; height: 70vh">
+          <canvas id="diiChart" style="display: block; box-sizing: border-box; height: 487px; width: 974px;"></canvas>
+        </div>
+      </div>
 
-  <script>
+      <script>
 
-    var labels_dii = {{ labels_dii|safe }};
-    var values_dii = {{ values_dii|safe }};
-    var colors = values_dii.map(value => value >= 0 ? 'rgb(33,150,243)' : 'rgb(249,108,146)');
+        var labels_dii = {{ labels_dii| safe }};
+        var values_dii = {{ values_dii| safe }};
+        var colors = values_dii.map(value => value >= 0 ? 'rgb(33,150,243)' : 'rgb(249,108,146)');
 
 
-    var ctx = document.getElementById('diiChart').getContext('2d');
-    var chart = new Chart(ctx, {
-      type: 'bar',
-      data: {
-        labels: labels_dii,
-        datasets: [{
-          label: 'Net Value',
-          data: values_dii,
-          backgroundColor: colors,
-         
-          borderWidth: 1
-        }]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        indexAxis: 'y', // Display labels on the y-axis
-        scales: {
-          y:{
-            grid: {
-              display: false, // Hide y-axis background border
-            },
-          },
-          x: {
-            beginAtZero: true,
-            
-          }
-        },
-        plugins: {
-          legend: {
-            labels: {
-              usePointStyle: true,
-              fontColor: "black",
-            },
-          },
-          tooltip: {
-            callbacks: {
-              label: function (context) {
-                var label = context.dataset.label || "";
-                if (label) {
-                  label += ": ";
-                }
-                label += context.parsed.y;
-                return label;
-              },
-              title: function (context) {
-                var title = "";
-                if (context.length > 0) {
-                  var dataIndex = context[0].dataIndex;
-                  title =
-                    "Date: " +
-                    dates[dataIndex] +
-                    "\nToday Close: " +
-                    closes[dataIndex] +
-                    "\nPrev Close: " +
-                    prev_close[dataIndex] +
-                    "\nToday: " +
-                    differences[dataIndex];
-                }
-                return title;
-              },
-            },
-          },
-          datalabels: {
-            display: true,
-            align: "end",
-            anchor: "end",
-            color: "black",
-            rotation: 270,
-            font: {
-              weight: "bold",
-            },
-            formatter: function (value, context) {
-              return value;
-            },
-          },
-        },
-      },
-    });
-    
-
-    var labels_fii = {{ labels_fii|safe }};
-    var values_fii = {{ values_fii|safe }};
-    var colors = values_fii.map(value => value >= 0 ? 'rgb(33,150,243)' : 'rgb(249,108,146)');
-    var borderColors = values_fii.map(value => value >= 0 ? 'rgba(0, 243, 0, 1)' : 'rgba(255, 0, 0, 1)');
-
-    var ctx = document.getElementById('fiiChart').getContext('2d');
-    var chart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: labels_fii,
+        var ctx = document.getElementById('diiChart').getContext('2d');
+        var chart = new Chart(ctx, {
+          type: 'bar',
+          data: {
+            labels: labels_dii,
             datasets: [{
-                label: 'Net Value',
-                data: values_fii,
-                backgroundColor: colors,
-         
-                borderWidth: 1
+              label: 'Net Value',
+              data: values_dii,
+              backgroundColor: colors,
+
+              borderWidth: 1
             }]
-        },
-        options: {
-          responsive: true,
-
-          maintainAspectRatio: false,
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
             indexAxis: 'y', // Display labels on the y-axis
-
             scales: {
-              y:{
+              y: {
                 grid: {
                   display: false, // Hide y-axis background border
                 },
               },
-                x: {
-               
-                    beginAtZero: true
-                }
-            }
-        }
-    });
+              x: {
+                beginAtZero: true,
 
-    var labels = {{ labels|safe }};
-        var values = {{ values|safe }};
+              }
+            },
+            plugins: {
+              legend: {
+                labels: {
+                  usePointStyle: true,
+                  fontColor: "black",
+                },
+              },
+              tooltip: {
+                callbacks: {
+                  label: function (context) {
+                    var label = context.dataset.label || "";
+                    if (label) {
+                      label += ": ";
+                    }
+                    label += context.parsed.y;
+                    return label;
+                  },
+                  title: function (context) {
+                    var title = "";
+                    if (context.length > 0) {
+                      var dataIndex = context[0].dataIndex;
+                      title =
+                        "Date: " +
+                        dates[dataIndex] +
+                        "\nToday Close: " +
+                        closes[dataIndex] +
+                        "\nPrev Close: " +
+                        prev_close[dataIndex] +
+                        "\nToday: " +
+                        differences[dataIndex];
+                    }
+                    return title;
+                  },
+                },
+              },
+              datalabels: {
+                display: true,
+                align: "end",
+                anchor: "end",
+                color: "black",
+                rotation: 270,
+                font: {
+                  weight: "bold",
+                },
+                formatter: function (value, context) {
+                  return value;
+                },
+              },
+            },
+          },
+        });
+
+
+        var labels_fii = {{ labels_fii| safe }};
+        var values_fii = {{ values_fii| safe }};
+        var colors = values_fii.map(value => value >= 0 ? 'rgb(33,150,243)' : 'rgb(249,108,146)');
+        var borderColors = values_fii.map(value => value >= 0 ? 'rgba(0, 243, 0, 1)' : 'rgba(255, 0, 0, 1)');
+
+        var ctx = document.getElementById('fiiChart').getContext('2d');
+        var chart = new Chart(ctx, {
+          type: 'bar',
+          data: {
+            labels: labels_fii,
+            datasets: [{
+              label: 'Net Value',
+              data: values_fii,
+              backgroundColor: colors,
+
+              borderWidth: 1
+            }]
+          },
+          options: {
+            responsive: true,
+
+            maintainAspectRatio: false,
+            indexAxis: 'y', // Display labels on the y-axis
+
+            scales: {
+              y: {
+                grid: {
+                  display: false, // Hide y-axis background border
+                },
+              },
+              x: {
+
+                beginAtZero: true
+              }
+            }
+          }
+        });
+
+        var labels = {{ labels| safe }};
+        var values = {{ values| safe }};
         var colors = values.map(value => value >= 0 ? 'rgb(33,150,243)' : 'rgb(249,108,146)');
         var borderColors = values.map(value => value >= 0 ? 'rgba(0, 243, 0, 1)' : 'rgba(255, 0, 0, 1)');
 
         var ctx = document.getElementById('fii_diiChart').getContext('2d');
         var chart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: 'Net Value',
-                    data: values,
-                    backgroundColor: colors,
-    
-                    borderWidth: 1
-                }]
-            },
-            options: {
-              responsive: true,
+          type: 'bar',
+          data: {
+            labels: labels,
+            datasets: [{
+              label: 'Net Value',
+              data: values,
+              backgroundColor: colors,
 
-              maintainAspectRatio: false,
-                indexAxis: 'y', // Display labels on the y-axis
-                
+              borderWidth: 1
+            }]
+          },
+          options: {
+            responsive: true,
 
-                scales: {
-                  y:{
-                    grid: {
-                      display: false, // Hide y-axis background border
-                    },
-                  },
-                    
-              
-                    x: {
-                        beginAtZero: true,
-                      
-                    }
-                }
+            maintainAspectRatio: false,
+            indexAxis: 'y', // Display labels on the y-axis
+
+
+            scales: {
+              y: {
+                grid: {
+                  display: false, // Hide y-axis background border
+                },
+              },
+
+
+              x: {
+                beginAtZero: true,
+
+              }
             }
+          }
         });
-  </script>
+      </script>
 
-  <script>
-    // Function to show or hide charts based on filter selection
-    var dii_fii = document.getElementById("dii_fii");
-    var fii = document.getElementById("fii");
-    var dii = document.getElementById("dii");
-    dii_fii.style.display = "block";
-
-    fii.style.display = "none";
-    dii.style.display = "none";
-    function filterChart(filter) {
-      var dii_fii = document.getElementById("dii_fii");
-      var fii = document.getElementById("fii");
-      var dii = document.getElementById("dii");
-      var chartContainer = document.getElementById("chartContainer");
-
-      if (filter === "fii_dii") {
+      <script>
+        // Function to show or hide charts based on filter selection
+        var dii_fii = document.getElementById("dii_fii");
+        var fii = document.getElementById("fii");
+        var dii = document.getElementById("dii");
         dii_fii.style.display = "block";
 
         fii.style.display = "none";
         dii.style.display = "none";
-      } else if (filter === "fii") {
-        dii_fii.style.display = "none";
-        fii.style.display = "block";
-        dii.style.display = "none";
-      } else if (filter === "dii") {
-        dii_fii.style.display = "none";
-        fii.style.display = "none";
-        dii.style.display = "block";
-      }
-    }
-    $(document).ready(function () {
-      $("[data-btn-id]:first-child").addClass("desc_usage_active");
-      // Filter button click event
-      $("[data-btn-id]").click(function () {
-        var btnId = $(this).attr("data-btn-id");
-        filterResults(btnId);
-        changeButtonColor($(this));
-      });
+        function filterChart(filter) {
+          var dii_fii = document.getElementById("dii_fii");
+          var fii = document.getElementById("fii");
+          var dii = document.getElementById("dii");
+          var chartContainer = document.getElementById("chartContainer");
 
-      // Initial filtering (optional)
-      filterResults(1);
-      // Function to filter results
-      function filterResults(btnId) {
-        // Clear previous results
-        // Filter elements based on btnId
+          if (filter === "fii_dii") {
+            dii_fii.style.display = "block";
+
+            fii.style.display = "none";
+            dii.style.display = "none";
+          } else if (filter === "fii") {
+            dii_fii.style.display = "none";
+            fii.style.display = "block";
+            dii.style.display = "none";
+          } else if (filter === "dii") {
+            dii_fii.style.display = "none";
+            fii.style.display = "none";
+            dii.style.display = "block";
+          }
+        }
+        $(document).ready(function () {
+          $("[data-btn-id]:first-child").addClass("desc_usage_active");
+          // Filter button click event
+          $("[data-btn-id]").click(function () {
+            var btnId = $(this).attr("data-btn-id");
+            filterResults(btnId);
+            changeButtonColor($(this));
+          });
+
+          // Initial filtering (optional)
+          filterResults(1);
+          // Function to filter results
+          function filterResults(btnId) {
+            // Clear previous results
+            // Filter elements based on btnId
+          }
+
+          // Function to change button color
+          function changeButtonColor(button) {
+            // Reset color of all buttons
+            $("[data-btn-id]").removeClass("desc_usage_active");
+
+            // Add color to the clicked button
+            button.addClass("desc_usage_active");
+          }
+        });
+      </script>
+    </div>
+
+  </div>
+  <div class="main_right_content d-none d-lg-block">
+    <div class="right_side_panel shadow">
+
+
+
+      <style>
+        .swiper-pagination {
+          position: relative;
+          text-align: center;
+          transition: .3s opacity;
+          transform: translate3d(0, 0, 0);
+          z-index: 10;
+        }
+
+        #Publish_news_feed {
+          margin-bottom: auto;
+          display: flex;
+          align-items: center;
+          gap: 0.2rem;
+          font-size: 13px;
+          font-family: 'Hanken Grotesk';
+          color: #696969d6;
+          font-weight: 600;
+          padding: 3px 0;
+        }
+
+        .blog-title {
+          color: dimgray;
+          font-size: 16px;
+        }
+      </style>
+      <div class="main_swiper_container py-4"
+        style="width: 370px;  border-radius: 10px; padding: 10px; height: 540px; ">
+        <div class="top_news_feed d-flex pb-2" style=" border-bottom: 1px solid rgba(128, 128, 128, 0.57);   justify-content: space-between;
+      text-align: center;">
+          <h5 style="font-weight: 700;
+          color: dimgray;">LATEST NEWS</h5>
+          <button class="btn btn-outline-primary btn-sm" id="hindi_language_news_feed">हिंदी समाचार</button>
+          <script>
+            $('#hindi_language_news_feed').click(function () {
+              // Set newsLanguage to 'hindi' in local storage
+              localStorage.setItem('newsLanguage', 'Hindi');
+              // Redirect to the blog_news page
+              window.location.href = '/blog_news'; // Replace '/blog_news' with the actual URL of the blog_news page
+            });
+          </script>
+
+        </div>
+        <div class="swiper-container" id="blog-news-slider" style="overflow: hidden;     padding: 5px 0;    height: 423px;">
+          <div class="swiper-wrapper">
+            <!-- Blog news items will be dynamically added here -->
+          </div>
+          <!-- Add pagination -->
+          <div class="swiper-pagination"></div>
+        </div>
+
+        <a href="{% url 'blog_news' %}" style="text-decoration: none;     float: right;
+      margin-top: 1rem;
+   " class="pt-2">View more</a>
+      </div>
+
+
+
+      <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+      <!-- Add Swiper JS -->
+      <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+      <!-- ... Previous code ... -->
+      <script>
+        $(document).ready(function () {
+          // Function to get blog news data from API using AJAX
+          function getBlogNewsData() {
+            $.ajax({
+              url: '/dashboard_news_feed', // Replace this with the actual API endpoint
+              type: 'GET',
+              dataType: 'json',
+              success: function (data) {
+                updateBlogNewsData(data.resultData);
+              },
+              error: function (error) {
+                console.log(error);
+              }
+            });
+          }
+
+          // Function to update the blog news data on the page
+          function updateBlogNewsData(data) {
+            var blogNewsContainer = $('#blog-news-slider .swiper-wrapper');
+            blogNewsContainer.empty();
+
+            // Assuming the API response contains an array of blog news objects
+            data.forEach(function (blogNewsItem) {
+              // Check if the source is "The Economic Times"
+              if (blogNewsItem.source === "The Economic Times") {
+                var blogItem = $('<div class="swiper-slide blog-item"></div>');
+
+                var title = $('<h5 class="blog-title"></h5>').text(blogNewsItem.title);
+                blogItem.append(title); // Add title to the top of the swiper-slide
+
+                // Add image if available
+                if (blogNewsItem.imageUrl) {
+                  var imageElement = $('<img class="card-img-top">').attr('src', blogNewsItem.imageUrl);
+                  blogItem.append(imageElement);
+                }
+
+                var publishDate = $('<p style="margin-bottom:auto" class="card-text d-flex align-items-center" id="Publish_news_feed"></p>');
+                var clockIcon = $('<i class="bi bi-clock"></i>');
+
+                function getTimeAgo(publishDate) {
+                  // ... Previous getTimeAgo function ...
+                  var currentDate = new Date();
+                  var newsDate = new Date(publishDate);
+
+                  var timeDiff = Math.abs(currentDate.getTime() - newsDate.getTime());
+                  var minutesDiff = Math.floor(timeDiff / (1000 * 60));
+                  var hoursDiff = Math.floor(timeDiff / (1000 * 60 * 60));
+                  var daysDiff = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+
+                  if (minutesDiff < 60) {
+                    return minutesDiff + ' minutes ago';
+                  } else if (hoursDiff < 24) {
+                    return hoursDiff + ' hours ago';
+                  } else {
+                    return daysDiff + ' days ago';
+                  }
+                }
+
+                publishDate.append(clockIcon).append('   ' + getTimeAgo(blogNewsItem.publishDate) + ' / ' + blogNewsItem.source);
+                var description = blogNewsItem.description;
+                // Remove HTML tags from description using regular expression
+                var plainText = description.replace(/<[^>]+>/g, '');
+                // Trim the text to a specific length (e.g., 150 characters)
+                var maxLength = 75;
+                var truncatedDescription = plainText.length > maxLength ? plainText.substr(0, maxLength) + '...' : plainText;
+                console.log(truncatedDescription);
+                var content = $('<p class="blog-content"></p>').text(truncatedDescription);
+
+                blogItem.append(publishDate, content); // Move publishDate and content below the title
+                blogNewsContainer.append(blogItem);
+              }
+            });
+
+            // Initialize Swiper slider
+            var swiper = new Swiper('#blog-news-slider', {
+              slidesPerView: 1,
+              spaceBetween: 20,
+              pagination: {
+                el: '.swiper-pagination',
+                clickable: true,
+              },
+              loop: true, // Set infinite loop to true
+            });
+          }
+
+          // Call the function to get blog news data on page load
+          getBlogNewsData();
+        });
+      </script>
+    </div>
+    <style>
+      #main_list_tarder_toolkit {}
+
+      .trader_toolkit_li {
+        padding: 10px 0;
+        display: flex;
+        padding-left: 0.6rem;
+        align-items: center;
       }
 
-      // Function to change button color
-      function changeButtonColor(button) {
-        // Reset color of all buttons
-        $("[data-btn-id]").removeClass("desc_usage_active");
-
-        // Add color to the clicked button
-        button.addClass("desc_usage_active");
+      .trader_toolkit_li:hover {
+        color: #4399eb !important;
+        background-color: rgba(0, 0, 0, 0.09);
       }
-    });
-  </script>
-</body>
+      .trader_toolkit_li:hover .link_trader_toolkit {
+        color: #4399eb !important;
+     
+      }
+.link_trader_toolkit{
+  text-decoration: none;
+}
+      li a {
+        font-size: 13px;
+        font-weight: 600;
+        color: rgba(0, 0, 0, 0.712);
+      }
+    </style>
+    <div class="trader_toolkit shadow mt-3">
+      <h5 style="padding: 11px 0 0 12px; font-weight: 700;
+  color: dimgray;">TRADER’S TOOLKIT</h5>
+      <hr>
+      <ul class="list-unstyled m-0" id="main_list_tarder_toolkit">
+        <li class="trader_toolkit_li"><span><i class="bx bx-chevron-right">
+
+            </i class="trader_toolkit_li"></span><a class="link_trader_toolkit" title="Options Max Pain Analysis Chart" class="text-decoration-none"
+            href="/options-max-pain-chart-live/tcs">Options Max Pain Analysis Chart</a></li>
+        <li class="trader_toolkit_li"><span><i class="bx bx-chevron-right"></i></span><a class="link_trader_toolkit" title="Nifty Option Strategy"
+            class="text-decoration-none" href="/option-strategies">Nifty Option Strategy</a></li>
+        <li class="trader_toolkit_li"><span><i class="bx bx-chevron-right"></i></span><a class="link_trader_toolkit" title="Compare Brokers"
+            class="text-decoration-none" href="/select-best-broker">Compare Brokers</a></li>
+        <li class="trader_toolkit_li"><span><i class="bx bx-chevron-right"></i></span><a class="link_trader_toolkit" title="Stocks Option Chain"
+            class="text-decoration-none" href="/nse-option-chain/nifty">Stocks Option Chain</a></li>
+        <li class="trader_toolkit_li"><span><i class="bx bx-chevron-right"></i></span><a
+            class="link_trader_toolkit" title="FII DII Activity for whole month" class="text-decoration-none" href="/fii-dii-activity">FII DII
+            Activity for whole month</a></li>
+        <li class="trader_toolkit_li"><span><i class="bx bx-chevron-right"></i></span><a
+            class="link_trader_toolkit" title="Pivot Point Calculator | Fibonacci Pivots" class="text-decoration-none"
+            href="/pivot-calculator">Pivot Point Calculator | Fibonacci Pivots</a></li>
+        <li class="trader_toolkit_li"><span><i class="bx bx-chevron-right"></i></span><a
+            class="link_trader_toolkit" title="Black Scholes Option Pricing Calculator" class="text-decoration-none"
+            href="/option-pricing-calculator">Black Scholes Option Pricing Calculator</a>
+        </li>
+      </ul>
+
+
+    </div>
+
+  </div>
+
+
+
+</div>
+
+
+
 {% endblock dashboard_body %}

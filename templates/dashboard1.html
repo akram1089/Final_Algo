@@ -170,6 +170,7 @@
   .market_action:hover #maket_action_dropdown {
     display: block;
     right: 1;
+    top:27px;
 
   }
 
@@ -738,52 +739,69 @@
               });
           }
       </script> -->
-<script>
-        // Click event listener for "Add To Watchlist" option
-        $(document).on("click", ".add-to-watchlist", function () {
-        var rowData = {
-          symbol_name: $(this).closest("tr").find("td:eq(1)").text(),
-          prev_high: $(this).closest("tr").find("td:eq(2)").text(),
-          today_low: $(this).closest("tr").find("td:eq(3)").text(),
-          today_high: $(this).closest("tr").find("td:eq(4)").text(),
-          change_value: parseFloat($(this).closest("tr").find("td:eq(5)").text().split("(")[0]),
-          change_percent: parseFloat($(this).closest("tr").find("td:eq(5)").text().split("(")[1].split("%")[0]),
-          prev_close: $(this).closest("tr").find("td:eq(6)").text(),
-          today_volume: parseInt($(this).closest("tr").find("td:eq(7)").text()),
-        };
 
-        // AJAX call to save the data into the database
-        $.ajax({
-          url: "/save_to_watchlist", // Replace with your Django endpoint to handle the watchlist data
-          method: "POST",
-          data: rowData,
-          dataType: "json",
-          success: function (response) {
-            if (response.message1) {
-              $("#alert-watchlist").text(response.message1).addClass('alert alert-danger show').removeClass('alert-success').fadeIn()
-            } 
-           else if (response.message2) {
-              $("#alert-watchlist").text(response.message2).addClass('alert alert-success show').removeClass('alert-danger').fadeIn()
-            } 
-            // Fetch updated watchlist data
-    
 
-            // Hide the alert after 3 seconds (3000 milliseconds)
-            setTimeout(function () {
-              $("#alert-watchlist").fadeOut();
-            }, 3000);
-        
-          },
-          error: function (xhr, textStatus, errorThrown) {
-            console.log("Error occurred while saving data:", errorThrown);
-            // Handle any error or show error message here
-          },
+<!-- Include your other meta tags, stylesheets, etc. here -->
+
+    <!-- Include jQuery library -->
+
+
+    <script>
+        $(document).ready(function () {
+            $(document).on("click", ".add-to-watchlist", function () {
+                // Check if the user is authenticated
+                if ({{ request.user.is_authenticated|lower }}) {
+                    // User is authenticated, proceed with watchlist addition
+                    var rowData = {
+                        symbol_name: $(this).closest("tr").find("td:eq(1)").text(),
+                        prev_high: $(this).closest("tr").find("td:eq(2)").text(),
+                        today_low: $(this).closest("tr").find("td:eq(3)").text(),
+                        today_high: $(this).closest("tr").find("td:eq(4)").text(),
+                        change_value: parseFloat($(this).closest("tr").find("td:eq(5)").text().split("(")[0]),
+                        change_percent: parseFloat($(this).closest("tr").find("td:eq(5)").text().split("(")[1].split("%")[0]),
+                        prev_close: $(this).closest("tr").find("td:eq(6)").text(),
+                        today_volume: parseInt($(this).closest("tr").find("td:eq(7)").text()),
+                    };
+
+                    // Rest of your existing AJAX code for adding to watchlist
+                    $.ajax({
+                        url: "/save_to_watchlist", // Replace with your Django endpoint to handle the watchlist data
+                        method: "POST",
+                        data: rowData,
+                        dataType: "json",
+                        success: function (response) {
+                            console.log(response);
+                            if (response.message1) {
+                                $("#alert-watchlist").text(response.message1).addClass('alert alert-danger show').removeClass('alert-success').fadeIn();
+                            } else if (response.message2) {
+                                $("#alert-watchlist").text(response.message2).addClass('alert alert-success show').removeClass('alert-danger').fadeIn();
+                            }
+                            // Fetch updated watchlist data
+
+                            // Hide the alert after 3 seconds (3000 milliseconds)
+                            setTimeout(function () {
+                                $("#alert-watchlist").fadeOut();
+                            }, 3000);
+
+                        },
+                        error: function (xhr, textStatus, errorThrown) {
+                            console.log("Error occurred while saving data:", errorThrown);
+                            // Handle any error or show error message here
+                        },
+                    });
+
+                } else {
+                    // User is not authenticated, show an error or redirect to login page
+                    //alert("You need to be logged in to add to your watchlist.");
+                    $("#signinModal").modal("show");
+                    // You can also redirect the user to the login page using JavaScript:
+               
+                }
+            });
         });
-      });
+    </script>
 
 
-
-</script>
 <div class="alert alert-dismissible" role="alert" id="alert-watchlist" style="display: none;
 z-index: 100000000009 !important;
 position: fixed !important;
@@ -2510,10 +2528,7 @@ padding: 25px;">
 
 
 
-<div id="spinner"
-  class="position-fixed top-50 start-50 translate-middle d-flex align-items-center justify-content-center">
-  <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;"></div>
-</div>
+
 <script>
   var equity = document.getElementById("equity");
   var sme = document.getElementById("sme");
