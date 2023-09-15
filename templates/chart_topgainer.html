@@ -762,6 +762,14 @@
         color: #00b865;
         font-size: 19px;
     }
+
+
+    .red-option-indicator {
+        color: #e6191e;
+        font-size: 19px;
+    }
+
+
     .table-striped-custom>tbody>tr:nth-child(2n)>td,
             .table-striped-custom>tbody>tr:nth-child(2n)>th {
                 background-color: rgb(240, 247, 253) !important;
@@ -804,7 +812,7 @@
                         <p>Spot</p>
 
                         <div id="spot_value"></div>
-                        <div id="closest_strike_price" style="display: none;"></div>
+                        <div id="closest_strike_price"></div>
                         <div id="closen_expiry_date"></div>
                     </div>
                 </div>
@@ -1643,132 +1651,129 @@
 
 
 
-    <div class="Option_startegies_data_display  py-3">
-        <div class="display_table p-3">
-            <div class="main_add_table d-flex justify-content-between my-1">
-                <div class="empty_left"></div>
-
-                <i class="add-btn bi bi-plus-square-fill"></i>
-            </div>
 
 
-            <table class="data-display-table">
-                <!-- Initial empty row -->
-                <tr class="strategy_table_input">
-                    <td>
-                        <div class="textOnInput">
-                            <label for="optionSide">Instruments</label>
-                            <select class="option_side_input form-select">
-                                <option value="Select">Select</option>
-                                <option value="">Long</option>
-                                <option value="">Put</option>
 
-                            </select>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="textOnInput">
-                            <label for="expiryDate">Expiry Date</label>
-                            <select class="expiry_date_input form-select">
-                                <option value="Select">Select</option>
-                            </select>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="textOnInput">
-                            <label for="strikePrice">Strike Price</label>
-                            <select class="strike_price_input form-select">
-                                <option value="Select">Select</option>
-                            </select>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="textOnInput">
-                            <label for="action">Position</label>
-                            <select class="action_input form-select">
-                                <option value="Select">Select</option>
-                                <option value="Short">Short</option>
-                                <option value="Long">Long</option>
-                            </select>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="textOnInput">
-                            <label for="action">No. of Lots</label>
-                            <input type="number" class="option_lot_size_input form-control" value="1" />
-                        </div>
-                    </td>
-                    <td>
-                        <div class="textOnInput">
-                            <label for="action">Traded Price</label>
-                            <input type="number" class="ltpValue_input form-control" value="0" />
-                        </div>
-                    </td>
-                    <td>
-                        <i class="delete-btn bi bi-trash-fill"></i>
-                    </td>
-                </tr>
-            </table>
-
-            <div class="save_calculates_button d-flex justify-content-between my-3">
-                <div class="right_calc_empty"></div>
-                <div class="calc_save_btns d-flex gap-1">
-                    <button class="btn_outline_primary" id="save">SAVE</button><button class="btn_outline_primary"
-                        id="calculate">
-                        CALCULATE
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="table_pl_greek shadow p-2 mt-3 mb-5">
-        <div class="main_filter_greek_P_L">
-            <div class="inner_greek_p_l d-flex bg-light" style="gap: 1rem">
-                <p class="strategy_cost_table greek_strategy_active">STRATEGY COST</p>
-                <p class="greek_table">GREEKS</p>
-            </div>
-        </div>
-        <div id="table-Greeks" class="table-responsive">
-            <table id="resultTable" class="table table-hover ">
-                <thead class="bg-light">
-                    <tr>
-                        <th>LEG</th>
-                        <th>POSITION</th>
-                        <th>IV</th>
-                        <th>DELTA</th>
-                        <th>THETA</th>
-                        <th>GAMMA</th>
-                        <th>VEGA</th>
-                        <th>RHO</th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
-        </div>
-        <div id="table-PL_main" class="table-responsive">
-            <table class="PL-table table table-hover ">
-                <thead class="bg-light">
-                    <tr>
-                        <th>LEG</th>
-                        <th>POSITION</th>
-                        <th>TRADED PRICE</th>
-                        <th>CURRENT PRICE</th>
-                        <th>LOTS</th>
-                        <th>QTY.</th>
-                        <th>TOTAL CUR. COST</th>
-                        <th class="text-center">P/L</th>
-                    </tr>
-                </thead>
-                <tbody id="table-PL"></tbody>
-            </table>
-        </div>
-    </div>
 </div>
+
+
+<div class="modal fade" id="editPositionModal">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header" id="modal_header_edit">
+                <h5 class="modal-title" id="modal_title_edit">Edit Position</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="modal_body">
+                <div class="form-group textOnInput_edit">
+                    <label for="expiryEdit">Select Expiry</label>
+                    <select name="selectExpiry" class="expiry_date_input" id="selectExpiry">
+
+
+
+                    </select>
+                </div>
+                <div class="form-group textOnInput_edit">
+                    <label for="strikeEdit">Select Strike Price</label>
+                    <select name="selectStrikePrice" class="strike_price_input" id="selectStrikePrice">
+
+
+                    </select>
+                </div>
+                <div class="form-group textOnInput_edit">
+                    <label for="optionType">Select Option Type</label>
+                    <select name="optionType" id="optionType">
+
+                        <option value="CE">CE</option>
+                        <option value="PE">PE</option>
+                    </select>
+                </div>
+
+                <div class="Long_short">
+
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="long_short" id="long_radio" value="Long"
+                            checked>
+                        <label class="form-check-label" for="long_radio">
+                            Buy
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="long_short" id="short_radio" value="Short">
+                        <label class="form-check-label" for="short_radio">
+                            Short
+                        </label>
+                    </div>
+
 
 
 <script>
     $(document).ready(function () {
+
+
+
+        var stockDropdown_edit = $("#stockDropdown").val()
+        $("#selectExpiry").change(function () {
+            // console.log($(this).val());
+            get_edit_entry_price(stockDropdown_edit, $(this).val());
+        });
+        $("#selectStrikePrice").change(function () {
+
+            get_edit_entry_price(stockDropdown_edit, $("#selectExpiry").val());
+        });
+        $("#optionType").change(function () {
+
+            get_edit_entry_price(stockDropdown_edit, $("#selectExpiry").val());
+        });
+
+        function get_edit_entry_price(selectedOption, selectedExpiry) {
+            $("#spinner").show()
+            $.ajax({
+                url:
+                    '{% url "get_option_strategy_optimizer_option_data" %}?selected_option=' +
+                    selectedOption +
+                    "&selected_expiry=" +
+                    selectedExpiry,
+                type: "GET",
+                success: function (response) {
+                    // console.log(response.option_data.resultData.opDatas);
+
+                    var option_Date = response.option_data.resultData.opDatas
+                    Entry_edit(option_Date)
+
+
+                    $("#spinner").hide()
+                }
+            })
+
+        }
+
+        function Entry_edit(option_Date) {
+            var selectStrikePrice = $("#selectStrikePrice").val();
+            var optionType = $("#optionType").val();
+
+            for (var i = 0; i < option_Date.length; i++) {
+                var strikePrice = option_Date[i].strike_price; // Assuming strike_price is a property of each object in option_Date
+
+                // Compare the current option's strike_price with selectStrikePrice
+                if (strikePrice == selectStrikePrice) {
+                    // Do something when a matching strike_price is found
+                    if (optionType === "CE") {
+                        $(".edit_entry ").val(option_Date[i].calls_ltp)
+                        // console.log("Matching strike_price:", option_Date[i].calls_ltp);
+                    } else {
+                        // console.log("Matching strike_price:", option_Date[i].puts_ltp);
+                        $(".edit_entry ").val(option_Date[i].puts_ltp)
+
+                    }
+                }
+            }
+        }
+
+
+
+
+
 
 
 
@@ -2258,32 +2263,168 @@
         // After removing a data row, update the empty message visibility
         updateEmptyMessageVisibility();
 
+
+
+        $("#saveChangesButton").click(function () {
+            // Find the parent element containing the .edit_entry input
+            var closest_edit_data = $(this).closest('.modal-content');
+
+            // Navigate to .edit_entry input within the parent element
+            var selectExpiry = closest_edit_data.find("#selectExpiry").val();
+            var selectStrikePrice = closest_edit_data.find("#selectStrikePrice").val();
+            var optionType = closest_edit_data.find("#optionType").val();
+
+            // Navigate to the checked radio button within the parent element
+            var checkedRadio = closest_edit_data.find(".Long_short input[type='radio']:checked");
+
+            // Get the value of the checked radio button
+            var selectedLongShort = checkedRadio.val();
+
+            // Get the value of the counter_input_edit
+            var counter_input_edit = closest_edit_data.find("#counter_input_edit").val();
+
+            // Get the value of the .edit_entry input
+            var editEntryValue = closest_edit_data.find(".edit_entry").val();
+
+            // Get the value of the .exit_price input
+            var exit_price = closest_edit_data.find(".exit_price").val();
+
+            // Log all the values
+            console.log("selectExpiry:", selectExpiry);
+            console.log("selectStrikePrice:", selectStrikePrice);
+            console.log("optionType:", optionType);
+            console.log("selectedLongShort:", selectedLongShort);
+            console.log("counter_input_edit:", counter_input_edit);
+            console.log("editEntryValue:", editEntryValue);
+            console.log("exit_price:", exit_price);
+            var modal = $('#editPositionModal');
+            var position = modal.data('position');
+
+
+            var parsedDate = new Date(selectExpiry);
+            var day = parsedDate.getDate().toString().padStart(2, "0");
+            var month = (parsedDate.getMonth() + 1).toString().padStart(2, "0");
+            var year = parsedDate.getFullYear();
+            var formattedDate_initial = day + "-" + month + "-" + year;
+
+
+
+            function formatDate(inputDate) {
+                const dateParts = inputDate.split('-'); // Split the input date by hyphen
+                const day = dateParts[0]; // Extract day
+                const month = dateParts[1]; // Extract month
+                const year = dateParts[2]; // Extract year
+
+                // Create an array of month abbreviations
+                const monthAbbreviations = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
+
+                // Get the abbreviated month using the month value as an index
+                const abbreviatedMonth = monthAbbreviations[parseInt(month) - 1];
+
+                // Create the formatted date string
+                const formattedDate = `${day}${abbreviatedMonth}${year}`;
+
+                return formattedDate;
+            }
+
+            const inputDate = formattedDate_initial;
+            const formattedDate = formatDate(inputDate);
+
+
+
+
+
+
+            position.find(".expiry_initial").text(selectExpiry)
+            position.find(".expiry").text(formattedDate)
+            position.find(".option_lot_size_input").text(counter_input_edit)
+
+            var long_short_val = ""
+            if (selectedLongShort === "Short") {
+                long_short_val = "-"
+            } else {
+                long_short_val = "+"
+
+            }
+            position.find(".long_short_inner").text(long_short_val)
+            position.find(".strikePrice").text(selectStrikePrice)
+
+            position.find(".call_put_entrance").text(optionType)
+            position.find(".entryPrice").text(editEntryValue)
+            if (exit_price > 0) {
+                position.find(".exit_indicator").removeClass("green-option-indicator").addClass("red-option-indicator")
+            }
+            else {
+                position.find(".exit_indicator").removeClass("red-option-indicator").addClass("green-option-indicator")
+            }
+            position.find(".current_price").text(exit_price)
+
+
+
+
+            calculate_data()
+
+
+
+
+        });
         // Load spot data for "NIFTY" initially
 
 
         $("#calculate").click(function () {
             $("#spinner").show()
+
+        var greeks = 1
+        var p_l = 1
+
+
+
+        function calculate_data() {
+
             var selectedOption = $("#stockDropdown").val();
+            $("#spinner").show()
             // console.log("ca=" + selectedOption);
             loadExpiryData(selectedOption)
-            $("#table-PL").empty();
-            $("#resultTable tbody").empty();
 
-            var dataRows = $(".data-display-table").find("tr");
+
+
+            var All_positions = $(".main_position").find(".main_add_position_actions")
             var allData = [];
             var conditionOrder = 1;
-
-            dataRows.each(function () {
+            All_positions.each(function () {
 
                 var row = $(this);
-                var optionSide = row.find(".option_side_input").val();
-                var expiryDate = row.find(".expiry_date_input").val();
-                var strikePrice = row.find(".strike_price_input").val();
-                var action = row.find(".action_input").val();
-                var quantity = row.find(".option_lot_size_input").val();
-                var ltpValue = row.find(".ltpValue_input").val();
+                var optionSide = row.find(".call_put_entrance").text();
+
+                var expiryDate = row.find(".expiry_initial").text();
+
+                var strikePrice = row.find(".strikePrice").text();
+
+                var long_short_inner = row.find(".long_short_inner").text();
+
+                var action = "";
+
+                if (long_short_inner === "-") {
+                    action = "Short";
+                } else {
+                    action = "Long";
+                }
+
+
+                var optionSide_main = ""
+                if (optionSide == "CE") {
+                    optionSide_main = "Call"
+                } else {
+                    optionSide_main = "Put"
+
+                }
+
+                var quantity = row.find(".option_lot_size_input").text();
+                var ltpValue = row.find(".entryPrice").text();
+
                 var option_lot_size = $("#lot_size_value").text();
                 var main_conditionOrder = conditionOrder++;
+
 
                 // Check if any field is empty
                 if (
@@ -2307,6 +2448,22 @@
                     allData.push({
                         selectedOption: selectedOption,
                         optionSide: optionSide,
+
+
+                var childrenLength = $('.main_position').children().length;
+                // console.log('childrenLength', childrenLength);
+
+                if (parseInt(childrenLength) < 1) {
+                    // console.log("hii there zero");
+                    $("#spinner").hide()
+                    return false;
+                } else {
+
+
+                    allData.push({
+                        selectedOption: selectedOption,
+                        optionSide: optionSide_main,
+
                         option_lot_size: option_lot_size,
                         expiryDate: expiryDate,
                         strikePrice: strikePrice,
@@ -2316,6 +2473,7 @@
                         ltpValue: ltpValue,
                     });
                 }
+
                 if (allData.length === dataRows.length) {
 
                     $.ajax({
@@ -2362,6 +2520,106 @@
                                         <tr>
                                             <td>LEG${leg++}</td>
                                             <td>${position.toUpperCase()} ${strikePrice}${optionType.toUpperCase()}(${expiry})</td>
+
+
+
+            });
+
+
+            get_position_data_from_django(allData)
+            // console.log("AllData", allData);
+            $("#spinner").show()
+        }
+
+
+        function get_position_data_from_django(allData) {
+            $("#spinner").show();
+            $.ajax({
+                type: "POST",
+                url: "/filter_iv_data",
+                data: JSON.stringify(allData),
+                contentType: "application/json",
+                success: function (response) {
+                    // console.log("Data sent to Django:", response);
+                    // console.log(response.stock_data.resultData);
+
+                    // Clear previous table data
+                    $("#table-PL").empty();
+
+                    $("#resultTable tbody").empty();
+
+                    // Process response data and populate the table
+                    const resultData = response.iv_data.resultData;
+                    let totalDelta = 0;
+                    let totalTheta = 0;
+                    let totalGamma = 0;
+                    let totalVega = 0;
+                    let totalRho = 0;
+                    let leg = 1;
+
+                    for (const item of resultData) {
+                        const optionType = item.optiontype;
+                        const symbol = item.symbol;
+                        const strikePrice = item.strikeprice;
+                        const expiry = item.expiry;
+                        const position = item.position;
+                        const iv = item.calls_iv || item.puts_iv;
+
+                        // console.log('optionType' + optionType);
+
+                        const delta =
+                            optionType === "CE" ? item.call_delta : item.put_delta;
+                        const theta =
+                            optionType === "CE" ? item.call_theta : item.put_theta;
+                        const gamma =
+                            optionType === "CE" ? item.call_gamma : item.put_gamma;
+                        const vega =
+                            optionType === "CE" ? item.call_vega : item.put_vega;
+                        const rho =
+                            optionType === "CE" ? item.call_rho : item.put_rho;
+                        var parsedDate = new Date(expiry);
+                        var day = parsedDate.getDate().toString().padStart(2, "0");
+                        var month = (parsedDate.getMonth() + 1).toString().padStart(2, "0");
+                        var year = parsedDate.getFullYear();
+                        var formattedDate_initial = day + "-" + month + "-" + year;
+
+
+
+                        function formatDate(inputDate) {
+                            const dateParts = inputDate.split('-'); // Split the input date by hyphen
+                            const day = dateParts[0]; // Extract day
+                            const month = dateParts[1]; // Extract month
+                            const year = dateParts[2]; // Extract year
+
+                            // Create an array of month abbreviations
+                            const monthAbbreviations = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
+
+                            // Get the abbreviated month using the month value as an index
+                            const abbreviatedMonth = monthAbbreviations[parseInt(month) - 1];
+
+                            // Create the formatted date string
+                            const formattedDate = `${day}${abbreviatedMonth}${year}`;
+
+                            return formattedDate;
+                        }
+
+                        const inputDate = formattedDate_initial;
+                        const formattedDate = formatDate(inputDate);
+                        const absoluteQuantity = Math.abs(item.quantity);
+                        // console.log(formattedDate); // Output: "14SEP"
+                        var stockDropdown = $("#stockDropdown").val()
+                        // Create the table row for each option
+
+                        const tableRow = `
+                                        <tr id=${greeks++}>
+                                            <td>
+                                                                    <div class="greeks_position d-flex gap-1">
+                                            <div class="main_short_long_lot_size">
+                                            <div class="short_long"><span class="long_short_inner">${position === "Long" ? "+" : "-"}</span></div> <div class="option_lot_size_input">${absoluteQuantity}</div>x
+                                        </div>
+                                        <div class="symbol_expiry"><span class="symbol">${stockDropdown}</span><span class="expiry">${formattedDate}</span></div>
+                                        <div class="strike_price_call_put"> <span class="strikePrice">${parseFloat(strikePrice)}</span><span class="call_put_entrance">${optionType === "Call" ? "CE" : "PE"}</span></div> </div></td>
+
                                         
                                             <td>${iv !== null ? iv.toFixed(2) : 0}</td>
                                             <td>${delta !== null ? delta.toFixed(2) : 0}</td>
@@ -2374,15 +2632,16 @@
 
                         `;
 
-                                $("#resultTable tbody").append(tableRow);
+                        $("#resultTable tbody").append(tableRow);
 
-                                // Calculate positional Greeks
-                                totalDelta += parseFloat(delta);
-                                totalTheta += parseFloat(theta);
-                                totalGamma += parseFloat(gamma);
-                                totalVega += parseFloat(vega);
-                                totalRho += parseFloat(rho);
-                            }
+                        // Calculate positional Greeks
+                        totalDelta += parseFloat(delta);
+                        totalTheta += parseFloat(theta);
+                        totalGamma += parseFloat(gamma);
+                        totalVega += parseFloat(vega);
+                        totalRho += parseFloat(rho);
+                    }
+
 
                             // Add the row for positional Greeks
                             const totalRow = `
@@ -2398,16 +2657,31 @@
               </tr>
           `;
 
+                    // Add the row for positional Greeks
+                    const totalRow = `
+                                                                    <tr>
+                                                                        <td>POSITIONAL GREEKS</td>
+                                                                    
+                                                                        <td></td>
+                                                                        <td>${totalDelta !== null ? totalDelta.toFixed(2) : 0}</td>
+                                                                        <td>${totalTheta !== null ? totalTheta.toFixed(4) : 0}</td>
+                                                                        <td>${totalGamma !== null ? totalGamma.toFixed(4) : 0}</td>
+                                                                        <td>${totalVega !== null ? totalVega.toFixed(2) : 0}</td>
+                                                                        <td>${totalRho !== null ? totalRho.toFixed(2) : 0}</td>
+                                                                    </tr>
+                                                                `;
 
-                            $("#resultTable tbody").append(totalRow);
 
-                            // Assuming response.stock_data.resultData is an array containing the data
-                            const updatedResultData = response.stock_data.resultData.map(
-                                (item, index) => {
-                                    const ltpValue = $(".strategy_table_input")
-                                        .eq(index)
-                                        .find(".ltpValue_input")
-                                        .val();
+
+                    $("#resultTable tbody").append(totalRow);
+
+                    const updatedResultData = response.stock_data.resultData.map((item, index) => {
+                        // Find the current_price element within the corresponding .main_add_position_actions
+                        const ltpValue = $(".main_add_position_actions")
+                            .eq(index)
+                            .find(".current_price")
+                            .text();
+
 
                                     return { ...item, ltpValue: parseFloat(ltpValue) };
                                 }
@@ -2416,20 +2690,31 @@
                             function createTable(data) {
                                 let tableHTML = "";
 
-                                let netCost = 0;
-                                let netPL = 0;
+                        // Initialize parsedLtpValue to ltpValue (assuming it contains a numeric value)
+                        let parsedLtpValue = parseFloat(ltpValue);
 
-                                let shortCount = 0;
-                                let longCount = 0;
+                        // Check if parsedLtpValue is 0 and if item.unitPrice is available
+                        if (parsedLtpValue === 0 && item.unitPrice) {
+                            // If ltpValue is 0, set parsedLtpValue to item.unitPrice
+                            parsedLtpValue = item.unitPrice;
+                        }
 
-                                // Loop through the data to count short and long positions
-                                for (const item of data) {
-                                    const shortMatches = item.position.match(/Short/gi);
-                                    const longMatches = item.position.match(/Long/gi);
+                        // Log the values for debugging
+                        // console.log('ltpValue', ltpValue);
+                        // console.log('parsedLtpValue', parsedLtpValue);
+                        // console.log('item.unitPrice', item.unitPrice);
 
-                                    if (shortMatches) {
-                                        shortCount += shortMatches.length;
-                                    }
+
+                        // Return an object with ltpValue and item.unitPrice added
+                        return { ...item, ltpValue: parsedLtpValue };
+                    });
+
+
+                    // console.log(updatedResultData);
+
+                    function createTable(data) {
+                        let tableHTML = "";
+
 
                                     if (longMatches) {
                                         longCount += longMatches.length;
@@ -2445,20 +2730,48 @@
                                 for (let i = 0; i < data.length; i++) {
                                     const item = data[i];
 
-                                    // Adjust lotSize based on position
-                                    const adjustedLotSize =
-                                        item.position.toLowerCase() === "short"
-                                            ? -item.lotSize
-                                            : item.lotSize;
-                                    const absoluteQuantity = Math.abs(item.quantity);
-                                    const totalCurrentCost =
-                                        item.unitPrice * adjustedLotSize * absoluteQuantity;
-                                    const totalPL =
-                                        item.ltpValue * adjustedLotSize * absoluteQuantity;
-                                    var final_P_L = totalPL - totalCurrentCost;
+                        let netCost = 0;
+                        let netPL = 0;
 
-                                    maxStrikePrice = Math.max(maxStrikePrice, item.strikePrice);
-                                    minStrikePrice = Math.min(minStrikePrice, item.strikePrice);
+                        let shortCount = 0;
+                        let longCount = 0;
+
+                        // Loop through the data to count short and long positions
+                        for (const item of data) {
+                            const shortMatches = item.position.match(/Short/gi);
+                            const longMatches = item.position.match(/Long/gi);
+
+
+                            if (shortMatches) {
+                                shortCount += shortMatches.length;
+                            }
+
+                            if (longMatches) {
+                                longCount += longMatches.length;
+                            }
+                        }
+                        let maxStrikePrice = Number.NEGATIVE_INFINITY;
+                        let minStrikePrice = Number.POSITIVE_INFINITY;
+                        // Determine the position label based on the majority
+                        const positionLabel = shortCount > longCount ? "SHORT" : "LONG";
+                        let totalStrikePrice = 0;
+                        let itemCount = 0;
+                        let premiumPain = 0;
+
+
+                        var All_positions = $(".main_position").find(".main_add_position_actions")
+                        for (let i = 0; i < data.length; i++) {
+                            const item = data[i];
+
+                            console.log(item.ltpValue);
+                            var All_positions = $(".main_position").find(".main_add_position_actions");
+                            All_positions.each(function (index) {
+                                var row = $(this);
+                                var item = data[index]; // Get the corresponding data item
+                                var unitPrice = item.unitPrice; // Get the unitPrice from the data
+                                row.find(".entryPrice").text(unitPrice);
+                            });
+
 
                                     const legRow = `
                                                                 <tr>
@@ -2511,6 +2824,127 @@
                                     $("#max_loss").text(long_position_label)
                                     $("#break_evens").text(`${minStrikePrice}~${maxStrikePrice}`)
                                 tableHTML += `
+
+                            // Adjust lotSize based on position
+                            const adjustedLotSize =
+                                item.position.toLowerCase() === "short"
+                                    ? -item.lotSize
+                                    : item.lotSize;
+                            const absoluteQuantity = Math.abs(item.quantity);
+                            const totalCurrentCost =
+                                item.unitPrice * adjustedLotSize * absoluteQuantity;
+                            const totalPL =
+                                item.ltpValue * adjustedLotSize * absoluteQuantity;
+                            var final_P_L = totalPL - totalCurrentCost;
+
+                            maxStrikePrice = Math.max(maxStrikePrice, item.strikePrice);
+                            minStrikePrice = Math.min(minStrikePrice, item.strikePrice);
+
+
+
+                            var parsedDate = new Date(item.expiry);
+                            var day = parsedDate.getDate().toString().padStart(2, "0");
+                            var month = (parsedDate.getMonth() + 1).toString().padStart(2, "0");
+                            var year = parsedDate.getFullYear();
+                            var formattedDate_initial = day + "-" + month + "-" + year;
+
+
+
+                            function formatDate(inputDate) {
+                                const dateParts = inputDate.split('-'); // Split the input date by hyphen
+                                const day = dateParts[0]; // Extract day
+                                const month = dateParts[1]; // Extract month
+                                const year = dateParts[2]; // Extract year
+
+                                // Create an array of month abbreviations
+                                const monthAbbreviations = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
+
+                                // Get the abbreviated month using the month value as an index
+                                const abbreviatedMonth = monthAbbreviations[parseInt(month) - 1];
+
+                                // Create the formatted date string
+                                const formattedDate = `${day}${abbreviatedMonth}${year}`;
+
+                                return formattedDate;
+                            }
+
+                            const inputDate = formattedDate_initial;
+                            const formattedDate = formatDate(inputDate);
+
+                            // console.log(formattedDate); // Output: "14SEP"
+                            var stockDropdown = $("#stockDropdown").val()
+
+
+
+
+
+
+                            const legRow = `
+                                                                <tr id=${p_l++}>
+                                                                    <td>
+                                                                    <div class="p_l_position d-flex gap-1">
+                                            <div class="main_short_long_lot_size">
+                                            <div class="short_long"><span class="long_short_inner">${item.position === "Long" ? "+" : "-"}</span></div> <div class="option_lot_size_input">${absoluteQuantity}</div>x
+                                        </div>
+                                        <div class="symbol_expiry"><span class="symbol">${stockDropdown}</span><span class="expiry">${formattedDate}</span></div>
+                                        <div class="strike_price_call_put"> <span class="strikePrice">${parseFloat(item.strikePrice)}</span><span class="call_put_entrance">${item.optionType === "Call" ? "CE" : "PE"}</span></div> </div></td>
+                                                                   
+                                                                    <td><div class="ltpValue">${item.ltpValue
+                                }</div></td>
+                                                                    <td><div class="unitPrice">${item.unitPrice
+                                }</div></td>
+                                                                    <td><div class="adjsutedLotSize">${adjustedLotSize}</div></td>
+                                                                    <td><div class="absoluteQuantity">${absoluteQuantity}</div></td>
+                                                                    <td><div class="totalCurrentCost">${totalCurrentCost.toFixed(2)}</div></td>
+                                                                    <td class="text-center"><div class="final_P_L">${final_P_L}</div></td>
+                                                                </tr>
+                                                            `;
+                            const $exitPriceElements = $(".exit_price");
+                            if ($exitPriceElements.length > i) {
+                                $($exitPriceElements[i]).empty().text(final_P_L);
+                            }
+                            tableHTML += legRow;
+
+
+
+                            netCost += parseFloat(totalCurrentCost.toFixed(2));
+                            netPL += parseFloat(final_P_L);
+
+                            totalStrikePrice += parseFloat(item.strikePrice);
+                            itemCount++;
+                            premiumPain += parseFloat(item.unitPrice)
+
+                        }
+
+
+                        // console.log(totalStrikePrice);
+                        const averageStrikePrice = totalStrikePrice / itemCount;
+                        // console.log("Average of the :" + averageStrikePrice);
+                        // console.log(positionLabel);
+                        var min_breakPoints = averageStrikePrice - premiumPain
+                        var max_breakPoints = averageStrikePrice + premiumPain
+
+
+
+                        var Put_position_label =
+                            positionLabel == "SHORT"
+                                ? Math.abs(netCost + -netPL)
+                                : "Unlimited";
+                        var long_position_label =
+                            positionLabel == "LONG"
+                                ? Math.abs(netCost + -netPL)
+                                : "Unlimited";
+                        var Put_position_display =
+                            positionLabel == "SHORT" ? "d-block" : "d-none";
+                        var long_position_display =
+                            positionLabel == "LONG" ? "d-block" : "d-none";
+
+
+                        $("#max_profit").text(Put_position_label)
+                        $("#max_loss").text(long_position_label)
+                        $("#break_evens").text(`${minStrikePrice}~${maxStrikePrice}`)
+                        tableHTML += `
+
                                                                 <tr>
                                                                     <td colspan="6">NET COST OF STRATEGY :</td>
                                                                     <td>${netCost}</td>
@@ -2544,20 +2978,19 @@
                                                                     </tr>
                                                             `;
 
-                                return tableHTML;
-                            }
+                        return tableHTML;
+                    }
 
-                            const tableBody = document.getElementById("table-PL");
-                            tableBody.innerHTML = createTable(updatedResultData);
-                            $("#spinner").hide()
-                        },
-                        error: function (xhr, status, error) {
-                            console.error("Error sending data to Django:", error);
-                        },
-                    });
-                }
-
+                    const tableBody = document.getElementById("table-PL");
+                    tableBody.innerHTML = createTable(updatedResultData);
+                    $("#spinner").hide()
+                },
+                error: function (xhr, status, error) {
+                    // console.error("Error sending data to Django:", error);
+                },
             });
+            $("#spinner").hide();
+
 
             // If all data is valid, log all the data at once
             if (allData.length === dataRows.length) {
@@ -2565,6 +2998,15 @@
             }
 
         });
+
+        }
+
+
+
+
+
+
+
 
         var isFirstTime = true;
         $("#collapseExample").on("show.bs.collapse", function () {
@@ -2692,11 +3134,15 @@
 
             if (selectedOption) {
                 loadOptionData(selectedOption, selectedOptionExpiry);
+                loadExpiryData(selectedOption)
             }
         });
 
+
+
+
         function loadOptionData(selectedOption, selectedExpiry) {
-            $("#spinner").show();
+
 
             $.ajax({
                 url:
@@ -2732,7 +3178,7 @@
                     // console.log(lot_size_value_option);
                     // console.log(selectedOption);
 
-                    console.log(selectedExpiry)
+                    // console.log(selectedExpiry)
 
                     var optionChainTable = $(".strategy_option_chain");
                     optionChainTable.empty();
@@ -2861,7 +3307,7 @@
 
 
                                     // Click on buttons with IDs "#Auto_calls_short_click" and "#Auto_puts_short_click"
-                                    $(this).closest(".call_put_tr").find("#Auto_calls_short_click, #Auto_puts_short_click").click();
+                                    $(this).closest(".call_put_tr").find("#Auto_calls_short_click, #Auto_puts_short_click").data("HI1", "HI1There").click();
 
                                     // Get the value of "#counter_input"
                                     var counterInputValue = $("#counter_input").val();
@@ -2870,7 +3316,7 @@
                                     $(".option_lot_size_input").val(counterInputValue);
 
                                     // Trigger the click event for the element with ID "#calculate"
-                                    $("#calculate").click();
+                                    calculate_data()
                                 }
                             });
 
@@ -2983,19 +3429,19 @@
 
                                     var closestRowPrev = optionChainTable.find(".strike_price:contains(" + put_strikeSelect_strangle + ")").closest(".call_put_tr");
                                     if (closestRowPrev.length) {
-                                        closestRowPrev.find("#Auto_puts_short_click").click();
+                                        closestRowPrev.find("#Auto_puts_short_click").data("HI1", "HI1There").click();
                                     }
 
                                     // Find the closest row for lastIndexForw and click on Auto_calls_short_click
                                     var closestRowForw = optionChainTable.find(".strike_price:contains(" + call_strikeSelect_strangle + ")").closest(".call_put_tr");
                                     if (closestRowForw.length) {
-                                        closestRowForw.find("#Auto_calls_short_click").click();
+                                        closestRowForw.find("#Auto_calls_short_click").data("HI1", "HI1There").click();
                                     }
                                     var counterInputValue = $("#counter_input_strangle").val();
                                     $(".option_lot_size_input").val(counterInputValue);
                                     // Click on #calculate after a longer delay
 
-                                    $("#calculate").click();
+                                    calculate_data()
 
                                     $("#strangle_modal").hide();
                                 }
@@ -3102,7 +3548,7 @@
                                         var closestRow = optionChainTable.find(".strike_price:contains(" + rowStrikePrice + ")").closest(".call_put_tr");
                                         if (closestRow.length) {
 
-                                            closestRow.find("#Auto_calls_short_click").click();
+                                            closestRow.find("#Auto_calls_short_click").data("HI1", "HI1There").click();
 
                                             // Delay before clicking on #calculate (adjust as needed)
 
@@ -3122,7 +3568,7 @@
                                 var closestRowPrev = optionChainTable.find(".strike_price:contains(" + lastIndexPrev + ")").closest(".call_put_tr");
                                 if (closestRowPrev.length) {
 
-                                    closestRowPrev.find("#Auto_puts_short_click").click();
+                                    closestRowPrev.find("#Auto_puts_short_click").data("HI1", "HI1There").click();
 
                                 }
 
@@ -3130,14 +3576,19 @@
                                 var closestRowForw = optionChainTable.find(".strike_price:contains(" + lastIndexForw + ")").closest(".call_put_tr");
                                 if (closestRowForw.length) {
 
-                                    closestRowForw.find("#Auto_calls_long_click").click();
+                                    closestRowForw.find("#Auto_calls_long_click").data("HI1", "HI1There").click();
 
                                 }
 
                                 // Click on #calculate after a longer delay
                                 var counterInputValue = $("#counter_input_spread").val();
+
                                 $(".option_lot_size_input").val(counterInputValue);
                                 $("#calculate").click();
+
+                                $(".option_lot_size_input").text(counterInputValue);
+                                calculate_data()
+
 
 
                                 $("#spread_modal").hide();
@@ -3269,7 +3720,7 @@
                                 var closestRowPrev = optionChainTable.find(".strike_price:contains(" + lastIndexPrev + ")").closest(".call_put_tr");
                                 if (closestRowPrev.length) {
 
-                                    closestRowPrev.find("#Auto_puts_long_click").click();
+                                    closestRowPrev.find("#Auto_puts_long_click").data("HI1", "HI1There").click();
 
                                 }
 
@@ -3280,7 +3731,7 @@
                                     if (rowStrikePrice === parseFloat(put_call_strikeSelect_ironFly)) {
 
                                         $(this).closest(".call_put_tr")
-                                            .find("#Auto_calls_short_click, #Auto_puts_short_click")
+                                            .find("#Auto_calls_short_click, #Auto_puts_short_click").data("HI1", "HI1There")
                                             .click();
 
 
@@ -3296,7 +3747,7 @@
                                 var closestRowForw = optionChainTable.find(".strike_price:contains(" + lastIndexForw + ")").closest(".call_put_tr");
                                 if (closestRowForw.length) {
 
-                                    closestRowForw.find("#Auto_calls_long_click").click();
+                                    closestRowForw.find("#Auto_calls_long_click").data("HI1", "HI1There").click();
 
                                 }
 
@@ -3304,16 +3755,12 @@
                                 var counterInputValue = $("#counter_input_ironFly").val();
                                 $(".option_lot_size_input").val(counterInputValue);
 
-                                $("#calculate").click();
+                                calculate_data()
                                 $("#ironFly_modal").hide()
 
                             })
 
                         }
-
-
-
-
 
 
 
@@ -3467,20 +3914,20 @@
                                 var closestRowPrev = optionChainTable.find(".strike_price:contains(" + lastIndexPrev + ")").closest(".call_put_tr");
                                 if (closestRowPrev.length) {
 
-                                    closestRowPrev.find("#Auto_puts_long_click").click();
+                                    closestRowPrev.find("#Auto_puts_long_click").data("HI1", "HI1There").click();
 
                                 }
                                 var closestRowPrev3 = optionChainTable.find(".strike_price:contains(" + lastIndexPrev3 + ")").closest(".call_put_tr");
                                 if (closestRowPrev3.length) {
 
-                                    closestRowPrev3.find("#Auto_puts_short_click").click();
+                                    closestRowPrev3.find("#Auto_puts_short_click").data("HI1", "HI1There").click();
 
                                 }
                                 // Find the closest row for lastIndexForw and click on Auto_calls_short_click
                                 var closestRowForw3 = optionChainTable.find(".strike_price:contains(" + lastIndexForw3 + ")").closest(".call_put_tr");
                                 if (closestRowForw3.length) {
 
-                                    closestRowForw3.find("#Auto_calls_short_click").click();
+                                    closestRowForw3.find("#Auto_calls_short_click").data("HI1", "HI1There").click();
 
                                 }
 
@@ -3488,7 +3935,7 @@
                                 var closestRowForw = optionChainTable.find(".strike_price:contains(" + lastIndexForw + ")").closest(".call_put_tr");
                                 if (closestRowForw.length) {
 
-                                    closestRowForw.find("#Auto_calls_long_click").click();
+                                    closestRowForw.find("#Auto_calls_long_click").data("HI1", "HI1There").click()
 
                                 }
 
@@ -3496,7 +3943,7 @@
                                 var counterInputValue = $("#counter_input_ironCondor").val();
                                 $(".option_lot_size_input").val(counterInputValue);
 
-                                $("#calculate").click();
+                                calculate_data()
                                 $("#ironCondor_modal").hide()
 
                             })
@@ -3632,7 +4079,7 @@
                                 var closestRowForw2 = optionChainTable.find(".strike_price:contains(" + lastIndexForw2 + ")").closest(".call_put_tr");
                                 if (closestRowForw2.length) {
 
-                                    closestRowForw2.find("#Auto_calls_short_click").click();
+                                    closestRowForw2.find("#Auto_calls_short_click").data("HI1", "HI1There").click();
 
                                 }
 
@@ -3640,7 +4087,7 @@
                                 var closestRowForw = optionChainTable.find(".strike_price:contains(" + lastIndexForw + ")").closest(".call_put_tr");
                                 if (closestRowForw.length) {
 
-                                    closestRowForw.find("#Auto_calls_long_click").click();
+                                    closestRowForw.find("#Auto_calls_long_click").data("HI1", "HI2there").click();
 
                                 }
 
@@ -3648,7 +4095,7 @@
                                 var closestRowPrev = optionChainTable.find(".strike_price:contains(" + lastIndexPrev + ")").closest(".call_put_tr");
                                 if (closestRowPrev.length) {
 
-                                    closestRowPrev.find("#Auto_puts_short_click").click();
+                                    closestRowPrev.find("#Auto_puts_short_click").data("HI1", "HI3there").click();
 
                                 }
                                 // Click on #calculate after a longer delay
@@ -3656,7 +4103,7 @@
                                 var counterInputValue = $("#counter_input_jaze_lizard").val();
                                 $(".option_lot_size_input").val(counterInputValue);
 
-                                $("#calculate").click();
+                                calculate_data()
                                 $("#jaze_lizard_modal").hide()
 
                             })
@@ -3736,6 +4183,8 @@
                                 ltpValue,
                                 opiton_selected
                             );
+
+
                         } else {
                             var option_side = "Put";
                             var puts_oi = row.find(".text-start").eq(1).text();
@@ -3762,6 +4211,20 @@
                                 opiton_selected
                             );
                         }
+
+                        $('.inner_p_l_greeks').show();
+                        if ($(this).data("HI1") === undefined) {
+                            console.log('Yes');
+                            // Remove the "HI1" data attribute
+                           
+                            calculate_data();
+                        } else {
+                            console.log('No');
+                            $(this).removeData("HI1");
+                        }
+
+
+
                     });
 
 
@@ -3899,10 +4362,11 @@
                         const inputDate = formattedDate_initial;
                         const formattedDate = formatDate(inputDate);
 
-                        console.log(formattedDate); // Output: "14SEP"
+                        // console.log(formattedDate); // Output: "14SEP"
                         var stockDropdown = $("#stockDropdown").val()
                         // +1x NIFTY07SEP 19350CE - ₹ 125.3 (0.00)
                         var add_position = $(`
+
     <div class="main_add_position_actions d-flex justify-content-between">
         <div class="inner_position d-flex gap-1">
             <div class="main_short_long_lot_size">
@@ -3990,6 +4454,192 @@
 `);
                         $(".data-display-table").append(newRow);
                         $(".main_position").append(add_position)
+
+                                    <div class="main_add_position_actions d-flex justify-content-between" id=${positions++}>
+                                        <div class="inner_position d-flex gap-1">
+                                            <div class="main_short_long_lot_size">
+                                            <div class="short_long"><span class="long_short_inner">${action === "Long" ? "+" : "-"}</span></div> <div class="option_lot_size_input">1</div>x
+                                        </div>
+                                        <div class="symbol_expiry"><span class="symbol">${stockDropdown}</span><span class="expiry">${formattedDate}</span><span class="expiry_initial" style="display:none">${expiry_date}</span></div>
+                                        <div class="strike_price_call_put"> <span class="strikePrice">${parseFloat(strike_price)}</span><span class="call_put_entrance">${option_side === "Call" ? "CE" : "PE"}</span></div>
+                                        <div class="ltp_main">-₹<span class="entryPrice">${parseFloat(ltpValue)}</span>(<span class="exit_price">0</span>) <span class="current_price">0</span></div></div>
+
+                                        <div class="action_option_strategy d-flex justify-content-center align-items-center gap-1">
+                                                    <i class="bi bi-pencil-square edit-button" data-bs-toggle="modal" data-bs-target="#editPositionModal"></i>
+                                                    <i class="bi bi-trash-fill delete-button dlt-btn" id="delete-btn"></i>
+                                                    <i class='bx bxs-circle green-option-indicator exit_indicator'></i>
+                                                </div>
+                                            
+                                            
+                                            </div>
+
+                                    `)
+
+
+
+
+                        $(".main_position").append(add_position)
+
+                        $(".dlt-btn").click(function () {
+                            // Find the closest parent element with class main_add_position_actions
+                            var main_add_position_actions = $(this).closest('.main_add_position_actions');
+
+                            // Get the id attribute from the found element
+                            var idValue = main_add_position_actions.attr('id');
+
+                            // Remove the clicked element
+                            main_add_position_actions.remove();
+                            $("#table-PL").find("tr#" + idValue).remove();
+                            $("#resultTable tbody").find("tr#" + idValue).remove();
+                            $(".data-display-table").find("tr#" + idValue).remove();
+
+
+                            var childrenLength = $('.main_position').children().length;
+                            //console.log("Children length in #myTable:", childrenLength);
+
+
+                            // Check if #myTable has no child elements
+                            if (childrenLength < 1) {
+                                // If it has no children, hide .main_table_instruments_data
+                                $('.inner_p_l_greeks').hide();
+                                $(".straddle").removeClass("option_strategies_active")
+
+                            } else {
+                                calculate_data()
+                            }
+
+                            // Output the id value to the console
+                            // console.log(idValue);
+
+                        });
+
+
+
+
+
+
+                        $(".edit-button").on('click', function (event) {
+                            event.stopPropagation();
+                            // console.log('Hii there');
+
+                            var position = $(this).closest('.main_add_position_actions');
+                            var option_lot_size_input = position.find('.option_lot_size_input').text();
+                            var expiry_initial = position.find('.expiry_initial').text();
+                            var strikePrice = position.find('.strikePrice').text();
+                            var call_put_entrance = position.find('.call_put_entrance').text();
+
+                            var long_short_inner = position.find('.long_short_inner').text();
+
+
+
+                            // Check the appropriate radio button based on long_short_inner
+                            if (long_short_inner === "+") {
+                                $("#long_radio").prop("checked", true);
+                            } else if (long_short_inner === "-") {
+                                $("#short_radio").prop("checked", true);
+                            }
+
+                            var selectStrikePrice = $("#selectStrikePrice");
+
+                            selectStrikePrice.find("option").each(function () {
+                                // Get the value of the current option
+                                var optionValue = $(this).val();
+
+                                // Check if the option value matches the value of closest_strike_price
+                                if (optionValue === strikePrice) {
+                                    // Add the 'selected' attribute to the matching option
+                                    $(this).prop("selected", true);
+                                }
+
+                            });
+
+
+                            var optionType = $("#optionType");
+
+                            optionType.find("option").each(function () {
+                                // Get the value of the current option
+                                var optionValue = $(this).val();
+
+                                // Check if the option value matches the value of closest_strike_price
+                                if (optionValue === call_put_entrance) {
+                                    // Add the 'selected' attribute to the matching option
+                                    $(this).prop("selected", true);
+                                }
+
+                            });
+                            // console.log(expiry_initial);
+                            var selectExpiry = $("#selectExpiry");
+
+                            selectExpiry.find("option").each(function () {
+                                // Get the value of the current option
+                                var expiryDate = $(this).val();
+                                // console.log(expiryDate);
+
+                                // Check if the option value matches the value of closest_strike_price
+                                if (expiryDate === expiry_initial) {
+                                    // Add the 'selected' attribute to the matching option
+                                    $(this).prop("selected", true);
+                                }
+
+                            });
+
+
+
+
+                            // Use a more specific selector for entryPrice
+                            var entryPrice = position.find('.entryPrice').first().text();
+                            $(".edit_entry ").val(entryPrice)
+
+                            var exit_price = position.find('.current_price').first().text();
+                            $('.exit_price').val(exit_price);
+
+
+
+                            $('#counter_input_edit').val(option_lot_size_input);
+
+
+                            // console.log(entryPrice);
+
+
+                            function Edit_counter() {
+
+
+                                var counterValue = position.find(".option_lot_size_input").text();
+
+                                // Function to update the input field with the current value
+                                function updateCounterInput() {
+                                    $("#counter_input_edit").val(counterValue);
+                                }
+
+                                // Initialize the input field
+                                updateCounterInput();
+
+                                // Increment button click handler
+                                $("#increment_edit").click(function () {
+                                    counterValue++;
+                                    updateCounterInput();
+                                });
+
+                                // Decrement button click handler
+                                $("#decrement_edit").click(function () {
+                                    if (counterValue > 1) {
+                                        counterValue--;
+                                        updateCounterInput();
+                                    }
+                                });
+
+                            }
+
+
+                            $('#editPositionModal').data('position', position);
+                            // console.log($('#editPositionModal').data('position', position));
+
+                            Edit_counter()
+
+
+                        });
+
+
                     }
 
                     // Delete button click handler
@@ -3997,6 +4647,8 @@
                         $(this).closest("tr").remove();
                     });
                     $("#spinner").hide();
+
+
                 },
             });
 
@@ -4032,6 +4684,10 @@
 
             //   expirySelect.empty();
             //   strikeSelect.empty();
+
+            expirySelect.empty();
+            strikeSelect.empty();
+ 
             // Add a default "Select" option
 
             // Add each expiry date as an option

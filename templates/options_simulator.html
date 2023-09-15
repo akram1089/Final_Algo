@@ -2341,7 +2341,7 @@
                         current_values.push(parseFloat(value));
                         // console.log("current_val" + value);
                     } else if ($this.hasClass("exit_edit_curr")) {
-                        if (value === 0) {
+                     
                             // If exit_edit_curr is zero, calculate and push the difference
                             var ltp = ltp_values.pop() || 0; // Get the last value from ltp_values or 0 if empty
                             var current = current_values.pop() || 0; // Get the last value from current_values or 0 if empty
@@ -2356,25 +2356,47 @@
                             }
 
                             current_values.push(difference);
-                        }
+                        
                     }
                 });
 
                 // console.log(current_values);
                 // Iterate over elements with class "indicator_edit_table"
                 $(".indicator_edit_table").each(function (index) {
-                    var $this = $(this);
+    var $this = $(this);
+    console.log('$this', $this.text());
+    
+    var shortLongClass = $this.closest('tr').find('.short_long');
+    
+    if (shortLongClass.text().includes('+')) {
+        var value = parseFloat($this.text());
+        
+        if (value === 0 || isNaN(value)) {
+            console.log("Zero");
+        } else {
+            if (value > 0) {
+                value = -value; // Convert positive to negative
+            } else {
+                value = Math.abs(value); // Convert negative to positive
+            }
+            $this.text(value.toFixed(2));
+            console.log("Converted Value: " + value.toFixed(2));
+        }
+    } else {
+        console.log('No');
+    }
 
-                    // Check if the corresponding exit_edit_curr is zero before calculating
-                    if (index < current_values.length && $(".exit_edit_curr").eq(index).text() === "0") {
-                        var value = current_values[index].toFixed(2);
-                        $this.text(value);
-                        //console.log("$     " + value);
+    // Check if the corresponding exit_edit_curr is zero before calculating
+    if (index < current_values.length && $(".exit_edit_curr").eq(index).text() === "0") {
+        var value = current_values[index].toFixed(2);
+        $this.text(value);
+        console.log("$     " + value);
 
-                        // Set the value in the corresponding .indicator_edit element using index
-                        $(".indicator_edit").eq(index).text(value)
-                    }
-                });
+        // Set the value in the corresponding .indicator_edit element using index
+        $(".indicator_edit").eq(index).text(value);
+    }
+});
+
 
             }
 
@@ -2495,6 +2517,8 @@
                     var exit_price = position.find('.exit_price').text()
 
                     $('#ltpInput').val(currentLTP);
+                    console.log(currentLTP);
+                    
                     $('#exitPriceInput').val(exit_price);
                     $('#counterValueInput').val(parseFloat(currentCounterValue));
                     $('#editPositionModal').data('position', position);
