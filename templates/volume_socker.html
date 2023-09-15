@@ -33,6 +33,9 @@
 <style>
   tr {
     white-space: nowrap;
+ Deepak-Khatei
+    font-size: 16px;
+
   }
 
   .bi.bi-graph-up {
@@ -71,13 +74,16 @@
 
   /* Add padding to tbody tr */
   tbody tr {
-    border-bottom: 1px solid #0f0f0f !important;
+
+    border-bottom: .5px solid #0000006d !important;
+    font-size: 14px;
+
     /* Add borders between rows */
   }
 
   td>div,
   th>div {
-    padding: 9px;
+    padding: 7px;
   }
 
   .dataTables_length,
@@ -98,7 +104,7 @@
   }
 
   thead {
-    padding: 12px 15px !important;
+    padding: 10px 15px !important;
     font-size: 17px !important;
     background: #4399eb !important;
     color: #fff !important;
@@ -191,7 +197,7 @@
 
   table.dataTable tbody tr {
     background-color: transparent;
-    border-bottom: red !important;
+    border-bottom: transparent;
   }
 
   table.dataTable thead th,
@@ -239,9 +245,22 @@
     display: flex;
     flex-direction: column;
   }
-.dataTables_filter input{
-  all: unset !important;
-}
+
+  .dataTables_filter input{
+    all:unset !important;
+    text-align: left !important;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.504) !important;
+  }
+  .dataTables_filter label{
+   position: relative;
+  }
+  .dataTables_filter label i{
+   position: absolute;
+   right: 2px;
+  }
+=======
+
+
 
 </style>
 <div>
@@ -258,22 +277,22 @@
             <thead>
               <tr>
                 <td>
-                  <div>SYMBOL</div>
+                  <div>Symbol</div>
                 </td>
                 <td>
-                  <div>LTP</div>
+                  <div>Ltp</div>
                 </td>
                 <td>
-                  <div>HIGH</div>
+                  <div>High</div>
                 </td>
                 <td>
-                  <div>LOW</div>
+                  <div>Low</div>
                 </td>
                 <td>
-                  <div>AVG DAILY VOLUME(LACS)</div>
+                  <div>Avg Daily Volume(Lacs)</div>
                 </td>
                 <td>
-                  <div>(TODAY/AVG VOLUME)</div>
+                  <div>(Today/Avg Volume)</div>
                 </td>
               </tr>
 
@@ -289,8 +308,7 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
       // Function to create the table rows from the JSON data
-      $(document).ready(function () {
-        // Create the icon element
+
      // Select the input field within .dataTables_wrapper .dataTables_filter
 
 
@@ -357,10 +375,51 @@
               $("#loader").hide(); // Hide the loader in case of an error
             }
           });
+ 
         }
 
 
+        $("#loader").hide(); // Hide the loader once data is loaded
+        $("#breakout-table").show(); // Show the table after data is loaded
+        if ($.fn.DataTable.isDataTable("#volume_shocker_table")) {
+          $("#volume_shocker_table").DataTable().destroy();
+        }
 
+
+        $('#volume_shocker_table').DataTable({
+          "pageLength": 25
+        });
+        $('#volume_shocker_table').wrap('<div class="parent_table"></div>');
+        $('#volume_shocker_table_length,#volume_shocker_table_filter').wrapAll('<div class="parent_search_length"></div>');
+        
+        var icon = $("<i>").addClass("bi bi-search").attr('id',"magnifying_glass");
+         $(".dataTables_filter label").append(icon);
+         
+      }
+
+      // Make an AJAX request to fetch the breakout data
+      function volume_shocker_data() {
+
+        $("#loader").show();
+        $.ajax({
+          url: '/breakout_data',
+          method: 'GET',
+          dataType: 'json',
+          beforeSend: function () {
+            $("#loader").show(); // Show the loader before AJAX call
+          },
+          success: function (data) {
+            console.log(data);
+            createTableRows(data);
+          },
+          error: function (xhr, status, error) {
+            console.error('Request failed. Status: ' + xhr.status);
+            $("#loader").hide(); // Hide the loader in case of an error
+          }
+        });
+      }
+      volume_shocker_data();
+      setInterval(volume_shocker_data, 150000);
 
  
 
@@ -368,8 +427,6 @@
 
 
         
-        volume_shocker_data();
-        setInterval(volume_shocker_data, 150000);
     });
     
     

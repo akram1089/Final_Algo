@@ -315,38 +315,38 @@
         color: #767f88;
 
 
-
-
+      
+        
         font-weight: 600;
-
+     
         font-size: 15px;
-        padding: 7px;
-        font-family: system-ui;
-        cursor: pointer;
+    padding: 7px;
+    font-family: system-ui;
+    cursor: pointer;
     }
 
 
     #resultTable thead tr th,
     .PL-table thead tr th {
-        background: #4399EB;
-        color: white;
-        font-size: 12px;
-        font-weight: 600;
-        font-family: system-ui;
-    }
+                background: #4399EB;
+                color: white;
+                font-size: 12px;
+                font-weight: 600;
+                font-family: system-ui;
+            }
 
 
     #resultTable tbody tr td,
     .PL-table tbody tr td {
-        font-size: 14px;
-    }
+                font-size: 14px;
+            }
 
-    #resultTable tbody tr td,
+            #resultTable tbody tr td,
     .PL-table tbody tr td {
-        border-color: inherit;
-        border-style: hidden !important;
-        border-width: 0;
-    }
+                border-color: inherit;
+                border-style: hidden !important;
+                border-width: 0;
+            }
 </style>
 <style>
     .inner_greek_p_l {
@@ -359,8 +359,7 @@
     }
 </style>
 <style>
-    .strategy_inputs,
-    .textOnInput_edit {
+    .strategy_inputs {
         position: relative;
         width: 259px;
         display: flex;
@@ -368,8 +367,7 @@
         height: 2.5rem !important;
     }
 
-    .strategy_inputs label,
-    .textOnInput_edit label {
+    .strategy_inputs label {
         position: absolute;
         top: -9px;
         font-weight: 700;
@@ -381,13 +379,11 @@
         white-space: nowrap;
     }
 
-    .strategy_inputs select:focus,
-    .textOnInput_edit select:focus {
+    .strategy_inputs select:focus {
         box-shadow: none !important;
     }
 
-    .strategy_inputs label:after,
-    .textOnInput_edit label:after {
+    .strategy_inputs label:after {
         content: " ";
         background-color: #fff;
         width: 100%;
@@ -496,7 +492,6 @@
     }
 
     #counter_input,
-    #counter_input_edit,
     #counter_input_strangle,
     #counter_input_ironFly,
     #counter_input_spread,
@@ -523,8 +518,6 @@
 
     #decrement,
     #increment,
-    #decrement_edit,
-    #increment_edit,
     #decrement_strangle,
     #increment_strangle,
     #decrement_spread,
@@ -747,26 +740,11 @@
     }
 
     .inner_p_l_greeks {
-        display: flex;
         justify-content: center;
         gap: 1rem;
     }
 
-    .inner_position,
-    .ltpValue,
-    .unitPrice,
-    .adjsutedLotSize,
-    .absoluteQuantity,
-    .totalCurrentCost,
-    .final_P_L,
-    .greeks_iv,
-    .greeks_delta,
-    .greeks_theta,
-    .greeks_gamma,
-    .greeks_vega,
-    .greeks_rho,
-    .greeks_position,
-    .p_l_position {
+    .inner_position {
         font-size: 14px;
         font-weight: 600;
         font-family: system-ui;
@@ -785,15 +763,18 @@
         font-size: 19px;
     }
 
+
     .red-option-indicator {
         color: #e6191e;
         font-size: 19px;
     }
 
+
     .table-striped-custom>tbody>tr:nth-child(2n)>td,
-    .table-striped-custom>tbody>tr:nth-child(2n)>th {
-        background-color: rgb(240, 247, 253) !important;
-    }
+            .table-striped-custom>tbody>tr:nth-child(2n)>th {
+                background-color: rgb(240, 247, 253) !important;
+            }
+
 </style>
 <div class="title my-2">
     <h5>Option Strategy Optimizer</h5>
@@ -942,16 +923,10 @@
             background-color: #f1f5fa;
             margin-bottom: 0.5rem;
         }
-
-        .main_all_profit_loss {
+        .main_all_profit_loss{
             display: flex;
-            flex-direction: column;
-            row-gap: 0.8rem;
-        }
-
-        .exit_price {
-            font-size: 11px;
-            font-weight: 700;
+    flex-direction: column;
+    row-gap: 0.8rem;
         }
     </style>
 
@@ -1576,7 +1551,7 @@
 
 
     <div class="main_option_p_l_greeks_charts ">
-        <div class="inner_p_l_greeks row">
+        <div class="inner_p_l_greeks d-flex row">
 
             <div class="left_main_strategy_position col-4">
                 <div class="strategy_position_reset d-flex justify-content-between">
@@ -1632,7 +1607,7 @@
                         <table id="resultTable" class="table table-striped-custom">
                             <thead class="bg-light">
                                 <tr>
-
+                                    <th>LEG</th>
                                     <th>POSITION</th>
                                     <th>IV</th>
                                     <th>DELTA</th>
@@ -1649,7 +1624,7 @@
                         <table class="PL-table table table-striped-custom">
                             <thead class="bg-light">
                                 <tr>
-
+                                    <th>LEG</th>
                                     <th>POSITION</th>
                                     <th>TRADED PRICE</th>
                                     <th>CURRENT PRICE</th>
@@ -1680,6 +1655,8 @@
 
 
 </div>
+
+
 <div class="modal fade" id="editPositionModal">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -1730,41 +1707,9 @@
 
 
 
-                </div>
-                <div class="main_counter d-flex gap-3 mb-3">
-                    <div class="innerStraddle_lot_size">
-                        <p class=" fs-6 lot_title">Lot Qty:</p>
-                        <div class="counter_straddle d-flex justify-content-center gap-1">
-                            <button class="btn" id="decrement_edit"><i class='bx bx-minus'></i></button>
-                            <input type="text" name="" id="counter_input_edit" min="1" disabled>
-                            <button class="btn" id="increment_edit"><i class='bx bx-plus'></i></button>
-                        </div>
-                    </div>
-
-                </div>
-
-
-                <div class="form-group textOnInput_edit">
-                    <label for="entryEdit">Entry Price</label>
-                    <input type="text" class="edit_entry form-control">
-                </div>
-                <div class="form-group textOnInput_edit">
-                    <label for="exitPrice">Exit Price</label>
-                    <input type="number" class="exit_price form-control">
-                </div>
-
-            </div>
-            <div class="modal-footer" id="modal_footer_edit">
-                <button type="button" class="saveChanges" data-bs-dismiss="modal" id="saveChangesButton">Save
-                </button>
-
-            </div>
-        </div>
-    </div>
-</div>
-
 <script>
     $(document).ready(function () {
+
 
 
         var stockDropdown_edit = $("#stockDropdown").val()
@@ -1824,6 +1769,7 @@
                 }
             }
         }
+
 
 
 
@@ -1913,7 +1859,6 @@
 
 
             $("#table-PL").empty();
-            $(".main_position").empty();
             $("#resultTable tbody").empty();
 
 
@@ -2085,8 +2030,6 @@
 
 
         // Set the initial value
-
-
         var counterValue = 1;
 
         // Function to update the input field with the current value
@@ -2287,9 +2230,9 @@
         loadStocks();
         loadSpotData("NIFTY");
         loadExpiryData("NIFTY");
-
-        loadOptionData("NIFTY", "");
-
+        setTimeout(function () {
+            loadOptionData("NIFTY", "");
+        }, 1000);
         $("#table-PL_main").show();
         $("#resultTable").hide();
 
@@ -2427,12 +2370,17 @@
         });
         // Load spot data for "NIFTY" initially
 
+
+        $("#calculate").click(function () {
+            $("#spinner").show()
+
         var greeks = 1
         var p_l = 1
 
 
 
         function calculate_data() {
+
             var selectedOption = $("#stockDropdown").val();
             $("#spinner").show()
             // console.log("ca=" + selectedOption);
@@ -2478,6 +2426,30 @@
                 var main_conditionOrder = conditionOrder++;
 
 
+                // Check if any field is empty
+                if (
+                    optionSide === "Select" ||
+                    expiryDate === "Select" ||
+                    strikePrice === "Select" ||
+                    action === "Select" ||
+                    quantity === "" ||
+                    ltpValue === ""
+                ) {
+                    // Display a Bootstrap alert
+                    alert("Please fill in all fields.");
+                    return false; // Stop processing further rows
+                } else {
+                    // Convert quantity to negative if action is "Short"
+                    // if (action === "Short") {
+                    //     quantity = -Math.abs(quantity);
+                    // }
+
+                    // Collect data for this row
+                    allData.push({
+                        selectedOption: selectedOption,
+                        optionSide: optionSide,
+
+
                 var childrenLength = $('.main_position').children().length;
                 // console.log('childrenLength', childrenLength);
 
@@ -2491,6 +2463,7 @@
                     allData.push({
                         selectedOption: selectedOption,
                         optionSide: optionSide_main,
+
                         option_lot_size: option_lot_size,
                         expiryDate: expiryDate,
                         strikePrice: strikePrice,
@@ -2500,6 +2473,54 @@
                         ltpValue: ltpValue,
                     });
                 }
+
+                if (allData.length === dataRows.length) {
+
+                    $.ajax({
+                        type: "POST",
+                        url: "/filter_iv_data",
+                        data: JSON.stringify(allData),
+                        contentType: "application/json",
+                        success: function (response) {
+                            // console.log("Data sent to Django:", response);
+                            // console.log(response.stock_data.resultData);
+
+                            // Clear previous table data
+                            $("#resultTable tbody").empty();
+
+                            // Process response data and populate the table
+                            const resultData = response.iv_data.resultData;
+                            let totalDelta = 0;
+                            let totalTheta = 0;
+                            let totalGamma = 0;
+                            let totalVega = 0;
+                            let totalRho = 0;
+                            let leg = 1;
+
+                            for (const item of resultData) {
+                                const optionType = item.optiontype;
+                                const symbol = item.symbol;
+                                const strikePrice = item.strikeprice;
+                                const expiry = item.expiry;
+                                const position = item.position;
+                                const iv = item.calls_iv || item.puts_iv;
+                                const delta =
+                                    optionType === "Call" ? item.call_delta : item.put_delta;
+                                const theta =
+                                    optionType === "Call" ? item.call_theta : item.put_theta;
+                                const gamma =
+                                    optionType === "Call" ? item.call_gamma : item.put_gamma;
+                                const vega =
+                                    optionType === "Call" ? item.call_vega : item.put_vega;
+                                const rho =
+                                    optionType === "Call" ? item.call_rho : item.put_rho;
+
+                                // Create the table row for each option
+                                const tableRow = `
+                                        <tr>
+                                            <td>LEG${leg++}</td>
+                                            <td>${position.toUpperCase()} ${strikePrice}${optionType.toUpperCase()}(${expiry})</td>
+
 
 
             });
@@ -2598,13 +2619,14 @@
                                         </div>
                                         <div class="symbol_expiry"><span class="symbol">${stockDropdown}</span><span class="expiry">${formattedDate}</span></div>
                                         <div class="strike_price_call_put"> <span class="strikePrice">${parseFloat(strikePrice)}</span><span class="call_put_entrance">${optionType === "Call" ? "CE" : "PE"}</span></div> </div></td>
+
                                         
-                                            <td><div class="greeks_iv">${iv !== null ? iv.toFixed(2) : 0}</div></td>
-                                            <td><div class="greeks_delta">${delta !== null ? delta.toFixed(2) : 0}</div></td>
-                                            <td><div class="greeks_theta">${theta !== null ? theta.toFixed(4) : 0}</div></td>
-                                            <td><div class="greeks_gamma">${gamma !== null ? gamma.toFixed(4) : 0} </div></td>
-                                            <td ><div class="greeks_vega">${vega !== null ? vega.toFixed(2) : 0}</div></td>
-                                            <td><div class="greeks_rho">${rho !== null ? rho.toFixed(2) : 0}</div></td>
+                                            <td>${iv !== null ? iv.toFixed(2) : 0}</td>
+                                            <td>${delta !== null ? delta.toFixed(2) : 0}</td>
+                                            <td>${theta !== null ? theta.toFixed(4) : 0}</td>
+                                            <td>${gamma !== null ? gamma.toFixed(4) : 0}</td>
+                                            <td>${vega !== null ? vega.toFixed(2) : 0}</td>
+                                            <td>${rho !== null ? rho.toFixed(2) : 0}</td>
                                         </tr>
                 
 
@@ -2619,6 +2641,21 @@
                         totalVega += parseFloat(vega);
                         totalRho += parseFloat(rho);
                     }
+
+
+                            // Add the row for positional Greeks
+                            const totalRow = `
+              <tr>
+                  <td>POSITIONAL GREEKS</td>
+                  <td></td>
+                  <td></td>
+                  <td>${totalDelta !== null ? totalDelta.toFixed(2) : 0}</td>
+                  <td>${totalTheta !== null ? totalTheta.toFixed(4) : 0}</td>
+                  <td>${totalGamma !== null ? totalGamma.toFixed(4) : 0}</td>
+                  <td>${totalVega !== null ? totalVega.toFixed(2) : 0}</td>
+                  <td>${totalRho !== null ? totalRho.toFixed(2) : 0}</td>
+              </tr>
+          `;
 
                     // Add the row for positional Greeks
                     const totalRow = `
@@ -2635,6 +2672,7 @@
                                                                 `;
 
 
+
                     $("#resultTable tbody").append(totalRow);
 
                     const updatedResultData = response.stock_data.resultData.map((item, index) => {
@@ -2643,6 +2681,14 @@
                             .eq(index)
                             .find(".current_price")
                             .text();
+
+
+                                    return { ...item, ltpValue: parseFloat(ltpValue) };
+                                }
+                            );
+                            // console.log(updatedResultData);
+                            function createTable(data) {
+                                let tableHTML = "";
 
                         // Initialize parsedLtpValue to ltpValue (assuming it contains a numeric value)
                         let parsedLtpValue = parseFloat(ltpValue);
@@ -2658,6 +2704,7 @@
                         // console.log('parsedLtpValue', parsedLtpValue);
                         // console.log('item.unitPrice', item.unitPrice);
 
+
                         // Return an object with ltpValue and item.unitPrice added
                         return { ...item, ltpValue: parsedLtpValue };
                     });
@@ -2667,6 +2714,21 @@
 
                     function createTable(data) {
                         let tableHTML = "";
+
+
+                                    if (longMatches) {
+                                        longCount += longMatches.length;
+                                    }
+                                }
+                                let maxStrikePrice = Number.NEGATIVE_INFINITY;
+                                let minStrikePrice = Number.POSITIVE_INFINITY;
+                                // Determine the position label based on the majority
+                                const positionLabel = shortCount > longCount ? "SHORT" : "LONG";
+                                let totalStrikePrice = 0;
+                                let itemCount = 0;
+                                let premiumPain = 0;
+                                for (let i = 0; i < data.length; i++) {
+                                    const item = data[i];
 
                         let netCost = 0;
                         let netPL = 0;
@@ -2678,6 +2740,7 @@
                         for (const item of data) {
                             const shortMatches = item.position.match(/Short/gi);
                             const longMatches = item.position.match(/Long/gi);
+
 
                             if (shortMatches) {
                                 shortCount += shortMatches.length;
@@ -2708,6 +2771,59 @@
                                 var unitPrice = item.unitPrice; // Get the unitPrice from the data
                                 row.find(".entryPrice").text(unitPrice);
                             });
+
+
+                                    const legRow = `
+                                                                <tr>
+                                                                    <td>LEG ${i + 1
+                                        }</td>
+                                                                    <td>${item.position.toUpperCase()} ${item.strikePrice
+                                        }${item.optionType.toUpperCase()}(${item.expiry})</td>
+                                                                    <td>${item.ltpValue
+                                        }</td>
+                                                                    <td>${item.unitPrice
+                                        }</td>
+                                                                    <td>${adjustedLotSize}</td>
+                                                                    <td>${absoluteQuantity}</td>
+                                                                    <td>${totalCurrentCost}</td>
+                                                                    <td class="text-center">${final_P_L}</td>
+                                                                </tr>
+                                                            `;
+                                    tableHTML += legRow;
+                                    netCost += parseFloat(totalCurrentCost);
+                                    netPL += parseFloat(final_P_L);
+                                    totalStrikePrice += parseFloat(item.strikePrice);
+                                    itemCount++;
+                                    premiumPain += parseFloat(item.unitPrice)
+
+                                }
+                                // console.log(totalStrikePrice);
+                                const averageStrikePrice = totalStrikePrice / itemCount;
+                                // console.log("Average of the :" + averageStrikePrice);
+                                // console.log(positionLabel);
+                                var min_breakPoints = averageStrikePrice - premiumPain
+                                var max_breakPoints = averageStrikePrice + premiumPain
+
+
+
+                                var Put_position_label =
+                                    positionLabel == "SHORT"
+                                        ? Math.abs(netCost + -netPL)
+                                        : "Unlimited";
+                                var long_position_label =
+                                    positionLabel == "LONG"
+                                        ? Math.abs(netCost + -netPL)
+                                        : "Unlimited";
+                                var Put_position_display =
+                                    positionLabel == "SHORT" ? "d-block" : "d-none";
+                                var long_position_display =
+                                    positionLabel == "LONG" ? "d-block" : "d-none";
+
+
+                                    $("#max_profit").text(Put_position_label)
+                                    $("#max_loss").text(long_position_label)
+                                    $("#break_evens").text(`${minStrikePrice}~${maxStrikePrice}`)
+                                tableHTML += `
 
                             // Adjust lotSize based on position
                             const adjustedLotSize =
@@ -2828,13 +2944,38 @@
                         $("#max_loss").text(long_position_label)
                         $("#break_evens").text(`${minStrikePrice}~${maxStrikePrice}`)
                         tableHTML += `
+
                                                                 <tr>
-                                                                    <td colspan="5">NET COST OF STRATEGY :</td>
+                                                                    <td colspan="6">NET COST OF STRATEGY :</td>
                                                                     <td>${netCost}</td>
-                                                                    <td colspan="6" class="text-center">${netPL}</td>
+                                                                    <td colspan="7" class="text-center">${netPL}</td>
                                                                 
                                                                 </tr>
-                                                            
+                                                                <tr>
+                                                                    <td colspan="1">
+                                                                        <div class="put_max_profit d-block text-success fw-600">
+                                                                            <p>Max - Profit: ${Put_position_label}</p>
+                                                                            <p class=${Put_position_display}>At: ${minStrikePrice}~${maxStrikePrice}</p>
+                                                                            </div>
+                                                                        </td>
+                                                                        <td clospan="3">
+                                                                            <div class="long_max_loss d-block text-danger fw-600">
+                                                                            <p>Max - Profit: ${long_position_label}</p>
+                                                                            <p class=${long_position_display}>At: ${minStrikePrice}~${maxStrikePrice}</p>
+                                                                            </div>
+                                                                            </td>
+                                                                            <td colspan="5" class="fw-600">Reward Risk: Not defined</td>
+
+                                                                            <td clospan="7" class="fw-600 text-center">
+                                                                                
+                                                                                <div class="breakever_probaility_profit">
+                                                                                    
+                                                                                    <p>Min Breakeven : ${min_breakPoints.toFixed(2)} ~ Max Breakeven : ${max_breakPoints.toFixed(2)}</p>
+                                                                                    <p>Probability of Profit: 10.00%</p>
+                                                                                    </div>
+                                                                                </td>
+
+                                                                    </tr>
                                                             `;
 
                         return tableHTML;
@@ -2850,7 +2991,16 @@
             });
             $("#spinner").hide();
 
+
+            // If all data is valid, log all the data at once
+            if (allData.length === dataRows.length) {
+                // console.log("All Data:", allData);
+            }
+
+        });
+
         }
+
 
 
 
@@ -3139,8 +3289,6 @@
                             $(".data-display-table").empty();
                             $("#table-PL").empty();
                             $("#resultTable tbody").empty();
-                            $(".inner_p_l_greeks").show();
-                            $(".main_position").empty();
 
                             var counter_input = $("#counter_input").val()
                             $(".option_lot_size_input").each(function () {
@@ -3166,7 +3314,6 @@
 
                                     // Set the value of ".option_lot_size_input" elements to "#counter_input" value
                                     $(".option_lot_size_input").val(counterInputValue);
-                                    $(".option_lot_size_input").text(counterInputValue);
 
                                     // Trigger the click event for the element with ID "#calculate"
                                     calculate_data()
@@ -3270,8 +3417,6 @@
                                 $(".data-display-table").empty();
                                 $("#table-PL").empty();
                                 $("#resultTable tbody").empty();
-                                $(".inner_p_l_greeks").show();
-                                $(".main_position").empty();
 
 
                                 // Delay the rest of the code execution for a brief moment to ensure elements are fully emptied
@@ -3294,7 +3439,6 @@
                                     }
                                     var counterInputValue = $("#counter_input_strangle").val();
                                     $(".option_lot_size_input").val(counterInputValue);
-                                    $(".option_lot_size_input").text(counterInputValue);
                                     // Click on #calculate after a longer delay
 
                                     calculate_data()
@@ -3389,8 +3533,7 @@
                                 $("#spread").addClass("option_strategies_active")
                                 $("#iron_condor").removeClass("option_strategies_active")
                                 $("#jaze_lizard").removeClass("option_strategies_active")
-                                $(".inner_p_l_greeks").show();
-                                $(".main_position").empty();
+
                                 $(".data-display-table").empty();
                                 $("#table-PL").empty();
                                 $("#resultTable tbody").empty();
@@ -3439,8 +3582,13 @@
 
                                 // Click on #calculate after a longer delay
                                 var counterInputValue = $("#counter_input_spread").val();
+
+                                $(".option_lot_size_input").val(counterInputValue);
+                                $("#calculate").click();
+
                                 $(".option_lot_size_input").text(counterInputValue);
                                 calculate_data()
+
 
 
                                 $("#spread_modal").hide();
@@ -3561,8 +3709,6 @@
                                 $(".data-display-table").empty();
                                 $("#table-PL").empty();
                                 $("#resultTable tbody").empty();
-                                $(".inner_p_l_greeks").show();
-                                $(".main_position").empty();
                                 var put_strikeSelect_ironFly = $("#put_strikeSelect_ironFly").val()
                                 var put_call_strikeSelect_ironFly = $("#put_call_strikeSelect_ironFly").val()
                                 var call_strikeSelect_ironFly = $("#call_strikeSelect_ironFly").val()
@@ -3607,7 +3753,7 @@
 
                                 // Click on #calculate after a longer delay
                                 var counterInputValue = $("#counter_input_ironFly").val();
-                                $(".option_lot_size_input").text(counterInputValue);
+                                $(".option_lot_size_input").val(counterInputValue);
 
                                 calculate_data()
                                 $("#ironFly_modal").hide()
@@ -3749,8 +3895,6 @@
                                 $(".data-display-table").empty();
                                 $("#table-PL").empty();
                                 $("#resultTable tbody").empty();
-                                $(".inner_p_l_greeks").show();
-                                $(".main_position").empty();
 
 
 
@@ -3797,7 +3941,7 @@
 
                                 // Click on #calculate after a longer delay
                                 var counterInputValue = $("#counter_input_ironCondor").val();
-                                $(".option_lot_size_input").text(counterInputValue);
+                                $(".option_lot_size_input").val(counterInputValue);
 
                                 calculate_data()
                                 $("#ironCondor_modal").hide()
@@ -3920,8 +4064,6 @@
                                 $(".data-display-table").empty();
                                 $("#table-PL").empty();
                                 $("#resultTable tbody").empty();
-                                $(".inner_p_l_greeks").show();
-                                $(".main_position").empty();
 
                                 var lastIndexForw = $("#call_strikeSelect_jaze_lizard").val();
 
@@ -3959,7 +4101,7 @@
                                 // Click on #calculate after a longer delay
 
                                 var counterInputValue = $("#counter_input_jaze_lizard").val();
-                                $(".option_lot_size_input").text(counterInputValue);
+                                $(".option_lot_size_input").val(counterInputValue);
 
                                 calculate_data()
                                 $("#jaze_lizard_modal").hide()
@@ -4024,14 +4166,14 @@
                             var opiton_selected = row.find(".opiton_selected").text();
                             var option_side = "Call";
 
-                            // console.log(option_side);
-                            // console.log("Call Side - Action:", action);
-                            // console.log("Call Side - calls_iv:", calls_iv);
-                            // console.log("Call Side - calls_oi:", calls_oi);
-                            // console.log("Call Side - calls_ltp:", ltpValue);
-                            // console.log("Call Side - strike_price:", strike_price);
-                            // console.log(expiry_date);
-                            // console.log(opiton_lot_size);
+                            console.log(option_side);
+                            console.log("Call Side - Action:", action);
+                            console.log("Call Side - calls_iv:", calls_iv);
+                            console.log("Call Side - calls_oi:", calls_oi);
+                            console.log("Call Side - calls_ltp:", ltpValue);
+                            console.log("Call Side - strike_price:", strike_price);
+                            console.log(expiry_date);
+                            console.log(opiton_lot_size);
                             populateInputTable(
                                 option_side,
                                 expiry_date,
@@ -4051,14 +4193,14 @@
                             var strike_price = row.find(".strike_price").text();
                             var opiton_lot_size = row.find(".opiton_lot_size").text();
                             var opiton_selected = row.find(".opiton_selected").text();
-                            // console.log(option_side);
-                            // console.log("Put Side - Action:", action);
-                            // console.log("Put Side - puts_ltp:", ltpValue);
-                            // console.log("Put Side - puts_oi:", puts_oi);
-                            // console.log("Put Side - puts_iv:", puts_iv);
-                            // console.log(expiry_date);
-                            // console.log(opiton_lot_size);
-                            // console.log(strike_price);
+                            console.log(option_side);
+                            console.log("Put Side - Action:", action);
+                            console.log("Put Side - puts_ltp:", ltpValue);
+                            console.log("Put Side - puts_oi:", puts_oi);
+                            console.log("Put Side - puts_iv:", puts_iv);
+                            console.log(expiry_date);
+                            console.log(opiton_lot_size);
+                            console.log(strike_price);
                             populateInputTable(
                                 option_side,
                                 expiry_date,
@@ -4069,6 +4211,7 @@
                                 opiton_selected
                             );
                         }
+
                         $('.inner_p_l_greeks').show();
                         if ($(this).data("HI1") === undefined) {
                             console.log('Yes');
@@ -4088,8 +4231,7 @@
 
 
 
-                    var positions = 1
-                    var positions_input = 1
+
                     $(".add-btn").off("click");
                     $(".add-btn").click(function (event) {
                         event.preventDefault(); // Prevent default behavior
@@ -4174,7 +4316,6 @@
 
                         $(".data-display-table").append(newRow);
                     });
-
                     function populateInputTable(
                         option_side,
                         expiry_date,
@@ -4213,7 +4354,7 @@
                             const abbreviatedMonth = monthAbbreviations[parseInt(month) - 1];
 
                             // Create the formatted date string
-                            const formattedDate = `${day}${abbreviatedMonth}${year}`;
+                            const formattedDate = `${day}${abbreviatedMonth}`;
 
                             return formattedDate;
                         }
@@ -4225,6 +4366,95 @@
                         var stockDropdown = $("#stockDropdown").val()
                         // +1x NIFTY07SEP 19350CE - ₹ 125.3 (0.00)
                         var add_position = $(`
+
+    <div class="main_add_position_actions d-flex justify-content-between">
+        <div class="inner_position d-flex gap-1">
+            <div class="main_short_long_lot_size">
+            <div class="short_long"><span class="long_short_inner">${action === "Long" ? "+" : "-"}</span></div> <div class="option_lot_size_input">1</div>x
+        </div>
+        <div class="symbol_expiry"><span class="symbol">${stockDropdown}</span><span class="expiry">${formattedDate}</span></div>
+        <div class="strike_price_call_put"> <span>${parseFloat(strike_price)}</span><span>${option_side === "Call" ? "CE" : "PE"}</span></div>
+        <div class="ltp_main">-₹<span>${parseFloat(ltpValue)}</span>(<span classs="exit_price">0</span>)</div></div>
+
+        <div class="action_option_strategy d-flex justify-content-center align-items-center gap-1">
+                    <i class="bi bi-pencil-square edit-button" data-bs-toggle="modal" data-bs-target="#editPositionModal"></i>
+                    <i class="bi bi-trash-fill delete-button"></i>
+                    <i class='bx bxs-circle green-option-indicator'></i>
+                </div>
+            
+            
+            </div>
+
+    `)
+                        var newRow = $(`
+    <tr class="strategy_table_input">
+        <td>
+            <div class="textOnInput">
+                <label for="optionSide">Option Side</label>
+                <select class="option_side_input form-select">
+                    <option value="Select">Select</option>
+                    <option value="Call" ${option_side === "Call" ? "selected" : ""
+                            }>Call</option>
+                    <option value="Put" ${option_side === "Put" ? "selected" : ""
+                            }>Put</option>
+                    <option value="Future" ${option_side === "Future" ? "selected" : ""
+                            }>Future</option>
+                </select>
+            </div>
+        </td>
+        <td>
+            <div class="textOnInput">
+                <label for="expiryDate">Expiry Date</label>
+                <select class="expiry_date_input form-select">
+                    <option value="${expiry_date}">${formattedDate}</option>
+                </select>
+            </div>
+        </td>
+        <td>
+            <div class="textOnInput">
+                <label for="strikePrice">Strike Price</label>
+                <select class="strike_price_input form-select">
+                    <option value="${parseFloat(strike_price)}">${parseFloat(
+                                strike_price
+                            )}</option>
+                </select>
+            </div>
+        </td>
+        <td>
+            <div class="textOnInput">
+                <label for="action">Action</label>
+                <select class="action_input form-select">
+                    
+
+                    <option value="Select">Select</option>
+         
+                    <option value="Long" ${action === "Long" ? "selected" : ""
+                            }>Long</option>
+                    <option value="Short" ${action === "Short" ? "selected" : ""
+                            }>Short</option>
+                </select>
+            </div>
+        </td>
+        <td>
+            <div class="textOnInput">
+                <label for="action">No. of Lots</label>
+                <input type="number" class="option_lot_size_input form-control" value="1">
+            </div>
+        </td>
+        <td>
+            <div class="textOnInput">
+                <label for="action">Traded Price</label>
+                <input type="number" class="ltpValue_input form-control" value="${parseFloat(
+                                ltpValue
+                            )}">
+            </div>
+        </td>
+        <td>   <i class="delete-btn bi bi-trash-fill"></i></td>
+    </tr>
+`);
+                        $(".data-display-table").append(newRow);
+                        $(".main_position").append(add_position)
+
                                     <div class="main_add_position_actions d-flex justify-content-between" id=${positions++}>
                                         <div class="inner_position d-flex gap-1">
                                             <div class="main_short_long_lot_size">
@@ -4409,21 +4639,20 @@
 
                         });
 
-                    }
-                    // Add a click event handler to the delete-button
 
+                    }
+
+                    // Delete button click handler
+                    $(".data-display-table").on("click", ".delete-btn", function () {
+                        $(this).closest("tr").remove();
+                    });
+                    $("#spinner").hide();
 
 
                 },
-
             });
 
         }
-
-
-
-
-
         loadOptionData(selectedOption, selectedExpiry)
         function loadExpiryData(selectedOption) {
             // console.log("Hi there" + selectedOption);
@@ -4453,8 +4682,12 @@
             var expirySelect = $(".expiry_date_input");
             var strikeSelect = $(".strike_price_input");
 
+            //   expirySelect.empty();
+            //   strikeSelect.empty();
+
             expirySelect.empty();
             strikeSelect.empty();
+ 
             // Add a default "Select" option
 
             // Add each expiry date as an option
@@ -4512,12 +4745,6 @@
 
 
         // Select the elements
-
-
-
-
-
-
 
 
     });

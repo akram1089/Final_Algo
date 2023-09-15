@@ -1,0 +1,278 @@
+{% extends "base_dashboard.html" %}
+{% load static %}
+{% block dashboard_body %}
+<style>
+       .calls_puts {
+        background-color: #f1f5fa;
+        font-size: 12px;
+        font-weight: 500;
+        color: var(--label-color-5);
+        text-transform: uppercase;
+        padding: 10px 5px;
+        -moz-box-flex: 1 !important;
+        -webkit-flex: 1 1 auto !important;
+        flex: 1 1 auto !important;
+        border-left: 1px solid #dee2e6 !important;
+        border-bottom: 1px solid #dee2e6 !important;
+        border-right-color: #dee2e6 !important;
+        border-top-color: #dee2e6 !important;
+        text-align: center;
+
+    }
+    .bg_light{
+        background-color: #ffff !important;
+    }
+    .bg_warning{
+        
+      background-color: rgb(251, 245, 205) !important;  
+    }
+    .bg_success{
+        background-color: #caede1!important;
+        color:green;
+    } 
+    .bg_danger{
+        background-color: #ffd2cf!important;
+        color:red;
+    }
+    .put_writing{
+        background-color: rgba(234, 61, 61, 0.46);
+    }
+    thead th{
+        font-size: 12px !important;
+    }
+    .bs_option_chain{
+        box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+    }
+    .option_lth{
+        white-space: nowrap;
+    }
+    .option_rth{
+        white-space: nowrap;
+    }
+</style>
+<section>
+    <h4 class="pt-4">BSE Option Chain (Equity Derivatives)</h4>
+    <div class="container bs_option_chain">
+        <div class="container d-flex justify-content-between pt-4">
+            <div class="bse_chain_table">
+                <div class="table_top d-flex gap-2">
+        
+                    <div class="chart_tracking">
+                        <a href="">
+                            <i class="bx bx-line-chart" id="trading_view_chart"></i>
+                        </a>
+                    </div>
+                    <div class="symbol_dropdown">
+                        <select id="symbol-dropdown" class="form-select form-select-sm">
+                            <optgroup label="symbol">
+                                <option value="">SENSEX</option>
+                            </optgroup>
+                            
+                        </select>
+                    </div>
+                    <div class="future_spot">
+                      
+                         
+                      <p>Future Spot</p>
+                      <div class="d-flex change_spot_per_color">
+                      <span class="spot_price"></span>
+                      <span class="spot_price_change_percent"></span>
+                    </div>
+                    </div>
+                    <div class="pcr">
+                      <p>PCR</p>
+                      <span>1.0921</span>
+                    </div>
+                    <div class="lot_size">
+                      <p>Lot Size</p>
+                      <span class="bse_lot"></span>
+                    </div>
+                    <div class="expiry_dropdown">
+                        <select id="symbol-dropdown" class="form-select form-select-sm">
+                            <optgroup label="symbol" class="expiry_date">
+                                
+                            </optgroup>
+                            
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="form-check form-switch">
+                <label class="form-check-label fw-bold" for="auto-refresh-switch">Auto Refresh</label>
+                <input class="form-check-input" type="checkbox" id="auto-refresh-switch">
+            </div>
+        </div>
+        <div class="container">
+           
+            <div class="calls_puts">
+                <div class="row">
+                    <div class="col-6">Calls</div>
+                    <div class="col-6">Puts</div>
+                </div>
+            </div>
+            <div class="option_chain_table table-responsive">
+
+                <table class="table ">
+                    <thead>
+                      <tr>
+                        <th scope="col" class="option_lth">BUILTUP</th>
+                        <th scope="col" class="option_lth">VOLUME</th>
+                        <th scope="col" class="option_lth">OI IN VALUE</th>
+                        <th scope="col" class="option_lth">CHANGE IN OI VALUE</th>
+                        <th scope="col" class="option_lth">OI</th>
+                        <th scope="col" class="option_lth">CHANGE IN OI</th>
+                        <th scope="col" class="option_lth">BID PRICE</th>
+                        <th scope="col" class="option_lth">OFFER PRICE</th>
+                        <th scope="col" class="option_lth">LTP(CHG%)</th>
+                        <th scope="col" style="background-color: #dee2e6;">STRIKE</th>
+                        <th scope="col" class="option_rth">LTP</th>
+                        <th scope="col" class="option_rth">OFFER PRICE</th>
+                        <th scope="col" class="option_rth">BID PRICE</th>
+                        <th scope="col" class="option_rth">CHANGE IN OI</th>
+                        <th scope="col" class="option_rth">OI</th>
+                        <th scope="col" class="option_rth">CHANGE IN OI VALUE</th>
+                        <th scope="col" class="option_rth">OI IN VALUE</th>
+                        <th scope="col" class="option_rth">VOLUME</th>
+                        <th scope="col" class="option_rth">BUILTUP</th>
+                        <th scope="col" class="option_rth">PCR</th>
+                        <th scope="col" class="option_rth">CHG OI PCR</th>
+                        <th scope="col" class="option_rth">VOLUME PCR</th>
+                      </tr>
+                    </thead>
+                    <tbody id="bse_data_to_show">
+                      
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+      $(".option_lth").css("background-color", "#c9ffed")
+      $(".option_rth").css("background-color", "#ffd2cf")
+    $.ajax({
+        url: "/bse_option_chain_spotprice",
+        type: "GET",
+        dataType: "json",
+      
+        success: function (data) {
+            console.log(data)
+            $(".spot_price").text(data.last_trade_price)
+            $(".bse_lot").text(data.lot_size)
+            
+            var change_value = data.change_value
+            var change_color =change_value > 0 ?"text-success":"text-danger"   
+        $(".change_spot_per_color").addClass(change_color)
+        
+        }
+    })
+    
+   
+//    $.ajax({
+    
+//    })
+   $.ajax({
+        url: "/bse_option_expiry",
+        type: "GET",
+        dataType: "json",
+
+     success: function(data){
+        console.log(data)
+        expiry_data = data.resultData
+        console.log(expiry_data)
+        for (let expiry = 0; expiry < expiry_data.length; expiry++) {
+            const element = expiry_data[expiry];
+            console.log(element.split("T")[0])
+            console.log(element)
+            $(".expiry_date").append($("<option class='dates_for_change'>").val(element.split("T")[0]).text(element.split("T")[0]))
+        }   
+     }
+   })
+
+   $.ajax({
+     url: "/bse_table_data",
+     type: "GET",
+     dataType: "Json",
+    
+     success: function (data) {
+        console.log(data.opDatas)
+        bse_option_data = data.opDatas
+        var future_spot_color = $(".spot_price").text()
+        var war = $(".bg_warning").text()
+        console.log(war)
+        for (const i in bse_option_data) {
+            console.log(i)
+
+            if (bse_option_data[i].calls_builtup === "Call Short Covering" || bse_option_data[i].calls_builtup === "Call Buying") {
+                                bse_calls_builtup_simu = "bg_success fw-bolder";
+                            } else if (bse_option_data[i].calls_builtup === "No Conclusion") {
+                                bse_calls_builtup_simu = "";
+                            } else if (bse_option_data[i].calls_builtup === "Call Long Covering" || bse_option_data[i].calls_builtup === "Call Writing") {
+                                bse_calls_builtup_simu = "bg_danger";
+                            }
+
+                            var bse_puts_builtup_simu = "";
+                            if (bse_option_data[i].puts_builtup === "Put Short Covering" || bse_option_data[i].puts_builtup === "Put Buying") {
+                                bse_puts_builtup_simu = "bg_danger";
+                            } else if (bse_option_data[i].puts_builtup === "No Conclusion") {
+                                bse_puts_builtup_simu = "";
+                            } else if (bse_option_data[i].puts_builtup === "Put Long Covering" || bse_option_data[i].puts_builtup === "Put Writing") {
+                                bse_puts_builtup_simu = "bg_success";
+                            }
+
+            var call_bg_color = bse_option_data[i].strike_price < parseFloat(future_spot_color) ? "bg_warning" :""
+            var put_bg_color = bse_option_data[i].strike_price > parseFloat(future_spot_color)  ? "bg_warning" :""
+
+            var call_built_bg = bse_option_data[i].calls_builtup === "Call Writing" ? "bg_danger":""
+            var call_built_sbg = bse_option_data[i].calls_builtup === "Call Short Covering" ? "bg_success" : ""
+            var buildup_color= bse_option_data[i].puts_builtup === "Put Writing" ? "bg_success" :""
+           
+           var row = `<tr class="fw-light" style="font-size:12px;">
+                       <td class=${bse_calls_builtup_simu} ${call_bg_color}> ${bse_option_data[i].calls_builtup}</td>
+                       <td class=${call_bg_color}>${bse_option_data[i].calls_volume}</td>
+                       <td class=${call_bg_color}>${bse_option_data[i].calls_oi_value}</td>
+                       <td class=${call_bg_color}>${bse_option_data[i].calls_change_oi_value}</td>
+                       <td class=${call_bg_color}>${bse_option_data[i].calls_oi}</td>
+                       <td class=${call_bg_color}>${bse_option_data[i].calls_change_oi}</td>
+                       <td class=${call_bg_color}>${bse_option_data[i].calls_bid_price}</td>
+                       <td class=${call_bg_color}>${bse_option_data[i].calls_offer_price}</td>
+                       <td class=${call_bg_color}>${bse_option_data[i].calls_ltp}</td>
+                       <td class="strike">${bse_option_data[i].strike_price}</td>
+                       <td class=${put_bg_color}> ${bse_option_data[i].puts_ltp}</td>
+                       <td class=${put_bg_color}> ${bse_option_data[i].puts_offer_price}</td>
+                       <td class=${put_bg_color}> ${bse_option_data[i].puts_bid_price}</td>
+                       <td class=${put_bg_color}> ${bse_option_data[i].puts_change_oi}</td>
+                       <td class=${put_bg_color}> ${bse_option_data[i].puts_oi}</td>
+                       <td class=${put_bg_color}> ${bse_option_data[i].puts_change_oi_value}</td>
+                       <td class=${put_bg_color}> ${bse_option_data[i].puts_oi_value}</td>
+                       <td class=${put_bg_color}> ${bse_option_data[i].puts_volume}</td>
+                       <td class=${bse_puts_builtup_simu} ${put_bg_color }>${bse_option_data[i].puts_builtup}</td>
+                       <td class= ${put_bg_color }>${bse_option_data[i].pcr}</td>
+                       <td class= ${put_bg_color }>${bse_option_data[i].puts_change_oi_per}</td>
+                       <td class= ${put_bg_color }>${bse_option_data[i].volume_pcr}</td>
+                     </tr>`
+            
+            var table = $("#bse_data_to_show")
+            table.append(row)
+            console.log(bse_option_data[i].calls_oi)
+            $(".strike").css("background-color", "hsla(47,27%,87%,.471)")
+
+            // if((bse_option_data[i].calls_builtup==="No Conclusion")){
+            //      $("td").addClass("text-warning")
+            // }
+            // else if( (bse_option_data[i].calls_oi === "0")){
+            //     $("td").addClass("text-danger")
+            // }
+
+           
+        }
+      
+        
+     }
+   })
+   $(".dates_for_change").change(function () {
+        alert("Hello this is my first experiment")
+    })
+</script>
+{% endblock dashboard_body %}
