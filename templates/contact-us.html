@@ -693,6 +693,19 @@ right: 0;">
             var messages = $("#msgs").val().trim()
             if (fname === "" || lname === "" || email==="" || phone ==="") {
                 console.log("all fields are required")
+
+                var alertElement = $(".alert-dismissible");
+            
+                // Display the success message in an alert
+                alertElement
+                    .removeClass("alert-success")
+                    .addClass("alert-danger")
+                    .text("All fields are required")
+                    .fadeIn();
+    
+                setTimeout(function () {
+                    alertElement.fadeOut();
+                }, 3000);
                 return false;
             }
             else if(!(phonePattern.test(phone))){
@@ -706,7 +719,7 @@ right: 0;">
             
             $.ajax({
                 url: "/customer_contact",
-                type: "POST",
+                type: "GET",
                 data: {
                     firstname: fname,
                     lastname: lname,

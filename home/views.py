@@ -4273,12 +4273,12 @@ from .models import ContactUs
 
 @csrf_exempt
 def customer_contact(request):
-    if request.method == "POST":
-        first_name = request.POST.get("firstname")
-        last_name = request.POST.get("lastname")
-        email = request.POST.get("email")
-        phone_number = request.POST.get("phone")
-        messages = request.POST.get("message")
+    if request.method == "GET":
+        first_name = request.GET.get("firstname")
+        last_name = request.GET.get("lastname")
+        email = request.GET.get("email")
+        phone_number = request.GET.get("phone")
+        messages = request.GET.get("message")
 
         if not all([first_name, last_name, email, phone_number, messages]):
             error_message = "All fields are required."
