@@ -60,7 +60,7 @@
     gap: 2rem;
     display: flex;
     flex-wrap: wrap;
-    justify-content: center;
+    justify-content: center;bi.bi-arrow-clockwise
 
 
   }
@@ -86,19 +86,46 @@
   i.bi.bi-arrow-clockwise:hover {
     all: unset
   }
-
-  #refresh_global:hover {
-    background-color: dodgerblue;
-    color: white;
-    border-radius: 10px;
-    padding: 4px;
+  .refresh_global{
+    all: unset;
+    background: linear-gradient(180deg, #4399eb, #5cadfb) ;
+    color: #fff ;
+    border-radius: 3px;
+    border: 1px solid #4399eb;
+  
+    display: flex;
+    gap: 0.2rem;
+    padding: 0;
+    margin: 0;
+    width: 78px;
+    margin-top: 0px;
+    margin-bottom: 4px;
+    justify-content: center;
+    padding-top: 2px;
     cursor: pointer;
+    transition: 0.3s;
+  }
+
+  .refresh_global:hover {
+ 
+    background: transparent;
+    color: #4399eb;
+
+ 
+   
+  }
+  .hello{
+    all:unset !important;
+  }
+  .hello:hover{
+        background: transparent;
+    color: #4399eb !important;
   }
 
   .desc_usage_active {
-    color: #011490;
+    color: #4399eb;
     text-align: center;
-    border-bottom: 2px solid #011490;
+    border-bottom: 2px solid #4399eb;
     font-size: 21px;
     font-weight: 600;
   }
@@ -149,9 +176,9 @@
   }
 
   .future_active {
-    color: #011490;
+    color: #4399eb;
     text-align: center;
-    border-bottom: 2px solid #011490;
+    border-bottom: 2px solid #4399eb;
     font-size: 21px;
     font-weight: 600;
   }
@@ -169,8 +196,8 @@
 
   .market_action:hover #maket_action_dropdown {
     display: block;
-    right: 1;
-    top:27px;
+    right: 6px !important;
+    top: 15px;
 
   }
 
@@ -181,9 +208,9 @@
   }
 
   .filter_ipo_active {
-    color: #011490;
+    color: #4399eb;
     text-align: center;
-    border-bottom: 2px solid #011490;
+    border-bottom: 2px solid #4399eb;
     font-size: 21px;
     font-weight: 600;
   }
@@ -210,9 +237,9 @@
   }
 
   .filter_child_active {
-    color: #011490;
+    color: #4399eb;
     text-align: center;
-    border-bottom: 2px solid #011490;
+    border-bottom: 2px solid #4399eb;
     font-size: 21px;
     font-weight: 600;
   }
@@ -321,19 +348,21 @@
   $(document).ready(function () {
     function update_global_indicies() {
 
-
+$("#spinner").show()
       $.ajax({
         url: "/global_market",
         dataType: "json",
         success: function (data) {
+            $("#tables-container").empty(countryTable);
           for (var i = 0; i < data.tables.length; i++) {
             console.log(data.tables[i].country)
             var countryTable = "";
             countryTable += "<child_global>";
             countryTable += `<div class="country_indices_refresh d-flex  justify-content-between" style="">
                         <h5>${data.tables[i].country}</h5>
-                        <div class="d-flex fs-5" id="refresh_global" >
-                            <i class="bi bi-arrow-clockwise hello"></i>
+                        <div class="d-flex fs-5 refresh_global" >
+                          <i class='bx bx-revision'></i>
+                          
                             <p style="margin-bottom:auto;     font-size: 13px;">refresh</p>
                             </div>
                         </div>`;
@@ -362,6 +391,11 @@
             countryTable += "</child_global>";
             $("#tables-container").append(countryTable);
           }
+          $(".refresh_global").click(function () {
+    
+    update_global_indicies()
+  })
+          $("#spinner").hide()
         },
         complete: function () {
           // Schedule the next update after 5 seconds
@@ -372,6 +406,8 @@
 
     }
     update_global_indicies()
+
+   
   });
 </script>
 <script>
@@ -1577,22 +1613,22 @@ $(document).ready(function () {
 
           <div class="chart-header col-2  text-center" onclick="filterChart('sameopenandlow')" data-btn-id="3"
             style="font-size: 21px;    width: fit-content;">
-            sameOpenAndLow
+            SameOpenAndLow
           </div>
 
           <div class="chart-header col-2  text-center" onclick="filterChart('sameOpenAndHigh')" data-btn-id="4"
             style="font-size: 21px;    width: fit-content;">
-            sameOpenAndHigh
+            SameOpenAndHigh
           </div>
 
           <div class="chart-header col-2  text-center" onclick="filterChart('gapUp')" data-btn-id="4"
             style="font-size: 21px;    width: fit-content;">
-            gapUp
+            GapUp
           </div>
 
           <div class="chart-header col-2  text-center" onclick="filterChart('gapDown')" data-btn-id="4"
             style="font-size: 21px;     width: fit-content;">
-            gapDown
+            GapDown
           </div>
 
 
@@ -1600,7 +1636,7 @@ $(document).ready(function () {
         </div>
 
       </div>
-      <div id="chartContainer " style=" overflow: auto;   height: fit-content;">
+      <div id="chartContainer " style=" overflow: auto;   height: 424px;">
         <div class="topgainers" id="topgainers" style="width: 100%; height: 80%">
           <table class="table table-hover  ">
             <thead style="background: #f1f5fa;border-bottom: 1px solid black !important;" class="">
@@ -1822,9 +1858,9 @@ $(document).ready(function () {
       }
 
       .active_52_week {
-        color: #011490;
+        color: #4399eb;
         text-align: center;
-        border-bottom: 2px solid #011490;
+        border-bottom: 2px solid #4399eb;
         font-size: 21px;
         font-weight: 600;
       }
@@ -1837,6 +1873,19 @@ $(document).ready(function () {
         align-items: center;
         width: fit-content;
 
+      }
+      #data-dropdown,#data-dropdown-low,#data-dropdown-upper,#data-dropdown-lower{
+        outline: none;
+    height: 40px;
+    padding: 0 12px !important;
+    width: 163px !important;
+    box-shadow: none;
+    border-radius: 6px;
+    border: 1px solid hsla(0,0%,72.5%,.3);
+    background-color: #fff;
+      }
+      .chart-header{
+        padding: 0 10px !important;
       }
     </style>
     <div class="main_upper_future_open d-flex gap-4 container" style="    justify-content: center;

@@ -66,7 +66,7 @@
 
       <td>
         <a href="#edit_modal{{forloop.counter}}">
-          <i class="bi bi-pencil-square fs-5 text-success" data-bs-toggle="modal"
+          <i class="bi bi-pencil-square fs-5 text-success modal__btn" data-bs-toggle="modal"
             data-bs-target="#edit_modal{{forloop.counter}}"></i>
         </a>
 
@@ -369,15 +369,14 @@
               class="text-danger show-error-text" id="error_phone_code"></span>
           </div>
 
-          <div class="form-group" id="modalCountrySignUp" style="display: flex;flex-direction: column;">
+          <div class="form-group" id="modalCountrySignUp" style="display: flex; flex-direction: column;">
             <label for="country_id">Country</label>
-            <select class="form-select" id="country_id" required value="{{user.Country}}" name="edit_country">
-              <option selected disabled>Edit country</option>
-              <option value="USA">USA </option>
-              <option value="INDIA"> INDIA</option>
+            <select class="form-select" id="country_id" required name="edit_country">
+                <option disabled>Edit country</option>
+                <option value="USA">USA</option>
+                <option value="INDIA">INDIA</option>
             </select>
-
-          </div>
+        </div>
 
           <div class="form-group" id="modalStateSignUp" style="display: flex;flex-direction: column;">
             <label for="modalStateSignUp">State</label>
@@ -407,7 +406,16 @@
     </div>
   </div>
 </div>
+<script>
+  // Get the value of {{user.Country}} and convert it to lowercase (assuming it's in lowercase)
+  var userCountry = "{{user.Country}}".toLowerCase();
+  console.log(userCountry)
+  $(".modal__btn")click(function(){
 
+    $("#country_id").val(userCountry);
+  })
+  // Get the select element
+</script>
 
 {% endfor %}
 
