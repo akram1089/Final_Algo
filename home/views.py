@@ -1440,11 +1440,11 @@ def ban_list_dashboard(request):
 
 #     return JsonResponse({"sme_records": sme_records, "equity_records": equity_records})
 
-
+@csrf_exempt
 def admin_login(request):
     return render(request, "admin_login.html")
 
-
+@csrf_exempt
 def admin_signup(request):
     if request.method == "POST":
         fname = request.POST["name"]
