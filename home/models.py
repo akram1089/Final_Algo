@@ -159,3 +159,12 @@ class MostSpreadStock(models.Model):
     data_json = models.TextField()
 
 
+class ContactUs(models.Model):
+    Contact_first_name = models.CharField(max_length=100)
+    Contact_last_name = models.CharField(max_length=100)
+    Contact_email = models.CharField(max_length=100)
+    Contact_phone_number = models.CharField(max_length=100)
+    Contact_messages = models.TextField(max_length=300)
+
+    def _str_(self):
+        return self.Contact_first_name

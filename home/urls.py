@@ -171,6 +171,8 @@ urlpatterns = [
     path('filter_iv_data', views.filter_iv_data, name='filter_iv_data'),
     path('bse_spot_data', views.bse_spot_data, name='bse_spot_data'),
     path('option_strategy_tester', views.option_strategy_tester, name='option_strategy_tester'),
+    path('contact_us', views.contact_us, name='contact_us'),
+    path('customer_contact', views.customer_contact, name='customer_contact'),
 
 
 

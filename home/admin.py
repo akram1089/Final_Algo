@@ -17,6 +17,7 @@ from.models import All_stock_underlying
 from.models import VolumeGainer
 from.models import MostActiveStock
 from.models import MostSpreadStock
+from.models import ContactUs
 # from.models import StockListing
 
 
@@ -38,6 +39,7 @@ admin.site.register(All_stock_underlying)
 admin.site.register(VolumeGainer)
 admin.site.register(MostActiveStock)
 admin.site.register(MostSpreadStock)
+admin.site.register(ContactUs)
 # admin.site.register(StockListing)
 
 

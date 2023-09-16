@@ -22,7 +22,7 @@ from .models import Top_Loser
 from .models import Top_Gainer
 from bs4 import BeautifulSoup
 from django.shortcuts import render, get_object_or_404
-from django.http import JsonResponse
+from django.http import HttpResponseServerError, JsonResponse
 import uuid
 import json
 from django.shortcuts import render, redirect, HttpResponse
@@ -4258,3 +4258,47 @@ def bse_spot_data(request):
 
 def option_strategy_tester(request):
     return render(request,"option_strategy_tester.html")
+
+
+
+
+def contact_us(request):
+    return render(request, "contact-us.html")
+
+
+from .models import ContactUs
+
+@csrf_exempt
+def customer_contact(request):
+    if request.method == "POST":
+        first_name = request.POST["firstname"]
+        last_name = request.POST["lastname"]
+        email = request.POST["email"]
+        phone_number = request.POST["phone"]
+        messages = request.POST["message"]
+        print(first_name)
+        print(last_name)
+        print(phone_number)
+        print(email)
+        print(messages)
+
+        try:
+          
+            new_contact = ContactUs(
+                Contact_first_name=first_name,
+                Contact_last_name=last_name,
+                Contact_phone_number=phone_number,
+                Contact_email=email,
+                Contact_messages=messages
+            )
+            new_contact.save()
+
+     
+            success_message = "Thank you for contacting us."
+            return HttpResponse(success_message)
+        except Exception as e:
+     
+            error_message = f"An error occurred while contacting us:  {str(e)}"
+            return HttpResponseServerError(error_message)
+
+
