@@ -4266,24 +4266,25 @@ def contact_us(request):
     return render(request, "contact-us.html")
 
 
+
+
+from django.http import JsonResponse
 from .models import ContactUs
 
 @csrf_exempt
 def customer_contact(request):
     if request.method == "POST":
-        first_name = request.POST["firstname"]
-        last_name = request.POST["lastname"]
-        email = request.POST["email"]
-        phone_number = request.POST["phone"]
-        messages = request.POST["message"]
-        print(first_name)
-        print(last_name)
-        print(phone_number)
-        print(email)
-        print(messages)
+        first_name = request.POST.get("firstname")
+        last_name = request.POST.get("lastname")
+        email = request.POST.get("email")
+        phone_number = request.POST.get("phone")
+        messages = request.POST.get("message")
+
+        if not all([first_name, last_name, email, phone_number, messages]):
+            error_message = "All fields are required."
+            return JsonResponse({"error_message": error_message}, status=400)
 
         try:
-          
             new_contact = ContactUs(
                 Contact_first_name=first_name,
                 Contact_last_name=last_name,
@@ -4293,12 +4294,13 @@ def customer_contact(request):
             )
             new_contact.save()
 
-     
             success_message = "Thank you for contacting us."
-            return HttpResponse(success_message)
-        except Exception as e:
-     
-            error_message = f"An error occurred while contacting us:  {str(e)}"
-            return HttpResponseServerError(error_message)
+            return JsonResponse({"success_message": success_message})
 
+        except Exception as e:
+            error_message = f"An error occurred while contacting us: {str(e)}"
+            return JsonResponse({"error_message": error_message}, status=500)
+
+    # Handle GET request if needed
+    return JsonResponse({"error_message": "Invalid request method."}, status=405)
 
