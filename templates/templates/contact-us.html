@@ -693,6 +693,19 @@ right: 0;">
             var messages = $("#msgs").val().trim()
             if (fname === "" || lname === "" || email==="" || phone ==="") {
                 console.log("all fields are required")
+
+                var alertElement = $(".alert-dismissible");
+            
+                // Display the success message in an alert
+                alertElement
+                    .removeClass("alert-success")
+                    .addClass("alert-danger")
+                    .text("All fields are required")
+                    .fadeIn();
+    
+                setTimeout(function () {
+                    alertElement.fadeOut();
+                }, 3000);
                 return false;
             }
             else if(!(phonePattern.test(phone))){
@@ -705,37 +718,57 @@ right: 0;">
             }
             
             $.ajax({
-            url:"/customer_contact",
-            type:"POST",
-            data:{
-              firstname:fname,
-              lastname:lname,
-              email:email,
-              phone:phone,
-              message:messages,
-            },
-
-            success:function(contact_msg){
-               
-                    if(contact_msg){
-                        var fname = $("#fname").val("")
-                        var lname = $("#lname").val("")
-                        var email = $("#email").val("")
-                        var phone = $("#phone").val("")
-                        var messages = $("#msgs").val("")
-              $(".alert-dismissible").addClass("alert-success").text(contact_msg).fadeIn()
-              
-             
-            }
+                url: "/customer_contact",
+                type: "GET",
+                data: {
+                    firstname: fname,
+                    lastname: lname,
+                    email: email,
+                    phone: phone,
+                    message: messages,
+                },
+                success: function (contact_msg) {
+                    console.log(contact_msg);
+                    if (contact_msg && contact_msg.success_message) {
+                        var fname = $("#fname").val("");
+                        var lname = $("#lname").val("");
+                        var email = $("#email").val("");
+                        var phone = $("#phone").val("");
+                        var messages = $("#msgs").val("");
+                        var alertElement = $(".alert-dismissible");
             
-             setTimeout(function () {
-               
-                                $("#alert-watchlist").fadeOut();
-                            }, 3000);
-                           
-            }
-    
-        })
+                        // Display the success message in an alert
+                        alertElement
+                            .removeClass("alert-danger")
+                            .addClass("alert-success")
+                            .text(contact_msg.success_message)
+                            .fadeIn();
+            
+                        setTimeout(function () {
+                            alertElement.fadeOut();
+                        }, 3000);
+                    }
+                },
+                error: function (error) {
+                    console.log(error);
+                    if (error && error.responseJSON && error.responseJSON.error_message) {
+                        var alertElement = $(".alert-dismissible");
+            
+                        // Display the error message in an alert
+                        alertElement
+                            .removeClass("alert-success")
+                            .addClass("alert-danger")
+                            .text(error.responseJSON.error_message)
+                            .fadeIn();
+            
+                        setTimeout(function () {
+                            alertElement.fadeOut();
+                        }, 3000);
+                    }
+                },
+            });
+            
+
         })
     });
     

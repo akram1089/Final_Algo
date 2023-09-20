@@ -390,7 +390,7 @@
                 <div class="pcr d-block">
                     <div class="title_pcr">PCR</div>
                     <div class="pcr_value">
-              
+
                     </div>
                 </div>
 
@@ -2050,31 +2050,31 @@
                         <label for="call_inst_type">Call_inst_type</label>
                         <!-- <input type="text" id="call_inst_type" class="form-control" min="1" disabled> -->
                     </div>
-                    <div class="form-group"style="display: none;">
+                    <div class="form-group" style="display: none;">
                         <label for="callLotSizeInput">Lot Size:</label>
                         <input type="number" id="callLotSizeInput" class="form-control" min="1" disabled>
                     </div>
-                    <div class="form-group"style="display: none;">
+                    <div class="form-group" style="display: none;">
                         <label for="call_ltp">Call LTP:</label>
                         <input type="number" id="call_ltp" class="form-control" min="1" disabled>
                     </div>
-                    <div class="form-group"style="display: none;">
+                    <div class="form-group" style="display: none;">
                         <label for="call_strike">Call Strike:</label>
                         <input type="number" id="call_strike" class="form-control" min="1" disabled>
                     </div>
-                    <div class="form-group"style="display: none;">
+                    <div class="form-group" style="display: none;">
                         <label for="calls_delta">Call Delta:</label>
                         <input type="number" id="calls_delta" class="form-control" min="1" disabled>
                     </div>
-                    <div class="form-group"style="display: none;">
+                    <div class="form-group" style="display: none;">
                         <label for="calls_theta">Call Theta:</label>
                         <input type="number" id="calls_theta" class="form-control" min="1" disabled>
                     </div>
-                    <div class="form-group"style="display: none;">
+                    <div class="form-group" style="display: none;">
                         <label for="calls_gamma">Call Gamma:</label>
                         <input type="number" id="calls_gamma" class="form-control" min="1" disabled>
                     </div>
-                    <div class="form-group"style="display: none;">
+                    <div class="form-group" style="display: none;">
                         <label for="calls_vega">Call Gamma:</label>
                         <input type="number" id="calls_vega" class="form-control" min="1" disabled>
                     </div>
@@ -2341,61 +2341,61 @@
                         current_values.push(parseFloat(value));
                         // console.log("current_val" + value);
                     } else if ($this.hasClass("exit_edit_curr")) {
-                     
-                            // If exit_edit_curr is zero, calculate and push the difference
-                            var ltp = ltp_values.pop() || 0; // Get the last value from ltp_values or 0 if empty
-                            var current = current_values.pop() || 0; // Get the last value from current_values or 0 if empty
-                            var difference = (ltp - current) * parseInt(lot_size);
-                            // console.log("difference" + difference);
+
+                        // If exit_edit_curr is zero, calculate and push the difference
+                        var ltp = ltp_values.pop() || 0; // Get the last value from ltp_values or 0 if empty
+                        var current = current_values.pop() || 0; // Get the last value from current_values or 0 if empty
+                        var difference = (ltp - current) * parseInt(lot_size);
+                        // console.log("difference" + difference);
 
 
-                            // Check the .short_long class for "+" or "-"
-                            var shortLongClass = $this.closest('tr').find('.short_long');
-                            if (shortLongClass.text().includes('+')) {
-                                difference = -difference // Make the difference positive if "+" is present
-                            }
+                        // Check the .short_long class for "+" or "-"
+                        var shortLongClass = $this.closest('tr').find('.short_long');
+                        if (shortLongClass.text().includes('+')) {
+                            difference = -difference // Make the difference positive if "+" is present
+                        }
 
-                            current_values.push(difference);
-                        
+                        current_values.push(difference);
+
                     }
                 });
 
                 // console.log(current_values);
                 // Iterate over elements with class "indicator_edit_table"
                 $(".indicator_edit_table").each(function (index) {
-    var $this = $(this);
-    console.log('$this', $this.text());
-    
-    var shortLongClass = $this.closest('tr').find('.short_long');
-    
-    if (shortLongClass.text().includes('+')) {
-        var value = parseFloat($this.text());
-        
-        if (value === 0 || isNaN(value)) {
-            console.log("Zero");
-        } else {
-            if (value > 0) {
-                value = -value; // Convert positive to negative
-            } else {
-                value = Math.abs(value); // Convert negative to positive
-            }
-            $this.text(value.toFixed(2));
-            console.log("Converted Value: " + value.toFixed(2));
-        }
-    } else {
-        console.log('No');
-    }
+                    var $this = $(this);
+                    console.log('$this', $this.text());
 
-    // Check if the corresponding exit_edit_curr is zero before calculating
-    if (index < current_values.length && $(".exit_edit_curr").eq(index).text() === "0") {
-        var value = current_values[index].toFixed(2);
-        $this.text(value);
-        console.log("$     " + value);
+                    var shortLongClass = $this.closest('tr').find('.short_long');
 
-        // Set the value in the corresponding .indicator_edit element using index
-        $(".indicator_edit").eq(index).text(value);
-    }
-});
+                    if (shortLongClass.text().includes('+')) {
+                        var value = parseFloat($this.text());
+
+                        if (value === 0 || isNaN(value)) {
+                            console.log("Zero");
+                        } else {
+                            if (value > 0) {
+                                value = -value; // Convert positive to negative
+                            } else {
+                                value = Math.abs(value); // Convert negative to positive
+                            }
+                            $this.text(value.toFixed(2));
+                            console.log("Converted Value: " + value.toFixed(2));
+                        }
+                    } else {
+                        console.log('No');
+                    }
+
+                    // Check if the corresponding exit_edit_curr is zero before calculating
+                    if (index < current_values.length && $(".exit_edit_curr").eq(index).text() === "0") {
+                        var value = current_values[index].toFixed(2);
+                        $this.text(value);
+                        console.log("$     " + value);
+
+                        // Set the value in the corresponding .indicator_edit element using index
+                        $(".indicator_edit").eq(index).text(value);
+                    }
+                });
 
 
             }
@@ -2518,7 +2518,7 @@
 
                     $('#ltpInput').val(currentLTP);
                     console.log(currentLTP);
-                    
+
                     $('#exitPriceInput').val(exit_price);
                     $('#counterValueInput').val(parseFloat(currentCounterValue));
                     $('#editPositionModal').data('position', position);
@@ -2974,22 +2974,22 @@
 
                 // Use setTimeout to capture the initial value after 1 second
 
-                    updatePrevBtn = startDateInput.val();
-                    // Call prevOneDay_disable to initially disable the button
-                    prevOneDay_disable();
-                    // Now, you can log the initial value
-                    // console.log("initial_date (after 1 second delay): " + updatePrevBtn);
+                updatePrevBtn = startDateInput.val();
+                // Call prevOneDay_disable to initially disable the button
+                prevOneDay_disable();
+                // Now, you can log the initial value
+                // console.log("initial_date (after 1 second delay): " + updatePrevBtn);
 
-                    const btnOneDayBack = $('#btnOneDayBack');
+                const btnOneDayBack = $('#btnOneDayBack');
 
-                    // Set up an event listener to update the prevOneDay_disable function whenever #startDate changes
-                    startDateInput.on("change", function () {
-                        updatePrevBtn = startDateInput.val(); // Save the new initial value
-                        console.log(updatePrevBtn);
-                        $(".sample_startdate").val(updatePrevBtn)
-                        prevOneDay_disable(); // Run the function
-                    });
-        
+                // Set up an event listener to update the prevOneDay_disable function whenever #startDate changes
+                startDateInput.on("change", function () {
+                    updatePrevBtn = startDateInput.val(); // Save the new initial value
+                    console.log(updatePrevBtn);
+                    $(".sample_startdate").val(updatePrevBtn)
+                    prevOneDay_disable(); // Run the function
+                });
+
             }
 
             function prevOneDay_disable() {
@@ -3008,7 +3008,7 @@
                 }
             }
             function isUpdatePrevBtnEqualToStartDate() {
-               const startDateValue= $(".sample_startdate").val()
+                const startDateValue = $(".sample_startdate").val()
                 return updatePrevBtn === startDateValue;
             }
 
@@ -3179,8 +3179,8 @@
                 setupStartDateListener();
             });
             $('#btn30MintBack').prop('disabled', true);
-                        $('#btn15MintBack').prop('disabled', true);
-                        $('#btn5MintBack').prop('disabled', true);
+            $('#btn15MintBack').prop('disabled', true);
+            $('#btn5MintBack').prop('disabled', true);
             function changeStartTimeMinutes(minutesDelta) {
                 //console.log(minutesDelta);
                 var time = $(".time_formated").text();
@@ -3297,7 +3297,7 @@
                         var cteateTime = response.map((currtime) => {
                             return currtime.time
                         })
-                        //console.log(cteateTime[0]);
+                        console.log(cteateTime);
                         $(".time_formated").text(cteateTime[0])
                         // Handle the response from Django view
 
@@ -3423,8 +3423,8 @@
                 var closestStrikePrice = null;
                 var closestDiff = Number.MAX_VALUE;
                 //console.log('closestDiff' + closestDiff);
-var callOI=0
-var putOI=0
+                var callOI = 0
+                var putOI = 0
 
                 data.forEach(row => {
 
@@ -3485,8 +3485,8 @@ var putOI=0
                     newRow.append($('<td>').addClass(bottom_bg_right + ' ' + text_end).text(replaceZeroWithDash(row.pcr)));
 
                     newRow.append($('<td>').addClass(bottom_bg_right).append(putActionsBtn));
-                        callOI+=row.calls_oi
-                        putOI+=row.puts_oi
+                    callOI += row.calls_oi
+                    putOI += row.puts_oi
                     // Disable buttons when puts_ltp is 0 or calls_ltp is 0
                     if (row.puts_ltp === 0) {
                         putActionsBtn.prop('disabled', true);
@@ -3502,14 +3502,14 @@ var putOI=0
                 //console.log("Closest Strike Price" + closestStrikePrice);
 
                 // console.log('Putcall_ratio'+ putOI/callOI);
-                $(".pcr_value").text((putOI/callOI).toFixed(3))
-           
-                // Check if .sample_startdate has a value before setting it
-if (!$(".sample_startdate").val()) {
-    $(".sample_startdate").val($("#startDate").val());
-}
+                $(".pcr_value").text((putOI / callOI).toFixed(3))
 
-                
+                // Check if .sample_startdate has a value before setting it
+                if (!$(".sample_startdate").val()) {
+                    $(".sample_startdate").val($("#startDate").val());
+                }
+
+
                 var optionChainTable = $(".option_simulator_body");
 
 
@@ -4230,7 +4230,7 @@ if (!$(".sample_startdate").val()) {
                     $("#ratio").text("No Defined")
 
 
-                } 
+                }
                 else if (Strategy_args === "spread") {
 
                     var leftMyTable = $("#myTable");

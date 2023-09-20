@@ -4264,6 +4264,10 @@ def option_strategy_tester(request):
 
 def contact_us(request):
     return render(request, "contact-us.html")
+def vertical(request):
+    return render(request, "vertical.html")
+def annotation(request):
+    return render(request, "annotation.html")
 
 
 

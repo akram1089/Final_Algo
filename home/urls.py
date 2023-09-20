@@ -173,6 +173,8 @@ urlpatterns = [
     path('option_strategy_tester', views.option_strategy_tester, name='option_strategy_tester'),
     path('contact_us', views.contact_us, name='contact_us'),
     path('customer_contact', views.customer_contact, name='customer_contact'),
+    path('vertical', views.vertical, name='vertical'),
+    path('annotation', views.annotation, name='annotation'),
 
 
 
