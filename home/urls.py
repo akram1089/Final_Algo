@@ -175,6 +175,10 @@ urlpatterns = [
     path('customer_contact', views.customer_contact, name='customer_contact'),
     path('vertical', views.vertical, name='vertical'),
     path('annotation', views.annotation, name='annotation'),
+    path('bse_option_chain',views.bse_option_chain, name = 'bse_option_chain' ),
+    path('bse_option_chain_spotprice',views.bse_option_chain_spotprice, name = 'bse_option_chain_spotprice' ),
+    path('bse_option_expiry',views.bse_option_expiry, name = 'bse_option_expiry' ),
+    path('bse_table_data',views.bse_table_data, name = 'bse_table_data'),
 
 
 

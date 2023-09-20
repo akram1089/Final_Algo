@@ -4308,3 +4308,54 @@ def customer_contact(request):
     # Handle GET request if needed
     return JsonResponse({"error_message": "Invalid request method."}, status=405)
 
+
+
+def bse_option_chain(request):
+    return render(request, "bse_option_chain.html")
+
+def bse_option_chain_spotprice(request):
+    url_date = "https://webapi.niftytrader.in/webapi/symbol/today-spot-data?symbol=SENSEX&exchange=bse"
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
+        "Accept-Language": "en-US,en;q=0.9",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive"
+    }
+    response_date = requests.get(url_date, headers=headers)
+    data_date = response_date.json()
+    all_data=data_date["resultData"]
+    
+    return JsonResponse(all_data)
+
+def bse_option_expiry(request):
+    url = "https://webapi.niftytrader.in/webapi/symbol/symbol-expiry-list?symbol=sensex&exchange=BSE"
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
+        "Accept-Language": "en-US,en;q=0.9",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive"
+    }
+    response_date_expiry = requests.get(url, headers=headers)
+    expiry_data = response_date_expiry.json()
+    all_expiry_data=expiry_data
+    
+    return JsonResponse(all_expiry_data)
+def bse_table_data(request):
+    if request.method == "GET":
+        dates_option = request.GET.get("dates_option")
+        # symbols_value = request.GET.get("symbol_data")
+        print(dates_option)
+        # print(symbols_value)
+        url=f"https://webapi.niftytrader.in/webapi/option/fatch-option-chain?symbol=SENSEX&expiryDate={dates_option}&exchange=BSE"
+        print(url)
+        headers = {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
+            "Accept-Language": "en-US,en;q=0.9",
+            "Accept-Encoding": "gzip, deflate, br",
+            "Connection": "keep-alive"
+        }
+        response_table_data = requests.get(url,headers=headers)
+        table_option_data = response_table_data.json()
+        all_table_option_data = table_option_data["resultData"]
+
+    return JsonResponse(all_table_option_data)

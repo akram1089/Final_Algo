@@ -49,46 +49,64 @@
     .option_rth{
         white-space: nowrap;
     }
+    #bse_view_chart{
+        color: gray;
+    font-size: 16px;
+    font-weight: 100;
+    border: 1px solid #8080804a;
+    border-radius: 8px;
+    padding: 5px;
+    transition: 0.3s;
+}
+#bse_view_chart:hover{
+    color: white;
+        background-color: #4d97ff;
+}
+    
 </style>
 <section>
-    <h4 class="pt-4">BSE Option Chain (Equity Derivatives)</h4>
-    <div class="container bs_option_chain">
-        <div class="container d-flex justify-content-between pt-4">
-            <div class="bse_chain_table">
-                <div class="table_top d-flex gap-2">
+     <div class="bse_heading d-flex justify-content-between align-items-center mb-4">
+         <h4 class="pt-4">BSE Option Chain (Equity Derivatives)</h4>
+         <div class="form-check form-switch">
+             <label class="form-check-label fw-bold" for="auto-refresh-switch">Auto Refresh</label>
+             <input class="form-check-input" type="checkbox" id="auto-refresh-switch">
+         </div>
+     </div>
+    <div class=" bs_option_chain">
+        <div class=" d-flex justify-content-between pt-4 ms-3" >
+            <div class="bse_chain_table pb-4">
+                <div class="table_top d-flex gap-3" style="align-items: center !important;">
         
                     <div class="chart_tracking">
-                        <a href="">
-                            <i class="bx bx-line-chart" id="trading_view_chart"></i>
+                        <a href="https://www.tradingview.com/chart/?symbol=sensex&aff_id=113877">
+                            <i class="bx bx-line-chart" id="bse_view_chart"></i>
                         </a>
                     </div>
                     <div class="symbol_dropdown">
                         <select id="symbol-dropdown" class="form-select form-select-sm">
-                            <optgroup label="symbol">
-                                <option value="">SENSEX</option>
+                            <optgroup label="symbol" class="symbol_data">
+                                
                             </optgroup>
                             
                         </select>
                     </div>
                     <div class="future_spot">
-                      
-                         
-                      <p>Future Spot</p>
-                      <div class="d-flex change_spot_per_color">
+                      <p style="margin-bottom: 0 !important; color: dimgrey; font-size: 13px;">Future Spot</p>
+                      <div class="change_spot_per_color d-flex">
                       <span class="spot_price"></span>
-                      <span class="spot_price_change_percent"></span>
+                      <span class="spot_price_change_percent" style="font-size: 13px;"></span>
                     </div>
                     </div>
                     <div class="pcr">
-                      <p>PCR</p>
-                      <span>1.0921</span>
+                      <p style="margin-bottom: 0 !important; color: dimgrey; font-size: 13px;">PCR</p>
+                      <span id="pcr" style="color: dimgrey; font-size: 13px;"></span>
                     </div>
                     <div class="lot_size">
-                      <p>Lot Size</p>
+                      <p style="margin-bottom: 0 !important; color: dimgrey; font-size: 13px;">Lot Size</p>
                       <span class="bse_lot"></span>
                     </div>
                     <div class="expiry_dropdown">
-                        <select id="symbol-dropdown" class="form-select form-select-sm">
+                        <select id="symbol-dropdown-expiry" class="form-select form-select-sm">
                             <optgroup label="symbol" class="expiry_date">
                                 
                             </optgroup>
@@ -97,12 +115,9 @@
                     </div>
                 </div>
             </div>
-            <div class="form-check form-switch">
-                <label class="form-check-label fw-bold" for="auto-refresh-switch">Auto Refresh</label>
-                <input class="form-check-input" type="checkbox" id="auto-refresh-switch">
-            </div>
+           
         </div>
-        <div class="container">
+        <div class="">
            
             <div class="calls_puts">
                 <div class="row">
@@ -149,6 +164,7 @@
 </section>
 
 <script>
+    
       $(".option_lth").css("background-color", "#c9ffed")
       $(".option_rth").css("background-color", "#ffd2cf")
     $.ajax({
@@ -158,52 +174,88 @@
       
         success: function (data) {
             console.log(data)
+            
+            $(".symbol_data").append($('<option>',{"value":data.symbol_name , "text":data.symbol_name}))
+             
             $(".spot_price").text(data.last_trade_price)
             $(".bse_lot").text(data.lot_size)
-            
+            $(".spot_price").text(data.last_trade_price)
+            $(".spot_price_change_percent").text(`(${data.change_per}%)`)
             var change_value = data.change_value
             var change_color =change_value > 0 ?"text-success":"text-danger"   
-        $(".change_spot_per_color").addClass(change_color)
-        
+            $(".change_spot_per_color").addClass(change_color)
+             get_expiry_date(data.symbol_name)
         }
     })
     
-   
-//    $.ajax({
     
-//    })
-   $.ajax({
+  
+
+
+
+    $.ajax({
         url: "/bse_option_expiry",
         type: "GET",
         dataType: "json",
 
      success: function(data){
-        console.log(data)
+        // console.log(data)
         expiry_data = data.resultData
-        console.log(expiry_data)
+        // console.log(expiry_data)
         for (let expiry = 0; expiry < expiry_data.length; expiry++) {
             const element = expiry_data[expiry];
             console.log(element.split("T")[0])
             console.log(element)
             $(".expiry_date").append($("<option class='dates_for_change'>").val(element.split("T")[0]).text(element.split("T")[0]))
+                      
         }   
      }
+     
    })
 
-   $.ajax({
-     url: "/bse_table_data",
-     type: "GET",
-     dataType: "Json",
+   
     
+    
+    $("#symbol-dropdown-expiry").change(function () {
+            var dates_option = $(this).val()
+            console.log(dates_option)
+            get_expiry_date(dates_option)
+    })
+    // console.log($("#symbol-dropdown").val());
+
+   
+   
+    
+
+
+    
+   function get_expiry_date(date_options, symbols_data) { 
+    // console.log(date_options)
+        console.log(symbols_data)
+   $.ajax({
+     url: `/bse_table_data`,
+     type: "GET",
+     dataType: "json",
+     data:{
+       dates_option:date_options,
+    //    symbol_data:symbols_data
+     },
+
      success: function (data) {
         console.log(data.opDatas)
         bse_option_data = data.opDatas
         var future_spot_color = $(".spot_price").text()
         var war = $(".bg_warning").text()
-        console.log(war)
-        for (const i in bse_option_data) {
-            console.log(i)
+        // console.log(war)
+        $("#bse_data_to_show").empty()
+        var total_calls_oi = 0
+        var total_putss_oi = 0
 
+        for (const i in bse_option_data) {
+            // console.log(i)
+             total_calls_oi += bse_option_data[i].calls_oi
+             total_putss_oi += bse_option_data[i].puts_oi
+             total_putss_oi/total_calls_oi
             if (bse_option_data[i].calls_builtup === "Call Short Covering" || bse_option_data[i].calls_builtup === "Call Buying") {
                                 bse_calls_builtup_simu = "bg_success fw-bolder";
                             } else if (bse_option_data[i].calls_builtup === "No Conclusion") {
@@ -255,7 +307,7 @@
             
             var table = $("#bse_data_to_show")
             table.append(row)
-            console.log(bse_option_data[i].calls_oi)
+            // console.log(bse_option_data[i].calls_oi)
             $(".strike").css("background-color", "hsla(47,27%,87%,.471)")
 
             // if((bse_option_data[i].calls_builtup==="No Conclusion")){
@@ -267,12 +319,15 @@
 
            
         }
-      
+      var pcr= total_putss_oi/total_calls_oi
+      console.log(pcr.toFixed(4))
+      $("#pcr").text(pcr.toFixed(4))
         
      }
    })
-   $(".dates_for_change").change(function () {
-        alert("Hello this is my first experiment")
-    })
+
+}
+get_expiry_date("")
+
 </script>
-{% endblock dashboard_body %}
+{% endblock dashboard_body %}
