@@ -4367,9 +4367,16 @@ from .models import Customer_feedback
 
 def customer_feedback(request):
     return render(request, "customer_feedback.html")
+
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+
 @csrf_exempt
 def customer_feedback_data(request):
     if request.method == "POST":
+        if not request.user.is_authenticated:
+            return JsonResponse({'error': 'You must be logged in to submit feedback.'}, status=401)
+
         usr = request.user
         data = json.loads(request.body.decode('utf-8'))
 
