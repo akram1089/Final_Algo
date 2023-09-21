@@ -2247,7 +2247,7 @@
     </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
     <script>
         $(document).ready(function () {
             $(".main_table_instruments_data ").hide();
@@ -5004,18 +5004,7 @@
 
 
 
-   function drawHorizontalLine(chart, lineValue) {
-            var ctxPlugin = chart.chart.ctx;
-            var xAxe = chart.scales['x'];
-            var yAxe = chart.scales['y'];
 
-            ctxPlugin.strokeStyle = "red";
-            ctxPlugin.beginPath();
-            var yPos = yAxe.getPixelForValue(lineValue);
-            ctxPlugin.moveTo(xAxe.left, yPos);
-            ctxPlugin.lineTo(xAxe.right, yPos);
-            ctxPlugin.stroke();
-        }
 
         // Function to render the chart and draw the horizontal line
         function Table_chart_pyoff() {
@@ -5052,66 +5041,88 @@
                 final_p_l.push(-((parseFloat(main_calls_ltp) + parseFloat(main_puts_ltp)) - p_l) * parseInt(lot_size));
             });
             console.log(final_p_l)
-            // Create a chart using Chart.js
-            // Create a chart using Chart.js
+      
+
+
             var ctx = document.getElementById("myChart").getContext("2d");
 
-            var myChartConfig = {
-                type: "line",
-                data: {
-                    labels: strikePrices,
-                    datasets: [
-                        {
-                            label: "Final P/L",
-                            data: final_p_l,
-                            backgroundColor: final_p_l.map(value => value < 0 ? 'rgba(255, 0, 0, 0.2)' : 'rgba(0, 255, 0, 0.2)'),
-                            borderColor:'black',
-                            borderWidth: 2,
-                            fill: {
-                                target:'origin',
-                                below:"rgba(255, 0, 0, 0.2)",
-                                above:"rgba(0, 255, 0, 0.2)"
-                            },
-                            pointStyle: false, // Remove data points
-                            borderDash: [5, 5], // Set the border to dashed
-                        },
-                    ],
+var myChartConfig = {
+    type: "line",
+    data: {
+        labels: strikePrices,
+        datasets: [
+            {
+                label: "Final P/L",
+                data: final_p_l,
+                backgroundColor: final_p_l.map(value => value < 0 ? 'rgba(255, 0, 0, 0.2)' : 'rgba(0, 255, 0, 0.2)'),
+                borderColor: 'black',
+                borderWidth: 2,
+                fill: {
+                    target: 'origin',
+                    below: "rgba(255, 0, 0, 0.2)",
+                    above: "rgba(0, 255, 0, 0.2)"
                 },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        x: {
-                            type: "linear",
-                            position: "bottom",
-                            title: {
-                                display: true,
-                                text: "Strike Prices",
-                            },
-                        },
-                        y: {
-                            title: {
-                                display: true,
-                                text: "Final P/L",
-                            },
-                        },
-                    },
-                    plugins: {
-                        legend: {
-                            display: false, // Hide the legend
-                        },
-                        interaction: {
-                            mode: 'index', // Enable line hover effect
-                        },
-                    },
+                pointBorderWidth: 0,
+                pointHoverRadius: 5,
+                pointHoverBackgroundColor: "black",
+                pointHoverBorderColor: "white",
+                pointHoverBorderWidth: 3,
+                pointRadius: 1,
+                pointHitRadius: 100,
+                borderDash: [5, 5], // Set the border to dashed
+            },
+        ],
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+            x: {
+                
+                type: "linear",
+                position: "bottom",
+                title: {
+                    display: true,
+                    text: "Strike Prices",
                 },
-            };
+            },
+            y: {
+                title: {
+                    display: true,
+                    text: "Final P/L",
+                },
+            },
+        },
+        plugins: {
+            legend: {
+                display: false, // Hide the legend
+            },
+            annotation: {
+                annotations: [
+                    {
+                        type: 'line',
+            
+                        scaleID: 'y',
+                        borderColor: 'red', // Color of the vertical line
+                        borderWidth: 2,
+                        value: '0', // The x-axis value where the line will be drawn
+                    },
+                ],
+            },
+        },
+        layout: {
+            padding: {
+                left: 0,   // Adjust left padding as needed
+                right: 0,  // Adjust right padding as needed
+                bottom: 0, // Adjust bottom padding as needed
+                top: 0,    // Adjust top padding as needed
+            },
+        },
+    },
+};
 
-            var myChart = new Chart(ctx, myChartConfig);
-
-            // Draw the horizontal line at the desired position
-            var lineAt = 0; // Adjust this value to set the horizontal line position
-            drawHorizontalLine(myChart, lineAt);
+var myChart = new Chart(ctx, myChartConfig);
+           
         }
 
         // Call the function to render the chart and draw the horizontal line
