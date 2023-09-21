@@ -179,6 +179,8 @@ urlpatterns = [
     path('bse_option_chain_spotprice',views.bse_option_chain_spotprice, name = 'bse_option_chain_spotprice' ),
     path('bse_option_expiry',views.bse_option_expiry, name = 'bse_option_expiry' ),
     path('bse_table_data',views.bse_table_data, name = 'bse_table_data'),
+    path('customer_feedback_data', views.customer_feedback_data,name='customer_feedback_data'),
+    path('customer_feedback', views.customer_feedback,name='customer_feedback'),
 
 
 

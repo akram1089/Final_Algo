@@ -4313,6 +4313,7 @@ def customer_contact(request):
 def bse_option_chain(request):
     return render(request, "bse_option_chain.html")
 
+
 def bse_option_chain_spotprice(request):
     url_date = "https://webapi.niftytrader.in/webapi/symbol/today-spot-data?symbol=SENSEX&exchange=bse"
     headers = {
@@ -4359,3 +4360,37 @@ def bse_table_data(request):
         all_table_option_data = table_option_data["resultData"]
 
     return JsonResponse(all_table_option_data)
+
+
+
+from .models import Customer_feedback
+
+def customer_feedback(request):
+    return render(request, "customer_feedback.html")
+@csrf_exempt
+def customer_feedback_data(request):
+    if request.method == "POST":
+        usr = request.user
+        data = json.loads(request.body.decode('utf-8'))
+
+        first_star = data.get("first_star")
+        second_star = data.get("second_star")
+        rating1_10 = data.get("rating1_10")
+        review = data.get("review")
+        yes_no = data.get("yes_no")
+        frnd_recommend = yes_no.lower() == "yes"
+        
+        print(usr, first_star, second_star, rating1_10, review, yes_no)
+
+        new_feedback = Customer_feedback(
+            user=usr,
+            ui_exp=first_star,
+            helpful_exp=second_star,
+            rating_scale=rating1_10,
+            suggestion=review,
+            frnd_recommend=frnd_recommend
+        )
+
+        new_feedback.save()
+
+        return JsonResponse({'message': 'Thank you for your feedback!'})

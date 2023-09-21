@@ -166,5 +166,17 @@ class ContactUs(models.Model):
     Contact_phone_number = models.CharField(max_length=100)
     Contact_messages = models.TextField(max_length=300)
 
-    def _str_(self):
+    def __str__(self):  # Use double underscores here
         return self.Contact_first_name
+
+
+
+class Customer_feedback(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    ui_exp = models.CharField( max_length=50)
+    helpful_exp = models.CharField(max_length=50,)
+    rating_scale = models.CharField(max_length=50)
+    suggestion = models.TextField(max_length=300)
+    frnd_recommend = models.BooleanField(default=True)
+    def _str_(self):
+        return self.user.username
