@@ -19,47 +19,116 @@
     background: white;
     border-radius: 12px;
   }
+#stars_feeback{
+    color: gold; /* Change the color to gold */
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5); /* Add a shadow effect */
+}
+</style>
+<style>
+  .rating-scale {
+      width: 100px; /* Width of the scale */
+      height: 20px; /* Height of the scale */
+      background: linear-gradient(74deg, rgba(50,164,255,1) 0%, rgba(250,88,88,1) 0%, rgba(67,255,196,1) 100%);
+      position: relative;
+  }
+  .rating-bar {
+      width: 2px; /* Width of the vertical bar */
+      height: 100%;
+      background-color: #000; /* Color of the vertical bar */
+      position: absolute;
+  }
+  .table-striped-custom>tbody>tr:nth-child(2n)>td,
+    .table-striped-custom>tbody>tr:nth-child(2n)>th {
+        background-color: rgb(240, 247, 253) !important;
+    }
+.main_table_feedback{
+      background: white;
+    padding: 35px 21px;
+    border-radius: 8px;
+}
+table.dataTable tbody tr {
+        background-color: transparent;
+        border-bottom:transparent;
+    }
+    table.dataTable thead th, table.dataTable thead td {
+    padding: 10px;
+    border-bottom: 0px solid rgb(0 0 0 / 0%);
+}
 </style>
 
 
-<div class="feedback_management_table">
-<table class="table mt-4" id="feedback_table">
-    <thead style="color: white; background-color: #01A3FF !important; border-bottom: 1px solid black !important;">
-      <tr>
-        <th scope="col">Customer Name</th>
-        <th scope="col">Email Address</th>
-        <th scope="col">Phone Number</th>
-        <th scope="col">Feedback</th>
-        <th scope="col">Timestamp</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <th scope="row">Mark</th>
-        <td>Mark@gmail.com</td>
-        <td>Otto</td>
-        <td>@mdo</td>
-        <td>@mdo</td>
-    </tr>
-      <tr>
-        <th scope="row">Jacob</th>
-        <td>Jacob@gmail.com</td>
-        <td>Thornton</td>
-        <td>@fat</td>
-        <td>@fat</td>
-      </tr>
-      <tr>
-        <th scope="row">Larry The Bird</th>
-        <td >LarrytheBird@gmail.com</td>
-        <td>@twitter</td>
-        <td>@twitter</td>
-        <td>@twitter</td>
-      </tr>
-    </tbody>
+
+
+<div class="table-responsive main_table_feedback">
+  <table id="feedbackTable" class="table-striped-custom table">
+      <thead style="    background: -webkit-gradient(linear, left top, left bottom, from(#4399eb), to(#5cadfb));
+      background: -moz-linear-gradient(top, #4399eb 0, #5cadfb 100%);
+      background: linear-gradient(180deg, #4399eb, #5cadfb);
+      color: #fff;">
+          <tr>
+              <th>User</th>
+              <th>UI Experience</th>
+              <th>Helpful Experience</th>
+              <th>Rating (1-10)</th>
+              <th>Review</th>
+              <th>Friend Recommend</th>
+          </tr>
+      </thead>
+      <tbody>
+          <!-- Data will be populated here -->
+      </tbody>
   </table>
-
-
 </div>
+
+<script>
+  $(document).ready(function() {
+      // Initialize DataTable
+      $('#feedbackTable').DataTable({
+          ajax: {
+              url: '/format_feedback_data',  // Your data endpoint
+              dataSrc: '',  // Empty string because data is an array directly
+          },
+          columns: [
+              { data: 'User' },
+              {
+                data: 'UI Experience',
+                render: function (data, type, row) {
+                
+                    var stars = '<i class="bx bxs-star" id="stars_feeback"></i>'.repeat(parseInt(data));
+                    return stars;
+                }
+            },
+            {
+                data: 'Helpful Experience',
+                render: function (data, type, row) {
+                
+                    var stars = '<i class="bx bxs-star" id="stars_feeback"></i>'.repeat(parseInt(data));
+                    return stars;
+                }
+            },
+            {
+                data: 'Rating (1-10)',
+                render: function (data, type, row) {
+                    var rating = parseInt(data);
+                    return `<div class="rating-scale"  title="${rating}">
+                        <div class="rating-bar" style="left: calc((100% / 10) * ${rating - 1});"></div>
+                    </div>`;
+                }
+            },
+              { data: 'Review' },
+              {
+                data: 'Friend Recommend',
+                render: function (data, type, row) {
+                    // Display "Yes" for true and "No" for false
+                    return data ? 'Yes' : 'No';
+                }
+              }
+          ],
+          lengthMenu: [ [10, 25, 50, -1], [10, 25, 50, "All"] ],  
+        pageLength: 50,  
+      });
+  });
+</script>
 
 
 

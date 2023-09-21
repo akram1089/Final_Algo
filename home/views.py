@@ -4401,3 +4401,25 @@ def customer_feedback_data(request):
         new_feedback.save()
 
         return JsonResponse({'message': 'Thank you for your feedback!'})
+
+
+from django.http import JsonResponse
+from .models import Customer_feedback
+
+def format_feedback_data(request):
+    all_feedback = Customer_feedback.objects.all()
+    
+    feedback_list = []
+    for feedback in all_feedback:
+      
+        feedback_data = {
+            'User': feedback.user.email,  # Serialize the username or "No User"
+            'UI Experience': feedback.ui_exp,
+            'Helpful Experience': feedback.helpful_exp,
+            'Rating (1-10)': feedback.rating_scale,
+            'Review': feedback.suggestion,
+            'Friend Recommend': feedback.frnd_recommend
+        }
+        feedback_list.append(feedback_data)
+
+    return JsonResponse(feedback_list, safe=False)

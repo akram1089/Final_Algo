@@ -181,6 +181,7 @@ urlpatterns = [
     path('bse_table_data',views.bse_table_data, name = 'bse_table_data'),
     path('customer_feedback_data', views.customer_feedback_data,name='customer_feedback_data'),
     path('customer_feedback', views.customer_feedback,name='customer_feedback'),
+    path('format_feedback_data', views.format_feedback_data,name='format_feedback_data'),
 
 
 
