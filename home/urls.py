@@ -185,6 +185,8 @@ urlpatterns = [
     path('event_tracker_dates', views.event_tracker_dates,name='event_tracker_dates'),
     path('event_tracker', views.event_tracker,name='event_tracker'),
     path('subscribe_to_newsletter', views.subscribe_to_newsletter, name ='subscribe_to_newsletter'),
+    path('get_subscribers/', views.get_subscribers, name='get_subscribers'),
+    path('subscribers_management', views.subscribers_management, name='subscribers_management'),
 
 
 

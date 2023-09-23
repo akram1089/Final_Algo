@@ -4483,3 +4483,15 @@ def subscribe_to_newsletter(request):
             return JsonResponse({'error': 'Invalid email address.'})
     else:
         return JsonResponse({'error': 'Invalid request method.'})
+
+from django.http import JsonResponse
+from .models import Subscriber
+
+def get_subscribers(request):
+    subscribers = Subscriber.objects.all().values('email', 'subscribed_at')
+    subscribers_list = list(subscribers)
+    return JsonResponse({'subscribers': subscribers_list})
+
+
+def subscribers_management(request):
+    return render(request, 'subscribers_management.html')
