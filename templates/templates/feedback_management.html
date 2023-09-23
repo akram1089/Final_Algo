@@ -1,0 +1,153 @@
+{% extends "base_admin_panel.html" %}
+{% load static %}
+{% block dashboard_admin_body %}
+<style>
+  .dataTables_length {
+    margin: 7px 0 10px 0 !important;
+  }
+
+  .main_report_admin {
+    background: white;
+    padding: 4rem 2rem;
+    border-radius: 10px;
+  }
+</style>
+<style>
+
+  .feedback_management_table{
+    padding: 50px 17px 19px 15px;
+    background: white;
+    border-radius: 12px;
+  }
+#stars_feeback{
+    color: gold; /* Change the color to gold */
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5); /* Add a shadow effect */
+}
+</style>
+<style>
+  .rating-scale {
+      width: 100px; /* Width of the scale */
+      height: 15px; /* Height of the scale */
+      background: linear-gradient(74deg, rgba(50,164,255,1) 0%, rgba(250,88,88,1) 0%, rgba(67,255,196,1) 100%);
+      position: relative;
+  }
+  .Range_OF_IIFL {
+  
+  }
+  .table-striped-custom>tbody>tr:nth-child(2n)>td,
+    .table-striped-custom>tbody>tr:nth-child(2n)>th {
+        background-color: rgb(240, 247, 253) !important;
+    }
+.main_table_feedback{
+      background: white;
+    padding: 35px 21px;
+    border-radius: 8px;
+}
+table.dataTable tbody tr {
+        background-color: transparent;
+        border-bottom:transparent;
+    }
+    table.dataTable thead th, table.dataTable thead td {
+    padding: 10px;
+    border-bottom: 0px solid rgb(0 0 0 / 0%);
+}
+#feedbackTable{
+  width: -webkit-fill-available !important;
+}
+.parent_table{
+    overflow: auto;
+}
+#feedbackTable_wrapper{
+  display: flex;
+    flex-direction: column;
+
+}
+.parent_search_length{
+  margin-bottom: 3px;
+}
+</style>
+
+
+
+
+<div class="main_table_feedback">
+  <table id="feedbackTable" class="table-striped-custom table">
+      <thead style="    background: -webkit-gradient(linear, left top, left bottom, from(#4399eb), to(#5cadfb));
+      background: -moz-linear-gradient(top, #4399eb 0, #5cadfb 100%);
+      background: linear-gradient(180deg, #4399eb, #5cadfb);
+      color: #fff;">
+          <tr>
+              <th>User</th>
+              <th>UI Experience</th>
+              <th>Helpful Experience</th>
+              <th>Rating (1-10)</th>
+              <th>Review</th>
+              <th>Friend Recommend</th>
+          </tr>
+      </thead>
+      <tbody>
+          <!-- Data will be populated here -->
+      </tbody>
+  </table>
+</div>
+
+<script>
+  $(document).ready(function() {
+      // Initialize DataTable
+      $('#feedbackTable').DataTable({
+          ajax: {
+              url: '/format_feedback_data', 
+              dataSrc: '',  
+          },
+          columns: [
+              { data: 'User' },
+              {
+                data: 'UI Experience',
+                render: function (data, type, row) {
+                
+                    var stars = '<i class="bx bxs-star" id="stars_feeback"></i>'.repeat(parseInt(data));
+                    return stars;
+                }
+            },
+            {
+                data: 'Helpful Experience',
+                render: function (data, type, row) {
+                
+                    var stars = '<i class="bx bxs-star" id="stars_feeback"></i>'.repeat(parseInt(data));
+                    return stars;
+                }
+            },
+            {
+                data: 'Rating (1-10)',
+                render: function (data, type, row) {
+                    var rating = parseInt(data);
+                    return `<div class="rating-scale"  title="${rating}">
+                     
+                        <svg id="Range_OF_IIFL" class="watchlist-range-control position-absolute" alt="Range Icon" width="7" height="19" viewBox="0 0 7 16" style="left: calc((100% / 10) * ${rating - 1});"><path id="Union_1" data-name="Union 1" d="M0,16l3-5.142V0H4V10.856L7,16Z" fill="#495057"></path></svg>
+                    </div>`;
+                }
+            },
+              { data: 'Review' },
+              {
+                data: 'Friend Recommend',
+                render: function (data, type, row) {
+                  
+                    return data ? 'Yes' : 'No';
+                }
+              }
+          ],
+          lengthMenu: [ [10, 25, 50, -1], [10, 25, 50, "All"] ],  
+        pageLength: 50,  
+        
+      });
+      $('#feedbackTable').wrap('<div class="parent_table"></div>');
+        $('#feedbackTable_length,#feedbackTable_filter').wrapAll('<div class="parent_search_length"></div>');
+  });
+</script>
+
+
+
+
+
+
+{% endblock dashboard_admin_body %}

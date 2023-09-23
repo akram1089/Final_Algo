@@ -1,0 +1,110 @@
+{% extends "base_dashboard.html" %}
+{% load static %}
+{% block dashboard_body %}
+<style>
+ .event_num{
+    border-bottom: 2px solid #0473e9;
+    color: #0473e9;
+ }
+ .events_list li{
+    cursor: pointer;
+ }
+
+ .events_showing_btn button{
+    background-color: #69ca44;
+    color: #fff;
+    border: none;
+    padding: 5px 12px;
+    border-radius: 5px;
+    font-size: 15px;
+    margin-right: 9px;
+ }
+</style>
+<section class="pt-4">
+    <div class="events">
+        <div class="events_title">
+            <ul class="events_list d-flex gap-4">
+                <li class="event_num">Event Tracker</li>
+                <li>Stocks</li>
+                <li>IPO</li>
+                <li>Mutual funds</li>
+                <li>F&O</li>
+                <li>Currency</li>
+                <li>Comodity</li>
+                <li>ETF</li>
+                <li>SGB</li>
+            </ul>
+        </div>
+    </div>
+    <div class="events_inner_data">
+        <div class="calender_header">
+            <h3>Event/Result Calender</h3>
+        </div>
+        <div class="events_showing_btn">
+            <button id="today" value="day">TODAY</button>
+            <button id="week" value="week">WEEK</button>
+            <button id="month" value="month">MONTH</button>
+        </div>
+            
+    </div>
+</section>
+
+<script>
+    
+    
+
+    $("#today").click(function () {
+        var today_data = $(this).val()
+        pass_calender_data(today_data)
+    })
+
+    $("#week").click(function () {
+        var weeks_data = $(this).val()
+        pass_calender_data(weeks_data)
+    })
+
+    $("#month").click(function () {
+        var months_data = $(this).val()
+         pass_calender_data(months_data)
+    })
+
+    function pass_calender_data(all_dates) {
+
+           
+        $.ajax({
+            type:"post",
+            url:"/event_tracker_dates",
+            dataType:"json",
+            data:{
+             all_date:all_dates
+            },
+        success:function (response) {
+            const colors = ["white", "black", "red", "blue", "green", "yellow", "purple", "orange", "gray", "pink"];
+
+         
+            response.data.forEach(function (item, index) {
+             
+                    item.color = colors[index];
+                    console.log("yes")
+     
+                    
+                   
+            });
+    
+            console.log(response.data);
+        }
+        })
+    }
+
+
+
+
+
+
+
+
+
+    pass_calender_data()
+</script>
+
+{% endblock dashboard_body%}
