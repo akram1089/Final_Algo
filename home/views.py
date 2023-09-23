@@ -4413,7 +4413,7 @@ def format_feedback_data(request):
     for feedback in all_feedback:
       
         feedback_data = {
-            'User': feedback.user.email,  # Serialize the username or "No User"
+            'User': feedback.user.email,  
             'UI Experience': feedback.ui_exp,
             'Helpful Experience': feedback.helpful_exp,
             'Rating (1-10)': feedback.rating_scale,
@@ -4423,3 +4423,63 @@ def format_feedback_data(request):
         feedback_list.append(feedback_data)
 
     return JsonResponse(feedback_list, safe=False)
+
+
+def event_tracker(request):
+    return render(request , "event_tracker.html")
+
+@csrf_exempt
+def event_tracker_dates(request):
+
+        day = request.POST.get("all_date","day")
+        print(day)
+       
+        url = f"https://www.moneysukh.com/api/markets/Eventcal/{day}"
+        print(url)
+        
+        headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
+        "Accept-Language": "en-US,en;q=0.9",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive"
+       }
+        response_date = requests.get(url, headers=headers)
+        all_datas = response_date.json()
+        all_event_data= all_datas
+        print(all_event_data)
+        return JsonResponse(all_event_data,safe=False)
+
+
+
+
+from .models import Subscriber
+from django.core.mail import send_mail
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from datetime import datetime
+
+@csrf_exempt
+def subscribe_to_newsletter(request):
+    if request.method == "POST":
+        email = request.POST.get("send_email")
+        print(email)
+        if email:
+            if Subscriber.objects.filter(email=email).exists():
+                return JsonResponse({'message_already': 'You are already subscribed.'})
+            else:
+                new_subscriber = Subscriber(email=email)
+                new_subscriber.subscribed_at = datetime.now()
+   
+                new_subscriber.save()
+                
+                subject = 'Subscription Confirmation'
+                message = 'Thank you for subscribing to our newsletter!'
+                from_email = 'tufailakram8190@gmail.com'
+                recipient_list = [email]
+                send_mail(subject, message, from_email, recipient_list)
+                
+                return JsonResponse({'message': 'You have successfully subscribed to our newsletter!'})
+        else:
+            return JsonResponse({'error': 'Invalid email address.'})
+    else:
+        return JsonResponse({'error': 'Invalid request method.'})

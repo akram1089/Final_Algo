@@ -19,6 +19,7 @@ from.models import MostActiveStock
 from.models import MostSpreadStock
 from.models import ContactUs
 from.models import Customer_feedback
+from.models import Subscriber
 # from.models import StockListing
 
 
@@ -42,6 +43,7 @@ admin.site.register(MostActiveStock)
 admin.site.register(MostSpreadStock)
 admin.site.register(ContactUs)
 admin.site.register(Customer_feedback)
+admin.site.register(Subscriber)
 # admin.site.register(StockListing)
 
 
