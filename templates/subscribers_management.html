@@ -1,0 +1,126 @@
+{% extends "base_admin_panel.html" %}
+{% load static %}
+{% block dashboard_admin_body %}
+<style>
+    .dataTables_length {
+      margin: 7px 0 10px 0 !important;
+    }
+  
+    .main_report_admin {
+      background: white;
+      padding: 4rem 2rem;
+      border-radius: 10px;
+    }
+  </style>
+  <style>
+  
+    .feedback_management_table{
+      padding: 50px 17px 19px 15px;
+      background: white;
+      border-radius: 12px;
+    }
+  #stars_feeback{
+      color: gold; /* Change the color to gold */
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5); /* Add a shadow effect */
+  }
+  </style>
+  <style>
+    .rating-scale {
+        width: 100px; /* Width of the scale */
+        height: 15px; /* Height of the scale */
+        background: linear-gradient(74deg, rgba(50,164,255,1) 0%, rgba(250,88,88,1) 0%, rgba(67,255,196,1) 100%);
+        position: relative;
+    }
+    .Range_OF_IIFL {
+    
+    }
+    .table-striped-custom>tbody>tr:nth-child(2n)>td,
+      .table-striped-custom>tbody>tr:nth-child(2n)>th {
+          background-color: rgb(240, 247, 253) !important;
+      }
+  .main_table_subscriber{
+        background: white;
+      padding: 35px 21px;
+      border-radius: 8px;
+  }
+  table.dataTable tbody tr {
+          background-color: transparent;
+          border-bottom:transparent;
+      }
+      table.dataTable thead th, table.dataTable thead td {
+      padding: 10px;
+      border-bottom: 0px solid rgb(0 0 0 / 0%);
+  }
+  #subscriberTable{
+    width: -webkit-fill-available !important;
+  }
+  .parent_table{
+      overflow: auto;
+  }
+  #subscriberTable_wrapper{
+    display: flex;
+      flex-direction: column;
+  
+  }
+  .parent_search_length{
+    margin-bottom: 3px;
+  }
+  </style>
+  
+<h5>Subscriber List</h5>
+<div class="main_table_subscriber">
+<table id="subscriberTable" class="table-striped-custom table">
+    <thead style="    background: -webkit-gradient(linear, left top, left bottom, from(#4399eb), to(#5cadfb));
+    background: -moz-linear-gradient(top, #4399eb 0, #5cadfb 100%);
+    background: linear-gradient(180deg, #4399eb, #5cadfb);
+    color: #fff;">
+        <tr>
+            <th>Email</th>
+            <th>Date</th>
+            <th>Time</th>
+        </tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#subscriberTable').DataTable({
+            ajax: {
+                url: '/get_subscribers/', // Replace with your URL
+                dataSrc: 'subscribers'
+            },
+            columns: [
+                { data: 'email' },
+                {
+                    data: 'subscribed_at',
+                    render: function (data) {
+                        // Format the 'subscribed_at' field as desired (separate date and time)
+                        const date = new Date(data);
+                        const formattedDate = date.toLocaleDateString();
+                        return formattedDate;
+                    }
+                },
+                {
+                    data: 'subscribed_at',
+                    render: function (data) {
+                        // Format the 'subscribed_at' field as desired (separate date and time)
+                        const date = new Date(data);
+                        const formattedTime = date.toLocaleTimeString();
+                        return formattedTime;
+                    }
+                },
+            ],
+            lengthMenu: [ [10, 25, 50, -1], [10, 25, 50, "All"] ],  
+        pageLength: 50,  
+        });
+        $('#subscriberTable').wrap('<div class="parent_table"></div>');
+        $('#subscriberTable_length,#subscriberTable_filter').wrapAll('<div class="parent_search_length"></div>');
+
+    });
+    
+</script>
+
+
+{% endblock dashboard_admin_body %}
