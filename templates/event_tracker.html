@@ -2,109 +2,819 @@
 {% load static %}
 {% block dashboard_body %}
 <style>
- .event_num{
-    border-bottom: 2px solid #0473e9;
-    color: #0473e9;
- }
- .events_list li{
-    cursor: pointer;
- }
+    .events_list li {
+        cursor: pointer;
+    }
 
- .events_showing_btn button{
-    background-color: #69ca44;
-    color: #fff;
-    border: none;
-    padding: 5px 12px;
-    border-radius: 5px;
-    font-size: 15px;
-    margin-right: 9px;
- }
+    .events_showing_btn button {
+
+        color: #4399eb;
+        border: 1px solid #4399eb !important;
+        border: none;
+        padding: 5px 12px;
+        border-radius: 5px;
+        font-size: 15px;
+        margin-right: 9px;
+        background: white;
+        transition: ease-in-out;
+    }
+
+    .events_showing_btn button:hover {
+        background: linear-gradient(180deg, #4399eb, #5cadfb) !important;
+        color: white !important;
+    }
+
+    .btn_active {
+        background: linear-gradient(180deg, #4399eb, #5cadfb) !important;
+        color: white !important;
+    }
+
+    .cal-item,
+    .placeholder_main {
+        text-align: center;
+        padding: 10px;
+        height: 6rem !important;
+
+    }
+
+    .eventMainDiv {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        grid-gap: 11px;
+
+
+    }
+
+    .cal-num {
+        font-size: 34px;
+        line-height: 40px;
+        font-weight: 700;
+        color: #000000d6;
+    }
+
+    .CalFont {
+        color: #000000d6;
+        font-size: 16px;
+        cursor: pointer;
+    }
+</style>
+<style>
+    /* Akram changes */
+    .main_event {
+        box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+        padding: 1rem;
+        border-radius: 10px;
+    }
+
+    .placeholder_main {
+        display: none;
+    }
+
+    .calender-header h2 {
+        margin-bottom: 2.5rem;
+        font-size: 2.5rem;
+        text-align: center;
+        font-family: BoldText;
+        display: block;
+        color: #4399eb;
+    }
+
+    .calender-header h2 span:after {
+        position: absolute;
+        content: "";
+
+        background: url(../static/event.png);
+
+        background-repeat: no-repeat;
+        width: 0.9rem;
+        height: 0.9rem;
+    }
+
+    .modal-header {
+        border: none;
+    }
+
+    .modal-body table thead tr th {
+        font-size: 15px;
+
+        color: #081a76;
+        background-color: #eff9ff;
+        border: none;
+        padding: 10px;
+        white-space: nowrap;
+        font-weight: 700 !important;
+    }
+
+    .no-data-available {
+        display: flex;
+        justify-content: center;
+        color: red;
+        font-size: 1.5rem;
+    }
+    .main_spinner{
+        display: flex;
+        justify-content: center;
+    }
+    .dataTables_length{
+        margin-bottom: 1rem;
+    }
+    .main_event_card {
+        border: 0.2px solid lightgray;
+        cursor: pointer;
+        transition: ease-in-out;
+    }
+    .main_event_card:hover, .main_event_card:focus{
+        box-shadow: rgb(147 221 255 / 93%) 0px 1px 4px;
+    border: 0.2px solid #4399eb;
+    }
 </style>
 <section class="pt-4">
-    <div class="events">
-        <div class="events_title">
-            <ul class="events_list d-flex gap-4">
-                <li class="event_num">Event Tracker</li>
-                <li>Stocks</li>
-                <li>IPO</li>
-                <li>Mutual funds</li>
-                <li>F&O</li>
-                <li>Currency</li>
-                <li>Comodity</li>
-                <li>ETF</li>
-                <li>SGB</li>
-            </ul>
-        </div>
-    </div>
+
     <div class="events_inner_data">
         <div class="calender_header">
             <h3>Event/Result Calender</h3>
         </div>
-        <div class="events_showing_btn">
-            <button id="today" value="day">TODAY</button>
-            <button id="week" value="week">WEEK</button>
-            <button id="month" value="month">MONTH</button>
+        <div class="main_event">
+            <div class="events_showing_btn mb-4">
+
+                <button class="btn_event btn_active" data-value="day" id="day">Today</button>
+                <button class="btn_event" data-value="week" id="week">This Week</button>
+                <button class="btn_event" data-value="month" id="month">This Month</button>
+
+            </div>
+            <div class="boxes_data">
+                <div class="eventMainDiv" id="box">
+
+
+
+
+                </div>
+            </div>
         </div>
-            
+    </div>
     </div>
 </section>
+<!-- Button to open the modal -->
+
+<button id="openModalBtn" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#dataModal"
+    style="display: none;">
+
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="dataModal" tabindex="-1" role="dialog" aria-bs-labelledby="dataModalLabel"
+    aria-bs-hidden="true" style="z-index: 9999999999999999999;">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+
+            </div>
+            <h5 class="modal-title" id="dataModalLabel"></h5>
+            <div class="modal-body table-responsive">
+
+
+              <div class="main_spinner">
+                <div class="spinner-border text-primary" role="status" id="event-spinner">
+                    <span class="visually-hidden">Loading...</span>
+                  </div>
+              </div>
+
+
+
+
+            </div>
+
+        </div>
+    </div>
+</div>
 
 <script>
-    
-    
+    $(document).ready(function () {
 
-    $("#today").click(function () {
-        var today_data = $(this).val()
-        pass_calender_data(today_data)
-    })
 
-    $("#week").click(function () {
-        var weeks_data = $(this).val()
-        pass_calender_data(weeks_data)
-    })
 
-    $("#month").click(function () {
-        var months_data = $(this).val()
-         pass_calender_data(months_data)
-    })
 
-    function pass_calender_data(all_dates) {
+        
+        
+        $(".btn_event").click(function () {
+            $(".btn_event").removeClass("btn_active");
+            $(this).addClass("btn_active");
+            var selectedData = $(this).data("value");
 
-           
-        $.ajax({
-            type:"post",
-            url:"/event_tracker_dates",
-            dataType:"json",
-            data:{
-             all_date:all_dates
-            },
-        success:function (response) {
-            const colors = ["white", "black", "red", "blue", "green", "yellow", "purple", "orange", "gray", "pink"];
 
-         
-            response.data.forEach(function (item, index) {
-             
-                    item.color = colors[index];
-                    console.log("yes")
-     
+            pass_calender_data(selectedData);
+        });
+
+
+        function pass_calender_data(all_dates) {
+            console.log(all_dates);
+            $("#box").empty();
+            for (var i = 1; i < 15; i++) {
+                $("#box").append(`
+            <p class="placeholder-glow">
+                <span class="placeholder_main placeholder col-12"></span>
+            </p>
+        `);
+            }
+
+
+            $(".placeholder_main").show();
+            $.ajax({
+                type: "post",
+                url: "/event_tracker_dates",
+                dataType: "json",
+                data: {
+                    all_date: all_dates,
+                },
+                success: function (response) {
                     
-                   
+                    
+
+                    var res_data = response.data;
+                    $("#box").empty();
+
+                    var color_arr = [
+                        "#F6EDEB",
+                        "#F7E4E6",
+                        "#E8F2FB",
+                        "#E4F2FD",
+                        "#E4F3EF",
+                        "#EEEDFB",
+                        "#E8F3FC",
+                        "#F3E8E6",
+                        "#F6EAE8",
+                        "#E8F7E4"
+                    ];
+
+                    res_data.forEach(function (item, index) {
+                        item.color = color_arr[index];
+                    });
+                    
+                    
+
+                    res_data.forEach((element) => {
+                        var dynamicID = element.corptype.replace(/\s+/g, "_");
+                        var card = `<div class="main_event_card cal-item" data-value2=${dynamicID} id=${dynamicID} style=background:${element.color}>
+                               <div class="cal-num">${element.totalcount}</div>
+                               <p class="CalFont">${element.corptype}</p>
+                               </div>`;
+                        var div_ele = $("#box");
+                        div_ele.append(card);
+                    });
+
+                    $(".placeholder_main").hide()
+                    $(".main_event_card").click(function () {
+                        console.log("Hii");
+                        var value2 = ($(this).data("value2"));
+                        var originalValue = value2.replace(/_/g, ' ');
+                        data_table_events(value2)
+                        $('#openModalBtn').click();
+                        $("#dataModalLabel").empty().append(
+                            `
+                            
+                            <div class="calender-header"><h2><span>${originalValue}</span></h2></div>`
+                        )
+
+                    })
+
+
+                },
             });
-    
-            console.log(response.data);
+
         }
-        })
-    }
+
+        pass_calender_data();
+
+
+        function data_table_events(value2) {
+            var originalValue = value2.replace(/_/g, ' ');
+
+            
+            
+            var events_showing_btn = $(".events_showing_btn .btn_event.btn_active").data("value");
+
+            console.log(originalValue);
+            console.log(events_showing_btn);
+            
+            
+            var currentDate = new Date();
+
+            if (events_showing_btn === "day") {
+                
+                
+                var from_date = formatDate(currentDate);
+                var to_date = formatDate(currentDate);
+            } else if (events_showing_btn === "week") {
+                
+                
+                var startOfWeek = new Date(currentDate);
+                startOfWeek.setDate(currentDate.getDate() - currentDate.getDay()); 
+                
+                var endOfWeek = new Date(currentDate);
+                endOfWeek.setDate(startOfWeek.getDate() + 6); 
+                
+
+                var from_date = formatDate(startOfWeek);
+                var to_date = formatDate(endOfWeek);
+            } else if (events_showing_btn === "month") {
+                
+                
+                var startOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+                var endOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
+
+                var from_date = formatDate(startOfMonth);
+                var to_date = formatDate(endOfMonth);
+            }
+
+            
+            
+            function formatDate(date) {
+                var year = date.getFullYear();
+                var month = (date.getMonth() + 1).toString().padStart(2, '0');
+                var day = date.getDate().toString().padStart(2, '0');
+                return year + '-' + month + '-' + day;
+            }
+
+            console.log("from_date:", from_date);
+            console.log("to_date:", to_date);
+            $(".modal-body").empty().append(`
+
+            <div class="main_spinner">
+                <div class="spinner-border text-primary" role="status" id="event-spinner">
+                    <span class="visually-hidden">Loading...</span>
+                  </div>
+              </div>
+            
+            `)
+
+            $.ajax({
+                type: "post",
+                url: "/events_table_data",
+                data: {
+                    from_date: from_date,
+                    to_date: to_date,
+                    originalValue: originalValue,
+
+                },
+                success: function (all_data) {
+
+                    
+                    
+                    var data = all_data.data;
+
+                    
+                    
+
+                    
+                    
+                    openModalWithData(data, value2);
+
+                }
+            });
+
+
+            function openModalWithData(event_data, value2) {
+                console.log(value2);
+                console.log(event_data);
+                var modalBody = $(".modal-body");
+                modalBody.empty();
+
+                
+                
+                if (!event_data || event_data.length === 0) {
+                    
+                    
+                    var noDataDiv = $("<div>").addClass("no-data-available");
+                    noDataDiv.text("No Data Found");
+                    modalBody.append(noDataDiv);
+                    return;
+                }
+                var headers = []
+                if (value2 === "Dividend") {
+                    headers = [
+                        'Company Name',
+                        'Div Type',
+                        'Div %',
+                        'Div Amount',
+                        'Announcement Date',
+                        'Record Date',
+                        'Ex-Div Date'
+
+                    ];
+
+                }
+                else if (value2 === 'Bonus') {
+                    headers = [
+                        'Company Name',
+                        'Ratio',
+                        'Record Date',
+                        'Ex Date',
+                    ];
+                }
+
+                else if (value2 === 'Split') {
+                    headers = [
+                        'Company Name',
+                        'Announcement Date',
+                        'Split Date',
+                        'FV Before(₹)',
+                        'FV After(₹)',
+                    ];
+                }
+                else if (value2 === 'BuyBack') {
+                    headers = [
+                        ' Company Name', 'Buyback Price', 'Buyback Type', 'Announcement Date', 'Open Date', 'Close Date'
+                    ];
+                }
+                else if (value2 === 'Rights') {
+                    headers = [
+                        '    Company Name', '	Premium (₹)', 'Ratio', 'Record Date', '	Ex Date'
+                    ];
+                }
+                else if (value2 === 'AGM') {
+                    headers = [
+              '      Company Name'	,' Announcement Date',	'AGM Date'
+                    ];
+                }
+                else if (value2 === 'Board_Meeting') {
+                    headers = [
+              '      Company Name'	,	'Announcement Date'	,'Board Meeting Date'
+                    ];
+                }
+                else if (value2 === 'EGM') {
+                    headers = [
+              '      Company Name'	,	'Announcement Date'	,'EGM Date'
+                    ];
+                }
+                else if (value2 === 'Book_Closure') {
+                    headers = [
+                    'Company Name'	,' Announcement Date',	'Book Closure (From Date)','	Book Closure (To Date)'
+                    ];
+                }
+                else if (value2 === 'Result') {
+                    headers = [
+                    'Company Name'	,' Announcement Date','	Result Date'
+                    ];
+                }
+
+
+                
+                
+                var table = $('<table>').addClass('table');
+
+                
+                    
+                var headerRow = '<tr>';
+                headers.forEach(function (header) {
+                    headerRow += `<th>${header}</th>`;
+                });
+                headerRow += '</tr>';
+
+                
+                
+                table.append($('<thead>').html(headerRow));
+
+                
+                    
+                var tableBody = $('<tbody>');
+
+                
+                    
+                
+                
+                function formatDate(dateStr) {
+                    const options = { year: 'numeric', month: 'short', day: '2-digit' };
+                    return new Date(dateStr).toLocaleDateString('en-US', options);
+                }
+
+                if (value2 === "Dividend") {
+
+                    event_data.forEach(function (item) {
+                        var formattedAnnouncementDate = formatDate(item.AnnouncementDate);
+                        var formattedRecordDate = formatDate(item.RecordDate);
+                        var formattedDivDate = formatDate(item.DivDate);
+
+                        var row = `<tr>
+                                        <td>${item.co_name}</td>
+                                        <td>${item.DividendType}</td>
+                                        <td>${item.DivPer}</td>
+                                        <td>${item.DivAmount}</td>
+                                        <td>${formattedAnnouncementDate}</td>
+                                        <td>${formattedRecordDate}</td>
+                                        <td>${formattedDivDate}</td>
+                                    </tr>`;
+                        tableBody.append(row);
+                    });
+
+                    
+                    
+                    table.append(tableBody);
+                    
+                    
+
+                    
+                    
+                    $(".modal-body").empty().append(table);
+                } else if (value2 === "Bonus") {
+                    event_data.forEach(function (item) {
+                        var BonusDate = formatDate(item.BonusDate);
+                        var formattedRecordDate = formatDate(item.RecordDate);
+
+
+                        var row = `<tr>
+                                        <td>${item.co_name}</td>
+                                        <td>${item.BonusRatio}</td>
+                                      
+                                        <td>${formattedRecordDate}</td>
+                                        <td>${BonusDate}</td>
+                                 
+                                    </tr>`;
+                        tableBody.append(row);
+                    });
+
+                    
+                    
+                    table.append(tableBody);
+                    
+                    
+
+                    
+                    
+                    $(".modal-body").empty().append(table);
+                }
+                else if (value2 === "Split") {
+                    event_data.forEach(function (item) {
+                        var AnnouncementDate = formatDate(item.AnnouncementDate);
+                        var SplitDate = formatDate(item.SplitDate);
+
+
+                        var row = `<tr>
+                                        <td>${item.co_name}</td>
+                                        <td>${AnnouncementDate}</td>
+                                      
+                                      
+                                        <td>${SplitDate}</td>
+                                        <td>${item.FVBefore}</td>
+                                        <td>${item.FVAfter}</td>
+                                 
+                                    </tr>`;
+                        tableBody.append(row);
+                    });
+
+                    
+                    
+                    table.append(tableBody);
+                    
+                    
+
+                    
+                    
+                    $(".modal-body").empty().append(table);
+                }
+                else if (value2 === "BuyBack") {
+                    event_data.forEach(function (item) {
+                        var AnnouncementDate = formatDate(item.AnnouncementDate);
+                        var BBFromdate = formatDate(item.BBFromdate);
+                        var BBToDate = formatDate(item.BBToDate);
+
+
+                        var row = `<tr>
+                                        <td>${item.co_name}</td>
+                                        <td>${item.maxbuybackprice}</td>
+                                        <td>${item.offertype}</td>
+                                        <td>${AnnouncementDate}</td>
+                                      
+                                      
+                                        <td>${BBFromdate}</td>
+                                        <td>${BBToDate}</td>
+                                      
+                                 
+                                    </tr>`;
+                        tableBody.append(row);
+                    });
+
+                    
+                    
+                    table.append(tableBody);
+                    
+                    
+
+                    
+                    
+                    $(".modal-body").empty().append(table);
+                }
+                else if (value2 === "Rights") {
+                    event_data.forEach(function (item) {
+                        var recorddate = formatDate(item.recorddate);
+                        var RightDate = formatDate(item.RightDate);
+                        var BBToDate = formatDate(item.BBToDate);
+
+
+                        var row = `<tr>
+                                        <td>${item.co_name}</td>
+                                        <td>${item.premium}</td>
+                                        <td>${item.RightsRatio}</td>
+                                        <td>${recorddate}</td>
+                                      
+                                      
+                                        <td>${RightDate}</td>
+                             
+                                      
+                                 
+                                    </tr>`;
+                        tableBody.append(row);
+                    });
+
+                    
+                    
+                    table.append(tableBody);
+                    
+                    
+
+                    
+                    
+                    $(".modal-body").empty().append(table);
+                }
+                else if (value2 === "AGM") {
+                    event_data.forEach(function (item) {
+                        var AnnouncementDate = formatDate(item.AnnouncementDate);
+                        var GMdate = formatDate(item.GMdate);
+                      
+
+
+                        var row = `<tr>
+                                        <td>${item.co_name}</td>
+                                    
+                                        <td>${AnnouncementDate}</td>
+                                      
+                                      
+                                        <td>${GMdate}</td>
+                             
+                                      
+                                 
+                                    </tr>`;
+                        tableBody.append(row);
+                    });
+
+                    
+                    
+                    table.append(tableBody);
+                    
+                    
+
+                    
+                    
+                    $(".modal-body").empty().append(table);
+                }
+                else if (value2 === "Board_Meeting") {
+                    event_data.forEach(function (item) {
+                        var AnnouncementDate = formatDate(item.AnnouncementDate);
+                        var BMdate = formatDate(item.BMdate);
+                      
+
+
+                        var row = `<tr>
+                                        <td>${item.co_name}</td>
+                                    
+                                        <td>${AnnouncementDate}</td>
+                                      
+                                      
+                                        <td>${BMdate}</td>
+                             
+                                      
+                                 
+                                    </tr>`;
+                        tableBody.append(row);
+                    });
+
+                    
+                    
+                    table.append(tableBody);
+                    
+                    
+
+                    
+                    
+                    $(".modal-body").empty().append(table);
+                }
+                else if (value2 === "EGM") {
+                    event_data.forEach(function (item) {
+                        var AnnouncementDate = formatDate(item.AnnouncementDate);
+                        var GMdate = formatDate(item.GMdate);
+                      
+
+
+                        var row = `<tr>
+                                        <td>${item.co_name}</td>
+                                    
+                                        <td>${AnnouncementDate}</td>
+                                      
+                                      
+                                        <td>${GMdate}</td>
+                             
+                                      
+                                 
+                                    </tr>`;
+                        tableBody.append(row);
+                    });
+
+                    
+                    
+                    table.append(tableBody);
+                    
+                    
+
+                    
+                    
+                    $(".modal-body").empty().append(table);
+                }
+                else if (value2 === "Book_Closure") {
+                    event_data.forEach(function (item) {
+                        var AnnouncementDate = formatDate(item.AnnouncementDate);
+                        var BCFromdate = formatDate(item.BCFromdate);
+                        var BCToDate = formatDate(item.BCToDate);
+                      
+
+
+                        var row = `<tr>
+                                        <td>${item.Co_name}</td>
+                                    
+                                        <td>${AnnouncementDate}</td>
+                                      
+                                      
+                                        <td>${BCFromdate}</td>
+                                        <td>${BCToDate}</td>
+                             
+                                      
+                                 
+                                    </tr>`;
+                        tableBody.append(row);
+                    });
+
+                    
+                    
+                    table.append(tableBody);
+                    
+                    
+
+                    
+                    
+                    $(".modal-body").empty().append(table);
+                }
+                else if (value2 === "Result") {
+                    event_data.forEach(function (item) {
+                        var AnnouncementDate = formatDate(item.AnnouncementDate);
+                        var ResultDate = formatDate(item.ResultDate);
+                     
+
+
+                        var row = `<tr>
+                                        <td>${item.co_name}</td>
+                                    
+                                        <td>${AnnouncementDate}</td>
+                                        <td>${ResultDate}</td>
+                                      
+                                     
+                             
+                                      
+                                 
+                                    </tr>`;
+                        tableBody.append(row);
+                    });
+
+                    
+                    
+                    table.append(tableBody);
+                    
+                    
+
+                    
+                    
+                    $(".modal-body").empty().append(table);
+                }
 
 
 
+                var dataTable = table.DataTable({
+                    paging: true,      
+                    
+                    searching: true    
+                    
+                });
+
+                dataTable.draw();
+                
+                
+
+            }
 
 
+        }
 
 
-
-
-    pass_calender_data()
+    });
 </script>
 
 {% endblock dashboard_body%}

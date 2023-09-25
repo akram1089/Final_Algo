@@ -4456,7 +4456,7 @@ from .models import Subscriber
 from django.core.mail import send_mail
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from datetime import datetime
+import datetime 
 
 @csrf_exempt
 def subscribe_to_newsletter(request):
@@ -4468,7 +4468,7 @@ def subscribe_to_newsletter(request):
                 return JsonResponse({'message_already': 'You are already subscribed.'})
             else:
                 new_subscriber = Subscriber(email=email)
-                new_subscriber.subscribed_at = datetime.now()
+                new_subscriber.subscribed_at = datetime.datetime.now()
    
                 new_subscriber.save()
                 
@@ -4495,3 +4495,53 @@ def get_subscribers(request):
 
 def subscribers_management(request):
     return render(request, 'subscribers_management.html')
+
+
+def event_tracker(request):
+    return render(request , "event_tracker.html")
+
+@csrf_exempt
+def event_tracker_dates(request):
+    
+        days = request.POST.get("all_date", "day")
+       
+        url = f"https://www.moneysukh.com/api/markets/Eventcal/{days}"
+        print(url)
+        
+        headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
+        "Accept-Language": "en-US,en;q=0.9",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive"
+       }
+        response_date = requests.get(url, headers=headers)
+        all_datas = response_date.json()
+        all_event_data= all_datas
+        print(all_event_data)
+        return JsonResponse(all_event_data)
+
+
+@csrf_exempt
+def events_table_data(request):
+    if request.method == "POST":
+     from_date = request.POST.get("from_date")
+     to_date = request.POST.get("to_date")
+     originalValue = request.POST.get("originalValue")
+   
+     
+ 
+     url = f"https://www.moneysukh.com/api/markets/CorporateAction/{originalValue}/{from_date}/{to_date}/-/-"
+     print(url)
+     headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
+        "Accept-Language": "en-US,en;q=0.9",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive"
+       }
+     response_card_data = requests.get(url , headers)
+     all_data = response_card_data.json()
+     all_table_data = all_data
+
+     return JsonResponse(all_table_data,safe=False)
+
+
