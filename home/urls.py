@@ -190,6 +190,24 @@ urlpatterns = [
     path('event_tracker', views.event_tracker, name ='event_tracker'),
     path('event_tracker_dates', views.event_tracker_dates, name ='event_tracker_dates'),
     path('events_table_data', views.events_table_data, name ='events_table_data'),
+    path('broker_management', views.broker_management, name ='broker_management'),
+    path('save_zerodha_config', views.save_zerodha_config, name='save_zerodha_config'),
+    path('get_zerodha_config', views.get_zerodha_config, name='get_zerodha_config'),
+    path('delete_zerodha_config/<int:item_id>/', views.delete_zerodha_config, name='delete_zerodha_config'),
+    path('edit_access_token', views.edit_access_token, name='edit_access_token'),
+    path('zerodha_place', views.zerodha_place, name='zerodha_place'),
+    path('kiteOrder', views.kiteOrder, name='kiteOrder'),
+    path('ipo_dashboard', views.ipo_dashboard, name='ipo_dashboard'),
+    path('ipo_return_data', views.ipo_return_data, name='ipo_return_data'),
+    path('best_performers', views.best_performers, name='best_performers'),
+    path('draft_prospectus', views.draft_prospectus, name='draft_prospectus'),
+    path('quote_data_zerodha', views.quote_data_zerodha, name='quote_data_zerodha'),
+    path('mutual_fund', views.mutual_fund, name='mutual_fund'),
+    path('category_performance', views.category_performance, name='category_performance'),
+
+
+
+
     
 
 

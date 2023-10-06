@@ -1,0 +1,614 @@
+{% extends "base_dashboard.html" %}
+{% load static %}
+{% block dashboard_body %}
+<style>
+    .main_ipo_tables {
+        box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+        padding: 1rem;
+        border-radius: 10px;
+    }
+
+    .eventMainDiv {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        grid-gap: 11px;
+    }
+
+    .main_event_card {
+        border: 0.2px solid lightgray;
+        cursor: pointer;
+        transition: ease-in-out;
+    }
+
+    .cal-item,
+    .placeholder_main {
+        text-align: center;
+        padding: 10px;
+        height: 6rem !important;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .main_event_card p {
+        margin-bottom: 0 !important;
+    }
+</style>
+<section class="pt-4">
+    <div class="ipos_data">
+        <h3>IPO Dashboard</h3>
+    </div>
+    <div class="main_ipo_tables">
+        <div class="boxes_data">
+            <div class="eventMainDiv" id="box">
+                <div class="main_event_card ipo_return_button cal-item" data-bs-toggle="modal"
+                    data-bs-target="#ipo_return_modal" style="background:#F6EDEB;">
+
+                    <p class="CalFont">IPO Return</p>
+                </div>
+
+                <style>
+                    .btn_bse_nse,
+                    .right_ipo_day_filters button,
+                    .best_performer_filter_btn button,
+                    .main_draft_filter button {
+                        color: #4399eb;
+                        border: 1px solid #4399eb !important;
+                        border: none;
+                        padding: 5px 12px;
+                        border-radius: 5px;
+                        font-size: 15px;
+                        margin-right: 9px;
+                        background: white;
+                        transition: ease-in-out;
+                    }
+
+                    .main_filter_ipo_return {
+                        display: flex;
+                        justify-content: space-between;
+                    }
+
+                    .right_ipo_day_filters_active,
+                    .btn_bse_nse_active,
+                    .best_performer_filter_btn_active,
+                    .main_draft_filter_active,
+                    .btn_bse_nse:hover,
+                    .right_ipo_day_filters button:hover,
+                    .main_draft_filter button:hover,
+                    .best_performer_filter_btn button:hover {
+                        background: linear-gradient(180deg, #4399eb, #5cadfb) !important;
+                        color: white !important;
+                    }
+
+                    .best_performer_filter_btn {
+                        margin: 0 0 11px 0;
+
+                    }
+                </style>
+
+                <!-- Modal -->
+                <div class="modal fade" id="ipo_return_modal" tabindex="-1" aria-labelledby="exampleModalLabel"
+                    aria-hidden="true" style="z-index: 9999999999999999  !important;">
+                    <div class="modal-dialog modal-xl">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="exampleModalLabel">IPO Return</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="modal_inner_ipo_return">
+
+                                    <div class="main_filter_ipo_return">
+                                        <div class="left_nse_bse">
+                                            <button class="btn_bse_nse right_ipo_day_filters_active"
+                                                data-market="nse">NSE</button>
+                                            <button class="btn_bse_nse" data-market="bse">BSE</button>
+                                        </div>
+                                        <div class="right_ipo_day_filters">
+                                            <button class="btn_bse_nse_active" data-duration="1M">1M</button>
+                                            <button data-duration="3M">3M</button>
+                                            <button data-duration="6M">6M</button>
+                                            <button data-duration="1Y">1Y</button>
+                                            <button data-duration="3Y">3Y</button>
+                                        </div>
+
+
+
+                                    </div>
+
+                                    <div class="main_ipo_return">
+
+                                        <div id="chart-container" style="width: 100%; height: 400px;"></div>
+
+                                    </div>
+
+
+
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-primary">Save changes</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                <div class="main_event_card cal-item" style="background:#F6EDEB;">
+
+                    <p class="CalFont">IPO Watch</p>
+                </div>
+                <div class="main_event_card cal-item" style="background:#F6EDEB;">
+
+                    <p class="CalFont">New Listing</p>
+                </div>
+                <div class="main_event_card best_performer_card cal-item" data-bs-toggle="modal"
+                    data-bs-target="#ipo_best_performer" style="background:#F6EDEB;">
+
+                    <p class="CalFont">Best Performer</p>
+                </div>
+
+
+
+                <div class="modal fade" id="ipo_best_performer" tabindex="-1" aria-labelledby="exampleModalLabel"
+                    aria-hidden="true" style="z-index: 9999999999999999  !important;">
+                    <div class="modal-dialog modal-xl">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="exampleModalLabel">Best Performer</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="modal_best_performer">
+
+                                    <div class="main_best_performer">
+                                        <div class="best_performer_filter_btn">
+                                            <button data-market="NSE" data-segment="main" data-duration="8"
+                                                class="best_performer_filter_btn_active">NSE</button>
+                                            <button data-market="BSE" data-segment="main" data-duration="8">BSE</button>
+                                            <button data-market="BSE" data-segment="sme" data-duration="8">BSE
+                                                SME</button>
+                                            <button data-market="NSE" data-segment="sme" data-duration="8">NSE
+                                                EMERGE</button>
+
+                                        </div>
+                                        <table id="best-performers-table" class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Company</th>
+                                                    <th>Listing Date</th>
+                                                    <th>Listing Price (₹)</th>
+                                                    <th>Offer Price (₹)</th>
+                                                    <th>LTP(₹)</th>
+                                                    <th>High(₹)</th>
+                                                    <th>Low(₹)</th>
+                                                    <th>Volume(Nos.)</th>
+                                                    <th>Change(%)</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody></tbody>
+                                        </table>
+
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-primary">Save changes</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="main_event_card cal-item" style="background:#F6EDEB;">
+
+                    <p class="CalFont">Basis of Allotment</p>
+                </div>
+                <div class="main_event_card draft_btn cal-item" style="background:#F6EDEB;" data-bs-toggle="modal"
+                    data-bs-target="#ipo_drafy_prospectus">
+
+                    <p class="CalFont">Draft Prospectus</p>
+                </div>
+                <div class="modal fade" id="ipo_drafy_prospectus" tabindex="-1" aria-labelledby="exampleModalLabel"
+                    aria-hidden="true" style="z-index: 9999999999999999  !important;">
+                    <div class="modal-dialog modal-xl">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="exampleModalLabel">Draft Prospectus</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="modal_drafy_prospectus">
+
+                                    <div class="main_drafy_prospectus">
+                                        <div class="main_draft_filter mb-2">
+                                            <button data-draft="sebi" class="main_draft_filter_active">SEBI</button>
+                                            <button data-draft="CLEARED">CLEARED</button>
+                                        </div>
+
+                                        <table id="draft-prospectus-table" class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Company Name</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <!-- Data will be displayed here -->
+                                            </tbody>
+                                        </table>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-primary">Save changes</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="main_event_card cal-item" style="background:#F6EDEB;">
+
+                    <p class="CalFont">IPO News</p>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+<script>
+    $(document).ready(function () {
+
+
+
+
+        var table_pros = $('#draft-prospectus-table').DataTable();
+
+        // Function to update the table with data
+        function updateTable_pros(data_props) {
+            table_pros.clear().draw();
+
+            data_props.forEach(function (item) {
+                table_pros.row.add([
+                    item.lname,
+                ]).draw(false);
+            });
+        }
+
+        // Handle filter button clicks
+        $('.main_draft_filter button').click(function () {
+            $(".main_draft_filter button").removeClass("main_draft_filter_active")
+            $(this).addClass("main_draft_filter_active")
+            console.log('Button clicked');
+
+            var draftType = $(this).data('draft');
+            console.log('Draft Type:', draftType);
+
+            $.ajax({
+                url: '/draft_prospectus', // Update the URL to your Django view
+                method: 'GET',
+                data: {
+                    draft_type: draftType
+                },
+                success: function (data) {
+                    console.log('Data received:', data);
+                    updateTable_pros(data.data);
+                },
+                error: function () {
+                    alert('Error fetching data from the server.');
+                }
+            });
+        });
+
+
+        $(".draft_btn").click(function () {
+
+
+            $.ajax({
+                url: '/draft_prospectus',
+                data: {
+                    draft_type: 'sebi', // Set your initial market here
+
+                },
+                success: function (data) {
+                    updateTable_pros(data.data);
+                }
+            });
+
+
+        })
+
+        // Function to update the stock data table
+
+
+
+        // Function to update the table with data
+        var table = $('#best-performers-table').DataTable();
+        function updateTable(data) {
+            console.log(data);
+            table.clear().draw();
+
+
+            function formatDate(inputDate) {
+                const dateParts = inputDate.split('-');
+                const year = dateParts[0];
+                const month = dateParts[1];
+                const day = dateParts[2].split('T')[0];
+
+                // Define an array of month names
+                const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+                return `${day}-${monthNames[parseInt(month) - 1]}-${year}`;
+            }
+
+
+            data.forEach(function (data) {
+                table.row.add([
+                    data.CO_NAME,
+                    formatDate(data.LISTDATE),          // Company
+                    // Listing Date
+                    data.listprice,            // Listing Price (₹)
+                    data.OfferPrice,           // Offer Price (₹)
+                    data.CLOSE,                // LTP(₹)
+                    data.HIGH,                 // High(₹)
+                    data.LOW,                  // Low(₹)
+                    data.LISTVOL,              // Volume(Nos.)
+                    data.PerChange             // Change(%)
+                ]).draw(false);
+
+            });
+        }
+
+
+
+        // Handle filter button clicks
+        $('.best_performer_filter_btn button').click(function () {
+
+            $(".best_performer_filter_btn button").removeClass("best_performer_filter_btn_active")
+            $(this).addClass("best_performer_filter_btn_active")
+
+            var market = $(this).data('market');
+            var segment = $(this).data('segment');
+
+
+            console.log(market, segment);
+
+
+
+
+            $.ajax({
+                url: '/best_performers', // Update the URL to your Django view
+                method: 'GET',
+                data: {
+                    market: market,
+                    segment: segment
+
+                },
+                success: function (data) {
+
+                    updateTable(data.data);
+                },
+                error: function () {
+                    alert('Error fetching data from the server.');
+                }
+            });
+
+
+        });
+
+
+
+        $(".best_performer_card").click(function () {
+            $.ajax({
+                url: '/best_performers',
+                data: {
+                    market: 'NSE', // Set your initial market here
+                    segment: 'main' // Set your initial duration here
+                },
+                success: function (data) {
+                    updateTable(data.data);
+                }
+            });
+        })
+
+
+        function updateStockTable(data) {
+            console.log(data);
+            var main_return_data = data.data;
+            const tbody = $('#return_ipo tbody');
+            tbody.empty(); // Clear previous data
+            var chartData = [];
+            main_return_data.forEach(function (stock) {
+                console.log(stock.CO_NAME);
+                chartData.push({
+                    "company_name": stock.CO_NAME,
+                    "PerChange": stock.PerChange
+                });
+            });
+
+            // Create a chart instance
+            var chart = am4core.create("chart-container", am4charts.XYChart);
+
+            // Enable mouse wheel zoom for the x-axis
+            chart.mouseWheelZoomEnabled = true;
+
+            // Remove chart watermark
+            chart.logo.disabled = true;
+
+            // Add data to the chart
+            chart.data = chartData;
+
+            // Create category axis (company_name)
+            var categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
+            categoryAxis.dataFields.category = "company_name";
+            categoryAxis.title.text = "Company Name";
+
+            // Create value axis (PerChange)
+            var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
+            valueAxis.title.text = "PerChange";
+
+            // Draw a horizontal line at y-axis 0
+            var zeroLine = valueAxis.axisRanges.create();
+            zeroLine.value = 0;
+            zeroLine.grid.stroke = am4core.color("#000"); // Color of the line
+            zeroLine.grid.strokeWidth = 2; // Line width
+            zeroLine.grid.strokeOpacity = 0.5; // Line opacity
+
+            // Find the maximum PerChange value and its corresponding category
+            var maxPerChange = -Infinity;
+            var maxPerChangeCategory = "";
+            chartData.forEach(function (dataItem) {
+                if (dataItem.PerChange > maxPerChange) {
+                    maxPerChange = dataItem.PerChange;
+                    maxPerChangeCategory = dataItem.company_name;
+                }
+            });
+
+            // Create a vertical line at the maximum PerChange value
+            var maxLine = valueAxis.axisRanges.create();
+            maxLine.value = maxPerChange.toFixed(3);
+            maxLine.grid.stroke = am4core.color("#FF6F61"); // Color of the line
+            maxLine.grid.strokeWidth = 2; // Line width
+            maxLine.grid.strokeOpacity = 0.5; // Line opacity
+            maxLine.label.text = "Max: " + maxPerChange.toFixed(3); // Display the maximum value as a label
+            maxLine.label.fill = am4core.color("#FF6F61"); // Label text color
+            maxLine.label.fontSize = 12; // Label font size
+
+            // Create a series for the column chart
+            var series = chart.series.push(new am4charts.ColumnSeries());
+            series.dataFields.valueY = "PerChange";
+            series.dataFields.categoryX = "company_name";
+            series.name = "PerChange";
+            series.columns.template.tooltipText = "{categoryX}: [bold]{valueY}[/]";
+
+            // Set the background color of the bars and border color manually based on the value of PerChange
+            series.columns.template.adapter.add("fill", function (fill, target) {
+                if (target.dataItem && target.dataItem.dataContext.PerChange < 0) {
+                    return am4core.color("#FF6F61"); // Red for negative values
+                } else {
+                    return am4core.color("#5cb85c"); // Green for positive or zero values
+                }
+            });
+
+            series.columns.template.adapter.add("stroke", function (stroke, target) {
+                if (target.dataItem && target.dataItem.dataContext.PerChange < 0) {
+                    return am4core.color("#FF6F61"); // Red border for negative values
+                } else {
+                    return am4core.color("#5cb85c"); // Green border for positive or zero values
+                }
+            });
+
+            categoryAxis.renderer.labels.template.disabled = true; // Hide the labels
+
+            // Enable pan and zoom features for the chart
+            chart.cursor = new am4charts.XYCursor();
+            chart.cursor.behavior = "selectX";
+            chart.events.on("datavalidated", function () {
+                maxLine.value = maxPerChange;
+            });
+
+            // Configure pan and zoom settings
+            chart.scrollbarX = new am4core.Scrollbar();
+            chart.scrollbarX.wheelX = "zoomX";
+            chart.scrollbarX.parent = chart.bottomAxesContainer;
+
+            // Finally, update the chart
+            chart.invalidateData();
+        }
+
+
+        // Market filter click event handler
+        $('.btn_bse_nse').click(function () {
+            $('.btn_bse_nse').removeClass('right_ipo_day_filters_active');
+
+            // Add 'right_ipo_day_filters_active' class to the clicked market button
+            $(this).addClass('right_ipo_day_filters_active');
+            const market = $(this).data('market');
+            console.log(`Market: ${market}`);
+            console.log($('.right_ipo_day_filters button.btn_bse_nse_active').data('duration'));
+
+
+            // Make an AJAX request based on the selected market
+            $.ajax({
+                url: '/ipo_return_data',
+                data: {
+                    market: market,
+                    duration: $('.right_ipo_day_filters button.btn_bse_nse_active').data('duration')
+                },
+                success: function (data) {
+                    updateStockTable(data);
+                }
+            });
+        });
+
+        // Duration filter click event handler
+        $('.right_ipo_day_filters button').click(function () {
+            $('.right_ipo_day_filters button').removeClass('btn_bse_nse_active');
+
+            // Add 'btn_bse_nse_active' class to the clicked duration button
+            $(this).addClass('btn_bse_nse_active');
+
+            const duration = $(this).data('duration');
+            console.log(`Duration: ${duration}`);
+            console.log($('.btn_bse_nse.right_ipo_day_filters_active').data('market'));
+
+            // Make an AJAX request based on the selected duration
+            $.ajax({
+                url: '/ipo_return_data',
+                data: {
+                    market: $('.btn_bse_nse.right_ipo_day_filters_active').data('market'),
+                    duration: duration
+                },
+                success: function (data) {
+                    updateStockTable(data);
+                }
+            });
+        });
+
+
+        $(".ipo_return_button").click(function () {
+
+
+            $.ajax({
+                url: '/ipo_return_data',
+                data: {
+                    market: 'nse', // Set your initial market here
+                    duration: '1M' // Set your initial duration here
+                },
+                success: function (data) {
+                    updateStockTable(data);
+                }
+            });
+
+
+        })
+        // Handle button active states
+
+
+
+    });
+</script>
+
+{% endblock dashboard_body %}

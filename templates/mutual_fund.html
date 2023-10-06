@@ -1,0 +1,233 @@
+{% extends "base_dashboard.html" %}
+{% load static %}
+{% block dashboard_body %}
+
+<style>
+    .table-box {
+        box-shadow: 1px 0 11px #d3cccc;
+        border-radius: 17px;
+        padding-top: 12px;
+        padding-bottom: 12px!important;
+    }
+    #chartdiv {
+        width: 100%;
+        height: 500px;
+      }
+</style>
+<section>
+    <div class="mt-5">
+        <h3>Mutual Funds</h3>
+    </div>
+
+    <div class="cate_performance mt-5">
+        <h4>Category Performance</h4>
+
+        <div class="table-box mt-3 p-5">
+           <div class="category d-flex justify-content-between">
+             <div class="options">
+                <select id="myOptions" class="form-select" aria-label="Default select example">
+                    
+                    <option class="category_per" value="EQUITY" selected>Equity</option>
+                    <option class="category_per" value="HYBRID">Hybrid</option>
+                    <option class="category_per" value="DEBT">Debt</option>
+                  </select>
+             </div>
+             <div class="timelines">
+               <div class="times">
+                <ul class="d-flex gap-3">
+                    <li id="1WEEK" data-value="1WEEK" class="dates">1W</li>
+                    <li data-value="1MONTH" class="dates">1M</li>
+                    <li data-value="3MONTH" class="dates">3M</li>
+                    <li data-value="6MONTH" class="dates">6M</li>
+                    <li data-value="1YEAR" class="dates">1Y</li>
+                    <li data-value="3YEAR" class="dates">3Y</li>
+                </ul>
+               </div>
+             </div>
+           </div>
+           <div id="chartdiv">
+
+           </div>
+        </div>
+    </div>
+</section>
+
+<script>
+     
+     var selectCate = "EQUITY"
+    $("#myOptions").change(function(){
+       var selectedText = $(this).val()
+       selectCate = selectedText
+       
+       get_all_datas()
+   });
+    var selectDate = "1WEEK"
+   $(".dates").click(function(){
+    var time_value = $(this).data("value")
+    selectDate=time_value
+    get_all_datas()
+   })
+   
+   function get_all_datas() {
+    get_category_data(selectCate, selectDate)
+   
+   }
+   function get_category_data(get_cate, get_time){
+     console.log(get_cate);
+     console.log(get_time);
+    $.ajax({
+        type:"post",
+        url:"/category_performance",
+
+        data:{
+         category:get_cate,
+         times_date:get_time
+        },
+        success:function(data){
+         console.log(data);
+        }
+    })
+   }
+//    $.ajaxSetup({
+                
+//             });
+</script>
+
+<script src="https://cdn.amcharts.com/lib/5/index.js"></script>
+<script src="https://cdn.amcharts.com/lib/5/xy.js"></script>
+<script src="https://cdn.amcharts.com/lib/5/themes/Animated.js"></script>
+
+
+
+<script>
+    am5.ready(function() {
+    
+    // Create root element
+    // https://www.amcharts.com/docs/v5/getting-started/#Root_element
+    var root = am5.Root.new("chartdiv");
+    
+    
+    // Set themes
+    // https://www.amcharts.com/docs/v5/concepts/themes/
+    root.setThemes([
+      am5themes_Animated.new(root)
+    ]);
+    
+    
+    // Create chart
+    // https://www.amcharts.com/docs/v5/charts/xy-chart/
+    var chart = root.container.children.push(am5xy.XYChart.new(root, {
+      panX: true,
+      panY: true,
+      wheelX: "panX",
+      wheelY: "zoomX",
+      pinchZoomX: true
+    }));
+    
+    // Add cursor
+    // https://www.amcharts.com/docs/v5/charts/xy-chart/cursor/
+    var cursor = chart.set("cursor", am5xy.XYCursor.new(root, {}));
+    cursor.lineY.set("visible", false);
+    
+    
+    // Create axes
+    // https://www.amcharts.com/docs/v5/charts/xy-chart/axes/
+    var xRenderer = am5xy.AxisRendererX.new(root, { minGridDistance: 30 });
+    xRenderer.labels.template.setAll({
+      rotation: -90,
+      centerY: am5.p50,
+      centerX: am5.p100,
+      paddingRight: 15
+    });
+    
+    xRenderer.grid.template.setAll({
+      location: 1
+    })
+    
+    var xAxis = chart.xAxes.push(am5xy.CategoryAxis.new(root, {
+      maxDeviation: 0.3,
+      categoryField: "country",
+      renderer: xRenderer,
+      tooltip: am5.Tooltip.new(root, {})
+    }));
+    
+    var yAxis = chart.yAxes.push(am5xy.ValueAxis.new(root, {
+      maxDeviation: 0.3,
+      renderer: am5xy.AxisRendererY.new(root, {
+        strokeOpacity: 0.1
+      })
+    }));
+    
+    
+    // Create series
+    // https://www.amcharts.com/docs/v5/charts/xy-chart/series/
+    var series = chart.series.push(am5xy.ColumnSeries.new(root, {
+      name: "Series 1",
+      xAxis: xAxis,
+      yAxis: yAxis,
+      valueYField: "value",
+      sequencedInterpolation: true,
+      categoryXField: "country",
+      tooltip: am5.Tooltip.new(root, {
+        labelText: "{valueY}"
+      })
+    }));
+    
+    series.columns.template.setAll({ cornerRadiusTL: 5, cornerRadiusTR: 5, strokeOpacity: 0 });
+    series.columns.template.adapters.add("fill", function(fill, target) {
+      return chart.get("colors").getIndex(series.columns.indexOf(target));
+    });
+    
+    series.columns.template.adapters.add("stroke", function(stroke, target) {
+      return chart.get("colors").getIndex(series.columns.indexOf(target));
+    });
+    
+    
+    // Set data
+    var data = [{
+      country: "USA",
+      value: 2025
+    }, {
+      country: "China",
+      value: 1882
+    }, {
+      country: "Japan",
+      value: 1809
+    }, {
+      country: "Germany",
+      value: 1322
+    }, {
+      country: "UK",
+      value: 1122
+    }, {
+      country: "France",
+      value: 1114
+    }, {
+      country: "India",
+      value: 984
+    }, {
+      country: "Spain",
+      value: 711
+    }, {
+      country: "Netherlands",
+      value: 665
+    }, {
+      country: "South Korea",
+      value: 443
+    }, {
+      country: "Canada",
+      value: 441
+    }];
+    
+    xAxis.data.setAll(data);
+    series.data.setAll(data);
+    
+    
+    // Make stuff animate on load
+    // https://www.amcharts.com/docs/v5/concepts/animations/
+    series.appear(1000);
+    chart.appear(1000, 100);
+    
+    }); // end am5.ready()
+    </script>
+{% endblock dashboard_body%}

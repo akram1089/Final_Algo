@@ -2591,12 +2591,28 @@ def future_data_chart(request):
     All_symbol = []
     for psymbol in psymbol_data["resultData"]:
         All_symbol.append(psymbol["symbol_name"])
+  
     future_expiry_list = []
     for future in future_data["resultData"]:
         oi_change = future["oi"] - future["prev_oi"]
-        oi_percent_change = (oi_change / future["prev_oi"]) * 100
+        print(oi_change)
+        
+        # Check if prev_oi is zero to avoid division by zero
+        if future["prev_oi"] != 0:
+            oi_percent_change = (oi_change / future["prev_oi"]) * 100
+        else:
+            oi_percent_change = 0  # Set to 0 or handle as appropriate for your use case
+        
+        print(oi_percent_change)
+        
         change_price = future["last_price"] - future["prev_close"]
-        change_percent = (change_price / future["prev_close"]) * 100
+        
+        # Check if prev_close is zero to avoid division by zero
+        if future["prev_close"] != 0:
+            change_percent = (change_price / future["prev_close"]) * 100
+        else:
+            change_percent = 0  # Set to 0 or handle as appropriate for your use case
+        
         future_expiry_list.append({
             "expiry": future["expiry"],
             "oi": future["oi"],
@@ -2609,6 +2625,7 @@ def future_data_chart(request):
             "high": future["high"],
             "low": future["low"]
         })
+
 
     spot_symbol_list = spot_data["resultData"]["symbol_name"]
     spot_price_list = spot_data["resultData"]["last_trade_price"]
@@ -4387,7 +4404,7 @@ def customer_feedback_data(request):
         yes_no = data.get("yes_no")
         frnd_recommend = yes_no.lower() == "yes"
         
-        print(usr, first_star, second_star, rating1_10, review, yes_no)
+        # print(usr, first_star, second_star, rating1_10, review, yes_no)
 
         new_feedback = Customer_feedback(
             user=usr,
@@ -4462,13 +4479,14 @@ import datetime
 def subscribe_to_newsletter(request):
     if request.method == "POST":
         email = request.POST.get("send_email")
-        print(email)
+        # print(email)
         if email:
             if Subscriber.objects.filter(email=email).exists():
                 return JsonResponse({'message_already': 'You are already subscribed.'})
             else:
                 new_subscriber = Subscriber(email=email)
                 new_subscriber.subscribed_at = datetime.datetime.now()
+             
    
                 new_subscriber.save()
                 
@@ -4499,6 +4517,7 @@ def subscribers_management(request):
 
 def event_tracker(request):
     return render(request , "event_tracker.html")
+
 
 @csrf_exempt
 def event_tracker_dates(request):
@@ -4545,3 +4564,456 @@ def events_table_data(request):
      return JsonResponse(all_table_data,safe=False)
 
 
+def broker_management(request):
+    return render(request , "broker_management.html")
+
+import datetime
+from django.http import JsonResponse
+from .models import ZerodhaAPIConfig
+from django.contrib.auth.decorators import login_required
+
+@login_required
+def save_zerodha_config(request):
+    user = request.user  # Get the currently logged-in user
+
+    if not user.is_authenticated:
+        return JsonResponse({'message': 'Please login first'})
+
+    if request.method == 'POST':
+        app_name = request.POST.get('app_name')
+        api_key = request.POST.get('api_key')
+        secret_key = request.POST.get('secret_key')
+
+        # Check if an API configuration with the same api_key and secret_key exists for this user
+        existing_config = ZerodhaAPIConfig.objects.filter(user=user, api_key=api_key, secret_key=secret_key).first()
+
+        if existing_config:
+            return JsonResponse({'message': 'API is already in use'})
+
+        api_data = ZerodhaAPIConfig(
+            user=user,  # Associate the user with the configuration
+            app_name=app_name,
+            api_key=api_key,
+            secret_key=secret_key,
+            api_added_at=datetime.datetime.now()
+        )
+        api_data.save()
+
+        return JsonResponse({'message': 'Data saved successfully'})
+    else:
+        return JsonResponse({'message': 'Invalid request method'}, status=405)
+
+
+
+
+
+
+import datetime
+from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
+from .models import ZerodhaAPIConfig
+
+@login_required
+def get_zerodha_config(request):
+    user = request.user  # Get the currently logged-in user
+
+    # Get the current date
+    current_date = datetime.date.today()
+
+    # Retrieve data for the logged-in user sorted by 'api_added_at' field in descending order
+    data = ZerodhaAPIConfig.objects.filter(user=user).order_by('-api_added_at').values()
+
+    # Create a list comprehension to modify the data and add 'connected' status
+    modified_data = [
+        {
+            **item,
+            'connected': 'Connected' if item['access_token'] and item['api_added_at'].date() == current_date else 'Please connect'
+        }
+        for item in data
+    ]
+
+    return JsonResponse(modified_data, safe=False)
+
+
+
+
+from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import csrf_exempt
+from .models import ZerodhaAPIConfig
+
+@csrf_exempt
+@login_required
+def delete_zerodha_config(request, item_id):
+    if request.method == 'POST':
+        try:
+            # Attempt to delete the item from the database only if it belongs to the logged-in user
+            item = ZerodhaAPIConfig.objects.get(pk=item_id, user=request.user)
+            item.delete()
+            return JsonResponse({'message': 'Item deleted successfully'})
+        except ZerodhaAPIConfig.DoesNotExist:
+            return JsonResponse({'message': 'Item not found'}, status=404)
+    else:
+        return JsonResponse({'message': 'Invalid request method'}, status=405)
+
+
+
+
+
+
+from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import csrf_exempt
+from .models import ZerodhaAPIConfig
+import datetime
+from kiteconnect import KiteConnect
+
+@csrf_exempt
+@login_required
+def edit_access_token(request):
+    if request.method == 'POST':
+        unique_id = request.POST.get('unique_id')
+        access_token = request.POST.get('access_token')
+
+        try:
+            api_config = ZerodhaAPIConfig.objects.get(pk=unique_id, user=request.user)
+
+            # Retrieve api_secret and request_token from the database
+            api_secret = api_config.secret_key
+            request_token = access_token
+
+            # Create a KiteConnect instance and generate a new access_token
+            kite = KiteConnect(api_key=api_config.api_key)
+            data = kite.generate_session(request_token, api_secret=api_secret)
+            new_access_token = data["access_token"]
+
+            # Update the API configuration with the new access_token and timestamp
+            api_config.access_token = new_access_token
+            api_config.api_added_at = datetime.datetime.now()
+            api_config.save()
+
+            return JsonResponse({'message': 'Access token updated successfully'})
+        except ZerodhaAPIConfig.DoesNotExist:
+            return JsonResponse({'message': 'API configuration not found'}, status=404)
+
+    return JsonResponse({'message': 'Invalid request'}, status=400)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+def zerodha_place(request):
+    return render(request , "zerodha_place.html")
+
+
+from django.http import JsonResponse
+import requests
+from django.views.decorators.csrf import csrf_exempt
+
+@csrf_exempt
+def ipo_return_data(request):
+    market = request.GET.get('market', 'nse')
+    duration = request.GET.get('duration', '1M')
+
+    stock_url = f"https://www.moneysukh.com/api/markets/returnipo/{market}/{duration}/-/-"
+     
+
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
+        "Accept-Language": "en-US,en;q=0.9",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive"
+    }
+
+    try:
+        stock_data = requests.get(stock_url, headers=headers)
+
+        if stock_data.status_code == 200:
+            stock_json = stock_data.json()
+            return JsonResponse(stock_json)
+        else:
+            return JsonResponse({"error": f"Failed to fetch data. Status Code: {stock_data.status_code}"}, status=500)
+
+    except requests.RequestException as e:
+        return JsonResponse({"error": f"An error occurred: {e}"}, status=500)
+
+
+
+
+def ipo_dashboard(request):
+    return render(request , "ipo_dashboard.html")
+
+
+
+
+
+import requests
+from django.http import JsonResponse
+from django.views.decorators.http import require_GET
+
+@require_GET
+def best_performers(request):
+    market = request.GET.get('market', 'NSE')
+    segment = request.GET.get('segment', 'sme')
+   
+
+
+    api_url = f"https://www.moneysukh.com/api/markets/BestPerformers/{market}/{segment}/-"
+    
+    headers = {
+        "User-Agent": "Your User Agent",  # Set your user agent here
+        "Accept-Language": "en-US,en;q=0.9",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive",
+    }
+
+    response = requests.get(api_url, headers=headers)
+
+    if response.status_code == 200:
+        data = response.json()
+        return JsonResponse(data)
+    else:
+        return JsonResponse({"error": "Unable to fetch data from the API"}, status=500)
+
+
+
+import requests
+from django.http import JsonResponse
+
+def draft_prospectus(request):
+    draft_type = request.GET.get('draft_type','sebi')
+
+
+    api_url = f"https://www.moneysukh.com/api/markets/DraftProspectus/{draft_type}/-"
+
+    headers = {
+        "User-Agent": "Your User Agent",  # Set your user agent here
+        "Accept-Language": "en-US,en;q=0.9",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive",
+    }
+
+    response = requests.get(api_url, headers=headers)
+
+    if response.status_code == 200:
+        data = response.json()
+        return JsonResponse(data)
+    else:
+        return JsonResponse({"error": "Unable to fetch data from the API"}, status=500)
+
+
+
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+import json
+import logging
+import os
+from kiteconnect import KiteConnect
+from .models import ZerodhaAPIConfig
+
+@csrf_exempt
+def kiteOrder(request):
+    if request.method == 'POST':
+        try:
+            dataTrade = json.loads(request.body)
+            print(dataTrade)
+            logging.basicConfig(level=logging.DEBUG)
+
+            # Retrieve API keys and access token from the database
+            zerodha_config = ZerodhaAPIConfig.objects.first()  # Assuming you have only one configuration
+
+            if not zerodha_config:
+                return JsonResponse({'error': 'API configuration not found'}, status=500)
+
+            api_key = zerodha_config.api_key
+            api_secret = zerodha_config.secret_key
+            access_token = zerodha_config.access_token
+            print(f"API Key: {api_key}")
+            print(f"Access Token: {access_token}")
+
+
+            kite = KiteConnect(api_key=api_key)
+
+            if access_token:
+                kite.set_access_token(access_token)
+            else:
+                # If the access token is not available, generate a new one
+                print(kite.login_url())
+                request_token = input("Enter the request token after logging in: ")
+
+                data = kite.generate_session(request_token, api_secret=api_secret)
+                access_token = data["access_token"]
+                kite.set_access_token(access_token)
+
+                # Save the access token securely for future use
+                zerodha_config.access_token = access_token
+                zerodha_config.save()
+
+            # Now you can use the saved access token to interact with the API
+
+            try:
+                profile = kite.profile()['user_name']
+                print(profile)
+                order_ids = []
+
+                for order_data in dataTrade:
+                    tradingsymbol = order_data['tradingsymbol']
+                    isRadioChecked = order_data['isRadioChecked']
+                    quantity = int(order_data['Quantity'])
+                    price = float(order_data['price'])
+                    print(tradingsymbol)
+                    print(quantity)
+                    print(price)
+                    print(isRadioChecked)
+                    transaction_type = kite.TRANSACTION_TYPE_SELL if order_data['sell_buy_indicator'] == 'SELL' else kite.TRANSACTION_TYPE_BUY
+                    order_type = kite.ORDER_TYPE_LIMIT if order_data['isRadioChecked'] == 'limit' else kite.ORDER_TYPE_MARKET
+
+                    # Place a market order
+                    order_id = kite.place_order(
+                        tradingsymbol=tradingsymbol,
+                        exchange=kite.EXCHANGE_NFO,
+                        transaction_type=transaction_type,
+                        quantity=quantity,
+                        price=price,
+                        variety=kite.VARIETY_REGULAR,
+                        order_type=order_type,
+                        product=kite.PRODUCT_NRML,  # Modify this if needed
+                        validity=kite.VALIDITY_DAY
+                    )
+                    order_ids.append(order_id)
+                    logging.info("Order placed for {}. ID is: {}".format(tradingsymbol, order_id))
+
+                if all(order_ids):
+                    response_data = {'message': 'Orders placed successfully', 'order_ids': order_ids}
+                    return JsonResponse(response_data)
+                else:
+                    return JsonResponse({'error': 'Some orders failed to place'}, status=500)
+
+            except Exception as e:
+                logging.error("Order placement failed: {}".format(str(e)))
+                order_failed="Order placement failed: {}".format(str(e))
+                return JsonResponse({'error':order_failed})
+
+            # Return a response if needed (only if there are no exceptions)
+            response_data = {'message': 'Data received successfully'}
+            return JsonResponse(response_data)
+
+        except json.JSONDecodeError as e:
+            return JsonResponse({'error': 'Invalid JSON data'}, status=400)
+
+    return JsonResponse({'error': 'Invalid request method'}, status=405)
+
+
+
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+import json
+from kiteconnect import KiteConnect
+
+@csrf_exempt
+def quote_data_zerodha(request):
+    zerodha_config = ZerodhaAPIConfig.objects.first() 
+    api_key = zerodha_config.api_key
+    api_secret = zerodha_config.secret_key
+    access_token = zerodha_config.access_token
+    
+    kite = KiteConnect(api_key=api_key)
+    
+    if access_token:
+        kite.set_access_token(access_token)
+    
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body.decode('utf-8'))
+            trading_quote = data.get('trading_quote')
+            zerodha_trading_symbol = data.get('zerodha_trading_symbol')
+            
+            ohlc_data = kite.ohlc(zerodha_trading_symbol["tradingsymbol"])
+            ohlc = ohlc_data[zerodha_trading_symbol["tradingsymbol"]]
+            
+            # Calculate net change and change percentage
+            nifty_ltp = ohlc['last_price']
+            open_price = ohlc['ohlc']['open']
+            close_price = ohlc['ohlc']['close']
+            net_change = nifty_ltp - close_price
+            percentage_change = (net_change / open_price) * 100
+            
+            profile = kite.profile()['user_name']
+            user_id = kite.profile()['user_id']
+            margins = kite.margins(segment='equity')
+
+# Extract available cash balance
+            available_cash = margins['available']['cash']
+
+  
+            # Create a list to store the quotes
+            quotes_data = []
+            
+            for item in trading_quote:
+                combinedString = item.get('combinedString')
+                stock_symbol = f'NFO:{combinedString}'  # Create the instrument symbol
+                
+                # Fetch the quote for the stock symbol
+                stock_quote = kite.quote(stock_symbol)
+                
+                # Append the stock_quote to the quotes_data list
+                quotes_data.append(stock_quote)
+            
+            # Add combined_data to the quotes_data list as a separate element
+            quotes_data.append({
+                'combined_data': {
+                    "available_cash":available_cash,
+                    "symbol_spot":zerodha_trading_symbol["tradingsymbol"],
+                    'nifty_ltp': nifty_ltp,
+                    'percentage_change': percentage_change,
+                    'profile': profile,
+                    'user_id': user_id
+                }
+            })
+            
+            # Return the quotes_data list as a JSON response
+            return JsonResponse(quotes_data, safe=False)
+        except json.JSONDecodeError as e:
+            return JsonResponse({'error': 'Invalid JSON data.'}, status=400)
+
+
+def mutual_fund(request):
+    return render(request , "mutual_fund.html")
+
+import requests
+from django.http import JsonResponse
+@csrf_exempt
+def category_performance(request):
+    if request.method == "POST":
+        category = request.POST.get("category")
+        times = request.POST.get("times_date")
+        print(category,times)
+        url = f"https://www.moneysukh.com/api/markets/MFActivityChart/{category}/{times}/GROWTH/-"
+        print(url)
+        headers = {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
+            "Accept-Language": "en-US,en;q=0.9",
+            "Accept-Encoding": "gzip, deflate, br",
+            "Connection": "keep-alive",
+        }
+        try:
+            response = requests.get(url, headers=headers)
+            response.raise_for_status()  # Check for HTTP errors
+            all_data = response.json()
+            return JsonResponse(all_data)
+        except requests.exceptions.RequestException as e:
+            # Handle any exceptions, e.g., connection error or invalid response
+            error_message = {"error": str(e)}
+            return JsonResponse(error_message, status=500)  # Return a 500 Internal Server Error
+
+    # Handle other HTTP methods (e.g., GET, PUT, DELETE) if needed
+    return JsonResponse({"error": "Unsupported HTTP method"}, status=405)  # Method Not Allowed

@@ -1,0 +1,220 @@
+{% extends "base_admin_panel.html" %}
+ {% load static %}
+ {% block dashboard_admin_body %}
+
+<style>
+    .zerodha_add_api {
+        display: flex;
+        width: 11rem;
+        flex-direction: column;
+        align-items: center;
+        background: white;
+        row-gap: 0.5rem;
+        box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+        padding: 20px;
+    }
+
+    .zerodha_add_api img {
+        width: 9rem;
+    }
+
+    .offcanvas-body input {
+        margin-bottom: 1rem;
+    }
+
+    #zerodha_data_display {
+        margin-top: 2rem;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .main_api_card {
+        border: 1px solid;
+        /* display: flex; */
+        /* flex-direction: column; */
+        align-items: center;
+        padding: 1rem;
+        box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+    }
+</style>
+<div class="main_broker_api">
+    <div class="zerodha_add_api">
+        <img src="{% static "./api_icons/zerodha.png" %}">
+
+        <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"
+            aria-controls="offcanvasRight">
+            Add Api
+        </button>
+    </div>
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="offcanvasRightLabel">Offcanvas right</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <form>
+                <input type="text" class="form-control" id="app_name" placeholder="Enter app names" required />
+                <input type="text" class="form-control" id="api_key" placeholder="Enter zerodha api key " required />
+                <input type="text" class="form-control" id="secret_key" placeholder="Enter zerodha secret key"
+                    required />
+                <button class="btn btn-primary save_zerodha_btn">
+                    Save Zerodha Api
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="all_broker">
+    <div id="zerodha_data_display"></div>
+</div>
+<script>
+    $(".save_zerodha_btn").click(function (event) {
+        event.preventDefault();
+        var app_name = $("#app_name").val();
+        var api_key = $("#api_key").val();
+        var secret_key = $("#secret_key").val();
+        if (!app_name || !api_key || !secret_key) {
+            alert("Please fill in all fields.");
+            return; // Don't proceed with the AJAX request if any field is empty
+        }
+
+        $.ajax({
+            url: "/save_zerodha_config", // URL of your Django view
+            type: "POST",
+            data: {
+                app_name: app_name,
+                api_key: api_key,
+                secret_key: secret_key,
+                csrfmiddlewaretoken: "{{ csrf_token }}", // Include CSRF token for security
+            },
+            success: function (response) {
+                console.log(response.message);
+                get_api_data();
+
+                $("#app_name").val("");
+                $("#api_key").val("");
+                $("#secret_key").val("");
+            },
+            error: function (xhr, status, error) {
+                console.error(xhr.responseText);
+            },
+        });
+    });
+    var hasRunOnPageLoad = false; // Initialize a flag to track whether the code has run on page load
+
+    function get_api_data() {
+        $.ajax({
+            url: "/get_zerodha_config", // URL of your Django view for data retrieval
+            type: "GET",
+            success: function (data) {
+                // Handle the retrieved data
+                console.log(data);
+
+                // Assuming you have a <div> with id "zerodha_data_display" to display the data
+                // Clear previous data
+                var all_data = "";
+                $.each(data, function (index, item) {
+                    var connected_varifications =
+                        item.connected !== "Connected"
+                            ? `<a href="https://kite.zerodha.com/connect/login?api_key=${item.api_key}&v=3">${item.connected}</a>`
+                            : "Connected";
+                    all_data += `
+                    <div class='main_api_card'>
+                        <p>App Name: ${item.app_name}</p>
+                        <p>API Key: ${item.api_key}</p>
+                        <p>Secret Key: ${item.secret_key}</p>
+                        <p>last token updated: ${item.api_added_at}</p>
+                        <p>Access Token: ${item.access_token}</p>
+                  <button>${connected_varifications}</button>
+                        <button class="delete_btn" data-id="${item.id}">Delete</button>
+                    </div>
+                `;
+                });
+                $("#zerodha_data_display").empty().append(all_data);
+
+                // Attach a click event handler for the delete buttons
+                $(".delete_btn").click(function () {
+                    var itemId = $(this).data("id");
+                    deleteItem(itemId);
+                });
+
+                if (!hasRunOnPageLoad) {
+                    // Check if the code has not run on page load
+                    var uniqueId = $(".delete_btn").data("id");
+
+                    // Function to extract query parameters from a URL
+                    function getQueryParam(url, name) {
+                        name = name.replace(/[\[\]]/g, "\\$&");
+                        var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)");
+                        var results = regex.exec(url);
+                        if (!results) return null;
+                        if (!results[2]) return "";
+                        return decodeURIComponent(results[2].replace(/\+/g, " "));
+                    }
+
+                    // Get the current URL
+                    var currentUrl = window.location.href;
+
+                    // Extract the 'request_token' parameter from the URL
+                    var requestToken = getQueryParam(currentUrl, "request_token");
+
+                    // Check if 'requestToken' has a value and do something with it
+                    if (requestToken) {
+                        console.log("request_token:", requestToken);
+                        editAccessToken(uniqueId, requestToken);
+                        var urlWithoutParams = currentUrl.split("?")[0];
+                        window.history.replaceState({}, document.title, urlWithoutParams);
+                        // Now you can use 'requestToken' in your JavaScript code as needed.
+                    } else {
+                        console.log("Hii king");
+                    }
+
+                    hasRunOnPageLoad = true; // Set the flag to true after running the code on page load
+                }
+
+                // This code will run on subsequent AJAX requests as well as on page load.
+            },
+            error: function (xhr, status, error) {
+                console.error(xhr.responseText);
+            },
+        });
+    }
+    function deleteItem(itemId) {
+        $.ajax({
+            url: `/delete_zerodha_config/${itemId}/`, // URL of your Django delete view
+            type: "POST",
+            success: function (response) {
+                console.log(response.message);
+                // Refresh the data display after successful deletion
+                get_api_data();
+            },
+            error: function (xhr, status, error) {
+                console.error(xhr.responseText);
+            },
+        });
+    }
+
+    function editAccessToken(uniqueId, newAccessToken) {
+        $.ajax({
+            url: "/edit_access_token",
+            type: "POST",
+            data: {
+                unique_id: uniqueId,
+                access_token: newAccessToken,
+            },
+            success: function (data) {
+                console.log(data.message); // Print the response message
+                get_api_data();
+            },
+            error: function (xhr, status, error) {
+                console.error(xhr.responseText);
+            },
+        });
+    }
+
+    get_api_data();
+</script>
+
+{% endblock dashboard_admin_body %}
