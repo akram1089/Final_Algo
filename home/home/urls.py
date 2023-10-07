@@ -171,6 +171,54 @@ urlpatterns = [
     path('filter_iv_data', views.filter_iv_data, name='filter_iv_data'),
     path('bse_spot_data', views.bse_spot_data, name='bse_spot_data'),
     path('option_strategy_tester', views.option_strategy_tester, name='option_strategy_tester'),
+    path('contact_us', views.contact_us, name='contact_us'),
+    path('customer_contact', views.customer_contact, name='customer_contact'),
+    path('vertical', views.vertical, name='vertical'),
+    path('annotation', views.annotation, name='annotation'),
+    path('bse_option_chain',views.bse_option_chain, name = 'bse_option_chain' ),
+    path('bse_option_chain_spotprice',views.bse_option_chain_spotprice, name = 'bse_option_chain_spotprice' ),
+    path('bse_option_expiry',views.bse_option_expiry, name = 'bse_option_expiry' ),
+    path('bse_table_data',views.bse_table_data, name = 'bse_table_data'),
+    path('customer_feedback_data', views.customer_feedback_data,name='customer_feedback_data'),
+    path('customer_feedback', views.customer_feedback,name='customer_feedback'),
+    path('format_feedback_data', views.format_feedback_data,name='format_feedback_data'),
+    path('event_tracker_dates', views.event_tracker_dates,name='event_tracker_dates'),
+    path('event_tracker', views.event_tracker,name='event_tracker'),
+    path('subscribe_to_newsletter', views.subscribe_to_newsletter, name ='subscribe_to_newsletter'),
+    path('get_subscribers/', views.get_subscribers, name='get_subscribers'),
+    path('subscribers_management', views.subscribers_management, name='subscribers_management'),
+    path('event_tracker', views.event_tracker, name ='event_tracker'),
+    path('event_tracker_dates', views.event_tracker_dates, name ='event_tracker_dates'),
+    path('events_table_data', views.events_table_data, name ='events_table_data'),
+    path('broker_management', views.broker_management, name ='broker_management'),
+    path('save_zerodha_config', views.save_zerodha_config, name='save_zerodha_config'),
+    path('get_zerodha_config', views.get_zerodha_config, name='get_zerodha_config'),
+    path('delete_zerodha_config/<int:item_id>/', views.delete_zerodha_config, name='delete_zerodha_config'),
+    path('edit_access_token', views.edit_access_token, name='edit_access_token'),
+    path('zerodha_place', views.zerodha_place, name='zerodha_place'),
+    path('kiteOrder', views.kiteOrder, name='kiteOrder'),
+    path('ipo_dashboard', views.ipo_dashboard, name='ipo_dashboard'),
+    path('ipo_return_data', views.ipo_return_data, name='ipo_return_data'),
+    path('best_performers', views.best_performers, name='best_performers'),
+    path('draft_prospectus', views.draft_prospectus, name='draft_prospectus'),
+    path('quote_data_zerodha', views.quote_data_zerodha, name='quote_data_zerodha'),
+    path('mutual_fund', views.mutual_fund, name='mutual_fund'),
+    path('category_performance', views.category_performance, name='category_performance'),
+    
+    path('ipo_watch', views.ipo_watch, name='ipo_watch'),
+    path('new_listed_ipo', views.new_listed_ipo, name='new_listed_ipo'),
+    path('basic_allotment', views.basic_allotment, name='basic_allotment'),
+    path('ipo_news', views.ipo_news, name='ipo_news'),
+    path('ipo_deepak', views.ipo_deepak, name='ipo_deepak'),
+    path('news_details/<int:sno>/<str:heading>/', views.news_details, name='news_details'),
+
+
+
+    
+
+
+
+    
 
 
 
