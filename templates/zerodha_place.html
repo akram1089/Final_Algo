@@ -3084,33 +3084,61 @@ $(".place_order_btn").click(function () {
 });
 
 
+function sendPosition_to_kite(All_positionTrade) {
+        console.log(All_positionTrade);
 
+        // Send the data to the Django view using AJAX
+        $.ajax({
+            url: '/kiteOrder', // Replace with the actual URL of your Django view
+            type: 'POST',
+            data: JSON.stringify(All_positionTrade),
+            contentType: 'application/json',
+            success: function (response) {
+                // Handle the response from the Django view if needed
+                console.log(response);
 
-        function sendPosition_to_kite(All_positionTrade) {
-            console.log(All_positionTrade);
-
-            // Send the data to the Django view using AJAX
-            $.ajax({
-                url: '/kiteOrder', // Replace with the actual URL of your Django view
-                type: 'POST',
-                data: JSON.stringify(All_positionTrade),
-                contentType: 'application/json',
-                success: function (response) {
-                    // Handle the response from the Django view if needed
-                    console.log(response);
-                    All_positionTrade = []
-                },
-                error: function (error) {
-                    console.error(error);
+                // Check if there's a success message in the response
+                if (response.message) {
+                    displayAlert(response.message, 'success');
+                } else if (response.error) {
+                    // Check if there's an error message in the response
+                    displayAlert(response.error, 'error');
                 }
-            });
-        }
 
+                All_positionTrade = [];
+            },
+            error: function (error) {
+                console.error(error);
 
+                // Display a generic error alert
+                displayAlert('An error occurred while processing your request.', 'error');
+            }
+        });
+    }
 
-        // END PLACE ZERODHA ORDER
+    function displayAlert(message, type) {
+        var alertElement = $(".alert-dismissible");
+        alertElement
+            .removeClass(type === 'error' ? 'success_alert' : 'error_alert')
+            .addClass(type === 'error' ? 'error_alert' : 'success_alert')
+            .text(message)
+            .css({
+                'max-width': '50%', // Set the maximum width
+                'width': '100%',   // Set the width to 100%
+                'height': 'fit-content',  // Set the height to auto
+                'padding': '15px',
+                'position': 'fixed',
+            
+                'z-index': '99999999999 !important', 
+                'border-radius': '5px',
+       
+            })
+            .fadeIn();
 
-
+        setTimeout(function () {
+            alertElement.fadeOut();
+        }, 3000);
+    }
 
 
 
