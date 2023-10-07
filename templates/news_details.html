@@ -1,0 +1,70 @@
+{% extends "base_dashboard.html" %}
+{% load static %}
+{% block dashboard_body %}
+<style>
+     .news_details_head h2 {
+        margin-bottom: 2.5rem;
+        font-size: 2.5rem;
+        text-align: center;
+        font-family: BoldText;
+        display: block;
+        color: #4399eb;
+        margin-top: 1rem;
+    }
+
+    .news_details_head h2 span:after {
+        position: absolute;
+        content: "";
+
+        background: url(/static/event.png);
+
+        background-repeat: no-repeat;
+        width: 0.9rem;
+        height: 0.9rem;
+    }
+    .titleCompanyNews {
+    border: 2px solid #0473e9;
+    padding: 10px;
+    font-size: 23px;
+    text-align: center;
+    background: #0473e9;
+    color: #fff;
+    font-weight: 700;
+    margin-bottom: 40px;
+}
+</style>
+
+    <div class="news_details_head">
+        <h2><span>News Details</span></h2>
+
+    </div>
+    <div class="main_content container">
+
+        <div class="titleCompanyNews"></div>
+<div class="InfoCompanyNews"></div>
+    </div>
+
+
+
+
+<!-- Use JavaScript to log news_data to the console -->
+<script>
+    // Retrieve the news_data from the context
+    var news_data = {{ news_data|safe }};
+    
+    // Log news_data to the console
+    console.log(news_data);
+    news_data.map((news)=>{
+console.log(news.Heading);
+$(".titleCompanyNews").text(news.Heading)
+$(".InfoCompanyNews").append(`
+${news.Arttext}
+
+
+
+`)
+    })
+</script>
+
+
+{% endblock dashboard_body%}

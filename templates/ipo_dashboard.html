@@ -30,9 +30,126 @@
         justify-content: center;
     }
 
+    .ipo_table_head {
+        font-size: 15px;
+        font-weight: 700;
+        color: #000;
+        background-color: #eff9ff;
+        border: none;
+        padding: 10px;
+        white-space: nowrap;
+    }
+
+    .table-box {
+   
+        border-radius: 17px;
+        padding-top: 12px;
+        padding-bottom: 12px !important;
+    }
+
+    .ipos {
+        background-color: transparent;
+        color: rgb(8, 139, 247);
+        border: 1px solid rgb(8, 139, 247);
+        padding: 4px 8px;
+        border-radius: 3px;
+    }
+
+    .active {
+        color: whitesmoke;
+        background-color: rgb(8, 139, 247);
+        border: 1px solid rgb(8, 139, 247);
+        padding: 4px;
+        border-radius: 3px;
+    }
+
+    .IPOnews-wq {
+        display: inline-block;
+        width: 49%;
+        right: 12px;
+        margin-right: 1%;
+        margin-top: 19px;
+        background: #fff 0 0 no-repeat padding-box;
+        box-shadow: inset -10px -10px 20px rgba(4, 115, 233, .0784313725490196);
+        border-radius: 28px;
+        padding: 1rem;
+        position: relative;
+        right: auto;
+        cursor: pointer;
+ 
+    }
+    .IPOnews-wq:hover {
+  transform: scale(1.01);
+  transition: transform 0.3s ease; /* This adds a smooth transition effect */
+}
+
+    .ipos_list {
+        background-color: transparent;
+        border: 1px solid rgb(8, 139, 247);
+        color: rgb(8, 139, 247);
+        padding: 5px 8px;
+        border-radius: 6px;
+    }
+
+    .btn_active {
+        border: 1px solid rgb(8, 139, 247);
+        border-radius: 6px;
+        background-color: rgb(8, 139, 247);
+        padding: 5px 8px;
+        color: white;
+    }
+    .main_event_card:hover, .main_event_card:focus{
+        box-shadow: rgb(147 221 255 / 93%) 0px 1px 4px;
+    border: 0.2px solid #4399eb;
+    }
+
+</style>
+<style>
+    .main_ipo_tables {
+        box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+        padding: 1rem;
+        border-radius: 10px;
+    }
+
+    .eventMainDiv {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        grid-gap: 11px;
+    }
+
+    .main_event_card {
+        border: 0.2px solid lightgray;
+        cursor: pointer;
+        transition: ease-in-out;
+    }
+
+    .cal-item,
+    .placeholder_main {
+        text-align: center;
+        padding: 10px;
+        height: 6rem !important;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
     .main_event_card p {
         margin-bottom: 0 !important;
     }
+    thead {
+    padding: 10px 15px !important;
+    font-size: 17px !important;
+    background: #eff9ff;
+    color: #081a76 !important;
+    font-weight: bold !important;
+    /* border-right: 1px solid var(--border-gray) !important; */
+  }
+  tbody tr {
+    border-bottom: .5px solid #00000024 !important;
+    font-size: 14px;
+  
+  }
+
 </style>
 <section class="pt-4">
     <div class="ipos_data">
@@ -127,10 +244,7 @@
 
                                 </div>
                             </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                <button type="button" class="btn btn-primary">Save changes</button>
-                            </div>
+                          
                         </div>
                     </div>
                 </div>
@@ -148,14 +262,96 @@
 
 
 
-                <div class="main_event_card cal-item" style="background:#F6EDEB;">
+                <div class="main_event_card ipo_watch cal-item" style="background:#F6EDEB;">
 
                     <p class="CalFont">IPO Watch</p>
                 </div>
-                <div class="main_event_card cal-item" style="background:#F6EDEB;">
+
+                <div id="myModal" class="modal fade" tabindex="-1" style="z-index: 9999999999;">
+                    <div class="modal-dialog modal-xl modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">IPO Watch</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="ipo_watch_btns">
+                                    <button class="ipos active" data-value="1">Upcoming IPO</button>
+                                    <button class="ipos " data-value="2">Open IPO</button>
+                                    <button class="ipos " data-value="3">Closed IPO</button>
+                                </div>
+                                <div class="ipo_watch_table mt-5">
+                                    <table class="table" id="ipo-watch">
+                                        <thead>
+                                            <tr class="ipo_table_head">
+                                                <th class="text-left">Company Name</th>
+                                                <th class="text-left">Issue Type</th>
+                                                <th class="text-right">Issue Size(₹)Cr</th>
+                                                <th class="text-right">Open Date</th>
+                                                <th class="text-right">Closed Date</th>
+                                                <th class="text-right">Offer Price(₹)</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="table_data_to_show">
+        
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+        
+                        </div>
+                    </div>
+                </div>
+                <div class="main_event_card new_listing cal-item" style="background:#F6EDEB;">
 
                     <p class="CalFont">New Listing</p>
                 </div>
+
+
+                <div id="newListing" class="modal fade" tabindex="-1" style="z-index: 9999999999;">
+                    <div class="modal-dialog modal-xl modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">New Listing</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="ipo_list_btns">
+                                    <button class="ipos_list btn_active" data-value="BSE/main">BSE</button>
+                                    <button class="ipos_list" data-value="NSE/main">NSE</button>
+                                    <button class="ipos_list" data-value="bse/sme">BSE SME</button>
+                                    <button class="ipos_list" data-value="nse/sme">NSE EMERGE</button>
+                                </div>
+                                <div class="ipo_watch_table mt-5">
+                                    <table class="table" id="new-lists">
+                                        <thead>
+                                            <tr class="ipo_table_head">
+                                                <th class="text-left">Company Name</th>
+                                                <th class="text-left">Listing Date</th>
+                                                <th class="text-right">Listing Price</th>
+                                                <th class="text-right">High</th>
+                                                <th class="text-right">Low</th>
+                                                <th class="text-right">Last Price(₹)</th>
+        
+                                            </tr>
+                                        </thead>
+                                        <tbody id="new_listing_data">
+        
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                         
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+
+
+
                 <div class="main_event_card best_performer_card cal-item" data-bs-toggle="modal"
                     data-bs-target="#ipo_best_performer" style="background:#F6EDEB;">
 
@@ -208,19 +404,57 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                <button type="button" class="btn btn-primary">Save changes</button>
-                            </div>
+                         
                         </div>
                     </div>
                 </div>
 
 
-                <div class="main_event_card cal-item" style="background:#F6EDEB;">
+                <div class="main_event_card basic_allotment cal-item" style="background:#F6EDEB;">
 
                     <p class="CalFont">Basis of Allotment</p>
                 </div>
+
+
+                <div id="basic_allotment" class="modal fade" tabindex="-1" style="z-index: 9999999999;">
+                    <div class="modal-dialog modal-xl modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Basis Allotment</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+        
+                                <div class="ipo_watch_table mt-5">
+                                    <table class="table" id="basis-allotment">
+                                        <thead>
+                                            <tr class="ipo_table_head">
+                                                <th class="text-left">Company Name</th>
+                                                <th class="text-left">Issue Type</th>
+                                                <th class="text-right">Closed Date</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="basis_allotment">
+        
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                      
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+
+
+
+
+
+
+
                 <div class="main_event_card draft_btn cal-item" style="background:#F6EDEB;" data-bs-toggle="modal"
                     data-bs-target="#ipo_drafy_prospectus">
 
@@ -258,18 +492,32 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                <button type="button" class="btn btn-primary">Save changes</button>
-                            </div>
+                          
                         </div>
                     </div>
                 </div>
-                <div class="main_event_card cal-item" style="background:#F6EDEB;">
+                <div class="main_event_card news_card cal-item" style="background:#F6EDEB;">
 
                     <p class="CalFont">IPO News</p>
                 </div>
-
+                <div id="ipo_news" class="modal fade" tabindex="-1" style="z-index: 9999999999;">
+                    <div class="modal-dialog modal-xl modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">IPO News</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+        
+                                <div class="table-box d-flex flex-wrap" id="news-boxs">
+        
+                                </div>
+                            </div>
+                          
+                        </div>
+                    </div>
+                </div>
+        
 
             </div>
         </div>
@@ -375,7 +623,7 @@
                     data.HIGH,                 // High(₹)
                     data.LOW,                  // Low(₹)
                     data.LISTVOL,              // Volume(Nos.)
-                    data.PerChange             // Change(%)
+                    data.PerChange.toFixed(2)             // Change(%)
                 ]).draw(false);
 
             });
@@ -606,6 +854,233 @@
         })
         // Handle button active states
 
+
+            // Basis Allotment Start Here !
+
+    $(".basic_allotment").click(function () {
+        $("#basic_allotment").modal("show")
+        basis_allotment()
+    })
+
+    function basis_allotment() {
+        $.ajax({
+            type: "get",
+            url: "/basic_allotment",
+            dataType: "json",
+            success: function (data) {
+                var res_data = data.data
+                $("#basis_allotment").empty()
+                res_data.forEach(element => {
+                    var row = `<tr>
+                            <td>${element.lname}</td>
+                            <td>${element.IssueType}</td>
+                            <td>${element.ClosDate.split("T")[0]}</td>
+                          </tr>`
+                    var table = $("#basis_allotment")
+                    table.append(row)
+                });
+                $("#basis-allotment").DataTable()
+            }
+        })
+    }
+
+
+    // IPO News Start Here !
+
+    $(".news_card").click(function () {
+        $("#ipo_news").modal("show")
+        get_ipo_news()
+    })
+
+    function get_ipo_news() {
+        $.ajax({
+            type: "get",
+            url: "/ipo_news",
+            dataType: "json",
+            success: function (data) {
+                var news = data.data
+                console.log(news);
+                news.forEach(element => {
+                    console.log(element);
+                    var news_box = `<div class="IPOnews-wq" 
+                data-sno="${element.Sno}" 
+                data-heading="${element.Heading}">
+                                  <div>
+                                    <h5>${element.Heading}</h5>
+                                    <span>${element.Date.split("T")[0]}</span> <span>(${element.Time})</span>
+                                    </div>
+                               </div>   
+                                `
+                    $(".table-box").append(news_box)
+
+                });
+
+                $(".IPOnews-wq").click(function () {
+                    var sno = $(this).data("sno");
+                    var heading = $(this).data("heading");
+
+
+                    heading = heading.replace(/\s+/g, '-');
+
+
+                    var url = `/news_details/${sno}/${heading}/`;
+
+
+                    window.open(url, '_blank');
+                    
+                });
+
+
+            }
+        })
+    }
+
+        //   New Listing Start Here !
+
+
+        $(".new_listing").click(function () {
+            $("#newListing").modal("show")
+            var intialData = {
+                bse_main: "BSE/main"
+            }
+            new_listed_ipo(intialData)
+        })
+
+        $(".ipos_list").click(function () {
+            $(".ipos_list").removeClass("btn_active")
+            $(this).addClass("btn_active")
+            var new_list = $(this).data("value")
+            console.log(new_list);
+            new_listed_ipo(new_list)
+        })
+
+        function new_listed_ipo(new_listed) {
+
+
+
+            $.ajax({
+                type: "post",
+                url: "/new_listed_ipo",
+                data: {
+
+                    all_listed_data: new_listed
+                },
+                success: function (data) {
+                    new_listing = data.data;
+                    $("#new_listing_data").empty()
+                    new_listing.forEach(element => {
+                        console.log(element);
+                        var row = `<tr>
+                            <td>${element.CO_NAME}</td>
+                            <td>${element.LISTDATE.split("T")[0]}</td>
+                            <td>${element.LISTPRICE}</td>
+                            <td>${element.HIGH}</td>
+                            <td>${element.LOW}</td>
+                            <td>${element.CLOSE}</td>
+                         </tr>`
+                        var table = $("#new_listing_data")
+                        table.append(row)
+                    });
+                    $("#new-lists").DataTable()
+                }
+            })
+        }
+
+    // Ipo Watch Start
+
+    $(".ipo_watch").click(function () {
+            $("#myModal").modal('show');
+            var intial_w_val = {
+                value_one: "1"
+            }
+            ipo_watch_data(intial_w_val)
+        })
+
+        $(".ipos").click(function () {
+            $(".ipos").removeClass("active");
+            $(this).addClass("active");
+            var btn_values = $(this).data("value")
+
+            ipo_watch_data(btn_values)
+        })
+
+
+
+
+
+
+        function ipo_watch_data(btn_value) {
+            console.log(btn_value);
+
+            $.ajax({
+                type: "post",
+                url: "/ipo_watch",
+                data: {
+                    all_data: btn_value
+                },
+                success: function (response) {
+                    var table_data = response.data
+                    $("#table_data_to_show").empty()
+
+                    table_data.forEach(element => {
+
+
+                        if (!element) {
+                            var table = $("#table_data_to_show")
+                            console.log("no data found");
+                        }
+                        else {
+
+                            if (btn_value == 2) {
+                                var row = `<tr>
+                                     <td>${element.lname}</td>
+                                     <td>${element.ISSUETYPE}</td>
+                                     <td>${element.IssueSize}</td>
+                                     <td>${element.OPENDATE.split("T")[0]}</td>
+                                     <td>${element.CLOSDATE.split("T")[0]}</td>
+                                     <td>${element.ISSUEPRICE}</td>
+                                    </tr>`
+                                var table = $("#table_data_to_show")
+                                table.append(row)
+                            }
+                            else if (btn_value == 3) {
+                                var row = `<tr>
+                                     <td>${element.Lname}</td>
+                                     <td>${element.IssueType}</td>
+                                     <td>${element.IssueSize}</td>
+                                     <td>${element.OPENDATE.split("T")[0]}</td>
+                                     <td>${element.CLOSDATE.split("T")[0]}</td>
+                                     <td>${element.ISSUEPRICE}</td>
+                                    </tr>`
+                                var table = $("#table_data_to_show")
+                                table.append(row)
+                            }
+                            else {
+                                var row = `<tr>
+                                     <td>${element.lname}</td>
+                                     <td>${element.ISSUETYPE}</td>
+                                     <td>${element.IssueSize}</td>
+                                     <td>${element.OPENDATE.split("T")[0]}</td>
+                                     <td>${element.CLOSDATE.split("T")[0]}</td>
+                                     <td>${element.ISSUEPRICE}</td>
+                                    </tr>`
+                                var table = $("#table_data_to_show")
+                                table.append(row)
+                            }
+                        }
+
+
+
+
+                    });
+                    $("#ipo-watch").DataTable()
+                }
+
+
+
+
+            })
+        }
 
 
     });

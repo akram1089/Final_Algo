@@ -204,7 +204,17 @@ urlpatterns = [
     path('quote_data_zerodha', views.quote_data_zerodha, name='quote_data_zerodha'),
     path('mutual_fund', views.mutual_fund, name='mutual_fund'),
     path('category_performance', views.category_performance, name='category_performance'),
+    
+    path('ipo_watch', views.ipo_watch, name='ipo_watch'),
+    path('new_listed_ipo', views.new_listed_ipo, name='new_listed_ipo'),
+    path('basic_allotment', views.basic_allotment, name='basic_allotment'),
+    path('ipo_news', views.ipo_news, name='ipo_news'),
+    path('ipo_deepak', views.ipo_deepak, name='ipo_deepak'),
+    path('news_details/<int:sno>/<str:heading>/', views.news_details, name='news_details'),
 
+
+
+    
 
 
 

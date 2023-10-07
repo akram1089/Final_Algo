@@ -4884,7 +4884,7 @@ def kiteOrder(request):
                         transaction_type=transaction_type,
                         quantity=quantity,
                         price=price,
-                        variety=kite.VARIETY_REGULAR,
+                        variety=kite.VARIETY_REGULAR,  
                         order_type=order_type,
                         product=kite.PRODUCT_NRML,  # Modify this if needed
                         validity=kite.VALIDITY_DAY
@@ -5017,3 +5017,112 @@ def category_performance(request):
 
     # Handle other HTTP methods (e.g., GET, PUT, DELETE) if needed
     return JsonResponse({"error": "Unsupported HTTP method"}, status=405)  # Method Not Allowed
+
+
+
+
+@csrf_exempt
+def ipo_watch(request):
+    if request.method == "POST":
+        ipo_data = request.POST.get("all_data", "1")
+        url = f"https://www.moneysukh.com/api/markets/Forthcoming/{ipo_data}/8/-/-/-/-"
+        print(url)
+        headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
+        "Accept-Language": "en-US,en;q=0.9",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive"
+         }
+        response_data = requests.get(url , headers)
+        datas = response_data.json()
+        get_all_data = datas
+    return JsonResponse(get_all_data)
+
+@csrf_exempt
+def new_listed_ipo(request):
+    if request.method == "POST":
+      new_listed = request.POST.get("all_listed_data", "BSE/main")
+      url = f"https://www.moneysukh.com/api/markets/Newlisting/{new_listed}/8"
+      print(url)
+      headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
+        "Accept-Language": "en-US,en;q=0.9",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive"
+      }
+      response_ipo_data = requests.get(url , headers)
+      datas = response_ipo_data.json()
+      get_listed_ipo_data = datas
+      return JsonResponse(get_listed_ipo_data)
+
+
+@csrf_exempt
+def basic_allotment(request):
+    url_data = "https://www.moneysukh.com/api/markets/BasisofAllotment/-"
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
+        "Accept-Language": "en-US,en;q=0.9",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive"
+    }
+    response_date = requests.get(url_data, headers=headers)
+    data_date = response_date.json()
+    all_data=data_date
+     
+    return JsonResponse(all_data)
+
+
+@csrf_exempt
+def ipo_news(request):
+    url = "https://www.moneysukh.com/api/markets/News/28/117/-/100"
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
+        "Accept-Language": "en-US,en;q=0.9",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive"
+    }
+    response_data = requests.get(url , headers=headers)
+    news_data = response_data.json()
+    all_news = news_data
+    return JsonResponse(all_news)
+
+def ipo_deepak(request):
+    return render(request , "ipo_deepak.html")
+
+import requests
+from django.http import JsonResponse
+from django.shortcuts import render
+
+def news_details(request, sno, heading):
+    # Construct the API URL with Sno as a parameter
+    api_url = f"https://www.moneysukh.com/api/markets/News/-/-/{sno}/-"
+
+    # Define headers for the request
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
+        "Accept-Language": "en-US,en;q=0.9",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive"
+    }
+
+    try:
+        # Make an API request to fetch the news details with headers
+        response = requests.get(api_url, headers=headers)
+        response.raise_for_status()  # Raise an exception for HTTP errors
+        news_data = response.json()
+        
+        # If "data" key exists, remove "Ind_code" from each dictionary inside it
+        if "data" in news_data:
+            data = news_data["data"]
+            for item in data:
+                if "Ind_code" in item:
+                    del item["Ind_code"]
+            # Update the "data" key with the modified data
+            news_data["data"] = data
+        
+        print(news_data)
+    except requests.exceptions.RequestException as e:
+        return JsonResponse({'error': str(e)}, status=500)
+
+    # Render the HTML template with the modified news_data
+    return render(request, 'news_details.html', {'news_data': news_data["data"]})
