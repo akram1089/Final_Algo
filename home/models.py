@@ -180,3 +180,24 @@ class Customer_feedback(models.Model):
     frnd_recommend = models.BooleanField(default=True)
     def _str_(self):
         return self.user.username
+
+
+class Subscriber(models.Model):
+    email = models.EmailField(max_length=254)
+    subscribed_at = models.DateTimeField()
+
+from django.db import models
+
+
+
+
+class ZerodhaAPIConfig(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    app_name = models.CharField(max_length=100)
+    api_key = models.TextField()  # Change from CharField to TextField
+    secret_key = models.TextField()  # Change from CharField to TextField
+    access_token = models.TextField()  # Change from CharField to TextField
+    api_added_at = models.DateTimeField()
+
+    def __str__(self):
+        return f"{self.user}"
