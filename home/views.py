@@ -4572,7 +4572,7 @@ import datetime
 from django.http import JsonResponse
 from .models import ZerodhaAPIConfig
 from django.contrib.auth.decorators import login_required
-
+@csrf_exempt
 @login_required
 def save_zerodha_config(request):
     user = request.user  # Get the currently logged-in user
