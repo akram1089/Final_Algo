@@ -212,6 +212,25 @@ urlpatterns = [
     path('ipo_deepak', views.ipo_deepak, name='ipo_deepak'),
     path('news_details/<int:sno>/<str:heading>/', views.news_details, name='news_details'),
     path('option_index_statregy_executor', views.option_index_statregy_executor, name='option_index_statregy_executor'),
+    
+    path('mutual_funds', views.mutual_funds, name ='mutual_funds'),
+    path('category_performance', views.category_performance, name='category_performance'),
+    path('holdings_select', views.holdings_select, name='holdings_select'),
+    path('performances_data', views.performances_data, name='performances_data'),
+    path('fund_activity', views.fund_activity, name='fund_activity'),
+    path('whats_in_out_category', views.whats_in_out_category, name='whats_in_out_category'),
+    path('whats_table_val', views.whats_table_val, name='whats_table_val'),
+    path('dividend_data', views.dividend_data, name='dividend_data'),
+    path('dividend_category', views.dividend_category, name='dividend_category'),
+    path('dividend_date', views.dividend_date, name='dividend_date'),
+    path('dividend_datas', views.dividend_datas, name='dividend_datas'),
+    path('fund_profile', views.fund_profile, name='fund_profile'),
+    path('new_funds_offer', views.new_funds_offer, name='new_funds_offer'),
+    path('mutual_fund_news', views.mutual_fund_news, name='mutual_fund_news'),
+    path('mutual_news_details', views.mutual_news_details, name='mutual_news_details'),
+    path('top_holdings_fund_house', views.top_holdings_fund_house, name='top_holdings_fund_house'),
+    path('top_holdings_category', views.top_holdings_category, name='top_holdings_category'),
+    path('holdings_scheme', views.holdings_scheme, name='holdings_scheme'),
 
 
 
