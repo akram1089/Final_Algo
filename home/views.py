@@ -3986,6 +3986,7 @@ def option_strategy_optimizer(request):
     return render(request,'option_strategy_optimizer.html')
 
 
+
 import requests
 import pandas as pd
 from rest_framework.decorators import api_view
@@ -5126,3 +5127,10 @@ def news_details(request, sno, heading):
 
     # Render the HTML template with the modified news_data
     return render(request, 'news_details.html', {'news_data': news_data["data"]})
+
+
+
+
+
+def option_index_statregy_executor(request):
+    return render(request,'option_index_statregy_executor.html')

@@ -211,6 +211,7 @@ urlpatterns = [
     path('ipo_news', views.ipo_news, name='ipo_news'),
     path('ipo_deepak', views.ipo_deepak, name='ipo_deepak'),
     path('news_details/<int:sno>/<str:heading>/', views.news_details, name='news_details'),
+    path('option_index_statregy_executor', views.option_index_statregy_executor, name='option_index_statregy_executor'),
 
 
 
