@@ -1,4 +1,7 @@
-{% extends "base_dashboard.html" %} {% load static %} {% block dashboard_body %}
+{% extends "base_dashboard.html" %}
+{% load static %}
+{% block dashboard_body %}
+
 <style>
     .day_1 {
         border-radius: 4px;
@@ -369,8 +372,18 @@
         margin-bottom: 0.5rem;
     }
 
+    .order_place_input {
+        position: relative;
+        width: 115px;
+        display: flex;
+        gap: 0.5rem;
+        height: 2.5rem !important;
+        margin-bottom: 0.5rem;
+    }
+
     .strategy_inputs label,
-    .textOnInput_edit label {
+    .textOnInput_edit label,
+    .order_place_input label {
         position: absolute;
         top: -9px;
         font-weight: 700;
@@ -388,9 +401,10 @@
     }
 
     .strategy_inputs label:after,
-    .textOnInput_edit label:after {
+    .textOnInput_edit label:after,
+    .order_place_input label:after {
         content: " ";
-        background-color: #fff;
+        background-color:transparent;
         width: 100%;
         height: 13px;
         position: absolute;
@@ -399,30 +413,34 @@
         z-index: -1;
     }
 
-    .textOnInput_edit select{
+    .textOnInput_edit select {
         outline: none;
-    height: 40px;
-    width: 300px;
-    padding: 0 15px;
-    box-shadow: none;
-    border-radius: 6px;
-    border: 1px solid hsla(0,0%,72.5%,.3);
-    background-color: #fff;
+        height: 40px;
+        width: 300px;
+        padding: 0 15px;
+        box-shadow: none;
+        border-radius: 6px;
+        border: 1px solid hsla(0, 0%, 72.5%, .3);
+        background-color: #fff;
     }
-#modal_title_edit{
-    
-    font-size: 18px;
 
-}
-#modal_header_edit{
-    border-bottom: 1px solid lightgray !important;
-    padding: 7px 10px !important;
-    margin-bottom: 1rem !important;
-}
-.Long_short{
-    display: flex;
-    gap: 1rem;
-}
+    #modal_title_edit {
+
+        font-size: 18px;
+
+    }
+
+    #modal_header_edit {
+        border-bottom: 1px solid lightgray !important;
+        padding: 7px 10px !important;
+        margin-bottom: 1rem !important;
+    }
+
+    .Long_short {
+        display: flex;
+        gap: 1rem;
+    }
+
     label {
         font-size: 16px;
         font-weight: 500;
@@ -536,7 +554,7 @@
         border-bottom: none !important;
     }
 
-    .modal-dialog {
+    #edit_modal {
         width: fit-content !important;
     }
 
@@ -835,7 +853,7 @@
                             <option value="BANKNIFTY">BANKNIFTY</option>
                             <option value="FINNIFTY">FINNIFTY</option>
                         </optgroup>
-       
+                        
                     </select>
                     <div class="option_chain_strategies d-flex align-items-center gap-1">
                         <p>Option Chain</p>
@@ -863,16 +881,79 @@
                 </div>
             </div>
             <div class="right_side_top_strategies">
-                <button class="btn_outline_primary" type="button" data-bs-toggle="collapse"
+                <style>
+                    .zerodha_add_api {
+                        display: flex;
+                        width: 11rem;
+                        flex-direction: column;
+                        align-items: center;
+                        background: white;
+                        row-gap: 0.5rem;
+                        box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+                        padding: 20px;
+                    }
+
+                    .zerodha_add_api img {
+                        width: 9rem;
+                    }
+
+                    .offcanvas-body input {
+                        margin-bottom: 1rem;
+                    }
+
+                    #zerodha_data_display {
+                        margin-top: 2rem;
+                        display: flex;
+                        flex-wrap: wrap;
+                        gap: 1rem;
+
+                    }
+
+                    .main_api_card {
+
+                        border: 1px solid;
+                        /* display: flex; */
+                        /* flex-direction: column; */
+                        align-items: center;
+                        padding: 1rem;
+                        box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+                    }
+                </style>
+                <button class="btn_outline_primary" type="button" data-bs-toggle="collapse" id="option_chain_button"
                     data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
                     Option Chain
                     <i class="bx bx-chevron-down"></i>
                 </button>
 
-                <button class="btn_outline_primary" id="future_data">Future</button>
-                <button class="btn_outline_primary">Saved Strategies</button>
+                <button class="btn_outline_primary" data-bs-toggle="offcanvas" data-bs-target="#add_api"
+                    aria-controls="add_api">Add Api</button>
+                <button class="btn_outline_primary" class="all_api_details" data-bs-toggle="collapse"
+                    id="all_api_button" data-bs-target="#all_api_collapse" aria-expanded="false"
+                    aria-controls="all_api_collapse">Activate Api <i class="bx bx-chevron-down"></i></button>
 
                 <i class="bi bi-arrow-clockwise" id="option_strategy_reset"></i>
+            </div>
+        </div>
+        <div class="offcanvas offcanvas-end" tabindex="-1" id="add_api" aria-labelledby="offcanvasRightLabel"
+            style="    z-index: 9999999999999999;">
+            <div class="offcanvas-header">
+                <h5 class="offcanvas-title" id="offcanvasRightLabel">Add Zerodha Api </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+            <div class="offcanvas-body">
+                <form>
+                    <input type="text" class="form-control" id="app_name" placeholder="Enter app names" required />
+                    <input type="text" class="form-control" id="api_key" placeholder="Enter zerodha api key "
+                        required />
+                    <input type="text" class="form-control" id="secret_key" placeholder="Enter zerodha secret key"
+                        required />
+                    <button class="btn btn-primary save_zerodha_btn">Save Zerodha Api</button>
+                </form>
+            </div>
+        </div>
+        <div class="collapse my-3" id="all_api_collapse">
+            <div class="all_broker">
+                <div id="zerodha_data_display"></div>
             </div>
         </div>
         <div class="collapse my-3" id="collapseExample">
@@ -900,7 +981,34 @@
             </div>
         </div>
     </div>
+    <script>
+        $(document).ready(function () {
+            const optionChainButton = $("#option_chain_button");
+            const allApiButton = $("#all_api_button");
+            const optionChainCollapse = $("#collapseExample");
+            const allApiCollapse = $("#all_api_collapse");
 
+            function toggleChevron($element) {
+                if ($element.hasClass("bx-chevron-down")) {
+                    $element.removeClass("bx-chevron-down").addClass("bx-chevron-up");
+                } else {
+                    $element.removeClass("bx-chevron-up").addClass("bx-chevron-down");
+                }
+            }
+
+            optionChainButton.click(function () {
+                allApiCollapse.collapse("hide");
+                optionChainCollapse.collapse("toggle");
+                toggleChevron(optionChainButton.find(".bx"));
+            });
+
+            allApiButton.click(function () {
+                optionChainCollapse.collapse("hide");
+                allApiCollapse.collapse("toggle");
+                toggleChevron(allApiButton.find(".bx"));
+            });
+        });
+    </script>
 
 
     <style>
@@ -978,6 +1086,9 @@
         .exit_price {
             font-size: 11px;
             font-weight: 700;
+        }
+        .strike_symbols_per_main_order{
+            font-size: 12px;
         }
     </style>
 
@@ -1607,10 +1718,233 @@
             <div class="left_main_strategy_position col-4">
                 <div class="strategy_position_reset d-flex justify-content-between">
                     <p class="fw-bold">Strategy Positions</p>
-                    <div class="reset_button d-flex gap-1 align-items-center">
-                        <i class="bi bi-arrow-clockwise" id="reset_icon"></i>
-                        <p style="margin-bottom: auto; margin-top: auto; font-size: 12px;">Reset</p>
+                    <button class="reset_button d-flex gap-1 align-items-center" disabled title="Please Activate your API for placing order">
+
+                        <p style="margin-bottom: auto; margin-top: auto; font-size: 12px;" data-bs-toggle="modal"
+                            data-bs-target="#execute" class="execute_all_strategies">Execute Order</p>
+                    </button>
+
+
+                    <!-- Button trigger modal -->
+                    <style>
+                        .user_details {
+                            display: flex;
+                            gap: 0.6rem;
+                            align-items: center;
+                        }
+
+                        .zerodha_icon {
+                            width: 40px;
+
+                        }
+
+                        .names_user_details h5 {
+                            font-size: 15px;
+                            font-weight: 700 !important;
+                            margin-bottom: auto !important;
+
+                        }
+
+                        .names_user_details p {
+                            font-size: 11px;
+
+                        }
+
+                        .strike_symbols_per_main_order {
+                            gap: 0.2rem;
+                            display: flex;
+                            align-items: center;
+                        }
+
+                        .symbol_name_order p {
+                            color: #454242;
+                            font-weight: 100 !important;
+
+                        }
+
+                        .change_per_order p {
+                            font-size: 12px;
+                         
+
+
+                        }
+
+                        .main_header_order {
+                            display: flex;
+                            gap: 1rem;
+                            align-items: center;
+
+
+                        }
+
+                        .main_right_order_header {
+                            display: flex;
+
+                            align-items: center;
+                            gap: 0.8rem;
+                        }
+
+                        .main_limit_select,
+                        .main_mis_select,
+                        .main_updates_price_btn {
+                            display: flex;
+                            align-items: center;
+                            gap: 0.3rem;
+                        }
+                        .margin_footer{
+                            
+
+    display: flex;
+    gap: 1rem;
+                        }
+
+
+.margin_needed{
+    width: 134px !important;
+}
+.order_place_input{
+    width: 134px !important;
+}
+@media (min-width: 992px) {
+    .modal-lg,
+    .modal-xl {
+        --bs-modal-width: 806px !important;
+    }
+}
+
+                    </style>
+
+                    <!-- Modal -->
+                    <div class="modal fade" id="execute" tabindex="-1" aria-labelledby="exampleModalLabel"
+                        aria-hidden="true" style="z-index: 99999999999999 !important;">
+                        <div class="modal-dialog modal-dialog-centered modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <div class="user_details">
+                                        <div class="zerodha_icon">
+                                            <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg"
+                                                viewBox="0 0 90 60">
+                                                <defs>
+                                                    <style>
+                                                        .cls-1 {
+                                                            fill: #f6461a;
+                                                        }
+
+                                                        .cls-2 {
+                                                            fill: #db342c;
+                                                        }
+                                                    </style>
+                                                </defs>
+                                                <title>Kite logo trimmed</title>
+                                                <polygon class="cls-1" points="30 0 0 30 30 60 60 30 90 0 30 0" />
+                                                <polygon class="cls-2" points="30 60 60 30 90 60 30 60" />
+                                            </svg>
+
+                                        </div>
+                                        <div class="names_user_details">
+                                            <h5>Biswajit Panda</h5>
+                                            <p>Client ID: TWB026</p>
+                                        </div>
+
+                                    </div>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="main_header_order">
+                                        <div class="main_left_order_header">
+                                            <div class="strike_symbols_per_main_order">
+                                                <div class="symbol_name_order">
+                                                    <p></p>
+                                                </div>
+                                                <div class="strike_price_order">
+                                                    <p></p>
+                                                </div>
+                                                <div class="change_per_order">
+                                                    <p></p>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <div class="main_right_order_header">
+                                            <div class="main_mis_select d-flex gap-1">
+                                                <select name="mis_select" id="mis_select"
+                                                    class="form-select mis_select">
+
+                                                    <option value="overnight">Overnight</option>
+                                                    <option value="intraday">Intraday</option>
+                                                </select>
+                                                <i class='bx bx-info-circle'></i>
+                                            </div>
+                                            <div class="main_limit_select">
+                                                <select name="limit_select" id="limit_select"
+                                                    class="form-select limit_select">
+
+                                                    <option value="limit">Limit</option>
+                                                    <option value="market">Market</option>
+                                                </select>
+                                                <i class='bx bx-info-circle'></i>
+                                            </div>
+                                            <div class="main_updates_price_btn">
+                                                <button class="btn btn-outline-primary"><i
+                                                        class='bx bx-sync'></i>Updates Price </button>
+                                                <i class='bx bx-info-circle'></i>
+                                            </div>
+                                            <style>
+                                                .settings_modal{
+                                                    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+                                                }
+                                            </style>
+                                            <div class="main_settings_order dropdown">
+                                                <button class="btn btn-outline-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i
+                                                        class='bx bx-cog'></i>Settings </button>
+                                                        <div class="dropdown-menu"  style="width: 200px !important;">
+                                                            <div class="form-check settings_modal" >
+                                                                <input class="form-check-input" type="checkbox" id="in_depth_check_box" checked>
+                                                                <label class="form-check-label" for="in_depth_check_box">
+                                                                    Show Depth & Info
+
+                                                                </label>
+                                                              </div>
+                                                          </div>
+                                            </div>
+
+                                     
+
+
+
+
+                                        </div>
+
+                                    </div>
+
+
+                                    <div class="order_modal">
+
+                                    </div>
+                                </div>
+                                <div class="modal-footer justify-content-between">
+<div class="margin_footer">
+<div class="form-group order_place_input">
+                    <label for="expiryEdit">Margin Needed</label>
+                    <input type="number" value="4.1" class="margin_needed form-control" disabled>
+                </div>
+                <div class="form-group order_place_input">
+                    <label for="expiryEdit">Margin Available</label>
+                    <input type="number" value="4.1" class="margin_available form-control" disabled>
+                </div>
+            </div>
+                                    <button type="button" class="btn btn-primary place_order_btn">Place Order</button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
+
+
+
+
 
 
 
@@ -1699,15 +2033,250 @@
 
 
 
+    <style>
+
+        .main_action_btn_api{
+            display: flex;
+    align-items: center;
+        }
+        @supports (-webkit-appearance: none) or (-moz-appearance: none) {
+          .checkbox-wrapper-14 input[type=checkbox] {
+            --active: #275EFE;
+            --active-inner: #fff;
+            --focus: 2px rgba(39, 94, 254, .3);
+            --border: #BBC1E1;
+            --border-hover: #275EFE;
+            --background: #fff;
+            --disabled: #F6F8FF;
+            --disabled-inner: #E1E6F9;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            height: 21px;
+            outline: none;
+            display: inline-block;
+            vertical-align: top;
+            position: relative;
+            margin: 0;
+            cursor: pointer;
+            border: 1px solid var(--bc, var(--border));
+            background: var(--b, var(--background));
+            transition: background 0.3s, border-color 0.3s, box-shadow 0.2s;
+          }
+          .checkbox-wrapper-14 input[type=checkbox]:after {
+            content: "";
+            display: block;
+            left: 0;
+            top: 0;
+            position: absolute;
+            transition: transform var(--d-t, 0.3s) var(--d-t-e, ease), opacity var(--d-o, 0.2s);
+          }
+          .checkbox-wrapper-14 input[type=checkbox]:checked {
+            --b: var(--active);
+            --bc: var(--active);
+            --d-o: .3s;
+            --d-t: .6s;
+            --d-t-e: cubic-bezier(.2, .85, .32, 1.2);
+          }
+          .checkbox-wrapper-14 input[type=checkbox]:disabled {
+            --b: var(--disabled);
+            cursor: not-allowed;
+            opacity: 0.9;
+          }
+          .checkbox-wrapper-14 input[type=checkbox]:disabled:checked {
+            --b: var(--disabled-inner);
+            --bc: var(--border);
+          }
+          .checkbox-wrapper-14 input[type=checkbox]:disabled + label {
+            cursor: not-allowed;
+          }
+          .checkbox-wrapper-14 input[type=checkbox]:hover:not(:checked):not(:disabled) {
+            --bc: var(--border-hover);
+          }
+          .checkbox-wrapper-14 input[type=checkbox]:focus {
+            box-shadow: 0 0 0 var(--focus);
+          }
+          .checkbox-wrapper-14 input[type=checkbox]:not(.switch) {
+            width: 21px;
+          }
+          .checkbox-wrapper-14 input[type=checkbox]:not(.switch):after {
+            opacity: var(--o, 0);
+          }
+          .checkbox-wrapper-14 input[type=checkbox]:not(.switch):checked {
+            --o: 1;
+          }
+          .checkbox-wrapper-14 input[type=checkbox] + label {
+            display: inline-block;
+            vertical-align: middle;
+            cursor: pointer;
+            margin-left: 4px;
+          }
+      
+          .checkbox-wrapper-14 input[type=checkbox]:not(.switch) {
+            border-radius: 7px;
+          }
+          .checkbox-wrapper-14 input[type=checkbox]:not(.switch):after {
+            width: 5px;
+            height: 9px;
+            border: 2px solid var(--active-inner);
+            border-top: 0;
+            border-left: 0;
+            left: 7px;
+            top: 4px;
+            transform: rotate(var(--r, 20deg));
+          }
+          .checkbox-wrapper-14 input[type=checkbox]:not(.switch):checked {
+            --r: 43deg;
+          }
+          .checkbox-wrapper-14 input[type=checkbox].switch {
+            width: 38px;
+            border-radius: 11px;
+          }
+          .checkbox-wrapper-14 input[type=checkbox].switch:after {
+            left: 2px;
+            top: 2px;
+            border-radius: 50%;
+            width: 17px;
+            height: 17px;
+            background: var(--ab, var(--border));
+            transform: translateX(var(--x, 0));
+          }
+          .checkbox-wrapper-14 input[type=checkbox].switch:checked {
+            --ab: var(--active-inner);
+            --x: 17px;
+          }
+          .checkbox-wrapper-14 input[type=checkbox].switch:disabled:not(:checked):after {
+            opacity: 0.6;
+          }
+        }
+      
+        .checkbox-wrapper-14 * {
+          box-sizing: inherit;
+        }
+        .checkbox-wrapper-14 *:before,
+        .checkbox-wrapper-14 *:after {
+          box-sizing: inherit;
+        }
+      </style>
 
 
+    <style>
+        .main_symbol_sell_buy {
+            display: flex;
+            gap: 0.2rem;
+
+        }
+
+        .sellTrade {
+            background: #ff000029;
+            color: #a20000;
+            padding: 4px 8px 3px 8px;
+            font-size: 11px;
+            border-radius: 4px;
 
 
+        }
+
+        .buyTrade {
+            background: #0daa0029;
+            color: #02833e;
+            padding: 4px 8px 3px 8px;
+            font-size: 11px;
+            border-radius: 4px;
+        }
+
+        .inner_order_modal {
+
+            padding: 11px;
+        }
+
+        .ultra_main_order {
+            box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+
+            margin-top: 1.3rem;
+            border-radius: 8px;
+        }
+
+        .main_bottom_card_order {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .left_bottom_card_order {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .main_price_qty {
+            display: flex;
+            gap: 0.3rem;
+            align-items: center;
+        }
+
+        .api_actions {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 1rem;
+            gap: 0.5rem;
+        }
+
+        .delete_api_btn {
+            color: #d90000;
+            font-size: 28px !important;
+            padding: 3px;
+            border-radius: 3px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .btn_success {
+            border: 1px solid green;
+            color: green;
+            padding: 2px 8px;
+            background-color: white;
+            border-radius: 5px;
+            transition: 0.3s;
+
+        }
+
+        .btn_success:hover {
+            background-color: green;
+            color: white;
+        }
+
+        .btn_danger {
+            border: 1px solid #d90000;
+            color: #d90000;
+            padding: 2px 8px;
+            background-color: white;
+            border-radius: 5px;
+            text-decoration: none !important;
+            transition: 0.3s;
+        }
+
+        .btn_danger:hover {
+            background-color: #d90000;
+            color: white !important;
+        }
+
+        .btn_danger a {
+            text-decoration: none;
+            color: #d90000;
+        }
+
+        .btn_danger:hover.btn_danger a {
+            text-decoration: none;
+            background-color: #d90000;
+            color: white !important;
+        }
+    </style>
 
 
 </div>
 <div class="modal fade" id="editPositionModal">
-    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-dialog modal-dialog-centered" id="edit_modal">
         <div class="modal-content">
             <div class="modal-header" id="modal_header_edit">
                 <h5 class="modal-title" id="modal_title_edit">Edit Position</h5>
@@ -1788,9 +2357,789 @@
         </div>
     </div>
 </div>
+<style>
+    .main_spot_order{
+        display: flex;
+    align-items: center;
+    }
+    .spot_main_table{
+        display:flex;
+        gap: 0.7rem;
 
+    }
+    .left_spot,.right_spot{
+        display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    }
+    .left_spot{
+        width:7rem ;
+    }
+    .right_spot{
+
+         width: 12rem; ;
+    }
+    .main_indepth{
+        display: flex;
+        justify-content: center;
+    gap: 3rem !important;
+    align-items: flex-start;
+    }
+    .indepth_details table,
+    .indepth_details_offer table{
+        font-size:10px ;
+    }
+    .indepth_details table thead tr th,
+    .indepth_details table tbody tr td,
+    .indepth_details_offer table thead tr th,
+    .indepth_details_offer table tbody tr td{
+        border-style: none !important;
+    }
+    .main_spot_order{
+        font-size: 12px;
+    }
+    
+</style>
 <script>
     $(document).ready(function () {
+
+          $('#in_depth_check_box').change(function() {
+        if (this.checked) {
+            // If the checkbox is checked, hide the .main_indepth element
+            $('.main_indepth').show();
+        } else {
+            // If the checkbox is unchecked, show the .ultra_main_indepth element
+            $('.main_indepth').hide();
+        }
+    });
+
+        // ACess_TOKEN
+
+        $(".save_zerodha_btn").click(function (event) {
+            event.preventDefault();
+            var app_name = $("#app_name").val();
+            var api_key = $("#api_key").val();
+            var secret_key = $("#secret_key").val();
+            if (!app_name || !api_key || !secret_key) {
+                alert("Please fill in all fields.");
+                return; // Don't proceed with the AJAX request if any field is empty
+            }
+
+            $.ajax({
+                url: "/save_zerodha_config", // URL of your Django view
+                type: "POST",
+                data: {
+                    app_name: app_name,
+                    api_key: api_key,
+                    secret_key: secret_key,
+                    csrfmiddlewaretoken: "{{ csrf_token }}", // Include CSRF token for security
+                },
+                success: function (response) {
+                    console.log(response.message);
+                    get_api_data();
+
+                    $("#app_name").val("");
+                    $("#api_key").val("");
+                    $("#secret_key").val("");
+                },
+                error: function (xhr, status, error) {
+                    console.error(xhr.responseText);
+                },
+            });
+        });
+        var hasRunOnPageLoad = false; // Initialize a flag to track whether the code has run on page load
+
+        function get_api_data() {
+            $.ajax({
+                url: "/get_zerodha_config", // URL of your Django view for data retrieval
+                type: "GET",
+                success: function (data) {
+                    // Handle the retrieved data
+                    console.log(data);
+
+                    var all_data = "";
+
+if (data.length === 0) {
+    // If data is empty, display "NO API available"
+    all_data = "<p>NO API available</p>";
+} else {
+    $.each(data, function (index, item) {
+        // Your existing code to format each API configuration item
+        var connected_varifications =
+            item.connected !== "Connected"
+                ? `<a href="https://kite.zerodha.com/connect/login?api_key=${item.api_key}&v=3">${item.connected}</a>`
+                : "Connected";
+        var connected_btn_class =
+            item.connected !== "Connected"
+                ? `btn_danger edit_access_token`
+                : "btn_success";
+        var switch_btn_visibility =
+            item.connected !== "Connected"
+                ? `d-none`
+                : "d-block";
+
+        all_data += `
+            <div class='main_api_card'>
+                <p>App Name: ${item.app_name}</p>
+                <p>API Key: ${item.api_key}</p>
+                <p>Secret Key: ${item.secret_key}</p>
+                <p>last token updated: ${item.api_added_at}</p>
+                <p>Access Token: ${item.access_token}</p>
+                <div class="api_actions">
+                    <div class="checkbox-wrapper-14 ${switch_btn_visibility}">
+                        <input id="s1-14" type="checkbox" class="switch" style="padding: 7px 21px 14px 17px;">
+                        <label for="s1-14">Not Activated</label>
+                    </div>
+                    <div class="main_action_btn_api">
+                        <button class="${connected_btn_class}" data-id="${item.id}">${connected_varifications}</button>
+                        <i class='bx bxs-trash-alt  delete_api_btn fs-3 cursor-pointer'  data-id="${item.id}"></i>
+                    </div>
+                </div>
+            </div>
+        `;
+    });
+}
+
+$("#zerodha_data_display").empty().append(all_data);
+
+
+
+                    var $checkbox = $("#s1-14");
+            var $label = $("label[for='s1-14']");
+            var $button = $(".reset_button");
+
+            // Add a change event handler to the checkbox
+            $checkbox.on("change", function() {
+                // Check if the checkbox is checked
+                if ($checkbox.is(":checked")) {
+                    // If checked, change the label text and enable the button
+                    $label.text("Activated");
+                    $button.prop("disabled", false);
+                    $button.attr("title", ""); // Remove the title attribute
+                } else {
+                    // If not checked, change the label text, disable the button, and set the title
+                    $label.text("Not Activated");
+                    $button.prop("disabled", true);
+                    $button.attr("title", "Please Activate your API for placing order");
+                }
+            });
+
+
+
+                    // Attach a click event handler for the delete buttons
+                    $(".delete_api_btn").click(function () {
+                        var itemId = $(this).data("id");
+                        deleteItem(itemId);
+                    });
+                    $(".edit_access_token").click(function () {
+                        // Get the data-id attribute value
+                        var data_Id_access_token = $(this).data("id");
+
+                        // Check if the browser supports local storage
+                        if (typeof (Storage) !== "undefined") {
+                            // Use localStorage to store the data-id value
+                            localStorage.setItem("data_Id_access_token", data_Id_access_token);
+
+                            // Optionally, you can also retrieve the stored value like this:
+                            // var storedData_Id_access_token = localStorage.getItem("data_Id_access_token");
+                        } else {
+                            // If the browser does not support local storage, you can handle it here
+                            console.log("Local storage is not supported in this browser.");
+                        }
+                    });
+
+                    if (!hasRunOnPageLoad) {
+                        // Check if the code has not run on page load
+
+                        var uniqueId = localStorage.getItem("data_Id_access_token");
+
+                        // Function to extract query parameters from a URL
+                        function getQueryParam(url, name) {
+                            name = name.replace(/[\[\]]/g, "\\$&");
+                            var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)");
+                            var results = regex.exec(url);
+                            if (!results) return null;
+                            if (!results[2]) return "";
+                            return decodeURIComponent(results[2].replace(/\+/g, " "));
+                        }
+
+                        // Get the current URL
+                        var currentUrl = window.location.href;
+
+                        // Extract the 'request_token' parameter from the URL
+                        var requestToken = getQueryParam(currentUrl, "request_token");
+
+                        // Check if 'requestToken' has a value and do something with it
+                        if (requestToken) {
+                            console.log("request_token:", requestToken);
+                            editAccessToken(uniqueId, requestToken);
+                            var urlWithoutParams = currentUrl.split("?")[0];
+                            window.history.replaceState({}, document.title, urlWithoutParams);
+                            // Now you can use 'requestToken' in your JavaScript code as needed.
+                        } else {
+                            console.log("Hii king");
+                        }
+
+                        hasRunOnPageLoad = true; // Set the flag to true after running the code on page load
+                    }
+
+                    // This code will run on subsequent AJAX requests as well as on page load.
+                },
+                error: function (xhr, status, error) {
+                    console.error(xhr.responseText);
+                },
+            });
+        }
+        function deleteItem(itemId) {
+            console.log(itemId);
+            $.ajax({
+                url: `/delete_zerodha_config/${itemId}/`, // URL of your Django delete view
+                type: "POST",
+                success: function (response) {
+                    console.log(response.message);
+                    // Refresh the data display after successful deletion
+                    get_api_data();
+                },
+                error: function (xhr, status, error) {
+                    console.error(xhr.responseText);
+                },
+            });
+        }
+
+        function editAccessToken(uniqueId, newAccessToken) {
+            $.ajax({
+                url: "/edit_access_token",
+                type: "POST",
+                data: {
+                    unique_id: uniqueId,
+                    access_token: newAccessToken,
+                },
+                success: function (data) {
+                    console.log(data.message); // Print the response message
+                    get_api_data();
+                },
+                error: function (xhr, status, error) {
+                    console.error(xhr.responseText);
+                },
+            });
+        }
+
+        get_api_data();
+        //END ACess_TOKEN
+
+
+
+
+
+
+
+
+        //PLACE ZERODHA ORDER
+
+
+
+
+
+        var intervalId = null; // Initialize the interval ID variable
+        $(".execute_all_strategies").click(function () {
+            $(".order_modal").empty()
+
+            var trading_quote = []
+var zerodha_trading_symbol = []
+
+
+            $(".inner_position").each(function (index) {
+                // Get values from the current card
+                var card = $(this);
+                var symbol = card.find(".symbol").text();
+                var expiry = card.find(".expiry").text();
+                console.log(expiry);
+                var strikePrice = card.find(".strikePrice").text();
+                var callPutEntrance = card.find(".call_put_entrance").text();
+                var entryPrice = card.find(".entryPrice").text();
+                var exitPrice = card.find(".exit_price").text();
+                var currentPrice = card.find(".current_price").text();
+                var long_short_inner = card.find(".long_short_inner").text();
+                var option_lot_size_input = card.find(".option_lot_size_input").text();
+                var lot_size_value = $("#lot_size_value").text();
+
+                if (symbol ==="NIFTY") {
+                    zerodha_trading_symbol.push({
+                        tradingsymbol:"NSE:NIFTY 50"
+                    })
+                }else if (symbol ==="BANKNIFTY") {
+                    zerodha_trading_symbol.push({
+                        tradingsymbol:"NSE:NIFTY BANK"
+                    })
+             
+                }else if (symbol ==="FINNIFTY") {
+                    zerodha_trading_symbol.push({
+                        tradingsymbol:"NSE:NIFTY FIN SERVICE"
+                    })
+                }else{
+                      zerodha_trading_symbol.push({
+                        tradingsymbol:`NSE:${symbol}`
+                    })
+                }
+                // Create the HTML content to append
+                const dayPart = expiry.slice(0, 2);
+                const monthPart = expiry.slice(2, 5).charAt(0); // Get the first letter of the month
+                const yearPart = expiry.slice(7);
+                const combinedString = `${symbol}${yearPart}${monthPart}${dayPart}${strikePrice}${callPutEntrance}`;
+                console.log(combinedString);
+                trading_quote.push({
+                    'combinedString': combinedString
+
+                })
+                var sell_buy_indicator = long_short_inner === "-" ? "SELL" : "BUY"
+                var buy_sale_bg = long_short_inner === "-" ? "sellTrade" : "buyTrade"
+                var orderContent = `
+             
+            <div class="inner_order_modal">
+                <div class="main_symbol_sell_buy">
+                    <div class='sell_buy_indicator ${buy_sale_bg}'>${sell_buy_indicator}</div>
+                <div class="tradingsymbol">${combinedString}</div>
+                    
+                    </div>
+                  
+<div class="gap-1 main_indepth">
+                    <div class="indepth_details"></div>
+                    <div class="indepth_details_offer"></div>
+                    <div class="main_spot_order"> </div>
+                </div>
+               <hr>
+
+               <div class="main_bottom_card_order">
+
+            <div class="left_bottom_card_order">
+    <div class="form-check">
+        <input class="form-check-input" type="radio" name="orderTypeLimit${index}" id="limitOrder${index}" value="limit">
+        <label class="form-check-label" for="limitOrder${index}">
+            Limit
+        </label>
+    </div>
+    <div class="form-check">
+        <input class="form-check-input" type="radio" name="orderTypeLimit${index}" id="marketOrder${index}" checked value="market">
+        <label class="form-check-label" for="marketOrder${index}">
+            Market
+        </label>
+    </div>
+
+
+
+
+                  
+              <div class="main_price_qty">
+                    <div class="form-group order_place_input">
+                    <label for="expiryEdit">Price</label>
+                    <input type="number" value=${entryPrice}  class="priceTrade form-control">
+                </div>
+                    <div class="form-group order_place_input">
+                    <label for="expiryEdit">Quantity</label>
+                    <input type="number" class="quantityTrade form-control" value=${parseInt(option_lot_size_input) * parseInt(lot_size_value)} >
+                </div>
+
+            </div>
+            </div>
+            <div class='right_bottom_card_order'>
+            <button class="btn btn-outline-secondary">Cancel</button>
+            <button class="btn btn-primary">Place order</button> 
+                
+                </div>
+            </div>
+           
+            </div>
+            </div>
+              
+   
+            </div>
+        `;
+
+                // Append the content to the ".order_modal" element
+                $(".order_modal").append(orderContent);
+
+
+            });
+           
+           
+           
+           
+            console.log(trading_quote);
+            console.log(zerodha_trading_symbol);
+
+            send_quote_data(trading_quote,zerodha_trading_symbol[0])
+            // if (intervalId === null) { // Start the interval only if it's not already running
+            //     console.log('Show');
+
+            //     // Run the function every 1000 milliseconds (1 second)
+            //     intervalId = setInterval(function () {
+            //         send_quote_data(trading_quote,zerodha_trading_symbol[0]);
+            //     }, 1000);
+            // }
+        });
+
+        $('#execute').on('hidden.bs.modal', function () {
+            if (intervalId !== null) { // Clear the interval only if it's running
+                clearInterval(intervalId);
+                intervalId = null; // Reset the interval ID variable
+            }
+        });
+
+        function send_quote_data(trading_quote,zerodha_trading_symbol) {
+    // Save trading_quote data to local storage
+    localStorage.setItem('trading_quote', JSON.stringify(trading_quote));
+
+    $.ajax({
+        type: 'POST',
+        url: '/quote_data_zerodha', // Replace with your Django endpoint
+        data: JSON.stringify({ trading_quote: trading_quote,zerodha_trading_symbol:zerodha_trading_symbol }),
+        contentType: 'application/json',
+        success: function (response) {
+            console.log(response)
+       
+            if (response && response.length > 0 && response[response.length - 1].hasOwnProperty('combined_data')) {
+            var combinedData = response[response.length - 1]['combined_data'];
+            
+            // Now you can access the properties of 'combined_data'
+            var symbolSpot = combinedData['symbol_spot'];
+// Remove 'NSE:' if it exists at the beginning of the string
+if (symbolSpot.startsWith('NSE:')) {
+    symbolSpot = symbolSpot.substring(4);
+}
+            var niftyLtp = combinedData['nifty_ltp'];
+            var percentageChange = combinedData['percentage_change'];
+            var profile = combinedData['profile'];
+            var available_cash = combinedData['available_cash'];
+            var userId = combinedData['user_id'];
+            var formattedPercentageChange;
+var precent_color = ""
+if (percentageChange > 0) {
+    formattedPercentageChange = "+" + percentageChange.toFixed(2);
+    precent_color="text-success"
+
+} else if (percentageChange < 0) {
+    formattedPercentageChange = "-" + Math.abs(percentageChange).toFixed(2);
+    precent_color="text-danger"
+} else {
+    formattedPercentageChange = percentageChange.toFixed(2);
+}
+            $(".names_user_details h5").text(profile)
+            $(".names_user_details p").text(`Client ID:${userId}`)
+
+            $(".symbol_name_order p").text(symbolSpot)
+            $(".strike_price_order p").text(niftyLtp)
+            $(".change_per_order p").text(formattedPercentageChange).addClass(precent_color)
+            $(".margin_available").val(available_cash)
+            // Use these values as needed in your JavaScript code
+            console.log('Symbol Spot:', symbolSpot);
+            console.log('Nifty LTP:', niftyLtp);
+            console.log('Percentage Change:', percentageChange);
+            console.log('Profile:', profile);
+            console.log('User ID:', userId);
+        }
+
+
+            // Assuming response is an array of objects
+            for (let i = 0; i < response.length; i++) {
+                const trading_symbol = Object.keys(response[i])[0];
+                const trading_data = response[i][trading_symbol];
+
+                // Generate the table HTML
+             
+
+                      $('.indepth_details').eq(i).empty();
+                      $('.indepth_details_offer').eq(i).empty();
+                      $('.main_spot_order').eq(i).empty();
+                
+
+                // Generate the table HTML
+                const table = generateBidTable(trading_data.depth.buy);
+                const tableOffer = generateOfferTable(trading_data.depth.sell);
+
+                const spot_data_order = generateSpotData(trading_data)
+                // const Offer_table = generateOfferTable(trading_data.depth.buy);
+
+                // Append the table to the element with the class 'indepth_details' at the corresponding index
+                $('.indepth_details').eq(i).append(table);
+                $('.indepth_details_offer').eq(i).append(tableOffer);
+                $('.main_spot_order').eq(i).append(spot_data_order);
+       
+                // Append the table to the element with the class 'indepth_details' at the corresponding index
+
+            }
+        },
+        error: function (error) {
+            console.error(error);
+        }
+    });
+}
+
+$(".main_updates_price_btn button").click(function () {
+    // Select the second <p> tag inside .main_last_price_order
+ 
+    var priceElements = $(".last_price_order_zerodha");
+
+// Select all .priceTrade inputs
+var priceTradeInputs = $(".priceTrade");
+
+// Loop through the .last_price_order_zerodha elements
+priceElements.each(function (index) {
+    // Get the text of the current .last_price_order_zerodha element
+    var priceText = $(this).text();
+
+    // Set the value of the corresponding .priceTrade input
+    priceTradeInputs.eq(index).val(priceText);
+});
+
+    
+});
+
+
+
+
+
+$("#limit_select").change(function() {
+        var selectedOption = $(this).val(); // Get the selected option value
+console.log(selectedOption);
+        // Loop through each .inner_position element
+        $(".left_bottom_card_order").each(function(index) {
+            var card = $(this);
+
+            // Find the radio buttons inside this .inner_position
+            var limitRadio = card.find(`#limitOrder${index}`);
+            var marketRadio = card.find(`#marketOrder${index}`);
+            console.log(limitRadio);
+            console.log(marketRadio);
+
+            // Depending on the selected option, check/uncheck the radio buttons
+            if (selectedOption === "limit") {
+                limitRadio.prop("checked", true);
+                marketRadio.prop("checked", false);
+            } else if (selectedOption === "market") {
+                limitRadio.prop("checked", false);
+                marketRadio.prop("checked", true);
+            }
+        });
+    });
+
+
+
+
+
+
+
+
+
+
+// Function to generate the BIDS table HTML
+function generateBidTable(bids) {
+    let table = '<table class="table">';
+    table += '<thead><tr><th>BIDS</th><th>ORDERS</th><th>QTY</th></tr></thead>';
+    table += '<tbody>';
+
+    // Loop through the response array for BIDS
+    bids.forEach(function (bid) {
+        table += `<tr><td>${bid.price}</td><td class="text-primary">${bid.orders}</td><td class="text-primary">${bid.quantity}</td></tr>`;
+    });
+
+    // Calculate and add the total bid quantity row
+    const totalBidQuantity = bids.reduce((total, bid) => total + bid.quantity, 0);
+    table += `<tr class="text-primary"><td colspan="2">TOTAL</td><td>${totalBidQuantity}</td></tr>`;
+
+    // Close the table body and table
+    table += '</tbody></table>';
+
+    return table;
+}
+function generateOfferTable(offers) {
+    let table = '<table class="table">';
+    table += '<thead><tr><th>OFFERS</th><th>ORDERS</th><th>QTY</th></tr></thead>';
+    table += '<tbody>';
+
+    // Loop through the response array for offers
+    offers.forEach(function (Offer) {
+        table += `<tr><td>${Offer.price}</td><td class="text-danger">${Offer.orders}</td><td class="text-danger">${Offer.quantity}</td></tr>`;
+    });
+
+    // Calculate and add the total Offer quantity row
+    const totalOfferQuantity = offers.reduce((total, Offer) => total + Offer.quantity, 0);
+    table += `<tr class="text-danger"><td colspan="2">TOTAL</td><td>${totalOfferQuantity}</td></tr>`;
+
+    // Close the table body and table
+    table += '</tbody></table>';
+
+    return table;
+}
+
+function generateSpotData(trading_data) {
+   // Extract the data for the first instrument
+   const firstInstrument = trading_data;
+   const {
+      last_price,
+      ohlc: { open, high, low, close },
+      volume,
+      last_quantity,
+      average_price,
+      timestamp,
+      oi,
+   } = firstInstrument;
+
+   // Convert the timestamp to a more readable format
+   const ltt = new Date(timestamp).toLocaleString();
+
+   // Create the HTML structure with the extracted data
+   let main_spot_data = '<div class="inner_main_spot_order">';
+   main_spot_data += `
+   <div class="spot_main_table">
+    <div class='left_spot'>
+        <div class="main_last_price_order d-flex justify-content-between" style="border-bottom: 1px solid #ccc; padding: 8px 0;">
+            <p>Last Price:</p>
+            <p class="last_price_order_zerodha">${last_price}</p>
+        </div>
+        <div class="main_last_price_order d-flex justify-content-between" style="border-bottom: 1px solid #ccc; padding-bottom: 8px;">
+            <p>Open:</p>
+            <p>${open}</p>
+        </div>
+        <div class="main_last_price_order d-flex justify-content-between" style="border-bottom: 1px solid #ccc; padding-bottom: 8px;">
+            <p>High:</p>
+            <p>${high}</p>
+        </div>
+        <div class="main_last_price_order d-flex justify-content-between" style="border-bottom: 1px solid #ccc; padding-bottom: 8px;">
+            <p>Low:</p>
+            <p>${low}</p>
+        </div>
+        <div class="main_last_price_order d-flex justify-content-between" style="border-bottom: 1px solid #ccc; padding-bottom: 8px;">
+            <p>Close:</p>
+            <p>${close}</p>
+        </div>
+    </div>
+    <div class='right_spot'>
+        <div class="main_last_price_order d-flex justify-content-between" style="border-bottom: 1px solid #ccc; padding: 8px 0;">
+            <p>Volume:</p>
+            <p>${volume}</p>
+        </div>
+        <div class="main_last_price_order d-flex justify-content-between" style="border-bottom: 1px solid #ccc; padding-bottom: 8px;">
+            <p>LTQ:</p>
+            <p>${last_quantity}</p>
+        </div>
+        <div class="main_last_price_order d-flex justify-content-between" style="border-bottom: 1px solid #ccc; padding-bottom: 8px;">
+            <p>Avg. Price:</p>
+            <p>${average_price}</p>
+        </div>
+        <div class="main_last_price_order d-flex justify-content-between" style="border-bottom: 1px solid #ccc; padding-bottom: 8px;">
+            <p>LTT:</p>
+            <p>${ltt}</p>
+        </div>
+        <div class="main_last_price_order d-flex justify-content-between" style="border-bottom: 1px solid #ccc; padding-bottom: 8px;">
+            <p>OI:</p>
+            <p>${oi}</p>
+        </div>
+    </div>
+</div>
+
+
+   `;
+   main_spot_data += '</div>';
+
+   return main_spot_data;
+}
+
+
+
+
+
+
+
+
+
+
+
+var OrderId = 1;
+$(".place_order_btn").click(function () {
+    var All_positionTrade = [];
+    var inner_order_modal = $(".inner_order_modal");
+    inner_order_modal.each(function (index_order) {
+        var order_level = $(this);
+        var sell_buy_indicator = order_level.find(".sell_buy_indicator").text();
+        var tradingsymbol = order_level.find(".tradingsymbol").text();
+        var priceTrade = order_level.find(".priceTrade").val();
+        var quantityTrade = order_level.find(".quantityTrade").val();
+
+        // Check if the radio button is checked
+        var isRadioChecked = $(`input[name='orderTypeLimit${index_order}']:checked`).val();
+
+        console.log(isRadioChecked);
+
+        All_positionTrade.push({
+            orderNumber: OrderId++,
+            sell_buy_indicator: sell_buy_indicator,
+            tradingsymbol: tradingsymbol,
+            Quantity: quantityTrade,
+            price: priceTrade,
+            isRadioChecked: isRadioChecked // Add this property to the object
+        });
+    });
+
+    sendPosition_to_kite(All_positionTrade);
+});
+
+
+function sendPosition_to_kite(All_positionTrade) {
+        console.log(All_positionTrade);
+
+        // Send the data to the Django view using AJAX
+        $.ajax({
+            url: '/kiteOrder', // Replace with the actual URL of your Django view
+            type: 'POST',
+            data: JSON.stringify(All_positionTrade),
+            contentType: 'application/json',
+            success: function (response) {
+                // Handle the response from the Django view if needed
+                console.log(response);
+
+                // Check if there's a success message in the response
+                if (response.message) {
+                    displayAlert(response.message, 'success');
+                } else if (response.error) {
+                    // Check if there's an error message in the response
+                    displayAlert(response.error, 'error');
+                }
+
+                All_positionTrade = [];
+            },
+            error: function (error) {
+                console.error(error);
+
+                // Display a generic error alert
+                displayAlert('An error occurred while processing your request.', 'error');
+            }
+        });
+    }
+
+    function displayAlert(message, type) {
+        var alertElement = $(".alert-dismissible");
+        alertElement
+            .removeClass(type === 'error' ? 'success_alert' : 'error_alert')
+            .addClass(type === 'error' ? 'error_alert' : 'success_alert')
+            .text(message)
+            .css({
+                'max-width': '50%', // Set the maximum width
+                'width': '100%',   // Set the width to 100%
+                'height': 'fit-content',  // Set the height to auto
+                'padding': '15px',
+                'position': 'fixed',
+            
+                'z-index': '99999999999 !important', 
+                'border-radius': '5px',
+       
+            })
+            .fadeIn();
+
+        setTimeout(function () {
+            alertElement.fadeOut();
+        }, 3000);
+    }
+
 
 
         var stockDropdown_edit = $("#stockDropdown").val()
@@ -2884,23 +4233,12 @@
 
 
 
-        var isFirstTime = true;
-        $("#collapseExample").on("show.bs.collapse", function () {
-            $(".bx-chevron-down")
-                .removeClass("bx-chevron-down")
-                .addClass("bx-chevron-up");
-        });
-
-        $("#collapseExample").on("hide.bs.collapse", function () {
-            $(".bx-chevron-up")
-                .removeClass("bx-chevron-up")
-                .addClass("bx-chevron-down");
-        });
 
 
         // Handle stock dropdown change
         $("#stockDropdown").change(function () {
             var selectedOption = $(this).val();
+
 
 
             $("#table-PL").empty();
@@ -2972,6 +4310,10 @@
 
         });
 
+        //         setInterval(function() {
+        //     loadSpotData($("#stockDropdown").val());
+        // }, 5000);
+
         // Function to load spot data
         function loadSpotData(selectedOption) {
             // console.log(selectedOption);
@@ -2982,6 +4324,7 @@
                     selectedOption,
                 type: "GET",
                 success: function (response) {
+
                     // Handle the response as needed
                     // console.log(response.spot_data.resultData);
                     $("#max_pain_value").text(response.spot_data.resultData.max_pain);
@@ -3068,6 +4411,7 @@
                     $.each(
                         response.option_data.resultData.opDatas,
                         function (index, optionChain) {
+                            // console.log(optionChain);
 
                             var strike_price = parseFloat(optionChain.strike_price);
                             var diff = Math.abs(spot_strike_price - strike_price);
@@ -4099,7 +5443,7 @@
                         if ($(this).data("HI1") === undefined) {
                             console.log('Yes');
                             // Remove the "HI1" data attribute
-                           
+
                             calculate_data();
                         } else {
                             console.log('No');
