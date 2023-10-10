@@ -5186,6 +5186,24 @@ def holdings_select(request):
     all_holdings = all_data
     return JsonResponse(all_holdings)
 
+    
+@csrf_exempt
+def main_holding_table_data(request):
+    cate_one= request.POST.get("cate_one")
+    initial_secondd_val= request.POST.get("initial_secondd_val")
+    print(cate_one,initial_secondd_val)
+    url = f"https://www.moneysukh.com/api/markets/MfTopHolding/{cate_one}/{initial_secondd_val}"
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
+        "Accept-Language": "en-US,en;q=0.9",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive"
+    }
+    response_category = requests.get(url , headers=headers)
+    all_data = response_category.json()
+    all_holdings = all_data
+    return JsonResponse(all_holdings)
+
 
 @csrf_exempt
 def performances_data(request):
@@ -5221,6 +5239,10 @@ def fund_activity(request):
     return JsonResponse(get_data)
 
 
+
+
+
+
 @csrf_exempt
 def top_holdings_fund_house(request):
     url = "https://www.moneysukh.com/api/markets/MfHoldingDrop/-/-"
@@ -5229,7 +5251,7 @@ def top_holdings_fund_house(request):
         "Accept-Language": "en-US,en;q=0.9",
         "Accept-Encoding": "gzip, deflate, br",
         "Connection": "keep-alive"
-     }
+    }
     response_data = requests.get(url, headers=headers)
     convert_holdings = response_data.json()
     all_holdings = convert_holdings
@@ -5238,15 +5260,17 @@ def top_holdings_fund_house(request):
 @csrf_exempt
 def top_holdings_category(request):
     if request.method=="POST":
-      get_category = request.POST.get("param_one_holding", "41331")
+      get_category = request.POST.get("pass_val")
       url = f"https://www.moneysukh.com/api/markets/MfHoldingDrop/{get_category}/-"
-    #   print(url)
-      headers = {
+      print(url)
+
+    # https://www.moneysukh.com/api/markets/MfHoldingDrop/5946/-
+    headers = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
         "Accept-Language": "en-US,en;q=0.9",
         "Accept-Encoding": "gzip, deflate, br",
         "Connection": "keep-alive"
-     }
+    }
     response_data = requests.get(url, headers=headers)
     converted_holding_cate = response_data.json()
     all_cate_data = converted_holding_cate
@@ -5256,7 +5280,7 @@ def top_holdings_category(request):
 @csrf_exempt
 def holdings_scheme(request):
     if request.method =="POST":
-        get_para1 = request.POST.get("pass_hold_house", "41331")
+        get_para1 = request.POST.get("pass_hold_house")
         get_para2 = request.POST.get("pass_schemes")
     url = f"https://www.moneysukh.com/api/markets/MfHoldingDrop/{get_para1}/{get_para2}"
     print(url)
@@ -5265,12 +5289,11 @@ def holdings_scheme(request):
         "Accept-Language": "en-US,en;q=0.9",
         "Accept-Encoding": "gzip, deflate, br",
         "Connection": "keep-alive"
-     }
+    }
     response_data = requests.get(url, headers=headers)
     data_convert = response_data.json()
     all_data_schemes = data_convert
     return JsonResponse(all_data_schemes)
-
 
 
 
@@ -5438,3 +5461,26 @@ def mutual_news_details(request):
 
 def mutual_funds(request):
     return render(request, "mutual_fund.html")
+
+def mutual_fund_performance(request):
+    return render(request, "mutual_fund_performance.html")
+
+
+
+
+
+
+@csrf_exempt
+def top_holdings_fund_house(request):
+    url = "https://www.moneysukh.com/api/markets/MfHoldingDrop/-/-"
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
+        "Accept-Language": "en-US,en;q=0.9",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive"
+    }
+    response_data = requests.get(url, headers=headers)
+    convert_holdings = response_data.json()
+    all_holdings = convert_holdings
+    return JsonResponse(all_holdings)
+

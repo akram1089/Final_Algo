@@ -3,28 +3,27 @@
 {% block dashboard_body %}
 
 <style>
-    .mutual_fund_section{
-        padding: 3rem 5rem;
-    }
-    .table-box {
-        box-shadow: 1px 0 11px #d3cccc;
-        border-radius: 17px;
-        padding-top: 12px;
-        padding-bottom: 12px!important;
-    }
-    #chartdiv {
-        width: 100%;
-        height: 500px;
-      }
-      .active{
-        color: white;
-        background-color: rgb(0, 162, 255);
-        border: 1px solid rgb(0, 162, 255);
-        border-radius: 2px;
-        padding: 2px 4px;
-      }
+  .table-box {
+    box-shadow: 1px 0 11px #d3cccc;
+    border-radius: 17px;
+    padding-top: 12px;
+    padding-bottom: 12px !important;
+  }
 
-    .fund {
+  #chartdiv {
+    width: 100%;
+    height: 500px;
+  }
+
+  .active {
+    color: white;
+    background-color: rgb(0, 162, 255);
+    border: 1px solid rgb(0, 162, 255);
+    border-radius: 2px;
+    padding: 2px 4px;
+  }
+
+  .fund {
     font-size: 15px;
     font-weight: 700;
     color: #000;
@@ -32,339 +31,443 @@
     border: none;
     padding: 10px;
     white-space: nowrap;
-      }
+  }
 
 
-   
-    .table thead tr{
-        font-size: 17px;
+
+  .table thead tr {
+    font-size: 17px;
     font-weight: 700;
     color: navy;
     background-color: #eff9ff;
     border: none;
     padding: 10px;
     white-space: nowrap;
-    }
+  }
 
-    .fund-activity{
-        font-size: 15px;
+  .fund-activity {
+    font-size: 15px;
     font-weight: 700;
     color: #000;
     background-color: #eff9ff;
     border: none;
     padding: 10px;
     white-space: nowrap;
-    }
+  }
 
-    .what_active{
-        background-color: rgb(0, 162, 255);
-        color: white;
-        padding: 5px;
-        border-radius: 3px;
-    }
+  .what_active {
+    background-color: rgb(0, 162, 255);
+    color: white;
+    padding: 5px;
+    border-radius: 3px;
+  }
 
-    .Mutualnews-wq{
+  .Mutualnews-wq {
     display: inline-block;
     width: 49%;
     right: 12px;
     margin-right: 1%;
     margin-top: 19px;
     background: #fff 0 0 no-repeat padding-box;
-    box-shadow: inset -10px -10px 20px rgba(4,115,233,.0784313725490196);
+    box-shadow: inset -10px -10px 20px rgba(4, 115, 233, .0784313725490196);
     border-radius: 28px;
     padding: 1rem;
     position: relative;
     right: auto;
-}
+  }
 
+  .times ul li:hover {
+    background: linear-gradient(180deg, #4399eb, #5cadfb);
+    color: white;
+  }
+
+  .performance_active {
+    background: linear-gradient(180deg, #4399eb, #5cadfb) !important;
+    color: white !important;
+  }
+
+  .times ul li {
+    background: white;
+
+    color: #4399eb;
+    padding: 0px 7px;
+    text-align: center;
+    height: 29px;
+    display: flex;
+    font-weight: 500;
+    border-radius: 4px;
+    border: 1px solid #4399eb !important;
+    -webkit-box-shadow: none !important;
+    box-shadow: none !important;
+    outline: 0 !important;
+    -webkit-transition: all .2s ease-in-out !important;
+    -moz-transition: all .2s ease-in-out !important;
+    transition: all .2s ease-in-out !important;
+    cursor: pointer;
+    font-weight: 600;
+    align-items: center;
+  }
+
+  .place_holder_chart {
+    height: 500px;
+    width: 50px;
+  }
+
+  .place_holder_chart_two {
+    height: 300px;
+    width: 50px;
+  }
+
+  .place_holder_chart_one {
+    height: 400px;
+    width: 50px;
+  }
+
+  .main_placeholder {
+    display: flex;
+    gap: 2rem;
+    align-items: flex-end;
+  }
 </style>
-<section class="mutual_fund_section">
-    <!-- <section>
-        <div class="mt-5">
-            <h3>Mutual Funds</h3>
-        </div>
-    
-        <div class="cate_performance mt-5">
-            <h4>Category Performance</h4>
-    
-            <div class="table-box mt-3 p-5">
-               <div class="category d-flex justify-content-between">
-                 <div class="options">
-                    <select id="myOptions" class="form-select" aria-label="Default select example">
-                        
-                        <option class="category_per" value="EQUITY" selected>Equity</option>
-                        <option class="category_per" value="HYBRID">Hybrid</option>
-                        <option class="category_per" value="DEBT">Debt</option>
-                      </select>
-                 </div>
-                 <div class="timelines">
-                   <div class="times">
-                    <ul class="d-flex gap-3">
-                        <li id="1WEEK" data-value="1WEEK" class="dates">1W</li>
-                        <li data-value="1MONTH" class="dates">1M</li>
-                        <li data-value="3MONTH" class="dates">3M</li>
-                        <li data-value="6MONTH" class="dates">6M</li>
-                        <li data-value="1YEAR" class="dates">1Y</li>
-                        <li data-value="3YEAR" class="dates">3Y</li>
-                    </ul>
-                   </div>
-                 </div>
-               </div>
-               <div id="chartdiv">
-    
-               </div>
-            </div>
-        </div>
-    </section> -->
+<section class="mutual_fund_section container">
+  <section>
 
-<!-- Funds Performance -->
-    <section class="mt-5">
-        <h4>Fund Performance</h4>
-        <div class="table-box p-4">
-            <div class="table_filter d-flex justify-content-between">
-                <div class="MF-Performance-dates">
-                    <ul class="d-flex gap-3 align-items-center">
-                        <li id="1Week" data-value="1Week" class="fund_dates active">1W</li>
-                        <li data-value="1Month" class="fund_dates">1M</li>
-                        <li data-value="3month" class="fund_dates">3M</li>
-                        <li data-value="6month" class="fund_dates">6M</li>
-                        <li data-value="1year" class="fund_dates">1Y</li>
-                        <li data-value="3year" class="fund_dates">3Y</li>
-                    </ul>
-                </div>
-                <div class="holdings-select">
-                    <select class="form-select" id="performer">
-                        <option>Select Category</option>
-                        <option value="T" selected>Top performance</option>
-                        <option value="B">Bottom Performance</option>
-                    </select>
-                </div>
-                <div class="holdings-select">
-                    <select name="" id="holdings" class="form-select">
-                     
-                    </select>
-                </div>
-            </div>
-            <div class="fund_table">
-                <table class="table">
-                    <thead class="fund">
-                      <tr>
-                        <th >Scheme Name</th>
-                        <th >% Return</th>
-                      </tr>
-                    </thead>
-                    <tbody id="table_b_data">
-                        
-                    </tbody>
-                  </table>
-            </div>
-        </div>
-    </section>
 
-    <!-- Mutual Fund Activity -->
-    <section class="mt-5">
-        <h4>Mutual Fund Activity</h4>
-        <div class="table-box">
-          <div class="funds_activity_table p-4">
-            <table class="table" id="data-table">
-                <thead>
-                  <tr class="fund-activity">
-                    <th >As on Date</th>
-                    <th >Equity/Debt</th>
-                    <th >Gross Purchase(₹)</th>
-                    <th >Gross Sale(₹)</th>
-                    <th >Net Purchase(₹)</th>
-                  </tr>
-                </thead>
-                <tbody id="fund_activity_body">
-                    <tr>
-                        <td></td>
-                    </tr>
-                </tbody>
-              </table>
+
+    <div class="cate_performance ">
+      <h4>Category Performance</h4>
+
+      <div class="table-box mt-3 p-5">
+        <div class="category d-flex justify-content-between">
+          <div class="options">
+            <select id="myOptions" class="form-select" aria-label="Default select example">
+
+              <option class="category_per" value="EQUITY" selected>Equity</option>
+              <option class="category_per" value="HYBRID">Hybrid</option>
+              <option class="category_per" value="DEBT">Debt</option>
+            </select>
+          </div>
+          <div class="timelines">
+            <div class="times">
+              <ul class="d-flex gap-3">
+                <li id="1WEEK" data-value="1WEEK" class="dates performance_active">1W</li>
+                <li data-value="1MONTH" class="dates">1M</li>
+                <li data-value="3MONTH" class="dates">3M</li>
+                <li data-value="6MONTH" class="dates">6M</li>
+                <li data-value="1YEAR" class="dates">1Y</li>
+                <li data-value="3YEAR" class="dates">3Y</li>
+              </ul>
+            </div>
           </div>
         </div>
-    
-    </section>
 
 
-<!-- Top Holdings -->
-<!-- <section class="top_holding_section mt-5">
-    <h4>Top 10 Holdings</h4>
-    <div class="table-box">
-        <div class="dividend_box p-4">
-             <div class="holdings_filter d-flex gap-4">
-                <select id="topHfundHouse" class="form-select" aria-label="Default select example">
-                    
-                  </select>
-                <select id="topHCategory" class="form-select" aria-label="Default select example">
-                    
-                  </select>
-                <select id="selectScheme" class="form-select" aria-label="Default select example">
-                    
-                  </select>
-             </div>
-            <div class="holdings mt-4">
-                <table class="table">
-                    <thead>
-                      <tr>
-                        <th scope="col">Company Name</th>
-                        <th scope="col">%Hold</th>
-                        
-                      </tr>
-                    </thead>
-                    <tbody id="top_holding_table">
-                      
-                    </tbody>
-                  </table>
+
+        <div id="chartdiv" style="width: 100%; height: 500px;">
+
+          <div class="main_placeholder">
+            <div class="placeholder-glow">
+              <span class="placeholder  bg-secondary-subtle place_holder_chart"></span>
             </div>
-        </div>
-    </div>
-  </section> -->
-
-
-    <!-- Whats in/out -->
-    <section class="mt-5">
-        <h4>What’s In /Out</h4>
-        <div class="table-box">
-            <div class="whats_box p-4">
-                <div class="whats_in_out d-flex justify-content-between">
-                    <div class="whats_filter">
-                        <span class="what_filter what_active" data-value="In">What’s In</span>
-                        <span class="what_filter ms-3" data-value="Out">What’s Out</span>
-                    </div>
-                    <div class="funds_name">
-                        <select class="form-select" id="funds_dropdown">
-                            <option>Select Category</option>
-                            
-                        </select>
-    
-                    </div>
-                </div>
-                <div class="what_in_out_table mt-3">
-                    <table class="table" id="what_in_out">
-                        <thead>
-                          <tr>
-                            <th scope="col">Company Name</th>
-                            <th scope="col">No. Of Shares</th>
-                            <th scope="col">Market Value(in Cr.)</th>
-                          </tr>
-                        </thead>
-                        <tbody id="what_in_out_body">
-                         
-                        </tbody>
-                      </table>
-                </div>
+            <div class="placeholder-glow">
+              <span class="placeholder  bg-secondary-subtle place_holder_chart_one"></span>
             </div>
-        </div>
-    </section>
-
-   <!--Dividend  -->
-   <section class="Dividend_section mt-5">
-    <h4>Dividend</h4>
-    <div class="table-box">
-        <div class="dividend_box p-4">
-             <div class="dividend_filter d-flex gap-4">
-                <select id="fundHouse" class="form-select" aria-label="Default select example">
-                    
-                  </select>
-                <select id="myCategory" class="form-select" aria-label="Default select example">
-                    
-                  </select>
-                <select id="selectDate" class="form-select" aria-label="Default select example">
-                    
-                  </select>
-             </div>
-            <div class="dividend mt-4">
-                <table class="table">
-                    <thead>
-                      <tr>
-                        <th scope="col">Company Name</th>
-                        <th scope="col">Nav</th>
-                        <th scope="col">Dividend</th>
-                        <th scope="col">Record Date</th>
-                        <th scope="col">1 Year(%)</th>
-                        <th scope="col">3 Year(%)</th>
-                      </tr>
-                    </thead>
-                    <tbody id="dividend_table">
-                      
-                    </tbody>
-                  </table>
+            <div class="placeholder-glow">
+              <span class="placeholder  bg-secondary-subtle place_holder_chart_two"></span>
             </div>
+            <div class="placeholder-glow">
+              <span class="placeholder  bg-secondary-subtle place_holder_chart_one"></span>
+            </div>
+            <div class="placeholder-glow">
+              <span class="placeholder  bg-secondary-subtle place_holder_chart"></span>
+            </div>
+
+            <div class="placeholder-glow">
+              <span class="placeholder  bg-secondary-subtle place_holder_chart"></span>
+            </div>
+            <div class="placeholder-glow">
+              <span class="placeholder  bg-secondary-subtle place_holder_chart_one"></span>
+            </div>
+            <div class="placeholder-glow">
+              <span class="placeholder  bg-secondary-subtle place_holder_chart_two"></span>
+            </div>
+            <div class="placeholder-glow">
+              <span class="placeholder  bg-secondary-subtle place_holder_chart_one"></span>
+            </div>
+            <div class="placeholder-glow">
+              <span class="placeholder  bg-secondary-subtle place_holder_chart"></span>
+            </div>
+            <div class="placeholder-glow">
+              <span class="placeholder  bg-secondary-subtle place_holder_chart"></span>
+            </div>
+            <div class="placeholder-glow">
+              <span class="placeholder  bg-secondary-subtle place_holder_chart_one"></span>
+            </div>
+            <div class="placeholder-glow">
+              <span class="placeholder  bg-secondary-subtle place_holder_chart_two"></span>
+            </div>
+            <div class="placeholder-glow">
+              <span class="placeholder  bg-secondary-subtle place_holder_chart_one"></span>
+            </div>
+            <div class="placeholder-glow">
+              <span class="placeholder  bg-secondary-subtle place_holder_chart"></span>
+            </div>
+          </div>
+
         </div>
+
+      </div>
     </div>
   </section>
 
-<!-- Fund profile -->
+  <!-- Funds Performance -->
+  <section class="mt-5">
+    <h4>Fund Performance</h4>
+    <div class="table-box p-4">
+      <div class="table_filter d-flex justify-content-between">
+        <div class="MF-Performance-dates">
+          <ul class="d-flex gap-3 align-items-center">
+            <li id="1Week" data-value="1Week" class="fund_dates active">1W</li>
+            <li data-value="1Month" class="fund_dates">1M</li>
+            <li data-value="3month" class="fund_dates">3M</li>
+            <li data-value="6month" class="fund_dates">6M</li>
+            <li data-value="1year" class="fund_dates">1Y</li>
+            <li data-value="3year" class="fund_dates">3Y</li>
+          </ul>
+        </div>
+        <div class="holdings-select">
+          <select class="form-select" id="performer">
+            <option>Select Category</option>
+            <option value="T" selected>Top performance</option>
+            <option value="B">Bottom Performance</option>
+          </select>
+        </div>
+        <div class="holdings-select">
+          <select name="" id="holdings" class="form-select">
 
-    <section class="fund_profile_section mt-5">
-      <h4>Fund Profile</h4>
-      <div class="table-box">
-        <div class="fund_profile p-4">
-            <table class="table">
-                <thead>
-                  <tr>
-                    <th scope="col">Fund House</th>
-                    <th scope="col">Incorporation Date</th>
-                    <th scope="col">Fund Type</th>
-                    <th scope="col">Total Assets* (Rs Cr.)</th>
-                    <th scope="col">As On Date</th>
-                  </tr>
-                </thead>
-                <tbody id="fund_profile_table">
-                  
-                </tbody>
-              </table>
+          </select>
         </div>
       </div>
-    </section>
+      <div class="fund_table">
+        <table class="table">
+          <thead class="fund">
+            <tr>
+              <th>Scheme Name</th>
+              <th>% Return</th>
+            </tr>
+          </thead>
+          <tbody id="table_b_data">
 
-    <!-- New Fund Offer -->
-    <section class="new_fund_section mt-5">
-        <h4>New Fund Offer</h4>
-        <div class="table-box">
-            <div class="new_funds_offer p-4">
-                <div class="new_fund_filter d-flex justify-content-start">
-                    <select id="new_fundOptions" class="form-select" aria-label="Default select example">
-                        <option class="category_per" value="equity" selected>Equity</option>
-                        <option class="category_per" value="Debt">Debt</option>
-                        <option class="category_per" value="hybrid">Hybrid</option>
-                      </select>
-                </div>
-                <div class="new_fund_table mt-4">
-                    <table class="table">
-                        <thead>
-                          <tr>
-                            <th scope="col">Scheme</th>
-                            <th scope="col">Type</th>
-                            <th scope="col">Open Date</th>
-                            <th scope="col">Close Date</th>
-                            <th scope="col">Min Amount</th>
-                            <th scope="col">Offer Price</th>
-                            <th scope="col">Category</th>
-                          </tr>
-                        </thead>
-                        <tbody id="new_fund">
-                          
-                        </tbody>
-                      </table>
-                </div>
-            </div>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- Mutual Fund Activity -->
+  <section class="mt-5">
+    <h4>Mutual Fund Activity</h4>
+    <div class="table-box">
+      <div class="funds_activity_table p-4">
+        <table class="table" id="data-table">
+          <thead>
+            <tr class="fund-activity">
+              <th>As on Date</th>
+              <th>Equity/Debt</th>
+              <th>Gross Purchase(₹)</th>
+              <th>Gross Sale(₹)</th>
+              <th>Net Purchase(₹)</th>
+            </tr>
+          </thead>
+          <tbody id="fund_activity_body">
+            <tr>
+              <td></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </section>
+
+
+<!-- Top Holdings -->
+<section class="top_holding_section mt-5">
+  <h4>Top 10 Holdings</h4>
+  <div class="table-box">
+      <div class="dividend_box p-4">
+           <div class="holdings_filter d-flex gap-4">
+              <select id="topHCate1" class="form-select" aria-label="Default select example">
+                  
+                </select>
+              <select id="topHCate2" class="form-select" aria-label="Default select example">
+                  
+                </select>
+              <select id="selectScheme" class="form-select" aria-label="Default select example">
+                  
+                </select>
+           </div>
+          <div class="holdings mt-4">
+              <table class="table">
+                  <thead>
+                    <tr>
+                      <th scope="col">Company Name</th>
+                      <th scope="col">%Hold</th>
+                      
+                    </tr>
+                  </thead>
+                  <tbody id="top_holding_table">
+                    
+                  </tbody>
+                </table>
+          </div>
+      </div>
+  </div>
+  </section>
+
+
+  <!-- Whats in/out -->
+  <section class="mt-5">
+    <h4>What’s In /Out</h4>
+    <div class="table-box">
+      <div class="whats_box p-4">
+        <div class="whats_in_out d-flex justify-content-between">
+          <div class="whats_filter">
+            <span class="what_filter what_active" data-value="In">What’s In</span>
+            <span class="what_filter ms-3" data-value="Out">What’s Out</span>
+          </div>
+          <div class="funds_name">
+            <select class="form-select" id="funds_dropdown">
+              <option>Select Category</option>
+
+            </select>
+
+          </div>
         </div>
-    </section>
+        <div class="what_in_out_table mt-3">
+          <table class="table" id="what_in_out">
+            <thead>
+              <tr>
+                <th scope="col">Company Name</th>
+                <th scope="col">No. Of Shares</th>
+                <th scope="col">Market Value(in Cr.)</th>
+              </tr>
+            </thead>
+            <tbody id="what_in_out_body">
 
-   
-
-    <!-- IPO News -->
-    <section class="mt-5">
-        <h4>Mutual Fund News</h4>
-        <div class="table-box">
-            <div class="news_table d-flex flex-wrap">
-                
-            </div>
+            </tbody>
+          </table>
         </div>
-    </section>
+      </div>
+    </div>
+  </section>
+
+  <!--Dividend  -->
+  <section class="Dividend_section mt-5">
+    <h4>Dividend</h4>
+    <div class="table-box">
+      <div class="dividend_box p-4">
+        <div class="dividend_filter d-flex gap-4">
+          <select id="fundHouse" class="form-select" aria-label="Default select example">
+
+          </select>
+          <select id="myCategory" class="form-select" aria-label="Default select example">
+
+          </select>
+          <select id="selectDate" class="form-select" aria-label="Default select example">
+
+          </select>
+        </div>
+        <div class="dividend mt-4">
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">Company Name</th>
+                <th scope="col">Nav</th>
+                <th scope="col">Dividend</th>
+                <th scope="col">Record Date</th>
+                <th scope="col">1 Year(%)</th>
+                <th scope="col">3 Year(%)</th>
+              </tr>
+            </thead>
+            <tbody id="dividend_table">
+
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Fund profile -->
+
+  <section class="fund_profile_section mt-5">
+    <h4>Fund Profile</h4>
+    <div class="table-box">
+      <div class="fund_profile p-4">
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">Fund House</th>
+              <th scope="col">Incorporation Date</th>
+              <th scope="col">Fund Type</th>
+              <th scope="col">Total Assets* (Rs Cr.)</th>
+              <th scope="col">As On Date</th>
+            </tr>
+          </thead>
+          <tbody id="fund_profile_table">
+
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- New Fund Offer -->
+  <section class="new_fund_section mt-5">
+    <h4>New Fund Offer</h4>
+    <div class="table-box">
+      <div class="new_funds_offer p-4">
+        <div class="new_fund_filter d-flex justify-content-start">
+          <select id="new_fundOptions" class="form-select" aria-label="Default select example">
+            <option class="category_per" value="equity" selected>Equity</option>
+            <option class="category_per" value="Debt">Debt</option>
+            <option class="category_per" value="hybrid">Hybrid</option>
+          </select>
+        </div>
+        <div class="new_fund_table mt-4">
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">Scheme</th>
+                <th scope="col">Type</th>
+                <th scope="col">Open Date</th>
+                <th scope="col">Close Date</th>
+                <th scope="col">Min Amount</th>
+                <th scope="col">Offer Price</th>
+                <th scope="col">Category</th>
+              </tr>
+            </thead>
+            <tbody id="new_fund">
+
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+
+  <!-- IPO News -->
+  <section class="mt-5">
+    <h4>Mutual Fund News</h4>
+    <div class="table-box">
+      <div class="news_table d-flex flex-wrap">
+
+      </div>
+    </div>
+  </section>
 
 </section>
 
@@ -373,237 +476,265 @@
 
 
 
-<script src="https://cdn.amcharts.com/lib/5/index.js"></script>
-<script src="https://cdn.amcharts.com/lib/5/xy.js"></script>
-<script src="https://cdn.amcharts.com/lib/5/themes/Animated.js"></script>
 <script>
 
 
-    $(document).ready(function () {
-
-        //Category Performance Start Here ! 
-
-        var selectCate = "EQUITY"
-    $("#myOptions").change(function(){
-       var selectedText = $(this).val()
-       selectCate = selectedText
-       
-       get_all_datas()
-   });
-   console.log(selectCate);
-    var selectDate = "1WEEK"
-   $(".dates").click(function(){
-    var time_value = $(this).data("value")
-    selectDate=time_value
-    get_all_datas()
-   })
-   
-   function get_all_datas() {
-    get_category_data(selectCate, selectDate)
-   
-   }
- 
 
 
-function get_category_data(get_cate, get_time) {
-    // console.log(get_cate);
-    // console.log(get_time);
 
-    
 
-    $.ajax({
-        type: "post",
+
+
+
+  $(document).ready(function () {
+
+
+
+
+
+
+
+
+    var selectCate = "EQUITY";
+    var selectDate = "1WEEK";
+
+    // Function to update the chart with data
+    function updateChart(data) {
+      // console.log(data);
+      var main_return_data = data.data;
+      const tbody = $('#return_ipo tbody');
+      tbody.empty(); // Clear previous data
+      var chartData = [];
+      main_return_data.forEach(function (stock) {
+        console.log(stock.TypeName);
+        chartData.push({
+          "company_name": stock.TypeName,
+          "PerChange": stock.Return
+        });
+      });
+      // console.log(chartData);
+      // Create a chart instance
+      var chart = am4core.create("chartdiv", am4charts.XYChart);
+
+      // Enable mouse wheel zoom for the x-axis
+      chart.mouseWheelZoomEnabled = true;
+
+      // Remove chart watermark
+      chart.logo.disabled = true;
+
+      // Add data to the chart
+      chart.data = chartData;
+
+      // Create category axis (company_name)
+      var categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
+      categoryAxis.dataFields.category = "company_name";
+      categoryAxis.title.text = "Company Name";
+
+      // Create value axis (PerChange)
+      var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
+      valueAxis.title.text = "PerChange";
+
+      // Draw a horizontal line at y-axis 0
+      var zeroLine = valueAxis.axisRanges.create();
+      zeroLine.value = 0;
+      zeroLine.grid.stroke = am4core.color("#000"); // Color of the line
+      zeroLine.grid.strokeWidth = 2; // Line width
+      zeroLine.grid.strokeOpacity = 0.5; // Line opacity
+
+      // Find the maximum PerChange value and its corresponding category
+      var maxPerChange = -Infinity;
+      var maxPerChangeCategory = "";
+      chartData.forEach(function (dataItem) {
+        if (dataItem.PerChange > maxPerChange) {
+          maxPerChange = dataItem.PerChange;
+          maxPerChangeCategory = dataItem.company_name;
+        }
+      });
+
+      // Create a vertical line at the maximum PerChange value
+      var maxLine = valueAxis.axisRanges.create();
+      maxLine.value = maxPerChange.toFixed(5);
+      maxLine.grid.stroke = am4core.color("#FF6F61"); // Color of the line
+      maxLine.grid.strokeWidth = 2; // Line width
+      maxLine.grid.strokeOpacity = 0.5; // Line opacity
+      maxLine.label.text = "Max: " + maxPerChange.toFixed(5); // Display the maximum value as a label
+      maxLine.label.fill = am4core.color("#FF6F61"); // Label text color
+      maxLine.label.fontSize = 12; // Label font size
+
+      // Create a series for the column chart
+      var series = chart.series.push(new am4charts.ColumnSeries());
+      series.dataFields.valueY = "PerChange";
+      series.dataFields.categoryX = "company_name";
+      series.name = "PerChange";
+      series.columns.template.tooltipText = "{categoryX}: [bold]{valueY}[/]";
+
+      // Set the background color of the bars and border color manually based on the value of PerChange
+      series.columns.template.adapter.add("fill", function (fill, target) {
+        if (target.dataItem && target.dataItem.dataContext.PerChange < 0) {
+          return am4core.color("#FF6F61"); // Red for negative values
+        } else {
+          return am4core.color("#5cb85c"); // Green for positive or zero values
+        }
+      });
+
+      series.columns.template.adapter.add("stroke", function (stroke, target) {
+        if (target.dataItem && target.dataItem.dataContext.PerChange < 0) {
+          return am4core.color("#FF6F61"); // Red border for negative values
+        } else {
+          return am4core.color("#5cb85c"); // Green border for positive or zero values
+        }
+      });
+
+      categoryAxis.renderer.labels.template.disabled = true; // Hide the labels
+
+      // Enable pan and zoom features for the chart
+      chart.cursor = new am4charts.XYCursor();
+      chart.cursor.behavior = "selectX";
+      chart.events.on("datavalidated", function () {
+        maxLine.value = maxPerChange;
+      });
+
+      // Configure pan and zoom settings
+      chart.scrollbarX = new am4core.Scrollbar();
+      chart.scrollbarX.wheelX = "zoomX";
+      chart.scrollbarX.parent = chart.bottomAxesContainer;
+
+      // Finally, update the chart
+      chart.invalidateData();
+    }
+
+    // Function to fetch data using AJAX
+    function get_category_data(get_cate, get_time) {
+      $.ajax({
+        type: "POST",
         url: "/category_performance",
         data: {
-            category: get_cate,
-            times_date: get_time
+          category: get_cate,
+          times_date: get_time
         },
-        success: function (data) {
-            var chart_data = data.data;
-            console.log(chart_data);
-            
-            // Create an array to hold chart data
-            var chartData = [];
-
-            chart_data.forEach(element => {
-                chartData.push({
-                    co_name: element.TypeName,
-                    value: element.Return
-                });
-            });
-            console.log(chartData);
-
-            am5.ready(function () {
-                var root = am5.Root.new("chartdiv");
-
-                root.setThemes([
-                    am5themes_Animated.new(root)
-                ]);
-
-                var chart = root.container.children.push(am5xy.XYChart.new(root, {
-                    panX: true,
-                    panY: true,
-                    wheelX: "panX",
-                    wheelY: "zoomX",
-                    pinchZoomX: true
-                }));
-
-                var cursor = chart.set("cursor", am5xy.XYCursor.new(root, {}));
-                cursor.lineY.set("visible", false);
-
-                var xRenderer = am5xy.AxisRendererX.new(root, { minGridDistance: 30 });
-                xRenderer.labels.template.setAll({
-                    rotation: -90,
-                    centerY: am5.p50,
-                    centerX: am5.p100,
-                    paddingRight: 15
-                });
-
-                xRenderer.grid.template.setAll({
-                    location: 1
-                });
-
-                var xAxis = chart.xAxes.push(am5xy.CategoryAxis.new(root, {
-                    maxDeviation: 0.3,
-                    categoryField: "co_name",
-                    renderer: xRenderer,
-                    tooltip: am5.Tooltip.new(root, {})
-                }));
-
-                var yAxis = chart.yAxes.push(am5xy.ValueAxis.new(root, {
-                    maxDeviation: 0.3,
-                    renderer: am5xy.AxisRendererY.new(root, {
-                        strokeOpacity: 0.1
-                    })
-                }));
-
-                var series = chart.series.push(am5xy.ColumnSeries.new(root, {
-                    name: "Series 1",
-                    xAxis: xAxis,
-                    yAxis: yAxis,
-                    valueYField: "value",
-                    sequencedInterpolation: true,
-                    categoryXField: "co_name",
-                    tooltip: am5.Tooltip.new(root, {
-                        labelText: "{valueY}"
-                    })
-                }));
-                 
-                
-                series.columns.template.setAll({ cornerRadiusTL: 5, cornerRadiusTR: 5, strokeOpacity: 0 });
-                series.columns.template.adapters.add("fill", function (fill, target) {
-                    return target.dataItem.valueY < 0 ? am5.color("#FF5733") : am5.color("#33FF57");
-                });
-
-                series.columns.template.adapters.add("stroke", function (stroke, target) {
-                    return target.dataItem.valueY < 0 ? am5.color("#FF5733") : am5.color("#33FF57");
-                });
-
-                // Set data
-                xAxis.data.setAll(chartData);
-                series.data.setAll(chartData);
-
-                // Make stuff animate on load
-                series.appear(1000);
-                chart.appear(1000, 100);
-            }); // end am5.ready()
+        success: function (response) {
+          if (response.success) {
+            // Update the chart with the received data
+            updateChart(response);
+          } else {
+            console.error("Error: Data retrieval unsuccessful.");
+          }
+        },
+        error: function () {
+          console.error("Error: AJAX request failed.");
         }
+      });
+    }
+
+    // Initial data load
+    get_category_data(selectCate, selectDate);
+
+    // Handle category and date changes
+    $("#myOptions").change(function () {
+      var selectedText = $(this).val();
+      selectCate = selectedText;
+      get_category_data(selectCate, selectDate);
     });
-}
+
+    $(".dates").click(function () {
+      $(".dates").removeClass("performance_active")
+      $(this).addClass("performance_active")
+      var time_value = $(this).data("value");
+      selectDate = time_value;
+      get_category_data(selectCate, selectDate);
+    });
 
 
-});
-// get_all_datas()
-//    get_category_data()
 
 
 
-// Fund performance Start Here !!!
 
-function holdings_get() {
-    $.ajax({
-        type:"get",
-        url:"/holdings_select",
-        dataType:"json",
-        success:function(data){
+
+
+    function holdings_get() {
+      $.ajax({
+        type: "get",
+        url: "/holdings_select",
+        dataType: "json",
+        success: function (data) {
           var holdings_name = data.data;
           holdings_name.forEach(element => {
             $("#holdings").append($("<option>").val(element.VCLASSCODE).text(element.VCLASS))
           });
         }
+      })
+    }
+
+
+
+    var initial_date = "1Week"
+    var perform = $("#performer").val();
+    var initial_val = $("#holdings option:first").val()
+
+    $(".fund_dates").click(function () {
+      $(".fund_dates").removeClass("active");
+      $(this).addClass("active")
+      var get_date = $(this).data("value")
+      initial_date = get_date
+      to_get_params()
     })
-}
 
 
-
-var initial_date = "1Week"
-var perform = $("#performer").val();
-var initial_val = $("#holdings option:first").val()
-
-$(".fund_dates").click(function () {
-    $(".fund_dates").removeClass("active");
-    $(this).addClass("active")
-    var get_date = $(this).data("value")
-    initial_date = get_date
-    to_get_params()
-})
+    $("#performer").change(function () {
+      var get_val = $(this).val()
+      perform = get_val
+      to_get_params()
+    })
 
 
-$("#performer").change(function () {
-   var get_val = $(this).val()
-   perform = get_val
-   to_get_params()
-})
+    $("#holdings").change(function () {
+      var co_val = $(this).val()
+      initial_val = co_val
+      to_get_params()
+    })
 
 
-$("#holdings").change(function () {
-    var co_val = $(this).val()
-    initial_val = co_val
-    to_get_params()
-})
+    function to_get_params() {
+      performance_table(initial_date, perform, initial_val)
+    }
 
-
-function to_get_params() {
-    performance_table(initial_date ,perform, initial_val )
-}
-
-function performance_table(get_date , get_perform , get_init_val) {
-    console.log(get_date);
-    console.log(get_perform);
-    console.log(get_init_val);
-    $.ajax({
-        type:"post",
-        url:"/performances_data",
-        data:{
-         p_date : get_date,
-         p_cate : get_perform,
-         p_co_name : get_init_val
+    function performance_table(get_date, get_perform, get_init_val) {
+      // console.log(get_date);
+      // console.log(get_perform);
+      // console.log(get_init_val);
+      $.ajax({
+        type: "post",
+        url: "/performances_data",
+        data: {
+          p_date: get_date,
+          p_cate: get_perform,
+          p_co_name: get_init_val
         },
-        success:function(data){
-         var perfomance_datas = data.data
-         console.log(perfomance_datas);
-         $("#table_b_data").empty()
-         
-         perfomance_datas.forEach(element => {
+        success: function (data) {
+          var perfomance_datas = data.data
+          //  console.log(perfomance_datas);
+          $("#table_b_data").empty()
+
+          perfomance_datas.forEach(element => {
             var settd;
 
-            if(get_date === "1Week"){
-             settd = element.week1
+            if (get_date === "1Week") {
+              settd = element.week1
             }
-            else if(get_date === "1Month"){
-             settd = element.month1
+            else if (get_date === "1Month") {
+              settd = element.month1
             }
-            else if(get_date === "3month"){
-             settd = element.month3
+            else if (get_date === "3month") {
+              settd = element.month3
             }
-            else if(get_date === "6month"){
-             settd = element.month6
+            else if (get_date === "6month") {
+              settd = element.month6
             }
-            else if(get_date === "1year"){
-             settd = element.year1
+            else if (get_date === "1year") {
+              settd = element.year1
             }
-            else if(get_date === "3year"){
-             settd = element.year3
+            else if (get_date === "3year") {
+              settd = element.year3
             }
             var row = `<tr>
                          <td>${element.Sch_Name}</td>
@@ -611,177 +742,239 @@ function performance_table(get_date , get_perform , get_init_val) {
                             ${parseFloat(settd).toFixed(2)}
                          </td>
                         </tr>  `
-                var table = $("#table_b_data")
-                table.append(row)        
-         });
-         
+            var table = $("#table_b_data")
+            table.append(row)
+          });
+
         }
-    })
-}
+      })
+    }
 
 
-// Mutual Fund Activity Start Here !!!
+    // Mutual Fund Activity Start Here !!!
 
-function mutual_fund_activity() {
-    $.ajax({
-        type:"get",
-        url:"/fund_activity",
-        dataType:"json",
-        success:function(data){
-         $("#fund_activity_body").empty()
-         var table_data = data.data
-         console.log(table_data);
-         table_data.forEach(element => {
-            
+    function mutual_fund_activity() {
+      $.ajax({
+        type: "get",
+        url: "/fund_activity",
+        dataType: "json",
+        success: function (data) {
+          $("#fund_activity_body").empty()
+          var table_data = data.data
+          //  console.log(table_data);
+          table_data.forEach(element => {
+
             var row = `<tr>
                         <td>${element.TRANS_DATE.split("T")[0]}</td>
                         <td>Equity</td>
                         <td>${element.EQ_GR_PURC}</td>
                         <td>${element.EQ_GR_SALE}</td>
-                        <td class=${element.EQ_G_NE_PS >= 0 ?"text-success":"text-danger"}>${element.EQ_G_NE_PS}</td>
+                        <td class=${element.EQ_G_NE_PS >= 0 ? "text-success" : "text-danger"}>${element.EQ_G_NE_PS}</td>
                         <tr>
                           <td></td>
                           <td>Debt</td>
                           <td>${element.DE_GR_PURC}</td>
                           <td>${element.DE_GR_SALE}</td>
-                          <td class=${element.DB_G_NE_PS <0 ? "text-danger":"text-success"}>${element.DB_G_NE_PS}</td>
+                          <td class=${element.DB_G_NE_PS < 0 ? "text-danger" : "text-success"}>${element.DB_G_NE_PS}</td>
                         </tr>
                       </tr>
                       `
-                    
-                var table = $("#fund_activity_body")
-                table.append(row)
-                // $("#data-table").DataTable()
-         });
-        
+
+            var table = $("#fund_activity_body")
+            table.append(row)
+            // $("#data-table").DataTable()
+          });
+
         }
-    })
-}
+      })
+    }
 
 
 // Top 10 Holdings
+var top_holding_header_conditions = true;
+var cate_one 
+var initial_secondd_val;
+var get_second_cate_val_condition = true;
+var scheme_last_dropdown;
+var final_pagination_limit= 8
+var final_data_condition_dropdown=true
+function top_holding_header() {
+    $.ajax({
+        type: "get",
+        url: "/top_holdings_fund_house",
+        dataType: "json",
+        success: function (data) {
+            var holdings_h_dropdown = data.data;
+            console.log(holdings_h_dropdown);
+            var topHCate1 = $("#topHCate1");
+            topHCate1.empty();
+            holdings_h_dropdown.forEach(element => {
+                topHCate1.append($("<option>").val(element.mf_cocode).text(element.co_name));
+            });
+            cate_one= topHCate1.val()
+            if (top_holding_header_conditions) {
+                get_second_cate_val(cate_one);
+                top_holding_header_conditions = false;
+                console.log(top_holding_header_conditions);
+            }
 
-// function top_holding_header() {
-//     $.ajax({
-//         type:"get",
-//         url:"/top_holdings_fund_house",
-//         dataType:"json",
-//         success:function (data) {
-//             var holdings_h_dropdown = data.data
-//             console.log(holdings_h_dropdown);
-//             holdings_h_dropdown.forEach(element => {
-//                 $("#topHfundHouse").append($("<option>").val(element.mf_cocode).text(element.co_name))
-//             });
+            topHCate1.off("change").on("change", function () {
+                var get_scheme = $(this).val();
+                console.log(get_scheme);
+                cate_one = get_scheme;
+                get_second_cate_val(cate_one);
+          
             
-//         }
-//     })
-// }
-// top_holding_header()
-
-// var initial_holdings_house =  $("#topHfundHouse option:first").val()
-// $("#topHfundHouse").change(function () {
-//     var update_val = $(this).val()
-//     initial_holdings_house = update_val
-//     holdings_category(initial_holdings_house)
-//     hello_holder()
-// })
-
-// holdings_category()
-// function holdings_category(get_holding_cate) {
-//     $.ajax({
-//         type:"post",
-//         url:"/top_holdings_category",
-//         data:{
-//         param_one_holding:get_holding_cate
-//         },
-//         success:function(data){
-//         var hold_cate = data.data
-//         $("#topHCategory").empty()
-//         hold_cate.forEach(element => {
-//             $("#topHCategory").append($("<option>").val(element.VCLASSCODE).text(element.VCLASS))
-//         });
-//         }
-//     })
-// }
-
-// var initial_scheme_val = $("#topHCategory").val()
-// $("#topHCategory").change(function () {
-//     var category_filt = $(this).val()
-//     initial_scheme_val = category_filt
-//     hello_holder()
-// })
-// function hello_holder() {
-//     get_holding_schemes(initial_holdings_house, initial_scheme_val)
-// }
-// hello_holder()
-// function get_holding_schemes(get_schemes, get_hold_house) {
-//     // console.log(get_schemes);
-//     // console.log(get_hold_house);
-//     $.ajax({
-//         type:"post",
-//         url:"/holdings_scheme",
-//         data:{
-//         pass_hold_house:get_hold_house,
-//         pass_schemes:get_schemes
-//         },
-//         success:function(data){
-//         console.log(data.data);
-//         }
-//     })
-// }
-
-// Whats In/Out Start Here !!!!
-
-function whats_in_out() {
-    $.ajax({
-        type:"get",
-        url:"/whats_in_out_category",
-        dataType:"json",
-        success:function(data){
-         var drop_down_data = data.data
-         drop_down_data.forEach(element => {
-            $("#funds_dropdown").append($("<option>").val(element.mf_cocode).text(element.co_name))
-         });
+            });
         }
-    })
-}
-
-var intial_what = "In"
-var intial_co_val = '41331' 
-
-$(".what_filter").click(function () {
-    $(".what_filter").removeClass("what_active")
-    $(this).addClass("what_active")
-    var get_w_val = $(this).data("value")
-    intial_what = get_w_val
-    to_pass_data()
-})
-
-
-$("#funds_dropdown").change(function () {
-    var get_w_c_val = $(this).val()
-    intial_co_val = get_w_c_val
-    to_pass_data()
-})
-
-function to_pass_data(){
- name(intial_what , intial_co_val)
+    });
 }
 
 
-function name(get_intial_what, get_intial_co_val) {
-    console.log(get_intial_what, get_intial_co_val);
+
+function get_second_cate_val(get_val) {
+    console.log("GET" + get_val);
     $.ajax({
-        type:"post",
-        url:"/whats_table_val",
-        data:{
-         pass_data1:get_intial_what,
-         pass_data2:get_intial_co_val
+        type: "post",
+        url: "/top_holdings_category",
+        data: {
+            pass_val: get_val
         },
-        success:function(data){
-         var all_data = data.data
-         $("#what_in_out_body").empty()
-         all_data.forEach(element => {
+        success: function (data) {
+            var get_data = data.data;
+            var topHCate2 = $("#topHCate2");
+            topHCate2.empty();
+            get_data.forEach(element => {
+                topHCate2.append($("<option>").val(element.VCLASSCODE).text(element.VCLASS));
+            });
+      
+                initial_secondd_val = topHCate2.val();
+                get_third_cate_val(cate_one, initial_secondd_val);
+                get_second_cate_val_condition = false;
+                console.log(get_second_cate_val_condition);
+       
+
+            topHCate2.off("change").on("change", function () {
+                initial_secondd_val = $(this).val();
+                console.log(initial_secondd_val);
+                get_third_cate_val(cate_one, initial_secondd_val);
+           
+                console.log(cate_one);
+            });
+        }
+    });
+}
+
+function get_third_cate_val(get_hold_house, get_schemes) {
+    $.ajax({
+        type: "post",
+        url: "/holdings_scheme",
+        data: {
+            pass_hold_house: get_hold_house,
+            pass_schemes: get_schemes
+        },
+        success: function (data) {
+            var selectScheme = $("#selectScheme");
+            selectScheme.empty(); // Clear previous options
+            console.log(data.data);
+            var options = data.data.map(function (item) {
+                return $("<option>").val(item.MF_SCHCODE).text(item.SCH_NAME);
+            });
+
+            selectScheme.append(options);
+
+            console.log(selectScheme.val());
+            var scheme_last_dropdown = selectScheme.val()
+   
+            get_main_holding_table_data(scheme_last_dropdown,final_pagination_limit)
+     
+   
+            selectScheme.off("change").on("change", function () {
+                hodling_last_dropdown = $(this).val();
+                scheme_last_dropdown=hodling_last_dropdown
+                console.log(hodling_last_dropdown);
+                get_main_holding_table_data(scheme_last_dropdown,final_pagination_limit)
+                
+            });
+        }
+    });
+}
+function  get_main_holding_table_data(cate_one,initial_secondd_val) {
+    $.ajax({
+        type: "post",
+        url: "/main_holding_table_data",
+        data: {
+          cate_one: cate_one,
+          initial_secondd_val: initial_secondd_val
+        },
+        success: function (data) {
+          console.log(data);
+        }
+    });
+}
+
+
+top_holding_header();
+
+
+
+
+
+
+
+
+    // Whats In/Out Start Here !!!!
+
+    function whats_in_out() {
+      $.ajax({
+        type: "get",
+        url: "/whats_in_out_category",
+        dataType: "json",
+        success: function (data) {
+          var drop_down_data = data.data
+          drop_down_data.forEach(element => {
+            $("#funds_dropdown").append($("<option>").val(element.mf_cocode).text(element.co_name))
+          });
+        }
+      })
+    }
+
+    var intial_what = "In"
+    var intial_co_val = '41331'
+
+    $(".what_filter").click(function () {
+      $(".what_filter").removeClass("what_active")
+      $(this).addClass("what_active")
+      var get_w_val = $(this).data("value")
+      intial_what = get_w_val
+      to_pass_data()
+    })
+
+
+    $("#funds_dropdown").change(function () {
+      var get_w_c_val = $(this).val()
+      intial_co_val = get_w_c_val
+      to_pass_data()
+    })
+
+    function to_pass_data() {
+      name(intial_what, intial_co_val)
+    }
+
+
+    function name(get_intial_what, get_intial_co_val) {
+      // console.log(get_intial_what, get_intial_co_val);
+      $.ajax({
+        type: "post",
+        url: "/whats_table_val",
+        data: {
+          pass_data1: get_intial_what,
+          pass_data2: get_intial_co_val
+        },
+        success: function (data) {
+          var all_data = data.data
+          $("#what_in_out_body").empty()
+          all_data.forEach(element => {
             var row = `<tr>
                        <td>${element.CO_NAME}</td>
                        <td>${element.NO_SHARES}</td>
@@ -789,120 +982,120 @@ function name(get_intial_what, get_intial_co_val) {
                     </tr>`
             var table = $("#what_in_out_body")
             table.append(row)
-         });
+          });
 
-         $("#what_in_out").DataTable()
+          $("#what_in_out").DataTable()
         }
+      })
+    }
+
+
+    // Dividend
+    var initial_fund = "5946"
+    $("#fundHouse").change(function () {
+      var div_fund_h = $(this).val()
+      initial_fund = div_fund_h
+      name_is_div()
     })
-}
 
 
-// Dividend
-var initial_fund = "5946"
-$("#fundHouse").change(function () {
-    var div_fund_h = $(this).val()
-    initial_fund = div_fund_h
-    name_is_div()
-})
 
 
- 
-
-function get_dividend_category(get_fund_h) {
-    $.ajax({
-        type:"post",
-        url:"/dividend_category",
-        data:{
-         pass_fund_h:get_fund_h
+    function get_dividend_category(get_fund_h) {
+      $.ajax({
+        type: "post",
+        url: "/dividend_category",
+        data: {
+          pass_fund_h: get_fund_h
         },
-        success:function(data){
-         var cate_data = data.data
-         $("#myCategory").empty()
-         cate_data.forEach(element => {
+        success: function (data) {
+          var cate_data = data.data
+          $("#myCategory").empty()
+          cate_data.forEach(element => {
             $("#myCategory").append($("<option>").val(element.VCLASSCODE).text(element.VCLASS))
 
-         });
+          });
         }
-    })
-}
+      })
+    }
 
 
 
-function dividend_fund_house() {
-    
-    $.ajax({
-        type:"get",
-        url:"/dividend_data",
-        dataType:"json",
-        success:function(data){
-         var dividend_dropdown = data.data
-         dividend_dropdown.forEach(element => {
-         $("#fundHouse").append($("<option>").val(element.mf_cocode).text(element.co_name))
-         });
+    function dividend_fund_house() {
+
+      $.ajax({
+        type: "get",
+        url: "/dividend_data",
+        dataType: "json",
+        success: function (data) {
+          var dividend_dropdown = data.data
+          dividend_dropdown.forEach(element => {
+            $("#fundHouse").append($("<option>").val(element.mf_cocode).text(element.co_name))
+          });
         }
-    })
-}
+      })
+    }
 
-function divdend_date_dropdown() {
+    function divdend_date_dropdown() {
 
-    $.ajax({
-        type:"get",
-        url:"/dividend_date",
-        dataType:"json",
-        success:function(data){
-         var div_date = data.data
+      $.ajax({
+        type: "get",
+        url: "/dividend_date",
+        dataType: "json",
+        success: function (data) {
+          var div_date = data.data
 
-         div_date.forEach(element => {
-              var original_val = element.DivDate
-              encodedDate = original_val.replace(/ /g, "%20")
-              
-             $("#selectDate").append($("<option>").val(encodedDate).text(element.DivDate))
-         });
+          div_date.forEach(element => {
+            var original_val = element.DivDate
+            encodedDate = original_val.replace(/ /g, "%20")
+
+            $("#selectDate").append($("<option>").val(encodedDate).text(element.DivDate))
+          });
         }
+      })
+    }
+
+    var initial_d_cate = "26"
+    $("#myCategory").change(function () {
+      var div_cate = $(this).val()
+      initial_d_cate = div_cate
+      name_is_div()
     })
-}
 
-var initial_d_cate = "26"
-$("#myCategory").change(function () {
-    var div_cate = $(this).val()
-    initial_d_cate = div_cate
-    name_is_div()
-})
+    var initial_d_date = "Sep%202023"
+    $("#selectDate").change(function () {
+      var div_o_date = $(this).val()
+      initial_d_date = div_o_date
+      name_is_div()
+    })
 
-var initial_d_date = "Sep%202023"
-$("#selectDate").change(function () {
-    var div_o_date = $(this).val()
-    initial_d_date = div_o_date
-    name_is_div()
-})
+    function name_is_div() {
+      dividend_table_date(initial_fund, initial_d_cate, initial_d_date)
+    }
 
-function name_is_div() {
-    dividend_table_date(initial_fund,initial_d_cate, initial_d_date)
-}
-
-function dividend_table_date(get_initial_fund , get_initial_d_cate, get_initial_d_date) {
-    console.log(get_initial_d_cate);
-    console.log(get_initial_d_date);
-    console.log(get_initial_fund);
-    $.ajax({
-        type:"post",
-        url:"/dividend_datas",
-        data:{
-        param1:get_initial_fund,
-        param2:get_initial_d_cate,
-        param3:get_initial_d_date
+    function dividend_table_date(get_initial_fund, get_initial_d_cate, get_initial_d_date) {
+      // console.log(get_initial_d_cate);
+      // console.log(get_initial_d_date);
+      // console.log(get_initial_fund);
+      $.ajax({
+        type: "post",
+        url: "/dividend_datas",
+        data: {
+          param1: get_initial_fund,
+          param2: get_initial_d_cate,
+          param3: get_initial_d_date
         },
-        success:function (data) {
-            var dividends = data.data
-            $("#dividend_table").empty()
-            if(!dividends ){
+        success: function (data) {
+          var dividends = data.data
+          $("#dividend_table").empty()
+          if (!dividends) {
             $("#dividend_table").html("<p class='text-danger text-center'>no record found !!")
-        
-            }
-            else{
 
-                dividends.forEach(element => {
-                    var row = `<tr>
+          }
+          else {
+
+            dividends.forEach(element => {
+              var row = `<tr>
                                 <td>${element.Sch_Name}</td>
                                 <td>${parseFloat(element.NAVRS.toFixed(2))}</td>
                                 <td>${parseFloat(element.DivAmount.toFixed(2))}</td>
@@ -910,32 +1103,32 @@ function dividend_table_date(get_initial_fund , get_initial_d_cate, get_initial_
                                 <td>${parseFloat(element.year1.toFixed(2))}</td>
                                 <td>${(element.year3)}</td>
                                </tr>`
-                    var table = $("#dividend_table")
-                    table.append(row)
-                });
-            }
+              var table = $("#dividend_table")
+              table.append(row)
+            });
+          }
         }
-    })
-}
+      })
+    }
 
-// dividend_table_date()
-name_is_div()
+    // dividend_table_date()
+    name_is_div()
 
-dividend_fund_house()
+    dividend_fund_house()
 
-divdend_date_dropdown()
-get_dividend_category()
+    divdend_date_dropdown()
+    get_dividend_category()
 
-// Fund Profile
+    // Fund Profile
 
-function fund_profile_data() {
-    $.ajax({
-        type:"get",
-        url:"/fund_profile",
-        dataType:"json",
-        success:function(data){
-         var fundData = data.data
-         fundData.forEach(element => {
+    function fund_profile_data() {
+      $.ajax({
+        type: "get",
+        url: "/fund_profile",
+        dataType: "json",
+        success: function (data) {
+          var fundData = data.data
+          fundData.forEach(element => {
             var row = `<tr>
                         <td>${element.LNAME}</td>
                         <td>${element.STARTED_ON.split("T")[0]}</td>
@@ -945,54 +1138,54 @@ function fund_profile_data() {
                       </tr>`
             var table = $("#fund_profile_table")
             table.append(row)
-         });
+          });
         }
+      })
+    }
+
+    fund_profile_data()
+
+    // New Fund offer Start Here !!!!!
+
+    var intial_type = "equity"
+
+    $("#new_fundOptions").change(function () {
+      var new_fund_value = $(this).val()
+      new_fund_param(new_fund_value)
     })
-}
-
-fund_profile_data()
-
-// New Fund offer Start Here !!!!!
-
-var intial_type = "equity"
-
-$("#new_fundOptions").change(function () {
-   var new_fund_value =  $(this).val()
-   new_fund_param(new_fund_value)
-})
 
 
-function new_fund_param(intial_type) {
-    console.log(intial_type);
+    function new_fund_param(intial_type) {
+      // console.log(intial_type);
 
-    $.ajax({
-        type:"post",
-        url:"/new_funds_offer",
-        data:{
-        pass_intial_type:intial_type
+      $.ajax({
+        type: "post",
+        url: "/new_funds_offer",
+        data: {
+          pass_intial_type: intial_type
         },
-        success:function(data){
-        var new_fund_all_data = data.data
-        $("#new_fund").empty()
-        if(!new_fund_all_data ){
+        success: function (data) {
+          var new_fund_all_data = data.data
+          $("#new_fund").empty()
+          if (!new_fund_all_data) {
             $("#new_fund").html("<p class='text-danger text-center'>no record found !!")
-        
-        }
-        else{
+
+          }
+          else {
 
             new_fund_all_data.forEach(element => {
-                 if(intial_type === "equity"){
-                    tdVal = element.TypeName
-                 }
-                 else if(intial_type === "Debt"){
-                    tdVal = element.TypeName
-                 }
-                 else if(intial_type === "hybrid"){
-                    tdVal = element.TypeName
-                 }
-              
-    
-                    var row = `<tr>
+              if (intial_type === "equity") {
+                tdVal = element.TypeName
+              }
+              else if (intial_type === "Debt") {
+                tdVal = element.TypeName
+              }
+              else if (intial_type === "hybrid") {
+                tdVal = element.TypeName
+              }
+
+
+              var row = `<tr>
                               <td>${element.Sch_Name}</td>
                               <td>${tdVal}</td>
                               <td>${element.Launc_Date.split("T")[0]}</td>
@@ -1001,36 +1194,36 @@ function new_fund_param(intial_type) {
                               <td>${element.OFFERPRICE}</td>
                               <td>${element.VClass}</td>
                               </tr>`
-                    var table = $("#new_fund")
-                    table.append(row)
-               
+              var table = $("#new_fund")
+              table.append(row)
+
             });
+          }
         }
-        }
-    })
-}
+      })
+    }
 
 
-// Mutual Fund news
+    // Mutual Fund news
 
-$(".news_table").on("click", ".Mutualnews-wq", function () {
-    var news_id = $(this).data("value")
-    console.log(news_id);
-    var detailsUrl = '/mutual_news_details'
-    window.location.href = detailsUrl
-    
-});
+    $(".news_table").on("click", ".Mutualnews-wq", function () {
+      var news_id = $(this).data("value")
+      // console.log(news_id);
+      var detailsUrl = '/mutual_news_details'
+      window.location.href = detailsUrl
+
+    });
 
 
-function mutual_fund_news_data() {
-    $.ajax({
-        type:"get",
-        url:"/mutual_fund_news",
-        dataType:"json",
-        success:function(data){
-         var mutual_news = data.data
-         mutual_news.forEach(element => {
-             
+    function mutual_fund_news_data() {
+      $.ajax({
+        type: "get",
+        url: "/mutual_fund_news",
+        dataType: "json",
+        success: function (data) {
+          var mutual_news = data.data
+          mutual_news.forEach(element => {
+
             var news_box = `<div class="Mutualnews-wq" data-value=${element.Sno}>
                                   <div>
                                     <p>${element.Heading}</p>
@@ -1038,25 +1231,34 @@ function mutual_fund_news_data() {
                                     </div>
                                </div>   
                                 `
-                $(".news_table").append(news_box)
-         });
+            $(".news_table").append(news_box)
+          });
         }
-    })
-}
+      })
+    }
 
 
 
-mutual_fund_news_data()
+    mutual_fund_news_data()
 
 
 
 
-holdings_get()
-to_get_params()
-mutual_fund_activity()
-whats_in_out()
-to_pass_data()
-new_fund_param(intial_type)
+    holdings_get()
+    to_get_params()
+    mutual_fund_activity()
+    whats_in_out()
+    to_pass_data()
+    new_fund_param(intial_type)
+
+
+
+
+
+  });
+
+
+
 
 </script>
 

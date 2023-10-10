@@ -212,7 +212,7 @@ urlpatterns = [
     path('ipo_deepak', views.ipo_deepak, name='ipo_deepak'),
     path('news_details/<int:sno>/<str:heading>/', views.news_details, name='news_details'),
     path('option_index_statregy_executor', views.option_index_statregy_executor, name='option_index_statregy_executor'),
-    
+
     path('mutual_funds', views.mutual_funds, name ='mutual_funds'),
     path('category_performance', views.category_performance, name='category_performance'),
     path('holdings_select', views.holdings_select, name='holdings_select'),
@@ -231,6 +231,9 @@ urlpatterns = [
     path('top_holdings_fund_house', views.top_holdings_fund_house, name='top_holdings_fund_house'),
     path('top_holdings_category', views.top_holdings_category, name='top_holdings_category'),
     path('holdings_scheme', views.holdings_scheme, name='holdings_scheme'),
+    path('mutual_fund_performance', views.mutual_fund_performance, name='mutual_fund_performance'),
+
+    path('main_holding_table_data', views.main_holding_table_data, name='main_holding_table_data'),
 
 
 
