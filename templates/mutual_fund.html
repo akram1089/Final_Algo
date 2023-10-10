@@ -3,78 +3,103 @@
 {% block dashboard_body %}
 
 <style>
-  .table-box {
+
+.table-box {
     box-shadow: 1px 0 11px #d3cccc;
     border-radius: 17px;
     padding-top: 12px;
-    padding-bottom: 12px !important;
-  }
-
-  #chartdiv {
+    padding-bottom: 12px!important;
+}
+#chartdiv {
     width: 100%;
     height: 500px;
   }
+  
 
-  .active {
-    color: white;
-    background-color: rgb(0, 162, 255);
-    border: 1px solid rgb(0, 162, 255);
-    border-radius: 2px;
-    padding: 2px 4px;
-  }
-
-  .fund {
-    font-size: 15px;
-    font-weight: 700;
-    color: #000;
-    background-color: #eff9ff;
-    border: none;
-    padding: 10px;
-    white-space: nowrap;
+.fund {
+font-size: 15px;
+font-weight: 700;
+color: #000;
+background-color: #eff9ff;
+border: none;
+padding: 10px;
+white-space: nowrap;
   }
 
 
 
-  .table thead tr {
+.table thead tr{
     font-size: 17px;
-    font-weight: 700;
-    color: navy;
-    background-color: #eff9ff;
-    border: none;
-    padding: 10px;
-    white-space: nowrap;
+font-weight: 700;
+color: black;
+background-color: #eff9ff;
+border: none;
+padding: 10px;
+white-space: nowrap;
+}
+.fund_dates{
+color: #4399eb;
+border: 1px solid #4399eb !important;
+border: none;
+padding: 5px 12px;
+border-radius: 5px;
+font-size: 15px;
+margin-right: 9px;
+background: white;
+transition: ease-in-out;
+cursor: pointer;
+}
+
+.active{
+    background: linear-gradient(180deg, #4399eb, #5cadfb) !important;
+    color: white !important;
+    border: 1px solid #4399eb;
+    border-radius: 5px;
+    
   }
 
-  .fund-activity {
+.fund-activity{
     font-size: 15px;
-    font-weight: 700;
-    color: #000;
-    background-color: #eff9ff;
-    border: none;
-    padding: 10px;
-    white-space: nowrap;
-  }
+font-weight: 700;
+color: #000;
+background-color: #eff9ff;
+border: none;
+padding: 10px;
+white-space: nowrap;
+}
+.what_filter{
+color: #4399eb;
+border: 1px solid #4399eb !important;
+border: none;
+padding: 5px 12px;
+border-radius: 5px;
+font-size: 15px;
+margin-right: 9px;
+background: white;
+cursor: pointer;
+transition: ease-in-out;
+}
+.what_active{
+    background: linear-gradient(180deg, #4399eb, #5cadfb) !important;
+    color: white !important;
+    border: 1px solid #4399eb;
+    border-radius: 5px;
+}
 
-  .what_active {
-    background-color: rgb(0, 162, 255);
-    color: white;
-    padding: 5px;
-    border-radius: 3px;
-  }
+.Mutualnews-wq{
+display: inline-block;
+width: 49%;
+right: 12px;
+margin-right: 1%;
+margin-top: 19px;
+background: #fff 0 0 no-repeat padding-box;
+box-shadow: inset -10px -10px 20px rgba(4,115,233,.0784313725490196);
+border-radius: 28px;
+padding: 1rem;
+position: relative;
+right: auto;
 
-  .Mutualnews-wq {
-    display: inline-block;
-    width: 49%;
-    right: 12px;
-    margin-right: 1%;
-    margin-top: 19px;
-    background: #fff 0 0 no-repeat padding-box;
-    box-shadow: inset -10px -10px 20px rgba(4, 115, 233, .0784313725490196);
-    border-radius: 28px;
-    padding: 1rem;
-    position: relative;
-    right: auto;
-  }
+}
 
   .times ul li:hover {
     background: linear-gradient(180deg, #4399eb, #5cadfb);
@@ -128,6 +153,121 @@
     gap: 2rem;
     align-items: flex-end;
   }
+
+  .nav_initial_filter {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .historical_data {
+    display: flex;
+    gap: 0.5rem;
+    width: 60%;
+  }
+ 
+
+  .main_nav_filter_mutual_funds button {
+    background: white;
+
+    color: #4399eb;
+    padding: 0px 7px;
+    text-align: center;
+    height: 29px;
+    display: flex;
+    font-weight: 500;
+    border-radius: 4px;
+    border: 1px solid #4399eb !important;
+    -webkit-box-shadow: none !important;
+    box-shadow: none !important;
+    outline: 0 !important;
+    -webkit-transition: all .2s ease-in-out !important;
+    -moz-transition: all .2s ease-in-out !important;
+    transition: all .2s ease-in-out !important;
+    cursor: pointer;
+    font-weight: 600;
+    align-items: center;
+  }
+  .nav_filter_active {
+    background: linear-gradient(180deg, #4399eb, #5cadfb) !important;
+    color: white !important;
+  }
+
+
+  @media only screen and (max-width: 768px) {
+
+  .holdings_filter{
+   flex-wrap: wrap !important;
+   gap:.5rem !important;
+  }
+  
+  .mutual_fund_section{
+    padding: 3rem 2rem;
+  }
+
+  .dividend_filter{
+    flex-wrap: wrap !important;
+    gap: .5rem !important;
+  }
+  .whats_in_out{
+    flex-wrap: wrap !important;
+    gap: 1rem !important;
+  }
+  .table_filter{
+    flex-wrap: wrap !important;
+  }
+  .fund_dates {
+    padding: 2px 6px;
+    font-size: 15px;
+  }
+.category{
+  flex-wrap: wrap !important;
+  gap: 1rem !important;
+}
+.options{
+  width: 100% !important;
+}
+.times ul{
+  gap: .5rem !important;
+  padding-left: 0 !important;
+}
+.times ul li{
+  padding: 0px 4px;
+}
+.new_fund_offer_category{
+  width: 100% !important;
+}
+.MF-Performance-dates ul{
+padding-left: 0 !important;
+}
+.whats_filter{
+
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.fund_perform_filter{
+  flex-wrap: wrap !important;
+}
+.nav_initial_filter{
+  flex-wrap: wrap !important;
+}
+.historical_data{
+  flex-wrap: wrap !important;
+  width: 100%;
+}
+#nav_symbol_body{
+  overflow: auto;
+}
+#performer{
+  width: 100%;
+}
+.holdings-select{
+  width: 100%;
+}
+  }
+
+
 </style>
 <section class="mutual_fund_section container">
   <section>
@@ -220,13 +360,65 @@
     </div>
   </section>
 
+  <!-- NAV -->
+  <section id="Nav_mutual_funds">
+    <h4 class="mt-5">NAV</h4>
+
+    <div class="table-box">
+      <div class="dividend_box p-4">
+        <div class="nav_initial_filter">
+          <select id="navFirst_drop" class="form-select" aria-label="Default select example">
+
+          </select>
+          <select id="navSecond_drop" class="form-select" aria-label="Default select example">
+
+          </select>
+          <select id="navThird_drop" class="form-select" aria-label="Default select example">
+
+          </select>
+        </div>
+
+        <div class="historical_data" style="display: none;">
+
+          <select name="period_dropdown" id="period_dropdown" class="form-select">
+            <option value="1week">1Week</option>
+            <option value="1Month">1Month</option>
+            <option value="1Year">1Year</option>
+          </select>
+
+          <select name="All_Historical_options" id="All_Historical_options" class="form-control"></select>
+        </div>
+
+        <div class="main_nav_filter_mutual_funds mt-4 d-flex gap-2">
+          <button class="nav_filter_active" data-nav-filter="daily">Daily</button><button
+            data-nav-filter="historical">Historical</button>
+        </div>
+        
+          
+            <div id="nav_symbol_body" class="mt-3">
+               
+              
+            </div>
+         
+          
+      </div>
+    </div>
+
+
+
+
+  </section>
+
+
+
+
   <!-- Funds Performance -->
   <section class="mt-5">
     <h4>Fund Performance</h4>
     <div class="table-box p-4">
       <div class="table_filter d-flex justify-content-between">
         <div class="MF-Performance-dates">
-          <ul class="d-flex gap-3 align-items-center">
+          <ul class="d-flex gap-2 align-items-center">
             <li id="1Week" data-value="1Week" class="fund_dates active">1W</li>
             <li data-value="1Month" class="fund_dates">1M</li>
             <li data-value="3month" class="fund_dates">3M</li>
@@ -235,21 +427,23 @@
             <li data-value="3year" class="fund_dates">3Y</li>
           </ul>
         </div>
-        <div class="holdings-select">
-          <select class="form-select" id="performer">
-            <option>Select Category</option>
-            <option value="T" selected>Top performance</option>
-            <option value="B">Bottom Performance</option>
-          </select>
-        </div>
-        <div class="holdings-select">
-          <select name="" id="holdings" class="form-select">
-
-          </select>
+        <div class=" fund_perform_filter d-flex gap-1">
+          <div class="holdings-select">
+            <select class="form-select" id="performer">
+              <option>Select Category</option>
+              <option value="T" selected>Top performance</option>
+              <option value="B">Bottom Performance</option>
+            </select>
+          </div>
+          <div class="holdings-select">
+            <select name="" id="holdings" class="form-select">
+  
+            </select>
+          </div>
         </div>
       </div>
-      <div class="fund_table">
-        <table class="table">
+      <div class="fund_table table-responsive mt-3">
+        <table class="table ">
           <thead class="fund">
             <tr>
               <th>Scheme Name</th>
@@ -268,7 +462,7 @@
   <section class="mt-5">
     <h4>Mutual Fund Activity</h4>
     <div class="table-box">
-      <div class="funds_activity_table p-4">
+      <div class="funds_activity_table p-4 table-responsive">
         <table class="table" id="data-table">
           <thead>
             <tr class="fund-activity">
@@ -307,8 +501,8 @@
                   
                 </select>
            </div>
-          <div class="holdings mt-4">
-              <table class="table">
+          <div class="holdings mt-4 table-responsive">
+              <table class="table ">
                   <thead>
                     <tr>
                       <th scope="col">Company Name</th>
@@ -333,8 +527,8 @@
       <div class="whats_box p-4">
         <div class="whats_in_out d-flex justify-content-between">
           <div class="whats_filter">
-            <span class="what_filter what_active" data-value="In">What’s In</span>
-            <span class="what_filter ms-3" data-value="Out">What’s Out</span>
+            <span class="what_filter what_active w-100" data-value="In">What’s In</span>
+            <span class="what_filter w-100" data-value="Out">What’s Out</span>
           </div>
           <div class="funds_name">
             <select class="form-select" id="funds_dropdown">
@@ -344,7 +538,7 @@
 
           </div>
         </div>
-        <div class="what_in_out_table mt-3">
+        <div class="what_in_out_table mt-3 table-responsive">
           <table class="table" id="what_in_out">
             <thead>
               <tr>
@@ -378,8 +572,8 @@
 
           </select>
         </div>
-        <div class="dividend mt-4">
-          <table class="table">
+        <div class="dividend mt-4 table-responsive">
+          <table class="table ">
             <thead>
               <tr>
                 <th scope="col">Company Name</th>
@@ -404,7 +598,7 @@
   <section class="fund_profile_section mt-5">
     <h4>Fund Profile</h4>
     <div class="table-box">
-      <div class="fund_profile p-4">
+      <div class="fund_profile p-4 table-responsive">
         <table class="table">
           <thead>
             <tr>
@@ -428,14 +622,16 @@
     <h4>New Fund Offer</h4>
     <div class="table-box">
       <div class="new_funds_offer p-4">
-        <div class="new_fund_filter d-flex justify-content-start">
-          <select id="new_fundOptions" class="form-select" aria-label="Default select example">
-            <option class="category_per" value="equity" selected>Equity</option>
-            <option class="category_per" value="Debt">Debt</option>
-            <option class="category_per" value="hybrid">Hybrid</option>
-          </select>
+        <div class="new_fund_filter d-flex justify-content-end">
+          <div class="new_fund_offer_category">
+            <select id="new_fundOptions" class="form-select" aria-label="Default select example">
+              <option class="category_per" value="equity" selected>Equity</option>
+              <option class="category_per" value="Debt">Debt</option>
+              <option class="category_per" value="hybrid">Hybrid</option>
+            </select>
+          </div>
         </div>
-        <div class="new_fund_table mt-4">
+        <div class="new_fund_table mt-4 table-responsive">
           <table class="table">
             <thead>
               <tr>
@@ -466,6 +662,7 @@
       <div class="news_table d-flex flex-wrap">
 
       </div>
+      <div class="load-more">Load More</div>
     </div>
   </section>
 
@@ -664,7 +861,7 @@
         }
       })
     }
-
+    holdings_get()
 
 
     var initial_date = "1Week"
@@ -697,7 +894,8 @@
     function to_get_params() {
       performance_table(initial_date, perform, initial_val)
     }
-
+    
+    to_get_params()
     function performance_table(get_date, get_perform, get_init_val) {
       // console.log(get_date);
       // console.log(get_perform);
@@ -751,6 +949,347 @@
     }
 
 
+//NAV
+
+
+
+
+//NAV
+
+
+
+
+var nav_header_conditions = true;
+    var first_args_nav
+    var second_args_nav;
+    var nav_header_second_conditions = true;
+    var third_args_nav;
+    var nav_pagination_limits = 8
+    var nav_final_conditions = true
+    function main_nav_data() {
+      $.ajax({
+        type: "get",
+        url: "/top_holdings_fund_house",
+        dataType: "json",
+        success: function (data) {
+          var holdings_h_dropdown = data.data;
+
+          var topHCate1 = $("#navFirst_drop");
+          topHCate1.empty();
+          holdings_h_dropdown.forEach(element => {
+            topHCate1.append($("<option>").val(element.mf_cocode).text(element.co_name));
+          });
+          first_args_nav = topHCate1.val()
+          if (nav_header_conditions) {
+            get_second_nav(first_args_nav);
+            nav_header_conditions = false;
+
+          }
+
+          topHCate1.off("change").on("change", function () {
+            var get_scheme = $(this).val();
+
+            first_args_nav = get_scheme;
+            get_second_nav(first_args_nav);
+
+
+          });
+        }
+      });
+    }
+
+
+
+    function get_second_nav(get_val) {
+
+      $.ajax({
+        type: "post",
+        url: "/top_holdings_category",
+        data: {
+          pass_val: get_val
+        },
+        success: function (data) {
+          var get_data = data.data;
+          var topHCate2 = $("#navSecond_drop");
+          topHCate2.empty();
+          get_data.forEach(element => {
+            topHCate2.append($("<option>").val(element.VCLASSCODE).text(element.VCLASS));
+          });
+
+          second_args_nav = topHCate2.val();
+          get_third_nav(first_args_nav, second_args_nav);
+          nav_header_second_conditions = false;
+
+
+
+          topHCate2.off("change").on("change", function () {
+            second_args_nav = $(this).val();
+
+            get_third_nav(first_args_nav, second_args_nav);
+
+
+          });
+        }
+      });
+    }
+
+    function get_third_nav(get_hold_house, get_schemes) {
+      $.ajax({
+        type: "post",
+        url: "/holdings_scheme",
+        data: {
+          pass_hold_house: get_hold_house,
+          pass_schemes: get_schemes
+        },
+        success: function (data) {
+          var selectScheme = $("#navThird_drop");
+          selectScheme.empty(); // Clear previous options
+
+          var options = data.data.map(function (item) {
+            return $("<option>").val(item.MF_SCHCODE).text(item.SCH_NAME);
+          });
+
+          selectScheme.append(options);
+
+
+          third_args_nav = selectScheme.val()
+
+          get_main_nav_data(first_args_nav, second_args_nav, third_args_nav, nav_pagination_limits)
+
+
+          selectScheme.off("change").on("change", function () {
+            hodling_last_dropdown = $(this).val();
+            third_args_nav = hodling_last_dropdown
+            console.log(third_args_nav);
+
+            get_main_nav_data(first_args_nav, second_args_nav, third_args_nav, nav_pagination_limits)
+
+          });
+        }
+      });
+    }
+
+    function get_main_nav_data(first_args_nav, second_args_nav, third_args_nav, nav_pagination_limits) {
+      $.ajax({
+        type: "post",
+        url: "/main_nav_data",
+        data: {
+          first_args_nav: first_args_nav,
+          second_args_nav: second_args_nav,
+          third_args_nav: third_args_nav,
+          nav_pagination_limits: nav_pagination_limits,
+        },
+        success: function (data) {
+          console.log(data);
+          var nav_symbol_body = $("#nav_symbol_body");
+          var table = $("<table>").addClass("nav_table table");
+          var thead = $("<thead>");
+          var tbody = $("<tbody>");
+          nav_symbol_body.empty();
+
+          // Create table headers (thead)
+          var headerRow = `
+        <tr>
+          <th>Scheme Name</th>
+          <th>Nav Date</th>
+          <th>NAV (Rs)</th>
+          <th>Repurchase Price (Rs)</th>
+          <th>Company</th>
+        </tr>
+      `;
+
+          thead.append(headerRow);
+
+          // Check if data is empty
+          if (data.data === null) {
+            var noDataMessage = `
+          <tr>
+            <td colspan="5">No data found</td>
+          </tr>
+        `;
+            tbody.append(noDataMessage);
+          } else {
+            // Populate table with data
+            $.each(data.data, function (index, row) {
+              var rowHTML = `
+            <tr>
+              <td>${row.sch_name}</td>
+              <td>${row.navdate}</td>
+              <td>${row.navrs}</td>
+              <td>${row.RepurchasePrice}</td>
+              <td><img src="${row.Logo}" class="logo" style="width:20px"></td>
+            </tr>
+          `;
+              tbody.append(rowHTML);
+            });
+          }
+
+          // Append the table to your desired container
+          table.append(thead, tbody);
+          nav_symbol_body.append(table);
+        },
+      });
+    }
+
+    main_nav_data();
+
+
+
+
+    var period_selected;
+    var All_nav_symbol_selected;
+    var historical_pagiantion_limit = 8
+    function All_Historical_options() {
+      $.ajax({
+        type: "post",
+        url: "/main_nav_historical_data",
+
+        success: function (data) {
+          var get_data = data.data;
+          var All_hostorical_opiton = $("#All_Historical_options");
+          All_hostorical_opiton.empty();
+
+          get_data.forEach(element => {
+            All_hostorical_opiton.append($("<option>").val(element.MF_SCHCODE).text(element.SCH_NAME));
+          });
+
+          All_nav_symbol_selected = All_hostorical_opiton.val();
+
+          period_selected = $("#period_dropdown").val()
+          All_nav_historical_table_data(period_selected, All_nav_symbol_selected, historical_pagiantion_limit)
+          console.log(historical_pagiantion_limit);
+
+
+
+          $("#period_dropdown").off("change").on("change", function () {
+            period_selected = $(this).val();
+
+            All_nav_historical_table_data(period_selected, All_nav_symbol_selected, historical_pagiantion_limit)
+
+
+          });
+          All_hostorical_opiton.off("change").on("change", function () {
+            All_nav_symbol_selected = $(this).val();
+
+            All_nav_historical_table_data(period_selected, All_nav_symbol_selected, historical_pagiantion_limit)
+
+
+          });
+        }
+      });
+    }
+
+    All_Historical_options()
+
+    function formatDate(inputDate) {
+      const options = { year: 'numeric', month: 'short', day: 'numeric' };
+      return new Date(inputDate).toLocaleDateString('en-US', options);
+    }
+
+    function All_nav_historical_table_data(period_selected, All_nav_symbol_selected, historical_pagiantion_limit) {
+      console.log(historical_pagiantion_limit);
+      $.ajax({
+        type: "post",
+        url: "/All_nav_historical_table_data",
+        data: {
+          period_selected: period_selected,
+          All_nav_symbol_selected: All_nav_symbol_selected,
+          historical_pagiantion_limit: historical_pagiantion_limit
+        },
+        success: function (data) {
+          console.log(data);
+
+          var nav_symbol_body = $("#nav_symbol_body");
+          var table = $("<table>").addClass("historical_table table");
+          var thead = $("<thead>");
+          var tbody = $("<tbody>");
+          nav_symbol_body.empty();
+
+          // Create table headers (thead)
+          var headerRow = `
+        <tr>
+          <th>Scheme Name</th>
+          <th>Nav Date</th>
+          <th>NAV (Rs)</th>
+          <th>Yearly Low(₹)</th>
+       
+        </tr>
+      `;
+
+          thead.append(headerRow);
+
+          // Check if data is empty
+          if (data.data === null) {
+            var noDataMessage = `
+          <tr>
+            <td colspan="5">No data found</td>
+          </tr>
+        `;
+            tbody.append(noDataMessage);
+          } else {
+            // Populate table with data
+            $.each(data.data, function (index, row) {
+              var formattedDate = formatDate(row.NAVDATE);
+              var rowHTML = `
+            <tr>
+              <td>${row.sch_name}</td>
+              <td>${formattedDate}</td>
+              <td>${row.NAVRS}</td>
+              <td>${row.NAVREPRICE}</td>
+      
+            </tr>
+          `;
+              tbody.append(rowHTML);
+            });
+          }
+
+          // Append the table to your desired container
+          table.append(thead, tbody);
+          nav_symbol_body.append(table);
+        },
+
+      });
+    }
+
+
+
+    $(".main_nav_filter_mutual_funds button").click(function () {
+      $(".main_nav_filter_mutual_funds button").removeClass("nav_filter_active")
+      $(this).addClass("nav_filter_active")
+
+      var selectedFilter = $(this).data("nav-filter");
+
+    
+      var hasActiveClass = $(this).hasClass("nav_filter_active");
+      if (hasActiveClass) {
+
+
+
+        if (selectedFilter === "daily") {
+          $(".historical_data").hide();
+          $(".nav_initial_filter").show();
+
+
+
+          get_main_nav_data(first_args_nav, second_args_nav, third_args_nav, nav_pagination_limits);
+      
+        } else if (selectedFilter === "historical") {
+          $(".historical_data").show();
+          $(".nav_initial_filter").hide();
+
+      
+
+          All_nav_historical_table_data(period_selected, All_nav_symbol_selected, historical_pagiantion_limit);
+ 
+        }
+      }
+    });
+
+
+
+
+
+
     // Mutual Fund Activity Start Here !!!
 
     function mutual_fund_activity() {
@@ -788,8 +1327,8 @@
         }
       })
     }
-
-
+    mutual_fund_activity()
+  
 // Top 10 Holdings
 var top_holding_header_conditions = true;
 var cate_one 
@@ -908,8 +1447,16 @@ function  get_main_holding_table_data(cate_one,initial_secondd_val) {
           initial_secondd_val: initial_secondd_val
         },
         success: function (data) {
-          console.log(data);
-        }
+          var hold_table_data = data.data
+          hold_table_data.forEach(element => {
+            var row = `<tr>
+                        <td>${element.co_name}</td>
+                        <td>${parseFloat(element.Perc_hold).toFixed(2)}</td>
+                      </tr>`
+              var table = $("#top_holding_table")
+              table.append(row)
+           });
+        },
     });
 }
 
@@ -938,7 +1485,7 @@ top_holding_header();
         }
       })
     }
-
+    whats_in_out()
     var intial_what = "In"
     var intial_co_val = '41331'
 
@@ -960,7 +1507,7 @@ top_holding_header();
     function to_pass_data() {
       name(intial_what, intial_co_val)
     }
-
+    to_pass_data()
 
     function name(get_intial_what, get_intial_co_val) {
       // console.log(get_intial_what, get_intial_co_val);
@@ -1035,6 +1582,7 @@ top_holding_header();
         }
       })
     }
+    dividend_fund_house()
 
     function divdend_date_dropdown() {
 
@@ -1072,7 +1620,7 @@ top_holding_header();
     function name_is_div() {
       dividend_table_date(initial_fund, initial_d_cate, initial_d_date)
     }
-
+    name_is_div()
     function dividend_table_date(get_initial_fund, get_initial_d_cate, get_initial_d_date) {
       // console.log(get_initial_d_cate);
       // console.log(get_initial_d_date);
@@ -1112,9 +1660,9 @@ top_holding_header();
     }
 
     // dividend_table_date()
-    name_is_div()
+    
 
-    dividend_fund_house()
+    
 
     divdend_date_dropdown()
     get_dividend_category()
@@ -1202,15 +1750,14 @@ top_holding_header();
         }
       })
     }
-
+    
+    new_fund_param(intial_type)
 
     // Mutual Fund news
 
     $(".news_table").on("click", ".Mutualnews-wq", function () {
       var news_id = $(this).data("value")
       // console.log(news_id);
-      var detailsUrl = '/mutual_news_details'
-      window.location.href = detailsUrl
 
     });
 
@@ -1221,7 +1768,7 @@ top_holding_header();
         url: "/mutual_fund_news",
         dataType: "json",
         success: function (data) {
-          var mutual_news = data.data
+          var mutual_news = data.data.slice(0,5)
           mutual_news.forEach(element => {
 
             var news_box = `<div class="Mutualnews-wq" data-value=${element.Sno}>
@@ -1233,7 +1780,9 @@ top_holding_header();
                                 `
             $(".news_table").append(news_box)
           });
-        }
+         
+                
+        },
       })
     }
 
@@ -1241,15 +1790,15 @@ top_holding_header();
 
     mutual_fund_news_data()
 
+   
 
 
-
-    holdings_get()
-    to_get_params()
-    mutual_fund_activity()
-    whats_in_out()
-    to_pass_data()
-    new_fund_param(intial_type)
+    
+    
+    
+    
+    
+    
 
 
 

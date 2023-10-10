@@ -234,6 +234,10 @@ urlpatterns = [
     path('mutual_fund_performance', views.mutual_fund_performance, name='mutual_fund_performance'),
 
     path('main_holding_table_data', views.main_holding_table_data, name='main_holding_table_data'),
+    
+    path('main_nav_data', views.main_nav_data, name='main_nav_data'),
+    path('main_nav_historical_data', views.main_nav_historical_data, name='main_nav_historical_data'),
+    path('All_nav_historical_table_data', views.All_nav_historical_table_data, name='All_nav_historical_table_data'),
 
 
 

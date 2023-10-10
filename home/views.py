@@ -5205,6 +5205,9 @@ def main_holding_table_data(request):
     return JsonResponse(all_holdings)
 
 
+
+
+
 @csrf_exempt
 def performances_data(request):
     if request.method == "POST":
@@ -5484,3 +5487,82 @@ def top_holdings_fund_house(request):
     all_holdings = convert_holdings
     return JsonResponse(all_holdings)
 
+
+
+    
+@csrf_exempt
+def main_nav_data(request):
+    # Extracting values from request data
+    first_args_nav = request.POST.get('first_args_nav')
+    second_args_nav = request.POST.get('second_args_nav')
+    third_args_nav = request.POST.get('third_args_nav')
+    nav_pagination_limits = request.POST.get('nav_pagination_limits')
+
+    # Constructing the URL for the external API
+    url = f"https://www.moneysukh.com/api/markets/MFNavDaily/{first_args_nav}/{second_args_nav}/{third_args_nav}/{nav_pagination_limits}"
+    print(url)
+
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
+        "Accept-Language": "en-US,en;q=0.9",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive"
+    }
+
+    # Sending a request to the external API
+    response_category = requests.get(url, headers=headers)
+    all_data = response_category.json()
+    all_holdings = all_data
+
+    # Returning the fetched data as JSON response
+    return JsonResponse(all_holdings)
+@csrf_exempt
+def main_nav_historical_data(request):
+ 
+ 
+    # Constructing the URL for the external API
+    url = f"https://www.moneysukh.com/api/markets/MfHoldingDrop/all/-"
+
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
+        "Accept-Language": "en-US,en;q=0.9",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive"
+    }
+
+    # Sending a request to the external API
+    response_category = requests.get(url, headers=headers)
+    all_data = response_category.json()
+    all_holdings = all_data
+
+    # Returning the fetched data as JSON response
+    return JsonResponse(all_holdings)
+
+
+
+
+@csrf_exempt
+def All_nav_historical_table_data(request):
+    # Extracting values from the POST request
+    period_selected = request.POST.get('period_selected')
+    All_nav_symbol_selected = request.POST.get('All_nav_symbol_selected')
+    historical_pagination_limit = request.POST.get('historical_pagination_limit',8)
+    print(period_selected,All_nav_symbol_selected,historical_pagination_limit)
+
+    # Constructing the URL for the external API with dynamic values
+    url = f"https://www.moneysukh.com/api/markets/MFNavHistorical/{All_nav_symbol_selected}/{period_selected}/{historical_pagination_limit}"
+    print(url)
+
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
+        "Accept-Language": "en-US,en;q=0.9",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive"
+    }
+
+    # Sending a request to the external API
+    response_category = requests.get(url, headers=headers)
+    all_data = response_category.json()
+
+    # Returning the fetched data as JSON response
+    return JsonResponse(all_data)
