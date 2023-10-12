@@ -697,153 +697,159 @@
       var chartData = [];
       main_return_data.forEach(function (stock) {
         console.log(stock.TypeName);
-        var companyNameParts = stock.TypeName.split('-');
+        var companyNameParts = stock.TypeName.split("-");
         console.log(companyNameParts);
-        
+
         chartData.push({
-    
           company_name: companyNameParts[1],
           PerChange: stock.Return,
         });
       });
-     // Create a chart instance
-var chart = am4core.create("chartdiv", am4charts.XYChart);
-chart.paddingBottom = 30; // Add some padding at the bottom to accommodate the labels
+     
 
-// Enable mouse wheel zoom for the x-axis
-chart.mouseWheelZoomEnabled = true;
+      var chart = am4core.create("chartdiv", am4charts.XYChart);
+      chart.paddingBottom = 30; // Add some padding at the bottom to accommodate the labels
 
-// Remove chart watermark
-chart.logo.disabled = true;
+      // Enable mouse wheel zoom for the x-axis
+      chart.mouseWheelZoomEnabled = true;
 
-// Add data to the chart
-chart.data = chartData;
+      // Remove chart watermark
+      chart.logo.disabled = true;
 
-// Create category axis (company_name)
-var categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
-categoryAxis.dataFields.category = "company_name";
-categoryAxis.title.text = "Company Name";
+      // Add data to the chart
+      chart.data = chartData;
 
-// Create value axis (PerChange)
-var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
-valueAxis.title.text = "PerChange";
+      // Create category axis (company_name)
+      var categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
+      categoryAxis.dataFields.category = "company_name";
+      categoryAxis.title.text = "Company Name";
+   
+      // Create value axis (PerChange)
+      var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
+      valueAxis.title.text = "PerChange";
 
-// Draw a horizontal line at y-axis 0
-var zeroLine = valueAxis.axisRanges.create();
-zeroLine.value = 0;
-zeroLine.grid.stroke = am4core.color("#000"); // Color of the line
-zeroLine.grid.strokeWidth = 2; // Line width
-zeroLine.grid.strokeOpacity = 0.5; // Line opacity
+      // Draw a horizontal line at y-axis 0
+      var zeroLine = valueAxis.axisRanges.create();
+      zeroLine.value = 0;
+      zeroLine.grid.stroke = am4core.color("#000"); // Color of the line
+      zeroLine.grid.strokeWidth = 2; // Line width
+      zeroLine.grid.strokeOpacity = 0.5; // Line opacity
 
-// Find the maximum PerChange value and its corresponding category
-var maxPerChange = -Infinity;
-var maxPerChangeCategory = "";
-chartData.forEach(function (dataItem) {
-  if (dataItem.PerChange > maxPerChange) {
-    maxPerChange = dataItem.PerChange;
-    maxPerChangeCategory = dataItem.company_name;
+      // Find the maximum PerChange value and its corresponding category
+      var maxPerChange = -Infinity;
+      var maxPerChangeCategory = "";
+      chartData.forEach(function (dataItem) {
+        if (dataItem.PerChange > maxPerChange) {
+          maxPerChange = dataItem.PerChange;
+          maxPerChangeCategory = dataItem.company_name;
+        }
+      });
+
+      var minPerChange = Infinity;
+  chartData.forEach(function (dataItem) {
+    if (dataItem.PerChange < minPerChange) {
+      minPerChange = dataItem.PerChange;
+    }
+  });
+
+  if (minPerChange > 0) {
+    valueAxis.min = 0;
   }
-});
 
-// Create a vertical line at the maximum PerChange value
-var maxLine = valueAxis.axisRanges.create();
-maxLine.value = maxPerChange.toFixed(5);
-maxLine.grid.stroke = am4core.color("rgb(249,108,146)"); // Color of the line
-maxLine.grid.strokeWidth = 2; // Line width
-maxLine.grid.strokeOpacity = 0.5; // Line opacity
-maxLine.label.text = "Max: " + maxPerChange.toFixed(5); // Display the maximum value as a label
-maxLine.label.fill = am4core.color("rgb(249,108,146)"); // Label text color
-maxLine.label.fontSize = 12; // Label font size
+      // Create a vertical line at the maximum PerChange value
+      var maxLine = valueAxis.axisRanges.create();
+      maxLine.value = maxPerChange.toFixed(5);
+      maxLine.grid.stroke = am4core.color("rgb(249,108,146)"); // Color of the line
+      maxLine.grid.strokeWidth = 2; // Line width
+      maxLine.grid.strokeOpacity = 0.5; // Line opacity
+      maxLine.label.text = "Max: " + maxPerChange.toFixed(5); // Display the maximum value as a label
+      maxLine.label.fill = am4core.color("rgb(249,108,146)"); // Label text color
+      maxLine.label.fontSize = 12; // Label font size
 
-// Create a series for the column chart
-var series = chart.series.push(new am4charts.ColumnSeries());
-series.dataFields.valueY = "PerChange";
-series.dataFields.categoryX = "company_name";
-series.name = "PerChange";
-series.columns.template.tooltipText = "{categoryX}: [bold]{valueY}[/]";
+      // Create a series for the column chart
+      var series = chart.series.push(new am4charts.ColumnSeries());
+      series.dataFields.valueY = "PerChange";
+      series.dataFields.categoryX = "company_name";
+      series.name = "PerChange";
+      series.columns.template.tooltipText = "{categoryX}: [bold]{valueY}[/]";
 
-// Set the background color of the bars and border color manually based on the value of PerChange
-series.columns.template.adapter.add("fill", function (fill, target) {
-  if (target.dataItem && target.dataItem.dataContext.PerChange < 0) {
-    return am4core.color("rgb(249,108,146)"); // Red for negative values
-  } else {
-    return am4core.color("rgb(33,150,243)"); // Green for positive or zero values
-  }
-});
-series.columns.template.adapter.add("stroke", function (stroke, target) {
-  if (target.dataItem && target.dataItem.dataContext.PerChange < 0) {
-    // Red border for negative values
-    target.column.cornerRadiusBottomLeft = 5;
-    target.column.cornerRadiusBottomRight = 5;
-    target.column.cornerRadiusTopLeft = 0;
-    target.column.cornerRadiusTopRight = 0;
-    return am4core.color("rgb(249,108,146)");
-  } else {
-    // Green border for positive or zero values
-    target.column.cornerRadiusBottomLeft = 0;
-    target.column.cornerRadiusBottomRight = 0;
-    target.column.cornerRadiusTopLeft = 5;
-    target.column.cornerRadiusTopRight = 5;
-    return am4core.color("rgb(33,150,243)");
-  }
-});
-series.columns.template.width = am4core.percent(50);
+      // Set the background color of the bars and border color manually based on the value of PerChange
+      series.columns.template.adapter.add("fill", function (fill, target) {
+        if (target.dataItem && target.dataItem.dataContext.PerChange < 0) {
+          return am4core.color("rgb(249,108,146)"); // Red for negative values
+        } else {
+          return am4core.color("rgb(33,150,243)"); // Green for positive or zero values
+        }
+      });
+      series.columns.template.adapter.add("stroke", function (stroke, target) {
+        if (target.dataItem && target.dataItem.dataContext.PerChange < 0) {
+          // Red border for negative values
+          target.column.cornerRadiusBottomLeft = 5;
+          target.column.cornerRadiusBottomRight = 5;
+          target.column.cornerRadiusTopLeft = 0;
+          target.column.cornerRadiusTopRight = 0;
+          return am4core.color("rgb(249,108,146)");
+        } else {
+          // Green border for positive or zero values
+          target.column.cornerRadiusBottomLeft = 0;
+          target.column.cornerRadiusBottomRight = 0;
+          target.column.cornerRadiusTopLeft = 5;
+          target.column.cornerRadiusTopRight = 5;
+          return am4core.color("rgb(33,150,243)");
+        }
+      });
+      series.columns.template.width = am4core.percent(50);
 
+      var labelBullet = series.bullets.push(new am4charts.LabelBullet());
+      // Get the full company_name
+      var fullCompanyName = "{company_name}";
 
+      labelBullet.label.text = fullCompanyName;
+      labelBullet.label.truncate = false; // Don't truncate text if it doesn't fit in the bar
+      labelBullet.label.hideOversized = false; // Show the text even if it's oversized
 
-var labelBullet = series.bullets.push(new am4charts.LabelBullet());
-// Get the full company_name
-var fullCompanyName = "{company_name}";
+      labelBullet.label.rotation = 270; // Rotate the label horizontally
+      labelBullet.label.fontSize = 15; // Set the font size to 10px
 
-labelBullet.label.text = fullCompanyName;
-labelBullet.label.truncate = false; // Don't truncate text if it doesn't fit in the bar
-labelBullet.label.hideOversized = false; // Show the text even if it's oversized
+      labelBullet.locationY = 1; // Move the label to the starting point of the bar
 
-labelBullet.label.rotation = 270; // Rotate the label horizontally
-labelBullet.label.fontSize = 10; // Set the font size to 10px
+      // Use an adapter to set horizontalCenter based on the condition
+      labelBullet.label.adapter.add(
+        "horizontalCenter",
+        function (horizontalCenter, target) {
+          if (target.dataItem && target.dataItem.dataContext.PerChange < 0) {
+            return "right"; // Set to "right" if PerChange < 0
+          } else {
+            return "left"; // Set to "left" for other cases
+          }
+        }
+      );
 
+      // Set labelBullet.dy conditionally outside the adapter function
+      labelBullet.label.adapter.add("dy", function (dy, target) {
+        if (target.dataItem && target.dataItem.dataContext.PerChange < 0) {
+          return 3; // Set to 10 if PerChange < 0
+        } else {
+          return -3; // Set to -10 for other cases
+        }
+      });
 
+      categoryAxis.renderer.labels.template.disabled = true; // Hide the labels
 
-// Use an adapter to set horizontalCenter based on the condition
-labelBullet.label.adapter.add("horizontalCenter", function (horizontalCenter, target) {
-  if (target.dataItem && target.dataItem.dataContext.PerChange < 0) {
+      // Enable pan and zoom features for the chart
+      chart.cursor = new am4charts.XYCursor();
+      chart.cursor.behavior = "selectX";
+      chart.events.on("datavalidated", function () {
+        maxLine.value = maxPerChange;
+      });
 
-    return "right"; // Set to "right" if PerChange < 0
-  } else {
+      // Configure pan and zoom settings
+      chart.scrollbarX = new am4core.Scrollbar();
+      chart.scrollbarX.wheelX = "zoomX";
+      chart.scrollbarX.parent = chart.bottomAxesContainer;
 
-    return "left"; // Set to "left" for other cases
-  }
-});
-
-
-// Set labelBullet.dy conditionally outside the adapter function
-labelBullet.label.adapter.add("dy", function (dy, target) {
-  if (target.dataItem && target.dataItem.dataContext.PerChange < 0) {
-    return 5; // Set to 10 if PerChange < 0
-  } else {
-    return -5; // Set to -10 for other cases
-  }
-});
-labelBullet.locationY = 1; // Move the label to the starting point of the bar
-
-
-categoryAxis.renderer.labels.template.disabled = true; // Hide the labels
-
-// Enable pan and zoom features for the chart
-chart.cursor = new am4charts.XYCursor();
-chart.cursor.behavior = "selectX";
-chart.events.on("datavalidated", function () {
-  maxLine.value = maxPerChange;
-});
-
-// Configure pan and zoom settings
-chart.scrollbarX = new am4core.Scrollbar();
-chart.scrollbarX.wheelX = "zoomX";
-chart.scrollbarX.parent = chart.bottomAxesContainer;
-
-// Finally, update the chart
-chart.invalidateData();
-
+      // Finally, update the chart
+      chart.invalidateData();
     }
 
     // Function to fetch data using AJAX
