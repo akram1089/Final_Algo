@@ -4259,55 +4259,74 @@
                         var max_profit_strategy = null
 
                         var strike_price_diff = null
-                        var long_short_final;
+                        var long_short_final = []
                         $(".inner_position").each(function () {
                             var strikePrice = parseFloat($(this).find(".strikePrice").text());
                             var longShortInner = $(this).find(".long_short_inner").text();
 
                             var entryPrice = parseFloat($(this).find(".entryPrice").text());
-                    
 
-if (longShortInner === "-") {
-    long_short_final = -Math.abs(entryPrice);
-} else {
-    long_short_final = Math.abs(entryPrice);
-}
-console.log(long_short_final)
+
+                            if (longShortInner === "-") {
+                                long_short_final.push(-Math.abs(entryPrice))
+                            } else {
+
+                                long_short_final.push(Math.abs(entryPrice))
+                            }
+                            console.log(long_short_final)
                             if (previousStrikePrice !== null) {
                                 var strikePriceDifference = strikePrice - previousStrikePrice;
                                 strike_price_diff = strikePriceDifference
                                 console.log("Difference in Strike Price: " + strikePriceDifference);
                             }
                             if (previousEntryPrice !== null) {
-                                var entryPriceDifference = long_short_final + previousEntryPrice;
+                                var entryPriceDifference = (entryPrice) + (previousEntryPrice);
                                 max_profit_strategy = entryPriceDifference
+                                console.log('max_profit_strategy', max_profit_strategy);
+
                                 console.log("Difference in Entry Price: " + entryPriceDifference);
                             }
 
                             previousStrikePrice = strikePrice;
-                            previousEntryPrice = long_short_final;
+                            previousEntryPrice = entryPrice;
                         });
 
-                        var final_max_profit = Math.abs(max_profit_strategy * lot_size_value_strategy)
-                        var final_max_looss = ((strike_price_diff + (max_profit_strategy)) * lot_size_value_strategy).toFixed(2)
+                        var sum = long_short_final.reduce((total, num) => total + num, 0);
+
+console.log("Sum of long_short_final array:", sum);
+
+                        var final_max_profit = (Math.abs(sum * lot_size_value_strategy)).toFixed(2)
+                        var final_max_looss = ((strike_price_diff + (sum)) * lot_size_value_strategy).toFixed(2)
 
                         if (strategyBuilder === "straddle") {
                             $("#max_profit").text(Put_position_label)
                             $("#max_loss").text(long_position_label)
-
+                            $("#ratio").text("No defined")
 
                         } else if (strategyBuilder === "strangle") {
                             $("#max_profit").text(Put_position_label)
                             $("#max_loss").text(long_position_label)
+                            $("#ratio").text("No defined")
 
                         } else if (strategyBuilder === "spread") {
                             $("#max_profit").text(final_max_profit)
                             $("#max_loss").text(final_max_looss)
-                            $("#ratio").text((final_max_profit/final_max_looss).toFixed(2))
+                            $("#ratio").text((final_max_profit / final_max_looss).toFixed(2))
                         }
                         else if (strategyBuilder === "iron_fly") {
                             $("#max_profit").text(final_max_profit)
                             $("#max_loss").text(final_max_looss)
+                            $("#ratio").text((final_max_profit / final_max_looss).toFixed(2))
+                        }
+                        else if (strategyBuilder === "iron_condor") {
+                            $("#max_profit").text(final_max_profit)
+                            $("#max_loss").text(final_max_looss)
+                            $("#ratio").text((final_max_profit / final_max_looss).toFixed(2))
+                        }
+                        else if (strategyBuilder === "jaze_lizard") {
+                            $("#max_profit").text(final_max_profit)
+                            $("#max_loss").text("Unlimited")
+                            $("#ratio").text("No defined")
                         }
 
                         $("#break_evens").text(`${minStrikePrice}~${maxStrikePrice}`)
@@ -5255,27 +5274,29 @@ console.log(long_short_final)
                                     closestRowPrev.find("#Auto_puts_long_click").data("HI1", "HI1There").click();
 
                                 }
+
+                                   var closestRowForw = optionChainTable.find(".strike_price:contains(" + lastIndexForw + ")").closest(".call_put_tr");
+                                if (closestRowForw.length) {
+
+                                    closestRowForw.find("#Auto_puts_short_click").data("HI1", "HI1There").click()
+
+                                }
                                 var closestRowPrev3 = optionChainTable.find(".strike_price:contains(" + lastIndexPrev3 + ")").closest(".call_put_tr");
                                 if (closestRowPrev3.length) {
 
-                                    closestRowPrev3.find("#Auto_puts_short_click").data("HI1", "HI1There").click();
+                                    closestRowPrev3.find("#Auto_calls_short_click").data("HI1", "HI1There").click();
 
                                 }
                                 // Find the closest row for lastIndexForw and click on Auto_calls_short_click
                                 var closestRowForw3 = optionChainTable.find(".strike_price:contains(" + lastIndexForw3 + ")").closest(".call_put_tr");
                                 if (closestRowForw3.length) {
 
-                                    closestRowForw3.find("#Auto_calls_short_click").data("HI1", "HI1There").click();
+                                    closestRowForw3.find("#Auto_calls_long_click").data("HI1", "HI1There").click();
 
                                 }
 
 
-                                var closestRowForw = optionChainTable.find(".strike_price:contains(" + lastIndexForw + ")").closest(".call_put_tr");
-                                if (closestRowForw.length) {
-
-                                    closestRowForw.find("#Auto_calls_long_click").data("HI1", "HI1There").click()
-
-                                }
+                             
 
                                 // Click on #calculate after a longer delay
                                 var counterInputValue = $("#counter_input_ironCondor").val();
