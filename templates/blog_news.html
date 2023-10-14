@@ -179,10 +179,15 @@
             var filter = 'IndianNews';
             $('#filter-indian').addClass('active');
             $('#filter-world').removeClass('active');
+            $('#filter-ipo').removeClass('active');
+            $('#filter-mutual').removeClass('active');
+            var news_data=$(this).data("news")
+
             $('#language-dropdown').show();
             var language = $('#language-select').val();
             var url = '/get-news-data/?filter=' + filter + '&language=' + language;
-            saveSettings(filter, language, 'grid');
+            saveSettings(filter, 'English', 'grid',news_data);
+            
             getNewsData(url);
             $('.list_icon').removeClass('activek');
             $('.grid_icon').addClass('activek');
@@ -193,13 +198,57 @@
             var filter = 'WorldNews';
             $('#filter-indian').removeClass('active');
             $('#filter-world').addClass('active');
+            $('#filter-ipo').removeClass('active');
+            $('#filter-mutual').removeClass('active');
+          
+
+            var news_data=$(this).data("news")
             $('#language-dropdown').hide();
             var url = '/get-news-data/?filter=' + filter + '&language=' + 'English';
-            saveSettings(filter, 'English', 'grid');
+            saveSettings(filter, 'English', 'grid',news_data);
             getNewsData(url);
             $('.list_icon').removeClass('activek');
             $('.grid_icon').addClass('activek');
         });
+
+        $('#filter-ipo').click(function () {
+            var filter = 'Iponews';
+            $('#filter-indian').removeClass('active');
+            $('#filter-world').removeClass('active');
+            $('#filter-mutual').removeClass('active');
+            $('#filter-ipo').addClass('active');   
+
+       
+            var news_data=$(this).data("news")
+            $('#language-dropdown').hide();
+            var url = '/All_ipo_news'
+            saveSettings(filter, 'English', 'grid',news_data);
+            getNewsData(url);
+            $('.list_icon').removeClass('activek');
+            $('.grid_icon').addClass('activek');
+        });
+        $('#filter-mutual').click(function () {
+            var filter = 'mutualnews';
+            $('#filter-indian').removeClass('active');
+            $('#filter-world').removeClass('active');
+            $('#filter-ipo').removeClass('active');   
+            $('#filter-mutual').removeClass('active');   
+
+            $('#filter-mutual').addClass('active');
+            var news_data=$(this).data("news")
+            $('#language-dropdown').hide();
+            var url = '/All_mutual_news'
+            saveSettings(filter, 'English', 'grid',news_data);
+            getNewsData(url);
+            $('.list_icon').removeClass('activek');
+            $('.grid_icon').addClass('activek');
+        });
+
+
+
+
+
+
 
 
         $('#language-select').change(function () {
@@ -211,14 +260,18 @@
         });
 
 
-        function saveSettings(filter, language, displayMode) {
+        function saveSettings(filter, language, displayMode,news_data) {
             localStorage.setItem('newsFilter', filter);
             localStorage.setItem('newsLanguage', language);
             localStorage.setItem('displayMode', displayMode);
+            localStorage.setItem('NewsData', news_data);
         }
 
 
         function getNewsData(url) {
+            console.log(url);
+  
+            
             $.ajax({
                 url: url,
                 type: 'GET',
@@ -227,86 +280,88 @@
                         
                         <div class="main_placeholder_container  d-flex">
 
-<div class="row1">
-    <div class="main_placeholder">
-        <div class="placeholder-glow">
-            <span class="placeholder  bg-secondary-subtle col-12" style="height: 250px;"></span>
-        </div>
-    </div>
+                        <div class="row1">
+                            <div class="main_placeholder">
+                                <div class="placeholder-glow">
+                                    <span class="placeholder  bg-secondary-subtle col-12" style="height: 250px;"></span>
+                                </div>
+                            </div>
 
-    <div class="main_placeholder">
-        <div class="placeholder-glow">
-            <span class="placeholder  bg-secondary-subtle col-12" style="height: 250px;"></span>
-        </div>
-    </div>
-
-
-    <div class="main_placeholder">
-        <div class="placeholder-glow">
-            <span class="placeholder  bg-secondary-subtle col-12" style="height: 250px;"></span>
-        </div>
-    </div>
-
-    <div class="main_placeholder">
-        <div class="placeholder-glow">
-            <span class="placeholder  bg-secondary-subtle col-12" style="height: 250px;"></span>
-        </div>
-    </div>
+                            <div class="main_placeholder">
+                                <div class="placeholder-glow">
+                                    <span class="placeholder  bg-secondary-subtle col-12" style="height: 250px;"></span>
+                                </div>
+                            </div>
 
 
-</div>
-<div class="row2">
-    <div class="main_placeholder">
-        <div class="placeholder-glow">
-            <span class="placeholder  bg-secondary-subtle col-12" style="height: 350px;"></span>
-        </div>
-    </div>
-    <div class="main_placeholder">
-        <div class="placeholder-glow">
-            <span class="placeholder  bg-secondary-subtle col-12" style="height: 350px;"></span>
-        </div>
-    </div>
-    <div class="main_placeholder">
-        <div class="placeholder-glow">
-            <span class="placeholder  bg-secondary-subtle col-12" style="height: 350px;"></span>
-        </div>
-    </div>
-    <div class="main_placeholder">
-        <div class="placeholder-glow">
-            <span class="placeholder  bg-secondary-subtle col-12" style="height: 350px;"></span>
-        </div>
-    </div>
-</div>
-<div class="row3">
+                            <div class="main_placeholder">
+                                <div class="placeholder-glow">
+                                    <span class="placeholder  bg-secondary-subtle col-12" style="height: 250px;"></span>
+                                </div>
+                            </div>
 
-    <div class="main_placeholder">
-        <div class="placeholder-glow">
-            <span class="placeholder  bg-secondary-subtle col-12" style="height: 250px;"></span>
-        </div>
-    </div>
-    <div class="main_placeholder">
-        <div class="placeholder-glow">
-            <span class="placeholder  bg-secondary-subtle col-12" style="height: 250px;"></span>
-        </div>
-    </div>
-    <div class="main_placeholder">
-        <div class="placeholder-glow">
-            <span class="placeholder  bg-secondary-subtle col-12" style="height: 250px;"></span>
-        </div>
-    </div>
-    <div class="main_placeholder">
-        <div class="placeholder-glow">
-            <span class="placeholder  bg-secondary-subtle col-12" style="height: 250px;"></span>
-        </div>
-    </div>
-</div>
-</div>
+                            <div class="main_placeholder">
+                                <div class="placeholder-glow">
+                                    <span class="placeholder  bg-secondary-subtle col-12" style="height: 250px;"></span>
+                                </div>
+                            </div>
+
+
+                        </div>
+                        <div class="row2">
+                            <div class="main_placeholder">
+                                <div class="placeholder-glow">
+                                    <span class="placeholder  bg-secondary-subtle col-12" style="height: 350px;"></span>
+                                </div>
+                            </div>
+                            <div class="main_placeholder">
+                                <div class="placeholder-glow">
+                                    <span class="placeholder  bg-secondary-subtle col-12" style="height: 350px;"></span>
+                                </div>
+                            </div>
+                            <div class="main_placeholder">
+                                <div class="placeholder-glow">
+                                    <span class="placeholder  bg-secondary-subtle col-12" style="height: 350px;"></span>
+                                </div>
+                            </div>
+                            <div class="main_placeholder">
+                                <div class="placeholder-glow">
+                                    <span class="placeholder  bg-secondary-subtle col-12" style="height: 350px;"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row3">
+
+                            <div class="main_placeholder">
+                                <div class="placeholder-glow">
+                                    <span class="placeholder  bg-secondary-subtle col-12" style="height: 250px;"></span>
+                                </div>
+                            </div>
+                            <div class="main_placeholder">
+                                <div class="placeholder-glow">
+                                    <span class="placeholder  bg-secondary-subtle col-12" style="height: 250px;"></span>
+                                </div>
+                            </div>
+                            <div class="main_placeholder">
+                                <div class="placeholder-glow">
+                                    <span class="placeholder  bg-secondary-subtle col-12" style="height: 250px;"></span>
+                                </div>
+                            </div>
+                            <div class="main_placeholder">
+                                <div class="placeholder-glow">
+                                    <span class="placeholder  bg-secondary-subtle col-12" style="height: 250px;"></span>
+                                </div>
+                            </div>
+                        </div>
+                        </div>
                         
                         
                         
                         </div>`);
                 },
                 success: function (data) {
+                  
+                 
                     updateNewsData(data);
                 },
                 error: function (error) {
@@ -316,6 +371,10 @@
         }
 
         function updateNewsData(data) {
+            var NewsData = localStorage.getItem('NewsData');
+
+            if (NewsData ==="world_news" || NewsData==="indian_news") {
+                
             var newsContainer = $('#news-container');
             newsContainer.empty();
 
@@ -397,6 +456,69 @@
 
 
             newsContainer.append(column1, column2, column3);
+            }
+            else{
+
+    
+    var newsContainer = $('#news-container');
+    newsContainer.empty();
+
+    var main_ipo = data.data;
+    console.log(main_ipo);
+    var column1 = $('<div class="news-column"></div>');
+    var column2 = $('<div class="news-column"></div>');
+    var column3 = $('<div class="news-column"></div>');
+
+    main_ipo.forEach((ipo, index) => { // Here, index is properly included in the parameters.
+        var ipoText = ipo.Arttext;
+var words = ipoText.split(' ');
+
+var truncatedText = words.slice(0, 50).join(' ');
+var index1 = truncatedText.indexOf('.');
+var index2 = truncatedText.indexOf(':');
+
+if (index1 !== -1 || index2 !== -1) {
+    var splitIndex = index1 !== -1 && (index1 < index2 || index2 === -1) ? index1 : index2;
+    truncatedText = truncatedText.substring(0, splitIndex + 1);
+} else {
+    truncatedText = words.slice(0, 50).join(' ') + ' ' + words.slice(50).join(' ');
+}
+
+console.log(truncatedText);
+
+
+
+        var newsItem = $('<div class="card mb-2"></div>');
+        var cardBody = $('<div class="card-body"></div>');
+
+        var title = $('<h5 class="card-title"></h5>').text(ipo.Heading); // Updated to 'ipo.Heading'.
+
+        var clockIcon = $('<i class="bi bi-clock"></i>');
+
+    
+        var publishDate = $('<p style="margin-bottom:auto"  class="card-text fw-light d-flex align-items-center"></p>').append(clockIcon).append(' ' + ipo.Date.split('T')[0]);
+
+        var source = $('<p style="margin-bottom:auto" class="card-text fw-light d-flex align-items-center"></p>').append(ipo.Section_name);
+
+        var main_pub_source_icon = $('<p class="main_pub_source_icon fw-light"></p>').append(publishDate).append(`  /  `).append(source);
+
+        var description = $('<p class="card-text fw-light description_news"></p>').append(truncatedText);
+
+        cardBody.append(title, main_pub_source_icon, description);
+        newsItem.append(cardBody);
+
+        if (index % 3 === 0) {
+            column1.append(newsItem);
+        } else if (index % 3 === 1) {
+            column2.append(newsItem);
+        } else {
+            column3.append(newsItem);
+        }
+    });
+
+    newsContainer.append(column1, column2, column3);
+}
+
         }
 
 
@@ -411,21 +533,47 @@
 
 
         var savedFilter = localStorage.getItem('newsFilter');
-        var savedLanguage = localStorage.getItem('newsLanguage');
-        if (savedFilter && savedLanguage) {
-            $('#language-select').val(savedLanguage);
-            if (savedFilter === 'IndianNews') {
-                $('#filter-indian').addClass('active');
-                $('#filter-world').removeClass('active');
-                $('#language-dropdown').show();
-            } else {
-                $('#filter-indian').removeClass('active');
-                $('#filter-world').addClass('active');
-                $('#language-dropdown').hide();
-            }
-            var url = '/get-news-data/?filter=' + savedFilter + '&language=' + savedLanguage;
-            getNewsData(url);
-        }
+var savedLanguage = localStorage.getItem('newsLanguage');
+if (savedFilter && savedLanguage) {
+    $('#language-select').val(savedLanguage);
+    if (savedFilter === 'IndianNews') {
+        $('#filter-indian').addClass('active');
+        $('#filter-world').removeClass('active');
+        $('#filter-ipo').removeClass('active');
+        $('#filter-mutual').removeClass('active');
+        $('#language-dropdown').show();
+        var url = '/get-news-data/?filter=' + savedFilter + '&language=' + savedLanguage;
+        getNewsData(url);
+    } else if (savedFilter === "WorldNews") {
+        $('#filter-indian').removeClass('active');
+        $('#filter-world').addClass('active');
+        $('#filter-ipo').removeClass('active');
+        $('#filter-mutual').removeClass('active');
+        $('#language-dropdown').hide();
+        var url = '/get-news-data/?filter=' + savedFilter + '&language=' + savedLanguage;
+        getNewsData(url);
+    } else if (savedFilter === "Iponews") {
+        $('#filter-indian').removeClass('active');
+        $('#filter-world').removeClass('active');
+        $('#filter-ipo').addClass('active');
+        $('#filter-mutual').removeClass('active');
+        $('#language-dropdown').hide();
+        var url = '/All_ipo_news';
+        getNewsData(url);
+    } else if (savedFilter === "mutualnews") {
+        $('#filter-indian').removeClass('active');
+        $('#filter-world').removeClass('active');
+        $('#filter-ipo').removeClass('active');
+        $('#filter-mutual').addClass('active');
+        $('#language-dropdown').hide();
+        var url = '/All_mutual_news';
+        getNewsData(url);
+    }
+} else {
+    console.log('Hii ther false');
+    saveSettings('IndianNews', 'English', 'grid',"indian_news");
+    getNewsData('/get-news-data/?filter=IndianNews&language=English');
+}
 
 
         var savedDisplayMode = localStorage.getItem('displayMode');
@@ -455,12 +603,18 @@
             $('.description_news').show();
         })
         $('.grid_icon').addClass('activek');
-        getNewsData('/get-news-data/?filter=IndianNews&language=English');
+       
     });
 </script>
 
 
+<style>
 
+    .description_news{
+        display: flex;
+    flex-direction: column;
+    }
+</style>
 
 <div class="container py-4">
     <div class="main_top_header">
@@ -468,8 +622,10 @@
             <div class="mb-3" style="    display: flex;
             white-space: nowrap;
         ">
-                <button id="filter-indian" class="filter-button active">Indian News</button>
-                <button id="filter-world" class="filter-button">World News</button>
+                <button id="filter-indian" class="filter-button active" data-news="indian_news">India News</button>
+                <button id="filter-world" class="filter-button" data-news="world_news">World News</button>
+                <button id="filter-ipo" class="filter-button" data-news="ipo_news">IPO News</button>
+                <button id="filter-mutual" class="filter-button" data-news="mutual_news">Mutual Fund News</button>
             </div>
         </div>
         <div class="right_news_head">

@@ -1320,7 +1320,7 @@
 
             .textOnInput label {
                 position: absolute;
-                top: -9px;
+                top: -11px;
                 font-weight: 700;
                 left: 10px;
                 padding: 2px;
@@ -2586,8 +2586,7 @@ $("#decrement_jaze_lizard").click(function () {
                             var expirySelect = $(".expiry_date_input");
                             var strikeSelect = $(".strike_price_input");
 
-                            expirySelect.empty();
-                            strikeSelect.empty();
+                       
                             var closest_strike_price = $("#closest_strike_price");
                             strikeSelect.find("option").each(function () {
                                 // Log the value of the current option
@@ -3736,50 +3735,48 @@ $("#decrement_jaze_lizard").click(function () {
                 },
             });
         }
+   
+        
+     
         function populateExpiry_Strike(expiryDates, expiryStrikes) {
             // Get the existing selected values before appending new options
             // console.log('Log Expiry');
-
+      
             // Populate the select element with expiry dates
             var expirySelect = $(".expiry_date_input");
             var strikeSelect = $(".strike_price_input");
-
-            //   expirySelect.empty();
-            //   strikeSelect.empty();
+      
+            // expirySelect.empty();
+            // strikeSelect.empty();
             // Add a default "Select" option
-
+      
             // Add each expiry date as an option
             expiryDates.forEach((expiry) => {
-                var inputDate = expiry.expiry_date.split("T")[0];
-                var parsedDate = new Date(inputDate);
-                var day = parsedDate.getDate().toString().padStart(2, "0");
-                var month = (parsedDate.getMonth() + 1).toString().padStart(2, "0");
-                var year = parsedDate.getFullYear();
-                var formattedDate = day + "-" + month + "-" + year;
-
-                expirySelect.append(
-                    $("<option>", {
-                        value: inputDate, // You can keep the original value or use formattedDate if needed
-                        text: formattedDate,
-                    })
-                );
+              var inputDate = expiry.expiry_date.split("T")[0];
+              var parsedDate = new Date(inputDate);
+              var day = parsedDate.getDate().toString().padStart(2, "0");
+              var month = (parsedDate.getMonth() + 1).toString().padStart(2, "0");
+              var year = parsedDate.getFullYear();
+              var formattedDate = day + "-" + month + "-" + year;
+      
+              expirySelect.append(
+                $("<option>", {
+                  value: inputDate, // You can keep the original value or use formattedDate if needed
+                  text: formattedDate,
+                })
+              );
             });
-
-
+      
             // Add each strike as an option
             expiryStrikes.forEach((strike) => {
-                strikeSelect.append(
-                    $("<option>", {
-                        value: strike,
-                        text: strike,
-                    })
-                );
+              strikeSelect.append(
+                $("<option>", {
+                  value: strike,
+                  text: strike,
+                })
+              );
             });
-
-
-
-
-        }
+          }
 
         function loadStocks(selectedOption) {
             $.ajax({

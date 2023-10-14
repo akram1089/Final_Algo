@@ -238,6 +238,8 @@ urlpatterns = [
     path('main_nav_data', views.main_nav_data, name='main_nav_data'),
     path('main_nav_historical_data', views.main_nav_historical_data, name='main_nav_historical_data'),
     path('All_nav_historical_table_data', views.All_nav_historical_table_data, name='All_nav_historical_table_data'),
+    path('All_ipo_news', views.All_ipo_news, name='All_ipo_news'),
+    path('All_mutual_news', views.All_mutual_news, name='All_mutual_news'),
 
 
 

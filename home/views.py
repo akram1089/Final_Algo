@@ -5566,3 +5566,50 @@ def All_nav_historical_table_data(request):
 
     # Returning the fetched data as JSON response
     return JsonResponse(all_data)
+
+
+
+
+def All_ipo_news(request):
+   
+   
+
+    # Constructing the URL for the external API with dynamic values
+    url = "https://www.moneysukh.com/api/markets/News/28/117/-/100"
+    print(url)
+
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
+        "Accept-Language": "en-US,en;q=0.9",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive"
+    }
+
+    # Sending a request to the external API
+    response_ipo_news = requests.get(url, headers=headers)
+    all_data_ipo_news = response_ipo_news.json()
+
+    # Returning the fetched data as JSON response
+    return JsonResponse(all_data_ipo_news)
+
+def All_mutual_news(request):
+   
+   
+
+    # Constructing the URL for the external API with dynamic values
+    url = "https://www.moneysukh.com/api/markets/News/10/24/-/100"
+    print(url)
+
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
+        "Accept-Language": "en-US,en;q=0.9",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive"
+    }
+
+    # Sending a request to the external API
+    response_mutual_news = requests.get(url, headers=headers)
+    all_data_mutual_news = response_mutual_news.json()
+
+    # Returning the fetched data as JSON response
+    return JsonResponse(all_data_mutual_news)
