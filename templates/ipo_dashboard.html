@@ -754,12 +754,11 @@
             // Set the background color of the bars and border color manually based on the value of PerChange
             series.columns.template.adapter.add("fill", function (fill, target) {
                 if (target.dataItem && target.dataItem.dataContext.PerChange < 0) {
-                    return am4core.color("#FF6F61"); // Red for negative values
+                    return am4core.color("rgb(249,108,146)"); // Red for negative values
                 } else {
-                    return am4core.color("#5cb85c"); // Green for positive or zero values
+                    return am4core.color("rgb(33,150,243)"); // Green for positive or zero values
                 }
             });
-
             series.columns.template.adapter.add("stroke", function (stroke, target) {
                 if (target.dataItem && target.dataItem.dataContext.PerChange < 0) {
                     return am4core.color("#FF6F61"); // Red border for negative values
@@ -768,6 +767,26 @@
                 }
             });
 
+            series.columns.template.adapter.add("stroke", function (stroke, target) {
+                if (target.dataItem && target.dataItem.dataContext.PerChange < 0) {
+                    // Red border for negative values
+                    target.column.cornerRadiusBottomLeft = 5;
+                    target.column.cornerRadiusBottomRight = 5;
+                    target.column.cornerRadiusTopLeft = 0;
+                    target.column.cornerRadiusTopRight = 0;
+                    return am4core.color("rgb(249,108,146)");
+                } else {
+                    // Green border for positive or zero values
+                    target.column.cornerRadiusBottomLeft = 0;
+                    target.column.cornerRadiusBottomRight = 0;
+                    target.column.cornerRadiusTopLeft = 5;
+                    target.column.cornerRadiusTopRight = 5;
+                    return am4core.color("rgb(33,150,243)");
+                }
+            });
+            series.columns.template.width = am4core.percent(50);
+    
+    
             categoryAxis.renderer.labels.template.disabled = true; // Hide the labels
 
             // Enable pan and zoom features for the chart
