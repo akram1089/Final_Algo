@@ -167,6 +167,11 @@
     .option_chain_strategies,
     .main_max_pain_strategies,
     .lot_size_strategies,
+    .open_strategies,
+    .low_strategies,
+    .high_strategies,
+    .high52_strategies,
+    .low52_strategies,
     .spot_strategies {
         font-size: 12px;
         font-weight: 700;
@@ -248,7 +253,7 @@
 <div class="top_content_option_chain p-3 shadow">
     <div class="main_top_all_left_right d-flex align-items-center justify-content-between">
         <div class="left_side_top_strategies">
-            <div class="main_top_strategies d-flex align-items-center gap-4">
+            <div class="main_top_strategies d-flex align-items-center gap-3">
                 <select id="stockDropdown" class="form-select w-auto">
                     <optgroup label="Indices">
                         <option value="NIFTY">NIFTY</option>
@@ -273,6 +278,40 @@
                     <div id="lot_size_value"></div>
                 </div>
 
+                <div class="low52_strategies">
+                    <p>Low 52 Wk</p>
+    
+                    <div id="low52_value"></div>
+      
+                </div>
+
+                <div class="high52_strategies">
+                    <p>High 52 Wk</p>
+    
+                    <div id="high52_value"></div>
+      
+                </div>
+                <div class="open_strategies">
+                    <p>Open</p>
+
+                    <div id="open_value"></div>
+      
+                </div>
+
+
+                <div class="low_strategies">
+                    <p>Low</p>
+
+                    <div id="low_value"></div>
+      
+                </div>
+                <div class="high_strategies">
+                    <p>High</p>
+
+                    <div id="high_value"></div>
+      
+                </div>
+
                 <div class="spot_strategies">
                     <p>Spot</p>
 
@@ -280,6 +319,9 @@
                     <div id="closest_strike_price" style="display: none;"></div>
                     <div id="closen_expiry_date"></div>
                 </div>
+
+
+
             </div>
         </div>
         <div class="right_side_top_strategies">
@@ -2429,6 +2471,11 @@ $("#decrement_jaze_lizard").click(function () {
                     // console.log(response.spot_data.resultData);
                     $("#max_pain_value").text(response.spot_data.resultData.max_pain);
                     $("#lot_size_value").text(response.spot_data.resultData.lot_size);
+                    $("#open_value").text(response.spot_data.resultData.open);
+                    $("#low_value").text(response.spot_data.resultData.low);
+                    $("#high_value").text(response.spot_data.resultData.high);
+                    $("#high52_value").text(response.spot_data.resultData.high52);                
+                    $("#low52_value").text(response.spot_data.resultData.low52);
                     var spot_check_strategies = response.spot_data.resultData.change_per;
                     var valid_spot_value_strategies =
                         spot_check_strategies > 0 ? "text-success" : "text-danger";

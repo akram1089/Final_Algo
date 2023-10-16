@@ -586,10 +586,19 @@ to {
     <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"></path>
   </symbol>
   </svg>
-  <div class="swiper-container" style="overflow: hidden; background: #000000bf; color: white;     height: 26px;">
+  <div class="swiper-container" style="overflow: hidden; background: #393939; color: white;   display: flex;
+  height: 30px;
+  position: relative;
+">
     <div class="swiper-wrapper">
         <!-- Slides will be added here dynamically through AJAX -->
     </div>
+    <div class="swiper-button-pause-resume" style="position: absolute; right: -2px; z-index: 999999999; background: #393939; padding: 3px 17px;">
+ 
+        <box-icon name='pause'  style="background-color: white; cursor: pointer;     border-radius: 7px;"></box-icon>
+        <box-icon name='play' style="background-color: white; display: none; cursor: pointer;border-radius: 7px; "></box-icon>
+   
+  </div>
     <div class="swiper-pagination"></div>
   </div>
 <header class="navbar sticky-top  flex-md-nowrap p-0 " data-bs-theme="light"  id="dashboard_nav" style=" background-color: white !important; z-index: 999999999;">
@@ -679,16 +688,29 @@ to {
           effect: 'slide', // You can try other effects like 'fade', 'cube', 'coverflow', etc.
       });
 
-      // Pause swiper on hover
-      var container = document.querySelector('.swiper-container');
-      container.addEventListener('mouseenter', function () {
-          swiper.autoplay.stop();
-      });
+      var pauseIcon = document.querySelector('[name="pause"]');
+    var playIcon = document.querySelector('[name="play"]');
 
-      // Resume swiper when the mouse leaves
-      container.addEventListener('mouseleave', function () {
-          swiper.autoplay.start();
-      });
+    var isPaused = false;
+
+    pauseIcon.addEventListener('click', function () {
+        if (!isPaused) {
+            swiper.autoplay.stop();
+            isPaused = true;
+            pauseIcon.style.display = 'none';
+            playIcon.style.display = 'block';
+        }
+    });
+
+    playIcon.addEventListener('click', function () {
+        if (isPaused) {
+            swiper.autoplay.start();
+            isPaused = false;
+            playIcon.style.display = 'none';
+            pauseIcon.style.display = 'block';
+        }
+    });
+
   }
 
   // Call fetchDataAndPopulateSwiper function to load data initially and populate Swiper

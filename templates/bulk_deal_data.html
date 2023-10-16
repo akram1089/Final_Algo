@@ -291,28 +291,27 @@
     function generateTableRows(data) {
       var rows = "";
       for (var i = 0; i < data.length; i++) {
+  
+          var Null_value = data[i].totaL_VALUE !== null ? data[i].totaL_VALUE : "-";
+  
+          var row = "<tr>" +
+              "<td><div>" + data[i].created_at + "</div></td>" +
+              "<td class='symbol_name_watchlist'><div>" + data[i].symbol_name + "</div></td>" +
+              "<td><div>" + data[i].security_name + "</div></td>" +
+              "<td><div>" + data[i].client_name + "</div></td>" +
+              "<td><div>" + data[i].type + "</div></td>" +
+              "<td><div class='text-center'>" + data[i].trade_quantity + "</div></td>" +
+              "<td><div class='text-center'>" + data[i].trade_price + "</div></td>" +
+              
+              "<td class='text-center'><div>" + Null_value + "</div></td>" +
 
-        var Null_value = null
-        if (data[i].totaL_VALUE == null) {
-          Null_value = "Null"
-        }
-
-        var row = "<tr>" +
-          "<td><div>" + data[i].created_at + "</div></td>" +
-          "<td class='symbol_name_watchlist'><div>" + data[i].symbol_name + "</div></td>" +
-          "<td><div>" + data[i].security_name + "</div></td>" +
-          "<td><div>" + data[i].client_name + "</div></td>" +
-          "<td><div>" + data[i].type + "</div></td>" +
-          "<td><div>" + data[i].trade_quantity + "</div></td>" +
-          "<td><div>" + data[i].trade_price + "</div></td>" +
-          "<td><div>" + Null_value + "</div></td>" +
-          "</tr>";
-
-        rows += row;
+              "</tr>";
+  
+          rows += row;
       }
       return rows;
-    }
-
+  }
+  
     // Function to populate date options in the select element
     function populateDateOptions(dates) {
       var options = "";
