@@ -582,6 +582,11 @@ def Open_interest_analysis(request):
     return render(request, "Open_interest_analysis.html", {"dataframe": data})
 
 
+
+
+
+from django.template.loader import get_template
+
 def signUp(request):
     if request.method == "POST":
         fname = request.POST["name"]
@@ -608,12 +613,41 @@ def signUp(request):
             )
             Mysignup.save()
 
+            email_template = get_template('custom_email_template.html')
+            context = {'username': fname}
+            email_content = email_template.render(context)
+            subject = 'Welcome to Algo Trade'
+            message = 'Thank you for signing up on Your Website. We are glad to have you as part of our community.'
+            from_email = 'your_email@gmail.com'  # Use the same email as configured in settings.py
+            recipient_list = [email]  
+
+            send_mail(subject, message, from_email, recipient_list, html_message=email_content, fail_silently=False)
             # Picture=Display_picture(image=images)
             # Picture.save()
             messages.success(
                 request, 'You have successfully signed up , please login with correct credential')
             redirect('/')
-    return render(request, 'home.html')
+    return render(request,'home.html')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 @csrf_exempt
 def login_user(request):
@@ -5705,3 +5739,22 @@ def short_iron_condor(request):
 
 def double_condor(request):
     return render(request , "doublecondor_page.html")
+
+
+
+@csrf_exempt
+def offer_for_sale(request):
+    # if request.method == "POST":
+    #  get_para = request.POST.get("pass_initial_of", "OFSListed")
+     url= "https://nwmw.nuvamawealth.com/api/ipo/getOFSData/"
+     print(url)
+     headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
+        "Accept-Language": "en-US,en;q=0.9",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive"
+     }
+     get_ofs_res = requests.get(url, headers=headers)
+     all_data = get_ofs_res.json()
+     all_ofs_data = all_data
+     return JsonResponse(all_ofs_data)

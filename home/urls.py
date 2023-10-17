@@ -269,6 +269,7 @@ urlpatterns = [
     path('long_iron_condor', views.long_iron_condor, name='long_iron_condor'),
     path('short_iron_condor', views.short_iron_condor, name='short_iron_condor'),
     path('double_condor', views.double_condor, name='double_condor'),
+    path('offer_for_sale', views.offer_for_sale, name='offer_for_sale'),
 
 
 
