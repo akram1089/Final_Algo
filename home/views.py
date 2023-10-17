@@ -5473,6 +5473,7 @@ def mutual_fund_performance(request):
 
 
 
+
 @csrf_exempt
 def top_holdings_fund_house(request):
     url = "https://www.moneysukh.com/api/markets/MfHoldingDrop/-/-"
@@ -5613,3 +5614,94 @@ def All_mutual_news(request):
 
     # Returning the fetched data as JSON response
     return JsonResponse(all_data_mutual_news)
+
+
+
+
+
+def icon_algo_trade(request):
+    return render(request, "icon_algo_trade.html")
+
+def short_put(request):
+    return render(request , "shortput_page.html")
+
+def bull_call_spread(request):
+    return render(request , "bullcallspread_page.html")
+
+def bull_put_spread(request):
+    return render(request , "bullputspread_page.html")
+
+def call_ratio_back_spread(request):
+    return render(request , "callratiobackspread_page.html")
+
+def long_synthetic(request):
+    return render(request , "longsynthetic_page.html")
+
+def range_forward(request):
+    return render(request , "rangeforward_page.html")
+
+def bullish_butterfly(request):
+    return render(request , "bullishbutterfly_page.html")
+
+def bullish_condor(request):
+    return render(request , "bullishcondor_page.html")
+
+def bear_call_spread(request):
+    return render(request , "bear_call_spread_page.html")
+
+def bear_put_spread(request):
+    return render(request , "bearputspread_page.html")
+
+def put_ratio_back_spread(request):
+    return render(request , "putratiobackspread_page.html")
+
+def short_synthetic(request):
+    return render(request , "shortsynthetic_page.html")
+
+def risk_reversal(request):
+    return render(request , "riskreversal_page.html")
+
+def bearish_butterfly(request):
+    return render(request , "bearishbutterfly_page.html")
+
+def bearish_condor(request):
+    return render(request , "bearishcondor_page.html")
+
+def long_strangle(request):
+    return render(request , "longstrangle_page.html")
+
+def short_strangle(request):
+    return render(request , "shortstrangle_page.html")
+
+def jade_lizard(request):
+    return render(request , "jadelizard_page.html")
+
+def reverse_jade_lizard(request):
+    return render(request , "reversejadelizard_page.html")
+
+def call_ratio_spread(request):
+    return render(request , "callratiospread_page.html")
+
+def put_ratio_spread(request):
+    return render(request , "putratiospread_page.html")
+
+def batman_startegy(request):
+    return render(request , "batmanstartegy_page.html")
+
+def long_iron_fly(request):
+    return render(request , "longironfly_page.html")
+
+def short_iron_fly(request):
+    return render(request , "shortironfly_page.html")
+
+def double_fly(request):
+    return render(request , "doublefly_page.html")
+
+def long_iron_condor(request):
+    return render(request , "longironcondor_page.html")
+
+def short_iron_condor(request):
+    return render(request , "shortironcondor_page.html")
+
+def double_condor(request):
+    return render(request , "doublecondor_page.html")
