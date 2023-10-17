@@ -94,7 +94,7 @@
         border: none;
     }
 
-    .modal-body table thead tr th {
+    #main_event_modal table thead tr th {
         font-size: 15px;
 
         color: #081a76;
@@ -127,6 +127,49 @@
         box-shadow: rgb(147 221 255 / 93%) 0px 1px 4px;
     border: 0.2px solid #4399eb;
     }
+    
+
+    .ofs_data{
+        box-shadow: 1px 0 11px #d3cccc;
+        border-radius: 17px;
+      }
+      .ofs_filter button{
+        color: #4399eb;
+        border: 1px solid #4399eb !important;
+        border: none;
+        padding: 5px 12px;
+        border-radius: 5px;
+        font-size: 15px;
+        margin-right: 9px;
+        background: white;
+        transition: ease-in-out;
+      }
+      .ofs_active{
+        background: linear-gradient(180deg, #4399eb, #5cadfb) !important;
+        color: white !important;
+      }
+      .ofs_filter button:hover{
+        background: linear-gradient(180deg, #4399eb, #5cadfb) !important;
+        color: white !important;
+      }
+      #ofs_table thead tr{
+       background-color: #eff9ff;
+       color: #081a76;
+      }
+      .ofs_text{
+        margin-top:23px;
+      }
+     #exampleModalofs{
+      z-index: 9999999999;
+     }
+
+     @media only screen and (max-width: 768px) {
+        .ofs_filter button{
+            width: 100%;
+            margin-top: 5px;
+        }
+     }
+
 </style>
 <section class="pt-4">
 
@@ -144,12 +187,63 @@
             </div>
             <div class="boxes_data">
                 <div class="eventMainDiv" id="box">
-
-
-
-
+                    
                 </div>
+                <div class="modal fade" id="exampleModalofs" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-xl ">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="ofs_filter pt-4">
+                                <button class="ofs_btn" data-value="OFSOngoing">ONGOING OFSS</button>
+                                <button class="ofs_btn" data-value= "OFSUpcoming"> UPCOMING OFSS</button>
+                                <button class="ofs_btn" data-value= "OFSAboutList"> ABOUT TO BE SETTLED </button>
+                                <button class="ofs_btn ofs_active" data-value="OFSListed">RECENTLY SETTLED OFSS  </button>
+                              </div>
+                              <div class="ofs_table mt-4">
+                                
+                                <div id="table4" class="table-responsive">
+                                 <table class="table" id="ofs_table">
+                                    
+                                     <thead>
+                                       <tr>
+                                         <th scope="col">Company</th>
+                                         <th scope="col">Settled On</th>
+                                         <th scope="col">Settled Price (₹)</th>
+                                         <th scope="col">Settled Price
+                                             (Post Retail Discount) (₹)</th>
+                                         <th scope="col">% Change After Allotment </th>
+                                       </tr>
+                                     </thead>
+                                     <tbody id="recently_ofs_table">
+                                        <div class="spinner-border text-primary spinner" role="status" id="loading-spinner">
+                                            <span class="visually-hidden">Loading...</span>
+                                          </div>
+                                     </tbody>
+                                   </table>
+                                </div>
+                             </div>
+                        </div>
+                       
+                      </div>
+                    </div>
+                </div>
+                </div>
+
+             
+                {% comment %} <div class="ofs_section mt-4">
+                    <h3>Offer for Sale - OFS</h3>
+                     <div class="ofs_data p-4">
+                       
+                      
+                       
+                     </div>
+                </div> {% endcomment %}
             </div>
+            
         </div>
     </div>
     </div>
@@ -172,7 +266,7 @@
 
             </div>
             <h5 class="modal-title" id="dataModalLabel"></h5>
-            <div class="modal-body table-responsive">
+            <div class="modal-body table-responsive" id="main_event_modal">
 
 
               <div class="main_spinner">
@@ -240,11 +334,13 @@
                         "#F6EAE8",
                         "#E8F7E4"
                     ];
-
+                     
+                    
                     res_data.forEach(function (item, index) {
                         item.color = color_arr[index];
+
                     });
-                    
+                    console.log(res_data);
                     
 
                     res_data.forEach((element) => {
@@ -256,19 +352,30 @@
                         var div_ele = $("#box");
                         div_ele.append(card);
                     });
+                    var div_ele = $("#box");
+                    var staticcard = `<div class="main_event_card ofs_box cal-item" style="background:#F6EDEB;">
+                                    <p class="CalFont ofs_text">OFS</p>
+                                   </div> 
+                                   
+                                   `
+                   div_ele.append(staticcard);
+                   $(".ofs_box").click(function () {
+                    $("#exampleModalofs").modal("show")
+                    var initial_ofs_filter = "OFSListed"
+                    get_ofs_data(initial_ofs_filter)
+                  })
 
                     $(".placeholder_main").hide()
 
                     
                     $(".main_event_card").click(function () {
-                        console.log("Hii");
+                        
                         var value2 = ($(this).data("value2"));
                         var originalValue = value2.replace(/_/g, ' ');
                         data_table_events(value2)
                         $('#openModalBtn').click();
                         $("#dataModalLabel").empty().append(
                             `
-                            
                             <div class="calender-header"><h2><span>${originalValue}</span></h2></div>`
                         )
 
@@ -334,7 +441,7 @@
 
             console.log("from_date:", from_date);
             console.log("to_date:", to_date);
-            $(".modal-body").empty().append(`
+            $("#main_event_modal").empty().append(`
 
             <div class="main_spinner">
                 <div class="spinner-border text-primary" role="status" id="event-spinner">
@@ -367,7 +474,7 @@
             function openModalWithData(event_data, value2) {
                 console.log(value2);
                 console.log(event_data);
-                var modalBody = $(".modal-body");
+                var modalBody = $("#main_event_modal");
                 modalBody.empty();
 
                 
@@ -384,7 +491,6 @@
                 if (value2 === "Dividend") {
                     headers = [
                         'Company Name',
-                        'ISIN',
                         'Div Type',
                         'Div %',
                         'Div Amount',
@@ -398,7 +504,6 @@
                 else if (value2 === 'Bonus') {
                     headers = [
                         'Company Name',
-                        'ISIN',
                         'Ratio',
                         'Record Date',
                         'Ex Date',
@@ -408,7 +513,6 @@
                 else if (value2 === 'Split') {
                     headers = [
                         'Company Name',
-                        'ISIN',
                         'Announcement Date',
                         'Split Date',
                         'FV Before(₹)',
@@ -417,7 +521,7 @@
                 }
                 else if (value2 === 'BuyBack') {
                     headers = [
-                        ' Company Name', 'ISIN', 'Buyback Price', 'Buyback Type', 'Announcement Date', 'Open Date', 'Close Date'
+                        ' Company Name', 'Buyback Price', 'Buyback Type', 'Announcement Date', 'Open Date', 'Close Date'
                     ];
                 }
                 else if (value2 === 'Rights') {
@@ -490,7 +594,6 @@
 
                         var row = `<tr>
                                         <td>${item.co_name}</td>
-                                        <td>${item.isin}</td>
                                         <td>${item.DividendType}</td>
                                         <td>${item.DivPer}</td>
                                         <td>${item.DivAmount}</td>
@@ -509,7 +612,7 @@
 
                     
                     
-                    $(".modal-body").empty().append(table);
+                    $("#main_event_modal").empty().append(table);
                 } else if (value2 === "Bonus") {
                     event_data.forEach(function (item) {
                         var BonusDate = formatDate(item.BonusDate);
@@ -518,7 +621,6 @@
 
                         var row = `<tr>
                                         <td>${item.co_name}</td>
-                                        <td>${item.isin}</td>
                                         <td>${item.BonusRatio}</td>
                                       
                                         <td>${formattedRecordDate}</td>
@@ -536,7 +638,7 @@
 
                     
                     
-                    $(".modal-body").empty().append(table);
+                    $("#main_event_modal").empty().append(table);
                 }
                 else if (value2 === "Split") {
                     event_data.forEach(function (item) {
@@ -546,7 +648,6 @@
 
                         var row = `<tr>
                                         <td>${item.co_name}</td>
-                                        <td>${item.isin}</td>
                                         <td>${AnnouncementDate}</td>
                                       
                                       
@@ -566,7 +667,7 @@
 
                     
                     
-                    $(".modal-body").empty().append(table);
+                    $("#main_event_modal").empty().append(table);
                 }
                 else if (value2 === "BuyBack") {
                     event_data.forEach(function (item) {
@@ -577,7 +678,6 @@
 
                         var row = `<tr>
                                         <td>${item.co_name}</td>
-                                        <td>${item.isin}</td>
                                         <td>${item.maxbuybackprice}</td>
                                         <td>${item.offertype}</td>
                                         <td>${AnnouncementDate}</td>
@@ -599,7 +699,7 @@
 
                     
                     
-                    $(".modal-body").empty().append(table);
+                    $("#main_event_modal").empty().append(table);
                 }
                 else if (value2 === "Rights") {
                     event_data.forEach(function (item) {
@@ -631,7 +731,7 @@
 
                     
                     
-                    $(".modal-body").empty().append(table);
+                    $("#main_event_modal").empty().append(table);
                 }
                 else if (value2 === "AGM") {
                     event_data.forEach(function (item) {
@@ -662,7 +762,7 @@
 
                     
                     
-                    $(".modal-body").empty().append(table);
+                    $("#main_event_modal").empty().append(table);
                 }
                 else if (value2 === "Board_Meeting") {
                     event_data.forEach(function (item) {
@@ -693,7 +793,7 @@
 
                     
                     
-                    $(".modal-body").empty().append(table);
+                    $("#main_event_modal").empty().append(table);
                 }
                 else if (value2 === "EGM") {
                     event_data.forEach(function (item) {
@@ -724,7 +824,7 @@
 
                     
                     
-                    $(".modal-body").empty().append(table);
+                    $("#main_event_modal").empty().append(table);
                 }
                 else if (value2 === "Book_Closure") {
                     event_data.forEach(function (item) {
@@ -757,7 +857,7 @@
 
                     
                     
-                    $(".modal-body").empty().append(table);
+                    $("#main_event_modal").empty().append(table);
                 }
                 else if (value2 === "Result") {
                     event_data.forEach(function (item) {
@@ -788,7 +888,7 @@
 
                     
                     
-                    $(".modal-body").empty().append(table);
+                    $("#main_event_modal").empty().append(table);
                 }
 
 
@@ -809,6 +909,140 @@
 
         }
 
+
+        var ofs_filter_inner="OFSListed"
+  var condition_of_filter = true
+            function get_ofs_data(pass_initial_ofs) {
+                console.log(pass_initial_ofs);
+                $("#loading-spinner").show();
+    
+                $.ajax({
+                    type:"get",
+                    url:'/offer_for_sale',
+                    success:function(data){
+                        console.log(data.OFSOngoing);
+                        console.log(data.OFSUpcoming);
+                        console.log(data.OFSAboutList);
+
+if (condition_of_filter) {
+    
+    All_ofs_data_filter(ofs_filter_inner)
+    condition_of_filter=false
+}
+                      
+          $(".ofs_btn").click(function () {
+            $(".ofs_btn").removeClass("ofs_active")
+            $(this).addClass("ofs_active")
+            initial_ofs_filter = $(this).data("value")
+            All_ofs_data_filter(initial_ofs_filter);
+          })
+    
+
+
+
+          function All_ofs_data_filter(initial_ofs_filter) {
+            var dataTable = $("#ofs_table").DataTable();
+    dataTable.clear().destroy(); // Clear DataTable
+    if (initial_ofs_filter === "OFSListed") {
+        var listed_ofs = data.OFSListed;
+        console.log(listed_ofs);
+        $("#main_event_modal").empty();
+        $("#recently_ofs_table").empty();
+
+        if (listed_ofs.length === 0) {
+            $("#recently_ofs_table").append("<tr><td colspan='5' class='text-danger'>No data found</td></tr>");
+        } else {
+            listed_ofs.forEach(element => {
+                var row = `<tr>
+                           <td>${element.Name}</br>  LTP:${element.LTP} |<span class= " ${(element.ChangeLTP)>=0? "text-success": "text-danger"}"> ${element.ChangeLTP} </span></td>
+                           <td>${element.AllottedOn.split("T")[0]}</td>
+                           <td>${element.AllotmentPrice !== null ? element.AllotmentPrice : "-"}</td>
+                           <td>${element.AllotmentPriceAfterDiscount !== null ? element.AllotmentPriceAfterDiscount : "-" }</td>
+                           <td>${typeof element.chngpriceper === 'number' && !isNaN(element.chngpriceper) ? parseFloat(element.chngpriceper).toFixed(2) : "-"}</td>
+                          </tr>`;
+                var table = $("#recently_ofs_table");
+                table.append(row);
+            });
+        
+        }
+        $("#loading-spinner").hide();
+    } else if (initial_ofs_filter === "OFSOngoing") {
+        var listed_ofs = data.OFSOngoing;
+        console.log(listed_ofs);
+        $("#main_event_modal").empty();
+        $("#recently_ofs_table").empty();
+
+
+            listed_ofs.forEach(element => {
+                var row = `<tr>
+                           <td>${element.Name}</br>  LTP:${element.LTP} |<span class= " ${(element.ChangeLTP)>=0? "text-success": "text-danger"}"> ${element.ChangeLTP} </span></td>
+                           <td>${element.AllottedOn.split("T")[0]}</td>
+                           <td>${element.AllotmentPrice !== null ? element.AllotmentPrice : "-"}</td>
+                           <td>${element.AllotmentPriceAfterDiscount !== null ? element.AllotmentPriceAfterDiscount : "-" }</td>
+                           <td>${typeof element.chngpriceper === 'number' && !isNaN(element.chngpriceper) ? parseFloat(element.chngpriceper).toFixed(2) : "-"}</td>
+                          </tr>`;
+                var table = $("#recently_ofs_table");
+                table.append(row);
+            });
+        
+        
+        $("#loading-spinner").hide();
+    }else if (initial_ofs_filter==="OFSUpcoming") {
+        var listed_ofs = data.OFSUpcoming;
+        console.log(listed_ofs);
+        $("#main_event_modal").empty();
+        $("#recently_ofs_table").empty();
+
+
+            listed_ofs.forEach(element => {
+                var row = `<tr>
+                           <td>${element.Name}</br>  LTP:${element.LTP} |<span class= " ${(element.ChangeLTP)>=0? "text-success": "text-danger"}"> ${element.ChangeLTP} </span></td>
+                           <td>${element.AllottedOn.split("T")[0]}</td>
+                           <td>${element.AllotmentPrice !== null ? element.AllotmentPrice : "-"}</td>
+                           <td>${element.AllotmentPriceAfterDiscount !== null ? element.AllotmentPriceAfterDiscount : "-" }</td>
+                           <td>${typeof element.chngpriceper === 'number' && !isNaN(element.chngpriceper) ? parseFloat(element.chngpriceper).toFixed(2) : "-"}</td>
+                          </tr>`;
+                var table = $("#recently_ofs_table");
+                table.append(row);
+            });
+        
+        
+        $("#loading-spinner").hide();
+    }
+
+    else if (initial_ofs_filter==="OFSAboutList") {
+        var listed_ofs = data.OFSAboutList;
+        console.log(listed_ofs);
+        $("#main_event_modal").empty();
+        $("#recently_ofs_table").empty();
+
+
+            listed_ofs.forEach(element => {
+                var row = `<tr>
+                           <td>${element.Name}</br>  LTP:${element.LTP} |<span class= " ${(element.ChangeLTP)>=0? "text-success": "text-danger"}"> ${element.ChangeLTP} </span></td>
+                           <td>${element.AllottedOn.split("T")[0]}</td>
+                           <td>${element.AllotmentPrice !== null ? element.AllotmentPrice : "-"}</td>
+                           <td>${element.AllotmentPriceAfterDiscount !== null ? element.AllotmentPriceAfterDiscount : "-" }</td>
+                           <td>${typeof element.chngpriceper === 'number' && !isNaN(element.chngpriceper) ? parseFloat(element.chngpriceper).toFixed(2) : "-"}</td>
+                          </tr>`;
+                var table = $("#recently_ofs_table");
+                table.append(row);
+            });
+        
+        
+        $("#loading-spinner").hide();
+    }
+    $("#ofs_table").DataTable();
+
+}
+
+
+
+ 
+                 
+                    },
+                })
+            }
 
     });
 </script>
