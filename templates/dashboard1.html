@@ -65,7 +65,9 @@
 
   }
 
-  .text-success,
+  .text-danger{
+    color: rgb(196 0 0) !important;
+  }
   .border-success {
     color: rgb(6, 197, 98) !important;
   }
@@ -367,26 +369,85 @@ $("#spinner").show()
                             </div>
                         </div>`;
 
-            for (var j = 0; j < data.tables[i].items.length; j++) {
-              var item = data.tables[i].items[j];
-              var priceClass = item.change_value > 0 ? "text-success" : "text-danger";
-              var borderClass = item.change_value > 0 ? "border-start  border-4 border-success" : " border-start  border-4 border-danger";
-              var progress_caret = item.change_value > 0 ? "up" : "down";
-              countryTable += `
-                        <div class="child_table">
-                            
-                            <div class="inner_global shadow ${borderClass}" style="width: 20rem; height: 5rem; padding: 12px;">
-                                <h5 style="font-size: 1rem;">${item.symbol}</h5>
-                                <div class="price_global d-flex justify-content-between">
-                                    <h5>${item.current_price}</h5>
-                                    <div class="precent_icon_Global d-flex align-items-center ${priceClass}">
-                                        <h5>${item.change_value}(${item.change_per})</h5>
-                                        <i class="bi bi-caret-${progress_caret}-fill"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>`;
-            }
+      
+                        for (var j = 0; j < data.tables[i].items.length; j++) {
+                          var item = data.tables[i].items[j];
+                          var priceClass = item.change_value > 0 ? "text-success" : "text-danger";
+                          var borderClass = item.change_value > 0 ? "border-start  border-4 border-success" : " border-start  border-4 border-danger";
+                          var progress_caret = item.change_value > 0 ? "up" : "down"; 
+                          var background_color_global_indicator = item.change_value > 0 ? "#32cd4c2e" : "#cd32322e"; 
+                          var background_color_global_indicator_minus_plus = item.change_value > 0 ? "+" : ""; 
+                    
+                          countryTable += `
+                                    <div class="child_table">
+                         
+          
+          
+                                    <div class="main_global_card" style="
+                                    width: 21rem;
+                                    display: flex;
+                                    align-items: flex-end;
+                                    column-gap: 1rem;
+                                    margin-bottom: 1rem;
+                                    border-radius: 10px;
+                                    padding: 7px 11px;
+                                    box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+                                    justify-content: space-between;
+          ">
+
+          <div class="left_global_content" style="    display: flex;
+          align-items: flex-end;
+          gap: 1rem;
+      ">
+              <div class="gain_loss_icon">
+                  <i class="bx bx-${progress_caret}-arrow-alt ${priceClass}" style="
+                  font-size: 16px;
+              font-size: 34px;
+              padding: 13px;
+              font-weight: 300 !important;
+              background-color: ${background_color_global_indicator};
+          
+              border-radius: 20px;
+          "></i>
+              </div>
+              <div class="stock_name_price">
+          <h5 style="    font-size: 16px;">${item.symbol}</h5>
+          <h5 style="
+          font-weight: 600 !important;
+              font-size: 14px;
+              color: darkslategray;
+          ">${item.current_price}</h5>
+              </div>
+            </div>
+
+          <div class="left_global_content">
+              <div class="gain_loss_price">
+                  <h5 class="${priceClass} percent_gain_loss_global" style="    font-size: 16px;">${background_color_global_indicator_minus_plus}${item.change_per}%</h5>
+                  <h5 class="${priceClass} percent_gain_loss_globla"  style="
+          font-weight: 600 !important;
+              font-size: 14px;
+              color: darkslategray;
+          ">${background_color_global_indicator_minus_plus}${item.change_value}</h5>
+              </div>
+            </div>
+          </div>
+          
+          
+          
+          `;
+          
+          
+          
+          
+          
+          
+          
+          
+          
+            
+            
+                                    
+                        }
 
             countryTable += "</child_global>";
             $("#tables-container").append(countryTable);
@@ -1031,7 +1092,8 @@ $(document).ready(function () {
 
 
   <div id="tables-container" class="d-flex"
-    style="    row-gap: 1rem;justify-content: space-around;     flex-wrap: wrap;"></div>
+    style="    row-gap: 1rem;  column-gap: 6rem;
+    justify-content: center;   flex-wrap: wrap;"></div>
 
   <style>
     * {
