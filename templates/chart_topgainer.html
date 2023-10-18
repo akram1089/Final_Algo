@@ -360,7 +360,7 @@
 </style>
 
 <body>
-    <h5 class="fw-bold">Options Simulator</h5>
+    <h5 class="fw-bold">Options Simulator Nigga</h5>
     <div class="main_option_strategy">
         <div class=" mt-4 mb-2 d-flex flex-wrap justify-content-between main_top_strategy_optimizer">
             <div class="left_top_option_simulator">
@@ -654,7 +654,8 @@
                     <div class="nav_greeks_table">GREEKS</div>
                 </div>
                 <div class="payoff_diagram_chart">
-                    <canvas id="myChart"></canvas>
+                    <div id="chartdiv" style="width: 100%; height: 400px;"></div>
+
 
                 </div>
                 <style>
@@ -5041,87 +5042,133 @@
                 final_p_l.push(-((parseFloat(main_calls_ltp) + parseFloat(main_puts_ltp)) - p_l) * parseInt(lot_size));
             });
             console.log(final_p_l)
+
+var spot_price=$(".spot_value").text()
       
+// Add the following code to your Table_chart_pyoff function after the final_p_l array is populated
+var chart = am4core.create("chartdiv", am4charts.XYChart);
+
+// Add data
+var chartData = [];
+for (var i = 0; i < strikePrices.length; i++) {
+  chartData.push({ category: strikePrices[i], value: final_p_l[i] });
+}
+chart.data = chartData;
+
+// Create axes
+var categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
+categoryAxis.dataFields.category = "category";
+categoryAxis.renderer.grid.template.location = 0;
+categoryAxis.renderer.minGridDistance = 100;
+chart.logo.disabled = true;
+var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
+
+       // Draw a horizontal line at y-axis 0
+       var zeroLine = valueAxis.axisRanges.create();
+            zeroLine.value = 0;
+            zeroLine.grid.stroke = am4core.color("#000"); // Color of the line
+            zeroLine.grid.strokeWidth = 2; // Line width
+            zeroLine.grid.strokeOpacity = 0.5; // Line opacity
+
+  // Create series
+var series = chart.series.push(new am4charts.LineSeries());
+series.dataFields.valueY = "value";
+series.dataFields.categoryX = "category";
+series.strokeWidth = 2;
+series.minBulletDistance = 10;
+series.tooltipText = " StrikePrice:{category}   \n  P&L:{value}";
+
+series.strokeDasharray = "5,5"; // This sets the line as dashed with 5px dashes and 5px gaps
+series.tooltip.getFillFromObject = false;
+series.tooltip.background.fill = am4core.color("white"); // Set the tooltip background color to gray
+series.tooltip.background.stroke = am4core.color("#000000"); // Set the tooltip border color to black
+series.tooltip.background.strokeWidth = 1; // Set the tooltip border width
+series.tooltip.background.strokeOpacity = 0.4; // Set the tooltip border opacity
+series.tooltip.background.filters.push(new am4core.DropShadowFilter()); 
+series.tooltip.label.fill = am4core.color("#000000"); // Set the font color to black
 
 
-            var ctx = document.getElementById("myChart").getContext("2d");
 
-var myChartConfig = {
-    type: "line",
-    data: {
-        labels: strikePrices,
-        datasets: [
-            {
-                label: "Final P/L",
-                data: final_p_l,
-                backgroundColor: final_p_l.map(value => value < 0 ? 'rgba(255, 0, 0, 0.2)' : 'rgba(0, 255, 0, 0.2)'),
-                borderColor: 'black',
-                borderWidth: 2,
-                fill: {
-                    target: 'origin',
-                    below: "rgba(255, 0, 0, 0.2)",
-                    above: "rgba(0, 255, 0, 0.2)"
-                },
-                pointBorderWidth: 0,
-                pointHoverRadius: 5,
-                pointHoverBackgroundColor: "black",
-                pointHoverBorderColor: "white",
-                pointHoverBorderWidth: 3,
-                pointRadius: 1,
-                pointHitRadius: 100,
-                borderDash: [5, 5], // Set the border to dashed
-            },
-        ],
-    },
-    options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        scales: {
-            x: {
-                
-                type: "linear",
-                position: "bottom",
-                title: {
-                    display: true,
-                    text: "Strike Prices",
-                },
-            },
-            y: {
-                title: {
-                    display: true,
-                    text: "Final P/L",
-                },
-            },
-        },
-        plugins: {
-            legend: {
-                display: false, // Hide the legend
-            },
-            annotation: {
-                annotations: [
-                    {
-                        type: 'line',
-            
-                        scaleID: 'y',
-                        borderColor: 'red', // Color of the vertical line
-                        borderWidth: 2,
-                        value: '0', // The x-axis value where the line will be drawn
-                    },
-                ],
-            },
-        },
-        layout: {
-            padding: {
-                left: 0,   // Adjust left padding as needed
-                right: 0,  // Adjust right padding as needed
-                bottom: 0, // Adjust bottom padding as needed
-                top: 0,    // Adjust top padding as needed
-            },
-        },
-    },
-};
+var spot_price = parseFloat($(".spot_value").text()); // Get the spot price value as a float
 
-var myChart = new Chart(ctx, myChartConfig);
+// Find the index of the spot price in the strikePrices array
+var spotIndex = strikePrices.indexOf(spot_price.toString());
+
+// Highlight the spot price on the chart
+if (spotIndex !== -1) {
+  var range = categoryAxis.axisRanges.create();
+  range.category = strikePrices[spotIndex];
+  range.endCategory = strikePrices[spotIndex];
+  range.axisFill.fill = am4core.color("#ff0000"); // Set the fill color to red
+  range.axisFill.fillOpacity = 0.2; // Adjust the opacity of the fill
+}
+
+
+
+var range = valueAxis.createSeriesRange(series);
+range.value = 0;
+range.endValue = Infinity;
+
+range.contents.fill = am4core.color("rgba(0, 255, 0, 0.9)"); // Set the fill color above 0 to green with opacity
+
+range.contents.fillOpacity = 0.2; // Adjust the opacity of the fill
+
+var range2 = valueAxis.createSeriesRange(series);
+range2.value = -Infinity;
+range2.endValue = 0;
+
+range2.contents.fill = am4core.color("rgba(255, 0, 0, 0.9)"); // Set the fill color below 0 to red with opacity
+range2.contents.fillOpacity = 0.2; // Adjust the opacity of the fill
+
+
+
+// Set the tooltip appearance
+chart.tooltip.getFillFromObject = false;
+chart.tooltip.background.fill = am4core.color("#888888"); // Set the tooltip background color to gray
+chart.tooltip.background.stroke = am4core.color("#000000"); // Set the tooltip border color to black
+chart.tooltip.background.strokeWidth = 2; // Set the tooltip border width
+chart.tooltip.background.strokeOpacity = 0.8; // Set the tooltip border opacity
+chart.tooltip.background.filters.push(new am4core.DropShadowFilter()); // Add a slight shadow to the tooltip
+
+  // Add scrollbar
+  chart.scrollbarX = new am4core.Scrollbar();
+
+  
+var bullet = series.bullets.push(new am4charts.CircleBullet());
+  bullet.circle.stroke = am4core.color("#fff");
+  bullet.circle.strokeWidth = 2;
+  bullet.fillOpacity = 0;
+  bullet.strokeOpacity = 0;
+  bullet.circle.radius = 6; // Adjust this value to change the size of the bullet
+
+  
+  var bulletState = bullet.states.create("hover");
+  bulletState.properties.fillOpacity = 1;
+  bulletState.properties.strokeOpacity = 1;
+
+
+
+
+
+
+
+  var cursor = new am4charts.XYCursor();
+cursor.lineX.stroke = am4core.color("black"); // set color for the X-axis cursor line
+cursor.lineY.stroke = am4core.color("#000"); // set color for the Y-axis cursor line
+cursor.lineX.strokeWidth = 2; // set width of the X-axis cursor line
+cursor.lineY.strokeWidth = 0; // set width of the Y-axis cursor line
+chart.cursor = cursor;
+
+// chart.scrollbarX = new am4core.Scrollbar();
+// chart.scrollbarX.position = "bottom"; // set the position of the scrollbar at the bottom of the chart
+
+
+// Make chart take up the entire space of its container
+chart.width = am4core.percent(100);
+chart.height = am4core.percent(100);
+
+
+
            
         }
 
