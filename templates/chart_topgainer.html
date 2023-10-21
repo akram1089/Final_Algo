@@ -360,7 +360,7 @@
 </style>
 
 <body>
-    <h5 class="fw-bold">Options Simulator Nigga</h5>
+    <h5 class="fw-bold">Options Simulator</h5>
     <div class="main_option_strategy">
         <div class=" mt-4 mb-2 d-flex flex-wrap justify-content-between main_top_strategy_optimizer">
             <div class="left_top_option_simulator">
@@ -2487,7 +2487,7 @@
 
                 var table_greek = `
 <tr id=${greek_unique++}>
-    <td>   <div class="instument_type_slot_strike_premium"><span class="main_lot_size_option_simulator"><span class="short_long">${lot_size_filter}</span><span class="lot_size_option_simulator">${counterValue}</span>x</span> <span class="instrument_type_edit">${inst_type}</span></td>
+    <td>   <div class="instument_type_slot_strike_premium" id="main_instruments"><span class="main_lot_size_option_simulator"><span class="short_long">${lot_size_filter}</span><span class="lot_size_option_simulator">${counterValue}</span>x</span> <span class="instrument_type_edit">${inst_type}</span></td>
     <td> <span class="delta">${parseFloat(delta).toFixed(3)}</span></td>
     <td> <span class="theta">${parseFloat(theta).toFixed(3)}</span></td>
     <td> <span class="gamma">${parseFloat(gamma).toFixed(3)}</span></td>
@@ -3313,8 +3313,10 @@
 
 
                         var lot_size = response_spot["lot_size"]
+                        var last_traded_price = response_spot["last_traded_price"]
                         //console.log(response_spot);
                         $(".lot_size_value").text(lot_size)
+                        $(".spot_value").text(last_traded_price)
 
 
 
@@ -3589,11 +3591,13 @@
                                     $("#put_add_position").click();
 
                                     straddle_calculation("straddle")
-                                    Table_chart_pyoff()
+                                  
                                 },); // Delay of 100ms
                             }
                         });
                     }
+ 
+     
                 });
 
 
@@ -3636,24 +3640,26 @@
                             }
                         }
 
-                        //console.log("Previous 5 Strike Prices:", prev5);
-                        //console.log("Next 5 Strike Prices:", forw5);
+                        console.log("Previous 5 Strike Prices:", prev5);
+                        console.log("Next 5 Strike Prices:", forw5);
 
                         if (prev5.length === 5 && forw5.length === 5) {
                             var lastIndexPrev = prev5[prev5.length - 1];
                             var lastIndexForw = forw5[forw5.length - 1];
+                            console.log(lastIndexPrev)
+                            console.log(lastIndexForw)
                             //console.log(lastIndexForw, lastIndexPrev);
 
                             // Find the closest row for lastIndexPrev and click on Auto_puts_short_click
                             var closestRowPrev = optionChainTable.find(".simulator_strike:contains(" + lastIndexPrev + ")").closest(".simulator_option_tr");
-                            closestRowPrev.find(".calls_action_btn").one("click", function (e) {
+                            closestRowPrev.find(".puts_action_btn").one("click", function (e) {
                                 e.preventDefault();
                                 $(".modal").hide();
                             }).click();
 
                             // Find the closest row for lastIndexForw and click on Auto_calls_short_click
                             var closestRowForw = optionChainTable.find(".simulator_strike:contains(" + lastIndexForw + ")").closest(".simulator_option_tr");
-                            closestRowForw.find(".puts_action_btn").one("click", function (e) {
+                            closestRowForw.find(".calls_action_btn").one("click", function (e) {
                                 e.preventDefault();
                                 $(".modal").hide();
                             }).click();
@@ -3662,8 +3668,11 @@
                             $("#put_add_position").click();
 
                             straddle_calculation("strangle");
+                       
+                        
                         }
                     }
+              
                 });
 
 
@@ -3751,6 +3760,8 @@
                             $("#call_add_position").click();
 
                             straddle_calculation("spread");
+               
+                      
                         }
                     }
                     $("#putBuyRadio").prop('checked', true);
@@ -4274,7 +4285,7 @@
                     //console.log("Positive Values:", positiveValues);
                     $("#ratio").text("No Defined")
 
-
+                   
                 }
                 else if (Strategy_args === "spread") {
 
@@ -4451,7 +4462,7 @@
                     //console.log("All Values:", allValues);
                     //console.log("Negative Values:", negativeValues);
                     //console.log("Positive Values:", positiveValues);
-
+             
 
 
                 }
@@ -4995,9 +5006,11 @@
 
 
 
+    
+        
 
 
-
+                Table_chart_pyoff()
 
             }
 
@@ -5007,8 +5020,132 @@
 
 
 
-        // Function to render the chart and draw the horizontal line
-        function Table_chart_pyoff() {
+
+
+
+
+
+
+
+
+            function Table_chart_pyoff() {
+
+
+            var main_strike_price_dynamic=[]
+            $(".main_logic").each(function () {
+
+var lot_size_value =$(".lot_size_value").text()
+
+var long_shorts=$(this).find(".short_long").text()
+ var strikePrice_edit = $(this).find(".instrument_type_edit").text()
+ var premiums = $(this).find(".ltp_edit").text()
+ 
+ var splitValues = strikePrice_edit.split(' ');
+
+
+ var requiredValue = splitValues[1]; // Assuming the format is consistent
+ var requiredStringValue = splitValues[1].match(/[a-zA-Z]+/g).join('');
+
+ var numericValue = requiredValue.replace(/\D/g, ''); // Extracting only the numbers
+ main_strike_price_dynamic.push({numericValue,long_shorts,premiums,requiredStringValue})
+});
+console.log(main_strike_price_dynamic);
+
+
+
+// final_long_call_new.push(MAX(0, strike_price -spot_strike ) - long_call);
+//     final_long_put_new.push( MAX(0, spot_strike -strike_price )-long_put );
+
+
+var resultArray = []; // Array to hold arrays
+
+var lot_size = parseInt($(".lot_size_value").text())
+
+var option_simulator_body = $(".option_simulator_body");
+
+function ULTRAMAX(a, b) {
+    return a > b ? a : b;
+}
+
+
+option_simulator_body.find(".simulator_strike").each(function() {
+    var ultra_strike_price = parseInt($(this).text());
+
+    console.log("ultra_strike_price         "  + ultra_strike_price);
+
+
+    var tempArray = []; // Temporary array to store values
+    main_strike_price_dynamic.forEach(function(item) {
+        if (item.requiredStringValue === 'CE' && item.long_shorts === '+') {
+            console.log('Inside CE and + condition');
+            console.log(parseFloat(item.numericValue));
+            console.log(parseFloat(item.premiums));
+            console.log(ultra_strike_price);
+            tempArray.push(ULTRAMAX(0, ultra_strike_price - parseFloat(item.numericValue)) -parseFloat( item.premiums));
+        }
+        if (item.requiredStringValue === 'CE' && item.long_shorts === '-') {
+            console.log('Inside CE and - condition');
+            tempArray.push(parseFloat( item.premiums)-ULTRAMAX(0, ultra_strike_price - parseFloat(item.numericValue)) );
+        }
+        if (item.requiredStringValue === 'PE' && item.long_shorts === '+') {
+            console.log('Inside PE and + condition');
+            tempArray.push(ULTRAMAX(0, parseFloat(item.numericValue) - ultra_strike_price) -parseFloat( item.premiums));
+        }
+        if (item.requiredStringValue === 'PE' && item.long_shorts === '-') {
+            console.log('Inside PE and - condition');
+            tempArray.push(parseFloat( item.premiums)-ULTRAMAX(0, parseFloat(item.numericValue) - ultra_strike_price) );
+        }
+    });
+    console.log(tempArray);
+    resultArray.push(tempArray); // Push the tempArray into the resultArray
+});
+
+console.log(resultArray);
+
+
+var sumArray = []; // Array to store the sums
+
+// Looping through each array in resultArray to calculate the sum
+resultArray.forEach(function(array) {
+    var sum = 0;
+    array.forEach(function(value) {
+        sum += value; // Adding each value to the sum
+    });
+    sum *= lot_size; // Multiplying the sum by lot_size
+    sumArray.push(sum); // Pushing the sum into the sumArray
+});
+
+// Logging the sums of each array in resultArray multiplied by lot_size
+console.log(sumArray);
+
+
+
+
+
+
+
+
+
+
+var all_premium_chart= []
+            $(".main_logic").each(function () {
+               var premium_condition = $(this).find(".short_long").text()
+             var premuim_values=parseFloat($(this).find(".ltp_edit").text())
+console.log(premium_condition);
+               if (premium_condition === "-") {
+                all_premium_chart.push(-Math.abs(premuim_values))
+            }else{
+                all_premium_chart.push(Math.abs(premuim_values))
+                
+               }
+            })
+            console.log(all_premium_chart);
+
+            var sum_all_premium_chart = all_premium_chart.reduce(function (a, b) {
+    return a + b;
+}, 0);
+
+console.log("Sum of all elements in all_premium_chart array: ", sum_all_premium_chart);
             // Your existing code to generate chart data goes here
             var option_simulator_body = $(".option_simulator_body");
             console.log(option_simulator_body);
@@ -5030,18 +5167,85 @@
                     main_puts_ltp = puts_ltp;
                 }
             });
-        
-            console.log(strikePrices);
-            console.log("Main calls_ltp: " + main_calls_ltp);
-            console.log("Main puts_ltp: " + main_puts_ltp);
-            var lot_size = $(".lot_size_value").text()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Define the MAX function
+function MAX(a, b) {
+    return a > b ? a : b;
+}
+
+// Initialize arrays
+var final_long_call_new = [];
+var final_long_put_new = [];
+var addition_result = [];
+
+// Add the arrays
+
+
+
+
+
+
+
+
+// Loop through each element
+option_simulator_body.find(".simulator_strike").each(function () {
+
+
+
+
+
+
+
+
+    var strike_price = parseInt($(this).text()); // Get the text value of the current element
+    var spot_strike = 19800;
+    var long_call = 113;
+    var long_put = 111.3;
+ // MAX(0,13650-14700)-136.8)
+    // Calculate and push the values
+    final_long_call_new.push(MAX(0, strike_price -spot_strike ) - long_call);
+    final_long_put_new.push( MAX(0, spot_strike -strike_price )-long_put );
+
+    // Perform addition between the elements
+    var index = final_long_call_new.length - 1;
+    addition_result.push((final_long_call_new[index] + final_long_put_new[index])*50);
+});
+
+// Display the results
+console.log("Final Long Call New: ", final_long_call_new);
+console.log("Final Long Put New: ", final_long_put_new);
+console.log("Addition Result: ", addition_result);
+
+
+
+
+
+
+
+            // console.log(strikePrices);
+            // console.log("Main calls_ltp: " + main_calls_ltp);
+            // console.log("Main puts_ltp: " + main_puts_ltp);
+          
             var final_p_l = []
             const priceDifferences = strikePrices.map((strikePrice) => Math.abs(closest_value - strikePrice));
             console.log(priceDifferences);
             priceDifferences.forEach((p_l) => {
-                final_p_l.push(-((parseFloat(main_calls_ltp) + parseFloat(main_puts_ltp)) - p_l) * parseInt(lot_size));
+                final_p_l.push(-(sum_all_premium_chart - p_l) * parseInt(lot_size))
             });
-            console.log(final_p_l)
+            // console.log(final_p_l)
 
 var spot_price=$(".spot_value").text()
       
@@ -5051,7 +5255,7 @@ var chart = am4core.create("chartdiv", am4charts.XYChart);
 // Add data
 var chartData = [];
 for (var i = 0; i < strikePrices.length; i++) {
-  chartData.push({ category: strikePrices[i], value: final_p_l[i] });
+  chartData.push({ category: strikePrices[i], value: sumArray[i] });
 }
 chart.data = chartData;
 
@@ -5168,9 +5372,11 @@ chart.width = am4core.percent(100);
 chart.height = am4core.percent(100);
 
 
+console.log('Hi');
 
            
         }
+
 
         // Call the function to render the chart and draw the horizontal line
       
