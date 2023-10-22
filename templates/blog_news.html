@@ -246,16 +246,12 @@
 
 
 
-
-
-
-
-
         $('#language-select').change(function () {
+            var news_data=$("#filter-indian").data("news")
             var filter = 'IndianNews';
             var language = $(this).val();
             var url = '/get-news-data/?filter=' + filter + '&language=' + language;
-            saveSettings(filter, language, 'grid');
+            saveSettings(filter, language, 'grid',news_data);
             getNewsData(url);
         });
 
@@ -372,6 +368,8 @@
 
         function updateNewsData(data) {
             var NewsData = localStorage.getItem('NewsData');
+            console.log(NewsData);
+            
 
             if (NewsData ==="world_news" || NewsData==="indian_news") {
                 
