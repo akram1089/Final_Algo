@@ -11,10 +11,13 @@
     }
     
     .card__container {
+      border: 1px solid #0000005e;
       position: relative;
-      width: 350px;
-      height: 300px;
-      border-radius: 0.5rem;
+      /* width: 300px;
+      height: 240px; */
+      width: 287px;
+    height: 220px;
+      border-radius: 12px;
       overflow: hidden;
       cursor: pointer;
       box-shadow: rgba(100, 100, 111, 0.08) 0px 7px 29px 0px;
@@ -59,7 +62,7 @@
     
     .card__info p,
     .card__info h2 {
-      font-size: 1.56rem;
+      font-size: 1rem;
     }
     
     .card__info p,
@@ -73,13 +76,16 @@
     
     .card__info h4 {
       color: rgb(21, 173, 21);
+      font-size: 1rem;
     }
     
     .card__info h3 {
+      font-size: 1rem;
       font-weight: 500;
       opacity: 0.5;
     }
-    
+   
+
     .card__badges {
       display: flex;
       justify-content: space-around;
@@ -91,7 +97,7 @@
     .card__change {
       font-size: 0.8rem;
       padding: 0.4rem 0.8rem;
-      border-radius: 0.2rem;
+      border-radius: 8px;
       background-color: #e0e0e0;
     }
     
@@ -131,12 +137,12 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      background-color: rgb(255, 154, 154);
+      /* background-color: rgb(255, 154, 154); */
       transform: rotateY(180deg);
     }
     
     .card__back p {
-      font-size: 1.2rem;
+      font-size: 1rem;
       font-weight: 400;
       margin-bottom: 1rem;
     }
@@ -321,11 +327,10 @@
       <h1>Options Dashboard</h1>
       <div class="d-flex align-items-center search_div">
         <span style="position: relative;"> <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="Search"></span>
-        <button>Information</button>
       </div>
     </section>
     <section class="option-sort-filter">
-      <hr />
+     
       <div class="option_dashboard d-flex justify-content-between">
         <div class="filter">
           <!-- <span>Filter By:</span> -->
@@ -347,26 +352,27 @@
            
         </div>
       </div>
-      <hr />
+     
     </section>
     <section class="tiles-sort">
-      <span>
+      {% comment %} <span>
         Last Updated At: 10:55 AM - 19-07-2023 | * IV/IVPs shift to next month
         expiry in the last week of front month expiry
-      </span>
+      </span> {% endcomment %}
       <div class="option_icon d-flex">
         <!-- <i class="bi bi-list " ></i>
         <i class="bi bi-grid-fill ms-5 "></i> -->
 
-        <i class='bx bx-menu fs-2' id="showTable"></i>
-        <i class='bx bxs-grid-alt fs-2 ms-5'  id="showCards"></i>
+        <i class='bx bxs-grid-alt fs-2' id="showTable"></i>
+        <i class=' bx bx-menu  fs-2 ms-5'  id="showCards"></i>
       </div>
       
     </section>
    
    
     <section class="content cards__wrapper">
-      <article class="card__container">
+
+      <!-- <article class="card__container">
         <div class="card">
           <div class="card__front">
             <div class="card__icons">
@@ -374,26 +380,38 @@
               <i class="fa-solid fa-star" style="color: #f39512"></i>
             </div>
             <div class="card__info">
-              <h2>NIFTY</h2>
-              <p>&#8377; 19789.15</p>
-              <h4>+18.6 (+0.09%)</h4>
-              <h3>IV : 11.79</h3>
-            </div>
-            <div class="card__badges">
-              <div class="card__rank">
-                <span>IV Rank: 17</span>
-              </div>
-              <div class="card__change">
-                <span>IV Change: +2.08%</span>
-              </div>
-            </div>
-            <div class="card__progressbar">
-              <div>
-                <span>IVP:30</span>
-                <div class="card__progressbar__container">
-                  <div class="card__progressbar__indication"></div>
+              <div class="row">
+                <div class="col-6">
+                  <h2>NIFTY</h2>
+                  
+                  <span>IVP:30</span>
+                  <h2>IV Rank: 17</h2>
+                </div>
+                <div class="col-6">
+                  <p>&#8377; 19789.15</p>
+                  <h2>IV Change: +2.08%</h2>
+                  <h3>IV : 11.79</h3>
                 </div>
               </div>
+              
+              
+            </div>
+            <div class="card__badges">
+              <div class="card__rank d-flex align-items-center" style="background-color: #cd32322e;">
+                <i class="bi bi-arrow-down" style="color: rgb(196 0 0) !important;"></i>
+                <span style="color: rgb(196 0 0) !important;">  +0.09%</span>
+              </div>
+              <div class="card__change" style="background-color: #cd32322e;">
+                <span style="color: rgb(196 0 0) !important;">IV Change: +2.08%</span>
+              </div> -->
+            <!-- </div>
+            <div class="card__progressbar">
+              <div> -->
+                
+                <!-- <div class="card__progressbar__container">
+                  <div class="card__progressbar__indication"></div>
+                </div> -->
+              <!-- </div>
             </div>
           </div>
           <div class="card__back">
@@ -404,8 +422,10 @@
             <span>Long Strangle</span>
           </div>
         </div>
-      </article>
+      </article>  -->
+
     </section>
+
     <section class="table_wrapper">
       <div class="content table table-responsive">
         <table class="table">
@@ -434,6 +454,23 @@
   <script>
     const cardObj = [
       {
+        bgc: "#024ecb",
+        name: "NIFTY",
+        value: 19789.15,
+        points: "+18.6 (+0.09%)",
+        IV: 11.79,
+        rank: 17,
+        change: "+2.08%",
+        ivp: 30,
+        strategies: [
+          "Debit spread",
+          "calendar spread",
+          "Long straddle",
+          "long strangle",
+        ],
+      },
+      {
+        bgc: "#0089ce",
         name: "BANKNIFTY",
         value: 45589.5,
         points: "+105(+0.23%)",
@@ -449,6 +486,7 @@
         ],
       },
       {
+        bgc: "",
         name: "ABB",
         value: 45389.5,
         points: "+46(+1.23%)",
@@ -459,6 +497,7 @@
         strategies: ["Iron Condor", "Butterfly"],
       },
       {
+        bgc: "",
         name: "BANKNIFTY",
         value: 45589.5,
         points: "+105(+0.23%)",
@@ -474,6 +513,7 @@
         ],
       },
       {
+        bgc: "",
         name: "ABFRL",
         value: 213.65,
         points: "+1.3(+0.61%)",
@@ -488,7 +528,7 @@
           "credit spread",
         ],
       },
-      {
+      { bgc: "",
         name: "ABBOTINDIA",
         value: 22997.65,
         points: "+100(-0.23%)",
@@ -503,7 +543,7 @@
           "credit spread",
         ],
       },
-      {
+      { bgc: "",
         name: "ABFRL",
         value: 213.65,
         points: "+1.3(+0.61%)",
@@ -518,7 +558,7 @@
           "credit spread",
         ],
       },
-      {
+      { bgc: "",
         name: "BANKNIFTY",
         value: 45589.5,
         points: "+105(+0.23%)",
@@ -533,7 +573,7 @@
           "long strangle",
         ],
       },
-      {
+      { bgc: "",
         name: "ABFRL",
         value: 213.65,
         points: "+1.3(+0.61%)",
@@ -548,7 +588,7 @@
           "credit spread",
         ],
       },
-      {
+      { bgc: "",
         name: "ABFRL",
         value: 213.65,
         points: "+1.3(+0.61%)",
@@ -563,7 +603,7 @@
           "credit spread",
         ],
       },
-      {
+      { bgc: "",
         name: "ABFRL",
         value: 213.65,
         points: "+1.3(+0.61%)",
@@ -578,7 +618,7 @@
           "credit spread",
         ],
       },
-      {
+      { bgc: "",
         name: "ABFRL",
         value: 213.65,
         points: "+1.3(+0.61%)",
@@ -612,11 +652,25 @@
       var table = $("#option-table")
       table.append(row)
     });
-
-    const cards__wrapper = document.querySelector(".cards__wrapper");
-
+  
+    // const cards__wrapper = document.querySelector(".cards__wrapper");
+     
     for (let card of cardObj) {
-      cards__wrapper.innerHTML += `<article class="card__container">
+      let cardChangeBackgroundColor = '';
+      let cardChangeTextColor = ''; 
+      if(card.ivp >60 ){
+        cardChangeBackgroundColor = "#32cd4c2e"
+        cardChangeTextColor = '#167f18e0';
+      }
+      else if(card.ivp >=40 && card.ivp <60 ){
+        cardChangeBackgroundColor = "#ffe0b2b8"
+        cardChangeTextColor = '#d18700';
+      }
+      else if(card.ivp <40 ){
+        cardChangeBackgroundColor = "#cd32322e"
+        cardChangeTextColor = 'rgb(196 0 0) !important';
+      }
+      var newCard = `<article class="card__container">
         <div class="card">
           <div class="card__front">
             <div class="card__icons">
@@ -630,44 +684,32 @@
               <h3>IV : ${card.IV}</h3>
             </div>
             <div class="card__badges">
-              <div class="card__rank">
-                <span>IV Rank: ${card.rank}</span>
+              <div class="card__rank"style="background-color: ${cardChangeBackgroundColor}">
+                <span style="color: ${cardChangeTextColor}">IV Rank: ${card.rank}</span>
               </div>
-              <div class="card__change">
-                <span>IV Change: ${card.change}</span>
+              <div class="card__change" style="background-color: ${cardChangeBackgroundColor}">
+                <span style="color: ${cardChangeTextColor}">IV Change: ${card.change}</span>
               </div>
             </div>
             <div class="card__progressbar">
               <div>
                 <span>IVP:${card.ivp}</span>
-                <div class="card__progressbar__container" ${
-                  card.ivp < 40 && 'style="background-color:#FBC6C2"'
-                }   ${
-        card.ivp >= 40 && card.ivp < 70 && 'style="background-color:#FFE0B2"'
-      }  ${card.ivp >= 70 && 'style="background-color:#C9E7CA"'}>
-                  <div class="card__progressbar__indication" 'style='width:${
-                    card.ivp
-                  }%' ${card.ivp < 40 && 'style="background-color:red"'}  ${
-        card.ivp >= 40 && card.ivp < 70 && 'style="background-color:#FF9800"'
-      }  ${card.ivp >= 70 && 'style="background-color:#4CAF50"'}></div>
-                </div>
+                
               </div>
             </div>
           </div>
-          <div class="card__back" ${
-            card.ivp < 40 && 'style="background-color:#E57373"'
-          } ${
-        card.ivp >= 40 && card.ivp < 70 && 'style="background-color:#FFB74D"'
-      } ${card.ivp >= 70 && 'style="background-color:#D4E157"'}>
+          <div class="card__back">
             <p>Suggested Option Strategies</p>
           ${card.strategies.map((e) => `<span>${e}</span>`).join("")}
           </div>
         </div>
       </article>`;
+         $(".cards__wrapper").append(newCard)
     }
+  
   </script>
 
-
+ 
   <script>
  const showCards = document.getElementById("showCards");
         const showTable = document.getElementById("showTable");
@@ -677,18 +719,20 @@
         // Add click event listeners to icons
         showCards.addEventListener("click", function () {
             // Hide the table and show the cards
-            cards.style.display = "flex";
-            table.style.display = "none";
-
+            // cards.style.display = "flex";
+            // table.style.display = "none";
+            $(".table").show()
+            $(".cards__wrapper").hide()
             sort.style.display = "block"
            
         });
 
         showTable.addEventListener("click", function () {
             // Hide the cards and show the table
-            cards.style.display = "none";
-            table.style.display = "block";
-            $(".table").show()
+            // cards.style.display = "none";
+            // table.style.display = "block";
+            $(".cards__wrapper").show()
+            $(".table").hide()
             sort.style.display = "none"
         });
   </script>
@@ -708,4 +752,5 @@
       get_option_data_table()
     });
   </script>
+ 
 {% endblock dashboard_body %}

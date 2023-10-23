@@ -33,7 +33,7 @@
 <style>
   tr {
     white-space: nowrap;
-    font-size: 16px;
+    font-size: 15px;
   }
 
   .bi.bi-graph-up {
@@ -72,7 +72,7 @@
   }
 
   tbody tr {
-    border-bottom: .5px solid #00000024 !important;
+    border-bottom: 1px solid #00000000 !important;
     font-size: 14px;
   
   }
@@ -202,7 +202,7 @@
   table.dataTable thead th,
   table.dataTable thead td {
     padding: 10px;
-    border-bottom: 0px solid rgb(0 0 0 / 0%) !important;
+    border-bottom: 1px solid rgb(0 0 0 / 0%) !important;
   }
 
   table.dataTable tbody td {
@@ -264,7 +264,13 @@
 #volume_shocker_table_filter label input::placeholder {
     content: "Search stocks:";
 }
-
+#volume_shocker{
+  background: linear-gradient(180deg, #4399eb, #5cadfb);
+    color: #fff;
+    border: 1px solid #4399eb;
+    transition: 0.3s;
+    border-radius: 6px;
+}
 </style>
 <div>
   <div>
@@ -272,40 +278,63 @@
 
     <div class="">
       <h4 class="my-3">Volume Shockers Intraday | NSE Stocks | NiftyTrader</h4>
-      <div class="row justify-content-center mt-2">
-        <div class="col-md-12" id="main_volume_socker">
+      <!-- Button trigger modal -->
+  
+      <button id="volume_shocker">Volume Shocker</button>
 
-          <table border="1" class="table mb-4 table-striped-custom" id="volume_shocker_table"
-            style="width:-webkit-fill-available;">
-            <thead>
-              <tr>
-                <td>
-                  <div>Symbol</div>
-                </td>
-                <td>
-                  <div>Ltp</div>
-                </td>
-                <td>
-                  <div>High</div>
-                </td>
-                <td>
-                  <div>Low</div>
-                </td>
-                <td>
-                  <div>Avg Daily Volume(Lacs)</div>
-                </td>
-                <td>
-                  <div>(Today/Avg Volume)</div>
-                </td>
-              </tr>
-
-            </thead>
-
-            <tbody id="breakout-table" style="display: none;"></tbody>
-          </table>
-
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style="z-index: 9999999999999;">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Volume Shocker</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row justify-content-center mt-2">
+          <div class="col-md-12" id="main_volume_socker">
+  
+            <table border="1" class="table mb-4 table-striped-custom" id="volume_shocker_table"
+              style="width:-webkit-fill-available;">
+              <thead>
+                <tr>
+                  <td>
+                    <div>Symbol</div>
+                  </td>
+                  <td>
+                    <div>Ltp</div>
+                  </td>
+                  <td>
+                    <div>High</div>
+                  </td>
+                  <td>
+                    <div>Low</div>
+                  </td>
+                  <td>
+                    <div>Avg Daily Volume(Lacs)</div>
+                  </td>
+                  <td>
+                    <div>(Today/Avg Volume)</div>
+                  </td>
+                </tr>
+  
+              </thead>
+  
+              <tbody id="breakout-table" style="display: none;"></tbody>
+            </table>
+  
+          </div>
         </div>
       </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+     
+
     </div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -338,7 +367,7 @@
         }
 
         $('#volume_shocker_table').DataTable({
-          "pageLength": 25
+          "pageLength": 10
         });
         $('#volume_shocker_table').wrap('<div class="parent_table"></div>');
         $('#volume_shocker_table_length,#volume_shocker_table_filter').wrapAll('<div class="parent_search_length"></div>');
@@ -352,7 +381,12 @@
     $('#volume_shocker_table_filter label input').attr('placeholder', 'Search stocks:');
 
       }
+     
 
+      $("#volume_shocker").click(function(){
+        $("#exampleModal").modal("show")
+        volume_shocker_data();
+      })
       // Make an AJAX request to fetch the breakout data
       function volume_shocker_data() {
 
@@ -374,7 +408,7 @@
           }
         });
       }
-      volume_shocker_data();
+      
       setInterval(volume_shocker_data, 150000);
     </script>
   </div>

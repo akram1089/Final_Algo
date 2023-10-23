@@ -330,11 +330,23 @@
     }
 
     .edit-button,
+    .flip-button,
     .delete-button {
 
-
+cursor: pointer;
         color: #767f88;
         transition: 0.3s;
+    }
+    .flip-button{
+        font-size: 24px !important;
+    font-weight: 600 !important;
+    padding: 1px;
+    }
+    .flip-button:hover{
+        background-color: #c8c1c18d;
+    border-radius: 50%;
+
+
     }
 
     .edit-button:hover {
@@ -497,7 +509,7 @@
 
             .main_logic {
                 border-bottom: 1px solid #8080803b;
-                padding: 9px 0;
+                padding: 9px 7px;
                 align-items: center;
             }
 
@@ -562,7 +574,9 @@
                 color: #4399eb !important;
                 border-bottom: 2px solid !important;
             }
-
+ .nav_adjusments_table,
+                   .nav_stoploss_table,
+              .nav_history_table,
             .payoff_diagram,
             .nav_pl_table,
             .nav_greeks_table {
@@ -577,8 +591,13 @@
             .filter_main_pl_greeks {
                 background-color: #f1f5fa;
                 margin-bottom: 1rem;
+                overflow: auto;
+    white-space: nowrap;
             }
-
+.main_total_greeks_p_l {
+    overflow: auto;
+    white-space: nowrap;
+}
             .real_pl_table thead,
             .real_greek_table thead {
                 background: #4399EB;
@@ -617,6 +636,26 @@
                 height: 42px !important;
             }
         </style>
+           <style>
+
+            @media screen and (min-width: 1000px) {
+                .col-lg-5.left_main_strategy {
+                                    width: 29% !important;
+                                }
+            
+                                .col-lg-6.right_table_greeks {
+                                    width: 68% !important;
+                                }
+            }
+                                #chartdiv {
+                                    height: 50vh;
+                                }
+                                .focusable:focus {
+ 
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+                              
+                            </style>
 
         <div class="row main_table_instruments_data mt-4" style="display: none;">
             <div class="col-md-5 col-lg-5 col-sm-12 left_main_strategy">
@@ -652,25 +691,31 @@
                     <div class="payoff_diagram filter_active_pl_greeks">PAYOFF DIAGRAM</div>
                     <div class="nav_pl_table ">P&L TABLE</div>
                     <div class="nav_greeks_table">GREEKS</div>
+                    <div class="nav_adjusments_table">ADJUSTMENTS</div>
+                    <div class="nav_stoploss_table">STOPLOSS</div>
+                    <div class="nav_history_table">HISTORY</div>
                 </div>
                 <div class="payoff_diagram_chart">
                     <div id="chartdiv" style="width: 100%; height: 400px;"></div>
-
+                    <div class="main_total_greeks_p_l d-flex justify-content-between mt-2">
+                        <div class="left_main_all_greeks d-flex gap-2">
+                            <p class="delta_total_main focusable" style="background: #e0e0e08f; padding: 0px 8px; margin-bottom: 0;" tabindex="0">Positional Delta: 100.07</p>
+                            <p class="theta_total_main focusable" style="background: #e0e0e08f; padding: 0px 8px; margin-bottom: 0;" tabindex="0">Theta: -16.3</p>
+                            <p class="gamma_total_main focusable" style="background: #e0e0e08f; padding: 0px 8px; margin-bottom: 0;" tabindex="0">Gamma: -0.01</p>
+                            <p class="vega_total_main focusable" style="background: #e0e0e08f; padding: 0px 8px; margin-bottom: 0;" tabindex="0">Vega: 0.17</p>
+                        </div>
+                        <div class="right_p_l">
+                            <p class="right_p_l_main focusable" style="background: #e0e0e08f; padding: 0px 8px; margin-bottom: 0;" tabindex="0">Total PNL: ₹ -1,625</p>
+                        </div>
+                    </div>
 
                 </div>
-                <style>
-                    .payoff_diagram_chart {
-                        height: 50vh;
-                    }
 
-                    .col-lg-5.left_main_strategy {
-                        width: 27.666667% !important;
-                    }
-
-                    .col-lg-6.right_table_greeks {
-                        width: 70% !important;
-                    }
-                </style>
+         
+                
+                
+           
+             
                 <div class="real_pl_table">
 
 
@@ -712,8 +757,32 @@
 
                     </table>
                 </div>
-            </div>
+
+<style>
+    .real_adjustment_table,.real_stoploss_table,.real_history_table{
+        width: 100%;
+    height: 88%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(72px);
+    }
+</style>
+<div class="real_adjustment_table">
+<p>Adjustment is under developement</p>
+
+</div>
+<div class="real_stoploss_table">
+    <p> StopLoss is under developement</p>
+</div>
+<div class="real_history_table">
+
+    <div id="trading-positions"></div>
+</div>
+   
         </div>
+        </div>
+
 
 
 
@@ -2046,6 +2115,27 @@
                 font-weight: 700;
                 font-size: 10px;
             }
+            .bg_indicator_sell{
+                background-color: #ffcdd2!important;
+    border-color: #ffcdd2!important;
+    color: #e53935!important;
+    caret-color: #e53935!important;
+    padding: 1px 10px;
+    border-radius: 2px;
+
+            }
+            .bg_indicator_buy{
+                color: #43a047!important;
+    caret-color: #43a047!important;
+                background-color: #c8e6c9!important;
+    border-color: #c8e6c9!important;
+    padding: 1px 10px;
+    border-radius: 2px;
+
+            }
+            .main_logic:hover{
+                box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+            }
         </style>
 
 
@@ -2251,36 +2341,72 @@
 
     <script>
         $(document).ready(function () {
-            $(".main_table_instruments_data ").hide();
-            $(".payoff_diagram_chart").show();
-            $(".real_pl_table").hide();
-            $(".real_greek_table").hide();
 
-            $(".payoff_diagram").on('click', function () {
-                $(".payoff_diagram").addClass('filter_active_pl_greeks');
-                $(".nav_pl_table").removeClass('filter_active_pl_greeks');
-                $(".nav_greeks_table").removeClass('filter_active_pl_greeks');
-                $(".payoff_diagram_chart").show();
-                $(".real_pl_table").hide();
-                $(".real_greek_table").hide();
-            });
-            $(".nav_pl_table").on('click', function () {
-                $(".nav_pl_table").addClass('filter_active_pl_greeks');
-                $(".nav_greeks_table").removeClass('filter_active_pl_greeks');
-                $(".payoff_diagram").removeClass('filter_active_pl_greeks');
-                $(".real_pl_table").show();
-                $(".real_greek_table").hide();
-                $(".payoff_diagram_chart").hide();
-            });
+            $(".main_table_instruments_data").hide();
+    $(".payoff_diagram_chart").show();
+    $(".real_pl_table").hide();
+    $(".real_greek_table").hide();
+    $(".real_adjustment_table").hide();
+    $(".real_stoploss_table").hide();
+    $(".real_history_table").hide();
 
-            $(".nav_greeks_table").on('click', function () {
-                $(".nav_pl_table").removeClass('filter_active_pl_greeks');
-                $(".nav_greeks_table").addClass('filter_active_pl_greeks');
-                $(".payoff_diagram").removeClass('filter_active_pl_greeks');
-                $(".real_pl_table").hide();
-                $(".real_greek_table").show();
-                $(".payoff_diagram_chart").hide();
-            });
+    $(".payoff_diagram").on('click', function () {
+        $(this).addClass('filter_active_pl_greeks');
+        $(".nav_pl_table, .nav_greeks_table, .nav_adjusments_table, .nav_stoploss_table, .nav_history_table")
+            .removeClass('filter_active_pl_greeks');
+        $(".payoff_diagram_chart").show();
+        $(".real_pl_table, .real_greek_table, .real_adjustment_table, .real_stoploss_table, .real_history_table").hide();
+    });
+
+    $(".nav_pl_table").on('click', function () {
+        $(this).addClass('filter_active_pl_greeks');
+        $(".payoff_diagram, .nav_greeks_table, .nav_adjusments_table, .nav_stoploss_table, .nav_history_table")
+            .removeClass('filter_active_pl_greeks');
+        $(".real_pl_table").show();
+        $(".real_greek_table, .payoff_diagram_chart, .real_adjustment_table, .real_stoploss_table, .real_history_table").hide();
+    });
+
+    $(".nav_greeks_table").on('click', function () {
+        $(this).addClass('filter_active_pl_greeks');
+        $(".nav_pl_table, .payoff_diagram, .nav_adjusments_table, .nav_stoploss_table, .nav_history_table")
+            .removeClass('filter_active_pl_greeks');
+        $(".real_greek_table").show();
+        $(".real_pl_table, .payoff_diagram_chart, .real_adjustment_table, .real_stoploss_table, .real_history_table").hide();
+    });
+
+    $(".nav_adjusments_table").on('click', function () {
+        $(this).addClass('filter_active_pl_greeks');
+        $(".nav_pl_table, .payoff_diagram, .nav_greeks_table, .nav_stoploss_table, .nav_history_table")
+            .removeClass('filter_active_pl_greeks');
+        $(".real_adjustment_table").show();
+        $(".real_pl_table, .payoff_diagram_chart, .real_greek_table, .real_stoploss_table, .real_history_table").hide();
+    });
+
+    $(".nav_stoploss_table").on('click', function () {
+        $(this).addClass('filter_active_pl_greeks');
+        $(".nav_pl_table, .payoff_diagram, .nav_greeks_table, .nav_adjusments_table, .nav_history_table")
+            .removeClass('filter_active_pl_greeks');
+        $(".real_stoploss_table").show();
+        $(".real_pl_table, .payoff_diagram_chart, .real_greek_table, .real_adjustment_table, .real_history_table").hide();
+    });
+
+    $(".nav_history_table").on('click', function () {
+        $(this).addClass('filter_active_pl_greeks');
+        $(".nav_pl_table, .payoff_diagram, .nav_greeks_table, .nav_adjusments_table, .nav_stoploss_table")
+            .removeClass('filter_active_pl_greeks');
+        $(".real_history_table").show();
+        $(".real_pl_table, .payoff_diagram_chart, .real_greek_table, .real_adjustment_table, .real_stoploss_table").hide();
+    });
+
+
+
+
+
+
+
+
+
+
             $(".reset_button").on('click', function () {
                 $(".main_table_instruments_data").hide();
                 $(".p_l_table").empty();
@@ -2397,7 +2523,7 @@
                 // Iterate over elements with class "indicator_edit_table"
                 $(".indicator_edit_table").each(function (index) {
                     var $this = $(this);
-                    console.log('$this', $this.text());
+                    // console.log('$this', $this.text());
 
                     var shortLongClass = $this.closest('tr').find('.short_long');
 
@@ -2405,7 +2531,7 @@
                         var value = parseFloat($this.text());
 
                         if (value === 0 || isNaN(value)) {
-                            console.log("Zero");
+                            // console.log("Zero");
                         } else {
                             if (value > 0) {
                                 value = -value; // Convert positive to negative
@@ -2413,17 +2539,17 @@
                                 value = Math.abs(value); // Convert negative to positive
                             }
                             $this.text(value.toFixed(2));
-                            console.log("Converted Value: " + value.toFixed(2));
+                            // console.log("Converted Value: " + value.toFixed(2));
                         }
                     } else {
-                        console.log('No');
+                        // console.log('No');
                     }
 
                     // Check if the corresponding exit_edit_curr is zero before calculating
                     if (index < current_values.length && $(".exit_edit_curr").eq(index).text() === "0") {
                         var value = current_values[index].toFixed(2);
                         $this.text(value);
-                        console.log("$     " + value);
+                        // console.log("$     " + value);
 
                         // Set the value in the corresponding .indicator_edit element using index
                         $(".indicator_edit").eq(index).text(value);
@@ -2442,13 +2568,69 @@
             var right_unique = 1
             var left_unique = 1
             var greek_unique = 1
+            var history_id = 1
 
             var indicator = $(".indicator_edit").text()
             var loss_profit = parseInt(indicator) < 0 ? "red-option-indicator" : "green-option-indicator";
             function addPosition(inst_type, lotSize, ltp, action, counterValue, strike_price, delta, theta, gamma, vega) {
-                //console.log(inst_type, lotSize, ltp, action, counterValue, strike_price);
+         
+    var currentDate = new Date(); // Get the current date and time
+    var timestamp = currentDate.toLocaleString(); // Convert the date to a readable string format
+
+    var tradingPosition = {
+        "history_id":history_id++,
+        "timestamp": timestamp,
+        "inst_type": inst_type,
+        "lotSize": lotSize,
+        "ltp": ltp,
+        "action": action,
+        "counterValue": counterValue,
+        "strike_price": strike_price,
+        "delta": delta,
+        "theta": theta,
+        "gamma": gamma,
+        "vega": vega
+    };
+
+    // Get existing positions from local storage
+    var existingPositions = JSON.parse(localStorage.getItem('TradingPositions')) || [];
+
+    // Add the new position to the array
+    existingPositions.push(tradingPosition);
+
+    // Store the updated array back into local storage
+    localStorage.setItem('TradingPositions', JSON.stringify(existingPositions));
+
+                
+// Display data in the custom format
+if (tradingPositions) {
+    var tradingPositionsDiv = document.getElementById('trading-positions');
+
+    tradingPositions.forEach(function (position) {
+        var positionDiv = document.createElement('div');
+        positionDiv.classList.add('trading-position');
+
+        var timestampDiv = document.createElement('div');
+        timestampDiv.classList.add('timestamp');
+        timestampDiv.textContent = position.timestamp;
+        positionDiv.appendChild(timestampDiv);
+
+        for (var key in position) {
+            if (key !== 'timestamp') {
+                var dataDiv = document.createElement('div');
+                dataDiv.classList.add('data-item');
+                dataDiv.textContent = key.toUpperCase() + ': ' + position[key];
+                positionDiv.appendChild(dataDiv);
+            }
+        }
+
+        tradingPositionsDiv.appendChild(positionDiv);
+    });
+}
 
                 var lot_size_filter = action === "sell" ? "-" : "+";
+                var long_short_indicator_bg = action === "sell" ? "bg_indicator_sell" : "bg_indicator_buy";
+                var long_short_indicator_text = action === "sell" ? "S" : "B";
 
 
                 // Create container for position
@@ -2457,6 +2639,7 @@
                 // Create elements for displaying position information
                 var positionInfo = `
                 <div class="instument_type_slot_strike_premium" id=${left_unique++}>
+                    <span class=${long_short_indicator_bg}>${long_short_indicator_text}</span>
                     <span class="main_lot_size_option_simulator" id="short_long"><span class="short_long" >${lot_size_filter}</span><span class="lot_size_option_simulator">${counterValue}</span>x</span>
                      <span class="instrument_type_edit" >${inst_type}</span> - ₹ <span class="ltp_edit">${ltp}</span> (<span class="indicator_edit">0</span>)
                   <span class="exit_price d-none">0</span> </div>
@@ -2464,6 +2647,7 @@
                     <i class="bi bi-pencil-square edit-button" data-bs-toggle="modal" data-bs-target="#editPositionModal"></i>
                     <i class="bi bi-trash-fill delete-button"></i>
                     <i class='bx bxs-circle green-option-indicator'></i>
+                    <i class='bx bx-repost flip-button'  title="Flip Position" ></i>
                 </div>
             `;
 
@@ -2550,7 +2734,7 @@
                     var exit_price = position.find('.exit_price').text()
 
                     $('#ltpInput').val(currentLTP);
-                    console.log(currentLTP);
+                    // console.log(currentLTP);
 
                     $('#exitPriceInput').val(exit_price);
                     $('#counterValueInput').val(parseFloat(currentCounterValue));
@@ -2642,14 +2826,21 @@
 
                 // Add the "Total" row at the end of the table
                 $(".p_l_table").append("<tr class='total-row'><td></td><td></td><td></td><td>Total P&L</td><td id='total_p_l'>0</td></tr>");
-                $(".real_greek_table_body").append("<tr class='total-greeks'><td>Total (in Decimals)</td><td id='delta_total'>0</td><td id='theta_total'>0</td><td id='gamma_total'>0</td><td id='vega_total'>0</td></tr>");
+                $(".real_greek_table_body").append("<tr class='total-greeks'><td>Total (in Decimals)</td><td class='delta_total'>0</td><td class='theta_total'>0</td><td class='gamma_total'>0</td><td class='vega_total'>0</td></tr>");
                 // Calculate and update max profit when a new position is added
 
+                var tradingPositions = JSON.parse(localStorage.getItem('TradingPositions'));
+      
                 updateTotalPAndL()
                 greeks_total()
             }
 
 
+
+
+
+
+     
 
             function updateTotalPAndL() {
                 var final_p_and_l = 0;
@@ -2680,6 +2871,19 @@
                 p_l_table.append("<tr class='total-row'><td></td><td></td><td></td><td>Total P&L</td><td id='total_p_l'>0</td></tr>");
 
                 p_l_table.find("#total_p_l").text(final_p_and_l); // Display it with 2 decimal places
+
+                var final_p_l_clr;
+if (final_p_and_l > 0) {
+    final_p_l_clr = "text-success";
+} else if (final_p_and_l < 0) {
+    final_p_l_clr = "text-danger";
+} else {
+    final_p_l_clr = "text-dark";
+}
+
+$(".right_p_l_main").text(`Total PNL: ₹ ${final_p_and_l} `).removeClass('text-success text-danger text-dark').addClass(final_p_l_clr);
+
+
             }
 
 
@@ -2726,10 +2930,15 @@
                 });
 
                 // Set the total values to the respective <td> elements using their IDs
-                $('#delta_total').text(parseFloat(totalDelta.toFixed(3)));
-                $('#theta_total').text(parseFloat(totalTheta.toFixed(3)));
-                $('#gamma_total').text(parseFloat(totalGamma.toFixed(3)));
-                $('#vega_total').text(parseFloat(totalVega.toFixed(3)));
+                $('.delta_total').text(parseFloat(totalDelta.toFixed(3)));
+                $('.theta_total').text(parseFloat(totalTheta.toFixed(3)));
+                $('.gamma_total').text(parseFloat(totalGamma.toFixed(3)));
+                $('.vega_total').text(parseFloat(totalVega.toFixed(3)));
+
+                $('.delta_total_main').text(` Positional Delta: ${parseFloat(totalDelta.toFixed(3))}`);
+                $('.theta_total_main').text(`Theta: ${parseFloat(totalTheta.toFixed(3))}`);
+                $('.gamma_total_main').text(`Gamma: ${parseFloat(totalVega.toFixed(3))}`);
+                $('.vega_total_main').text(`Vega:  ${parseFloat(totalVega.toFixed(3))}`);
 
 
 
@@ -2738,11 +2947,10 @@
                 $(".real_greek_table_body tr.total-greeks").remove();
                 // Add your positions here...
                 // Add the "Total" row at the end of the table
-                $(".real_greek_table_body").append("<tr class='total-greeks'><td>Total (in Decimals)</td><td id='delta_total'>" + totalDelta.toFixed(3) + "</td><td id='theta_total'>" + totalTheta.toFixed(3) + "</td><td id='gamma_total'>" + totalGamma.toFixed(3) + "</td><td id='vega_total'>" + totalVega.toFixed(3) + "</td></tr>");
+                $(".real_greek_table_body").append("<tr class='total-greeks'><td>Total (in Decimals)</td><td class='delta_total'>" + totalDelta.toFixed(3) + "</td><td class='theta_total'>" + totalTheta.toFixed(3) + "</td><td class='gamma_total'>" + totalGamma.toFixed(3) + "</td><td class='vega_total'>" + totalVega.toFixed(3) + "</td></tr>");
 
                 // Calculate and update max profit when a new position is added
             }
-
 
 
 
@@ -2774,7 +2982,7 @@
             //         var lotSize = parseInt(lotSizeCell);
             //         var strikePrice = parseFloat(strikePriceCell);
 
-            //         if (actionCell === "sell" || actionCell === "Sell") { // Consider both "sell" and "Sell"
+            //         if (actionCell === "sell" || actionCell === "Sell") { // Consclasser both "sell" and "Sell"
             //             var profit = ltp * lotSize;
             //             maxProfit += profit;
 
@@ -3018,7 +3226,7 @@
                 // Set up an event listener to update the prevOneDay_disable function whenever #startDate changes
                 startDateInput.on("change", function () {
                     updatePrevBtn = startDateInput.val(); // Save the new initial value
-                    console.log(updatePrevBtn);
+                    // console.log(updatePrevBtn);
                     $(".sample_startdate").val(updatePrevBtn)
                     prevOneDay_disable(); // Run the function
                 });
@@ -3332,7 +3540,7 @@
                         var cteateTime = response.map((currtime) => {
                             return currtime.time
                         })
-                        console.log(cteateTime);
+                        // console.log(cteateTime);
                         $(".time_formated").text(cteateTime[0])
                         // Handle the response from Django view
 
@@ -3578,7 +3786,7 @@
 
                                 var $this = $(this);
 
-                                setTimeout(function () {
+                            
                                     $this.closest(".simulator_option_tr")
                                         .find(".calls_action_btn, .puts_action_btn")
                                         .one("click", function (e) {
@@ -3586,18 +3794,21 @@
                                             $(".modal").hide();
                                         })
                                         .click();
+                                        $("#callSellRadio").prop('checked', true);
+                                        $("#putSellRadio").prop('checked', true);
 
                                     $("#call_add_position").click();
                                     $("#put_add_position").click();
 
                                     straddle_calculation("straddle")
                                   
-                                },); // Delay of 100ms
+                         
                             }
                         });
                     }
  
-     
+                    $("#callBuyRadio").prop('checked', true);
+                                        $("#callBuyRadio").prop('checked', true);
                 });
 
 
@@ -3640,14 +3851,14 @@
                             }
                         }
 
-                        console.log("Previous 5 Strike Prices:", prev5);
-                        console.log("Next 5 Strike Prices:", forw5);
+                        // console.log("Previous 5 Strike Prices:", prev5);
+                        // console.log("Next 5 Strike Prices:", forw5);
 
                         if (prev5.length === 5 && forw5.length === 5) {
                             var lastIndexPrev = prev5[prev5.length - 1];
                             var lastIndexForw = forw5[forw5.length - 1];
-                            console.log(lastIndexPrev)
-                            console.log(lastIndexForw)
+                            // console.log(lastIndexPrev)
+                            // console.log(lastIndexForw)
                             //console.log(lastIndexForw, lastIndexPrev);
 
                             // Find the closest row for lastIndexPrev and click on Auto_puts_short_click
@@ -3663,6 +3874,8 @@
                                 e.preventDefault();
                                 $(".modal").hide();
                             }).click();
+                            $("#callSellRadio").prop('checked', true);
+                                        $("#putSellRadio").prop('checked', true);
 
                             $("#call_add_position").click();
                             $("#put_add_position").click();
@@ -3672,7 +3885,8 @@
                         
                         }
                     }
-              
+                    $("#callBuyRadio").prop('checked', true);
+                                        $("#callBuyRadio").prop('checked', true);
                 });
 
 
@@ -4181,6 +4395,7 @@
                     var breakeven = 0;
                     var strike_price_all = 0;
                     var count = 0;
+                    var positive_premium= []
 
                     leftMyTable.find(".main_logic").each(function (index) {
                         var $parent = $(this);
@@ -4190,6 +4405,16 @@
                             var premium = parseFloat($parent.find(".ltp_edit").text());
                             var lot_size = parseFloat($parent.find(".lot_size_option_simulator").text());
                             var breakeven_premium = parseFloat($parent.find(".ltp_edit").text());
+                            var short_long = $parent.find(".short_long").text()
+                            console.log(short_long);
+
+                           if (short_long==="+") {
+console.log(premium);
+                            positive_premium.push(-premium)
+                            
+                           }else{
+                            positive_premium.push(Math.abs(premium))
+                           }
 
                             //console.log("Premium: " + premium);
                             //console.log("Lot Size: " + lot_size);
@@ -4218,6 +4443,7 @@
                         }
                     });
 
+                    console.log("Net Credit "    ,     positive_premium);
                     //console.log("Max Loss Value: " + max_loss_value);
 
                     // Calculate the average
@@ -5049,7 +5275,7 @@ var long_shorts=$(this).find(".short_long").text()
  var numericValue = requiredValue.replace(/\D/g, ''); // Extracting only the numbers
  main_strike_price_dynamic.push({numericValue,long_shorts,premiums,requiredStringValue})
 });
-console.log(main_strike_price_dynamic);
+// console.log(main_strike_price_dynamic);
 
 
 
@@ -5071,36 +5297,36 @@ function ULTRAMAX(a, b) {
 option_simulator_body.find(".simulator_strike").each(function() {
     var ultra_strike_price = parseInt($(this).text());
 
-    console.log("ultra_strike_price         "  + ultra_strike_price);
+    // console.log("ultra_strike_price         "  + ultra_strike_price);
 
 
     var tempArray = []; // Temporary array to store values
     main_strike_price_dynamic.forEach(function(item) {
         if (item.requiredStringValue === 'CE' && item.long_shorts === '+') {
-            console.log('Inside CE and + condition');
-            console.log(parseFloat(item.numericValue));
-            console.log(parseFloat(item.premiums));
-            console.log(ultra_strike_price);
+            // console.log('Inside CE and + condition');
+            // console.log(parseFloat(item.numericValue));
+            // console.log(parseFloat(item.premiums));
+            // console.log(ultra_strike_price);
             tempArray.push(ULTRAMAX(0, ultra_strike_price - parseFloat(item.numericValue)) -parseFloat( item.premiums));
         }
         if (item.requiredStringValue === 'CE' && item.long_shorts === '-') {
-            console.log('Inside CE and - condition');
+            // console.log('Inside CE and - condition');
             tempArray.push(parseFloat( item.premiums)-ULTRAMAX(0, ultra_strike_price - parseFloat(item.numericValue)) );
         }
         if (item.requiredStringValue === 'PE' && item.long_shorts === '+') {
-            console.log('Inside PE and + condition');
+            // console.log('Inside PE and + condition');
             tempArray.push(ULTRAMAX(0, parseFloat(item.numericValue) - ultra_strike_price) -parseFloat( item.premiums));
         }
         if (item.requiredStringValue === 'PE' && item.long_shorts === '-') {
-            console.log('Inside PE and - condition');
+            // console.log('Inside PE and - condition');
             tempArray.push(parseFloat( item.premiums)-ULTRAMAX(0, parseFloat(item.numericValue) - ultra_strike_price) );
         }
     });
-    console.log(tempArray);
+    // console.log(tempArray);
     resultArray.push(tempArray); // Push the tempArray into the resultArray
 });
 
-console.log(resultArray);
+// console.log(resultArray);
 
 
 var sumArray = []; // Array to store the sums
@@ -5116,7 +5342,7 @@ resultArray.forEach(function(array) {
 });
 
 // Logging the sums of each array in resultArray multiplied by lot_size
-console.log(sumArray);
+// console.log(sumArray);
 
 
 
@@ -5131,7 +5357,7 @@ var all_premium_chart= []
             $(".main_logic").each(function () {
                var premium_condition = $(this).find(".short_long").text()
              var premuim_values=parseFloat($(this).find(".ltp_edit").text())
-console.log(premium_condition);
+// console.log(premium_condition);
                if (premium_condition === "-") {
                 all_premium_chart.push(-Math.abs(premuim_values))
             }else{
@@ -5139,16 +5365,16 @@ console.log(premium_condition);
                 
                }
             })
-            console.log(all_premium_chart);
+            // console.log(all_premium_chart);
 
             var sum_all_premium_chart = all_premium_chart.reduce(function (a, b) {
     return a + b;
 }, 0);
 
-console.log("Sum of all elements in all_premium_chart array: ", sum_all_premium_chart);
+// console.log("Sum of all elements in all_premium_chart array: ", sum_all_premium_chart);
             // Your existing code to generate chart data goes here
             var option_simulator_body = $(".option_simulator_body");
-            console.log(option_simulator_body);
+            // console.log(option_simulator_body);
             const closest_value = parseInt($(".closest_value").text()); // Parse closest_value as an integer
             // Create a new array to store strike prices
             var strikePrices = [];
@@ -5225,9 +5451,9 @@ option_simulator_body.find(".simulator_strike").each(function () {
 });
 
 // Display the results
-console.log("Final Long Call New: ", final_long_call_new);
-console.log("Final Long Put New: ", final_long_put_new);
-console.log("Addition Result: ", addition_result);
+// console.log("Final Long Call New: ", final_long_call_new);
+// console.log("Final Long Put New: ", final_long_put_new);
+// console.log("Addition Result: ", addition_result);
 
 
 
@@ -5241,7 +5467,7 @@ console.log("Addition Result: ", addition_result);
           
             var final_p_l = []
             const priceDifferences = strikePrices.map((strikePrice) => Math.abs(closest_value - strikePrice));
-            console.log(priceDifferences);
+            // console.log(priceDifferences);
             priceDifferences.forEach((p_l) => {
                 final_p_l.push(-(sum_all_premium_chart - p_l) * parseInt(lot_size))
             });
@@ -5313,7 +5539,7 @@ var range = valueAxis.createSeriesRange(series);
 range.value = 0;
 range.endValue = Infinity;
 
-range.contents.fill = am4core.color("rgba(0, 255, 0, 0.9)"); // Set the fill color above 0 to green with opacity
+range.contents.fill = am4core.color("rgba(0, 255, 0, 1.0)"); // Set the fill color above 0 to green with opacity
 
 range.contents.fillOpacity = 0.2; // Adjust the opacity of the fill
 
@@ -5321,7 +5547,7 @@ var range2 = valueAxis.createSeriesRange(series);
 range2.value = -Infinity;
 range2.endValue = 0;
 
-range2.contents.fill = am4core.color("rgba(255, 0, 0, 0.9)"); // Set the fill color below 0 to red with opacity
+range2.contents.fill = am4core.color("rgba(255, 0, 0, 1.0)"); // Set the fill color below 0 to red with opacity
 range2.contents.fillOpacity = 0.2; // Adjust the opacity of the fill
 
 
@@ -5372,7 +5598,7 @@ chart.width = am4core.percent(100);
 chart.height = am4core.percent(100);
 
 
-console.log('Hi');
+// console.log('Hi');
 
            
         }
