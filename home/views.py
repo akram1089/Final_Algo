@@ -4320,6 +4320,8 @@ def vertical(request):
     return render(request, "vertical.html")
 def annotation(request):
     return render(request, "annotation.html")
+def content_management(request):
+    return render(request, "content_management.html")
 
 
 
@@ -4970,8 +4972,10 @@ def quote_data_zerodha(request):
         try:
             data = json.loads(request.body.decode('utf-8'))
             trading_quote = data.get('trading_quote')
+            # print(trading_quote)
             zerodha_trading_symbol = data.get('zerodha_trading_symbol')
-            
+            zerodha_lotSize = data.get('zerodha_lotSize')
+            # print(zerodha_lotSize)
             ohlc_data = kite.ohlc(zerodha_trading_symbol["tradingsymbol"])
             ohlc = ohlc_data[zerodha_trading_symbol["tradingsymbol"]]
             
@@ -4989,7 +4993,49 @@ def quote_data_zerodha(request):
 # Extract available cash balance
             available_cash = margins['available']['cash']
 
-  
+       # Initialize an empty list to store margin details
+            margin_details = []
+
+            for margin in zerodha_lotSize:
+                # print(margin["combinedString"])
+
+                try:
+                    # Fetch margin detail for single order
+                    order_param_single = {
+                        "exchange": "NFO",
+                        "tradingsymbol": margin["combinedString"],
+                        "transaction_type": margin["sell_buy_indicator"],
+                        "variety": "regular",
+                        "product": "NRML",
+                        "order_type": "LIMIT",
+                        "quantity": margin["final_lot_size_along_with_qty"],
+                        "price": float(margin["entryPrice"])  # Converting to float as it seems to be a price
+                    }
+                    # print(order_param_single)
+
+                    margin_detail = kite.order_margins([order_param_single])  # Wrap order_param_single in a list
+                    # print(margin_detail)
+                    logging.info("Required margin for single order: {}".format(margin_detail))
+                    
+                    # Append the margin detail to the list
+                    margin_details.append(margin_detail)
+                except Exception as e:
+                    logging.error("An error occurred: {}".format(e))
+
+
+     # Initialize a variable to store the total sum
+                total_sum = 0
+
+                for details in margin_details:
+                    for detail in details:
+                        total_sum += detail['total']
+
+                # Append the total sum to quotes_data
+                print(total_sum)
+
+# Return the quotes_data list as a JSON response
+
+
             # Create a list to store the quotes
             quotes_data = []
             
@@ -4999,6 +5045,7 @@ def quote_data_zerodha(request):
                 
                 # Fetch the quote for the stock symbol
                 stock_quote = kite.quote(stock_symbol)
+                # print(stock_quote)
                 
                 # Append the stock_quote to the quotes_data list
                 quotes_data.append(stock_quote)
@@ -5011,9 +5058,11 @@ def quote_data_zerodha(request):
                     'nifty_ltp': nifty_ltp,
                     'percentage_change': percentage_change,
                     'profile': profile,
-                    'user_id': user_id
+                    'user_id': user_id,
+                    'total_sum': total_sum
                 }
             })
+            # print(quotes_data)
             
             # Return the quotes_data list as a JSON response
             return JsonResponse(quotes_data, safe=False)
@@ -5739,6 +5788,8 @@ def short_iron_condor(request):
 
 def double_condor(request):
     return render(request , "doublecondor_page.html")
+def test(request):
+    return render(request , "test.html")
 
 
 
@@ -5758,3 +5809,180 @@ def offer_for_sale(request):
      all_data = get_ofs_res.json()
      all_ofs_data = all_data
      return JsonResponse(all_ofs_data)
+
+
+
+
+from .models import Note
+from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import csrf_exempt
+
+
+@login_required
+@csrf_exempt
+def save_note(request):
+    if request.method == "POST":
+        text = request.POST.get('text')
+        user = request.user
+        existing_note = Note.objects.filter(user=user).first()
+        if existing_note:
+            existing_note.text = text
+            existing_note.save()
+            return JsonResponse({'status': 'success', 'message': 'Note updated successfully'})
+        else:
+            new_note = Note.objects.create(text=text, user=user)
+            new_note.save()
+            return JsonResponse({'status': 'success', 'message': 'Note saved successfully'})
+    else:
+        return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
+
+@login_required
+def get_notes(request):
+    notes = Note.objects.filter(user=request.user)
+    notes_data = list(notes.values())  # Convert queryset to a list of dictionaries
+    return JsonResponse(notes_data, safe=False)
+
+
+
+
+# views.py
+
+from django.http import JsonResponse
+from .models import my_strategies
+from django.core import serializers
+
+@csrf_exempt
+@login_required
+def save_strategy(request):
+    if request.method == 'POST':
+        strategy_input = request.POST.get('strategy_input', None)
+        trading_positions = request.POST.get('trading_positions', None)  # Get trading positions
+        user = request.user  # Assuming you have a way to retrieve the current user
+        if strategy_input and trading_positions and user:
+            strategy = my_strategies.objects.create(user=user, strategy_name=strategy_input, trading_positions=trading_positions)
+            strategy.save()
+            return JsonResponse({'message': 'Strategy saved successfully.'})
+        else:
+            return JsonResponse({'message': 'Error saving strategy.'}, status=400)
+
+
+def get_all_strategies(request):
+    strategies = my_strategies.objects.filter(user=request.user)
+    strategy_data = []
+    for strategy in strategies:
+        trading_positions = json.loads(strategy.trading_positions)
+        strategy_data.append({
+            'id': strategy.id,
+            'user_id': strategy.user_id,
+            'strategy_name': strategy.strategy_name,
+            'trading_positions': trading_positions
+        })
+
+    return JsonResponse({'strategy_data': strategy_data}, safe=False)
+
+
+
+
+
+# views.py
+
+from django.http import JsonResponse
+from .models import my_strategies
+
+def delete_strategy(request):
+    if request.method == 'POST':
+        strategy_id = request.POST.get('strategy_id', None)
+        if strategy_id:
+            try:
+                strategy = my_strategies.objects.get(id=strategy_id)
+                strategy.delete()
+                return JsonResponse({'message': 'Strategy deleted successfully.'})
+            except my_strategies.DoesNotExist:
+                return JsonResponse({'message': 'Strategy does not exist.'}, status=404)
+        else:
+            return JsonResponse({'message': 'Invalid strategy ID.'}, status=400)
+    else:
+        return JsonResponse({'message': 'Invalid request method.'}, status=405)
+
+
+
+# views.py
+
+from django.http import JsonResponse
+from .models import my_strategies
+
+def get_unique_strategy(request):
+    if request.method == 'POST':
+        strategy_id = request.POST.get('strategy_id', None)
+        print(strategy_id)
+        if strategy_id:
+            try:
+                strategy = my_strategies.objects.get(id=strategy_id)
+                strategy_data = {
+                    'id': strategy.id,
+                    'user_id': strategy.user_id,
+                    'strategy_name': strategy.strategy_name,
+                    'trading_positions': strategy.trading_positions
+                }
+                return JsonResponse({'strategy_data': strategy_data})
+            except my_strategies.DoesNotExist:
+                return JsonResponse({'message': 'Strategy does not exist.'}, status=404)
+        else:
+            return JsonResponse({'message': 'Invalid strategy ID.'}, status=400)
+    else:
+        return JsonResponse({'message': 'Invalid request method.'}, status=405)
+
+
+
+# views.py
+
+from django.http import JsonResponse
+from .models import my_strategies
+
+def update_strategy(request):
+    if request.method == 'POST':
+        strategy_id = request.POST.get('strategy_id', None)
+        updated_strategy_name = request.POST.get('updated_strategy_name', None)
+        if strategy_id and updated_strategy_name:
+            try:
+                strategy = my_strategies.objects.get(id=strategy_id)
+                strategy.strategy_name = updated_strategy_name
+                strategy.save()
+                return JsonResponse({'message': 'Strategy updated successfully.'})
+            except my_strategies.DoesNotExist:
+                return JsonResponse({'message': 'Strategy does not exist.'}, status=404)
+        else:
+            return JsonResponse({'message': 'Invalid strategy ID or updated name.'}, status=400)
+    else:
+        return JsonResponse({'message': 'Invalid request method.'}, status=405)
+
+
+
+from django.http import JsonResponse
+import requests
+
+def fetch_indices_data(request):
+    symbols = ["NIFTY", "NIFTY+BANK", "FINNIFTY", "NIFTY+NEXT+50"]
+    data_list = []
+
+    for symbol in symbols:
+        url = f"https://webapi.niftytrader.in/webapi/symbol/today-spot-data?symbol={symbol}"
+        headers = {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
+            "Accept-Language": "en-US,en;q=0.9",
+            "Accept-Encoding": "gzip, deflate, br",
+            "Connection": "keep-alive"
+        }
+
+        response = requests.get(url, headers=headers)
+        if response.status_code == 200:
+            data = response.json()
+            data_list.append(data)
+        else:
+            return JsonResponse({"error": f"Failed to fetch data for symbol: {symbol}"})
+
+    final_indices_data = []
+    for data in data_list:
+        final_indices_data.append(data["resultData"])
+
+    return JsonResponse(final_indices_data, safe=False)

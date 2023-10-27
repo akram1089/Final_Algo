@@ -270,6 +270,23 @@ urlpatterns = [
     path('short_iron_condor', views.short_iron_condor, name='short_iron_condor'),
     path('double_condor', views.double_condor, name='double_condor'),
     path('offer_for_sale', views.offer_for_sale, name='offer_for_sale'),
+    path('test', views.test, name='test'),
+    path('content_management', views.content_management, name='content_management'),
+
+    path('save_note', views.save_note, name='save_note'),
+    path('get_notes', views.get_notes, name='get_notes'),
+    path('save_strategy', views.save_strategy, name='save_strategy'),
+    path('get_all_strategies', views.get_all_strategies, name='get_all_strategies'),
+    path('delete_strategy', views.delete_strategy, name='delete_strategy'),
+    path('get_unique_strategy', views.get_unique_strategy, name='get_unique_strategy'),
+    path('update_strategy', views.update_strategy, name='update_strategy'),
+
+
+    path('fetch_indices_data', views.fetch_indices_data, name='fetch_indices_data'),
+
+
+    # other URL configurations
+
 
 
 
