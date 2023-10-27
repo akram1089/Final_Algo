@@ -705,7 +705,6 @@
           PerChange: stock.Return,
         });
       });
-     
 
       var chart = am4core.create("chartdiv", am4charts.XYChart);
       chart.paddingBottom = 30; // Add some padding at the bottom to accommodate the labels
@@ -723,7 +722,7 @@
       var categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
       categoryAxis.dataFields.category = "company_name";
       categoryAxis.title.text = "Company Name";
-   
+
       // Create value axis (PerChange)
       var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
       valueAxis.title.text = "PerChange";
@@ -746,15 +745,24 @@
       });
 
       var minPerChange = Infinity;
-  chartData.forEach(function (dataItem) {
-    if (dataItem.PerChange < minPerChange) {
-      minPerChange = dataItem.PerChange;
-    }
-  });
+      chartData.forEach(function (dataItem) {
+        if (dataItem.PerChange < minPerChange) {
+          minPerChange = dataItem.PerChange;
+        }
+      });
 
-  if (minPerChange > 0) {
-    valueAxis.min = 0;
-  }
+      if (minPerChange > 0) {
+        valueAxis.min = 0;
+      }
+
+var allNegative = chartData.every(function (dataItem) {
+  return dataItem.PerChange < 0;
+});
+
+if (allNegative) {
+  valueAxis.max = 0;
+}
+
 
       // Create a vertical line at the maximum PerChange value
       var maxLine = valueAxis.axisRanges.create();
