@@ -1,3 +1,5 @@
+from django.utils import timezone  # Import 'timezone' from 'django.utils'
+
 from django.db import models
 
 from django.contrib.auth.models import AbstractUser
@@ -178,8 +180,11 @@ class Customer_feedback(models.Model):
     rating_scale = models.CharField(max_length=50)
     suggestion = models.TextField(max_length=300)
     frnd_recommend = models.BooleanField(default=True)
-    def _str_(self):
-        return self.user.username
+    def __str__(self):  
+        return f"{self.user.email}"
+    
+
+
 
 
 class Subscriber(models.Model):
@@ -201,3 +206,21 @@ class ZerodhaAPIConfig(models.Model):
 
     def __str__(self):
         return f"{self.user}"
+
+
+class Note(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    text = models.TextField()
+
+    def __str__(self):
+        return self.text[:50]
+    
+
+
+class my_strategies(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    strategy_name = models.CharField(max_length=100)
+    trading_positions = models.TextField()
+    def __str__(self):
+        return self.strategy_name
+

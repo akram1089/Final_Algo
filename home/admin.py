@@ -21,6 +21,9 @@ from.models import ContactUs
 from.models import Customer_feedback
 from.models import Subscriber
 from.models import ZerodhaAPIConfig
+from.models import Note
+from.models import my_strategies
+
 # from.models import StockListing
 
 
@@ -46,6 +49,9 @@ admin.site.register(ContactUs)
 admin.site.register(Customer_feedback)
 admin.site.register(Subscriber)
 admin.site.register(ZerodhaAPIConfig)
+admin.site.register(Note)
+admin.site.register(my_strategies)
+
 # admin.site.register(StockListing)
 
 
