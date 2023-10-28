@@ -935,99 +935,107 @@ if (condition_of_filter) {
         console.log(listed_ofs);
         $("#main_event_modal").empty();
         $("#recently_ofs_table").empty();
-        var table = $("<table>").addClass("table ofs_table")
-        var thead = $("<thead>");
-        var tbody = $("<tbody>");
-        var headerRow = `
-        <tr>
-          <th>Company</th>
-          <th>Settled On</th>
-          <th>Settled Price (₹) </th>
-          <th>Settled Price (Post Retail Discount) (₹)</th>
-          <th>% Change After Allotment</th>
-        </tr>
-      `;
-        thead.append(headerRow);
-        if (listed_ofs.length === 0) {
-            $("#recently_ofs_table").append("<tr><td colspan='5' class='text-danger'>No data found</td></tr>");
-        } else {
-            $("#table4").empty()
-            listed_ofs.forEach(element => {
-            var rowHTML = `
+        $("#table4").empty()
+
+        if(listed_ofs.length > 0){
+
+            var table = $("<table>").addClass("table ofs_table")
+            var thead = $("<thead>");
+            var tbody = $("<tbody>");
+            var headerRow = `
             <tr>
-              <td>${element.Name}</br>  LTP:${element.LTP} | <span class= " ${(element.ChangeLTP)>=0? "text-success": "text-danger"}"> ${element.ChangeLTP} (${element.ChangeLTPPer}%) </span></td>
-              <td>${element.AllottedOn.split("T")[0]}</td>
-              <td>${element.AllotmentPrice !== null ? element.AllotmentPrice : "-"}</td>
-              <td>${element.AllotmentPriceAfterDiscount !== null ? AllotmentPriceAfterDiscount : "-"}</td>
-              <td>${typeof element.chngpriceper === 'number' && !isNaN(element.chngpriceper) ? parseFloat(element.chngpriceper).toFixed(2) : "-"}</td>
+              <th>Company</th>
+              <th>Settled On</th>
+              <th>Settled Price (₹) </th>
+              <th>Settled Price (Post Retail Discount) (₹)</th>
+              <th>% Change After Allotment</th>
             </tr>
           `;
-              tbody.append(rowHTML);
-        });
-        table.append(thead, tbody);
-        $("#table4").append(table)
-        
+            thead.append(headerRow);
+            $("#table4").empty()
+                listed_ofs.forEach(element => {
+                var rowHTML = `
+                <tr>
+                  <td>${element.Name}</br>  LTP:${element.LTP} | <span class= " ${(element.ChangeLTP)>=0? "text-success": "text-danger"}"> ${element.ChangeLTP} (${element.ChangeLTPPer}%) </span></td>
+                  <td>${element.AllottedOn.split("T")[0]}</td>
+                  <td>${element.AllotmentPrice !== null ? element.AllotmentPrice : "-"}</td>
+                  <td>${element.AllotmentPriceAfterDiscount !== null ? AllotmentPriceAfterDiscount : "-"}</td>
+                  <td>${typeof element.chngpriceper === 'number' && !isNaN(element.chngpriceper) ? parseFloat(element.chngpriceper).toFixed(2) : "-"}</td>
+                </tr>
+              `;
+                  tbody.append(rowHTML);
+            });
+            table.append(thead, tbody);
+            $("#table4").append(table)
+        }
+        else{
+            var h3Element = $("<h3 class='text-center text-danger'>").text("No Data Available");
+                $("#table4").html(h3Element);
         }
         
     } 
     else if (initial_ofs_filter === "OFSOngoing") {
         var listed_ofs = data.OFSOngoing;
         console.log(listed_ofs);
-        var table = $("<table>").addClass("table ofs_table")
-        var thead = $("<thead>");
-        var tbody = $("<tbody>");
-        $("#main_event_modal").empty();
-        $("#recently_ofs_table").empty();
-        
-        var headerRow = `
-        <tr>
-          <th>Company Name</th>
-          <th>Floor Price</th>
-          <th>Min Bid Amount</th>
-          <th>Open Date</th>
-          <th>Close Date</th>
-          <th>Indicative Price</th>
-          <th>No. of Times Subscribed</th>
-        </tr>
-      `;
-      thead.append(headerRow);
-      if (data.OFSUpcoming === null) {
-            var noDataMessage = `
-          <tr>
-            <td colspan="5">No data found</td>
-          </tr>
-        `;
-        tbody.append(noDataMessage);
-       }
-       else{
         $("#table4").empty()
-        listed_ofs.forEach(element => {
-            var rowHTML = `
+
+        if(listed_ofs.length > 0){
+            var table = $("<table>").addClass("table ofs_table")
+            var thead = $("<thead>");
+            var tbody = $("<tbody>");
+            $("#main_event_modal").empty();
+            $("#recently_ofs_table").empty();
+            
+            var headerRow = `
             <tr>
-              <td>${element.Name} </br>  LTP:${element.LTP} | <span class= " ${(element.ChangeLTP)>=0? "text-success": "text-danger"}"> ${element.ChangeLTP} (${element.ChangeLTPPer}%) </span></td>
-              <td>${element.FloorPrice}</td>
-              <td>${element.MinBidAmount !== null ? element.MinBidAmount : "-"}</td>
-              <td>${element.OPENDATE.split("T")[0]}</td>
-              <td>${element.CLOSDATE.split("T")[0]}</td>
-              <td>${element.IndicativePrice  !== null ? element.IndicativePrice : "-"}</td>
-              <td>${element.NoofTimesSubscribed !== null ? element.NoofTimesSubscribed : "-"}</td>
+              <th>Company Name</th>
+              <th>Floor Price</th>
+              <th>Min Bid Amount</th>
+              <th>Open Date</th>
+              <th>Close Date</th>
+              <th>Indicative Price</th>
+              <th>No. of Times Subscribed</th>
             </tr>
           `;
-              tbody.append(rowHTML);
-        });
-        table.append(thead, tbody);
-        $("#table4").append(table)
-       }
+          thead.append(headerRow);
+          $("#table4").empty()
+            listed_ofs.forEach(element => {
+                var rowHTML = `
+                <tr>
+                  <td>${element.Name} </br>  LTP:${element.LTP} | <span class= " ${(element.ChangeLTP)>=0? "text-success": "text-danger"}"> ${element.ChangeLTP} (${element.ChangeLTPPer}%) </span></td>
+                  <td>${element.FloorPrice}</td>
+                  <td>${element.MinBidAmount !== null ? element.MinBidAmount : "-"}</td>
+                  <td>${element.OPENDATE.split("T")[0]}</td>
+                  <td>${element.CLOSDATE.split("T")[0]}</td>
+                  <td>${element.IndicativePrice  !== null ? element.IndicativePrice : "-"}</td>
+                  <td>${element.NoofTimesSubscribed !== null ? element.NoofTimesSubscribed : "-"}</td>
+                </tr>
+              `;
+                  tbody.append(rowHTML);
+            });
+            table.append(thead, tbody);
+            $("#table4").append(table)
+           
+        }
+        else{
+            var h3Element = $("<h3 class='text-center text-danger'>").text("No Data Available");
+            $("#table4").html(h3Element);
+        }
        
 
            
     
     }
 
+
+    // OFSUpcoming list
     else if (initial_ofs_filter==="OFSUpcoming") {
         var listed_ofs = data.OFSUpcoming;
         console.log(listed_ofs);
-        var table = $("<table>").addClass("table ofs_table")
+        $("#table4").empty()
+
+        if(listed_ofs.length > 0){
+            var table = $("<table>").addClass("table ofs_table")
         var thead = $("<thead>");
         var tbody = $("<tbody>");
         $("#main_event_modal").empty();
@@ -1042,17 +1050,7 @@ if (condition_of_filter) {
         </tr>
       `;
       thead.append(headerRow);
-      if (data.OFSUpcoming === null) {
-        //     var noDataMessage = `
-        //   <tr>
-        //     <td colspan="5">No data found</td>
-        //   </tr>
-        // `;
-        // tbody.append(noDataMessage);
-        console.log("no data found");
-       }
-       else{
-        $("#table4").empty()
+      $("#table4").empty()
         listed_ofs.forEach(element => {
             var rowHTML = `
             <tr>
@@ -1067,64 +1065,65 @@ if (condition_of_filter) {
         });
         table.append(thead, tbody);
         $("#table4").append(table)
-       }
 
+        }
+        else{
+            var h3Element = $("<h3 class='text-center text-danger'>").text("No Data Available");
+            $("#table4").html(h3Element);
+        }
+        
             
     }
 
+    // OFS AboutList
     else if (initial_ofs_filter==="OFSAboutList") {
         var listed_ofs = data.OFSAboutList;
         console.log(listed_ofs);
-        var table = $("<table>").addClass("table ofs_table")
-        var thead = $("<thead>");
-        var tbody = $("<tbody>");
-        $("#main_event_modal").empty();
-        $("#recently_ofs_table").empty();
-        var headerRow = `
-        <tr>
-          <th>Company Name</th>
-          <th>Floor Price</th>
-          <th>List Date</th>
-          <th>Indicative Price</th>
-          <th>No. of Times Subscribed</th>
-        </tr>
-      `;
-       thead.append(headerRow);
-       if (data.OFSAboutList === null) {
-            var noDataMessage = `
-          <tr>
-            <td colspan="5">No data found</td>
-          </tr>
-        `;
-        tbody.append(noDataMessage);
-       }
-       else{
         $("#table4").empty()
-        listed_ofs.forEach(element => {
-            var rowHTML = `
+        if(listed_ofs.length > 0){
+
+            var table = $("<table>").addClass("table ofs_table")
+            var thead = $("<thead>");
+            var tbody = $("<tbody>");
+            $("#main_event_modal").empty();
+            $("#recently_ofs_table").empty();
+            var headerRow = `
             <tr>
-              <td>${element.Name} </br>  LTP:${element.LTP} | <span class= " ${(element.ChangeLTP)>=0? "text-success": "text-danger"}"> ${element.ChangeLTP} (${element.ChangeLTPPer}%)</span></td>
-              <td>${element.FloorPrice}</td>
-              <td>${element.AllotmentDate.split("T")[0]}</td>
-              <td>${element.IndicativePrice !== null ? element.IndicativePrice: "-"}</td>
-              <td>${element.NoofTimesSubscribed !== null ? element.NoofTimesSubscribed : "-" }</td>
+              <th>Company Name</th>
+              <th>Floor Price</th>
+              <th>List Date</th>
+              <th>Indicative Price</th>
+              <th>No. of Times Subscribed</th>
             </tr>
           `;
-              tbody.append(rowHTML);
-        });
-        table.append(thead, tbody);
-        $("#table4").append(table)
-       }
+           thead.append(headerRow);
+           
+            listed_ofs.forEach(element => {
+                var rowHTML = `
+                <tr>
+                  <td>${element.Name} </br>  LTP:${element.LTP} | <span class= " ${(element.ChangeLTP)>=0? "text-success": "text-danger"}"> ${element.ChangeLTP} (${element.ChangeLTPPer}%)</span></td>
+                  <td>${element.FloorPrice}</td>
+                  <td>${element.AllotmentDate.split("T")[0]}</td>
+                  <td>${element.IndicativePrice !== null ? element.IndicativePrice: "-"}</td>
+                  <td>${element.NoofTimesSubscribed !== null ? element.NoofTimesSubscribed : "-" }</td>
+                </tr>
+              `;
+                  tbody.append(rowHTML);
+            });
+            table.append(thead, tbody);
+            $("#table4").append(table)
+        }
+        else{
+            var h3Element = $("<h3 class='text-center text-danger'>").text("No Data Available");
+            $("#table4").html(h3Element);
+        }
             
     }
     $("#ofs_table").DataTable();
 
 }
 
-
-
- 
-                 
+   
                     },
                 })
             }
