@@ -45,6 +45,14 @@ font-size: 23px;
     .broker_name{
         padding: 2px 11px;color: white;border-radius: 5px;
     }
+    .parent_div {
+        border-radius: 10px;
+        overflow: hidden; /* Ensures the border-radius is applied properly */
+    }
+    #api_config_table_wrapper{
+        display: flex;
+    flex-direction: column;
+    }
 </style>
 <div class="main_broker_title mt-2">
     <h5>   Broker Details</h5>
@@ -52,7 +60,7 @@ font-size: 23px;
 <div class="main_all_broker_table table-responsive-md mt-3">
 
 
-    <table id="api_config_table" class="display table  table-bordered">
+    <table id="api_config_table" class="display table  table-bordered" style="width: -webkit-fill-available;">
         <thead>
             <tr>
                 <!-- <th>Email</th> -->
@@ -69,7 +77,6 @@ font-size: 23px;
         </tbody>
     </table>
 </div>
-
 <script>
     $(document).ready(function() {
         $.ajax({
@@ -123,12 +130,16 @@ font-size: 23px;
                             }
                         },
                         { data: 'api_added_at' }
-                    ]
+                    ],
+                    drawCallback: function( settings ) {
+                        $('#api_config_table').wrap('<div class="parent_div"></div>');
+                    }
                 });
             }
         });
     });
 </script>
+
 
 
 
