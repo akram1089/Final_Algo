@@ -1,0 +1,137 @@
+{% extends "base_dashboard.html" %}
+{% load static %}
+{% block dashboard_body %}
+
+
+<style>
+
+    #api_config_table thead tr{
+        padding: 12px 15px !important;
+    font-size: 12px !important;
+    text-transform: uppercase !important;
+    background: #4399eb !important;
+    color: #fff !important;
+    }
+    #dataTables_length,#api_config_table_filter{
+        margin-bottom: 1rem;
+    }
+    #api_config_table tbody tr:nth-child(odd) {
+        background-color: #FFF;
+    }
+
+    #api_config_table tbody tr:nth-child(even) {
+        background-color: #f0f7fd !important;
+    }
+
+    tbody tr:hover td:first-child {
+  color: #4399eb;
+}
+.btn_edit_broker{
+
+font-size: 23px;
+    color: gray;
+    font-weight: 500 !important;
+}
+    .btn_edit_broker:hover{
+        color: green;
+    }
+    .btn_delete_boker{
+        font-size: 22px;
+        color: gray;
+    }
+    .btn_delete_boker:hover{
+        color: rgb(207 0 0)
+    }
+    .broker_name{
+        padding: 2px 11px;color: white;border-radius: 5px;
+    }
+</style>
+<div class="main_broker_title mt-2">
+    <h5>   Broker Details</h5>
+</div>
+<div class="main_all_broker_table table-responsive-md mt-3">
+
+
+    <table id="api_config_table" class="display table  table-bordered">
+        <thead>
+            <tr>
+                <!-- <th>Email</th> -->
+                <th>Broker</th>
+                <th>App Name</th>
+                <th>API Key</th>
+                <th>Secret Key</th>
+                <th>Access Token</th>
+                <th>Action</th>
+                <th>API Added At</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $.ajax({
+            url: "/zerodha_api_config", // Replace with your Django API endpoint
+            type: "GET",
+            dataType: "json",
+            success: function(data) {
+                $('#api_config_table').DataTable({
+                    data: data,
+                    columns: [
+                        { 
+                            data: 'brokers',
+                            render: function(data, type, row) {
+                                if (data === 'zerodha') {
+                                    return '<span class="broker_name" style="background-color: #ef8400;">' + data + '</span>';
+                                } else if (data === 'upstocks') {
+                                    return '<span class="broker_name" style="background-color: #015FA5; color: white;">' + data + '</span>';
+                                 
+                                } else if (data === 'angelone') {
+                                    return '<span class="broker_name" style="background-color: #11AF4B; color: white;">' + data + '</span>';
+                                
+                                
+                                } else if (data === 'fyers') {
+                                    return '<span class="broker_name" style="background-color: #436AF5; color: white;">' + data + '</span>';
+                                
+                                
+                                } else if (data === 'icicidirectbreeze') {
+                                    return '<span class="broker_name" style="background-color: #B02A30; color: white;">' + data + '</span>';
+                                } 
+                                
+                                else {
+                                    return data;
+                                }
+                            }
+                        },
+                        { data: 'app_name' },
+                        { data: 'api_key' },
+                        { data: 'secret_key' },
+                        { data: 'access_token' },
+                        {
+                            data: null,
+                            render: function (data, type, row) {
+                                return `
+                                <div style="display: flex;justify-content: center;">
+                                <div class='d-flex gap-3'>
+                                <a href="#" ><i class="bx bx-edit btn_edit_broker"></i></a>
+                                    <a href="#" class=""><i class="bi bi-trash-fill btn_delete_boker"></i></a>
+                                </div>
+                                </div>
+                                `
+                            }
+                        },
+                        { data: 'api_added_at' }
+                    ]
+                });
+            }
+        });
+    });
+</script>
+
+
+
+
+
+{% endblock dashboard_body %}

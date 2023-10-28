@@ -201,6 +201,7 @@ class ZerodhaAPIConfig(models.Model):
     app_name = models.CharField(max_length=100)
     api_key = models.TextField()  # Change from CharField to TextField
     secret_key = models.TextField()  # Change from CharField to TextField
+    brokers = models.TextField(default='zerodha')  # Set default value to 'zerodha'
     access_token = models.TextField()  # Change from CharField to TextField
     api_added_at = models.DateTimeField()
 

@@ -283,6 +283,14 @@ urlpatterns = [
 
 
     path('fetch_indices_data', views.fetch_indices_data, name='fetch_indices_data'),
+    path('account_details', views.account_details, name='account_details'),
+    path('broker_details', views.broker_details, name='broker_details'),
+    path('zerodha_api_config', views.zerodha_api_config, name='zerodha_api_config'),
+
+    path('main_contributor/<str:contributor>/', views.main_contributor, name='main_contributor'),
+  
+
+
 
 
     # other URL configurations
