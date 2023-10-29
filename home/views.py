@@ -4553,7 +4553,7 @@ def get_zerodha_config(request):
     modified_data = [
         {
             **item,
-            'connected': 'Connected' if item['access_token'] and item['api_added_at'].date() == current_date else 'Please connect'
+            'connected': 'Connected' if item['access_token'] and item['api_added_at'].date() == current_date else 'Connect'
         }
         for item in data
     ]
@@ -5799,7 +5799,7 @@ def delete_strategy(request):
 
 from django.http import JsonResponse
 from .models import my_strategies
-
+@csrf_exempt
 def get_unique_strategy(request):
     if request.method == 'POST':
         strategy_id = request.POST.get('strategy_id', None)

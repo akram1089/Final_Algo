@@ -1343,9 +1343,26 @@
 
 
 
-      $("#Activate_broker_btn").click(function () {
-        $("#active_broker_modal").slideToggle();
-      });
+      // $("#Activate_broker_btn").click(function () {
+      //   $("#active_broker_modal").slideToggle();
+      // });
+      
+      $("#Activate_broker_btn").click(function (e) {
+    e.stopPropagation(); // Prevent the click event from propagating to the document
+    $("#active_broker_modal").slideToggle();
+});
+
+// Close the modal when a click occurs anywhere outside of the modal
+$(document).on("click", function (e) {
+    if (!$("#active_broker_modal").is(e.target) && $("#active_broker_modal").has(e.target).length === 0) {
+        $("#active_broker_modal").slideUp();
+    }
+});
+
+
+
+
+
     });
 
 
@@ -3017,7 +3034,7 @@
   <style>
     .main_action_btn_api {
       display: flex;
-      align-items: center;
+      /* align-items: center; */
     }
 
     @supports (-webkit-appearance: none) or (-moz-appearance: none) {
@@ -3218,12 +3235,15 @@
     }
 
     .delete_api_btn {
-      color: #d90000;
+      color: #767f88;
       font-size: 28px !important;
       padding: 3px;
       border-radius: 3px;
       cursor: pointer;
       transition: 0.3s;
+    }
+    .delete_api_btn:hover{
+      color: red;
     }
 
     .btn_success {
@@ -3517,7 +3537,7 @@
               all_data += `
         <div class='main_api_card'>
             <div class="active_inactive_btn d-flex align-items-baseline gap-3"> 
-              <i class='bx bx-help-circle' data-title="${item.api_added_at}"></i>
+              
 
                 
                 <div class="checkbox-wrapper-14 ${switch_btn_visibility}">
@@ -3528,17 +3548,17 @@
 
             <div class="main_api_info">
                 <div class="app_name_main">
-                    <p class="text-success">App Name: </p>
+                    <p class="text-primary">App Name: </p>
                     <p>${item.app_name}</p>
                 </div>
                
                 <div class="api_key_main">
-                    <p>Api Key:</p>
+                    <p class=text-primary>Api Key:</p>
                     <p>${item.api_key}</p>
                 </div>
 
                 <div class="secret_key_main">
-                    <p>Secret Key: </p>
+                    <p class=text-primary>Secret Key: </p>
                     <p>${item.secret_key}</p>
                 </div>
 
@@ -3548,13 +3568,13 @@
                 </div>
                 
                 <div class="access_teken">
-                    <p> Access Token :</p>
+                    <p class="text-primary"> Access Token <sup><i class='bx bx-help-circle' data-title="${item.api_added_at}"></i></sup> :</p>
                     <p>${item.access_token}</p>
                 </div>
                 <div class="api_actions">
                     <div class="main_action_btn_api">
                         <button class="${connected_btn_class}" data-id="${item.id}">${connected_varifications}</button>
-                        <i class='bx bxs-trash-alt delete_api_btn fs-3 cursor-pointer' data-id="${item.id}"></i>
+                        <i class='bi bi-trash-fill delete_api_btn fs-3 cursor-pointer' data-id="${item.id}"></i>
                     </div>
                 </div>
             </div>
