@@ -317,8 +317,13 @@
 
   .strategy_cost_table,
   .payoff_charts,
+  .payoff_table,
   .oi_chart,
   .adjustment,
+  .targets,
+  .stoploss,
+  .alerts,
+  .history,
   .greek_table {
     font-family: system-ui;
     color: #767f88;
@@ -332,7 +337,8 @@
   }
 
   #resultTable thead tr th,
-  .PL-table thead tr th {
+  .PL-table thead tr th ,
+  .payoff_table_main_table thead tr th {
     background: #4399eb;
     color: white;
     font-size: 12px;
@@ -350,12 +356,14 @@
   }
 
   #resultTable tbody tr td,
-  .PL-table tbody tr td {
+  .PL-table tbody tr td ,
+  .payoff_table_main_table tbody tr td {
     font-size: 14px;
   }
 
   #resultTable tbody tr td,
-  .PL-table tbody tr td {
+  .PL-table tbody tr td ,
+  .payoff_table_main_table tbody tr td {
     border-color: inherit;
     border-style: hidden !important;
     border-width: 0;
@@ -550,7 +558,9 @@
   #counter_input_ironCondor,
   #counter_input_jaze_lizard,
   #counter_input_double_iron_fly,
-  #counter_input_double_iron_condor {
+  #counter_input_double_iron_condor,
+  #counter_input_put_butterfly,
+  #counter_input_call_butter_fly {
     width: 38px;
     text-align: center;
   }
@@ -586,7 +596,11 @@
   #decrement_double_iron_condor,
   #increment_double_iron_condor,
   #decrement_jaze_lizard,
-  #increment_jaze_lizard {
+  #increment_jaze_lizard,
+  #decrement_put_butterfly,
+  #increment_put_butterfly,
+  #decrement_call_butter_fly,
+  #increment_call_butter_fly {
     background: #4399eb;
     border: 1px solid #4399eb;
     width: 36px;
@@ -615,7 +629,9 @@
   #decrement_double_iron_fly:hover,
   #increment_double_iron_fly:hover,
   #decrement_double_iron_condor:hover,
-  #increment_double_iron_condor:hover {
+  #increment_double_iron_condor:hover,
+  #decrement_put_butterfly:hover,
+  #increment_put_butterfly:hover {
     background: white;
     color: #4399eb;
   }
@@ -755,6 +771,30 @@
     background-color: white;
   }
 
+  #put_butterfly_modal {
+    width: 24rem;
+    box-shadow: 0px 0px 1px 2px #4399eb3b;
+    position: absolute;
+    z-index: 99;
+    margin: 14px 0 0 0;
+    display: none;
+    border-radius: 8px;
+    background-color: white;
+  }
+
+  #call_butter_fly_modal {
+    width: 24rem;
+    box-shadow: 0px 0px 1px 2px #4399eb3b;
+    position: absolute;
+    z-index: 99;
+    margin: 15px 0px 1px 0;
+    display: none;
+    left: -61px;
+    border-radius: 8px;
+    background-color: white;
+
+  }
+
   .dismiss {
     display: flex;
     flex-direction: row-reverse;
@@ -781,7 +821,9 @@
   #short_ironCondor,
   #shortjaze_lizard,
   #shortdouble_iron_fly,
-  #shortdouble_iron_condor {
+  #shortdouble_iron_condor,
+  #shortput_butterfly,
+  #shortcall_butter_fly {
     width: 57px;
     text-align: center;
     font-size: 12px;
@@ -800,7 +842,8 @@
   #shortironFly:hover,
   #short_ironCondor:hover,
   #short_jaze_lizard:hover,
-  #shortdouble_iron_condor:hover {
+  #shortdouble_iron_condor:hover,
+  #shortput_butterfly:hover {
     background: white;
     border: 1px solid #dd0000;
     color: #dd0000;
@@ -823,6 +866,14 @@
     position: absolute;
   }
 
+  .triangle-up-call_butterfly {
+    width: 0;
+    height: 0;
+    left: 54px;
+
+    position: absolute;
+  }
+
   .triangle-up::before {
     content: "";
     position: absolute;
@@ -837,6 +888,22 @@
     transform-origin: 0 0;
     box-shadow: -3px 3px 3px 0 #4399eb3b;
     transform: rotate(135deg);
+  }
+
+  .triangle-up-call_butterfly::before {
+    content: "";
+    position: absolute;
+    width: 0;
+    height: 0;
+    top: -2px;
+    margin-left: -0.5em;
+    box-sizing: border-box;
+    border: 11px solid #ffecec00;
+    border-color: transparent transparent #ffffff #ffffff;
+    transform-origin: 0 0;
+    box-shadow: -3px 3px 3px 0 #4399eb3b;
+    transform: rotate(135deg);
+    left: 54px;
   }
 
   .main_counter {
@@ -904,7 +971,13 @@
     color: #e6191e;
     font-size: 19px;
   }
+.targets_table,.stoploss_table,.alerts_table,.history_table{
+  display: flex;
+    justify-content: center;
+    height: 400px;
+    align-items: center;
 
+}
   /* 
     .table-striped-custom>tbody>tr:nth-child(2n)>td,
     .table-striped-custom>tbody>tr:nth-child(2n)>th {
@@ -1348,16 +1421,16 @@
       // });
 
       $("#Activate_broker_btn").click(function (e) {
-    e.stopPropagation(); // Prevent the click event from propagating to the document
-    $("#active_broker_modal").slideToggle();
-});
+        e.stopPropagation(); // Prevent the click event from propagating to the document
+        $("#active_broker_modal").slideToggle();
+      });
 
-// Close the modal when a click occurs anywhere outside of the modal
-$(document).on("click", function (e) {
-    if (!$("#active_broker_modal").is(e.target) && $("#active_broker_modal").has(e.target).length === 0) {
-        $("#active_broker_modal").slideUp();
-    }
-});
+      // Close the modal when a click occurs anywhere outside of the modal
+      $(document).on("click", function (e) {
+        if (!$("#active_broker_modal").is(e.target) && $("#active_broker_modal").has(e.target).length === 0) {
+          $("#active_broker_modal").slideUp();
+        }
+      });
 
 
 
@@ -2250,11 +2323,225 @@ $(document).on("click", function (e) {
         </div>
 
         <div class="main-put-butterfly">
-          <p class="straddle" id="strangle">PUT BUTTERFLY</p>
+          <p class="straddle" id="put_butter_fly">PUT BUTTERFLY</p>
+
+          <div class="" id="put_butterfly_modal">
+            <div class="dismiss">
+              <i class="bx bx-plus dismiss_icon"></i>
+              <div class="triangle-up"></div>
+            </div>
+            <div class="modal_dialog">
+              <div class="modal_content">
+                <div class="modal_body" id="modal_body">
+                  <div class="main_put_butterfly">
+                    <h5 class="text-center">Put Butterfly</h5>
+
+                    <div class="main_body_fields_put_butterfly">
+
+
+                      <!-- first_position_put_butterfly -->
+                      <div class="main_strikePrice mb-3">
+                        <div class="put_butterfly_lot_size">
+                          <span id="put_negative_nine_hundred_fifty_butterfly_lot_size"></span><span>x</span>
+                        </div>
+                        <div class="strategy_inputs">
+                          <label for="strikePrice">Put Strike Price</label>
+                          <select class="strike_price_input form-select"
+                            id="put_negative_nine_hundred_fifty_Select_put_butterfly"></select>
+                        </div>
+                        <p class="pe_ce">PE</p>
+                      </div>
+
+
+
+
+                      <!-- second_position_put_butterfly -->
+
+
+
+                      <div class="main_strikePrice mb-3">
+                        <div class="put_butterfly_lot_size">
+                          <span id="five_hundred_put_call_butterfly_lot_size"></span><span>x</span>
+                        </div>
+                        <div class="strategy_inputs">
+                          <label for="strikePrice">Call/Put Strike Price</label>
+                          <select class="strike_price_input form-select"
+                            id="five_hundred_put_call_Select_put_butterfly"></select>
+                        </div>
+                        <p class="pe_ce">CE/PE</p>
+                      </div>
+
+
+                      <!-- third_position_put_butterfly -->
+
+                      <div class="main_strikePrice mb-3">
+                        <div class="put_butterfly_lot_size">
+                          <span id="put_negative_fifty_put_butterfly_lot_size"></span><span>x</span>
+                        </div>
+                        <div class="strategy_inputs">
+                          <label for="strikePrice">Call Strike Price</label>
+                          <select class="strike_price_input form-select"
+                            id="put_negative_fifty_Select_put_butterfly"></select>
+                        </div>
+                        <p class="pe_ce">CE</p>
+                      </div>
+
+
+
+
+
+
+
+
+
+                      <div class="strategy_inputs mb-3">
+                        <label for="expirydate">Expiry Date</label>
+                        <select class="expiry_date_input form-select" id="expiryDate_put_butterfly"></select>
+                      </div>
+
+                      <div class="main_counter d-flex gap-3 mb-3">
+                        <div class="inner_inroFly_counter d-flex gap-2">
+                          <p class="fs-5 lot_title">Lot Qty:</p>
+                          <div class="counter_put_butterfly d-flex justify-content-center gap-1">
+                            <button class="btn" id="decrement_put_butterfly">
+                              <i class="bx bx-minus"></i>
+                            </button>
+                            <input type="text" name="" id="counter_input_put_butterfly" min="1" disabled />
+                            <button class="btn" id="increment_put_butterfly">
+                              <i class="bx bx-plus"></i>
+                            </button>
+                          </div>
+
+                          <button class="" id="shortput_butterfly">SELL</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- <div class="buy_sell_buttons d-flex gap-2 justify-content-center">
+
+                      
+
+                        </div> -->
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+
+
         </div>
 
         <div class="main-call-butterfly">
-          <p class="straddle" id="strangle">CALL BUTTERFLY</p>
+          <p class="straddle" id="call_butter_fly">CALL BUTTERFLY</p>
+
+
+          <div class="" id="call_butter_fly_modal">
+            <div class="dismiss">
+              <i class="bx bx-plus dismiss_icon"></i>
+              <div class="triangle-up-call_butterfly"></div>
+            </div>
+            <div class="modal_dialog">
+              <div class="modal_content">
+                <div class="modal_body" id="modal_body">
+                  <div class="main_call_butter_fly">
+                    <h5 class="text-center">Call Butterfly</h5>
+
+                    <div class="main_body_fields_call_butter_fly">
+
+
+                      <!-- first_position_call_butter_fly -->
+                      <div class="main_strikePrice mb-3">
+                        <div class="call_butter_fly_lot_size">
+                          <span id="put_positive_fifty_butterfly_lot_size"></span><span>x</span>
+                        </div>
+                        <div class="strategy_inputs">
+                          <label for="strikePrice">Put Strike Price</label>
+                          <select class="strike_price_input form-select"
+                            id="put_positive_fifty_Select_call_butter_fly"></select>
+                        </div>
+                        <p class="pe_ce">PE</p>
+                      </div>
+
+
+
+
+                      <!-- second_position_call_butter_fly -->
+
+
+
+                      <div class="main_strikePrice mb-3">
+                        <div class="call_butter_fly_lot_size">
+                          <span id="four_hundred_put_call_butterfly_lot_size"></span><span>x</span>
+                        </div>
+                        <div class="strategy_inputs">
+                          <label for="strikePrice">Call/Put Strike Price</label>
+                          <select class="strike_price_input form-select"
+                            id="four_hundred_put_call_Select_call_butter_fly"></select>
+                        </div>
+                        <p class="pe_ce">CE/PE</p>
+                      </div>
+
+
+                      <!-- third_position_call_butter_fly -->
+
+                      <div class="main_strikePrice mb-3">
+                        <div class="call_butter_fly_lot_size">
+                          <span id="positive_seven_hundred_fifty_call_butter_fly_lot_size"></span><span>x</span>
+                        </div>
+                        <div class="strategy_inputs">
+                          <label for="strikePrice">Call Strike Price</label>
+                          <select class="strike_price_input form-select"
+                            id="positive_seven_hundred_fifty_Select_call_butter_fly"></select>
+                        </div>
+                        <p class="pe_ce">CE</p>
+                      </div>
+
+
+
+
+
+
+
+
+
+                      <div class="strategy_inputs mb-3">
+                        <label for="expirydate">Expiry Date</label>
+                        <select class="expiry_date_input form-select" id="expiryDate_call_butter_fly"></select>
+                      </div>
+
+                      <div class="main_counter d-flex gap-3 mb-3">
+                        <div class="inner_inroFly_counter d-flex gap-2">
+                          <p class="fs-5 lot_title">Lot Qty:</p>
+                          <div class="counter_call_butter_fly d-flex justify-content-center gap-1">
+                            <button class="btn" id="decrement_call_butter_fly">
+                              <i class="bx bx-minus"></i>
+                            </button>
+                            <input type="text" name="" id="counter_input_call_butter_fly" min="1" disabled />
+                            <button class="btn" id="increment_call_butter_fly">
+                              <i class="bx bx-plus"></i>
+                            </button>
+                          </div>
+
+                          <button class="" id="shortcall_butter_fly">SELL</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- <div class="buy_sell_buttons d-flex gap-2 justify-content-center">
+
+                      
+
+                        </div> -->
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+
         </div>
 
         <div class="custom-strategy">
@@ -2293,6 +2580,12 @@ $(document).on("click", function (e) {
     .save_strategy:hover {
       background: #fff !important;
       color: #4399eb !important;
+    }
+
+    .strategy_position_reset {
+      white-space: nowrap;
+      column-gap: 0.2rem;
+      overflow: auto;
     }
   </style>
 
@@ -2429,6 +2722,15 @@ $(document).on("click", function (e) {
             .saveStrategy:hover {
               background: #fff !important;
               color: #4399eb !important;
+            }
+
+            .main_filter_greek_P_L {
+              overflow: auto;
+              white-space: nowrap;
+
+            }
+            .main-call-butterfly{
+              position: relative;
             }
           </style>
 
@@ -2913,17 +3215,55 @@ $(document).on("click", function (e) {
                 PAYOFF DIAGRAM
 
               </p>
+              <p class="payoff_table">
+                PAYOFF TABLE
+
+              </p>
               <p class="strategy_cost_table">
                 STRATEGY COST
               </p>
               <p class="greek_table">GREEKS</p>
-              <p class="oi_chart">OI CHARTS</p>
-              <p class="adjustment">ADJUSTMENTS</p>
+              <p class="oi_chart">OI CHART</p>
+              <p class="adjustment">ADJUSTMENT</p>
+              <p class="targets">TARGET</p>
+              <p class="stoploss">STOPLOSS</p>
+              <p class="alerts">ALERT</p>
+              <p class="history">HISTORY</p>
             </div>
           </div>
 
           <div id="payoff_charts">
             <div id="chartdiv" style="width: 100%; height: 400px;"></div>
+          </div>
+          <div id="payoff_table" style="width: 100%; height: 400px;     overflow: auto;">
+
+            <table class="payoff_table_main_table table">
+              <thead>
+                <tr>
+                  <th>
+
+                    <div class="strikePrice_payoff_table">
+                      
+                      Strike Price
+                    </div>
+                  </th>
+                  <th class="d-flex gap-2 align-items-center">
+
+                    <div class="on_expiry_profits">
+                      On Expiry
+                    </div>
+                    <div class="payoff_expiry">
+
+                    </div>
+                  </th>
+                </tr>
+              </thead>
+
+              <tbody class="payoff_table_data">
+              
+              </tbody>
+            </table>
+
           </div>
 
           <div id="table-Greeks" class="table-responsive">
@@ -2963,7 +3303,7 @@ $(document).on("click", function (e) {
 
           <div id="oi-charts">
             <div class="option_oi_charts">
-              <div id="oi_charts" style="width: 100%; height: 350px;"></div>
+              <div id="oi_charts" style="width: 100%; height: 400px;"></div>
             </div>
 
           </div>
@@ -3024,6 +3364,19 @@ $(document).on("click", function (e) {
 
             </table>
 
+          </div>
+
+          <div class="targets_table">
+            <p>Targets is under developements</p>
+          </div>
+          <div class="stoploss_table">
+            <p>Stoploss is under developements</p>
+          </div>
+          <div class="alerts_table">
+            <p>Alerts is under developements</p>
+          </div>
+          <div class="history_table">
+            <p>History is under developements</p>
           </div>
 
         </div>
@@ -3243,7 +3596,8 @@ $(document).on("click", function (e) {
       cursor: pointer;
       transition: 0.3s;
     }
-    .delete_api_btn:hover{
+
+    .delete_api_btn:hover {
       color: red;
     }
 
@@ -3432,7 +3786,7 @@ $(document).on("click", function (e) {
 <script>
   $(document).ready(function () {
 
-
+    loadSpotData("NIFTY");
     function checkMainPositionContent() {
       var mainPositionElements = $('.main_position');
       var resetButton = $('.reset_button');
@@ -3455,11 +3809,7 @@ $(document).on("click", function (e) {
     $(".dismiss_icon_active_modal").click(function () {
       $("#active_broker_modal").slideUp();
     });
-    loadStocks();
-    loadSpotData("NIFTY");
-    loadExpiryData("NIFTY");
-
-    loadOptionData("NIFTY", "");
+  
     $("#in_depth_check_box").change(function () {
       if (this.checked) {
         // If the checkbox is checked, hide the .main_indepth element
@@ -4408,6 +4758,36 @@ $(document).on("click", function (e) {
     function hide_double_iron_condor_Modal() {
       $("#double_iron_condor_modal").hide();
     }
+    function hide_iron_butterfly() {
+      $("#put_butterfly_modal").hide();
+    }
+    function hide_call_butterfly() {
+      $("#call_butter_fly_modal").hide();
+    }
+
+    // Click event on the document body
+    $(document).on("click", function (e) {
+      // Check which modal to hide based on the click target
+      if (
+        !$(e.target).closest("#call_butter_fly_modal").length &&
+        !$(e.target).is("#call_butter_fly")
+      ) {
+        hide_call_butterfly();
+      }
+    });
+
+    // Click event on the document body
+    $(document).on("click", function (e) {
+      // Check which modal to hide based on the click target
+      if (
+        !$(e.target).closest("#put_butterfly_modal").length &&
+        !$(e.target).is("#put_butter_fly")
+      ) {
+        hide_iron_butterfly();
+      }
+    });
+
+
 
     // Click event on the document body
     $(document).on("click", function (e) {
@@ -4419,6 +4799,9 @@ $(document).on("click", function (e) {
         hide_double_iron_condor_Modal();
       }
     });
+
+
+
     // Click event on the document body
     $(document).on("click", function (e) {
       // Check which modal to hide based on the click target
@@ -4552,6 +4935,8 @@ $(document).on("click", function (e) {
       $("#jaze_lizard_modal").hide();
       $("#double_iron_fly_modal").hide();
       $("#double_iron_condor_modal").hide();
+      $("#put_butterfly_modal").hide();
+      $("#call_butter_fly_modal").hide();
     });
     $(".long_straddle").addClass("straddle_active");
     $(".long_straddle").click(function () {
@@ -4833,6 +5218,94 @@ $(document).on("click", function (e) {
 
 
 
+    //---------Put butterfly-------------
+
+    var counterValue_put_buttterfly = 1;
+
+    // Function to update the input field with the current value
+
+
+    function updateCounterInput_put_buttterfly() {
+      $("#counter_input_put_butterfly").val(counterValue_put_buttterfly);
+
+      $("#put_negative_nine_hundred_fifty_butterfly_lot_size").text(counterValue_put_buttterfly);
+      $("#five_hundred_put_call_butterfly_lot_size").text(counterValue_put_buttterfly);
+      $("#put_negative_fifty_put_butterfly_lot_size").text(counterValue_put_buttterfly);
+
+
+
+    }
+
+    // Initialize the input field
+    updateCounterInput_put_buttterfly();
+
+    // Increment button click handler
+    $("#increment_put_butterfly").click(function () {
+      counterValue_put_buttterfly++;
+      updateCounterInput_put_buttterfly();
+    });
+
+    // Decrement button click handler
+    $("#decrement_put_butterfly").click(function () {
+      if (counterValue_put_buttterfly > 1) {
+        counterValue_put_buttterfly--;
+        updateCounterInput_put_buttterfly();
+      }
+    });
+    //----------End Put butterfly---------------
+
+
+
+    //---------Put butterfly-------------
+
+    var counterValue_call_butterfly = 1;
+
+    // Function to update the input field with the current value
+
+
+    function updateCounterInput_call_butterfly() {
+      $("#counter_input_call_butter_fly").val(counterValue_call_butterfly);
+
+      $("#put_positive_fifty_butterfly_lot_size").text(counterValue_call_butterfly);
+      $("#four_hundred_put_call_butterfly_lot_size").text(counterValue_call_butterfly);
+      $("#positive_seven_hundred_fifty_call_butter_fly_lot_size").text(counterValue_call_butterfly);
+
+
+
+    }
+
+    // Initialize the input field
+    updateCounterInput_call_butterfly();
+
+    // Increment button click handler
+    $("#increment_call_butter_fly").click(function () {
+      counterValue_call_butterfly++;
+      updateCounterInput_call_butterfly();
+    });
+
+    // Decrement button click handler
+    $("#decrement_call_butter_fly").click(function () {
+      if (counterValue_call_butterfly > 1) {
+        counterValue_call_butterfly--;
+        updateCounterInput_call_butterfly();
+      }
+    });
+    //----------End Put butterfly---------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -4843,6 +5316,12 @@ $(document).on("click", function (e) {
     $("#resultTable").hide();
     $("#oi-charts").hide();
     $("#real_adjustment_table").hide();
+    $(".targets_table").hide();
+    $(".stoploss_table").hide();
+    $(".alerts_table").hide();
+    $(".history_table").hide();
+    $("#payoff_table").hide();
+    
     $("#payoff_charts").show();
 
     $(".strategy_cost_table").click(function () {
@@ -4851,17 +5330,49 @@ $(document).on("click", function (e) {
       $("#real_adjustment_table").hide();
       $("#payoff_charts").hide();
       $("#oi-charts").hide();
+      $(".targets_table").hide();
+    $(".stoploss_table").hide();
+    $(".alerts_table").hide();
+    $(".history_table").hide();
+    $("#payoff_table").hide();
       $(this).addClass("greek_strategy_active");
-      $(".greek_table, .oi_chart,.payoff_charts,.adjustment").removeClass("greek_strategy_active");
+      $(".greek_table,.oi_chart,.payoff_charts,.adjustment,.targets,.stoploss,.alerts,.history,.payoff_table").removeClass("greek_strategy_active");
     });
+
+    $(".payoff_table").click(function () {
+      $("#table-PL_main").hide();
+      $("#resultTable").hide();
+      $("#real_adjustment_table").hide();
+      $("#payoff_charts").hide();
+      $("#oi-charts").hide();
+      $(".targets_table").hide();
+    $(".stoploss_table").hide();
+    $(".alerts_table").hide();
+    $(".history_table").hide();
+    $("#payoff_table").show();
+      $(this).addClass("greek_strategy_active");
+      $(".greek_table,.oi_chart,.payoff_charts,.adjustment,.targets,.stoploss,.alerts,.history,.strategy_cost_table").removeClass("greek_strategy_active");
+    });
+
+
+
+
+
+
+
     $(".greek_table").click(function () {
       $("#table-PL_main").hide();
       $("#resultTable").show();
       $("#real_adjustment_table").hide();
       $("#payoff_charts").hide();
       $("#oi-charts").hide();
+      $(".targets_table").hide();
+    $(".stoploss_table").hide();
+    $(".alerts_table").hide();
+    $(".history_table").hide();
+    $("#payoff_table").hide();
       $(this).addClass("greek_strategy_active");
-      $(".strategy_cost_table, .oi_chart,.payoff_charts,.adjustment").removeClass("greek_strategy_active");
+      $(".strategy_cost_table, .oi_chart,.payoff_charts,.adjustment,.targets,.stoploss,.alerts,.history,.payoff_table").removeClass("greek_strategy_active");
     });
 
 
@@ -4871,8 +5382,13 @@ $(document).on("click", function (e) {
       $("#real_adjustment_table").hide();
       $("#payoff_charts").hide();
       $("#oi-charts").show();
+      $(".targets_table").hide();
+    $(".stoploss_table").hide();
+    $(".alerts_table").hide();
+    $(".history_table").hide();
+    $("#payoff_table").hide();
       $(this).addClass("greek_strategy_active");
-      $(".strategy_cost_table, .greek_table,.payoff_charts,.adjustment").removeClass("greek_strategy_active");
+      $(".strategy_cost_table, .greek_table,.payoff_charts,.adjustment,.targets,.stoploss,.alerts,.history,.payoff_table").removeClass("greek_strategy_active");
     });
     $(".adjustment").click(function () {
       $("#table-PL_main").hide();
@@ -4880,8 +5396,13 @@ $(document).on("click", function (e) {
       $("#oi-charts").hide();
       $("#real_adjustment_table").show();
       $("#payoff_charts").hide();
+      $(".targets_table").hide();
+    $(".stoploss_table").hide();
+    $(".alerts_table").hide();
+    $(".history_table").hide();
+    $("#payoff_table").hide();
       $(this).addClass("greek_strategy_active");
-      $(".strategy_cost_table, .greek_table,.payoff_charts, .oi_chart").removeClass("greek_strategy_active");
+      $(".strategy_cost_table, .greek_table,.payoff_charts, .oi_chart,.targets,.stoploss,.alerts,.history,.payoff_table").removeClass("greek_strategy_active");
     });
 
 
@@ -4891,9 +5412,87 @@ $(document).on("click", function (e) {
       $("#oi-charts").hide();
       $("#real_adjustment_table").hide();
       $("#payoff_charts").show();
+      $(".targets_table").hide();
+    $(".stoploss_table").hide();
+    $(".alerts_table").hide();
+    $(".history_table").hide();
+    $("#payoff_table").hide();
       $(this).addClass("greek_strategy_active");
-      $(".strategy_cost_table, .greek_table, .oi_chart, .adjustment").removeClass("greek_strategy_active");
+      $(".strategy_cost_table, .greek_table, .oi_chart, .adjustment,.targets,.stoploss,.alerts,.history,.payoff_table").removeClass("greek_strategy_active");
     });
+
+
+    $(".targets").click(function () {
+        $("#table-PL_main").hide();
+        $("#resultTable").hide();
+        $("#real_adjustment_table").hide();
+        $("#payoff_charts").hide();
+        $("#oi-charts").hide();
+        $(".targets_table").show();
+        $(".stoploss_table").hide();
+        $(".alerts_table").hide();
+        $(".history_table").hide();
+        $("#payoff_table").hide();
+        $(this).addClass("greek_strategy_active");
+        $(".greek_table, .oi_chart, .payoff_charts, .adjustment,.stoploss,.alerts,.history,.payoff_table").removeClass("greek_strategy_active");
+    });
+
+    $(".stoploss").click(function () {
+        $("#table-PL_main").hide();
+        $("#resultTable").hide();
+        $("#real_adjustment_table").hide();
+        $("#payoff_charts").hide();
+        $("#oi-charts").hide();
+        $(".targets_table").hide();
+        $(".stoploss_table").show();
+        $(".alerts_table").hide();
+        $(".history_table").hide();
+        $("#payoff_table").hide();
+        $(this).addClass("greek_strategy_active");
+        $(".greek_table, .oi_chart, .payoff_charts, .adjustment,.targets,.alerts,.history,.payoff_table").removeClass("greek_strategy_active");
+    });
+
+    $(".alerts").click(function () {
+        $("#table-PL_main").hide();
+        $("#resultTable").hide();
+        $("#real_adjustment_table").hide();
+        $("#payoff_charts").hide();
+        $("#oi-charts").hide();
+        $(".targets_table").hide();
+        $(".stoploss_table").hide();
+        $(".alerts_table").show();
+        $(".history_table").hide();
+        $("#payoff_table").hide();
+        $(this).addClass("greek_strategy_active");
+        $(".greek_table, .oi_chart, .payoff_charts, .adjustment,.targets,.stoploss,.history,.payoff_table").removeClass("greek_strategy_active");
+    });
+
+    $(".history").click(function () {
+        $("#table-PL_main").hide();
+        $("#resultTable").hide();
+        $("#real_adjustment_table").hide();
+        $("#payoff_charts").hide();
+        $("#oi-charts").hide();
+        $(".targets_table").hide();
+        $(".stoploss_table").hide();
+        $(".alerts_table").hide();
+        $("#payoff_table").hide();
+        $(".history_table").show();
+        $(this).addClass("greek_strategy_active");
+        $(".greek_table, .oi_chart, .payoff_charts, .adjustment,.targets,.stoploss,.alerts,.payoff_table").removeClass("greek_strategy_active");
+    });
+
+
+
+
+
+
+
+
+
+
+
+
 
     // After adding data row
     // Function to update empty message visibility based on data rows
@@ -5661,72 +6260,21 @@ $(document).on("click", function (e) {
     // Handle stock dropdown change
     $("#stockDropdown").change(function () {
       var selectedOption = $(this).val();
+      var selectedExpiry = $("#optionExpiryDropdown").val();
 
       $("#table-PL").empty();
       $("#resultTable tbody").empty();
       $(".strike_price_input").empty();
       $(".expiry_date_input").empty();
-      $(
-        ".data-display-table"
-      ).empty().append(`     <tr class="strategy_table_input">
-                <td>
-                    <div class="textOnInput">
-                        <label for="optionSide">Instruments</label>
-                        <select class="option_side_input form-select">
-                         
-                            <option value="">Long</option>
-                            <option value="">Put</option>
-
-                        </select>
-                    </div>
-                </td>
-                <td>
-                    <div class="textOnInput">
-                        <label for="expiryDate">Expiry Date</label>
-                        <select class="expiry_date_input form-select">
-                         
-                        </select>
-                    </div>
-                </td>
-                <td>
-                    <div class="textOnInput">
-                        <label for="strikePrice">Strike Price</label>
-                        <select class="strike_price_input form-select">
-                         
-                        </select>
-                    </div>
-                </td>
-                <td>
-                    <div class="textOnInput">
-                        <label for="action">Position</label>
-                        <select class="action_input form-select">
-                         
-                            <option value="Short">Short</option>
-                            <option value="Long">Long</option>
-                        </select>
-                    </div>
-                </td>
-                <td>
-                    <div class="textOnInput">
-                        <label for="action">No. of Lots</label>
-                        <input type="number" class="option_lot_size_input form-control" value="1" />
-                    </div>
-                </td>
-                <td>
-                    <div class="textOnInput">
-                        <label for="action">Traded Price</label>
-                        <input type="number" class="ltpValue_input form-control" value="0" />
-                    </div>
-                </td>
-                <td>
-                    <i class="delete-btn bi bi-trash-fill"></i>
-                </td>
-            </tr>`);
+ 
 
       loadSpotData(selectedOption);
 
-      loadExpiryData(selectedOption);
-      loadOptionData(selectedOption, "");
+
+
+        loadExpiryData(selectedOption);
+        loadOptionData(selectedOption, "");
+
     });
 
     //         setInterval(function() {
@@ -5767,10 +6315,12 @@ $(document).on("click", function (e) {
         },
       });
     }
+ 
 
     $("#optionExpiryDropdown").change(function () {
       var selectedOption = $("#stockDropdown").val();
       var selectedExpiry = $("#optionExpiryDropdown").val();
+      
       var selectedOptionExpiry = $(this).val();
 
       if (selectedOption) {
@@ -5803,6 +6353,9 @@ $(document).on("click", function (e) {
               var option = $("<option>")
                 .text(formattedDate)
                 .val(expiryDate.split("T")[0]);
+
+                console.log(formattedDate);
+                console.log(expiryDate.split("T")[0]);
 
               // Append the option to the dropdown
               optionExpiryDropdown.append(option);
@@ -5842,7 +6395,7 @@ $(document).on("click", function (e) {
               if (diff < closestDiff) {
                 closestDiff = diff;
                 closestStrikePrice = strike_price;
-                $("#closest_strike_price").text(strike_price);
+         
               }
 
               var strike_price_background_down =
@@ -5898,6 +6451,7 @@ $(document).on("click", function (e) {
             }
           );
           console.log("Nearest Strike Price:", closestStrikePrice);
+          $("#closest_strike_price").text(closestStrikePrice);
           console.log(all_callsOI_putsOI);
 
           OI_charts(all_callsOI_putsOI)
@@ -6016,6 +6570,9 @@ $(document).on("click", function (e) {
               $("#jaze_lizard").removeClass("option_strategies_active");
               $("#double_iron_fly").removeClass("option_strategies_active");
               $("#double_iron_condor").removeClass("option_strategies_active");
+              $("#call_butter_fly").removeClass("option_strategies_active");
+
+              $("#put_butter_fly").removeClass("option_strategies_active");
 
 
               $(".data-display-table").empty();
@@ -6058,7 +6615,8 @@ $(document).on("click", function (e) {
               // Hide the element with ID "#straddle_modal"
               Table_chart_pyoff()
               $("#straddle_modal").hide();
-            } else if (filter_arg_strategy === "strangle") {
+            }
+            else if (filter_arg_strategy === "strangle") {
               $("#straddle_modal").hide();
               $("#strangle_modal").show();
               $("#spread_modal").hide();
@@ -6150,6 +6708,9 @@ $(document).on("click", function (e) {
                 $("#jaze_lizard").removeClass("option_strategies_active");
                 $("#double_iron_fly").removeClass("option_strategies_active");
                 $("#double_iron_condor").removeClass("option_strategies_active");
+                $("#call_butter_fly").removeClass("option_strategies_active");
+
+                $("#put_butter_fly").removeClass("option_strategies_active");
 
                 $(".data-display-table").empty();
                 $("#table-PL").empty();
@@ -6211,7 +6772,8 @@ $(document).on("click", function (e) {
                 }
               });
 
-            } else if (filter_arg_strategy === "spread") {
+            }
+            else if (filter_arg_strategy === "spread") {
               $("#straddle_modal").hide();
               $("#strangle_modal").hide();
               $("#ironFly_modal").hide();
@@ -6295,6 +6857,9 @@ $(document).on("click", function (e) {
                 $("#jaze_lizard").removeClass("option_strategies_active");
                 $("#double_iron_fly").removeClass("option_strategies_active");
                 $("#double_iron_condor").removeClass("option_strategies_active");
+                $("#call_butter_fly").removeClass("option_strategies_active");
+
+                $("#put_butter_fly").removeClass("option_strategies_active");
 
                 $(".inner_p_l_greeks").show();
                 $(".main_position").empty();
@@ -6360,7 +6925,8 @@ $(document).on("click", function (e) {
                 $("#spread_modal").hide();
                 Table_chart_pyoff()
               });
-            } else if (filter_arg_strategy === "iron_fly") {
+            }
+            else if (filter_arg_strategy === "iron_fly") {
               $("#straddle_modal").hide();
               $("#strangle_modal").hide();
               $("#spread_modal").hide();
@@ -6462,6 +7028,9 @@ $(document).on("click", function (e) {
                 $("#jaze_lizard").removeClass("option_strategies_active");
                 $("#double_iron_fly").removeClass("option_strategies_active");
                 $("#double_iron_condor").removeClass("option_strategies_active");
+                $("#call_butter_fly").removeClass("option_strategies_active");
+
+                $("#put_butter_fly").removeClass("option_strategies_active");
 
                 $(".data-display-table").empty();
                 $("#table-PL").empty();
@@ -6524,7 +7093,8 @@ $(document).on("click", function (e) {
                 $("#ironFly_modal").hide();
                 Table_chart_pyoff()
               });
-            } else if (filter_arg_strategy === "iron_condor") {
+            }
+            else if (filter_arg_strategy === "iron_condor") {
               $("#straddle_modal").hide();
               $("#strangle_modal").hide();
               $("#spread_modal").hide();
@@ -6657,6 +7227,9 @@ $(document).on("click", function (e) {
                 $("#jaze_lizard").removeClass("option_strategies_active");
                 $("#double_iron_fly").removeClass("option_strategies_active");
                 $("#double_iron_condor").removeClass("option_strategies_active");
+                $("#call_butter_fly").removeClass("option_strategies_active");
+
+                $("#put_butter_fly").removeClass("option_strategies_active");
 
                 $(".data-display-table").empty();
                 $("#table-PL").empty();
@@ -6711,7 +7284,8 @@ $(document).on("click", function (e) {
                 $("#ironCondor_modal").hide();
                 Table_chart_pyoff()
               });
-            } else if (filter_arg_strategy === "jaze_lizard") {
+            }
+            else if (filter_arg_strategy === "jaze_lizard") {
               $("#straddle_modal").hide();
               $("#strangle_modal").hide();
               $("#spread_modal").hide();
@@ -6819,6 +7393,9 @@ $(document).on("click", function (e) {
                 $("#jaze_lizard").addClass("option_strategies_active");
                 $("#double_iron_fly").removeClass("option_strategies_active");
                 $("#double_iron_condor").removeClass("option_strategies_active");
+                $("#call_butter_fly").removeClass("option_strategies_active");
+
+                $("#put_butter_fly").removeClass("option_strategies_active");
 
                 $(".data-display-table").empty();
                 $("#table-PL").empty();
@@ -7046,6 +7623,9 @@ $(document).on("click", function (e) {
                 $("#jaze_lizard").removeClass("option_strategies_active");
                 $("#double_iron_fly").addClass("option_strategies_active");
                 $("#double_iron_condor").removeClass("option_strategies_active");
+                $("#call_butter_fly").removeClass("option_strategies_active");
+
+                $("#put_butter_fly").removeClass("option_strategies_active");
 
 
                 $(".data-display-table").empty();
@@ -7347,6 +7927,10 @@ $(document).on("click", function (e) {
                 $("#jaze_lizard").removeClass("option_strategies_active");
                 $("#double_iron_fly").removeClass("option_strategies_active");
                 $("#double_iron_condor").addClass("option_strategies_active");
+                $("#call_butter_fly").removeClass("option_strategies_active");
+
+                $("#put_butter_fly").removeClass("option_strategies_active");
+
 
                 $(".data-display-table").empty();
                 $("#table-PL").empty();
@@ -7467,6 +8051,377 @@ $(document).on("click", function (e) {
             }
 
 
+            else if (filter_arg_strategy === "put_butter_fly") {
+              $("#straddle_modal").hide();
+              $("#strangle_modal").hide();
+              $("#spread_modal").hide();
+              $("#ironFly_modal").hide();
+              $("#ironCondor_modal").hide();
+              $("#jaze_lizard_modal").hide();
+              $("#double_iron_fly_modal").hide();
+              $("#double_iron_condor_modal").hide();
+              $("#call_butter_fly_modal").hide();
+              $("#put_butterfly_modal").show();
+
+              // Ensure you are selecting the correct elements with .strike_price
+              var strikePrices = optionChainTable
+                .find(".strike_price")
+                .map(function () {
+                  return parseFloat($(this).text());
+                })
+                .get();
+
+              // Find the index of the row where strikePrice is closestStrikePrice
+
+              var closest_strike_price = $("#closest_strike_price").text();
+              $("#spot_Select_double_iron_condor")
+                .find("option")
+                .each(function () {
+                  var optionValue = parseFloat($(this).val());
+
+                  if (optionValue === parseFloat(closest_strike_price)) {
+                    // console.log(optionValue, closest_strike_price);
+                    $(this).prop("selected", true);
+                  }
+                });
+
+              var currentIndex = strikePrices.indexOf(closestStrikePrice);
+
+              var prev19 = [];
+              var prev10 = [];
+              var prev1 = [];
+
+
+              for (var i = currentIndex - 1; i >= 0 && (prev19.length < 19 || prev10.length < 10 || prev1.length < 1); i--) {
+                var rowStrikePrice = strikePrices[i];
+                if (!isNaN(rowStrikePrice)) {
+                  if (prev19.length < 19) {
+                    prev19.push(rowStrikePrice);
+                  }
+                  if (prev10.length < 10) {
+                    prev10.push(rowStrikePrice);
+                  }
+                  if (prev1.length < 1) {
+                    prev1.push(rowStrikePrice);
+                  }
+
+                }
+              }
+
+
+              $("#put_negative_nine_hundred_fifty_Select_put_butterfly")
+                .find("option")
+                .each(function () {
+                  var optionValue = parseFloat($(this).val());
+
+                  if (optionValue === parseFloat(prev19[prev19.length - 1])) {
+                    // console.log(optionValue, closest_strike_price);
+                    $(this).prop("selected", true);
+                  }
+                });
+
+              $("#five_hundred_put_call_Select_put_butterfly")
+                .find("option")
+                .each(function () {
+                  var optionValue = parseFloat($(this).val());
+
+                  if (optionValue === parseFloat(prev10[prev10.length - 1])) {
+                    // console.log(optionValue, closest_strike_price);
+                    $(this).prop("selected", true);
+                  }
+                });
+
+
+              $("#put_negative_fifty_Select_put_butterfly")
+                .find("option")
+                .each(function () {
+                  var optionValue = parseFloat($(this).val());
+
+                  if (optionValue === parseFloat(prev1[prev1.length - 1])) {
+                    // console.log(optionValue, closest_strike_price);
+                    $(this).prop("selected", true);
+                  }
+                });
+
+
+
+
+
+              // console.log("Next 4 Strike Prices:", forw4);
+              // console.log("Next 2 Strike Prices:", forw2);
+
+              // console.log("Previous 4 Strike Prices:", prev4);
+              // Get the values of lastIndexPrev and lastIndexForw
+
+              var expiryDate_put_butterfly = $("#expiryDate_put_butterfly");
+              var optionExpiryDropdown = $("#optionExpiryDropdown");
+
+              expiryDate_put_butterfly.on("change", function () {
+                var selectedValue_put_butterfly = $(this).val();
+                // console.log(selectedValue_put_butterfly);
+
+                // Set the value of optionExpiryDropdown to match the selected value
+                optionExpiryDropdown.val(selectedValue_put_butterfly).change();
+
+                // Trigger a click event on the selected option
+              });
+              $("#shortput_butterfly").click(function () {
+                $("#straddle").removeClass("option_strategies_active");
+                $("#strangle").removeClass("option_strategies_active");
+                $("#iron_fly").removeClass("option_strategies_active");
+                $("#spread").removeClass("option_strategies_active");
+                $("#iron_condor").removeClass("option_strategies_active");
+                $("#jaze_lizard").removeClass("option_strategies_active");
+                $("#double_iron_fly").removeClass("option_strategies_active");
+                $("#double_iron_condor").removeClass("option_strategies_active");
+                $("#call_butter_fly").removeClass("option_strategies_active");
+
+                $("#put_butter_fly").addClass("option_strategies_active");
+
+                $(".data-display-table").empty();
+                $("#table-PL").empty();
+                $("#resultTable tbody").empty();
+                $(".inner_p_l_greeks").show();
+                $(".main_position").empty();
+
+
+                var put_negative_nine_hundred_fifty_Select_put_butterfly = $("#put_negative_nine_hundred_fifty_Select_put_butterfly").val();
+                var five_hundred_put_call_Select_put_butterfly = $("#five_hundred_put_call_Select_put_butterfly").val();
+                var put_negative_fifty_Select_put_butterfly = $("#put_negative_fifty_Select_put_butterfly").val();
+
+
+
+                var closest_put_negative_nine_hundred_fifty_Select_put_butterfly = optionChainTable
+                  .find(".strike_price:contains(" + put_negative_nine_hundred_fifty_Select_put_butterfly + ")")
+                  .closest(".call_put_tr");
+                if (closest_put_negative_nine_hundred_fifty_Select_put_butterfly.length) {
+                  closest_put_negative_nine_hundred_fifty_Select_put_butterfly
+                    .find("#Auto_puts_long_click")
+                    .data("HI1", "HI1there")
+                    .click();
+                }
+
+                var closest_five_hundred_put_call_Select_put_butterfly = optionChainTable
+                  .find(".strike_price:contains(" + five_hundred_put_call_Select_put_butterfly + ")")
+                  .closest(".call_put_tr");
+                if (closest_five_hundred_put_call_Select_put_butterfly.length) {
+                  closest_five_hundred_put_call_Select_put_butterfly
+                    .find("#Auto_puts_short_click ,#Auto_calls_short_click")
+                    .data("HI1", "HI2there")
+                    .click();
+                }
+
+                // Find the closest row for lastIndexPrev and click on Auto_puts_short_click
+
+                // Find the closest row for lastIndexForw and click on Auto_calls_short_click
+                var closest_put_negative_fifty_Select_put_butterfly = optionChainTable
+                  .find(".strike_price:contains(" + put_negative_fifty_Select_put_butterfly + ")")
+                  .closest(".call_put_tr");
+                if (closest_put_negative_fifty_Select_put_butterfly.length) {
+                  closest_put_negative_fifty_Select_put_butterfly
+                    .find("#Auto_calls_long_click")
+                    .data("HI1", "HI3There")
+                    .click();
+                }
+
+
+
+
+
+
+
+
+                // Click on #calculate after a longer delay
+
+                var counterInputValue = $("#counter_input_put_butterfly").val();
+                $(".option_lot_size_input").text(counterInputValue);
+                localStorage.setItem("strategy_builder", "double_put_butterfly");
+                calculate_data();
+                $("#put_butterfly_modal").hide();
+                Table_chart_pyoff()
+              });
+            }
+            else if (filter_arg_strategy === "call_butter_fly") {
+              $("#straddle_modal").hide();
+              $("#strangle_modal").hide();
+              $("#spread_modal").hide();
+              $("#ironFly_modal").hide();
+              $("#ironCondor_modal").hide();
+              $("#jaze_lizard_modal").hide();
+              $("#double_iron_fly_modal").hide();
+              $("#double_iron_condor_modal").hide();
+              $("#put_butterfly_modal").hide();
+              $("#call_butter_fly_modal").show();
+
+              // Ensure you are selecting the correct elements with .strike_price
+              var strikePrices = optionChainTable
+                .find(".strike_price")
+                .map(function () {
+                  return parseFloat($(this).text());
+                })
+                .get();
+
+              // Find the index of the row where strikePrice is closestStrikePrice
+
+              var closest_strike_price = $("#closest_strike_price").text();
+
+              var currentIndex = strikePrices.indexOf(closestStrikePrice);
+
+              var forw10 = [];
+              var forw19 = [];
+              var forw1 = [];
+
+              for (var j = currentIndex + 1; j < strikePrices.length && (forw10.length < 10 || forw19.length < 19 || forw1.length < 1); j++) {
+                var rowStrikePrice = strikePrices[j];
+                if (!isNaN(rowStrikePrice)) {
+                  if (forw10.length < 10) {
+                    forw10.push(rowStrikePrice);
+                  }
+                  if (forw19.length < 19) {
+                    forw19.push(rowStrikePrice);
+                  }
+                  if (forw1.length < 1) {
+                    forw1.push(rowStrikePrice);
+                  }
+
+                }
+              }
+
+
+
+              $("#put_positive_fifty_Select_call_butter_fly")
+                .find("option")
+                .each(function () {
+                  var optionValue = parseFloat($(this).val());
+
+                  if (optionValue === parseFloat(forw1[forw1.length - 1])) {
+                    // console.log(optionValue, closest_strike_price);
+                    $(this).prop("selected", true);
+                  }
+                });
+
+              $("#four_hundred_put_call_Select_call_butter_fly")
+                .find("option")
+                .each(function () {
+                  var optionValue = parseFloat($(this).val());
+
+                  if (optionValue === parseFloat(forw10[forw10.length - 1])) {
+                    // console.log(optionValue, closest_strike_price);
+                    $(this).prop("selected", true);
+                  }
+                });
+
+
+              $("#positive_seven_hundred_fifty_Select_call_butter_fly")
+                .find("option")
+                .each(function () {
+                  var optionValue = parseFloat($(this).val());
+
+                  if (optionValue === parseFloat(forw19[forw19.length - 1])) {
+                    // console.log(optionValue, closest_strike_price);
+                    $(this).prop("selected", true);
+                  }
+                });
+
+
+
+
+
+              // console.log("Next 4 Strike Prices:", forw4);
+              // console.log("Next 2 Strike Prices:", forw2);
+
+              // console.log("Previous 4 Strike Prices:", prev4);
+              // Get the values of lastIndexPrev and lastIndexForw
+
+              var expiryDate_call_butter_fly = $("#expiryDate_call_butter_fly");
+              var optionExpiryDropdown = $("#optionExpiryDropdown");
+
+              expiryDate_call_butter_fly.on("change", function () {
+                var selectedValue_put_butterfly = $(this).val();
+                // console.log(selectedValue_put_butterfly);
+
+                // Set the value of optionExpiryDropdown to match the selected value
+                optionExpiryDropdown.val(selectedValue_put_butterfly).change();
+
+                // Trigger a click event on the selected option
+              });
+              $("#shortcall_butter_fly").click(function () {
+                $("#straddle").removeClass("option_strategies_active");
+                $("#strangle").removeClass("option_strategies_active");
+                $("#iron_fly").removeClass("option_strategies_active");
+                $("#spread").removeClass("option_strategies_active");
+                $("#iron_condor").removeClass("option_strategies_active");
+                $("#jaze_lizard").removeClass("option_strategies_active");
+                $("#double_iron_fly").removeClass("option_strategies_active");
+                $("#double_iron_condor").removeClass("option_strategies_active");
+                $("#put_butter_fly").removeClass("option_strategies_active");
+                $("#call_butter_fly").addClass("option_strategies_active");
+
+                $(".data-display-table").empty();
+                $("#table-PL").empty();
+                $("#resultTable tbody").empty();
+                $(".inner_p_l_greeks").show();
+                $(".main_position").empty();
+
+
+                var put_positive_fifty_Select_call_butter_fly = $("#put_positive_fifty_Select_call_butter_fly").val();
+                var four_hundred_put_call_Select_call_butter_fly = $("#four_hundred_put_call_Select_call_butter_fly").val();
+                var positive_seven_hundred_fifty_Select_call_butter_fly = $("#positive_seven_hundred_fifty_Select_call_butter_fly").val();
+
+
+
+                var closest_put_positive_fifty_Select_call_butter_fly = optionChainTable
+                  .find(".strike_price:contains(" + put_positive_fifty_Select_call_butter_fly + ")")
+                  .closest(".call_put_tr");
+                if (closest_put_positive_fifty_Select_call_butter_fly.length) {
+                  closest_put_positive_fifty_Select_call_butter_fly
+                    .find("#Auto_puts_long_click")
+                    .data("HI1", "HI1there")
+                    .click();
+                }
+
+                var closest_four_hundred_put_call_Select_call_butter_fly = optionChainTable
+                  .find(".strike_price:contains(" + four_hundred_put_call_Select_call_butter_fly + ")")
+                  .closest(".call_put_tr");
+                if (closest_four_hundred_put_call_Select_call_butter_fly.length) {
+                  closest_four_hundred_put_call_Select_call_butter_fly
+                    .find("#Auto_puts_short_click ,#Auto_calls_short_click")
+                    .data("HI1", "HI2there")
+                    .click();
+                }
+
+                // Find the closest row for lastIndexPrev and click on Auto_puts_short_click
+
+                // Find the closest row for lastIndexForw and click on Auto_calls_short_click
+                var closest_positive_seven_hundred_fifty_Select_call_butter_fly = optionChainTable
+                  .find(".strike_price:contains(" + positive_seven_hundred_fifty_Select_call_butter_fly + ")")
+                  .closest(".call_put_tr");
+                if (closest_positive_seven_hundred_fifty_Select_call_butter_fly.length) {
+                  closest_positive_seven_hundred_fifty_Select_call_butter_fly
+                    .find("#Auto_calls_long_click")
+                    .data("HI1", "HI3There")
+                    .click();
+                }
+
+
+
+
+
+
+
+
+                // Click on #calculate after a longer delay
+
+                var counterInputValue = $("#counter_input_call_butter_fly").val();
+                $(".option_lot_size_input").text(counterInputValue);
+                localStorage.setItem("strategy_builder", "call_butterfly");
+                calculate_data();
+                $("#call_butter_fly_modal").hide();
+                Table_chart_pyoff()
+              });
+            }
+
+
 
 
 
@@ -7489,6 +8444,8 @@ $(document).on("click", function (e) {
           attachButtonClickEvent($("#jaze_lizard"), "jaze_lizard");
           attachButtonClickEvent($("#double_iron_fly"), "double_iron_fly");
           attachButtonClickEvent($("#double_iron_condor"), "double_iron_condor");
+          attachButtonClickEvent($("#put_butter_fly"), "put_butter_fly");
+          attachButtonClickEvent($("#call_butter_fly"), "call_butter_fly");
 
           var isTableEmpty = true;
 
@@ -7781,6 +8738,7 @@ $(document).on("click", function (e) {
               } else {
                 calculate_data();
               }
+              Table_chart_pyoff()
 
               // Output the id value to the console
               // console.log(idValue);
@@ -7899,6 +8857,12 @@ $(document).on("click", function (e) {
       });
     }
 
+
+    loadStocks();
+
+loadExpiryData("NIFTY");
+
+loadOptionData("NIFTY", "");
     loadOptionData(selectedOption, selectedExpiry);
     function loadExpiryData(selectedOption) {
       // console.log("Hi there" + selectedOption);
@@ -8204,7 +9168,7 @@ $(document).on("click", function (e) {
 
 
 
-      console.log(strikePrices);
+      // console.log(strikePrices);
       // console.log("Main calls_ltp: " + main_calls_ltp);
       // console.log("Main puts_ltp: " + main_puts_ltp);
 
@@ -8223,9 +9187,38 @@ $(document).on("click", function (e) {
 
       // Add data
       var chartData = [];
+      var tableData=[]
       for (var i = 0; i < strikePrices.length; i++) {
+        var cleanCategory = strikePrices[i].trim();
+        tableData.push({ category: cleanCategory, value: sumArray[i] });
         chartData.push({ category: strikePrices[i], value: sumArray[i] });
       }
+
+      console.log(tableData);
+      var tableBody = $(".payoff_table_data");
+
+// Clear any existing rows
+tableBody.empty();
+
+// Loop through the tableData array and create table rows and cells
+tableData.forEach(function(item) {
+    var row = $("<tr>");
+
+    var categoryCell = $("<td>").text(item.category);
+    var valueCell = $("<td>").text(item.value.toFixed(2));
+
+    row.append(categoryCell);
+    row.append(valueCell);
+
+    tableBody.append(row);
+});
+
+   $(".payoff_expiry").text($("#optionExpiryDropdown").val())
+
+
+
+
+
       chart.data = chartData;
 
       // Create axes
