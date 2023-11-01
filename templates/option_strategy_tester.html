@@ -338,7 +338,8 @@
 
   #resultTable thead tr th,
   .PL-table thead tr th ,
-  .payoff_table_main_table thead tr th {
+  .payoff_table_main_table thead tr th ,
+  .adjsuments_table_thead{
     background: #4399eb;
     color: white;
     font-size: 12px;
@@ -364,10 +365,17 @@
   #resultTable tbody tr td,
   .PL-table tbody tr td ,
   .payoff_table_main_table tbody tr td {
-    border-color: inherit;
-    border-style: hidden !important;
-    border-width: 0;
+    border-color: inherit !important;
+    border: none;
+    border-bottom-style:inherit !important;
+  
+    border-width: 1 !important;
   }
+
+  .table-striped-custom>tbody>tr:nth-child(2n)>td,
+      .table-striped-custom>tbody>tr:nth-child(2n)>th {
+          background-color: rgb(240, 247, 253) !important;
+      }
 </style>
 <style>
   .inner_greek_p_l {
@@ -960,16 +968,29 @@
 
   .main_add_position_actions {
     border-bottom: 1px solid #8080803b;
-  }
+    transition: 0.3s;
 
+  }
+.main_add_position_actions:hover{
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+
+} 
   .green-option-indicator {
     color: #00b865;
-    font-size: 19px;
+    width: 6px;
+    background: #00b865;
+    height: 28px;
+    border-radius: 8px 0px 0px 9px;
   }
 
   .red-option-indicator {
-    color: #e6191e;
-    font-size: 19px;
+
+
+
+    width: 6px;
+    background: #e6191e;
+    height: 28px;
+    border-radius: 8px 0px 0px 9px;
   }
 .targets_table,.stoploss_table,.alerts_table,.history_table{
   display: flex;
@@ -1371,7 +1392,7 @@
       </div>
 
       <div class="main_option_chain_table">
-        <table class="table table-hover table-striped-custom">
+        <table class="table table-hover">
           <thead>
             <th class="text-end bg-light-green">CALL IV</th>
             <th class="text-end bg-light-green">CALL OI</th>
@@ -3237,7 +3258,7 @@
           </div>
           <div id="payoff_table" style="width: 100%; height: 400px;     overflow: auto;">
 
-            <table class="payoff_table_main_table table">
+            <table class="payoff_table_main_table table table-striped-custom">
               <thead>
                 <tr>
                   <th>
@@ -3310,7 +3331,7 @@
 
           <div id="real_adjustment_table">
             <table class="table table-striped-custom">
-              <thead>
+              <thead class="adjsuments_table_thead">
 
                 <tr>
 
@@ -3640,6 +3661,27 @@
       background-color: #d90000;
       color: white !important;
     }
+
+    .bg_indicator_sell {
+                background-color: #ffcdd2 !important;
+                border-color: #ffcdd2 !important;
+                color: #e53935 !important;
+                caret-color: #e53935 !important;
+                padding: 1px 10px;
+                border-radius: 2px;
+
+            }
+
+            .bg_indicator_buy {
+                color: #43a047 !important;
+                caret-color: #43a047 !important;
+                background-color: #c8e6c9 !important;
+                border-color: #c8e6c9 !important;
+                padding: 1px 10px;
+                border-radius: 2px;
+
+            }
+
   </style>
 </div>
 <div class="modal fade" id="editPositionModal">
@@ -4288,7 +4330,7 @@
             $(".names_user_details h5").text(profile);
             $(".names_user_details p").text(`Client ID:${userId}`);
 
-            $(".margin_needed").val(total_sum);
+            $(".margin_needed").val(total_sum.toFixed(2));
             $(".symbol_name_order p").text(symbolSpot);
             $(".strike_price_order p").text(niftyLtp);
             $(".change_per_order p")
@@ -8680,6 +8722,7 @@
             var add_position = $(`
                                     <div class="main_add_position_actions d-flex justify-content-between" id=${positions++}>
                                         <div class="inner_position d-flex gap-1">
+                                          <div class="${action === "Long" ? "bg_indicator_buy" : "bg_indicator_sell"}" > ${action === "Long" ? "B" : "S"}</div>
                                             <div class="main_short_long_lot_size">
                                             <div class="short_long"><span class="long_short_inner">${action === "Long" ? "+" : "-"
               }</span></div> <div class="option_lot_size_input">1</div>x
@@ -8696,7 +8739,7 @@
                                         <div class="action_option_strategy d-flex justify-content-center align-items-center gap-1">
                                                     <i class="bi bi-pencil-square edit-button" data-bs-toggle="modal" data-bs-target="#editPositionModal"></i>
                                                     <i class="bi bi-trash-fill delete-button dlt-btn" id="delete-btn"></i>
-                                                    <i class='bx bxs-circle green-option-indicator exit_indicator'></i>
+                                                    <i class='green-option-indicator exit_indicator'></i>
                                                 </div>
                                             
                                             
@@ -9202,10 +9245,11 @@ tableBody.empty();
 
 // Loop through the tableData array and create table rows and cells
 tableData.forEach(function(item) {
+  var main_payoff_table_condition= item.value < 0?"text-danger" :"text-success"
     var row = $("<tr>");
 
     var categoryCell = $("<td>").text(item.category);
-    var valueCell = $("<td>").text(item.value.toFixed(2));
+    var valueCell = $("<td>").text(item.value.toFixed(2)).addClass(main_payoff_table_condition);
 
     row.append(categoryCell);
     row.append(valueCell);
