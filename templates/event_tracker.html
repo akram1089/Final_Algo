@@ -329,16 +329,25 @@
                     });
                     console.log(res_data);
                     
+                    var lastIndex = res_data.pop(); // Remove and store the last element
+                    res_data.unshift(lastIndex); 
 
                     res_data.forEach((element) => {
                         var dynamicID = element.corptype.replace(/\s+/g, "_");
+                        if (element.corptype === "Result") {
+                            // Change the corptype for a specific element
+                            element.corptype = "Earning Result";
+                            
+                          }
                         var card = `<div class="main_event_card cal-item" data-value2=${dynamicID} id=${dynamicID} style=background:${element.color}>
-                               <div class="cal-num">${element.totalcount}</div>
-                               <p class="CalFont">${element.corptype}</p>
-                               </div>`;
+                                         <div class="cal-num">${element.totalcount}</div>
+                                         <p class="CalFont">${element.corptype}</p>
+                                     </div>`;
+                      
+                      
                         var div_ele = $("#box");
                         div_ele.append(card);
-                    });
+                      });
                     var div_ele = $("#box");
                     var staticcard = `<div class="main_event_card ofs_box cal-item" style="background:#F6EDEB;">
                                     <p class="CalFont ofs_text">OFS</p>
