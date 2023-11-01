@@ -4571,6 +4571,7 @@ from .models import ZerodhaAPIConfig
 @csrf_exempt
 @login_required
 def delete_zerodha_config(request, item_id):
+    print(item_id)
     if request.method == 'POST':
         try:
             # Attempt to delete the item from the database only if it belongs to the logged-in user
@@ -4901,30 +4902,34 @@ def quote_data_zerodha(request):
                         "price": float(margin["entryPrice"])  # Converting to float as it seems to be a price
                     }
                     # print(order_param_single)
+                    margin_details.append(order_param_single)
 
-                    margin_detail = kite.order_margins([order_param_single])  # Wrap order_param_single in a list
-                    # print(margin_detail)
-                    logging.info("Required margin for single order: {}".format(margin_detail))
+                    
+                   
+                   
                     
                     # Append the margin detail to the list
-                    margin_details.append(margin_detail)
+                 
                 except Exception as e:
                     logging.error("An error occurred: {}".format(e))
 
 
      # Initialize a variable to store the total sum
-                total_sum = 0
+                # total_sum = 0
 
-                for details in margin_details:
-                    for detail in details:
-                        total_sum += detail['total']
+                # for details in margin_details:
+                #     for detail in details:
+                #         total_sum += detail['total']
 
-                # Append the total sum to quotes_data
-                print(total_sum)
+                # # Append the total sum to quotes_data
+                # print(total_sum)
 
 # Return the quotes_data list as a JSON response
 
-
+            margin_detail = kite.basket_order_margins(margin_details, mode='compact')  # Wrap order_param_single in a list
+            logging.info("Required margin for single order: {}".format(margin_detail))
+            print(margin_detail)
+            total_sum=margin_detail['initial']['total']
             # Create a list to store the quotes
             quotes_data = []
             
