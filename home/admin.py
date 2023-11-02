@@ -23,6 +23,7 @@ from.models import Subscriber
 from.models import ZerodhaAPIConfig
 from.models import Note
 from.models import my_strategies
+from.models import AdminAPIIntegrations
 
 # from.models import StockListing
 
@@ -51,6 +52,7 @@ admin.site.register(Subscriber)
 admin.site.register(ZerodhaAPIConfig)
 admin.site.register(Note)
 admin.site.register(my_strategies)
+admin.site.register(AdminAPIIntegrations)
 
 # admin.site.register(StockListing)
 

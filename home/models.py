@@ -225,3 +225,17 @@ class my_strategies(models.Model):
     def __str__(self):
         return self.strategy_name
 
+
+
+
+class AdminAPIIntegrations(models.Model):
+    broker_name = models.CharField(max_length=100)
+    app_name = models.CharField(max_length=100)
+    api_key = models.CharField(max_length=100)
+    api_secret_key = models.CharField(max_length=100)
+    access_token = models.CharField(max_length=100)
+    api_added_at = models.DateTimeField()
+    active_api = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"{self.broker_name} - {self.app_name}"
