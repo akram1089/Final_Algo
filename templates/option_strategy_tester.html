@@ -337,9 +337,11 @@
   }
 
   #resultTable thead tr th,
-  .PL-table thead tr th ,
-  .payoff_table_main_table thead tr th ,
-  .adjsuments_table_thead{
+  .PL-table thead tr th,
+  .payoff_table_main_table thead tr th,
+  .targets_table thead tr th,
+  .stoploss_table thead tr th,
+  .adjsuments_table_thead {
     background: #4399eb;
     color: white;
     font-size: 12px;
@@ -357,25 +359,25 @@
   }
 
   #resultTable tbody tr td,
-  .PL-table tbody tr td ,
+  .PL-table tbody tr td,
   .payoff_table_main_table tbody tr td {
     font-size: 14px;
   }
 
   #resultTable tbody tr td,
-  .PL-table tbody tr td ,
+  .PL-table tbody tr td,
   .payoff_table_main_table tbody tr td {
     border-color: inherit !important;
     border: none;
-    border-bottom-style:inherit !important;
-  
+    border-bottom-style: inherit !important;
+
     border-width: 1 !important;
   }
 
   .table-striped-custom>tbody>tr:nth-child(2n)>td,
-      .table-striped-custom>tbody>tr:nth-child(2n)>th {
-          background-color: rgb(240, 247, 253) !important;
-      }
+  .table-striped-custom>tbody>tr:nth-child(2n)>th {
+    background-color: rgb(240, 247, 253) !important;
+  }
 </style>
 <style>
   .inner_greek_p_l {
@@ -484,7 +486,7 @@
   .main_body_fields_double_iron_fly {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    /* align-items: center; */
   }
 
   .main_body_fields_straddle {
@@ -832,10 +834,10 @@
   #shortdouble_iron_condor,
   #shortput_butterfly,
   #shortcall_butter_fly {
-    width: 57px;
+    width: 68px;
     text-align: center;
     font-size: 12px;
-    height: 35px;
+    height: 37px;
     font-weight: 700;
     background: #dd0000;
     color: white;
@@ -919,7 +921,7 @@
   }
 
   #put_call_select {
-    margin-left: 24px;
+    /* margin-left: 24px; */
   }
 </style>
 
@@ -930,10 +932,14 @@
     padding-bottom: 8rem;
   }
 
-  .left_main_strategy_position,
-  .right_p_l_greeks {
+  .left_main_strategy_position {
     box-shadow: #4399eb29 0px 1px 4px;
     padding: 18px 18px;
+  }
+
+  .right_p_l_greeks {
+    box-shadow: #4399eb29 0px 1px 4px;
+    padding: 0 18px 18px 18px;
   }
 
   .inner_p_l_greeks {
@@ -971,16 +977,18 @@
     transition: 0.3s;
 
   }
-.main_add_position_actions:hover{
-  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
 
-} 
+  .main_add_position_actions:hover {
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+
+  }
+
   .green-option-indicator {
     color: #00b865;
     width: 6px;
     background: #00b865;
     height: 28px;
-    border-radius: 8px 0px 0px 9px;
+    /* border-radius: 8px 0px 0px 9px; */
   }
 
   .red-option-indicator {
@@ -990,15 +998,18 @@
     width: 6px;
     background: #e6191e;
     height: 28px;
-    border-radius: 8px 0px 0px 9px;
+    /* border-radius: 8px 0px 0px 9px; */
   }
-.targets_table,.stoploss_table,.alerts_table,.history_table{
-  display: flex;
+
+
+  .history_table {
+    display: flex;
     justify-content: center;
     height: 400px;
     align-items: center;
 
-}
+  }
+
   /* 
     .table-striped-custom>tbody>tr:nth-child(2n)>td,
     .table-striped-custom>tbody>tr:nth-child(2n)>th {
@@ -1111,7 +1122,7 @@
               <option value="BANKNIFTY">BANKNIFTY</option>
               <option value="FINNIFTY">FINNIFTY</option>
             </optgroup>
-            <optgroup label="Stocks"></optgroup>
+       <optgroup label="Stocks"></optgroup> 
           </select>
           <div class="spot_strategies">
             <p class="spot_title">Spot</p>
@@ -1241,8 +1252,7 @@
           border: 1px solid red;
         }
       </style>
-      <button class="d-flex align-items-center" id="saveStrategies" data-bs-toggle="modal"
-        data-bs-target="#saved_startegyModal"><i class='bx bxs-bookmark'></i>
+      <button class="d-flex align-items-center" id="saveStrategies"><i class='bx bxs-bookmark'></i>
         <p style="margin-bottom: 0;">Saved Strategies</p>
       </button>
       <button class="btn_outline_primary" type="button" data-bs-toggle="collapse" id="option_chain_button"
@@ -1441,9 +1451,31 @@
       //   $("#active_broker_modal").slideToggle();
       // });
 
+      function checkUserLoggedIn() {
+        $.ajax({
+          type: 'GET',
+          url: '/check_user_logged_in', // Update the URL to the appropriate endpoint
+          success: function (response) {
+            // If the user is logged in, toggle the broker activation modal
+
+            if (response.user_logged_in) {
+              $("#signinModal").modal("show");
+            } else {
+
+              $("#active_broker_modal").slideToggle();
+            }
+          },
+          error: function (xhr, status, error) {
+            // Handle the error, for example, display an error message
+            console.error("Error:", error);
+            alert("Error checking user login status.");
+          }
+        });
+      }
+
       $("#Activate_broker_btn").click(function (e) {
         e.stopPropagation(); // Prevent the click event from propagating to the document
-        $("#active_broker_modal").slideToggle();
+        checkUserLoggedIn(); // Call the function to check if the user is logged in
       });
 
       // Close the modal when a click occurs anywhere outside of the modal
@@ -1469,6 +1501,7 @@
     }
 
     .reset_button,
+    .setTarget,
     .adjust {
       display: flex !important;
       align-items: center !important;
@@ -1492,6 +1525,7 @@
     }
 
     .reset_button:hover,
+    .setTarget:hover,
     .adjust:hover {
       background: #fff !important;
       color: #4399eb !important;
@@ -2344,7 +2378,7 @@
         </div>
 
         <div class="main-put-butterfly">
-          <p class="straddle" id="put_butter_fly">PUT BUTTERFLY</p>
+          <p class="straddle" id="put_butter_fly">BEAR BUTTERFLY</p>
 
           <div class="" id="put_butterfly_modal">
             <div class="dismiss">
@@ -2355,7 +2389,7 @@
               <div class="modal_content">
                 <div class="modal_body" id="modal_body">
                   <div class="main_put_butterfly">
-                    <h5 class="text-center">Put Butterfly</h5>
+                    <h5 class="text-center">Bear Butterfly</h5>
 
                     <div class="main_body_fields_put_butterfly">
 
@@ -2455,7 +2489,7 @@
         </div>
 
         <div class="main-call-butterfly">
-          <p class="straddle" id="call_butter_fly">CALL BUTTERFLY</p>
+          <p class="straddle" id="call_butter_fly">BULL BUTTERFLY</p>
 
 
           <div class="" id="call_butter_fly_modal">
@@ -2467,7 +2501,7 @@
               <div class="modal_content">
                 <div class="modal_body" id="modal_body">
                   <div class="main_call_butter_fly">
-                    <h5 class="text-center">Call Butterfly</h5>
+                    <h5 class="text-center">Bull Butterfly</h5>
 
                     <div class="main_body_fields_call_butter_fly">
 
@@ -2573,8 +2607,7 @@
     </div>
   </div>
   <style>
-    .strategy_notes,
-    .save_strategy {
+    .strategy_notes {
       display: flex !important;
       align-items: center !important;
       background: linear-gradient(180deg, #4399eb, #5cadfb);
@@ -2597,10 +2630,64 @@
       font-weight: 600;
     }
 
-    .strategy_notes:hover,
+    .reset_button {
+
+      background: linear-gradient(180deg, #4399eb, #5cadfb);
+      color: #fff;
+      padding: 0px 57px;
+      text-align: center;
+      font-size: 13px;
+      height: 34px;
+      font-weight: 500;
+      border-radius: 4px;
+      border: 1px solid #4399eb !important;
+      -webkit-box-shadow: none !important;
+      box-shadow: none !important;
+      outline: 0 !important;
+      -webkit-transition: all .2s ease-in-out !important;
+      -moz-transition: all .2s ease-in-out !important;
+      transition: all .2s ease-in-out !important;
+      cursor: pointer;
+      font-weight: 600;
+      white-space: nowrap;
+
+    }
+
+    .save_strategy {
+      background: #fff;
+      color: #4399eb;
+      padding: 0px 57px;
+      text-align: center;
+      font-size: 13px;
+      height: 34px;
+      font-weight: 500;
+      border-radius: 4px;
+      border: 1px solid #4399eb !important;
+      -webkit-box-shadow: none !important;
+      box-shadow: none !important;
+      outline: 0 !important;
+      -webkit-transition: all .2s ease-in-out !important;
+      -moz-transition: all .2s ease-in-out !important;
+      transition: all .2s ease-in-out !important;
+      cursor: pointer;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
     .save_strategy:hover {
+      background: linear-gradient(180deg, #4399eb, #5cadfb);
+      color: #fff;
+    }
+
+    .strategy_notes:hover {
       background: #fff !important;
       color: #4399eb !important;
+    }
+
+    .main_bottom_strategy_positions {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1rem;
     }
 
     .strategy_position_reset {
@@ -2608,385 +2695,413 @@
       column-gap: 0.2rem;
       overflow: auto;
     }
+
+    .left_main_strategy_position {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
   </style>
 
   <div class="main_option_p_l_greeks_charts">
     <div class="inner_p_l_greeks row">
       <div class="left_main_strategy_position col-md-4 col-lg-4 col-sm-12">
-        <div class="strategy_position_reset d-flex justify-content-between">
-          <p class="fw-bold">Strategy Positions</p>
+
+        <div class="main_top_startegy_positions">
+          <div class="strategy_position_reset d-flex justify-content-between">
+            <p class="fw-bold">Strategy Positions</p>
 
 
-          <button data-bs-toggle="modal" data-bs-target="#save_startegyModal" class="save_strategy">Save
-            Strategy</button>
-          <button data-bs-toggle="modal" data-bs-target="#notesModal" class="strategy_notes">Notes</button>
 
-          <button class="reset_button d-flex gap-1 align-items-center" disabled
-            title="Please Activate your API for placing order">
-            <p style="margin-bottom: auto; margin-top: auto; font-size: 12px" data-bs-toggle="modal"
-              data-bs-target="#execute" class="execute_all_strategies">
-              Execute Order
-            </p>
-          </button>
+            <button data-bs-toggle="modal" data-bs-target="#notesModal" class="strategy_notes">Notes</button>
 
-          <!-- Button trigger modal -->
-          <style>
-            .user_details {
-              display: flex;
-              gap: 0.6rem;
-              align-items: center;
-            }
 
-            .zerodha_icon {
-              width: 40px;
-            }
 
-            .names_user_details h5 {
-              font-size: 15px;
-              font-weight: 700 !important;
-              margin-bottom: auto !important;
-            }
-
-            .names_user_details p {
-              font-size: 11px;
-            }
-
-            .strike_symbols_per_main_order {
-              gap: 0.2rem;
-              display: flex;
-              align-items: center;
-            }
-
-            .symbol_name_order p {
-              color: #454242;
-              font-weight: 100 !important;
-            }
-
-            .change_per_order p {
-              font-size: 12px;
-            }
-
-            .main_header_order {
-              display: flex;
-              gap: 1rem;
-              align-items: center;
-            }
-
-            .main_right_order_header {
-              display: flex;
-
-              align-items: center;
-              gap: 0.8rem;
-            }
-
-            .main_limit_select,
-            .main_mis_select,
-            .main_updates_price_btn {
-              display: flex;
-              align-items: center;
-              gap: 0.3rem;
-            }
-
-            .margin_footer {
-              display: flex;
-              gap: 1rem;
-            }
-
-            .margin_needed {
-              width: 134px !important;
-            }
-
-            .order_place_input {
-              width: 134px !important;
-            }
-
-            @media (min-width: 992px) {
-
-              .modal-lg,
-              .modal-xl {
-                --bs-modal-width: 806px !important;
+            <!-- Button trigger modal -->
+            <style>
+              .user_details {
+                display: flex;
+                gap: 0.6rem;
+                align-items: center;
               }
-            }
 
-            .reset_button,
-            .left_positions_reset_notes button,
-            .saveNotes,
-            .editNotes,
-            .updateStrategy,
-            .saveStrategy {
-              display: flex !important;
-              align-items: center !important;
-              background: linear-gradient(180deg, #4399eb, #5cadfb);
-              color: #fff;
-              padding: 0px 7px;
-              text-align: center;
-              height: 29px;
-              font-weight: 500;
-              border-radius: 4px;
-              border: 1px solid #4399eb !important;
-              -webkit-box-shadow: none !important;
-              box-shadow: none !important;
-              outline: 0 !important;
-              -webkit-transition: all .2s ease-in-out !important;
-              -moz-transition: all .2s ease-in-out !important;
-              transition: all .2s ease-in-out !important;
-              cursor: pointer;
+              .zerodha_icon {
+                width: 40px;
+              }
 
-              font-weight: 600;
-            }
+              .names_user_details h5 {
+                font-size: 15px;
+                font-weight: 700 !important;
+                margin-bottom: auto !important;
+              }
 
-            .reset_button:hover,
-            .left_positions_reset_notes button:hover,
-            .saveNotes:hover,
-            .editNotes:hover,
-            .updateStrategy:hover,
-            .saveStrategy:hover {
-              background: #fff !important;
-              color: #4399eb !important;
-            }
+              .names_user_details p {
+                font-size: 11px;
+              }
 
-            .main_filter_greek_P_L {
-              overflow: auto;
-              white-space: nowrap;
+              .strike_symbols_per_main_order {
+                gap: 0.2rem;
+                display: flex;
+                align-items: center;
+              }
 
-            }
-            .main-call-butterfly{
-              position: relative;
-            }
-          </style>
+              .symbol_name_order p {
+                color: #454242;
+                font-weight: 100 !important;
+              }
 
-          <!-- Modal -->
-          <div class="modal fade" id="execute" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"
-            style="z-index: 99999999999999 !important">
-            <div class="modal-dialog modal-dialog-centered modal-lg">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <div class="user_details">
-                    <div class="zerodha_icon">
-                      <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 90 60">
-                        <defs>
-                          <style>
-                            .cls-1 {
-                              fill: #f6461a;
-                            }
+              .change_per_order p {
+                font-size: 12px;
+              }
 
-                            .cls-2 {
-                              fill: #db342c;
-                            }
-                          </style>
-                        </defs>
-                        <title>Kite logo trimmed</title>
-                        <polygon class="cls-1" points="30 0 0 30 30 60 60 30 90 0 30 0" />
-                        <polygon class="cls-2" points="30 60 60 30 90 60 30 60" />
-                      </svg>
+              .main_header_order {
+                display: flex;
+                gap: 1rem;
+                align-items: center;
+              }
+
+              .main_right_order_header {
+                display: flex;
+
+                align-items: center;
+                gap: 0.8rem;
+              }
+
+              .main_limit_select,
+              .main_mis_select,
+              .main_updates_price_btn {
+                display: flex;
+                align-items: center;
+                gap: 0.3rem;
+              }
+
+              .margin_footer {
+                display: flex;
+                gap: 1rem;
+              }
+
+              .margin_needed {
+                width: 134px !important;
+              }
+
+              .order_place_input {
+                width: 134px !important;
+              }
+
+              @media (min-width: 992px) {
+
+                .modal-lg,
+                .modal-xl {
+                  --bs-modal-width: 806px !important;
+                }
+              }
+
+
+              .left_positions_reset_notes button,
+              .saveNotes,
+              .editNotes,
+              .updateStrategy,
+              .saveStrategy {
+                display: flex !important;
+                align-items: center !important;
+                background: linear-gradient(180deg, #4399eb, #5cadfb);
+                color: #fff;
+                padding: 0px 7px;
+                text-align: center;
+                height: 29px;
+                font-weight: 500;
+                border-radius: 4px;
+                border: 1px solid #4399eb !important;
+                -webkit-box-shadow: none !important;
+                box-shadow: none !important;
+                outline: 0 !important;
+                -webkit-transition: all .2s ease-in-out !important;
+                -moz-transition: all .2s ease-in-out !important;
+                transition: all .2s ease-in-out !important;
+                cursor: pointer;
+
+                font-weight: 600;
+              }
+
+              .reset_button:hover,
+              .left_positions_reset_notes button:hover,
+              .saveNotes:hover,
+              .editNotes:hover,
+              .updateStrategy:hover,
+              .saveStrategy:hover {
+                background: #fff !important;
+                color: #4399eb !important;
+              }
+
+              .main_filter_greek_P_L {
+                overflow: auto;
+                white-space: nowrap;
+
+              }
+
+              .main-call-butterfly {
+                position: relative;
+              }
+
+              .table_pl_greek {
+                padding: 0 0.5rem 0.5rem 0.5rem;
+              }
+
+              .maximize {
+                font-size: 19px !important;
+                display: flex;
+                justify-content: flex-end;
+                cursor: pointer;
+              }
+            </style>
+
+            <!-- Modal -->
+            <div class="modal fade" id="execute" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"
+              style="z-index: 99999999999999 !important">
+              <div class="modal-dialog modal-dialog-centered modal-lg">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <div class="user_details">
+                      <div class="zerodha_icon">
+                        <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 90 60">
+                          <defs>
+                            <style>
+                              .cls-1 {
+                                fill: #f6461a;
+                              }
+
+                              .cls-2 {
+                                fill: #db342c;
+                              }
+                            </style>
+                          </defs>
+                          <title>Kite logo trimmed</title>
+                          <polygon class="cls-1" points="30 0 0 30 30 60 60 30 90 0 30 0" />
+                          <polygon class="cls-2" points="30 60 60 30 90 60 30 60" />
+                        </svg>
+                      </div>
+                      <div class="names_user_details">
+                        <h5>Biswajit Panda</h5>
+                        <p>Client ID: TWB026</p>
+                      </div>
                     </div>
-                    <div class="names_user_details">
-                      <h5>Biswajit Panda</h5>
-                      <p>Client ID: TWB026</p>
-                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                   </div>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                  <div class="main_header_order">
-                    <div class="main_left_order_header">
-                      <div class="strike_symbols_per_main_order">
-                        <div class="symbol_name_order">
-                          <p></p>
+                  <div class="modal-body">
+                    <div class="main_header_order">
+                      <div class="main_left_order_header">
+                        <div class="strike_symbols_per_main_order">
+                          <div class="symbol_name_order">
+                            <p></p>
+                          </div>
+                          <div class="strike_price_order">
+                            <p></p>
+                          </div>
+                          <div class="change_per_order">
+                            <p></p>
+                          </div>
                         </div>
-                        <div class="strike_price_order">
-                          <p></p>
+                      </div>
+                      <div class="main_right_order_header">
+                        <div class="main_mis_select d-flex gap-1">
+                          <select name="mis_select" id="mis_select" class="form-select mis_select">
+                            <option value="overnight">Overnight</option>
+                            <option value="intraday">Intraday</option>
+                          </select>
+                          <i class="bx bx-info-circle"></i>
                         </div>
-                        <div class="change_per_order">
-                          <p></p>
+                        <div class="main_limit_select">
+                          <select name="limit_select" id="limit_select" class="form-select limit_select">
+                            <option value="limit">Limit</option>
+                            <option value="market">Market</option>
+                          </select>
+                          <i class="bx bx-info-circle"></i>
                         </div>
-                      </div>
-                    </div>
-                    <div class="main_right_order_header">
-                      <div class="main_mis_select d-flex gap-1">
-                        <select name="mis_select" id="mis_select" class="form-select mis_select">
-                          <option value="overnight">Overnight</option>
-                          <option value="intraday">Intraday</option>
-                        </select>
-                        <i class="bx bx-info-circle"></i>
-                      </div>
-                      <div class="main_limit_select">
-                        <select name="limit_select" id="limit_select" class="form-select limit_select">
-                          <option value="limit">Limit</option>
-                          <option value="market">Market</option>
-                        </select>
-                        <i class="bx bx-info-circle"></i>
-                      </div>
-                      <div class="main_updates_price_btn">
-                        <button class="btn btn-outline-primary">
-                          <i class="bx bx-sync"></i>Updates Price
-                        </button>
-                        <i class="bx bx-info-circle"></i>
-                      </div>
-                      <style>
-                        .settings_modal {
-                          display: flex;
-                          gap: 0.5rem;
-                          justify-content: center;
-                        }
-                      </style>
-                      <div class="main_settings_order dropdown">
-                        <button class="btn btn-outline-primary dropdown-toggle" data-bs-toggle="dropdown"
-                          aria-expanded="false">
-                          <i class="bx bx-cog"></i>Settings
-                        </button>
-                        <div class="dropdown-menu" style="width: 200px !important">
-                          <div class="form-check settings_modal">
-                            <input class="form-check-input" type="checkbox" id="in_depth_check_box" checked />
-                            <label class="form-check-label" for="in_depth_check_box">
-                              Show Depth & Info
-                            </label>
+                        <div class="main_updates_price_btn">
+                          <button class="btn btn-outline-primary">
+                            <i class="bx bx-sync"></i>Updates Price
+                          </button>
+                          <i class="bx bx-info-circle"></i>
+                        </div>
+                        <style>
+                          .settings_modal {
+                            display: flex;
+                            gap: 0.5rem;
+                            justify-content: center;
+                          }
+                        </style>
+                        <div class="main_settings_order dropdown">
+                          <button class="btn btn-outline-primary dropdown-toggle" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            <i class="bx bx-cog"></i>Settings
+                          </button>
+                          <div class="dropdown-menu" style="width: 200px !important">
+                            <div class="form-check settings_modal">
+                              <input class="form-check-input" type="checkbox" id="in_depth_check_box" checked />
+                              <label class="form-check-label" for="in_depth_check_box">
+                                Show Depth & Info
+                              </label>
+                            </div>
                           </div>
                         </div>
                       </div>
                     </div>
-                  </div>
 
-                  <div class="order_modal"></div>
-                </div>
-                <div class="modal-footer justify-content-between">
-                  <div class="margin_footer">
-                    <div class="form-group order_place_input">
-                      <label for="expiryEdit">Margin Needed</label>
-                      <input type="number" value="4.1" class="margin_needed form-control" disabled />
+                    <div class="order_modal"></div>
+                  </div>
+                  <div class="modal-footer justify-content-between">
+                    <div class="margin_footer">
+                      <div class="form-group order_place_input">
+                        <label for="expiryEdit">Margin Needed</label>
+                        <input type="number" value="4.1" class="margin_needed form-control" disabled />
+                      </div>
+                      <div class="form-group order_place_input">
+                        <label for="expiryEdit">Margin Available</label>
+                        <input type="number" value="4.1" class="margin_available form-control" disabled />
+                      </div>
                     </div>
-                    <div class="form-group order_place_input">
-                      <label for="expiryEdit">Margin Available</label>
-                      <input type="number" value="4.1" class="margin_available form-control" disabled />
+                    <button type="button" class="btn btn-primary place_order_btn">
+                      Place All Order
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="modal fade" id="save_startegyModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+              aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Update Strategy</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    <div class="mb-3">
+
+                      <input type="text" class="form-control" id="strategy_input" placeholder="Enter strategy name">
                     </div>
                   </div>
-                  <button type="button" class="btn btn-primary place_order_btn">
-                    Place All Order
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
+                  <div class="modal-footer">
 
-          <div class="modal fade" id="save_startegyModal" tabindex="-1" aria-labelledby="exampleModalLabel"
-            aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h1 class="modal-title fs-5" id="exampleModalLabel">Update Strategy</h1>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                  <div class="mb-3">
 
-                    <input type="text" class="form-control" id="strategy_input" placeholder="Enter strategy name">
+                    <button type="button" class="saveStrategy">Save</button>
                   </div>
                 </div>
-                <div class="modal-footer">
-
-
-                  <button type="button" class="saveStrategy">Save</button>
-                </div>
               </div>
             </div>
-          </div>
 
-          <div class="modal fade" id="notesModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h1 class="modal-title fs-5" id="exampleModalLabel">Strategy Notes</h1>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                  <div class="mb-3">
-                    <textarea class="form-control" id="editInput" rows="3" placeholder="Write your note here..."
-                      disabled></textarea>
+            <div class="modal fade" id="notesModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+              aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Strategy Notes</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    <div class="mb-3">
+                      <textarea class="form-control" id="editInput" rows="3" placeholder="Write your note here..."
+                        disabled></textarea>
+                    </div>
+                  </div>
+                  <div class="modal-footer">
+
+                    <button type="button" class="editNotes">Edit</button>
+                    <button type="button" class="saveNotes">Save</button>
                   </div>
                 </div>
-                <div class="modal-footer">
+              </div>
+            </div>
 
-                  <button type="button" class="editNotes">Edit</button>
-                  <button type="button" class="saveNotes">Save</button>
+            <div class="modal fade edit_Strategy_modal" id="editStrategyModal" tabindex="-1"
+              aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Update Strategy</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    <input type="text" class="form-control" id="updateStrategyname">
+                  </div>
+                  <div class="modal-footer">
+
+                    <button type="button" class="updateStrategy" id="updateStrategy_btn">Update
+                      Strategy</button>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
 
-          <div class="modal fade edit_Strategy_modal" id="editStrategyModal" tabindex="-1"
-            aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h1 class="modal-title fs-5" id="exampleModalLabel">Update Strategy</h1>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                  <input type="text" class="form-control" id="updateStrategyname">
-                </div>
-                <div class="modal-footer">
-
-                  <button type="button" class="updateStrategy" id="updateStrategy_btn">Update
-                    Strategy</button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <script>
-            $(document).ready(function () {
+            <script>
+              $(document).ready(function () {
 
 
 
-              $(".saveStrategy").click(function () {
-                var strategy_input = $("#strategy_input").val();
-                var tempTradingPositions = localStorage.getItem('Temp_TradingPositions');
+                $(".saveStrategy").click(function () {
+                  var strategy_input = $("#strategy_input").val();
+                  var tempTradingPositions = localStorage.getItem('Temp_TradingPositions');
 
-                $.ajax({
-                  type: "POST",
-                  url: "/save_strategy",
-                  data: {
+                  $.ajax({
+                    type: "POST",
+                    url: "/save_strategy",
+                    data: {
 
-                    'strategy_input': strategy_input,
-                    'trading_positions': tempTradingPositions,  // Add the retrieved value here
+                      'strategy_input': strategy_input,
+                      'trading_positions': tempTradingPositions,  // Add the retrieved value here
 
-                    'csrfmiddlewaretoken': '{{ csrf_token }}'
-                  },
-                  success: function (response) {
-                    // handle success
-                    alert(response.message);
-                    getStrategies_data()
-                    $("#strategy_input").val('')
+                      'csrfmiddlewaretoken': '{{ csrf_token }}'
+                    },
+                    success: function (response) {
+                      // handle success
 
-                  },
-                  error: function (response) {
-                    // handle error
-                    alert(response.message);
-                  }
-                });
-
-              })
+                      if (response.user_not_logged_in) {
+                        $("#signinModal").modal("show");
+                      } else {
+                        alert(response.message);
+                        getStrategies_data()
+                        $("#strategy_input").val('')
+                      }
 
 
+                    },
+                    error: function (response) {
+                      // handle error
+                      alert(response.message);
+                    }
+                  });
 
-              function getStrategies_data() {
-                $.ajax({
-                  type: "GET",
-                  url: "/get_all_strategies",
-                  success: function (response) {
-                    // handle success
-                    var strategyData = response.strategy_data;
-                    $(".all_strategies").empty()
-                    // Do something with the strategy data
+                })
 
-                    if (strategyData.length === 0) {
-                      $(".all_strategies").append(`
+
+                $("#saveStrategies").click(function () {
+
+                  getStrategies_data()
+                })
+                function getStrategies_data() {
+                  $.ajax({
+                    type: "GET",
+                    url: "/get_all_strategies",
+                    success: function (response) {
+                      if (response.user_not_logged_in) {
+                        console.log("not logged");
+                        $("#signinModal").modal("show");
+                      } else {
+                        // handle success
+                        $("#saved_startegyModal").modal("show");
+                        var strategyData = response.strategy_data;
+                        $(".all_strategies").empty()
+                        // Do something with the strategy data
+
+                        if (strategyData.length === 0) {
+                          $(".all_strategies").append(`
                                               <div class="d-flex  justify-content-center p-2"> <p>No Strategies Found...</p></div>
                                               `);
-                    } else {
-                      strategyData.forEach((strategy) => {
+                        } else {
+                          strategyData.forEach((strategy) => {
 
-                        var tradingPositions = `
+                            var tradingPositions = `
                                                       <div class="savedStrategies d-flex justify-content-between">
                                                           <div class="left_strategy_name">
                                                               ${strategy.strategy_name}
@@ -2997,100 +3112,110 @@
                                                           </div>
                                                       </div>
                                                   `;
-                        $(".all_strategies").append(tradingPositions);
-                      });
+                            $(".all_strategies").append(tradingPositions);
+                          });
+                        }
+
+
+
+                        console.log(strategyData);
+
+                        $(".delete_strategy").click(function () {
+                          var strategyId = $(this).data('delete');
+                          console.log(strategyId);
+
+                          // Perform delete operation with strategyId
+                          $.ajax({
+                            type: "POST",
+                            url: "/delete_strategy",
+                            data: {
+                              'strategy_id': strategyId,
+                              'csrfmiddlewaretoken': '{{ csrf_token }}'
+                            },
+                            success: function (response) {
+                              // handle success
+                              console.log(response.message);
+                              getStrategies_data()
+                              // Refresh the strategies list or remove the deleted strategy from the DOM
+                            },
+                            error: function (response) {
+                              // handle error
+                              console.log('Error deleting strategy:', response);
+                            }
+                          });
+                        });
+                        // Open the modal on clicking the edit icon
+                        $(".edit_strategy").click(function () {
+                          var strategyId = $(this).data('edit');
+                          console.log(strategyId);
+
+                          $.ajax({
+                            type: "POST",
+                            url: "/get_unique_strategy",
+                            data: {
+                              'strategy_id': strategyId,
+
+                            },
+                            success: function (response) {
+                              // handle success
+                              console.log(response.strategy_data);
+
+                              $("#updateStrategyname").val(response.strategy_data.strategy_name).attr('data-id-update', strategyId);
+
+                            },
+                            error: function (response) {
+                              // handle error
+                              console.log('Error updating strategy:', response);
+                            }
+                          });
+
+                        });
+
+
+
+                        // Update the strategy on clicking the update button
+                        $("#updateStrategy_btn").click(function () {
+                          var updatedStrategyName = $("#updateStrategyname").val();
+                          var strategyId = $("#updateStrategyname").attr('data-id-update');
+
+                          // Send AJAX request to update the strategy name
+                          $.ajax({
+                            type: "POST",
+                            url: "/update_strategy",
+                            data: {
+                              'strategy_id': strategyId,
+                              'updated_strategy_name': updatedStrategyName,
+                              'csrfmiddlewaretoken': '{{ csrf_token }}'
+                            },
+                            success: function (response) {
+                              // handle success
+                              console.log(response.message);
+                              getStrategies_data(); // Refresh the strategies list
+
+                            },
+                            error: function (response) {
+                              // handle error
+                              console.log('Error updating strategy:', response);
+                            }
+                          });
+                        });
+
+
+                      }
+
+
+
+
+
+
+                    },
+                    error: function (response) {
+                      // handle error
+                      console.log('Error fetching strategies:', response);
                     }
+                  });
 
-
-
-
-
-
-
-
-
-
-                    console.log(strategyData);
-
-                    $(".delete_strategy").click(function () {
-                      var strategyId = $(this).data('delete');
-                      console.log(strategyId);
-
-                      // Perform delete operation with strategyId
-                      $.ajax({
-                        type: "POST",
-                        url: "/delete_strategy",
-                        data: {
-                          'strategy_id': strategyId,
-                          'csrfmiddlewaretoken': '{{ csrf_token }}'
-                        },
-                        success: function (response) {
-                          // handle success
-                          console.log(response.message);
-                          getStrategies_data()
-                          // Refresh the strategies list or remove the deleted strategy from the DOM
-                        },
-                        error: function (response) {
-                          // handle error
-                          console.log('Error deleting strategy:', response);
-                        }
-                      });
-                    });
-                    // Open the modal on clicking the edit icon
-                    $(".edit_strategy").click(function () {
-                      var strategyId = $(this).data('edit');
-                      console.log(strategyId);
-
-                      $.ajax({
-                        type: "POST",
-                        url: "/get_unique_strategy",
-                        data: {
-                          'strategy_id': strategyId,
-
-                        },
-                        success: function (response) {
-                          // handle success
-                          console.log(response.strategy_data);
-
-                          $("#updateStrategyname").val(response.strategy_data.strategy_name).attr('data-id-update', strategyId);
-
-                        },
-                        error: function (response) {
-                          // handle error
-                          console.log('Error updating strategy:', response);
-                        }
-                      });
-
-                    });
-
-
-
-                    // Update the strategy on clicking the update button
-                    $("#updateStrategy_btn").click(function () {
-                      var updatedStrategyName = $("#updateStrategyname").val();
-                      var strategyId = $("#updateStrategyname").attr('data-id-update');
-
-                      // Send AJAX request to update the strategy name
-                      $.ajax({
-                        type: "POST",
-                        url: "/update_strategy",
-                        data: {
-                          'strategy_id': strategyId,
-                          'updated_strategy_name': updatedStrategyName,
-                          'csrfmiddlewaretoken': '{{ csrf_token }}'
-                        },
-                        success: function (response) {
-                          // handle success
-                          console.log(response.message);
-                          getStrategies_data(); // Refresh the strategies list
-
-                        },
-                        error: function (response) {
-                          // handle error
-                          console.log('Error updating strategy:', response);
-                        }
-                      });
-                    });
+                }
 
 
 
@@ -3102,25 +3227,45 @@
 
 
 
+                $(".saveNotes").click(function () {
+                  var noteText = $("#editInput").val();
+                  $.ajax({
+                    type: "POST",
+                    url: "/save_note",
+                    data: {
+                      'id': 1,
+                      'text': noteText,
+                      'csrfmiddlewaretoken': '{{ csrf_token }}'
+                    },
+                    success: function (response) {
+                      // handle success
+
+                      if (response.not_logged_in) {
+                        $("#signinModal").modal("show");
+
+                      } else {
+                        alert(response.message);
+                        displayNotes();
+                        disableNote();
+                      }
 
 
+                    },
+                    error: function (response) {
+                      // handle error
+                      if (response.status === 401) {
 
-
-
-
-
-
-
-
-
-                  },
-                  error: function (response) {
-                    // handle error
-                    console.log('Error fetching strategies:', response);
-                  }
+                      } else {
+                        alert(response.message);
+                      }
+                    }
+                  });
                 });
 
-              }
+
+                // Add code to open the sign-in modal here
+                // You can use Bootstrap modal or any other modal library for this purpose
+                // Example code for opening Bootstrap modal:
 
 
 
@@ -3128,108 +3273,88 @@
 
 
 
-              getStrategies_data()
+                function displayNotes() {
+                  $.ajax({
+                    type: 'GET',
+                    url: '/get_notes',  // Replace with your URL to fetch notes
+                    success: function (notes) {
+                      if (notes.length > 0) {
+                        var latestNote = notes[notes.length - 1];
+                        $("#editInput").val(latestNote.text);
+                      }
+                    },
+                    error: function (error) {
+                      console.log('Error fetching notes:', error);
+                    }
+                  });
+                }
+                displayNotes();
 
+                $(".editNotes").click(function () {
+                  editNote()
+                })
 
+                function disableNote() {
+                  $("#editInput").prop('disabled', true); // Enable the textarea when editing
+                  // Revert CSS properties to their defaults
 
-
-              // Function to handle saving the note
-              $(".saveNotes").click(function () {
-                var noteText = $("#editInput").val();
-                $.ajax({
-                  type: "POST",
-                  url: "/save_note",
-                  data: {
-                    'id': 1,
-                    'text': noteText,
-                    'csrfmiddlewaretoken': '{{ csrf_token }}'
-                  },
-                  success: function (response) {
-                    // handle success
-                    alert(response.message);
-                    displayNotes();
-                    disableNote();
-
-
-                  },
-                  error: function (response) {
-                    // handle error
-                    alert(response.message);
-                  }
-                });
+                }
+                function editNote() {
+                  $("#editInput").prop('disabled', false); // Enable the textarea when editing
+                  // Revert CSS properties to their defaults
+                  $("#editInput").focus()
+                }
               });
 
 
+            </script>
 
 
+          </div>
 
+          <div class="main_position"></div>
 
-              function displayNotes() {
-                $.ajax({
-                  type: 'GET',
-                  url: '/get_notes',  // Replace with your URL to fetch notes
-                  success: function (notes) {
-                    if (notes.length > 0) {
-                      var latestNote = notes[notes.length - 1];
-                      $("#editInput").val(latestNote.text);
-                    }
-                  },
-                  error: function (error) {
-                    console.log('Error fetching notes:', error);
-                  }
-                });
-              }
-              displayNotes();
+          <div class="main_all_profit_loss">
+            <div class="d-flex align-items-center justify-content-between mt-2">
+              <p class="fs-14 fw-500 label-color-6">Max. Profit</p>
+              <p class="fs-14 fw-500 text-green" id="max_profit">Null</p>
+            </div>
+            <div class="d-flex align-items-center justify-content-between">
+              <p class="fs-14 fw-500 label-color-6">Max. Loss</p>
+              <p class="fs-14 fw-500 text-danger" id="max_loss">Null</p>
+            </div>
 
-              $(".editNotes").click(function () {
-                editNote()
-              })
+            <div class="d-flex align-items-center justify-content-between">
+              <p class="fs-14 fw-500 label-color-6">Breakevens</p>
+              <p class="fs-14 fw-500 label-color-6" id="break_evens">
+                Null
+              </p>
+            </div>
 
-              function disableNote() {
-                $("#editInput").prop('disabled', true); // Enable the textarea when editing
-                // Revert CSS properties to their defaults
-
-              }
-              function editNote() {
-                $("#editInput").prop('disabled', false); // Enable the textarea when editing
-                // Revert CSS properties to their defaults
-                $("#editInput").focus()
-              }
-            });
-
-
-          </script>
-
-
+            <div class="d-flex align-items-center justify-content-between">
+              <p class="fs-14 fw-500 label-color-6">Reward Risk:</p>
+              <p class="fs-14 fw-500 label-color-6" id="ratio">No Defined</p>
+            </div>
+          </div>
         </div>
-
-        <div class="main_position"></div>
-
-        <div class="main_all_profit_loss">
-          <div class="d-flex align-items-center justify-content-between mt-2">
-            <p class="fs-14 fw-500 label-color-6">Max. Profit</p>
-            <p class="fs-14 fw-500 text-green" id="max_profit">Null</p>
-          </div>
-          <div class="d-flex align-items-center justify-content-between">
-            <p class="fs-14 fw-500 label-color-6">Max. Loss</p>
-            <p class="fs-14 fw-500 text-danger" id="max_loss">Null</p>
-          </div>
-
-          <div class="d-flex align-items-center justify-content-between">
-            <p class="fs-14 fw-500 label-color-6">Breakevens</p>
-            <p class="fs-14 fw-500 label-color-6" id="break_evens">
-              Null
+        <div class="main_bottom_strategy_positions">
+          <button data-bs-toggle="modal" data-bs-target="#save_startegyModal" class="save_strategy">Save
+            Strategy</button>
+          <button class="reset_button d-flex gap-1 align-items-center" disabled
+            title="Please Activate your API for placing order">
+            <p style="margin-bottom: auto; margin-top: auto; font-size: 12px" data-bs-toggle="modal"
+              data-bs-target="#execute" class="execute_all_strategies">
+              Execute Order
             </p>
-          </div>
+          </button>
 
-          <div class="d-flex align-items-center justify-content-between">
-            <p class="fs-14 fw-500 label-color-6">Reward Risk:</p>
-            <p class="fs-14 fw-500 label-color-6" id="ratio">No Defined</p>
-          </div>
         </div>
       </div>
+
       <div class="right_p_l_greeks col-md-7 col-lg-7 col-sm-12">
-        <div class="table_pl_greek p-2">
+
+        <i class='bx bx-fullscreen maximize'></i>
+        <div class="table_pl_greek">
           <div class="main_filter_greek_P_L">
             <div class="inner_greek_p_l d-flex">
               <p class="payoff_charts greek_strategy_active">
@@ -3264,7 +3389,7 @@
                   <th>
 
                     <div class="strikePrice_payoff_table">
-                      
+
                       Strike Price
                     </div>
                   </th>
@@ -3281,7 +3406,7 @@
               </thead>
 
               <tbody class="payoff_table_data">
-              
+
               </tbody>
             </table>
 
@@ -3388,13 +3513,416 @@
           </div>
 
           <div class="targets_table">
-            <p>Targets is under developements</p>
+
+            <table class="table table-striped-custom">
+              <thead>
+                <tr>
+               
+                  <th>STRATEGY</th>
+                  <th>  STRIKE PRICE</th>
+                  <th>TARGET PRICE</th>
+                  <th>TARGET PERCENTAGE</th>
+                  <th>VARIANCE</th>
+                  <th>ACTION</th>
+                </tr>
+              </thead>
+
+              <tbody>
+              <tbody>
+
+
+                <tr>
+
+                  <td>
+                 Strategy 1
+                  </td>
+
+                  <td>19100</td>
+                  <td>
+                    <div class="main_tagets_check_input" style="display: flex;align-items: flex-start;gap: 0.5rem;">
+
+                      <div class="" style="display: flex;align-items: center;">
+                        <label for="exampleInputEmail1" class="form-label"></label>
+                        <input type="number" class="form-control form-control-sm" id="exampleInputEmail1"
+                          aria-describedby="emailHelp" value="19200" fdprocessedid="n1q6hn" style="width: 85px;">
+                        <div id="emailHelp" class="form-text"></div>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="main_tagets_check_input" style="display: flex;align-items: flex-start;gap: 0.5rem;">
+
+                      <div class="" style="display: flex;align-items: center;">
+                        <label for="exampleInputEmail1" class="form-label"></label>
+                        <input type="number" class="form-control form-control-sm" id="exampleInputEmail1"
+                          aria-describedby="emailHelp" value="5" fdprocessedid="n1q6hn" style="width: 85px;">
+                        <div id="emailHelp" class="form-text">%</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td>             <div class="" style="display: flex;align-items: center;">
+                    <label for="exampleInputEmail1" class="form-label"></label>
+                    <input type="number" class="form-control form-control-sm" id="exampleInputEmail1"
+                      aria-describedby="emailHelp" value="19200" fdprocessedid="n1q6hn" style="width: 85px;">
+                    <div id="emailHelp" class="form-text"></div>
+                  </div>
+                </div>
+              </td>
+                  <td><button class="setTarget">SET TARGET</button></td>
+
+
+
+
+                </tr>
+       
+                <tr>
+
+                  <td>
+                 Strategy 2
+                  </td>
+
+                  <td>19100</td>
+                  <td>
+                    <div class="main_tagets_check_input" style="display: flex;align-items: flex-start;gap: 0.5rem;">
+
+                      <div class="" style="display: flex;align-items: center;">
+                        <label for="exampleInputEmail1" class="form-label"></label>
+                        <input type="number" class="form-control form-control-sm" id="exampleInputEmail1"
+                          aria-describedby="emailHelp" value="19200" fdprocessedid="n1q6hn" style="width: 85px;">
+                        <div id="emailHelp" class="form-text"></div>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="main_tagets_check_input" style="display: flex;align-items: flex-start;gap: 0.5rem;">
+
+                      <div class="" style="display: flex;align-items: center;">
+                        <label for="exampleInputEmail1" class="form-label"></label>
+                        <input type="number" class="form-control form-control-sm" id="exampleInputEmail1"
+                          aria-describedby="emailHelp" value="5" fdprocessedid="n1q6hn" style="width: 85px;">
+                        <div id="emailHelp" class="form-text">%</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td>             <div class="" style="display: flex;align-items: center;">
+                    <label for="exampleInputEmail1" class="form-label"></label>
+                    <input type="number" class="form-control form-control-sm" id="exampleInputEmail1"
+                      aria-describedby="emailHelp" value="19200" fdprocessedid="n1q6hn" style="width: 85px;">
+                    <div id="emailHelp" class="form-text"></div>
+                  </div>
+                </div>
+              </td>
+                  <td><button class="setTarget">SET TARGET</button></td>
+
+
+
+
+                </tr>
+       
+                <tr>
+
+                  <td>
+                 Strategy 3
+                  </td>
+
+                  <td>19100</td>
+                  <td>
+                    <div class="main_tagets_check_input" style="display: flex;align-items: flex-start;gap: 0.5rem;">
+
+                      <div class="" style="display: flex;align-items: center;">
+                        <label for="exampleInputEmail1" class="form-label"></label>
+                        <input type="number" class="form-control form-control-sm" id="exampleInputEmail1"
+                          aria-describedby="emailHelp" value="19200" fdprocessedid="n1q6hn" style="width: 85px;">
+                        <div id="emailHelp" class="form-text"></div>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="main_tagets_check_input" style="display: flex;align-items: flex-start;gap: 0.5rem;">
+
+                      <div class="" style="display: flex;align-items: center;">
+                        <label for="exampleInputEmail1" class="form-label"></label>
+                        <input type="number" class="form-control form-control-sm" id="exampleInputEmail1"
+                          aria-describedby="emailHelp" value="5" fdprocessedid="n1q6hn" style="width: 85px;">
+                        <div id="emailHelp" class="form-text">%</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td>             <div class="" style="display: flex;align-items: center;">
+                    <label for="exampleInputEmail1" class="form-label"></label>
+                    <input type="number" class="form-control form-control-sm" id="exampleInputEmail1"
+                      aria-describedby="emailHelp" value="19200" fdprocessedid="n1q6hn" style="width: 85px;">
+                    <div id="emailHelp" class="form-text"></div>
+                  </div>
+                </div>
+              </td>
+                  
+                  <td><button class="setTarget">SET TARGET</button></td>
+
+
+
+
+                </tr>
+       
+
+
+
+              </tbody>
+            </table>
+
+
+
+
+
           </div>
+
+
+
+
+
+
+
+
+
+
+
           <div class="stoploss_table">
-            <p>Stoploss is under developements</p>
+
+            <table class="table table-striped-custom">
+              <thead>
+                <tr>
+               
+                  <th>STRATEGY</th>
+                  <th>  STRIKE PRICE</th>
+                  <th>STOPLOSS PRICE</th>
+                  <th>STOPLOSS PERCENTAGE</th>
+                  <th>   VARIANCE</th>
+                  <th>ACTION</th>
+                </tr>
+              </thead>
+
+              <tbody>
+              <tbody>
+
+
+                <tr>
+
+                  <td>
+                 Strategy 1
+                  </td>
+
+                  <td>19100</td>
+                  <td>
+                    <div class="main_tagets_check_input" style="display: flex;align-items: flex-start;gap: 0.5rem;">
+
+                      <div class="" style="display: flex;align-items: center;">
+                        <label for="exampleInputEmail1" class="form-label"></label>
+                        <input type="number" class="form-control form-control-sm" id="exampleInputEmail1"
+                          aria-describedby="emailHelp" value="19200" fdprocessedid="n1q6hn" style="width: 85px;">
+                        <div id="emailHelp" class="form-text"></div>
+                      </div>
+                    </div>
+                  </td>
+
+
+                  <td>
+                    <div class="main_tagets_check_input" style="display: flex;align-items: flex-start;gap: 0.5rem;">
+
+                      <div class="" style="display: flex;align-items: center;">
+                        <label for="exampleInputEmail1" class="form-label"></label>
+                        <input type="number" class="form-control form-control-sm" id="exampleInputEmail1"
+                          aria-describedby="emailHelp" value="5" fdprocessedid="n1q6hn" style="width: 85px;">
+                        <div id="emailHelp" class="form-text">%</div>
+                      </div>
+                    </div>
+                  </td>
+
+
+                  <td>
+                    <div class="main_tagets_check_input" style="display: flex;align-items: flex-start;gap: 0.5rem;">
+
+                      <div class="" style="display: flex;align-items: center;">
+                        <label for="exampleInputEmail1" class="form-label"></label>
+                        <input type="number" class="form-control form-control-sm" id="exampleInputEmail1"
+                          aria-describedby="emailHelp" value="19200" fdprocessedid="n1q6hn" style="width: 85px;">
+                        <div id="emailHelp" class="form-text"></div>
+                      </div>
+                    </div>
+                  </td>
+
+                  <td><button class="setTarget">SET STOPLOSS</button></td>
+
+
+
+
+                </tr>
+       
+                <tr>
+
+                  <td>
+                 Strategy 2
+                  </td>
+
+                  <td>19100</td>
+                  <td>
+                    <div class="main_tagets_check_input" style="display: flex;align-items: flex-start;gap: 0.5rem;">
+
+                      <div class="" style="display: flex;align-items: center;">
+                        <label for="exampleInputEmail1" class="form-label"></label>
+                        <input type="number" class="form-control form-control-sm" id="exampleInputEmail1"
+                          aria-describedby="emailHelp" value="19200" fdprocessedid="n1q6hn" style="width: 85px;">
+                        <div id="emailHelp" class="form-text"></div>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="main_tagets_check_input" style="display: flex;align-items: flex-start;gap: 0.5rem;">
+
+                      <div class="" style="display: flex;align-items: center;">
+                        <label for="exampleInputEmail1" class="form-label"></label>
+                        <input type="number" class="form-control form-control-sm" id="exampleInputEmail1"
+                          aria-describedby="emailHelp" value="5" fdprocessedid="n1q6hn" style="width: 85px;">
+                        <div id="emailHelp" class="form-text">%</div>
+                      </div>
+                    </div>
+                  </td>
+
+                  <td>
+                    <div class="main_tagets_check_input" style="display: flex;align-items: flex-start;gap: 0.5rem;">
+
+                      <div class="" style="display: flex;align-items: center;">
+                        <label for="exampleInputEmail1" class="form-label"></label>
+                        <input type="number" class="form-control form-control-sm" id="exampleInputEmail1"
+                          aria-describedby="emailHelp" value="19200" fdprocessedid="n1q6hn" style="width: 85px;">
+                        <div id="emailHelp" class="form-text"></div>
+                      </div>
+                    </div>
+                  </td>
+
+                  <td><button class="setTarget">SET STOPLOSS</button></td>
+
+
+
+
+                </tr>
+       
+                <tr>
+
+                  <td>
+                 Strategy 3
+                  </td>
+
+                  <td>19100</td>
+                  <td>
+                    <div class="main_tagets_check_input" style="display: flex;align-items: flex-start;gap: 0.5rem;">
+
+                      <div class="" style="display: flex;align-items: center;">
+                        <label for="exampleInputEmail1" class="form-label"></label>
+                        <input type="number" class="form-control form-control-sm" id="exampleInputEmail1"
+                          aria-describedby="emailHelp" value="19200" fdprocessedid="n1q6hn" style="width: 85px;">
+                        <div id="emailHelp" class="form-text"></div>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="main_tagets_check_input" style="display: flex;align-items: flex-start;gap: 0.5rem;">
+
+                      <div class="" style="display: flex;align-items: center;">
+                        <label for="exampleInputEmail1" class="form-label"></label>
+                        <input type="number" class="form-control form-control-sm" id="exampleInputEmail1"
+                          aria-describedby="emailHelp" value="5" fdprocessedid="n1q6hn" style="width: 85px;">
+                        <div id="emailHelp" class="form-text">%</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="main_tagets_check_input" style="display: flex;align-items: flex-start;gap: 0.5rem;">
+
+                      <div class="" style="display: flex;align-items: center;">
+                        <label for="exampleInputEmail1" class="form-label"></label>
+                        <input type="number" class="form-control form-control-sm" id="exampleInputEmail1"
+                          aria-describedby="emailHelp" value="19200" fdprocessedid="n1q6hn" style="width: 85px;">
+                        <div id="emailHelp" class="form-text"></div>
+                      </div>
+                    </div>
+                  </td>
+
+                  <td><button class="setTarget">SET STOPLOSS</button></td>
+
+
+
+
+                </tr>
+       
+
+
+
+              </tbody>
+            </table>
+
+
           </div>
           <div class="alerts_table">
-            <p>Alerts is under developements</p>
+
+
+            <table class="table table-striped-custom">
+              <thead class="adjsuments_table_thead">
+
+                <tr>
+
+                  <td>STRATEGY</td>
+                  <td>BREAKEVENS</td>
+                  <td>STRIKE PRICE</td>
+                  <td>OPTION PRICE</td>
+                  <td>ACTION</td>
+
+                </tr>
+              </thead>
+              <tbody class="real_adjustment_table_body">
+                <tr>
+                  <td>
+                    <div>ALerts 1</div>
+                  </td>
+                  <td>
+                    <div>19318.75</div>
+                  </td>
+                  <td>
+                    <div>19200</div>
+                  </td>
+                  <td>
+                    <div>65.2</div>
+                  </td>
+                  <td>
+                    <div><button class="adjust">SET ALERT</button></div>
+                  </td>
+
+                </tr>
+                <tr>
+                  <td>
+                    <div>Alerts 1</div>
+                  </td>
+                  <td>
+                    <div> 19781.25</div>
+                  </td>
+                  <td>
+                    <div>19200</div>
+                  </td>
+                  <td>
+                    <div>65.2</div>
+                  </td>
+                  <td>
+                    <div><button class="adjust">SET ALERT</button></div>
+                  </td>
+
+                </tr>
+
+              </tbody>
+
+            </table>
+
+
+
+
           </div>
           <div class="history_table">
             <p>History is under developements</p>
@@ -3404,6 +3932,114 @@
       </div>
     </div>
   </div>
+
+
+  <script>
+    $(".maximize").click(function () {
+      var elem = document.querySelector('.right_p_l_greeks');
+      var chartDiv = document.getElementById('chartdiv');
+      var payoffTable = document.getElementById('payoff_table'); // Add this line to select the element by its ID
+      var oi_charts = document.getElementById('oi_charts'); // Add this line to select the element by its ID
+      var maximizeIcon = document.querySelector('.maximize');
+
+      if (!document.fullscreenElement) {
+        if (elem.requestFullscreen) {
+          elem.requestFullscreen();
+          $('.right_p_l_greeks').css('background-color', 'white');
+          chartDiv.style.height = '90vh';
+          payoffTable.style.height = '90vh'; // Set the height of the payoff_table to 90vh
+          oi_charts.style.height = '90vh'; // Set the height of the payoff_table to 90vh
+          maximizeIcon.classList.remove('bx-fullscreen');
+          maximizeIcon.classList.add('bx-exit-fullscreen');
+        } else if (elem.webkitRequestFullscreen) { /* Safari */
+          elem.webkitRequestFullscreen();
+          $('.right_p_l_greeks').css('background-color', 'white');
+          chartDiv.style.height = '90vh';
+          payoffTable.style.height = '90vh';
+          oi_charts.style.height = '90vh'; // Set the height of the payoff_table to 90vh
+          maximizeIcon.classList.remove('bx-fullscreen');
+          maximizeIcon.classList.add('bx-exit-fullscreen');
+        } else if (elem.msRequestFullscreen) { /* IE11 */
+          elem.msRequestFullscreen();
+          $('.right_p_l_greeks').css('background-color', 'white');
+          chartDiv.style.height = '90vh';
+          payoffTable.style.height = '90vh';
+          oi_charts.style.height = '90vh'; // Set the height of the payoff_table to 90vh
+          maximizeIcon.classList.remove('bx-fullscreen');
+          maximizeIcon.classList.add('bx-exit-fullscreen');
+        }
+      } else {
+        if (document.exitFullscreen) {
+          document.exitFullscreen();
+          $('.right_p_l_greeks').css('background-color', 'white');
+          chartDiv.style.height = '400px'; // Change back to initial height
+          payoffTable.style.height = '400px'; // Revert to default height
+          oi_charts.style.height = '400px'; // Set the height of the payoff_table to 90vh
+          maximizeIcon.classList.remove('bx-exit-fullscreen');
+          maximizeIcon.classList.add('bx-fullscreen');
+        } else if (document.webkitExitFullscreen) { /* Safari */
+          document.webkitExitFullscreen();
+          $('.right_p_l_greeks').css('background-color', 'white');
+          chartDiv.style.height = '400px'; // Change back to initial height
+          payoffTable.style.height = '400px';
+          oi_charts.style.height = '400px'; // Set the height of the payoff_table to 90vh
+          maximizeIcon.classList.remove('bx-exit-fullscreen');
+          maximizeIcon.classList.add('bx-fullscreen');
+
+        } else if (document.msExitFullscreen) { /* IE11 */
+          document.msExitFullscreen();
+          $('.right_p_l_greeks').css('background-color', 'white');
+          chartDiv.style.height = '400px'; // Change back to initial height
+          payoffTable.style.height = '400px';
+          oi_charts.style.height = '400px'; // Set the height of the payoff_table to 90vh
+          maximizeIcon.classList.remove('bx-exit-fullscreen');
+          maximizeIcon.classList.add('bx-fullscreen');
+
+        }
+      }
+    });
+
+  document.onkeydown = function (evt) {
+    evt = evt || window.event;
+    var isEscape = false;
+    if ("key" in evt) {
+      isEscape = (evt.key === "Escape" || evt.key === "Esc");
+    } else {
+      isEscape = (evt.keyCode === 27);
+    }
+    if (isEscape) {
+      alert("hi")
+      minimizeFunction();
+    }
+  };
+
+  function minimizeFunction() {
+    var maximizeIcon = document.querySelector('.maximize');
+
+    if (document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement) {
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      } else if (document.webkitExitFullscreen) { /* Safari */
+        document.webkitExitFullscreen();
+      } else if (document.msExitFullscreen) { /* IE11 */
+        document.msExitFullscreen();
+      } else if (document.mozCancelFullScreen) { /* Firefox */
+        document.mozCancelFullScreen();
+      }
+      $('.right_p_l_greeks').css('background-color', 'red');
+      document.getElementById('chartdiv').style.height = '400px'; // Change back to initial height
+      document.getElementById('payoff_table').style.height = '400px'; // Revert to default height
+      document.getElementById('oi_charts').style.height = '400px'; // Set the height of the oi_charts to 400px
+      maximizeIcon.classList.remove('bx-exit-fullscreen');
+      maximizeIcon.classList.add('bx-fullscreen');
+    }
+  }
+
+
+
+  </script>
+
+  
 
   <style>
     .main_action_btn_api {
@@ -3663,25 +4299,24 @@
     }
 
     .bg_indicator_sell {
-                background-color: #ffcdd2 !important;
-                border-color: #ffcdd2 !important;
-                color: #e53935 !important;
-                caret-color: #e53935 !important;
-                padding: 1px 10px;
-                border-radius: 2px;
+      background-color: #ffcdd2 !important;
+      border-color: #ffcdd2 !important;
+      color: #e53935 !important;
+      caret-color: #e53935 !important;
+      padding: 1px 10px;
+      border-radius: 2px;
 
-            }
+    }
 
-            .bg_indicator_buy {
-                color: #43a047 !important;
-                caret-color: #43a047 !important;
-                background-color: #c8e6c9 !important;
-                border-color: #c8e6c9 !important;
-                padding: 1px 10px;
-                border-radius: 2px;
+    .bg_indicator_buy {
+      color: #43a047 !important;
+      caret-color: #43a047 !important;
+      background-color: #c8e6c9 !important;
+      border-color: #c8e6c9 !important;
+      padding: 1px 10px;
+      border-radius: 2px;
 
-            }
-
+    }
   </style>
 </div>
 <div class="modal fade" id="editPositionModal">
@@ -3851,7 +4486,7 @@
     $(".dismiss_icon_active_modal").click(function () {
       $("#active_broker_modal").slideUp();
     });
-  
+
     $("#in_depth_check_box").change(function () {
       if (this.checked) {
         // If the checkbox is checked, hide the .main_indepth element
@@ -3960,13 +4595,14 @@
                 </div>
                 
                 <div class="access_teken">
-                    <p class="text-primary"> Access Token <sup><i class='bx bx-help-circle' data-title="${item.api_added_at}"></i></sup>:</p>
+                    <p class="text-primary" style="display: flex;
+    align-items: flex-end;"> Access Token <sup><i class='bx bx-help-circle ms-1' data-title="${item.api_added_at}"></i></sup>:</p>
                     <p>${item.access_token}</p>
                 </div>
                 <div class="api_actions">
                     <div class="main_action_btn_api">
                         <button class="${connected_btn_class}" data-id="${item.id}">${connected_varifications}</button>
-                        <i class="bi bi-trash-fill delete_api_btn fs-3 cursor-pointer" data-id="3"></i>
+                        <i class="bi bi-trash-fill delete_api_btn fs-3 cursor-pointer" data-id="${item.id}"></i>
                     </div>
                 </div>
             </div>
@@ -5363,7 +5999,7 @@
     $(".alerts_table").hide();
     $(".history_table").hide();
     $("#payoff_table").hide();
-    
+
     $("#payoff_charts").show();
 
     $(".strategy_cost_table").click(function () {
@@ -5373,10 +6009,10 @@
       $("#payoff_charts").hide();
       $("#oi-charts").hide();
       $(".targets_table").hide();
-    $(".stoploss_table").hide();
-    $(".alerts_table").hide();
-    $(".history_table").hide();
-    $("#payoff_table").hide();
+      $(".stoploss_table").hide();
+      $(".alerts_table").hide();
+      $(".history_table").hide();
+      $("#payoff_table").hide();
       $(this).addClass("greek_strategy_active");
       $(".greek_table,.oi_chart,.payoff_charts,.adjustment,.targets,.stoploss,.alerts,.history,.payoff_table").removeClass("greek_strategy_active");
     });
@@ -5388,10 +6024,10 @@
       $("#payoff_charts").hide();
       $("#oi-charts").hide();
       $(".targets_table").hide();
-    $(".stoploss_table").hide();
-    $(".alerts_table").hide();
-    $(".history_table").hide();
-    $("#payoff_table").show();
+      $(".stoploss_table").hide();
+      $(".alerts_table").hide();
+      $(".history_table").hide();
+      $("#payoff_table").show();
       $(this).addClass("greek_strategy_active");
       $(".greek_table,.oi_chart,.payoff_charts,.adjustment,.targets,.stoploss,.alerts,.history,.strategy_cost_table").removeClass("greek_strategy_active");
     });
@@ -5409,10 +6045,10 @@
       $("#payoff_charts").hide();
       $("#oi-charts").hide();
       $(".targets_table").hide();
-    $(".stoploss_table").hide();
-    $(".alerts_table").hide();
-    $(".history_table").hide();
-    $("#payoff_table").hide();
+      $(".stoploss_table").hide();
+      $(".alerts_table").hide();
+      $(".history_table").hide();
+      $("#payoff_table").hide();
       $(this).addClass("greek_strategy_active");
       $(".strategy_cost_table, .oi_chart,.payoff_charts,.adjustment,.targets,.stoploss,.alerts,.history,.payoff_table").removeClass("greek_strategy_active");
     });
@@ -5425,10 +6061,10 @@
       $("#payoff_charts").hide();
       $("#oi-charts").show();
       $(".targets_table").hide();
-    $(".stoploss_table").hide();
-    $(".alerts_table").hide();
-    $(".history_table").hide();
-    $("#payoff_table").hide();
+      $(".stoploss_table").hide();
+      $(".alerts_table").hide();
+      $(".history_table").hide();
+      $("#payoff_table").hide();
       $(this).addClass("greek_strategy_active");
       $(".strategy_cost_table, .greek_table,.payoff_charts,.adjustment,.targets,.stoploss,.alerts,.history,.payoff_table").removeClass("greek_strategy_active");
     });
@@ -5439,10 +6075,10 @@
       $("#real_adjustment_table").show();
       $("#payoff_charts").hide();
       $(".targets_table").hide();
-    $(".stoploss_table").hide();
-    $(".alerts_table").hide();
-    $(".history_table").hide();
-    $("#payoff_table").hide();
+      $(".stoploss_table").hide();
+      $(".alerts_table").hide();
+      $(".history_table").hide();
+      $("#payoff_table").hide();
       $(this).addClass("greek_strategy_active");
       $(".strategy_cost_table, .greek_table,.payoff_charts, .oi_chart,.targets,.stoploss,.alerts,.history,.payoff_table").removeClass("greek_strategy_active");
     });
@@ -5455,73 +6091,73 @@
       $("#real_adjustment_table").hide();
       $("#payoff_charts").show();
       $(".targets_table").hide();
-    $(".stoploss_table").hide();
-    $(".alerts_table").hide();
-    $(".history_table").hide();
-    $("#payoff_table").hide();
+      $(".stoploss_table").hide();
+      $(".alerts_table").hide();
+      $(".history_table").hide();
+      $("#payoff_table").hide();
       $(this).addClass("greek_strategy_active");
       $(".strategy_cost_table, .greek_table, .oi_chart, .adjustment,.targets,.stoploss,.alerts,.history,.payoff_table").removeClass("greek_strategy_active");
     });
 
 
     $(".targets").click(function () {
-        $("#table-PL_main").hide();
-        $("#resultTable").hide();
-        $("#real_adjustment_table").hide();
-        $("#payoff_charts").hide();
-        $("#oi-charts").hide();
-        $(".targets_table").show();
-        $(".stoploss_table").hide();
-        $(".alerts_table").hide();
-        $(".history_table").hide();
-        $("#payoff_table").hide();
-        $(this).addClass("greek_strategy_active");
-        $(".greek_table, .oi_chart, .payoff_charts, .adjustment,.stoploss,.alerts,.history,.payoff_table").removeClass("greek_strategy_active");
+      $("#table-PL_main").hide();
+      $("#resultTable").hide();
+      $("#real_adjustment_table").hide();
+      $("#payoff_charts").hide();
+      $("#oi-charts").hide();
+      $(".targets_table").show();
+      $(".stoploss_table").hide();
+      $(".alerts_table").hide();
+      $(".history_table").hide();
+      $("#payoff_table").hide();
+      $(this).addClass("greek_strategy_active");
+      $(".greek_table, .oi_chart, .payoff_charts, .adjustment,.stoploss,.alerts,.history,.payoff_table").removeClass("greek_strategy_active");
     });
 
     $(".stoploss").click(function () {
-        $("#table-PL_main").hide();
-        $("#resultTable").hide();
-        $("#real_adjustment_table").hide();
-        $("#payoff_charts").hide();
-        $("#oi-charts").hide();
-        $(".targets_table").hide();
-        $(".stoploss_table").show();
-        $(".alerts_table").hide();
-        $(".history_table").hide();
-        $("#payoff_table").hide();
-        $(this).addClass("greek_strategy_active");
-        $(".greek_table, .oi_chart, .payoff_charts, .adjustment,.targets,.alerts,.history,.payoff_table").removeClass("greek_strategy_active");
+      $("#table-PL_main").hide();
+      $("#resultTable").hide();
+      $("#real_adjustment_table").hide();
+      $("#payoff_charts").hide();
+      $("#oi-charts").hide();
+      $(".targets_table").hide();
+      $(".stoploss_table").show();
+      $(".alerts_table").hide();
+      $(".history_table").hide();
+      $("#payoff_table").hide();
+      $(this).addClass("greek_strategy_active");
+      $(".greek_table, .oi_chart, .payoff_charts, .adjustment,.targets,.alerts,.history,.payoff_table").removeClass("greek_strategy_active");
     });
 
     $(".alerts").click(function () {
-        $("#table-PL_main").hide();
-        $("#resultTable").hide();
-        $("#real_adjustment_table").hide();
-        $("#payoff_charts").hide();
-        $("#oi-charts").hide();
-        $(".targets_table").hide();
-        $(".stoploss_table").hide();
-        $(".alerts_table").show();
-        $(".history_table").hide();
-        $("#payoff_table").hide();
-        $(this).addClass("greek_strategy_active");
-        $(".greek_table, .oi_chart, .payoff_charts, .adjustment,.targets,.stoploss,.history,.payoff_table").removeClass("greek_strategy_active");
+      $("#table-PL_main").hide();
+      $("#resultTable").hide();
+      $("#real_adjustment_table").hide();
+      $("#payoff_charts").hide();
+      $("#oi-charts").hide();
+      $(".targets_table").hide();
+      $(".stoploss_table").hide();
+      $(".alerts_table").show();
+      $(".history_table").hide();
+      $("#payoff_table").hide();
+      $(this).addClass("greek_strategy_active");
+      $(".greek_table, .oi_chart, .payoff_charts, .adjustment,.targets,.stoploss,.history,.payoff_table").removeClass("greek_strategy_active");
     });
 
     $(".history").click(function () {
-        $("#table-PL_main").hide();
-        $("#resultTable").hide();
-        $("#real_adjustment_table").hide();
-        $("#payoff_charts").hide();
-        $("#oi-charts").hide();
-        $(".targets_table").hide();
-        $(".stoploss_table").hide();
-        $(".alerts_table").hide();
-        $("#payoff_table").hide();
-        $(".history_table").show();
-        $(this).addClass("greek_strategy_active");
-        $(".greek_table, .oi_chart, .payoff_charts, .adjustment,.targets,.stoploss,.alerts,.payoff_table").removeClass("greek_strategy_active");
+      $("#table-PL_main").hide();
+      $("#resultTable").hide();
+      $("#real_adjustment_table").hide();
+      $("#payoff_charts").hide();
+      $("#oi-charts").hide();
+      $(".targets_table").hide();
+      $(".stoploss_table").hide();
+      $(".alerts_table").hide();
+      $("#payoff_table").hide();
+      $(".history_table").show();
+      $(this).addClass("greek_strategy_active");
+      $(".greek_table, .oi_chart, .payoff_charts, .adjustment,.targets,.stoploss,.alerts,.payoff_table").removeClass("greek_strategy_active");
     });
 
 
@@ -6076,7 +6712,7 @@
                 }</div></td>
                                                                     <td><div class="adjsutedLotSize">${adjustedLotSize}</div></td>
                                                                     <td><div class="absoluteQuantity">${absoluteQuantity}</div></td>
-                                                                    <td><div class="totalCurrentCost">${totalCurrentCost.toFixed(
+                                                                    <td><div class="totalCurrentCost ${totalCurrentCost > 0 ? "text-success" : "text-danger"}">${totalCurrentCost.toFixed(
                   2
                 )}</div></td>
                                                                     <td class="text-center"><div class="final_P_L">${final_P_L}</div></td>
@@ -6200,7 +6836,7 @@
             tableHTML += `
                                                                 <tr>
                                                                     <td colspan="5">NET COST OF STRATEGY :</td>
-                                                                    <td>${netCost}</td>
+                                                                    <td class="${netCost < 0 ? "text-danger" : "text-success"}">${netCost}</td>
                                                                     <td colspan="6" class="text-center">${netPL}</td>
                                                                 
                                                                 </tr>
@@ -6308,14 +6944,14 @@
       $("#resultTable tbody").empty();
       $(".strike_price_input").empty();
       $(".expiry_date_input").empty();
- 
+
 
       loadSpotData(selectedOption);
 
 
 
-        loadExpiryData(selectedOption);
-        loadOptionData(selectedOption, "");
+      loadExpiryData(selectedOption);
+      loadOptionData(selectedOption, "");
 
     });
 
@@ -6357,12 +6993,12 @@
         },
       });
     }
- 
+
 
     $("#optionExpiryDropdown").change(function () {
       var selectedOption = $("#stockDropdown").val();
       var selectedExpiry = $("#optionExpiryDropdown").val();
-      
+
       var selectedOptionExpiry = $(this).val();
 
       if (selectedOption) {
@@ -6396,8 +7032,8 @@
                 .text(formattedDate)
                 .val(expiryDate.split("T")[0]);
 
-                console.log(formattedDate);
-                console.log(expiryDate.split("T")[0]);
+              console.log(formattedDate);
+              console.log(expiryDate.split("T")[0]);
 
               // Append the option to the dropdown
               optionExpiryDropdown.append(option);
@@ -6437,7 +7073,7 @@
               if (diff < closestDiff) {
                 closestDiff = diff;
                 closestStrikePrice = strike_price;
-         
+
               }
 
               var strike_price_background_down =
@@ -8903,9 +9539,9 @@
 
     loadStocks();
 
-loadExpiryData("NIFTY");
+    loadExpiryData("NIFTY");
 
-loadOptionData("NIFTY", "");
+    loadOptionData("NIFTY", "");
     loadOptionData(selectedOption, selectedExpiry);
     function loadExpiryData(selectedOption) {
       // console.log("Hi there" + selectedOption);
@@ -9230,7 +9866,7 @@ loadOptionData("NIFTY", "");
 
       // Add data
       var chartData = [];
-      var tableData=[]
+      var tableData = []
       for (var i = 0; i < strikePrices.length; i++) {
         var cleanCategory = strikePrices[i].trim();
         tableData.push({ category: cleanCategory, value: sumArray[i] });
@@ -9240,24 +9876,24 @@ loadOptionData("NIFTY", "");
       console.log(tableData);
       var tableBody = $(".payoff_table_data");
 
-// Clear any existing rows
-tableBody.empty();
+      // Clear any existing rows
+      tableBody.empty();
 
-// Loop through the tableData array and create table rows and cells
-tableData.forEach(function(item) {
-  var main_payoff_table_condition= item.value < 0?"text-danger" :"text-success"
-    var row = $("<tr>");
+      // Loop through the tableData array and create table rows and cells
+      tableData.forEach(function (item) {
+        var main_payoff_table_condition = item.value < 0 ? "text-danger" : "text-success"
+        var row = $("<tr>");
 
-    var categoryCell = $("<td>").text(item.category);
-    var valueCell = $("<td>").text(item.value.toFixed(2)).addClass(main_payoff_table_condition);
+        var categoryCell = $("<td>").text(item.category);
+        var valueCell = $("<td>").text(item.value.toFixed(2)).addClass(main_payoff_table_condition);
 
-    row.append(categoryCell);
-    row.append(valueCell);
+        row.append(categoryCell);
+        row.append(valueCell);
 
-    tableBody.append(row);
-});
+        tableBody.append(row);
+      });
 
-   $(".payoff_expiry").text($("#optionExpiryDropdown").val())
+      $(".payoff_expiry").text($("#optionExpiryDropdown").val())
 
 
 

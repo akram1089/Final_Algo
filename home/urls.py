@@ -204,6 +204,7 @@ urlpatterns = [
     path('quote_data_zerodha', views.quote_data_zerodha, name='quote_data_zerodha'),
     path('mutual_fund', views.mutual_fund, name='mutual_fund'),
     path('category_performance', views.category_performance, name='category_performance'),
+    path('check_user_logged_in', views.check_user_logged_in, name='check_user_logged_in'),
     
     path('ipo_watch', views.ipo_watch, name='ipo_watch'),
     path('new_listed_ipo', views.new_listed_ipo, name='new_listed_ipo'),
@@ -288,6 +289,10 @@ urlpatterns = [
     path('zerodha_api_config', views.zerodha_api_config, name='zerodha_api_config'),
 
     path('main_contributor/<str:contributor>/', views.main_contributor, name='main_contributor'),
+    path('api_managements', views.api_managements, name='api_managements'),
+    path('save_broker_admin', views.save_broker_admin, name='save_broker_admin'),
+    path('get_api_integrations_admin', views.get_api_integrations_admin, name='get_api_integrations_admin'),
+
   
 
 

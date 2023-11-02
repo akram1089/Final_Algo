@@ -4496,7 +4496,7 @@ from django.http import JsonResponse
 from .models import ZerodhaAPIConfig
 from django.contrib.auth.decorators import login_required
 @csrf_exempt
-@login_required
+
 def save_zerodha_config(request):
     user = request.user  # Get the currently logged-in user
 
@@ -4601,6 +4601,8 @@ def edit_access_token(request):
     if request.method == 'POST':
         unique_id = request.POST.get('unique_id')
         access_token = request.POST.get('access_token')
+        print(unique_id)
+        print(access_token)
 
         try:
             api_config = ZerodhaAPIConfig.objects.get(pk=unique_id, user=request.user)
@@ -5707,28 +5709,32 @@ def offer_for_sale(request):
 
 
 
-from .models import Note
-from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.decorators import login_required
+from .models import Note
 
-
-@login_required
+# @login_required
 @csrf_exempt
 def save_note(request):
     if request.method == "POST":
         text = request.POST.get('text')
         user = request.user
-        existing_note = Note.objects.filter(user=user).first()
-        if existing_note:
-            existing_note.text = text
-            existing_note.save()
-            return JsonResponse({'status': 'success', 'message': 'Note updated successfully'})
+        if user.is_authenticated:
+            existing_note = Note.objects.filter(user=user).first()
+            if existing_note:
+                existing_note.text = text
+                existing_note.save()
+                return JsonResponse({'status': 'success', 'message': 'Note updated successfully'})
+            else:
+                new_note = Note.objects.create(text=text, user=user)
+                new_note.save()
+                return JsonResponse({'status': 'success', 'message': 'Note saved successfully'})
         else:
-            new_note = Note.objects.create(text=text, user=user)
-            new_note.save()
-            return JsonResponse({'status': 'success', 'message': 'Note saved successfully'})
+            return JsonResponse({'status': 'error', 'not_logged_in': 'User not logged in'})
     else:
         return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
+
 
 @login_required
 def get_notes(request):
@@ -5742,37 +5748,61 @@ def get_notes(request):
 # views.py
 
 from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.decorators import login_required
 from .models import my_strategies
-from django.core import serializers
 
 @csrf_exempt
-@login_required
+
 def save_strategy(request):
     if request.method == 'POST':
         strategy_input = request.POST.get('strategy_input', None)
         trading_positions = request.POST.get('trading_positions', None)  # Get trading positions
         user = request.user  # Assuming you have a way to retrieve the current user
-        if strategy_input and trading_positions and user:
-            strategy = my_strategies.objects.create(user=user, strategy_name=strategy_input, trading_positions=trading_positions)
-            strategy.save()
-            return JsonResponse({'message': 'Strategy saved successfully.'})
+        if user.is_authenticated:
+            if strategy_input and trading_positions:
+                strategy = my_strategies.objects.create(user=user, strategy_name=strategy_input, trading_positions=trading_positions)
+                strategy.save()
+                return JsonResponse({'message': 'Strategy saved successfully.'})
+            else:
+                return JsonResponse({'message': 'Error saving strategy. Invalid data provided.'}, status=400)
         else:
-            return JsonResponse({'message': 'Error saving strategy.'}, status=400)
+            return JsonResponse({'user_not_logged_in': 'User not logged in.'})
+    else:
+        return JsonResponse({'message': 'Invalid request method.'}, status=405)
+
+from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
+
+def check_user_logged_in(request):
+    if request.user.is_authenticated:
+        return JsonResponse({'message': 'User is logged in.'})
+    else:
+        return JsonResponse({'user_logged_in': 'User not logged in.'})
+
+
+from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
+import json
+from .models import my_strategies
 
 
 def get_all_strategies(request):
-    strategies = my_strategies.objects.filter(user=request.user)
-    strategy_data = []
-    for strategy in strategies:
-        trading_positions = json.loads(strategy.trading_positions)
-        strategy_data.append({
-            'id': strategy.id,
-            'user_id': strategy.user_id,
-            'strategy_name': strategy.strategy_name,
-            'trading_positions': trading_positions
-        })
+    if request.user.is_authenticated:
+        strategies = my_strategies.objects.filter(user=request.user)
+        strategy_data = []
+        for strategy in strategies:
+            trading_positions = json.loads(strategy.trading_positions)
+            strategy_data.append({
+                'id': strategy.id,
+                'user_id': strategy.user_id,
+                'strategy_name': strategy.strategy_name,
+                'trading_positions': trading_positions
+            })
 
-    return JsonResponse({'strategy_data': strategy_data}, safe=False)
+        return JsonResponse({'strategy_data': strategy_data}, safe=False)
+    else:
+        return JsonResponse({'user_not_logged_in': 'User not logged in.'})
 
 
 
@@ -6042,6 +6072,8 @@ def account_details(requests):
     return render(requests,'account_details.html')
 def broker_details(requests):
     return render(requests,'broker_details.html')
+def api_managements(requests):
+    return render(requests,'api_managements.html')
 
 
 
@@ -6072,3 +6104,51 @@ def zerodha_api_config(request):
         # Handle the case when the user is not authenticated
         return JsonResponse({'error': 'User not authenticated'}, status=401)
 
+
+
+
+
+
+import datetime
+from django.http import JsonResponse
+
+from .models import AdminAPIIntegrations
+@csrf_exempt
+def save_broker_admin(request):
+    if request.method == 'POST':
+        broker = request.POST.get('broker')
+        app_name = request.POST.get('app_name')
+        api_key = request.POST.get('api_key')
+        secret_key = request.POST.get('secret_key')
+
+        # Print the received values
+        print("Broker: ", broker)
+        print("App Name: ", app_name)
+        print("API Key: ", api_key)
+        print("Secret Key: ", secret_key)
+
+        # Set the current date and time
+        api_added_at = datetime.datetime.now()
+
+        # Save the values to the model
+        integration = AdminAPIIntegrations(
+            broker_name=broker,
+            app_name=app_name,
+            api_key=api_key,
+            api_secret_key=secret_key,
+            api_added_at=api_added_at
+        )
+        integration.save()
+
+        # Return a JSON response
+        return JsonResponse({'status': 'success', 'message': 'Broker information saved successfully.'})
+    else:
+        return JsonResponse({'status': 'error', 'message': 'Invalid request method.'})
+
+
+from django.http import JsonResponse
+from .models import AdminAPIIntegrations
+
+def get_api_integrations_admin(request):
+    integrations = AdminAPIIntegrations.objects.all().values()
+    return JsonResponse(list(integrations), safe=False)
