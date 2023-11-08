@@ -1,0 +1,742 @@
+{% extends "base_admin_panel.html" %}
+{% load static %}
+{% block dashboard_admin_body %}
+
+<style>
+    .main_card {
+        box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+        padding: 12px;
+        background-color: white;
+    }
+
+    .main_active_api_connect {
+        align-items: flex-end;
+    }
+
+    .action_on_off_delete {
+        display: flex;
+        align-items: flex-end;
+        gap: 0.3rem;
+    }
+
+    .left_broker_name h5 {
+        font-size: 15px;
+        font-weight: 600;
+    }
+
+    .left_broker_name p {
+        font-size: 10px;
+        margin-bottom: auto !important;
+
+    }
+
+    .left_broker_name {
+        align-items: flex-start;
+
+    }
+
+    #apiKeyToggle,
+    #apiSecretKeyToggle,
+    #accessTokenToggle {
+        all: unset !important;
+    }
+
+    #api_key_input_eye {
+        position: relative;
+    }
+
+    .input-group-append {
+        position: absolute;
+        right: 14px;
+        top: 29%;
+        font-size: 21px;
+        cursor: pointer;
+        z-index: 999999999999;
+    }
+
+    main .form-group {
+        width: 100%;
+        display: flex;
+        grid-gap: 10px;
+        align-items: center;
+    }
+
+    .form-group label {
+        white-space: nowrap;
+    }
+
+    .api_key i.bx.bx-plus,
+    .api_secret i.bx.bx-plus {
+        transform: rotate(45deg) !important;
+    }
+
+    .api_key,
+    .api_secret {
+        display: flex;
+        gap: 0.3rem;
+
+    }
+</style>
+
+<button class="btn_add_broker btn btn-primary" data-bs-toggle="offcanvas" data-bs-target="#add_api"
+    aria-controls="add_api">
+    Add Broker
+</button>
+<div class="offcanvas offcanvas-end" tabindex="-1" id="add_api" aria-labelledby="offcanvasRightLabel"
+    style="z-index: 9999999999999999">
+    <div class="offcanvas-header">
+
+
+
+        <h5 class="offcanvas-title" id="offcanvasRightLabel">
+            Add broker API details
+        </h5>
+
+
+
+
+
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+
+        <div class="add_broker_api d-flex gap-2 mb-3">
+            <input type="text" id="brokerNameInput" class="form-control" placeholder="Enter broker name">
+            <button class="btn btn-primary" style="white-space: nowrap;" id="add_broker_api_name">Add Broker</button>
+        </div>
+
+
+        <form>
+
+            <select name="All_brokers" id="all_brokers" class="form-select mb-3">
+
+                <!-- <option value="zerodha">Zerodha</option>
+                <option value="upstocks">Upstocks</option>
+                <option value="angelone">Angel One</option>
+                <option value="fyers">Fyers</option>
+                <option value="icicidirectbreeze">ICICI Direct Breeze</option> -->
+            </select>
+            <input type="text" class="form-control mb-3" id="app_name" placeholder="Enter app names" required />
+            <input type="text" class="form-control mb-3" id="api_key" placeholder="Enter api key " required />
+            <input type="text" class="form-control mb-3" id="secret_key" placeholder="Enter secret key" required />
+            <button class="btn btn-primary save_zerodha_btn">
+                Add Api Details
+            </button>
+        </form>
+    </div>
+
+</div>
+
+
+
+<div class="main_api_admin_card d-flex gap-2 flex-wrap mt-4">
+
+
+
+
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="editModalLabel">Edit Api Credentials</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="container">
+
+                    <input type="hidden" class="id_update">
+                    <div class="form-group mb-3">
+                        <label for="brokerName">Broker Name:</label>
+                        <input type="text" class="form-control" id="brokerName" value="" disabled>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="appName">App Name:</label>
+                        <input type="text" class="form-control" id="appName" value="">
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="apiKey">API Key:</label>
+                        <div class="input-group" id="api_key_input_eye">
+                            <input type="password" class="form-control" id="apiKey" value="">
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-secondary" type="button" id="apiKeyToggle">
+                                    <i class="bx bx-low-vision" id="apiKeyIcon"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="apiSecretKey">API Secret Key:</label>
+                        <div class="input-group">
+                            <input type="password" class="form-control" id="apiSecretKey" value="">
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-secondary" type="button" id="apiSecretKeyToggle">
+                                    <i class="bx bx-low-vision" id="apiSecretKeyIcon"></i>
+
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="accessToken">Access Token:</label>
+                        <div class="input-group">
+                            <input type="password" class="form-control" id="accessToken" value=""
+                                placeholder="Please enter your access key ">
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-secondary" type="button" id="accessTokenToggle">
+                                    <i class="bx bx-low-vision" id="accessTokenIcon"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+
+                <button type="button" class="btn btn-primary" id="update_api_credentials">Update Api
+                    Credentials</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+
+
+        $("#apiKeyToggle").click(function () {
+            var input = $("#apiKey");
+            if (input.attr("type") === "text") {
+                input.attr("type", "password");
+                $("#apiKeyIcon").removeClass("bx-show").addClass("bx-low-vision");
+            } else {
+                input.attr("type", "text");
+                $("#apiKeyIcon").removeClass("bx-low-vision").addClass("bx-show");
+            }
+        });
+
+        $("#apiSecretKeyToggle").click(function () {
+            var input = $("#apiSecretKey");
+            if (input.attr("type") === "text") {
+                input.attr("type", "password");
+                $("#apiSecretKeyIcon").removeClass("bx-show").addClass("bx-low-vision");
+            } else {
+                input.attr("type", "text");
+                $("#apiSecretKeyIcon").removeClass("bx-low-vision").addClass("bx-show");
+            }
+        });
+
+        $("#accessTokenToggle").click(function () {
+            var input = $("#accessToken");
+            if (input.attr("type") === "text") {
+                input.attr("type", "password");
+                $("#accessTokenIcon").removeClass("bx-show").addClass("bx-low-vision");
+            } else {
+                input.attr("type", "text");
+                $("#accessTokenIcon").removeClass("bx-low-vision").addClass("bx-show");
+            }
+        });
+
+        $(".save_zerodha_btn").click(function (e) {
+            e.preventDefault();
+            var broker = $("#all_brokers").val();
+            var appName = $("#app_name").val();
+            var apiKey = $("#api_key").val();
+            var secretKey = $("#secret_key").val();
+
+            if (broker === '' || appName === '' || apiKey === '' || secretKey === '') {
+                // Add your handling for the empty fields here if necessary
+            } else {
+                $.ajax({
+                    type: "POST",
+                    url: "/save_broker_admin",
+                    data: {
+                        'broker': broker,
+                        'app_name': appName,
+                        'api_key': apiKey,
+                        'secret_key': secretKey
+                    },
+                    success: function (response) {
+                        // Handle the response here
+                        // console.log(response);
+                        main_api_all();
+
+                        // Empty all the fields after successful save
+
+                        $("#app_name").val('');
+                        $("#api_key").val('');
+                        $("#secret_key").val('');
+                        $(".btn-close").click()
+                    },
+                    error: function (error) {
+                        // Handle any error that occurs during the request
+                        // console.log(error);
+                    }
+                });
+            }
+        });
+
+
+        function main_api_all() {
+            $.ajax({
+                url: '/get_api_integrations_admin',
+                type: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    // console.log(data); // Log all values to the console
+                    var main_admin_api_cards = ''; // Initialize as an empty string
+                    if (data && data.length > 0) {
+                        data.forEach(data_api => {
+
+                            var backen_date = data_api.api_added_at
+
+                            // Example date from Django backend
+
+
+                            var today = new Date();
+                            var year = today.getFullYear();
+                            var month = (today.getMonth() + 1).toString().padStart(2, '0');
+                            var day = today.getDate().toString().padStart(2, '0');
+                            var hours = today.getHours().toString().padStart(2, '0');
+                            var minutes = today.getMinutes().toString().padStart(2, '0');
+                            var seconds = today.getSeconds().toString().padStart(2, '0');
+                            var milliseconds = today.getMilliseconds().toString().padStart(3, '0');
+                            var offset = today.getTimezoneOffset();
+
+                            // Adjust the time with the offset
+                            today.setMinutes(today.getMinutes() + offset);
+
+                            // Format the date with the adjusted time
+                            var currentDate = `${year}-${month}-${day}T${hours}:${minutes}:${seconds}.${milliseconds}Z`;
+
+                            // Check if the date from the backend is today's date
+
+
+                            // Output the result
+                            // console.log("Is the date from the backend today's date?", currentDate);
+
+                            var extractedCurrentDate = currentDate.split('T')[0];
+                            var extractedBackenDate = backen_date.split('T')[0];
+
+                            // console.log(extractedCurrentDate);
+                            // console.log(extractedBackenDate);
+
+                            // Check if the date from the backend is today's date
+                           
+
+
+                            var addedAt = new Date(data_api.api_added_at);
+                            var formattedDate = `${addedAt.getUTCDate()} ${new Intl.DateTimeFormat('en-US', { month: 'short' }).format(addedAt)} ${addedAt.getUTCFullYear().toString().slice(-2)}`;
+                            var hours = addedAt.getUTCHours();
+                            var minutes = addedAt.getUTCMinutes();
+                            var seconds = addedAt.getUTCSeconds();
+                            var amOrPm = hours >= 12 ? 'PM' : 'AM';
+                            hours = hours % 12;
+                            hours = hours ? hours : 12; // the hour '0' should be '12'
+                            var formattedTime = `${hours}:${minutes < 10 ? '0' + minutes : minutes}:${seconds < 10 ? '0' + seconds : seconds} ${amOrPm}`;
+
+                            // console.log(data_api.broker_name);
+
+                            var main_broker_img = ""
+                            var connect_not = ""
+                            var connect_disabled = ""
+                            var bg_connect_btn = ""
+
+                            if (data_api.broker_name === "zerodha") {
+                                main_broker_img = `<img src="{% static "/img/zerodha_new.webp" %} " alt="" width="30px" />`
+                       
+                            if (extractedCurrentDate === extractedBackenDate) {
+                                // console.log("The date from the backend is today's date.");
+                                connect_not = "Connected"
+                                connect_disabled = "disabled"
+                                bg_connect_btn = "btn-success"
+
+                            } else {
+                                // console.log("The date from the backend is not today's date.");
+                                connect_not = "Connect"
+                                connect_disabled = ""
+                                bg_connect_btn = "btn-danger"
+                            }
+                            }
+                            else if (data_api.broker_name === "upstocks") {
+                                connect_not = "Connect"
+                                bg_connect_btn = "btn-danger"
+                                main_broker_img = `<img src="{% static "/img/upstox_new.webp" %}" alt="" width="30px" />`
+
+                            }
+                            else if (data_api.broker_name === "angelone") {
+                                connect_not = "Connect"
+                                bg_connect_btn = "btn-danger"
+                                main_broker_img = `<img src="{% static "/img/angel_1_new.webp" %}" alt="" width="30px" />`
+
+                            }
+
+                            var main_active_api = data_api.active_api === false ? "btn-sm btn-danger text-light" : "btn-sm btn-success text-light"
+                            var main_active_api_text = data_api.active_api === false ? "OFF" : "ON"
+                            var main_active_connect_btn = data_api.active_api === false ? "d-none" : "d-block"
+                            var main_active_delete_btn = data_api.active_api === false ? "d-block" : "d-none"
+                            var main_active_connect_on_off = data_api.active_api === false ? "off" : "on"
+
+
+                            // console.log(main_broker_img);
+
+
+
+
+                            main_admin_api_cards += `
+                                        <div class="main_card" style="width:18rem">
+
+
+
+                                            <div class="top_main_broker_name_app_name d-flex justify-content-between">
+                                                <div class="left_broker_name d-flex mb-2">      <h5>${data_api.app_name}</h5><p>(${data_api.broker_name})</p></div>
+                                                <div class="right_broker_icon">
+                                                ${main_broker_img}
+                                                    </div>
+                                                </div>
+
+                                                <div class="api_key mb-2"><div>Api key : </div>
+
+                                                <div>
+                                                    <i class='bx bx-plus'></i>
+                                                    <i class='bx bx-plus'></i>
+                                                    <i class='bx bx-plus'></i>
+                                                    <i class='bx bx-plus'></i>
+
+                                                    <i class='bx bx-plus'></i></div>
+                                                    
+                                                    </div>
+                                                <div class="api_secret mb-2">
+
+                                                    <div> Api secrect key:</div>
+                                                    <div>
+                                                    <i class='bx bx-plus'></i>
+                                                    <i class='bx bx-plus'></i>
+                                                    <i class='bx bx-plus'></i>
+                                                    <i class='bx bx-plus'></i>
+
+                                                    <i class='bx bx-plus'></i></div>
+                                                    
+                                 
+                                                    
+                                                    </div>
+                                          
+                                                <div class="api_added_at"> ${formattedDate} -- ${formattedTime}</div>
+
+
+                                                <div class="main_active_api_connect d-flex justify-content-between">
+                                                    <div class="action_on_off_delete">
+                                                    <button class="btn ${main_active_api} mt-1 on_off_btn" data-id='${data_api.id}'   data-on_off="${main_active_connect_on_off}">${main_active_api_text}</button>
+                                                    <button class="btn btn-primary btn-sm edit_btn ${main_active_delete_btn}" data-edit-id='${data_api.id}'>View</button>
+                                                    <button class="btn btn-danger btn-sm delete_btn ${main_active_delete_btn}" data-delete-id='${data_api.id}'>Delete</button>
+                                              </div>
+                                                    <button class="btn ${bg_connect_btn} btn-sm ${main_active_connect_btn}  connect_api_btn" data-connect_id="${data_api.id}" data-api_key="${data_api.api_key}"  data-redirect_attr="${data_api.broker_name}" ${connect_disabled}>${connect_not}</button>
+                                                    </div>
+
+
+                                    
+                                        </div>
+                                    `;
+                        });
+                        // console.log(main_admin_api_cards);
+
+                        $(".main_api_admin_card").empty().append(main_admin_api_cards);
+                    } else {
+                        // console.log("No data found.");
+                    }
+
+
+                    $(".edit_btn").click(function () {
+                        $("#editModal").modal("show");
+
+                        var edit_btn_id = $(this).data("edit-id");
+
+                        // Send data to Django backend using AJAX
+                        $.ajax({
+                            type: "POST",
+                            url: "/edit_api_details_admin", // Replace with your Django endpoint URL
+                            data: {
+                                editBtnId: edit_btn_id
+                            },
+                            success: function (response) {
+
+                                $(".id_update").val(response.id)
+                                $("#brokerName").val(response.broker_name);
+                                $("#appName").val(response.app_name);
+                                $("#apiKey").val(response.api_key);
+                                $("#apiSecretKey").val(response.api_secret_key);
+                                $("#accessToken").val(response.access_token);
+                                // console.log(response);
+                                // console.log('Data sent successfully!');
+                            },
+                            error: function (error) {
+                                // console.error('Error sending data:', error);
+                            }
+                        });
+                    });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    $(".connect_api_btn").click(function () {
+                        // console.log($(this).data("redirect_attr"));
+                        var redirect_url_attr = $(this).data("redirect_attr");
+                        var api_key = $(this).data("api_key");
+                        var api_connect_id = $(this).data("connect_id");
+
+                        if (redirect_url_attr === "zerodha") {
+                            // Set api_connect_id in localStorage
+                            localStorage.setItem('api_connect_id', api_connect_id);
+
+                            // Construct the URL
+                            var redirectUrl = `https://kite.zerodha.com/connect/login?api_key=${api_key}&v=3`;
+
+                            // Redirect to the constructed URL
+                            window.location.href = redirectUrl;
+                        }
+                    });
+
+
+
+
+
+
+
+
+
+
+
+
+                    $(".delete_btn").click(function () {
+                        var delete_id = $(this).data('delete-id');
+
+                        // Open a confirmation dialog box
+                        var confirmDelete = confirm("Are you sure you want to delete this Api Details?");
+
+                        // Check the user's choice
+                        if (confirmDelete) {
+                            $.ajax({
+                                type: 'POST',
+                                url: '/delete_record',
+                                data: {
+                                    'delete_id': delete_id,
+                                    'csrfmiddlewaretoken': '{{ csrf_token }}'
+                                },
+                                success: function (response) {
+                                    // Handle the response if needed
+                                    // console.log('Record deleted successfully.');
+                                    // console.log(response); // Log the response from the backend
+                                    main_api_all()
+                                },
+                                error: function (error) {
+                                    // Handle any errors that occur during the AJAX request
+                                    // console.error('Error deleting the record:', error);
+                                }
+                            });
+                        }
+                    });
+
+                    $(".on_off_btn").click(function () {
+                        var dataTdValue = $(this).data('on_off');
+                        var dataIdValue = $(this).data('id');
+                        // console.log("data-on_off:", dataTdValue);
+                        // console.log("data-id:", dataIdValue);
+
+                        $.ajax({
+                            type: 'POST',
+                            url: '/edit_broker_admin_data',
+                            data: {
+                                'on_off_value': dataTdValue,
+                                'id_value': dataIdValue,
+                                'csrfmiddlewaretoken': '{{ csrf_token }}'
+                            },
+                            success: function (response) {
+                                // Handle the response if needed
+                                // console.log('Data sent to Django backend successfully.');
+                                main_api_all()
+                            },
+                            error: function (error) {
+                                // Handle any errors that occur during the AJAX request
+                                // console.error('Error sending data to Django backend:', error);
+                            }
+                        });
+                    });
+
+
+                },
+                error: function (error) {
+                    // console.error('Error:', error);
+                }
+            });
+        }
+
+
+        $("#update_api_credentials").click(function () {
+            var appName = $("#appName").val();
+            var apiKey = $("#apiKey").val();
+            var apiSecretKey = $("#apiSecretKey").val();
+            var accessToken = $("#accessToken").val();
+            var id_update = $(".id_update").val()
+            // console.log(id_update);
+
+            // Send data to Django backend using AJAX
+            $.ajax({
+                type: "POST",
+                url: "/update_api_credentials_admin", // Replace with your Django endpoint URL
+                data: {
+                    id_update: id_update,
+                    appName: appName,
+                    apiKey: apiKey,
+                    apiSecretKey: apiSecretKey,
+                    accessToken: accessToken
+                },
+                success: function (response) {
+                    // Update fields if necessary
+                    // console.log('Data sent successfully!');
+                },
+                error: function (error) {
+                    // console.error('Error sending data:', error);
+                }
+            });
+        });
+
+
+
+
+        $("#add_broker_api_name").click(function () {
+            var brokerName = $('#brokerNameInput').val();
+            if (brokerName.trim() === '') {
+                alert("Please fill the broker name");
+            } else {
+                $.ajax({
+                    type: 'POST',
+                    url: '/save_broker_name',
+                    data: {
+                        'broker_name': brokerName,
+                        'csrfmiddlewaretoken': '{{ csrf_token }}'
+                    },
+                    success: function (response) {
+                        // Handle the response if needed
+                        get_all_broker_name();
+                        $('#brokerNameInput').val(''); // Clear the input field after successful AJAX request
+                    },
+                    error: function (error) {
+                        // Handle any errors that occur during the AJAX request
+                    }
+                });
+            }
+        });
+
+
+
+
+
+
+        function get_all_broker_name() {
+            $.ajax({
+                type: 'GET',
+                url: '/get_all_broker_names',
+                success: function (response) {
+
+                    if (response && response.length > 0) {
+                        // console.log(response.broker_name);
+
+                        $("#all_brokers").empty();
+
+                        var main_all_api_name = ""; // Initialize as an empty string
+                        response.forEach((broker_name_args) => {
+                            // console.log(broker_name_args.broker_name);
+
+
+                            var formattedBrokerName = broker_name_args.broker_name.toLowerCase().replace(/ /g, '_');
+
+                            main_all_api_name += '<option value="' + formattedBrokerName + '">' + broker_name_args.broker_name + '</option>';
+                        });
+
+                        // console.log(main_all_api_name);
+                        $("#all_brokers").append(main_all_api_name);
+                    }
+                },
+                error: function (error) {
+                    // console.error('Error retrieving broker names:', error);
+                }
+            });
+        }
+
+        // Retrieve and log the value of api_connect_id from localStorage
+
+        // Function to parse the URL parameters
+        function getParameterByName(name, url) {
+            var apiConnectId = localStorage.getItem('api_connect_id');
+            // console.log("api_connect_id:", apiConnectId);
+
+            if (!url) url = window.location.href;
+            name = name.replace(/[[\]]/g, '\\$&');
+            var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+                results = regex.exec(url);
+
+            var requestToken = null; // Initialize requestToken to null
+
+            if (results && results[2]) {
+                requestToken = decodeURIComponent(results[2].replace(/\+/g, ' '));
+                // console.log("Request Token:", requestToken);
+            }
+
+            // Only send data to Django backend using AJAX if requestToken is not empty
+            if (requestToken) {
+                $.ajax({
+                    type: "POST",
+                    url: "add_edit_access_token", // Replace with your Django endpoint
+                    data: {
+                        apiConnectId: apiConnectId,
+                        requestToken: requestToken
+                    },
+                    success: function (response) {
+                        // console.log(response);
+                        main_api_all();
+                        removeQueryStringFromURL();
+                    },
+                    error: function (error) {
+                        // console.error('Error sending data:', error);
+                    }
+                });
+            }
+            main_api_all();
+        }
+
+        // Function to remove the entire query string from the URL without refreshing the page
+        function removeQueryStringFromURL() {
+            if (typeof window !== 'undefined' && window.history.replaceState) {
+                var newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
+                window.history.replaceState({}, document.title, newUrl);
+            }
+        }
+
+        // Check if the redirected URL contains the request_token parameter
+        var redirectedUrl = window.location.href;
+        getParameterByName('request_token', redirectedUrl);
+
+
+
+
+        // Log the captured request_token
+
+
+        get_all_broker_name()
+    });
+</script>
+
+{% endblock dashboard_admin_body %}

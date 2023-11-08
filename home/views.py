@@ -6122,10 +6122,10 @@ def save_broker_admin(request):
         secret_key = request.POST.get('secret_key')
 
         # Print the received values
-        print("Broker: ", broker)
-        print("App Name: ", app_name)
-        print("API Key: ", api_key)
-        print("Secret Key: ", secret_key)
+        # print("Broker: ", broker)
+        # print("App Name: ", app_name)
+        # print("API Key: ", api_key)
+        # print("Secret Key: ", secret_key)
 
         # Set the current date and time
         api_added_at = datetime.datetime.now()
@@ -6152,3 +6152,422 @@ from .models import AdminAPIIntegrations
 def get_api_integrations_admin(request):
     integrations = AdminAPIIntegrations.objects.all().values()
     return JsonResponse(list(integrations), safe=False)
+
+from .models import All_brokers_api_name
+
+@csrf_exempt
+def save_broker_name(request):
+    if request.method == 'POST':
+        broker_name = request.POST.get('broker_name')
+        new_broker = All_brokers_api_name(broker_name=broker_name)
+        new_broker.save()
+        return JsonResponse({'message': 'Broker added successfully!'})
+    else:
+        return JsonResponse({'error': 'Invalid request method'})
+
+
+
+from django.core import serializers
+
+def get_all_broker_names(request):
+    all_brokers = All_brokers_api_name.objects.all().values()
+   
+    return JsonResponse(list(all_brokers),safe=False)
+
+
+from django.http import JsonResponse
+from django.views.decorators.csrf import ensure_csrf_cookie
+from django.views.decorators.http import require_POST
+from .models import AdminAPIIntegrations
+
+@require_POST
+@ensure_csrf_cookie
+def edit_broker_admin_data(request):
+    if request.method == 'POST':
+        on_off_value = request.POST.get('on_off_value')
+        id_value = request.POST.get('id_value')
+        
+        try:
+            instance = AdminAPIIntegrations.objects.get(id=id_value)
+            # print(instance.active_api)
+            if on_off_value == 'on':
+                instance.active_api = False
+            else:
+                instance.active_api = True
+            instance.save()
+            return JsonResponse({'message': 'Data updated successfully'}, status=200)
+        except AdminAPIIntegrations.DoesNotExist:
+            return JsonResponse({'message': 'Data not found'}, status=404)
+    else:
+        return JsonResponse({'message': 'Invalid request method'}, status=405)
+
+
+from django.http import JsonResponse
+from django.views.decorators.csrf import ensure_csrf_cookie
+from django.views.decorators.http import require_POST
+from .models import AdminAPIIntegrations  # Replace AdminAPIIntegrations with the appropriate model name
+
+@require_POST
+@ensure_csrf_cookie
+def delete_record(request):
+    if request.method == 'POST':
+        delete_id = request.POST.get('delete_id')
+        try:
+            instance = AdminAPIIntegrations.objects.get(id=delete_id)
+            instance.delete()
+            return JsonResponse({'message': 'Record deleted successfully'}, status=200)
+        except AdminAPIIntegrations.DoesNotExist:
+            return JsonResponse({'message': 'Record not found'}, status=404)
+    else:
+        return JsonResponse({'message': 'Invalid request method'}, status=405)
+
+
+
+
+import datetime
+from kiteconnect import KiteConnect  # Make sure to import KiteConnect if it's not already imported
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from .models import AdminAPIIntegrations
+
+@csrf_exempt
+def add_edit_access_token(request):
+    if request.method == 'POST':
+        api_connect_id = request.POST.get('apiConnectId')
+        request_token = request.POST.get('requestToken')
+        print(api_connect_id)
+        print(request_token)
+        
+        try:
+            instance = AdminAPIIntegrations.objects.get(id=api_connect_id)
+            kite = KiteConnect(api_key=instance.api_key)
+            data = kite.generate_session(request_token, api_secret=instance.api_secret_key)
+            profile = kite.profile()['user_name']
+            print(profile)
+            print(data)
+            instance.access_token = data['access_token']
+            instance.api_added_at = datetime.datetime.now()
+            instance.save()
+
+
+            return JsonResponse({'message': 'Access Token added successfully'}, status=200)
+        except AdminAPIIntegrations.DoesNotExist:
+            return JsonResponse({'message': 'Record not found'}, status=404)
+    else:
+        return JsonResponse({'error': 'Invalid request method'})
+
+# Make sure to set this part of the code in the appropriate section of your main code.
+
+
+
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from .models import AdminAPIIntegrations
+
+@csrf_exempt
+def edit_api_details_admin(request):
+    if request.method == 'POST':
+        edit_btn_id = request.POST.get('editBtnId')
+        # print(edit_btn_id)  # Check if the value is received correctly
+        try:
+            view_unique_id = AdminAPIIntegrations.objects.get(id=edit_btn_id)
+            data = {
+                'id': view_unique_id.id,
+                'broker_name': view_unique_id.broker_name,
+                'app_name': view_unique_id.app_name,
+                'api_key': view_unique_id.api_key,
+                'api_secret_key': view_unique_id.api_secret_key,
+                'access_token': view_unique_id.access_token,
+                'api_added_at': view_unique_id.api_added_at.strftime("%Y-%m-%d %H:%M:%S"),
+                'active_api': view_unique_id.active_api,
+            }
+            return JsonResponse(data, status=200)
+        except AdminAPIIntegrations.DoesNotExist:
+            return JsonResponse({'message': 'Record not found'}, status=404)
+    else:
+        return JsonResponse({'error': 'Invalid request method'})
+
+
+
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from .models import AdminAPIIntegrations
+
+@csrf_exempt
+def update_api_credentials_admin(request):
+    if request.method == 'POST':
+        id_update = request.POST.get('id_update')
+        app_name = request.POST.get('appName')
+        api_key = request.POST.get('apiKey')
+        api_secret_key = request.POST.get('apiSecretKey')
+        access_token = request.POST.get('accessToken')
+
+        # print("ID:", id_update)
+        # print("App Name:", app_name)
+        # print("API Key:", api_key)
+        # print("API Secret Key:", api_secret_key)
+        # print("Access Token:", access_token)
+
+        try:
+            # Get the instance by unique ID
+            instance = AdminAPIIntegrations.objects.get(id=id_update)
+
+            # Set the values
+            instance.app_name = app_name
+            instance.api_key = api_key
+            instance.api_secret_key = api_secret_key
+            instance.access_token = access_token
+
+            # Save the changes
+            instance.save()
+
+            return JsonResponse({'message': 'Data received successfully!'})
+        except AdminAPIIntegrations.DoesNotExist:
+            return JsonResponse({'error': 'Record not found'}, status=404)
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
+    else:
+        return JsonResponse({'error': 'Invalid request method'})
+
+
+
+def stock_option_chart(request):
+    return render(request, "stock_option_chart.html")
+
+
+def get_all_stocks(request):
+    url= "https://webapi.niftytrader.in/webapi/symbol/psymbol-list"
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
+        "Accept-Language": "en-US,en;q=0.9",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive"
+    }
+    get_stocks = requests.get(url, headers=headers)
+    all_stocks = get_stocks.json()
+    all_data = all_stocks
+    return JsonResponse(all_data)
+
+@csrf_exempt
+def get_spot_data(request):
+    if request.method == "POST":
+     get_spot = request.POST.get("pass_value")
+     url = f"https://webapi.niftytrader.in/webapi/symbol/today-spot-data?symbol={get_spot}"
+     headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
+        "Accept-Language": "en-US,en;q=0.9",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive"
+     }
+     get_all_spot_data = requests.get(url, headers=headers)
+     convert_data = get_all_spot_data.json()
+     all_datas = convert_data
+     return JsonResponse(all_datas)
+
+
+@csrf_exempt
+def get_expiry_date(request):
+    if request.method == "POST":
+        get_para = request.POST.get("para1")
+        url = f"https://webapi.niftytrader.in/webapi/symbol/symbol-expiry-list?symbol={get_para}"
+        headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
+        "Accept-Language": "en-US,en;q=0.9",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive"
+       }
+        get_dates = requests.get(url , headers=headers)
+        convert_datas = get_dates.json()
+        all_dates = convert_datas
+    return JsonResponse(all_dates)
+
+
+def india_vix_stock(request):
+    url = "https://webapi.niftytrader.in/webapi/Other/other-symbol-spot-data?symbol=INDIA+VIX"
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
+        "Accept-Language": "en-US,en;q=0.9",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive"
+    }
+    get_vix_data = requests.get(url, headers=headers)
+    convert_vix = get_vix_data.json()
+    all_vix_data = convert_vix
+    return JsonResponse(all_vix_data)
+
+@csrf_exempt
+def open_interest(request):
+    if request.method == "POST":
+        param = request.POST.get("param1")
+        param2 = request.POST.get("param2")
+    url = f"https://webapi.niftytrader.in/webapi/option/oi-data?reqType={param}&reqDate={param2}"
+    print(url)
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
+        "Accept-Language": "en-US,en;q=0.9",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive"
+    }
+    get_oi = requests.get(url, headers=headers)
+    convert_oi_data = get_oi.json()
+    all_oi_data = convert_oi_data
+    return JsonResponse(all_oi_data)
+
+@csrf_exempt
+def change_oi_val(request):
+    if request.method == "POST":
+        param_one = request.POST.get("param1")
+        param_two = request.POST.get("change_symbol")
+        url = f"https://webapi.niftytrader.in/webapi/option/oi-change-data?reqType={param_one}&reqDate=&symbolName={param_two}"
+        headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
+        "Accept-Language": "en-US,en;q=0.9",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive"
+    }
+        print(url)
+        get_change_oi_data = requests.get(url, headers=headers)
+        change_data = get_change_oi_data.json()
+        all_oi_change_data = change_data
+        return JsonResponse(all_oi_change_data)
+
+@csrf_exempt
+def put_call_data(request):
+    if request.method == "POST":
+     symbol = request.POST.get("put_call_symbol")
+     url = f"https://webapi.niftytrader.in/webapi/option/oi-pcr-data?reqType={symbol}pcr&reqDate="
+     print(url)
+     headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
+        "Accept-Language": "en-US,en;q=0.9",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive"
+    }
+     get_pc_data = requests.get(url, headers=headers)
+     convert_data = get_pc_data.json()
+     all_pc_data = convert_data
+     return JsonResponse(all_pc_data)
+    
+
+
+
+from kiteconnect import KiteConnect
+from django.http import JsonResponse
+
+
+
+import json
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+
+@csrf_exempt
+def margin_calculations(request):
+    if request.method == 'POST':
+        data = request.body
+        parsed_data = json.loads(data)
+        # print(parsed_data)  # Print the parsed data from the AJAX call
+
+        # Adjusting the data format as requested
+        combined_data = []
+        for data_entry in parsed_data:
+            temp_data = {
+                "exchange": data_entry["exchange"],
+                "tradingsymbol": data_entry["tradingsymbol"],
+                "transaction_type": data_entry["transaction_type"],
+                "variety": "regular",
+                "product": "MIS",
+                "order_type": "LIMIT",
+                "quantity": int(data_entry["quantity"]),
+                "price": float(data_entry["price"]),
+                "trigger_price": 0,
+                "squareoff": 0,
+                "stoploss": 0
+            }
+            combined_data.append(temp_data)
+
+        # Printing the combined data
+        combined_data_json = json.dumps(combined_data, indent=4)  # Convert to JSON with indentation
+        # print(combined_data_json)
+
+        # Perform necessary operations with the data
+
+        # Retrieving the relevant AdminAPIIntegrations instance
+        integrations = AdminAPIIntegrations.objects.filter(broker_name="zerodha", access_token__isnull=False, active_api=True).first()
+
+        if integrations:
+            # print(integrations.api_key)
+            # print(integrations.access_token)
+            api_key = integrations.api_key
+            access_token = integrations.access_token
+
+            try:
+                kite = KiteConnect(api_key=api_key)
+                kite.set_access_token(access_token)
+                profile = kite.profile()
+                if profile:
+                    profile_name = profile.get('user_name', 'Profile name not found')
+                    # print(profile_name)
+                    margin_amount = kite.basket_order_margins(json.loads(combined_data_json),mode='compact')
+                    main_margin_amout=margin_amount['initial']['total']
+                    # print(main_margin_amout)
+                else:
+                    print("Profile not found.")
+            except Exception as e:
+                print(f"An error occurred: {e}")
+
+            # Perform further operations with 'kite' instance
+            # For example:
+            # kite.some_function()
+
+            return JsonResponse({'message': 'Data received successfully. API key and access token set.',"main_margin_amout":main_margin_amout}, status=200)
+        else:
+            return JsonResponse({'error': 'No valid API integration found.'}, status=400)
+
+    else:
+        return JsonResponse({'error': 'Invalid request method'}, status=400)
+
+
+
+
+
+import json
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+
+# Create a Django view function
+@csrf_exempt
+def angel_one_margin_calculations(request):
+    if request.method == 'POST':
+        data = request.body
+        parsed_data = json.loads(data)
+        # print(parsed_data)  # Print the parsed data from the AJAX call
+
+        # Define the API URL
+        url = 'https://margin-calc-arom-prod.angelbroking.com/margin-calculator/SPAN'
+
+        # Convert parsed_data into JSON
+        output_data = json.dumps(parsed_data)
+
+        # Run the loop to set the output
+        payload = {"position": []}
+        for item in parsed_data:
+            payload["position"].append({
+                "contract": item["contract"],
+                "exchange": item["exchange"],
+                "product": item["product"],
+                "qty": int(item["qty"]),
+                "strikePrice": int(item["strikePrice"]),
+                "tradeType": item["tradeType"],
+                "optionType": item["optionType"]
+            })
+
+        # Send a POST request
+        response = requests.post(url, json=payload)
+
+        # Check the response
+        if response.status_code == 200:
+            # Return the response data as JSON
+            return JsonResponse(response.json(), safe=False)
+        else:
+            # Return an error message
+            return JsonResponse({"error": f"Request failed with status code {response.status_code}"}, status=500)

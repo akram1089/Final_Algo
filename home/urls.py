@@ -289,9 +289,35 @@ urlpatterns = [
     path('zerodha_api_config', views.zerodha_api_config, name='zerodha_api_config'),
 
     path('main_contributor/<str:contributor>/', views.main_contributor, name='main_contributor'),
+
+
     path('api_managements', views.api_managements, name='api_managements'),
     path('save_broker_admin', views.save_broker_admin, name='save_broker_admin'),
     path('get_api_integrations_admin', views.get_api_integrations_admin, name='get_api_integrations_admin'),
+    path('save_broker_name', views.save_broker_name, name='save_broker_name'),
+    path('get_all_broker_names', views.get_all_broker_names, name='get_all_broker_names'),
+    path('edit_broker_admin_data', views.edit_broker_admin_data, name='edit_broker_admin_data'),
+    path('delete_record', views.delete_record, name='delete_record'),
+    path('add_edit_access_token', views.add_edit_access_token, name='add_edit_access_token'),
+    path('edit_api_details_admin', views.edit_api_details_admin, name='edit_api_details_admin'),
+    path('update_api_credentials_admin', views.update_api_credentials_admin, name='update_api_credentials_admin'),
+    path('margin_calculations', views.margin_calculations, name='margin_calculations'),
+
+    path('stock_option_chart', views.stock_option_chart, name='stock_option_chart'),
+    path('get_all_stocks', views.get_all_stocks, name='get_all_stocks'),
+    path('get_spot_data', views.get_spot_data, name='get_spot_data'),
+    path('get_expiry_date', views.get_expiry_date, name='get_expiry_date'),
+    path('india_vix_stock', views.india_vix_stock, name='india_vix_stock'),
+    path('open_interest', views.open_interest, name='open_interest'),
+    path('change_oi_val', views.change_oi_val, name='change_oi_val'),
+    path('put_call_data', views.put_call_data, name='put_call_data'),
+
+    
+    path('angel_one_margin_calculations', views.angel_one_margin_calculations, name='angel_one_margin_calculations'),
+    
+
+
+
 
   
 

@@ -228,14 +228,22 @@ class my_strategies(models.Model):
 
 
 
+from django.db import models
+
 class AdminAPIIntegrations(models.Model):
     broker_name = models.CharField(max_length=100)
     app_name = models.CharField(max_length=100)
-    api_key = models.CharField(max_length=100)
-    api_secret_key = models.CharField(max_length=100)
-    access_token = models.CharField(max_length=100)
+    api_key = models.TextField()  # Changed to TextField
+    api_secret_key = models.TextField()  # Changed to TextField
+    access_token = models.TextField()  # Changed to TextField
     api_added_at = models.DateTimeField()
     active_api = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.broker_name} - {self.app_name}"
+
+
+
+
+class All_brokers_api_name(models.Model):
+    broker_name=models.CharField(max_length=50)
