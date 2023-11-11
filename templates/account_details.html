@@ -3,8 +3,327 @@
 {% block dashboard_body %}
 
 
+<style>
+    .user_photo {
+        font-size: 5rem !important;
+    }
+
+    .user_options {
+        padding-left: 0 !important;
+    }
+
+    .user_options li {
+        margin-top: 13px;
+    }
+
+    .active {
+        color: #279af4;
+    }
+
+    .profile_button {
+        color: white !important;
+        background: #4399eb !important;
+        border: 1px solid #4399eb !important;
+        padding: 8px;
+        border-radius: 5px;
+    }
+
+    .user_options li {
+        cursor: pointer;
+        border-bottom: 1px solid rgba(62, 62, 62, 0.375);
+        padding: 5px;
+    }
+    .order_details_table table thead{
+        background: linear-gradient(180deg, #4399eb, #5cadfb);
+    color: #fff;
+    }
+    .order_details_table table tbody tr td{
+     padding: 18px !important;
+    }
+    .options_for_user{
+        box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+        padding:20px;
+    }
+    .users_data{
+        box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+        padding:20px;
+    }
+    .subscript {
+        position: relative;
+    }
+
+    .subscript sub {
+        background-color: #4343439f; 
+        padding: 1px;
+        border-radius: 3px;
+        
+    }
+
+</style>
+<section>
+    <div class="user_account_details p-5">
+
+        <div class="user_account_name">
+            <h5>User Account's</h5>
+
+        </div>
+        <hr>
+        <div class="row mt-5 gap-3">
+            <div class="col-lg-3 options_for_user">
+                <div class="user_history">
+                    <div class="profile_photo ">
+                        <img src="{%   static   "/img/4715330.png" %}" alt="" height=" 80px" style="margin-left: 30px;">
+                        <div class="user_name_email">
+                            <h5 id="usr_name"></h5>
+                            <span style="font-size: 12px;" id="usr_email"></span>
+                        </div>
+                    </div>
+                    <ul class="user_options mt-4">
+                        <li class="active" data-id="personal" id="personal_info">Personal Information</li>
+                        <li data-id="order" id="order_history">Order History</li>
+                        <li data-id="billing" id="billing_pay">Billing & Payments</li>
+                        <li data-id="subscription" id="subscript">Subscriptions</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="col-lg-8 users_data">
+                <div class="personal_information">
+                    <h5>Account Details</h5>
+                    <!-- <span>Profile information</span> -->
+                    <div class="user_field mt-4">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="mb-3">
+                                    <label for="exampleFormControlInput1" class="form-label">Full Name</label>
+                                    <input type="text" class="form-control" id="full_name" placeholder="">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-lg-6">
+                                <div class="mb-3">
+                                    <label for="exampleFormControlInput1" class="form-label">Email address</label>
+                                    <input type="email" class="form-control" id="email" placeholder="name@example.com">
+                                </div>
+
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="mb-3">
+                                    <label for="exampleFormControlInput1" class="form-label">Mobile Number</label>
+                                    <input type="text" class="form-control" id="mobile_num" placeholder="">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-lg-6">
+                                <div class="mb-3">
+                                    <label for="exampleFormControlInput1" class="form-label">State</label>
+                                    <input type="text" class="form-control" id="state" placeholder="">
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="mb-3">
+                                    <label for="exampleFormControlInput1" class="form-label">Status</label>
+                                    <input type="text" class="form-control" id="status" placeholder="">
+                                </div>
+                            </div>
+                        </div>
+
+                        <button class="profile_button">Update</button>
+                    </div>
+                </div>
+
+                <div class="billing_payments" style="display: none;">
+                    <h1>Billing</h1>
+                </div>
+                <div class="order_history" style="display: none;">
+                    <h5>Order history</h5>
+                    <div class="order_details_table">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Id</th>
+                                    <th scope="col">Date</th>
+                                    <th scope="col">Instrument</th>
+                                    <th scope="col">Type</th>
+                                    <th scope="col">Qty.</th>
+                                    <th scope="col">Avg Price</th>
+                                    <th scope="col">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th scope="row">1</th>
+                                    <td>10-11-2023</td>
+                                    <td class="subscript">SBIN <sub>NSE</sub></td>
+                                    <td class="text-primary">BUY</td>
+                                    <td>1/1</td>
+                                    <td>261.5</td>
+                                    <td ><span style="border: 1px solid green; padding: 3px; color: green;">COMPLETE</span> </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">2</th>
+                                    <td>10-11-2023</td>
+                                    <td class="subscript">RELIANCE <sub>NSE</sub></td>
+                                    <td class="text-primary">BUY</td>
+                                    <td>0/5</td>
+                                    <td>255</td>
+                                    <td><span style="border: 1px solid blue; padding: 3px; color: blue;">CANCLLED</span> </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">3</th>
+                                    <td>10-11-2023</td>
+                                    <td class="subscript">NIFTY16DECFUT <sub>NSE</sub></td>
+                                    <td class="text-primary">BUY</td>
+                                    <td>0/75</td>
+                                    <td>8500</td>
+                                    <td> <span style="border: 1px solid red; padding: 3px; color: red;"> REJECTED</span></td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">4</th>
+                                    <td>10-11-2023</td>
+                                    <td class="subscript">NIFTY16DECFUT <sub>NSE</sub></td>
+                                    <td class="text-primary">BUY</td>
+                                    <td>0/75</td>
+                                    <td>8500</td>
+                                    <td> <span style="border: 1px solid red; padding: 3px; color: red;"> REJECTED</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="subscriptions" style="display: none;">
+                    <h1>Subscriptions Coming Soon</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 
 
+<script>
+    $(document).ready(function () {
+
+        // Retrieve filter_init_id from localStorage
+        var filter_init_id = localStorage.getItem("filter_init_id") || "personal";
+
+        // Set the active class based on the retrieved filter_init_id
+        $(".user_options li").removeClass("active");
+        $(".user_options li[data-id='" + filter_init_id + "']").addClass("active");
+
+        // Display the appropriate section based on filter_init_id
+        if (filter_init_id == "personal") {
+            $(".personal_information").show();
+            $(".billing_payments, .order_history, .subscriptions").hide();
+            $(".profile_photo").show();
+        } else if (filter_init_id == "billing") {
+            $(".personal_information, .order_history, .subscriptions").hide();
+            $(".billing_payments").show();
+            $(".profile_photo").hide();
+        } else if (filter_init_id == "order") {
+            $(".personal_information, .billing_payments, .subscriptions").hide();
+            $(".order_history").show();
+            $(".profile_photo").hide();
+        } else if (filter_init_id == "subscription") {
+            $(".personal_information, .billing_payments, .order_history").hide();
+            $(".subscriptions").show();
+            $(".profile_photo").hide();
+        }
+
+        $(".user_options li").click(function () {
+            $(".user_options li").removeClass("active");
+            $(this).addClass("active");
+            filter_init_id = $(this).data("id");
+
+            // Store filter_init_id in localStorage
+            localStorage.setItem("filter_init_id", filter_init_id);
+
+            // Update the view based on the selected filter_init_id
+            if (filter_init_id == "personal") {
+                $(".personal_information").show();
+                $(".billing_payments, .order_history, .subscriptions").hide();
+                $(".profile_photo").show();
+            } else if (filter_init_id == "billing") {
+                $(".personal_information, .order_history, .subscriptions").hide();
+                $(".billing_payments").show();
+                $(".profile_photo").hide();
+            } else if (filter_init_id == "order") {
+                $(".personal_information, .billing_payments, .subscriptions").hide();
+                $(".order_history").show();
+                $(".profile_photo").hide();
+            } else if (filter_init_id == "subscription") {
+                $(".personal_information, .billing_payments, .order_history").hide();
+                $(".subscriptions").show();
+                $(".profile_photo").hide();
+            }
+        });
+
+        function get_data() {
+            $.ajax({
+                type: "post",
+                url: "get_user_data/",
+                dataType: "json",
+                success: function (data) {
+                    console.log(data);
+                    if(data.status){
+                      $("#status").val("Active")
+                    }
+                    else{
+                        $("#status").val("Inactive")
+                    }
+                    $('.profile_button').attr('data-id', data.id);
+                    $('#full_name').val(data.full_name).prop('disabled', true);
+                    $("#usr_name").text(data.full_name)
+                    $("#usr_email").text(data.email)
+                    $('#email').val(data.email).prop('disabled', true);;
+                    $('#state').val(data.State);
+                    $('#mobile_num').val(data.Mobile_number);
+                }
+
+            })
+        }
+        get_data()
+
+
+        $(".profile_button").click(function () {
+            updateData()
+        })
+
+        function updateData() {
+            // Assume you have the data with an ID, replace it with your actual data
+            var data = {
+                id: $(".profile_button").data("id"), // Replace with your actual ID
+                // Include other updated data fields
+                full_name: $('#full_name').val(),
+                email: $('#email').val(),
+                state: $('#state').val(),
+                mobile_num: $('#mobile_num').val()
+            };
+
+            // Add CSRF token to the data
+            data['csrfmiddlewaretoken'] = '{{ csrf_token }}';
+
+            // Perform the AJAX request to update the data
+            $.ajax({
+                type: "post",
+                url: "update_user_data/",
+                dataType: "json",
+                data: data,
+                success: function (response) {
+                    console.log(response);
+                    // Handle the response as needed
+                    if (response.success) {
+                        alert('Data updated successfully!');
+                    } else {
+                        alert('Failed to update data.');
+                    }
+                }
+            });
+        }
+
+    });
+</script>
 
 
 

@@ -1,0 +1,1518 @@
+{% extends "base_dashboard.html" %}
+{% load static %}
+{% block dashboard_body %}
+
+<style>
+    /* .option_section {
+        padding: 0 4rem;
+    } */
+
+    .atock_spot_container,.stock_lot_size {
+        display: flex;
+    gap: 1rem;
+    }
+    .row {
+        margin-right: 0 !important;
+        margin-left: 0 !important;
+    }
+
+    .all_stocks_box {
+        overflow-x: scroll;
+        height: 500px;
+    }
+
+    .option_charts {
+        box-shadow: 0 3px 16px 0 rgba(35, 47, 62, .15);
+    }
+
+    .stock a {
+        text-decoration: none;
+        color: black;
+    }
+
+    .stock_list_item {
+        border-radius: 5px;
+        -webkit-filter: drop-shadow(0 2px 6.5px rgba(35, 47, 62, .12));
+        filter: drop-shadow(0 2px 6.5px rgba(35, 47, 62, .12));
+        padding-bottom: 5px !important;
+    }
+
+    .stock_filter {
+        color: rgba(0, 149, 255, 0.878);
+        cursor: pointer;
+    }
+
+    .stock_filter_active {
+        color: grey;
+    }
+
+    #openModalButton {
+        font-weight: bold !important;
+    }
+
+    #openModalButton:hover {
+        color: #4399eb;
+    }
+
+    #vixModal {
+        z-index: 999999999999999;
+    }
+
+    .active_filter_option {
+        color: #4399eb !important;
+        border-top: 2px solid #4399eb !important;
+    }
+
+    .stock_list_item {
+        padding: 13px;
+    }
+
+    .open_interest_chart,
+    .change_in_oi_chart,
+    .put_call_ratio_chart,
+    .volume_pcr_chart,
+    .live_max_pain_chart,
+    .stock_oi_chart,
+    .stock_oi_change_chart,
+    .stock_pcr_chart,
+    .stock_live_max_chart {
+        height: 450px;
+    }
+</style>
+
+<section class="option_section" id="stock_charts">
+    <div class="option_charts">
+        <div class="box_header mt-1">
+            <div class="row p-4">
+                <div class="col-lg-12 d-flex gap-2">
+                    <p class="stock_filter stock_filter_active" data-value="nifty">Nifty</p> <span>|</span>
+                    <p class="stock_filter" data-value="banknifty">Bank Nifty</p> <span>|</span>
+                    <p class="stock_filter" data-value="finnifty">Fin Nifty</p> <span>|</span>
+                    <p class="stock_filter" data-value="midcpnifty">Midcap Nifty</p> <span>|</span>
+                    <p class="stock_filter" id="stock_name_filter" data-stock="sbin">Stock</p>
+                </div>
+            </div>
+
+            <div class="spot_data align-items-center gap-4 ps-4 pe-4" style="display: flex;">
+                <div class="expiry_option">
+
+                </div>
+                <div class="strike_option">
+
+                </div>
+                <div class="spot_price">
+
+                </div>
+                <div class="india_vix">
+
+                </div>
+            </div>
+            <div class="atock_spot_container ps-3" style="display: none;">
+
+            </div>
+        </div>
+
+        <div class="chart_filter">
+            <ul class="d-flex gap-3 stock_filter_ul">
+                <li class=" active_filter_option" data-main_navigation="open_interest">Open Interest</li>
+                <li data-main_navigation="change_in_oi">Change in OI</li>
+                <li data-main_navigation="put_call_ratio">Put Call Ratio</li>
+                <li id="volume_pcr" data-main_navigation="volume_pcr">Volume PCR</li>
+                <li data-main_navigation="live_max">Live Max Pain</li>
+            </ul>
+        </div>
+
+        <div class="stock_oi_filter" style="display: none;">
+            <ul class="d-flex gap-3 stock_name_filter_ul">
+                <li class=" active_filter_option" data-navigation="stock_oi">Open Interest</li>
+                <li data-navigation="stock_oi_change">Change in OI</li>
+                <li data-navigation="stock_put_call_ratio">Put Call Ratio</li>
+                <li data-navigation="stock_live_max">Live Max Pain</li>
+            </ul>
+        </div>
+
+
+        <div class="chart_container">
+            <div class="open_interest_chart">
+                <canvas id="myChart"></canvas>
+
+            </div>
+            <div class="change_in_oi_chart" style="display: none;">
+                <canvas id="changeoiChart"></canvas>
+            </div>
+            <div class="put_call_ratio_chart" style="display: none;">
+                <canvas id="lineChart"></canvas>
+            </div>
+            <div class="volume_pcr_chart" style="display: none;">
+                <canvas id="volumeLinechart"></canvas>
+            </div>
+            <div class="live_max_pain_chart" style="display: none;">
+                <canvas id="barChart"></canvas>
+            </div>
+        </div>
+
+        <div class="stock_chart_container" >
+            <div class="stock_oi_chart">
+                <canvas id="stockChart"></canvas>
+            </div>
+            <div class="stock_oi_change_chart" style="display: none;">
+                <canvas id="stockOIchart"></canvas>
+            </div>
+            <div class="stock_pcr_chart" style="display: none;">
+                <canvas id="myStockpcrChart"></canvas>
+            </div>
+            <div class="stock_live_max_chart" style="display: none;">
+                <canvas id="myLiveStockchart"></canvas>
+            </div>
+        </div>
+
+    </div>
+
+
+    <div class="modal fade" id="vixModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <canvas id="vixChartCanvas"></canvas>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="all_stocks_box mt-5">
+        <div class="stock_detail">
+            <div class="row stocks_container">
+
+
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+<script>
+    $(document).ready(function () {
+        var main_initial_val = "nifty"
+        var initial_filter_val = "niftyoilist"
+        var initial_change_oi = "niftyoichange"
+        var initial_pcr_value = "niftypcr"
+        var initial_volume_value = "niftyvolumepcr"
+        var mainNavigation = "open_interest"
+        var expiry_date = ""
+        var strike_val = "10" // Initialize with a default value if needed
+
+
+
+        $(".stock_filter").click(function () {
+            main_initial_val = $(this).data("value")
+            $(".stock_filter").removeClass("stock_filter_active")
+            $(this).addClass("stock_filter_active")
+            $(".chart_filter").show()
+            $(".all_stocks_box").hide()
+            $(".chart_container").show()
+            $(".stock_oi_filter").hide()
+            $(".stock_chart_container").hide()
+            $(".spot_data").show()
+            $(".atock_spot_container").hide()
+            if (mainNavigation == "open_interest") {
+
+                if (main_initial_val == "nifty") {
+                    initial_filter_val = "niftyoilist"
+                }
+                else if (main_initial_val == "banknifty") {
+                    initial_filter_val = "bankniftyoi"
+                }
+                else if (main_initial_val == "finnifty") {
+                    initial_filter_val = "finniftyoilist"
+                }
+                else if (main_initial_val == "midcpnifty") {
+                    initial_filter_val = "midcpniftyoilist"
+                }
+
+            }
+
+            else if (mainNavigation == "change_in_oi") {
+                if (main_initial_val == "nifty") {
+                    initial_change_oi = "niftyoichange"
+                }
+                else if (main_initial_val == "banknifty") {
+                    initial_change_oi = "bankniftyoichange"
+                }
+                else if (main_initial_val == "finnifty") {
+                    initial_change_oi = "finniftyoichange"
+                }
+                else if (main_initial_val == "midcpnifty") {
+                    initial_change_oi = "midcpniftyoichange"
+                }
+            }
+
+            else if (mainNavigation == "put_call_ratio") {
+
+                if (main_initial_val == "nifty") {
+                    initial_pcr_value = "niftypcr"
+                }
+                else if (main_initial_val == "banknifty") {
+                    initial_pcr_value = "bankniftypcr"
+                }
+                else if (main_initial_val == "finnifty") {
+                    initial_pcr_value = "finniftypcr"
+                }
+                else if (main_initial_val == "midcpnifty") {
+                    initial_pcr_value = "midcpniftypcr"
+                }
+            }
+
+            else if (mainNavigation == "volume_pcr") {
+                if (main_initial_val == "nifty") {
+                    initial_volume_value = "niftyvolumepcr"
+                }
+                else if (main_initial_val == "banknifty") {
+                    initial_volume_value = "bankniftyvolumepcr"
+                }
+                else if (main_initial_val == "finnifty") {
+                    initial_volume_value = "finniftyvolumepcr"
+                }
+                else if (main_initial_val == "midcpnifty") {
+                    initial_volume_value = "midcpniftyvolumepcr"
+                }
+            }
+
+
+
+            console.log(main_initial_val);
+            console.log(initial_filter_val);
+            console.log(mainNavigation);
+            get_today_spot_d(main_initial_val); // Pass the value to the function
+            get_expiry_date_option(main_initial_val);
+            india_vix_data()
+            // oi_change(strike_val)
+            change_in_oi_data(main_initial_val)
+            put_call_ratio_data()
+
+        })
+
+        $(".stock_filter_ul li").click(function () {
+            mainNavigation = $(this).data("main_navigation");
+            $(".stock_filter_ul li").removeClass("active_filter_option")
+            $(this).addClass("active_filter_option")
+            console.log("Clicked on: " + mainNavigation);
+            console.log(initial_filter_val);
+
+            if (mainNavigation === "open_interest") {
+                $("#dateDropdown").show()
+                $(".strikeLimit").show()
+                oi_change(strike_val, expiry_date)
+                $(".open_interest_chart").show()
+                $(".change_in_oi_chart").hide()
+                $(".put_call_ratio_chart").hide()
+                $(".volume_pcr_chart").hide()
+                $(".live_max_pain_chart").hide()
+            }
+            else if (mainNavigation === "change_in_oi") {
+                $("#dateDropdown").show()
+                $(".strikeLimit").show()
+                change_in_oi_data(main_initial_val)
+                $(".change_in_oi_chart").show()
+                $(".open_interest_chart").hide()
+                $(".put_call_ratio_chart").hide()
+                $(".volume_pcr_chart").hide()
+                $(".live_max_pain_chart").hide()
+            }
+            else if (mainNavigation === "put_call_ratio") {
+                $("#dateDropdown").hide()
+                $(".strikeLimit").hide()
+                put_call_ratio_data()
+                $(".put_call_ratio_chart").show()
+                $(".change_in_oi_chart").hide()
+                $(".open_interest_chart").hide()
+                $(".volume_pcr_chart").hide()
+                $(".live_max_pain_chart").hide()
+            }
+            else if (mainNavigation === "volume_pcr") {
+                $("#dateDropdown").hide()
+                $(".strikeLimit").hide()
+                volume_pcr_data()
+                $(".volume_pcr_chart").show()
+                $(".open_interest_chart").hide()
+                $(".change_in_oi_chart").hide()
+                $(".put_call_ratio_chart").hide()
+                $(".live_max_pain_chart").hide()
+
+            }
+            else if (mainNavigation === "live_max") {
+                $("#dateDropdown").hide()
+                $(".strikeLimit").hide()
+                live_max()
+                $(".live_max_pain_chart").show()
+                $(".volume_pcr_chart").hide()
+                $(".open_interest_chart").hide()
+                $(".change_in_oi_chart").hide()
+                $(".put_call_ratio_chart").hide()
+
+            }
+
+
+
+
+
+        });
+
+
+        function get_today_spot_d(initial_spot_filter) {
+            console.log(initial_spot_filter);
+            $.ajax({
+                type: "post",
+                url: "/get_spot_data",
+                data: {
+                    pass_value: initial_spot_filter
+                },
+                success: function (data) {
+                    var spot_data = data.resultData
+                    console.log(spot_data);
+                    $(".spot_price").empty()
+
+                    var creatSpot_data = `<div class=" spot_data d-flex gap-3">
+                                      <div class="spot_pr">
+                                        <span>Spot</span> <span class="spot_data_val ${spot_data.change_value < 0 ? "text-danger" : "text-success"}" >${spot_data.last_trade_price}</span>
+                                        <p class="${spot_data.change_value < 0 ? "text-danger" : "text-success"}"> <i class="${spot_data.change_value < 0 ? 'bi bi-caret-down-fill' : 'bi bi-caret-up-fill'}"></i> ${spot_data.change_value} <span>(${spot_data.change_per}%)</span></p>
+                                      </div>
+                                     <div>
+                                        <span>PCR</span>
+                                    </div>
+                                    <div>
+                                        <p>Max Pain <br/> ${spot_data.max_pain}</p>
+                                        <span></span>
+                                    </div>
+                                    <div>
+                                        <p>Lot Size <br/> ${spot_data.lot_size}</p>
+                                        <span></span>
+                                    </div>
+                                    <div>
+                                    </div>
+                                 </div>`
+                    $(".spot_price").append(creatSpot_data)
+                    oi_change(strike_val, expiry_date)
+
+                }
+            })
+        }
+
+
+        get_today_spot_d(main_initial_val);
+
+
+        function get_expiry_date_option(main_initial_val) {
+            $.ajax({
+                type: "post",
+                url: "/get_expiry_date",
+                data: {
+                    para1: main_initial_val
+                },
+                success: function (data) {
+                    var ex_dates = data.resultData
+                    console.log(ex_dates);
+                    var select = $("<select>", {
+                        id: "dateDropdown",
+                        class: "form-select form-select-sm"
+                    });
+
+                    $(".expiry_option").empty()
+                    $(".strike_option").empty()
+                    $("#dateDropdown").empty()
+
+                    if (main_initial_val === "sbin") {
+
+                        $("#volume_pcr").hide()
+                    }
+
+                    else {
+
+                        ex_dates.forEach(element => {
+                            var option = $("<option>").text(element.split("T")[0]);
+                            select.append(option);
+                        });
+
+                        $(".expiry_option").append(select)
+
+                        $("#dateDropdown").change(function () {
+                            expiry_date = $(this).val()
+                            console.log(expiry_date);
+                            oi_change(strike_val, expiry_date);
+                        })
+
+                        var second_option = `<select class="form-select form-select-sm strikeLimit" >
+                                                 <option value="100">All Strikes</option>
+                                                 <option value="6">5</option>
+                                                 <option value="11" selected>10</option>
+                                                 <option value="16">15</option>
+                                                 <option value="21">20</option>
+                                              </select>`
+                        $(".strike_option").append(second_option)
+                        $("#volume_pcr").show()
+
+                        $(".strikeLimit").change(function () {
+                            strike_val = $(this).val()
+                            console.log(strike_val);
+                            oi_change(strike_val, expiry_date)
+                        })
+                    }
+
+                }
+            })
+        }
+
+        get_expiry_date_option(main_initial_val)
+
+
+
+
+
+        console.log(mainNavigation);
+
+        var myChart
+        function oi_change(strike_val, expiry_date) {
+
+            var spot_data = $(".spot_data_val").text()
+            console.log(spot_data + "oi");
+            console.log(expiry_date);
+            $.ajax({
+                type: "post",
+                url: "/open_interest",
+                data: {
+                    param1: initial_filter_val,
+                    param2: expiry_date,
+                },
+                success: function (data) {
+                    var datas = data.resultData;
+                    var strikePrices = [];
+                    var callsOIs = [];
+                    var putsOIs = [];
+
+                    var oi_data = datas.oiDatas;
+
+                    console.log(oi_data);
+
+                    // Populate strikePrices array
+                    for (var i = 0; i < oi_data.length; i++) {
+                        var data = oi_data[i];
+                        strikePrices.push(data.strike_price);
+                    }
+
+
+                    // var spot_data = $(".spot_data_val").text();
+
+
+                    // Find the 5 most closest greater and smaller values
+                    var finalStrikePrice = [];
+
+                    function findClosestValues(array, value, strike_val) {
+                        array.sort((a, b) => a - b);
+                        var lowerValues = array.filter((x) => x <= value).slice(-strike_val);
+                        var greaterValues = array.filter((x) => x > value).slice(0, strike_val);
+                        finalStrikePrice = lowerValues.concat(greaterValues);
+                        return lowerValues.concat(greaterValues);
+                    }
+
+
+                    // Separate loop to process included values from closestValues in data.strike_price
+                    var closestValues = findClosestValues(strikePrices, spot_data, strike_val);
+
+                    var main_oi_data = []
+                    for (var i = 0; i < oi_data.length; i++) {
+                        var data = oi_data[i];
+
+
+                        // Process only included values
+                        if (closestValues.includes(data.strike_price)) {
+
+                            main_oi_data.push(data);
+
+                        }
+                    }
+                    main_oi_data.sort((a, b) => a.strike_price - b.strike_price);
+
+                    // Pushing calls_oi and puts_oi after sorting
+                    for (var i = 0; i < main_oi_data.length; i++) {
+                        var data = main_oi_data[i];
+                        callsOIs.push(data.calls_oi);
+                        putsOIs.push(data.puts_oi);
+                    }
+
+
+
+                    if (myChart) {
+                        myChart.destroy();
+                    }
+
+                    var ctx = document.getElementById("myChart").getContext("2d");
+
+                    // Create the Chart.js chart
+                    myChart = new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: finalStrikePrice,
+                            datasets: [
+                                {
+                                    label: 'Total Calls OI',
+                                    data: callsOIs,
+                                    backgroundColor: '#2196f3',
+                                },
+                                {
+                                    label: 'Total Puts OI',
+                                    data: putsOIs,
+                                    backgroundColor: '#f96c92',
+                                },
+                            ],
+                        },
+                        options: {
+                            maintainAspectRatio: false, // Disable the aspect ratio
+                            scales: {
+                                x: {
+                                    title: {
+                                        display: true,
+                                        text: 'Strike Price',
+                                    },
+                                },
+                                y: {
+                                    title: {
+                                        display: true,
+                                        text: 'Value',
+                                    },
+                                },
+                            },
+                        },
+                    });
+
+
+
+                }
+            });
+        }
+
+
+
+
+        var changeoiChart
+        function change_in_oi_data(main_initial_val) {
+            var spot_data = $(".spot_data_val").text();
+            console.log(spot_data + "chng_oi");
+            $.ajax({
+                type: "post",
+                url: "/change_oi_val",
+                data: {
+                    param1: initial_change_oi,
+                    change_symbol: main_initial_val
+                },
+                success: function (data) {
+                    var datas = data.resultData;
+                    var strikePrices = [];
+                    var callsOIs = [];
+                    var putsOIs = [];
+
+                    var oi_data = datas.oiDatas;
+
+
+                    // Populate strikePrices array
+                    for (var i = 0; i < oi_data.length; i++) {
+                        var data = oi_data[i];
+                        strikePrices.push(data.strike_price);
+                    }
+
+
+                    // var spot_data = $(".spot_data_val").text();
+
+
+                    // Find the 5 most closest greater and smaller values
+                    var finalStrikePrice = [];
+
+                    function findClosestValues(array, value, strike_val) {
+                        array.sort((a, b) => a - b);
+                        var lowerValues = array.filter((x) => x <= value).slice(-strike_val);
+                        var greaterValues = array.filter((x) => x > value).slice(0, strike_val);
+                        finalStrikePrice = lowerValues.concat(greaterValues);
+                        return lowerValues.concat(greaterValues);
+                    }
+
+
+                    // Separate loop to process included values from closestValues in data.strike_price
+                    var closestValues = findClosestValues(strikePrices, spot_data, strike_val);
+
+                    var main_oi_data = []
+                    for (var i = 0; i < oi_data.length; i++) {
+                        var data = oi_data[i];
+
+
+                        // Process only included values
+                        if (closestValues.includes(data.strike_price)) {
+
+                            main_oi_data.push(data);
+
+                        }
+                    }
+                    main_oi_data.sort((a, b) => a.strike_price - b.strike_price);
+
+                    // Pushing calls_oi and puts_oi after sorting
+                    for (var i = 0; i < main_oi_data.length; i++) {
+                        var data = main_oi_data[i];
+                        callsOIs.push(data.calls_change_oi);
+                        putsOIs.push(data.puts_change_oi);
+                    }
+
+
+
+
+
+                    if (changeoiChart) {
+                        changeoiChart.destroy();
+                    }
+
+                    var ctx = document.getElementById("changeoiChart").getContext("2d");
+
+                    // Create the Chart.js chart
+                    changeoiChart = new Chart(ctx, {
+
+                        type: 'bar',
+                        data: {
+                            labels: finalStrikePrice,
+                            datasets: [
+                                {
+                                    label: 'Total Calls OI',
+                                    data: callsOIs,
+                                    backgroundColor: '#2196f3',
+                                },
+                                {
+                                    label: 'Total Puts OI',
+                                    data: putsOIs,
+                                    backgroundColor: '#f96c92',
+                                },
+                            ],
+                        },
+                        options: {
+                            maintainAspectRatio: false, // Disable the aspect ratio
+                            scales: {
+                                x: {
+                                    title: {
+                                        display: true,
+                                        text: 'Strike Price',
+                                    },
+                                },
+                                y: {
+                                    title: {
+                                        display: true,
+                                        text: 'Value',
+                                    },
+                                },
+                            },
+                        },
+                    });
+
+
+
+                }
+            })
+        }
+
+
+        // change_in_oi_data(main_initial_val)
+
+        var mypcrChart
+        function put_call_ratio_data() {
+            console.log(initial_pcr_value);
+            $.ajax({
+                type: "post",
+                url: "/put_call_data",
+                data: {
+                    put_call_symbol: initial_pcr_value
+                },
+                success: function (data) {
+                    var pc_data = data.resultData
+                    var pc_chart = pc_data.oiDatas
+                    // Function to generate x-axis time labels
+                    function generateTimeLabels(startHour, endHour, stepHour) {
+                        const labels = [];
+                        let currentHour = startHour;
+                        while (currentHour >= endHour) {
+                            labels.push(currentHour);
+                            currentHour -= stepHour;
+                        }
+                        return labels.reverse();
+                    }
+
+                    const startHour = 10;
+                    const endHour = 8;
+                    const stepHour = 2;
+
+                    const timeLabels = generateTimeLabels(startHour, endHour, stepHour);
+
+                    var labels = pc_chart.map(item => {
+                        const time = new Date(item.time);
+                        const formattedTime = time.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+                        return formattedTime;
+                    });
+                    var pcrValues = pc_chart.map(item => item.pcr);
+                    var indexVal = pc_chart.map(item => item.index_close);
+
+                    // Get the canvas element
+                    var ctx = document.getElementById('lineChart').getContext('2d');
+
+                    if (mypcrChart) {
+                        mypcrChart.destroy();
+                    }
+                    // Create the Chart.js chart
+                    mypcrChart = new Chart(ctx, {
+                        type: 'line',
+                        data: {
+                            labels: labels,
+                            datasets: [
+                                {
+                                    label: 'PCR',
+                                    data: pcrValues,
+                                    borderColor: '#2196f3',
+                                    borderWidth: 2,
+                                    fill: false,
+                                    yAxisID: 'pcr-y-axis'
+                                },
+                                {
+                                    label: 'NIFTY 50',
+                                    data: indexVal,
+                                    borderColor: '#f96c92',
+                                    borderWidth: 2,
+                                    fill: false,
+                                    yAxisID: 'index-y-axis'
+                                }
+                            ]
+                        },
+                        options: {
+                            maintainAspectRatio: false, // Disable the aspect ratio
+                            scales: {
+                                x: {
+                                    title: {
+                                        display: true,
+                                        text: 'Time'
+                                    },
+                                    ticks: {
+                                        stepSize: 3, // Adjust the step size for the x-axis
+                                        labels: timeLabels // Use the generated time labels
+                                    }
+                                },
+                                y: [
+                                    {
+                                        id: 'pcr-y-axis',
+                                        position: 'left',
+                                        title: {
+                                            display: true,
+                                            text: 'PCR'
+                                        },
+                                        min: 8900,
+                                        max: 9000,
+                                        stepSize: 10
+                                    },
+                                    {
+                                        id: 'index-y-axis',
+                                        position: 'right',
+                                        title: {
+                                            display: true,
+                                            text: 'Index Close'
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    });
+
+
+                },
+            })
+        }
+        put_call_ratio_data()
+
+        var volumeChart
+        function volume_pcr_data() {
+            console.log(initial_volume_value);
+            $.ajax({
+                type: "post",
+                url: "/volume_pcr",
+                data: {
+                    volume_symbol: initial_volume_value
+                },
+                success: function (data) {
+                    var volume_data = data.resultData
+
+                    function generateTimeLabels(startHour, endHour, stepHour) {
+                        const labels = [];
+                        let currentHour = startHour;
+                        while (currentHour >= endHour) {
+                            labels.push(currentHour);
+                            currentHour -= stepHour;
+                        }
+                        return labels.reverse();
+                    }
+
+                    const startHour = 10;
+                    const endHour = 8;
+                    const stepHour = 2;
+
+                    const timeLabels = generateTimeLabels(startHour, endHour, stepHour);
+                    // Extract the data into separate arrays
+                    const labels = volume_data.map(item => {
+                        const time = new Date(item.time);
+                        return time.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+                    });
+                    const pcrValues = volume_data.map(item => item.pcr);
+                    const indexCloseValues = volume_data.map(item => item.index_close);
+
+                    // Get the canvas element
+                    const ctx = document.getElementById('volumeLinechart').getContext('2d');
+
+                    if (volumeChart) {
+                        volumeChart.destroy();
+                    }
+
+                    // Create the Chart.js chart
+                    volumeChart = new Chart(ctx, {
+                        type: 'line',
+                        data: {
+                            labels: labels,
+                            datasets: [
+                                {
+                                    label: 'PCR',
+                                    data: pcrValues,
+                                    borderColor: '#2196f3',
+                                    borderWidth: 2,
+                                    fill: false,
+                                    yAxisID: 'pcr-y-axis'
+                                },
+                                {
+                                    label: 'NIFTY 50',
+                                    data: indexCloseValues,
+                                    borderColor: '#f96c92',
+                                    borderWidth: 2,
+                                    fill: false,
+                                    yAxisID: 'index-y-axis'
+                                }
+                            ]
+                        },
+                        options: {
+                            maintainAspectRatio: false, // Disable the aspect ratio
+                            scales: {
+                                x: {
+                                    title: {
+                                        display: true,
+                                        text: 'Time'
+                                    },
+                                    ticks: {
+                                        stepSize: 3, // Adjust the step size for the x-axis
+                                        labels: timeLabels // Use the generated time labels
+                                    }
+                                },
+                                y: [
+                                    {
+                                        id: 'pcr-y-axis',
+                                        position: 'left',
+                                        title: {
+                                            display: true,
+                                            text: 'PCR'
+                                        },
+                                        min: 8900,
+                                        max: 9000,
+                                        stepSize: 10
+                                    },
+                                    {
+                                        id: 'index-y-axis',
+                                        position: 'right',
+                                        title: {
+                                            display: true,
+                                            text: 'Index Close'
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    });
+
+
+                }
+            })
+        }
+        volume_pcr_data()
+
+
+        var myliveChart
+        function live_max() {
+            $.ajax({
+                type: "post",
+                url: "/live_max_pain",
+                data: {
+                    max_symbol: main_initial_val
+                },
+                success: function (data) {
+                    var live_data = data.resultData
+                    const labels = live_data.map(item => item.strike_price);
+                    const cpValues = live_data.map(item => item.cp);
+                    const ppValues = live_data.map(item => item.pp);
+
+                    // Get the canvas element
+                    const ctx = document.getElementById('barChart').getContext('2d');
+                    if (myliveChart) {
+                        myliveChart.destroy();
+                    }
+                    // Create the Chart.js chart
+                    myliveChart = new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: labels,
+                            datasets: [
+                                {
+                                    label: 'CP',
+                                    data: cpValues,
+                                    backgroundColor: '#2196f3', // Bar color for CP
+                                },
+                                {
+                                    label: 'PP',
+                                    data: ppValues,
+                                    backgroundColor: '#f96c92', // Bar color for PP
+                                }
+                            ]
+                        },
+                        options: {
+                            maintainAspectRatio: false, // Disable the aspect ratio
+                            scales: {
+                                x: {
+                                    title: {
+                                        display: true,
+                                        text: 'Strike Price'
+                                    }
+                                },
+                                y: {
+                                    title: {
+                                        display: true,
+                                        text: 'Value'
+                                    }
+                                }
+                            }
+                        }
+                    });
+                }
+            })
+        }
+
+
+
+        function india_vix_data() {
+
+            $.ajax({
+                type: "get",
+                url: "/india_vix_stock",
+                dataType: "json",
+                success: function (data) {
+                    var vix = data.resultData
+
+                    $(".india_vix").empty()
+                    var vix_data = `<div class="india_vix_details">
+                                       <span>India Vix</span>  <i class="bi bi-graph-up-arrow ms-2" id="openModalButton"></i>
+                                       <p id="vix_data">${vix.last_trade_price} <span>(${vix.change})</span></p>
+                                </div>`
+                    $(".india_vix").append(vix_data)
+
+                    $("#openModalButton").click(function () {
+                        $("#vixModal").modal("show");
+
+                        var chartdata = vix.chart_data.split(",");
+                        var charttime = vix.chart_time.split(",");
+
+                        // Create a canvas element for the chart
+                        var ctx = document.getElementById("vixChartCanvas").getContext("2d");
+
+                        // Create the Chart.js chart
+                        var chartColor = '#2397f3';
+                        var vixChart = new Chart(ctx, {
+                            type: 'line',
+                            data: {
+                                labels: charttime,
+                                datasets: [{
+                                    label: 'VIX Data',
+                                    data: chartdata,
+                                    borderColor: chartColor,
+                                    borderWidth: 4,
+                                    fill: false,
+                                    pointStyle: 'circle', // Set point style to 'rect' (rectangle)
+                                    pointRadius: 0,    // Adjust point radius to control the size (0 to remove points)
+                                    pointHoverRadius: 8,
+                                }]
+                            },
+                            options: {
+                                maintainAspectRatio: false, // Disable the aspect ratio
+                                responsive: true,
+                                scales: {
+                                    x: {
+                                        title: {
+                                            display: true,
+                                            text: 'Time'
+                                        },
+                                        grid: {
+                                            display: false // Hide the x-axis grid lines (vertical lines)
+                                        }
+                                    },
+                                    y: {
+                                        title: {
+                                            display: true,
+                                            text: 'Value'
+                                        },
+                                        grid: {
+                                            display: true // Hide the y-axis grid lines (horizontal lines)
+                                        }
+                                    }
+                                }
+                            }
+                        });
+                    });
+
+                }
+
+            })
+        }
+
+        india_vix_data()
+
+
+        var stockName
+        $("#stock_name_filter").click(function () {
+            stockName = $(this).data("stock");
+            stock_spot_data_d()
+            stocks_data()
+            $(".chart_filter").hide()
+            $(".all_stocks_box").show()
+            $(".chart_container").hide()
+            $(".stock_oi_filter").show()
+            $(".stock_chart_container").show()
+            $(".spot_data").hide()
+            $(".atock_spot_container").show()
+
+            console.log(stockName);
+            stock_oi_data()
+
+        })
+
+        var stock_navigation = "stock_oi"
+        $(".stock_name_filter_ul li").click(function () {
+            stock_navigation = $(this).data("navigation");
+            $(".stock_name_filter_ul li").removeClass("active_filter_option")
+            $(this).addClass("active_filter_option")
+
+            if (stock_navigation == "stock_oi") {
+
+                stock_oi_data()
+                $(".stock_oi_chart").show()
+                $(".stock_oi_change_chart").hide()
+                $(".stock_pcr_chart").hide()
+                $(".stock_live_max_chart").hide()
+            }
+            else if (stock_navigation == "stock_oi_change") {
+                stock_oi_change_data()
+                $(".stock_oi_change_chart").show()
+                $(".stock_oi_chart").hide()
+                $(".stock_pcr_chart").hide()
+                $(".stock_live_max_chart").hide()
+            }
+            else if (stock_navigation == "stock_put_call_ratio") {
+                stock_pc_ratio_data()
+                $(".stock_pcr_chart").show()
+                $(".stock_oi_chart").hide()
+                $(".stock_oi_change_chart").hide()
+                $(".stock_live_max_chart").hide()
+            }
+            else if (stock_navigation == "stock_live_max") {
+                stock_live_max_data()
+                $(".stock_live_max_chart").show()
+                $(".stock_pcr_chart").hide()
+                $(".stock_oi_chart").hide()
+                $(".stock_oi_change_chart").hide()
+            }
+        })
+
+        function stock_spot_data_d() {
+            console.log(stockName);
+            $.ajax({
+                type: "post",
+                url: "/stock_spot_data",
+                data: {
+                    stock_symbol: stockName
+                },
+                success: function (data) {
+                    var stock_spot_d = data.resultData
+                    console.log(stock_spot_d);
+                    $(".atock_spot_container").empty()
+                        var stock_spot_datas = `<div>
+                      <h5 id="stock_spot">${stock_spot_d.symbol_name}</h5>
+                    </div>
+                    <div>
+                        <span>Spot</span> <span class="spot_data_val ${stock_spot_d.change_value < 0 ? "text-danger" : "text-success"}" >${stock_spot_d.last_trade_price}</span>
+                                            <p class="${stock_spot_d.change_value < 0 ? "text-danger" : "text-success"}"> <i class="${stock_spot_d.change_value < 0 ? 'bi bi-caret-down-fill' : 'bi bi-caret-up-fill'}"></i> ${stock_spot_d.change_value} <span>(${stock_spot_d.change_per}%)</span></p>
+                    </div>
+                    <div class="stock_lot_size">
+                        <div>
+                                            <p>Max Pain <br/> ${stock_spot_d.max_pain}</p>
+                                            <span></span>
+                                        </div>
+                                        <div>
+                                            <p>Lot Size <br/> ${stock_spot_d.lot_size}</p>
+                                            <span></span>
+                                        </div>
+                    </div>`
+
+                        $(".atock_spot_container").append(stock_spot_datas)
+                }
+            })
+        }
+        stock_spot_data_d()
+
+        var myStockoi
+        function stock_oi_data() {
+            $.ajax({
+                type: "post",
+                url: "/stock_oi",
+                data: {
+                    stock_oi_symbol: stockName,
+                },
+                success: function (data) {
+                    var all_data = data.resultData
+                    var stock_oi_data = all_data.oiDatas
+                    var strikePrices = stock_oi_data.map(item => item.strike_price);
+                    var callOIs = stock_oi_data.map(item => item.calls_oi);
+                    var putOIs = stock_oi_data.map(item => item.puts_oi);
+
+                    var ctx = document.getElementById('stockChart').getContext('2d');
+                    if (myStockoi) {
+                        myStockoi.destroy()
+                    }
+                    myStockoi = new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: strikePrices,
+                            datasets: [
+                                {
+                                    label: 'Call OI',
+                                    data: callOIs,
+                                    backgroundColor: '#2196f3',
+                                },
+                                {
+                                    label: 'Put OI',
+                                    data: putOIs,
+                                    backgroundColor: '#f96c92',
+                                }
+                            ]
+                        },
+                        options: {
+                            maintainAspectRatio: false, // Disable the aspect ratio
+                            scales: {
+                                x: {
+                                    title: {
+                                        display: true,
+                                        text: 'Strike Price'
+                                    }
+                                },
+                                y: {
+                                    beginAtZero: true,
+                                    title: {
+                                        display: true,
+                                        text: 'Open Interest'
+                                    }
+                                }
+                            }
+                        }
+                    });
+                }
+            })
+        }
+
+        stock_oi_data()
+
+        // console.log(stock_navigation);
+
+        var stockOIchart
+        function stock_oi_change_data() {
+            $.ajax({
+                type: "post",
+                url: "/stock_oi",
+                data: {
+                    stock_oi_symbol: stockName,
+                },
+                success: function (data) {
+                    var all_oi_change_data = data.resultData
+                    var stock_oi_change_chart = all_oi_change_data.oiDatas
+
+                    console.log(stock_oi_change_chart);
+
+                    var strikePrices = stock_oi_change_chart.map(item => item.strike_price);
+                    var callOiValues = stock_oi_change_chart.map(item => item.calls_change_oi);
+                    var putOiValues = stock_oi_change_chart.map(item => item.puts_change_oi);
+
+                    var ctx = document.getElementById('stockOIchart').getContext('2d');
+
+                    if (stockOIchart) {
+                        stockOIchart.destroy()
+                    }
+
+                    stockOIchart = new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: strikePrices,
+                            datasets: [
+                                {
+                                    label: 'CALL CHNG OI',
+                                    data: callOiValues,
+                                    backgroundColor: '#2196f3',
+                                },
+                                {
+                                    label: 'PUT CHNG OI',
+                                    data: putOiValues,
+                                    backgroundColor: '#f96c92',
+                                },
+                            ],
+                        },
+                        options: {
+                            maintainAspectRatio: false, // Disable the aspect ratio
+                            scales: {
+                                x: {
+                                    title: {
+                                        display: true,
+                                        text: 'Strike Price',
+                                    },
+                                },
+                                y: {
+                                    title: {
+                                        display: true,
+                                        text: 'OI Value',
+                                    },
+                                },
+                            },
+                        },
+                    });
+
+                }
+            })
+        }
+
+
+
+        var mystockPcrChart
+        function stock_pc_ratio_data() {
+            $.ajax({
+                type: "post",
+                url: "/stock_pc_ratio",
+                data: {
+                    stock_pcr_symbol: stockName,
+                },
+                success: function (data) {
+                    var stock_pcr = data.resultData
+                    var all_pcr_data = stock_pcr.oiDatas
+                    console.log(all_pcr_data);
+                    var times = all_pcr_data.map(item => item.time);
+                    var pcrValues = all_pcr_data.map(item => item.pcr);
+                    var indexCloseValues = all_pcr_data.map(item => item.index_close);
+
+                    var ctx = document.getElementById('myStockpcrChart').getContext('2d');
+
+                    if (mystockPcrChart) {
+                        mystockPcrChart.destroy();
+                    }
+
+                    mystockPcrChart = new Chart(ctx, {
+                        type: 'line',
+                        data: {
+                            labels: times,
+                            datasets: [
+                                {
+                                    label: 'PCR',
+                                    data: pcrValues,
+                                    borderColor: '#2196f3',
+                                    borderWidth: 2,
+                                    fill: false,
+                                    yAxisID: 'left-y-axis', // Assign this dataset to the left y-axis
+                                },
+                                {
+                                    label: 'Index Close',
+                                    data: indexCloseValues,
+                                    borderColor: '#f96c92',
+                                    borderWidth: 2,
+                                    fill: false,
+                                    yAxisID: 'right-y-axis', // Assign this dataset to the right y-axis
+                                },
+                            ],
+                        },
+                        options: {
+                            maintainAspectRatio: false, // Disable the aspect ratio
+                            scales: {
+                                xAxis: {
+                                    title: {
+                                        display: true,
+                                        text: 'Time',
+                                    },
+                                },
+                                left: {
+                                    id: 'left-y-axis',
+                                    position: 'left',
+                                    title: {
+                                        display: true,
+                                        text: 'PCR',
+                                    },
+                                },
+                                right: {
+                                    id: 'right-y-axis',
+                                    position: 'right',
+                                    title: {
+                                        display: true,
+                                        text: 'Index Close',
+                                    },
+                                },
+                            },
+                        },
+                    });
+
+
+                }
+            })
+        }
+
+
+
+        var myLiveChart
+        function stock_live_max_data() {
+            $.ajax({
+                type: "post",
+                url: "/stock_live_max",
+                data: {
+                    stock_live_max_symbol: stockName,
+                },
+                success: function (data) {
+                    var live_chart = data.resultData
+                    var labels = live_chart.map(item => item.symbol_name);
+                    var cpValues = live_chart.map(item => item.cp);
+                    var ppValues = live_chart.map(item => item.pp);
+
+                    var ctx = document.getElementById('myLiveStockchart').getContext('2d');
+
+
+                    if (myLiveChart) {
+                        myLiveChart.destroy()
+                    }
+
+                    myLiveChart = new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: labels,
+                            datasets: [
+                                {
+                                    label: 'CP',
+                                    data: cpValues,
+                                    backgroundColor: '#2196f3',
+                                },
+                                {
+                                    label: 'PP',
+                                    data: ppValues,
+                                    backgroundColor: '#f96c92',
+                                }
+                            ]
+                        },
+                        options: {
+                            maintainAspectRatio: false, // Disable the aspect ratio
+                            scales: {
+                                x: {
+                                    title: {
+                                        display: true,
+                                        text: 'Symbol Name'
+                                    }
+                                },
+                                y: {
+                                    title: {
+                                        display: true,
+                                        text: 'Values'
+                                    }
+                                }
+                            }
+                        }
+                    });
+                },
+            })
+        }
+
+        function stocks_data() {
+
+            $.ajax({
+                type: "get",
+                url: "/get_all_stocks",
+                dataType: "json",
+                success: function (data) {
+                    var stocks = data.resultData
+                    console.log(stocks);
+
+                    // Calculate the percentage change
+
+                    $(".stocks_container").empty()
+                    stocks.forEach(element => {
+                        // var percent_diff = ((today_close - prev_close) / prev_close) * 100;
+                        var percentageChange = ((element.today_close - element.prev_close) / element.prev_close) * 100;
+
+                        percentageChange = percentageChange.toFixed(2) + "%";
+
+                        var style = '';
+
+                        if (parseFloat(percentageChange) < 0) {
+                            // Less than 0
+                            style = 'border: 1px solid #ff5656; background-color: #fdeeef; color: #ff5656; padding:5px; border-radius:5px;';
+                        } else if (parseFloat(percentageChange) >= 0 && parseFloat(percentageChange) < 1) {
+                            // Between 0 and 1 (inclusive)
+                            style = 'border: 1px solid #f5ba4a; background-color: #fffcd2; color:#f5ba4a; padding:5px; border-radius:5px;';
+                        } else {
+                            // Greater than or equal to 1
+                            style = 'border: 1px solid green; background-color: #e2f6e2; color:green; padding:5px; border-radius:5px;'
+                        }
+                        var stock = `<div class="col-lg-4 stock mt-3">
+                            <a href="#stock_charts">
+                                <div class="stock_list_item  bg-white d-flex align-items-center justify-content-between" data-value="${element.symbol_name.toLowerCase()}">
+                                    <div>
+                                        <h5>${element.symbol_name}</h5>
+                                        <span>Max Pain:${element.max_pain}</span>
+                                    </div>
+                                    <div>
+                                        <span  class="${parseFloat(percentageChange) > 0 ? 'text-success' : 'text-danger'}">${element.today_close}</span>
+                                        <span style="${style}">${percentageChange}</span>
+                                    </div>
+                                </div>
+                           </a>
+                        </div>`
+                        var stock_box = $(".stocks_container")
+                        stock_box.append(stock)
+
+                    });
+                    $(".stock_list_item").click(function () {
+                        stockName = $(this).data("value");
+                        console.log(stockName);
+                        stock_oi_data(stockName)
+                        stock_oi_change_data(stockName)
+                        stock_pc_ratio_data(stockName)
+                        stock_live_max_data(stockName)
+                        stock_spot_data_d(stockName)
+                    })
+
+                },
+
+            })
+        }
+
+
+
+
+
+    });
+
+
+</script>
+
+{% endblock dashboard_body %}

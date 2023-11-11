@@ -311,6 +311,14 @@ urlpatterns = [
     path('open_interest', views.open_interest, name='open_interest'),
     path('change_oi_val', views.change_oi_val, name='change_oi_val'),
     path('put_call_data', views.put_call_data, name='put_call_data'),
+    path('volume_pcr', views.volume_pcr, name='volume_pcr'),
+    path('live_max_pain', views.live_max_pain, name='live_max_pain'),
+    path('stock_spot_data', views.stock_spot_data, name='stock_spot_data'),
+    path('stock_oi', views.stock_oi, name='stock_oi'),
+    path('stock_pc_ratio', views.stock_pc_ratio, name='stock_pc_ratio'),
+    path('stock_live_max', views.stock_live_max, name='stock_live_max'),
+    path('get_user_data/', views.get_user_data, name='get_user_data'),
+
 
     
     path('angel_one_margin_calculations', views.angel_one_margin_calculations, name='angel_one_margin_calculations'),

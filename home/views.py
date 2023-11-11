@@ -4754,7 +4754,7 @@ def kiteOrder(request):
     if request.method == 'POST':
         try:
             dataTrade = json.loads(request.body)
-            print(dataTrade)
+            print("dataTrade",dataTrade)
             logging.basicConfig(level=logging.DEBUG)
 
             # Retrieve API keys and access token from the database
@@ -4797,14 +4797,18 @@ def kiteOrder(request):
                 for order_data in dataTrade:
                     tradingsymbol = order_data['tradingsymbol']
                     isRadioChecked = order_data['isRadioChecked']
+                    mis_select = order_data['mis_select']
                     quantity = int(order_data['Quantity'])
                     price = float(order_data['price'])
                     print(tradingsymbol)
                     print(quantity)
                     print(price)
                     print(isRadioChecked)
+                    print(mis_select)
                     transaction_type = kite.TRANSACTION_TYPE_SELL if order_data['sell_buy_indicator'] == 'SELL' else kite.TRANSACTION_TYPE_BUY
                     order_type = kite.ORDER_TYPE_LIMIT if order_data['isRadioChecked'] == 'limit' else kite.ORDER_TYPE_MARKET
+                    product = kite.PRODUCT_MIS if mis_select == 'intraday' else kite.PRODUCT_NRML  # Updated line
+
 
                     # Place a market order
                     order_id = kite.place_order(
@@ -4815,7 +4819,7 @@ def kiteOrder(request):
                         price=price,
                         variety=kite.VARIETY_REGULAR,  
                         order_type=order_type,
-                        product=kite.PRODUCT_NRML,  # Modify this if needed
+                        product=product,  # Modify this if needed
                         validity=kite.VALIDITY_DAY
                     )
                     order_ids.append(order_id)
@@ -6331,123 +6335,9 @@ def update_api_credentials_admin(request):
 
 
 
-def stock_option_chart(request):
-    return render(request, "stock_option_chart.html")
 
 
-def get_all_stocks(request):
-    url= "https://webapi.niftytrader.in/webapi/symbol/psymbol-list"
-    headers = {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
-        "Accept-Language": "en-US,en;q=0.9",
-        "Accept-Encoding": "gzip, deflate, br",
-        "Connection": "keep-alive"
-    }
-    get_stocks = requests.get(url, headers=headers)
-    all_stocks = get_stocks.json()
-    all_data = all_stocks
-    return JsonResponse(all_data)
 
-@csrf_exempt
-def get_spot_data(request):
-    if request.method == "POST":
-     get_spot = request.POST.get("pass_value")
-     url = f"https://webapi.niftytrader.in/webapi/symbol/today-spot-data?symbol={get_spot}"
-     headers = {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
-        "Accept-Language": "en-US,en;q=0.9",
-        "Accept-Encoding": "gzip, deflate, br",
-        "Connection": "keep-alive"
-     }
-     get_all_spot_data = requests.get(url, headers=headers)
-     convert_data = get_all_spot_data.json()
-     all_datas = convert_data
-     return JsonResponse(all_datas)
-
-
-@csrf_exempt
-def get_expiry_date(request):
-    if request.method == "POST":
-        get_para = request.POST.get("para1")
-        url = f"https://webapi.niftytrader.in/webapi/symbol/symbol-expiry-list?symbol={get_para}"
-        headers = {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
-        "Accept-Language": "en-US,en;q=0.9",
-        "Accept-Encoding": "gzip, deflate, br",
-        "Connection": "keep-alive"
-       }
-        get_dates = requests.get(url , headers=headers)
-        convert_datas = get_dates.json()
-        all_dates = convert_datas
-    return JsonResponse(all_dates)
-
-
-def india_vix_stock(request):
-    url = "https://webapi.niftytrader.in/webapi/Other/other-symbol-spot-data?symbol=INDIA+VIX"
-    headers = {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
-        "Accept-Language": "en-US,en;q=0.9",
-        "Accept-Encoding": "gzip, deflate, br",
-        "Connection": "keep-alive"
-    }
-    get_vix_data = requests.get(url, headers=headers)
-    convert_vix = get_vix_data.json()
-    all_vix_data = convert_vix
-    return JsonResponse(all_vix_data)
-
-@csrf_exempt
-def open_interest(request):
-    if request.method == "POST":
-        param = request.POST.get("param1")
-        param2 = request.POST.get("param2")
-    url = f"https://webapi.niftytrader.in/webapi/option/oi-data?reqType={param}&reqDate={param2}"
-    print(url)
-    headers = {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
-        "Accept-Language": "en-US,en;q=0.9",
-        "Accept-Encoding": "gzip, deflate, br",
-        "Connection": "keep-alive"
-    }
-    get_oi = requests.get(url, headers=headers)
-    convert_oi_data = get_oi.json()
-    all_oi_data = convert_oi_data
-    return JsonResponse(all_oi_data)
-
-@csrf_exempt
-def change_oi_val(request):
-    if request.method == "POST":
-        param_one = request.POST.get("param1")
-        param_two = request.POST.get("change_symbol")
-        url = f"https://webapi.niftytrader.in/webapi/option/oi-change-data?reqType={param_one}&reqDate=&symbolName={param_two}"
-        headers = {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
-        "Accept-Language": "en-US,en;q=0.9",
-        "Accept-Encoding": "gzip, deflate, br",
-        "Connection": "keep-alive"
-    }
-        print(url)
-        get_change_oi_data = requests.get(url, headers=headers)
-        change_data = get_change_oi_data.json()
-        all_oi_change_data = change_data
-        return JsonResponse(all_oi_change_data)
-
-@csrf_exempt
-def put_call_data(request):
-    if request.method == "POST":
-     symbol = request.POST.get("put_call_symbol")
-     url = f"https://webapi.niftytrader.in/webapi/option/oi-pcr-data?reqType={symbol}pcr&reqDate="
-     print(url)
-     headers = {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
-        "Accept-Language": "en-US,en;q=0.9",
-        "Accept-Encoding": "gzip, deflate, br",
-        "Connection": "keep-alive"
-    }
-     get_pc_data = requests.get(url, headers=headers)
-     convert_data = get_pc_data.json()
-     all_pc_data = convert_data
-     return JsonResponse(all_pc_data)
-    
 
 
 
@@ -6527,10 +6417,8 @@ def margin_calculations(request):
         return JsonResponse({'error': 'Invalid request method'}, status=400)
 
 
-
-
-
 import json
+import requests
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 
@@ -6538,36 +6426,323 @@ from django.views.decorators.csrf import csrf_exempt
 @csrf_exempt
 def angel_one_margin_calculations(request):
     if request.method == 'POST':
-        data = request.body
-        parsed_data = json.loads(data)
-        # print(parsed_data)  # Print the parsed data from the AJAX call
+        try:
+            data = request.body
+            parsed_data = json.loads(data)  # Parse the JSON data here
+            print(parsed_data)  # Print the parsed data from the AJAX call
 
-        # Define the API URL
-        url = 'https://margin-calc-arom-prod.angelbroking.com/margin-calculator/SPAN'
+            # Define the API URL
+            url = 'https://margin-calc-arom-prod.angelbroking.com/margin-calculator/SPAN'
 
-        # Convert parsed_data into JSON
-        output_data = json.dumps(parsed_data)
+            # Run the loop to set the output
+            payload = {"position": []}
+            for item in parsed_data:
+                payload["position"].append({
+                    "contract": item["contract"],
+                    "exchange": item["exchange"],
+                    "product": item["product"],
+                    "qty": int(item["qty"]),
+                    "strikePrice": int(item["strikePrice"]),
+                    "tradeType": item["tradeType"],
+                    "optionType": item["optionType"]
+                })
 
-        # Run the loop to set the output
-        payload = {"position": []}
-        for item in parsed_data:
-            payload["position"].append({
-                "contract": item["contract"],
-                "exchange": item["exchange"],
-                "product": item["product"],
-                "qty": int(item["qty"]),
-                "strikePrice": int(item["strikePrice"]),
-                "tradeType": item["tradeType"],
-                "optionType": item["optionType"]
-            })
+                print(payload)
 
-        # Send a POST request
-        response = requests.post(url, json=payload)
+            # Send a POST request
+            response = requests.post(url, json=payload)
 
-        # Check the response
-        if response.status_code == 200:
-            # Return the response data as JSON
-            return JsonResponse(response.json(), safe=False)
-        else:
-            # Return an error message
-            return JsonResponse({"error": f"Request failed with status code {response.status_code}"}, status=500)
+            # Check the response
+            if response.status_code == 200:
+                # Return the response data as JSON
+                return JsonResponse(response.json(), safe=False)
+            else:
+                # Return an error message
+                return JsonResponse({"error": f"Request failed with status code {response.status_code}"}, status=500)
+        except json.JSONDecodeError as e:
+            return JsonResponse({"error": "Invalid JSON format in request body"}, status=400)
+        except Exception as e:
+            return JsonResponse({"error": f"An error occurred: {e}"}, status=500)
+
+
+
+
+
+
+
+
+
+def stock_option_chart(request):
+    return render(request, "stock_option_chart.html")
+
+
+def get_all_stocks(request):
+    url= "https://webapi.niftytrader.in/webapi/symbol/psymbol-list"
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
+        "Accept-Language": "en-US,en;q=0.9",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive"
+    }
+    get_stocks = requests.get(url, headers=headers)
+    all_stocks = get_stocks.json()
+    all_data = all_stocks
+    return JsonResponse(all_data)
+
+@csrf_exempt
+def get_spot_data(request):
+    if request.method == "POST":
+     get_spot = request.POST.get("pass_value")
+     url = f"https://webapi.niftytrader.in/webapi/symbol/today-spot-data?symbol={get_spot}"
+     headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
+        "Accept-Language": "en-US,en;q=0.9",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive"
+     }
+     get_all_spot_data = requests.get(url, headers=headers)
+     convert_data = get_all_spot_data.json()
+     all_datas = convert_data
+     return JsonResponse(all_datas)
+
+
+@csrf_exempt
+def get_expiry_date(request):
+    if request.method == "POST":
+        get_para = request.POST.get("para1")
+        url = f"https://webapi.niftytrader.in/webapi/symbol/symbol-expiry-list?symbol={get_para}"
+        headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
+        "Accept-Language": "en-US,en;q=0.9",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive"
+       }
+        get_dates = requests.get(url , headers=headers)
+        convert_datas = get_dates.json()
+        all_dates = convert_datas
+    return JsonResponse(all_dates)
+
+
+def india_vix_stock(request):
+    url = "https://webapi.niftytrader.in/webapi/Other/other-symbol-spot-data?symbol=INDIA+VIX"
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
+        "Accept-Language": "en-US,en;q=0.9",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive"
+    }
+    get_vix_data = requests.get(url, headers=headers)
+    convert_vix = get_vix_data.json()
+    all_vix_data = convert_vix
+    return JsonResponse(all_vix_data)
+
+@csrf_exempt
+def open_interest(request):
+    if request.method == "POST":
+        param = request.POST.get("param1")
+        param2 = request.POST.get("param2")
+        param3 = request.POST.get("param3")
+    url = f"https://webapi.niftytrader.in/webapi/option/oi-data?reqType={param}&reqDate={param2}&symbolName="
+    print(url)
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
+        "Accept-Language": "en-US,en;q=0.9",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive"
+    }
+    get_oi = requests.get(url, headers=headers)
+    convert_oi_data = get_oi.json()
+    all_oi_data = convert_oi_data
+    return JsonResponse(all_oi_data)
+
+@csrf_exempt
+def change_oi_val(request):
+    if request.method == "POST":
+        param_one = request.POST.get("param1")
+        param_two = request.POST.get("change_symbol")
+        url = f"https://webapi.niftytrader.in/webapi/option/oi-change-data?reqType={param_one}&reqDate=&symbolName={param_two}"
+        headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
+        "Accept-Language": "en-US,en;q=0.9",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive"
+    }
+        print(url)
+        get_change_oi_data = requests.get(url, headers=headers)
+        change_data = get_change_oi_data.json()
+        all_oi_change_data = change_data
+        return JsonResponse(all_oi_change_data)
+
+@csrf_exempt
+def put_call_data(request):
+    if request.method == "POST":
+     symbol = request.POST.get("put_call_symbol")
+     url = f"https://webapi.niftytrader.in/webapi/option/oi-pcr-data?reqType={symbol}&reqDate="
+     print(url)
+     headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
+        "Accept-Language": "en-US,en;q=0.9",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive"
+    }
+     get_pc_data = requests.get(url, headers=headers)
+     convert_data = get_pc_data.json()
+     all_pc_data = convert_data
+     return JsonResponse(all_pc_data)
+
+@csrf_exempt
+def volume_pcr(request):
+    if request.method == "POST":
+        volume_symbol = request.POST.get("volume_symbol")
+        url = f"https://webapi.niftytrader.in/webapi/option/oi-volume-data?reqType={volume_symbol}"
+        print(url)
+        headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
+        "Accept-Language": "en-US,en;q=0.9",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive"
+       }
+        get_volume_data = requests.get(url, headers=headers)
+        convert_volume_data = get_volume_data.json()
+        all_datas = convert_volume_data
+        return JsonResponse(all_datas)
+
+@csrf_exempt
+def live_max_pain(request):
+    if request.method == "POST":
+     symbol_live_max = request.POST.get("max_symbol")
+     url= f"https://webapi.niftytrader.in/webapi/Option/symbol-max-pain-data?symbol={symbol_live_max}"
+     headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
+        "Accept-Language": "en-US,en;q=0.9",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive"
+    }
+     get_max_data = requests.get(url, headers=headers)
+     convert_max_data = get_max_data.json()
+     all_max_data = convert_max_data
+     print(url)
+     return JsonResponse(all_max_data)
+
+
+@csrf_exempt
+def stock_spot_data(request):
+   if request.method == "POST":
+       stock_symbol = request.POST.get("stock_symbol")
+       url=f"https://webapi.niftytrader.in/webapi/symbol/today-spot-data?symbol={stock_symbol}"
+       print(url)
+       headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
+        "Accept-Language": "en-US,en;q=0.9",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive"
+      }
+       get_stock_spot_data = requests.get(url, headers=headers)
+       convert_stock_spot_data = get_stock_spot_data.json()
+       all_stock_spot_data = convert_stock_spot_data
+       return JsonResponse(all_stock_spot_data)
+
+
+@csrf_exempt
+def stock_oi(request):
+    if request.method == "POST":
+     symbol_name = request.POST.get("stock_oi_symbol")
+     url=f"https://webapi.niftytrader.in/webapi/option/oi-data?reqType=otheroilist&reqDate=&symbolName={symbol_name}"
+     print(url)
+     headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
+        "Accept-Language": "en-US,en;q=0.9",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive"
+    }
+     get_stock_oi_data = requests.get(url, headers=headers)
+     convert_stock_oi_data = get_stock_oi_data.json()
+     all_stock_oi_data = convert_stock_oi_data
+     return JsonResponse(all_stock_oi_data)
+
+@csrf_exempt
+def stock_pc_ratio(request):
+    if request.method == "POST":
+     pcr_symbol = request.POST.get("stock_pcr_symbol")
+     url=f"https://webapi.niftytrader.in/webapi/option/oi-pcr-data?reqType=otherpcr&reqDate=&symbolName={pcr_symbol}"
+     headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
+        "Accept-Language": "en-US,en;q=0.9",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive"
+    }
+     get_stock_pcr_data = requests.get(url, headers=headers)
+     convert_stock_pcr_data = get_stock_pcr_data.json()
+     all_stock_pcr_data = convert_stock_pcr_data
+     return JsonResponse(all_stock_pcr_data)
+
+
+@csrf_exempt
+def stock_live_max(request):
+    if request.method == "POST":
+        live_max_symbol = request.POST.get("stock_live_max_symbol")
+        url = f"https://webapi.niftytrader.in/webapi/Option/symbol-max-pain-data?symbol={live_max_symbol}"
+        headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
+        "Accept-Language": "en-US,en;q=0.9",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive"
+        }
+        get_stock_live_data = requests.get(url, headers=headers)
+        convert_stock_live_data = get_stock_live_data.json()
+        all_stock_live_data = convert_stock_live_data
+        return JsonResponse(all_stock_live_data)
+    
+
+
+
+
+
+
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.decorators import login_required
+from django.core import serializers
+
+@login_required
+@csrf_exempt
+def get_user_data(request):
+    user = request.user
+    data = {
+        'id': user.id,
+        'username': user.username,
+        'full_name': user.full_name,
+        'email': user.email,
+        'Mobile_number': user.Mobile_number,
+        'Phone_code': user.Phone_code,
+        'Country': user.Country,
+        'State': user.State,
+        # Add other fields as needed
+    }
+
+    return JsonResponse(data)
+
+
+
+
+
+
+def update_user_data(request):
+    if request.method == 'POST':
+        # Get data from POST request
+        user_id = request.POST.get('id')
+        full_name = request.POST.get('full_name')
+        email = request.POST.get('email')
+        state = request.POST.get('state')
+        mobile_num = request.POST.get('mobile_num')
+
+        # Perform update operation, replace this with your logic
+        user = User.objects.get(id=user_id)
+        user.full_name = full_name
+        user.email = email
+        user.State = state
+        user.Mobile_number = mobile_num
+        user.save()
+
+        # Return success or failure response
+        return JsonResponse({'success': True})  # You can customize the response as needed
