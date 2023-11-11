@@ -322,6 +322,7 @@ urlpatterns = [
 
     
     path('angel_one_margin_calculations', views.angel_one_margin_calculations, name='angel_one_margin_calculations'),
+    path('update_user_data/', views.update_user_data, name='update_user_data'),
     
 
 
