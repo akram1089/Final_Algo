@@ -6726,7 +6726,7 @@ def get_user_data(request):
 
 
 
-
+@csrf_exempt
 def update_user_data(request):
     if request.method == 'POST':
         # Get data from POST request
