@@ -1,0 +1,342 @@
+{% extends "base_dashboard.html" %}
+{% load static %}
+{% block dashboard_body %}
+
+<style>
+     .table_active{
+        color: #279af4;
+        border-bottom: 3px solid #279af4;
+        /* padding-bottom: 10px; */
+    }
+    .charge{
+        margin-bottom: 0 !important;
+        cursor: pointer;
+    }
+</style>
+
+<section class="pt-5">
+    <div class="order_history">
+        <h5>Order history</h5>
+        <div class="order_table">
+            <div class="broker_filter">
+                <select class="form-select" aria-label="Default select example">
+                    <option selected>Select Broker</option>
+                    <option value="1">Zerodha</option>
+                    <option value="2">Upstocx</option>
+                    <option value="3">Angle One</option>
+                  </select>
+            </div>
+            <div class="filter_table mt-3 d-flex justify-content-between">
+                <div class="filter_one_table">
+                  <ul class="d-flex gap-3">
+                    <li class="table_active" data-filter="all">All Orders</li>
+                    <li data-filter="open_order" >Open Orders</li>
+                    <li data-filter="executed">Executed Orders</li>
+                    <li data-filter="stop_loss">Stoploss Orders</li>
+                  </ul> 
+                </div>
+                <div class="filter_two_table d-flex align-items-center gap-2">
+                   <div class="order_search">
+                    <input type="text" name="" id="" class="form-control" placeholder="search">
+                   </div>
+                   <p class="charge" data-bs-toggle="offcanvas" data-bs-target="#offcanvasWithBothOptions" aria-controls="offcanvasWithBothOptions" style="border: 1px solid grey; padding: 4px; border-radius: 4px;">Charges</p>
+                </div>
+                
+            </div>
+
+            <div class="offcanvas offcanvas-end" data-bs-scroll="true" tabindex="-1" id="offcanvasWithBothOptions" aria-labelledby="offcanvasWithBothOptionsLabel" style="z-index: 999999999999;">
+                <div class="offcanvas-header">
+                  <h5 class="offcanvas-title" id="offcanvasWithBothOptionsLabel">Charges</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                </div>
+                <div class="offcanvas-body">
+                  
+                </div>
+              </div>
+
+            <div class="orders_table">
+                <table class="table" id="all_order">
+                    <thead>
+                      <tr>
+                        <th scope="col">Time</th>
+                        <th scope="col">Instrument</th>
+                        <th scope="col">LTP</th>
+                        <th scope="col">P & L</th>
+                        <th scope="col">Qty.</th>
+                        <th scope="col">Price</th>
+                        <th scope="col">Status</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                       <tr>
+                        <td>11:48:28</td>
+                        <td><span style="background-color: rgba(253, 126, 126, 0.544); color: red; padding: 3px; font-size: 9px;"> SELL</span> <span style="color: #8474c0; background-color: rgba(209, 157, 249, 0.637); padding: 3px; font-size: 9px;">NRML</span> NIFTY 16<sup>th</sup> Nov 19950 CE</td>
+                        <td>25.05</td>
+                        <td></td>
+                        <td>0/50</td>
+                        <td>56.1</td>
+                        <td><span style="background-color: rgba(253, 126, 126, 0.544); color: red; padding: 4px;"> Rejected</span></td>
+                       </tr>
+                       <tr>
+                        <td>11:48:28</td>
+                        <td><span style="background-color: rgba(253, 126, 126, 0.544); color: red; padding: 3px; font-size: 9px;"> SELL</span> <span style="color: #8474c0; background-color: rgba(209, 157, 249, 0.637); padding: 3px; font-size: 9px;">NRML</span> NIFTY 16<sup>th</sup> Nov 19950 CE</td>
+                        <td>25.05</td>
+                        <td></td>
+                        <td>0/50</td>
+                        <td>56.1</td>
+                        <td > <span style="background-color: rgba(253, 126, 126, 0.544); color: red; padding: 4px;">Rejected</span></td>
+                       </tr>
+                       <tr>
+                        <td>11:48:28</td>
+                        <td><span style="background-color: rgba(150, 150, 251, 0.774); color: blue; padding: 3px; font-size: 9px;"> BUY</span> <span style="color: #8474c0; background-color: rgba(209, 157, 249, 0.637); padding: 3px; font-size: 9px;">NRML</span> NIFTY 16<sup>th</sup> Nov 19950 CE</td>
+                        <td>25.05</td>
+                        <td></td>
+                        <td>0/50</td>
+                        <td>56.1</td>
+                        <td ><span style="background-color: rgba(253, 126, 126, 0.544); color: red; padding: 4px;">Rejected</span> </td>
+                       </tr>
+                       <tr>
+                        <td>11:48:28</td>
+                        <td><span style="background-color: rgba(253, 126, 126, 0.544); color: red; padding: 3px; font-size: 9px;"> SELL</span> <span style="color: #8474c0; background-color: rgba(209, 157, 249, 0.637); padding: 3px; font-size: 9px;">NRML</span> NIFTY 16<sup>th</sup> Nov 19950 CE</td>
+                        <td>25.05</td>
+                        <td></td>
+                        <td>0/50</td>
+                        <td>56.1</td>
+                        <td ><span style="background-color: rgba(253, 126, 126, 0.544); color: red; padding: 4px;">Rejected</span> </td>
+                       </tr>
+                       <tr>
+                        <td>11:48:28</td>
+                        <td><span style="background-color: rgba(253, 126, 126, 0.544); color: red; padding: 3px; font-size: 9px;"> SELL</span> <span style="color: #8474c0; background-color: rgba(209, 157, 249, 0.637); padding: 3px; font-size: 9px;">NRML</span> NIFTY 16<sup>th</sup> Nov 19950 CE</td>
+                        <td>25.05</td>
+                        <td></td>
+                        <td>0/50</td>
+                        <td>56.1</td>
+                        <td ><span style="background-color: rgba(253, 126, 126, 0.544); color: red; padding: 4px;">Rejected</span> </td>
+                       </tr>
+                       <tr>
+                        <td>11:48:28</td>
+                        <td><span style="background-color: rgba(150, 150, 251, 0.774); color: blue; padding: 3px; font-size: 9px;"> BUY</span> <span style="color: #8474c0; background-color: rgba(209, 157, 249, 0.637); padding: 3px; font-size: 9px;">NRML</span> NIFTY 16<sup>th</sup> Nov 19950 CE</td>
+                        <td>25.05</td>
+                        <td></td>
+                        <td>0/50</td>
+                        <td>56.1</td>
+                        <td ><span style="background-color: rgba(253, 126, 126, 0.544); color: red; padding: 4px;">Rejected</span> </td>
+                       </tr>
+                       <tr>
+                       <td></td>
+                       <td></td>
+                       <td>Total</td>
+                       <td></td>
+                       <td></td>
+                       <td></td>
+                       <td></td>
+                       </tr>
+                    </tbody>
+                </table>
+                <table class="table" id="open_order" style="display: none;">
+                    <thead>
+                      <tr>
+                        <th scope="col">Time</th>
+                        <th scope="col">Instrument</th>
+                        <th scope="col">LTP</th>
+                        <th scope="col">P & L</th>
+                        <th scope="col">Qty.</th>
+                        <th scope="col">Price</th>
+                        <th scope="col">Status</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      
+                    </tbody>
+                </table>
+                <table class="table" id="executed_order" style="display: none;">
+                    <thead>
+                        <tr>
+                          <th scope="col">Time</th>
+                          <th scope="col">Instrument</th>
+                          <th scope="col">LTP</th>
+                          <th scope="col">P & L</th>
+                          <th scope="col">Qty.</th>
+                          <th scope="col">Price</th>
+                          <th scope="col">Status</th>
+                        </tr>
+                      </thead>
+                    <tbody>
+                        <tbody>
+                            <tr id="hover-row" data-bs-toggle="popover" data-bs-trigger="hover" data-bs-html="true" data-bs-placement="bottom" data-bs-content="">
+                             <td>11:48:28</td>
+                             <td><span style="background-color: rgba(253, 126, 126, 0.544); color: red; padding: 3px; font-size: 9px;"> SELL</span> <span style="color: #8474c0; background-color: rgba(209, 157, 249, 0.637); padding: 3px; font-size: 9px;">NRML</span> NIFTY 16<sup>th</sup> Nov 19950 CE</td>
+                             <td>25.05</td>
+                             <td></td>
+                             <td>0/50</td>
+                             <td>56.1</td>
+                             <td ><span style="background-color: rgba(253, 126, 126, 0.544); color: red; padding: 4px;"> Rejected</span></td>
+                            </tr>
+                            <tr>
+                             <td>11:48:28</td>
+                             <td><span style="background-color: rgba(253, 126, 126, 0.544); color: red; padding: 3px; font-size: 9px;"> SELL</span> <span style="color: #8474c0; background-color: rgba(209, 157, 249, 0.637); padding: 3px; font-size: 9px;">NRML</span> NIFTY 16<sup>th</sup> Nov 19950 CE</td>
+                             <td>25.05</td>
+                             <td></td>
+                             <td>0/50</td>
+                             <td>56.1</td>
+                             <td > <span style="background-color: rgba(253, 126, 126, 0.544); color: red; padding: 4px;">Rejected</span></td>
+                            </tr>
+                            <tr>
+                             <td>11:48:28</td>
+                             <td><span style="background-color: rgba(150, 150, 251, 0.774); color: blue; padding: 3px; font-size: 9px;"> BUY</span> <span style="color: #8474c0; background-color: rgba(209, 157, 249, 0.637); padding: 3px; font-size: 9px;">NRML</span> NIFTY 16<sup>th</sup> Nov 19950 CE</td>
+                             <td>25.05</td>
+                             <td></td>
+                             <td>0/50</td>
+                             <td>56.1</td>
+                             <td ><span style="background-color: rgba(253, 126, 126, 0.544); color: red; padding: 4px;">Rejected</span> </td>
+                            </tr>
+                            <tr>
+                             <td>11:48:28</td>
+                             <td><span style="background-color: rgba(253, 126, 126, 0.544); color: red; padding: 3px; font-size: 9px;"> SELL</span> <span style="color: #8474c0; background-color: rgba(209, 157, 249, 0.637); padding: 3px; font-size: 9px;">NRML</span> NIFTY 16<sup>th</sup> Nov 19950 CE</td>
+                             <td>25.05</td>
+                             <td></td>
+                             <td>0/50</td>
+                             <td>56.1</td>
+                             <td ><span style="background-color: rgba(253, 126, 126, 0.544); color: red; padding: 4px;">Rejected</span> </td>
+                            </tr>
+                            <tr>
+                             <td>11:48:28</td>
+                             <td><span style="background-color: rgba(253, 126, 126, 0.544); color: red; padding: 3px; font-size: 9px;"> SELL</span> <span style="color: #8474c0; background-color: rgba(209, 157, 249, 0.637); padding: 3px; font-size: 9px;">NRML</span> NIFTY 16<sup>th</sup> Nov 19950 CE</td>
+                             <td>25.05</td>
+                             <td></td>
+                             <td>0/50</td>
+                             <td>56.1</td>
+                             <td ><span style="background-color: rgba(253, 126, 126, 0.544); color: red; padding: 4px;">Rejected</span> </td>
+                            </tr>
+                            <tr>
+                             <td>11:48:28</td>
+                             <td><span style="background-color: rgba(150, 150, 251, 0.774); color: blue; padding: 3px; font-size: 9px;"> BUY</span> <span style="color: #8474c0; background-color: rgba(209, 157, 249, 0.637); padding: 3px; font-size: 9px;">NRML</span> NIFTY 16<sup>th</sup> Nov 19950 CE</td>
+                             <td>25.05</td>
+                             <td></td>
+                             <td>0/50</td>
+                             <td>56.1</td>
+                             <td ><span style="background-color: rgba(253, 126, 126, 0.544); color: red; padding: 4px;">Rejected</span> </td>
+                            </tr>
+                            <tr>
+                            <td></td>
+                            <td></td>
+                            <td>Total</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            </tr>
+                         </tbody>
+                      
+                    </tbody>
+                </table>
+                <table class="table" id="stop_loss_order" style="display: none;">
+                    <thead>
+                      <tr>
+                        <th scope="col">Time</th>
+                        <th scope="col">Instrument</th>
+                        <th scope="col">LTP</th>
+                        <th scope="col">P & L</th>
+                        <th scope="col">Qty.</th>
+                        <th scope="col">Price</th>
+                        <th scope="col">Status</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- <div class="order_details_table">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Id</th>
+                        <th scope="col">Date</th>
+                        <th scope="col">Instrument</th>
+                        <th scope="col">Type</th>
+                        <th scope="col">Qty.</th>
+                        <th scope="col">Avg Price</th>
+                        <th scope="col">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th scope="row">1</th>
+                        <td>10-11-2023</td>
+                        <td class="subscript">SBIN <sub>NSE</sub></td>
+                        <td class="text-primary">BUY</td>
+                        <td>1/1</td>
+                        <td>261.5</td>
+                        <td ><span style="border: 1px solid green; padding: 3px; color: green;">COMPLETE</span> </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">2</th>
+                        <td>10-11-2023</td>
+                        <td class="subscript">RELIANCE <sub>NSE</sub></td>
+                        <td class="text-primary">BUY</td>
+                        <td>0/5</td>
+                        <td>255</td>
+                        <td><span style="border: 1px solid blue; padding: 3px; color: blue;">CANCLLED</span> </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">3</th>
+                        <td>10-11-2023</td>
+                        <td class="subscript">NIFTY16DECFUT <sub>NSE</sub></td>
+                        <td class="text-primary">BUY</td>
+                        <td>0/75</td>
+                        <td>8500</td>
+                        <td> <span style="border: 1px solid red; padding: 3px; color: red;"> REJECTED</span></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">4</th>
+                        <td>10-11-2023</td>
+                        <td class="subscript">NIFTY16DECFUT <sub>NSE</sub></td>
+                        <td class="text-primary">BUY</td>
+                        <td>0/75</td>
+                        <td>8500</td>
+                        <td> <span style="border: 1px solid red; padding: 3px; color: red;"> REJECTED</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div> -->
+    </div>
+</section>
+
+<script>
+    $(document).ready(function () {
+        var initial_table_filter = "all"
+        $(".filter_one_table ul li").click(function () {
+            $(".filter_one_table ul li").removeClass("table_active")
+            $(this).addClass("table_active")
+            initial_table_filter = $(this).data("filter")
+            console.log(initial_table_filter);
+
+            if(initial_table_filter === "all"){
+             $("#all_order").show()
+             $("#open_order").hide()
+             $("#executed_order").hide()
+             $("#stop_loss_order").hide()
+            }
+            else if(initial_table_filter === "open_order"){
+             $("#all_order").hide()
+             $("#open_order").show()
+             $("#executed_order").hide()
+             $("#stop_loss_order").hide()
+            }
+            else if(initial_table_filter === "executed"){
+             $("#all_order").hide()
+             $("#open_order").hide()
+             $("#executed_order").show()
+             $("#stop_loss_order").hide()
+            }
+            else if(initial_table_filter === "stop_loss"){
+             $("#all_order").hide()
+             $("#open_order").hide()
+             $("#executed_order").hide()
+             $("#stop_loss_order").show()
+            }
+        })
+    });
+</script>
+{% endblock dashboard_body %}

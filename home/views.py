@@ -6724,8 +6724,6 @@ def get_user_data(request):
 
 
 
-
-
 @csrf_exempt
 def update_user_data(request):
     if request.method == 'POST':
@@ -6746,3 +6744,8 @@ def update_user_data(request):
 
         # Return success or failure response
         return JsonResponse({'success': True})  # You can customize the response as needed
+
+
+
+def order_history(request):
+    return render(request, "order_history.html")
