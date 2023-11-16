@@ -1,3 +1,5 @@
+
+
 from .models import Watchlist
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.decorators import api_view
@@ -28,13 +30,14 @@ import json
 from django.shortcuts import render, redirect, HttpResponse
 import pandas as pd
 import requests
-from django.contrib.auth.models import User
+# from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 
 from django.contrib import messages  #
 from django.contrib.auth import get_user_model
 from .models import ChartData
 from home.helper import send_forget_password_mail
+from django.conf import settings
 User = get_user_model()
 
 
@@ -1691,6 +1694,7 @@ def oi_losers(request):
 
 def admin_panel(request):
     User_check = User.objects.all()
+    print(User_check)
     return render(request, "admin_panel.html", {"User_check": User_check})
 
 
@@ -6764,7 +6768,7 @@ import json
 
 from .models import Broker
 from django.contrib.auth.decorators import login_required  # Import the login_required decorator
-from django.contrib.auth.models import User  # Import the User model
+# from django.contrib.auth.models import User  # Import the User model
 
 import pyotp
 
