@@ -25,6 +25,7 @@ from.models import Note
 from.models import my_strategies
 from.models import AdminAPIIntegrations
 from.models import All_brokers_api_name
+from.models import Broker
 
 # from.models import StockListing
 
@@ -55,6 +56,7 @@ admin.site.register(Note)
 admin.site.register(my_strategies)
 admin.site.register(AdminAPIIntegrations)
 admin.site.register(All_brokers_api_name)
+admin.site.register(Broker)
 
 # admin.site.register(StockListing)
 

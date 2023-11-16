@@ -26,7 +26,7 @@ urlpatterns = [
     path('change_pass/<token>/', views.change_pass, name='change_pass'),
     path('get_option_chain/', views.get_option_chain, name='get_option_chain'),
     path('Algo_market_place', views.Algo_market_place, name='Algo_market_place'),
-    path('my_strategies', views.my_strategies, name='my_strategies'),
+    path('my_strategies_page', views.my_strategies_page, name='my_strategies_page'),
     path('my_portfolio', views.my_portfolio, name='my_portfolio'),
     path('broking_details', views.broking_details, name='broking_details'),
     path('chart_topgainer', views.chart_topgainer, name='chart_topgainer'),
@@ -324,6 +324,8 @@ urlpatterns = [
     path('angel_one_margin_calculations', views.angel_one_margin_calculations, name='angel_one_margin_calculations'),
     path('update_user_data/', views.update_user_data, name='update_user_data'),
     path('order_history', views.order_history, name='order_history'),
+    path('add_broker_api_main', views.add_broker_api_main, name='add_broker_api_main'),
+#     path('your_template', views.your_template, name='your_template'),
     
 
 

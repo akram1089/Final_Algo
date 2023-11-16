@@ -191,7 +191,6 @@ class Subscriber(models.Model):
     email = models.EmailField(max_length=254)
     subscribed_at = models.DateTimeField()
 
-from django.db import models
 
 
 
@@ -247,3 +246,28 @@ class AdminAPIIntegrations(models.Model):
 
 class All_brokers_api_name(models.Model):
     broker_name=models.CharField(max_length=50)
+
+
+
+
+
+
+class Broker(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    broker_name = models.CharField(max_length=255)
+    trading_platform = models.CharField(max_length=255)
+    logging_id = models.CharField(max_length=255)
+    password = models.CharField(max_length=255)
+    totp_key = models.CharField(max_length=255)
+    fa_pin = models.CharField(max_length=6)
+    phone_number = models.CharField(max_length=15)
+    api_key = models.CharField(max_length=255)
+    api_secret = models.CharField(max_length=255)
+    app_name = models.CharField(max_length=255)
+    enctoken=models.TextField()
+    active_api = models.BooleanField(default=False)
+    added_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
+
+    def __str__(self):
+        return f"{self.broker_name} - {self.user} - {self.app_name}"

@@ -470,8 +470,8 @@ def blog(request):
     return render(request, "blog.html")
 
 
-def my_strategies(request):
-    return render(request, "my_strategies.html")
+def my_strategies_page(request):
+    return render(request, "my_strategies_page.html")
 
 
 def my_portfolio(request):
@@ -586,7 +586,7 @@ def Open_interest_analysis(request):
 
 
 from django.template.loader import get_template
-
+@csrf_exempt
 def signUp(request):
     if request.method == "POST":
         fname = request.POST["name"]
@@ -6749,3 +6749,223 @@ def update_user_data(request):
 
 def order_history(request):
     return render(request, "order_history.html")
+
+
+
+
+
+
+
+
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.utils import timezone
+import json
+
+from .models import Broker
+from django.contrib.auth.decorators import login_required  # Import the login_required decorator
+from django.contrib.auth.models import User  # Import the User model
+
+import pyotp
+
+def get_enctoken_internal(zerodha_username, zerodha_password, totp_secret):
+    try:
+        totp = pyotp.TOTP(totp_secret)
+        otp = totp.now()
+        print(otp)
+
+        session = requests.Session()
+        login_response = session.post('https://kite.zerodha.com/api/login', data={
+            "user_id": zerodha_username,
+            "password": zerodha_password
+        })
+        
+        if login_response.status_code != 200 or 'data' not in login_response.json():
+            return "Error in login: {}".format(login_response.text)
+
+        twofa_response = session.post('https://kite.zerodha.com/api/twofa', data={
+            "request_id": login_response.json()['data']['request_id'],
+            "twofa_value": otp,
+            "user_id": login_response.json()['data']['user_id']
+        })
+
+        if twofa_response.status_code != 200 or 'enctoken' not in twofa_response.cookies:
+            return "Error in two-factor authentication: {}".format(twofa_response.text)
+
+        enctoken = twofa_response.cookies.get('enctoken')
+
+        if enctoken:
+            return enctoken
+        else:
+            return "Invalid TOTP"
+
+    except Exception as e:
+        return str(e)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@csrf_exempt
+@login_required
+def add_broker_api_main(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        user = request.user
+
+        broker_name = data.get('broker_name')
+        trading_platform = data.get('trading_platform')
+        logging_id = data.get('logging_id')
+        password = data.get('password')
+        totp_key = data.get('totp_key')
+        fa_pin = data.get('fa_pin', '')
+        phone_number = data.get('phone_number', '')
+        api_key = data.get('api_key', '')
+        api_secret = data.get('api_secret', '')
+        app_name = data.get('app_name')
+
+        if trading_platform == 'zerodha_kite':
+            enctoken = get_enctoken_internal(logging_id, password, totp_key)
+            print(enctoken)
+            
+            if enctoken:
+                zerodha_api = ZerodhaAPI(enctoken)
+
+                user_profile = zerodha_api.get_user_profile()
+                
+                if user_profile:
+                    print(f"User Profile: {user_profile}")
+
+                    # Save enctoken to the Broker model
+                    broker = Broker.objects.create(
+                        user=user,
+                        broker_name=broker_name,
+                        trading_platform=trading_platform,
+                        logging_id=logging_id,
+                        password=password,
+                        totp_key=totp_key,
+                        fa_pin=fa_pin,
+                        phone_number=phone_number,
+                        api_key=api_key,
+                        api_secret=api_secret,
+                        app_name=app_name,
+                        enctoken=enctoken,
+                        added_at=timezone.now(),
+                        updated_at=timezone.now()
+                    )
+
+                    return JsonResponse({"message": "Broker added successfully"})
+                else:
+                    return JsonResponse({"message": "Invalid API credentials"}, status=400)
+
+      
+    elif request.method == 'GET':
+        # Retrieve all brokers for the current user
+        user = request.user
+        brokers = Broker.objects.filter(user=user)
+
+        # Convert the queryset to a list of dictionaries
+        broker_list = [
+            {
+                'broker_name': broker.broker_name,
+                'trading_platform': broker.trading_platform,
+                'logging_id': broker.logging_id,
+                'password': broker.password,
+                'totp_key': broker.totp_key,
+                'fa_pin': broker.fa_pin,
+                'phone_number': broker.phone_number,
+                'api_key': broker.api_key,
+                'api_secret': broker.api_secret,
+                'app_name': broker.app_name,
+                'active_api': broker.active_api,
+                'added_at': broker.added_at.strftime('%Y-%m-%d %H:%M:%S'),
+                'updated_at': broker.updated_at.strftime('%Y-%m-%d %H:%M:%S'),
+            }
+            for broker in brokers
+        ]
+
+        # Return the list of brokers as a JSON response
+        return JsonResponse({'brokers': broker_list})
+    
+    else:
+        return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
+    
+
+class ZerodhaAPI:
+    def __init__(self, enctoken):
+        self.headers = {"Authorization": f"enctoken {enctoken}"}
+        self.session = requests.Session()
+        self.root_url = "https://kite.zerodha.com/oms"
+        self.session.get(self.root_url, headers=self.headers)
+
+    def get_user_profile(self):
+        profile_url = f"{self.root_url}/user/profile/full"
+        response = self.session.get(profile_url, headers=self.headers)
+        return response.json() if response.status_code == 200 else None
+
+
+
+
+
+
+
+
+
+
+
+# def handle_broker(user, broker_name, trading_platform, logging_id, password, totp_key,
+#                   fa_pin, phone_number, api_key, api_secret, app_name):
+#     try:
+#         broker = Broker.objects.get(user=user, broker_name=broker_name, app_name=app_name)
+#     except Broker.DoesNotExist:
+#         # If the broker doesn't exist, create a new one for the current user
+#         broker = Broker.objects.create(
+#             user=user,
+#             broker_name=broker_name,
+#             trading_platform=trading_platform,
+#             logging_id=logging_id,
+#             password=password,
+#             totp_key=totp_key,
+#             fa_pin=fa_pin,
+#             phone_number=phone_number,
+#             api_key=api_key,
+#             api_secret=api_secret,
+#             app_name=app_name,
+#             active_api=False,
+#             added_at=timezone.now(),
+#             updated_at=timezone.now(),
+#         )
+#         return {'status': 'success', 'message': 'Broker added successfully'}
+#     else:
+#         # If the broker already exists, update its fields
+#         broker.trading_platform = trading_platform
+#         broker.logging_id = logging_id
+#         broker.password = password
+#         broker.totp_key = totp_key
+#         broker.fa_pin = fa_pin
+#         broker.phone_number = phone_number
+#         broker.api_key = api_key
+#         broker.api_secret = api_secret
+#         broker.updated_at = timezone.now()
+#         broker.save()
+#         return {'status': 'success', 'message': 'Broker updated successfully'}
+    
+
+
+
+
+
+
+
+

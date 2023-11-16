@@ -1406,6 +1406,9 @@
           background: none;
           color: #4399eb;
         }
+        div:where(.swal2-container) button:where(.swal2-styled).swal2-confirm{
+          background-color: linear-gradient(180deg, #4399eb, #5cadfb) !important;
+        }
       </style>
 
 
@@ -1425,6 +1428,7 @@
 
 
 
+
         <h5 class="offcanvas-title" id="offcanvasRightLabel">
           Add broker API details
         </h5>
@@ -1436,25 +1440,212 @@
         <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
       </div>
       <div class="offcanvas-body">
-
-
         <form>
           <select name="All_brokers" id="all_brokers" class="form-select mb-3">
-
             <option value="zerodha">Zerodha</option>
             <option value="upstocks">Upstocks</option>
             <option value="angelone">Angel One</option>
             <option value="fyers">Fyers</option>
             <option value="icicidirectbreeze">ICICI Direct Breeze</option>
           </select>
-          <input type="text" class="form-control" id="app_name" placeholder="Enter app names" required />
-          <input type="text" class="form-control" id="api_key" placeholder="Enter zerodha api key " required />
-          <input type="text" class="form-control" id="secret_key" placeholder="Enter zerodha secret key" required />
-          <button class="btn btn-primary save_zerodha_btn">
-            Add Broker
-          </button>
+          <div id="zerodhaFields">
+            <select class="form-select mb-3" id="zerodha_platform" name="zerodha_platform" required>
+              <option value="zerodha_kite">zerodha_kite</option>
+              <!-- Add more options if needed -->
+            </select>
+            <input type="text" class="form-control" id="zerodha_login_id" name="zerodha_login_id" placeholder="Enter Trading Platform Login ID" value="TWB026" required />
+            <input type="password" class="form-control" id="zerodha_password" name="zerodha_password" placeholder="Enter Password" value="Grow@7879" required />
+            <input type="text" class="form-control" id="zerodha_totp_key" name="zerodha_totp_key" placeholder="Enter TOTP Key" value="CUSYEXAYVMKJ6X332W7FT2F2VKUVAH4R" required />
+            <input type="text" class="form-control" id="zerodha_app_name" name="zerodha_app_name" placeholder="Enter App Name" required />
+          </div>
+          
+          <div id="angeloneFields" style="display: none;">
+            <select class="form-select mb-3" id="angelone_platform" name="angelone_platform" required>
+              <option value="smart_api">smart_api</option>
+              <!-- Add more options if needed -->
+            </select>
+            <input type="text" class="form-control" id="angelone_login_id" name="angelone_login_id" placeholder="Enter Trading Platform Login ID" required />
+            <input type="password" class="form-control" id="angelone_password" name="angelone_password" placeholder="Enter your MPIN" required />
+            <input type="text" class="form-control" id="angelone_totp_key" name="angelone_totp_key" placeholder="Enter TOTP Key" required />
+            <input type="text" class="form-control" id="angelone_api_key" name="angelone_api_key" placeholder="Enter API Key" required />
+            <input type="text" class="form-control" id="angelone_app_name" name="angelone_app_name" placeholder="Enter App Name" required />
+          </div>
+
+          <div class="validating_space"></div>
+          
+
+          <!-- Add similar div blocks for other brokers -->
+          <div class="action_broker_btn_save_validate d-flex gap-1">
+            <button class="btn btn-success save_validate_btn">Validate</button>
+            <button class="btn btn-primary save_zerodha_btn">Add Broker</button>
+          </div>
         </form>
       </div>
+
+
+      
+      <script>
+        $(document).ready(function () {
+          // Set default selected option
+          $("#all_brokers").val("zerodha");
+
+          // Show/hide fields based on the selected broker
+          $("#all_brokers").change(function () {
+            var selectedBroker = $(this).val();
+
+            // Hide all broker fields
+            $("div[id$='Fields']").hide();
+
+            // Show fields for the selected broker
+            $("#" + selectedBroker + "Fields").show();
+          });
+
+
+          $(".save_zerodha_btn").click(function (event) {
+      event.preventDefault(); // Prevent the default form submission
+
+      // Get values based on the selected broker
+      var selectedBroker = $("#all_brokers").val();
+      var platform = $("#" + selectedBroker + "_platform").val();
+      var loginId = $("#" + selectedBroker + "_login_id").val();
+      var password = $("#" + selectedBroker + "_password").val();
+      var totpKey = $("#" + selectedBroker + "_totp_key").val();
+      var appName = $("#" + selectedBroker + "_app_name").val();
+      var apiKey = $("#" + selectedBroker + "_api_key").val();
+
+// Remove undefined values
+const definedValues = [platform, loginId, password, totpKey, appName, apiKey].filter(val => val !== undefined);
+
+// Check if any of the remaining values is an empty string
+if (definedValues.some(val => val.trim() === '')) {
+    // Display SweetAlert2 warning message
+    Swal.fire({
+        icon: 'warning',
+        title: 'Warning',
+        text: 'Please fill in all fields.',
+    });
+    return; // Stop execution if any field is an empty string
+}
+
+
+
+
+
+      // Log the values
+      console.log("Broker: " + selectedBroker);
+      console.log("Platform: " + platform);
+      console.log("Login ID: " + loginId);
+      console.log("Password: " + password);
+      console.log("TOTP Key: " + totpKey);
+      console.log("App Name: " + appName);
+      console.log("Api Key: " + apiKey);
+
+      var data = {
+        'broker_name': selectedBroker,
+        'trading_platform': platform,
+        'logging_id': loginId,
+        'password': password,
+        'totp_key': totpKey,
+        'api_key': apiKey,
+        'app_name': appName,
+        // Add other fields as needed
+    };
+    data = Object.fromEntries(Object.entries(data).filter(([_, v]) => v !== undefined));
+
+    console.log(data);
+
+
+// Display loading indicator
+$('.validating_space').text('Validating your broker API...'); // Assuming '.validating_space' is a placeholder for your loading message
+
+// Perform AJAX request
+$.ajax({
+    url: '/add_broker_api_main',
+    method: 'POST',
+    contentType: 'application/json',
+    data: JSON.stringify(data),
+    beforeSend: function () {
+        // You can also show a loader or disable certain elements during the request
+        // Example: $('.loader').show();
+    },
+    success: function (response) {
+        console.log('Success:', response);
+
+        // Reset form fields
+        // $("#" + selectedBroker + "_platform").val('');
+        $("#" + selectedBroker + "_login_id").val('');
+        $("#" + selectedBroker + "_password").val('');
+        $("#" + selectedBroker + "_totp_key").val('');
+        $("#" + selectedBroker + "_app_name").val('');
+        $("#" + selectedBroker + "_api_key").val('');
+        
+        // Display SweetAlert2 success message
+        Swal.fire({
+            icon: 'success',
+            title: 'Success',
+            text: response.message,
+        });
+
+        // Add more fields if needed
+
+    },
+    error: function (error) {
+        console.log('Error:', error);
+
+        // Display SweetAlert2 error message
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Failed to add/update broker.',
+        });
+
+        // Display validation message
+        $('.validating_space').text('Validation of your broker API failed.');
+
+    },
+    complete: function () {
+        // This function will be called regardless of success or error
+        // You can hide loaders or re-enable elements here
+        // Example: $('.loader').hide();
+        $('.validating_space').text('');
+    }
+});
+
+
+
+    });
+
+    function getAllBrokers() {
+        // Make an AJAX GET request to your Django view
+        $.ajax({
+            type: 'GET',
+            url: '/add_broker_api_main',  // Replace with your actual Django view URL
+            dataType: 'json',
+            success: function(response) {
+                // Log the response to the console
+                console.log(response);
+
+                // Handle the response as needed
+                // For example, you can update the UI with the broker data
+            },
+            error: function(error) {
+                // Log the error to the console
+                console.error(error);
+
+                // Handle the error as needed
+                // For example, you can show an error message to the user
+            }
+        });
+    }
+
+
+
+
+
+        });
+      </script>
+
+
 
     </div>
 
@@ -4745,265 +4936,265 @@
       }
     });
 
-    // ACess_TOKEN
+    // // ACess_TOKEN
 
-    $(".save_zerodha_btn").click(function (event) {
-      event.preventDefault();
-      var app_name = $("#app_name").val();
-      var api_key = $("#api_key").val();
-      var secret_key = $("#secret_key").val();
-      var all_brokers = $("#all_brokers").val();
-      if (!app_name || !api_key || !secret_key) {
-        alert("Please fill in all fields.");
-        return; // Don't proceed with the AJAX request if any field is empty
-      }
+    // $(".save_zerodha_btn").click(function (event) {
+    //   event.preventDefault();
+    //   var app_name = $("#app_name").val();
+    //   var api_key = $("#api_key").val();
+    //   var secret_key = $("#secret_key").val();
+    //   var all_brokers = $("#all_brokers").val();
+    //   if (!app_name || !api_key || !secret_key) {
+    //     alert("Please fill in all fields.");
+    //     return; // Don't proceed with the AJAX request if any field is empty
+    //   }
 
-      $.ajax({
-        url: "/save_zerodha_config", // URL of your Django view
-        type: "POST",
-        data: {
-          app_name: app_name,
-          api_key: api_key,
-          secret_key: secret_key,
-          all_brokers: all_brokers,
-          csrfmiddlewaretoken: "{{ csrf_token }}", // Include CSRF token for security
-        },
-        success: function (response) {
-          // console.log(response.message);
-          get_api_data();
+    //   $.ajax({
+    //     url: "/save_zerodha_config", // URL of your Django view
+    //     type: "POST",
+    //     data: {
+    //       app_name: app_name,
+    //       api_key: api_key,
+    //       secret_key: secret_key,
+    //       all_brokers: all_brokers,
+    //       csrfmiddlewaretoken: "{{ csrf_token }}", // Include CSRF token for security
+    //     },
+    //     success: function (response) {
+    //       // console.log(response.message);
+    //       get_api_data();
 
-          $("#app_name").val("");
-          $("#api_key").val("");
-          $("#secret_key").val("");
-          $(".btn-close[data-bs-dismiss='offcanvas']").click(); // Simulate a click event on the button with the specific data-bs-dismiss attribute
+    //       $("#app_name").val("");
+    //       $("#api_key").val("");
+    //       $("#secret_key").val("");
+    //       $(".btn-close[data-bs-dismiss='offcanvas']").click(); // Simulate a click event on the button with the specific data-bs-dismiss attribute
 
 
-        },
-        error: function (xhr, status, error) {
-          console.error(xhr.responseText);
-        },
-      });
-    });
-    var hasRunOnPageLoad = false; // Initialize a flag to track whether the code has run on page load
+    //     },
+    //     error: function (xhr, status, error) {
+    //       console.error(xhr.responseText);
+    //     },
+    //   });
+    // });
+    // var hasRunOnPageLoad = false; // Initialize a flag to track whether the code has run on page load
 
-    function get_api_data() {
-      $.ajax({
-        url: "/get_zerodha_config", // URL of your Django view for data retrieval
-        type: "GET",
-        success: function (data) {
-          // Handle the retrieved data
-          // console.log(data);
+    // function get_api_data() {
+    //   $.ajax({
+    //     url: "/get_zerodha_config", // URL of your Django view for data retrieval
+    //     type: "GET",
+    //     success: function (data) {
+    //       // Handle the retrieved data
+    //       // console.log(data);
 
-          var all_data = "";
+    //       var all_data = "";
 
-          if (data.length === 0) {
-            // If data is empty, display "NO API available"
-            all_data = "<p style='padding: 0 85px;''>No API available </p>";
-          } else {
-            $.each(data, function (index, item) {
-              // Your existing code to format each API configuration item
-              var connected_varifications =
-                item.connected !== "Connected"
-                  ? `<a href="https://kite.zerodha.com/connect/login?api_key=${item.api_key}&v=3">${item.connected}</a>`
-                  : "Connected";
-              var connected_btn_class =
-                item.connected !== "Connected"
-                  ? `btn_danger edit_access_token`
-                  : "btn_success";
-              var switch_btn_visibility =
-                item.connected !== "Connected" ? `d-none` : "d-block";
+    //       if (data.length === 0) {
+    //         // If data is empty, display "NO API available"
+    //         all_data = "<p style='padding: 0 85px;''>No API available </p>";
+    //       } else {
+    //         $.each(data, function (index, item) {
+    //           // Your existing code to format each API configuration item
+    //           var connected_varifications =
+    //             item.connected !== "Connected"
+    //               ? `<a href="https://kite.zerodha.com/connect/login?api_key=${item.api_key}&v=3">${item.connected}</a>`
+    //               : "Connected";
+    //           var connected_btn_class =
+    //             item.connected !== "Connected"
+    //               ? `btn_danger edit_access_token`
+    //               : "btn_success";
+    //           var switch_btn_visibility =
+    //             item.connected !== "Connected" ? `d-none` : "d-block";
 
-              all_data += `
-        <div class='main_api_card'>
-            <div class="active_inactive_btn d-flex align-items-baseline gap-3"> 
+    //           all_data += `
+    //     <div class='main_api_card'>
+    //         <div class="active_inactive_btn d-flex align-items-baseline gap-3"> 
 
                 
-                <div class="checkbox-wrapper-14 ${switch_btn_visibility}">
-                    <input id="s1-14" type="checkbox" class="switch" style="padding: 7px 21px 14px 17px;">
-                    <label for="s1-14">Inactive</label>
-                </div>
-            </div>
+    //             <div class="checkbox-wrapper-14 ${switch_btn_visibility}">
+    //                 <input id="s1-14" type="checkbox" class="switch" style="padding: 7px 21px 14px 17px;">
+    //                 <label for="s1-14">Inactive</label>
+    //             </div>
+    //         </div>
 
-            <div class="main_api_info">
-                <div class="app_name_main">
-                    <p class="text-primary">App Name: </p>
-                    <p>${item.app_name}</p>
-                </div>
+    //         <div class="main_api_info">
+    //             <div class="app_name_main">
+    //                 <p class="text-primary">App Name: </p>
+    //                 <p>${item.app_name}</p>
+    //             </div>
                
-                <div class="api_key_main">
-                    <p class=text-primary>Api Key:</p>
-                    <p>${item.api_key}</p>
-                </div>
+    //             <div class="api_key_main">
+    //                 <p class=text-primary>Api Key:</p>
+    //                 <p>${item.api_key}</p>
+    //             </div>
 
-                <div class="secret_key_main">
-                    <p class=text-primary>Secret Key: </p>
-                    <p>${item.secret_key}</p>
-                </div>
+    //             <div class="secret_key_main">
+    //                 <p class=text-primary>Secret Key: </p>
+    //                 <p>${item.secret_key}</p>
+    //             </div>
 
-                <div class="last_api_token_main" style="display:none;">
-                    <p>last token updated:</p>
-                    <p> ${item.api_added_at}</p>
-                </div>
+    //             <div class="last_api_token_main" style="display:none;">
+    //                 <p>last token updated:</p>
+    //                 <p> ${item.api_added_at}</p>
+    //             </div>
                 
-                <div class="access_teken">
-                    <p class="text-primary" style="display: flex;
-    align-items: flex-end;"> Access Token <sup><i class='bx bx-help-circle ms-1' data-title="${item.api_added_at}"></i></sup>:</p>
-                    <p>${item.access_token}</p>
-                </div>
-                <div class="api_actions">
-                    <div class="main_action_btn_api d-flex gap-1">
-                        <button class="${connected_btn_class}" data-id="${item.id}">${connected_varifications}</button>
-                        <button class="delete_api_btn  cursor-pointer" data-id="${item.id}">Delete</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    `;
-            });
+    //             <div class="access_teken">
+    //                 <p class="text-primary" style="display: flex;
+    // align-items: flex-end;"> Access Token <sup><i class='bx bx-help-circle ms-1' data-title="${item.api_added_at}"></i></sup>:</p>
+    //                 <p>${item.access_token}</p>
+    //             </div>
+    //             <div class="api_actions">
+    //                 <div class="main_action_btn_api d-flex gap-1">
+    //                     <button class="${connected_btn_class}" data-id="${item.id}">${connected_varifications}</button>
+    //                     <button class="delete_api_btn  cursor-pointer" data-id="${item.id}">Delete</button>
+    //                 </div>
+    //             </div>
+    //         </div>
+    //     </div>
+    // `;
+    //         });
 
-            $('.help-icon').hover(function () {
-              var index = $(this).data('data-added-at');
-              $('#hover-info-' + index).css('display', 'block');
-            }, function () {
-              var index = $(this).data('data-added-at');
-              $('#hover-info-' + index).css('display', 'none');
-            });
-          }
+    //         $('.help-icon').hover(function () {
+    //           var index = $(this).data('data-added-at');
+    //           $('#hover-info-' + index).css('display', 'block');
+    //         }, function () {
+    //           var index = $(this).data('data-added-at');
+    //           $('#hover-info-' + index).css('display', 'none');
+    //         });
+    //       }
 
-          $("#zerodha_data_display").empty().append(all_data);
+    //       $("#zerodha_data_display").empty().append(all_data);
 
-          var $checkbox = $("#s1-14");
-          var $label = $("label[for='s1-14']");
-          var $button = $(".reset_button");
+    //       var $checkbox = $("#s1-14");
+    //       var $label = $("label[for='s1-14']");
+    //       var $button = $(".reset_button");
 
-          // Add a change event handler to the checkbox
-          $checkbox.on("change", function () {
-            // Check if the checkbox is checked
-            if ($checkbox.is(":checked")) {
-              // If checked, change the label text and enable the button
-              $label.text("Activated");
-              checkMainPositionContent()
-              $button.attr("title", ""); // Remove the title attribute
-            } else {
-              // If not checked, change the label text, disable the button, and set the title
-              $label.text("Inactive");
-              checkMainPositionContent()
-              $button.attr(
-                "title",
-                "Please Activate your API for placing order"
-              );
-            }
-          });
+    //       // Add a change event handler to the checkbox
+    //       $checkbox.on("change", function () {
+    //         // Check if the checkbox is checked
+    //         if ($checkbox.is(":checked")) {
+    //           // If checked, change the label text and enable the button
+    //           $label.text("Activated");
+    //           checkMainPositionContent()
+    //           $button.attr("title", ""); // Remove the title attribute
+    //         } else {
+    //           // If not checked, change the label text, disable the button, and set the title
+    //           $label.text("Inactive");
+    //           checkMainPositionContent()
+    //           $button.attr(
+    //             "title",
+    //             "Please Activate your API for placing order"
+    //           );
+    //         }
+    //       });
 
-          // Attach a click event handler for the delete buttons
-          $(".delete_api_btn").click(function () {
-            var itemId = $(this).data("id");
-            if (confirm("Are you sure you want to delete this Api?")) {
-              deleteItem(itemId);
-            }
-          });
+    //       // Attach a click event handler for the delete buttons
+    //       $(".delete_api_btn").click(function () {
+    //         var itemId = $(this).data("id");
+    //         if (confirm("Are you sure you want to delete this Api?")) {
+    //           deleteItem(itemId);
+    //         }
+    //       });
 
 
-          $(".edit_access_token").click(function () {
-            // Get the data-id attribute value
-            var data_Id_access_token = $(this).data("id");
+    //       $(".edit_access_token").click(function () {
+    //         // Get the data-id attribute value
+    //         var data_Id_access_token = $(this).data("id");
 
-            // Check if the browser supports local storage
-            if (typeof Storage !== "undefined") {
-              // Use localStorage to store the data-id value
-              localStorage.setItem(
-                "data_Id_access_token",
-                data_Id_access_token
-              );
+    //         // Check if the browser supports local storage
+    //         if (typeof Storage !== "undefined") {
+    //           // Use localStorage to store the data-id value
+    //           localStorage.setItem(
+    //             "data_Id_access_token",
+    //             data_Id_access_token
+    //           );
 
-              // Optionally, you can also retrieve the stored value like this:
-              // var storedData_Id_access_token = localStorage.getItem("data_Id_access_token");
-            } else {
-              // If the browser does not support local storage, you can handle it here
-              console.log("Local storage is not supported in this browser.");
-            }
-          });
+    //           // Optionally, you can also retrieve the stored value like this:
+    //           // var storedData_Id_access_token = localStorage.getItem("data_Id_access_token");
+    //         } else {
+    //           // If the browser does not support local storage, you can handle it here
+    //           console.log("Local storage is not supported in this browser.");
+    //         }
+    //       });
 
-          if (!hasRunOnPageLoad) {
-            // Check if the code has not run on page load
+    //       if (!hasRunOnPageLoad) {
+    //         // Check if the code has not run on page load
 
-            var uniqueId = localStorage.getItem("data_Id_access_token");
+    //         var uniqueId = localStorage.getItem("data_Id_access_token");
 
-            // Function to extract query parameters from a URL
-            function getQueryParam(url, name) {
-              name = name.replace(/[\[\]]/g, "\\$&");
-              var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)");
-              var results = regex.exec(url);
-              if (!results) return null;
-              if (!results[2]) return "";
-              return decodeURIComponent(results[2].replace(/\+/g, " "));
-            }
+    //         // Function to extract query parameters from a URL
+    //         function getQueryParam(url, name) {
+    //           name = name.replace(/[\[\]]/g, "\\$&");
+    //           var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)");
+    //           var results = regex.exec(url);
+    //           if (!results) return null;
+    //           if (!results[2]) return "";
+    //           return decodeURIComponent(results[2].replace(/\+/g, " "));
+    //         }
 
-            // Get the current URL
-            var currentUrl = window.location.href;
+    //         // Get the current URL
+    //         var currentUrl = window.location.href;
 
-            // Extract the 'request_token' parameter from the URL
-            var requestToken = getQueryParam(currentUrl, "request_token");
+    //         // Extract the 'request_token' parameter from the URL
+    //         var requestToken = getQueryParam(currentUrl, "request_token");
 
-            // Check if 'requestToken' has a value and do something with it
-            if (requestToken) {
-              console.log("request_token:", requestToken);
-              editAccessToken(uniqueId, requestToken);
-              var urlWithoutParams = currentUrl.split("?")[0];
-              window.history.replaceState({}, document.title, urlWithoutParams);
-              // Now you can use 'requestToken' in your JavaScript code as needed.
-            } else {
-              console.log("Hii king");
-            }
+    //         // Check if 'requestToken' has a value and do something with it
+    //         if (requestToken) {
+    //           console.log("request_token:", requestToken);
+    //           editAccessToken(uniqueId, requestToken);
+    //           var urlWithoutParams = currentUrl.split("?")[0];
+    //           window.history.replaceState({}, document.title, urlWithoutParams);
+    //           // Now you can use 'requestToken' in your JavaScript code as needed.
+    //         } else {
+    //           console.log("Hii king");
+    //         }
 
-            hasRunOnPageLoad = true; // Set the flag to true after running the code on page load
-          }
+    //         hasRunOnPageLoad = true; // Set the flag to true after running the code on page load
+    //       }
 
-          // This code will run on subsequent AJAX requests as well as on page load.
-        },
-        error: function (xhr, status, error) {
-          console.error(xhr.responseText);
-        },
-      });
-    }
-    function deleteItem(itemId) {
-      console.log(itemId);
-      $.ajax({
-        url: `/delete_zerodha_config/${itemId}/`, // URL of your Django delete view
-        type: "POST",
-        success: function (response) {
-          console.log(response.message);
-          // Refresh the data display after successful deletion
-          get_api_data();
-        },
-        error: function (xhr, status, error) {
-          console.error(xhr.responseText);
-        },
-      });
-    }
+    //       // This code will run on subsequent AJAX requests as well as on page load.
+    //     },
+    //     error: function (xhr, status, error) {
+    //       console.error(xhr.responseText);
+    //     },
+    //   });
+    // }
+    // function deleteItem(itemId) {
+    //   console.log(itemId);
+    //   $.ajax({
+    //     url: `/delete_zerodha_config/${itemId}/`, // URL of your Django delete view
+    //     type: "POST",
+    //     success: function (response) {
+    //       console.log(response.message);
+    //       // Refresh the data display after successful deletion
+    //       get_api_data();
+    //     },
+    //     error: function (xhr, status, error) {
+    //       console.error(xhr.responseText);
+    //     },
+    //   });
+    // }
 
-    function editAccessToken(uniqueId, newAccessToken) {
+    // function editAccessToken(uniqueId, newAccessToken) {
 
-      console.log(newAccessToken);
+    //   console.log(newAccessToken);
 
-      $.ajax({
-        url: "/edit_access_token",
-        type: "POST",
-        data: {
-          unique_id: uniqueId,
-          access_token: newAccessToken,
-        },
-        success: function (data) {
-          console.log(data.message); // Print the response message
-          get_api_data();
-        },
-        error: function (xhr, status, error) {
-          console.error(xhr.responseText);
-        },
-      });
-    }
+    //   $.ajax({
+    //     url: "/edit_access_token",
+    //     type: "POST",
+    //     data: {
+    //       unique_id: uniqueId,
+    //       access_token: newAccessToken,
+    //     },
+    //     success: function (data) {
+    //       console.log(data.message); // Print the response message
+    //       get_api_data();
+    //     },
+    //     error: function (xhr, status, error) {
+    //       console.error(xhr.responseText);
+    //     },
+    //   });
+    // }
 
-    get_api_data();
+    // get_api_data();
     //END ACess_TOKEN
 
     //PLACE ZERODHA ORDER
