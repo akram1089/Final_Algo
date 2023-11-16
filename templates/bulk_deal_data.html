@@ -47,6 +47,11 @@
     background-color: #f2f2f2;
   }
 
+
+  table.dataTable.display>tbody>tr.odd>.sorting_1, table.dataTable.order-column.stripe>tbody>tr.odd>.sorting_1 {
+    box-shadow: inset 0 0 0 9999px rgba(255, 255, 255, 0.054) !important;
+}
+
   th,
   td {
     padding: 12px 8px;
@@ -124,9 +129,14 @@
 
   .table-striped-custom>tbody>tr:nth-child(2n)>td,
   .table-striped-custom>tbody>tr:nth-child(2n)>th {
-    background-color: rgb(240, 247, 253) !important;
+    background-color: #f0f7fdff !important;
   }
-
+  table.dataTable.display tbody tr:hover>.sorting_1{
+    box-shadow: white !important;
+  }
+  table.dataTable.display>tbody>tr.odd>* {
+    box-shadow: inset 0 0 0 9999px rgba(255, 255, 255);
+}
   /* Custom CSS to change the background color of placeholder-glow */
   .placeholder-glow:focus::placeholder {
     background-color: red !important;
@@ -180,10 +190,10 @@
     font-size: 14px;
   }
 
-  table.dataTable tbody tr {
+  /* table.dataTable tbody tr {
     background-color: transparent;
     border-bottom: transparent;
-  }
+  } */
 
   table.dataTable thead th,
   table.dataTable thead td {
@@ -211,7 +221,10 @@
   position: relative;
 }
 
-
+.odd,.even{
+  background-color: white !important;
+  background: white !important;
+}
 .parent_table{
   overflow: auto;
 }
@@ -239,7 +252,7 @@
   </div>
   <div class="table-container">
   <div class="table_data">
-    <table id="bulk_data" class="display py-3 table-striped-custom table-responsive ">
+    <table id="bulk_data" class="display py-3 table-striped-custom">
       <thead style='    background: #4399eb!important; color:white;
    '>
         <tr>
@@ -278,7 +291,12 @@
 
 </div>
 <!-- ...existing HTML code... -->
-
+<style>
+  .data-table-body tbody tr {
+    background-color: white !important;
+    background: white !important;
+  }
+</style>
 <script>
   $(document).ready(function () {
    
@@ -294,7 +312,7 @@
   
           var Null_value = data[i].totaL_VALUE !== null ? data[i].totaL_VALUE : "-";
   
-          var row = "<tr>" +
+          var row = "<tr class='bg-light'>" +
               "<td><div>" + data[i].created_at + "</div></td>" +
               "<td class='symbol_name_watchlist'><div>" + data[i].symbol_name + "</div></td>" +
               "<td><div>" + data[i].security_name + "</div></td>" +
