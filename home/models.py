@@ -7,6 +7,7 @@ from .manager import UserManager
 from django.db import models
 class User(AbstractUser):
     username=None
+
     full_name=models.CharField( max_length=50,null=True,blank=True)
     email=models.EmailField( max_length=254,unique=True)
     Mobile_number=models.CharField( max_length=50,null=True,blank=True)
@@ -191,6 +192,7 @@ class Subscriber(models.Model):
     email = models.EmailField(max_length=254)
     subscribed_at = models.DateTimeField()
 
+from django.db import models
 
 
 
@@ -253,6 +255,7 @@ class All_brokers_api_name(models.Model):
 
 
 class Broker(models.Model):
+    id = models.AutoField(primary_key=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     broker_name = models.CharField(max_length=255)
     trading_platform = models.CharField(max_length=255)
@@ -271,3 +274,14 @@ class Broker(models.Model):
 
     def __str__(self):
         return f"{self.broker_name} - {self.user} - {self.app_name}"
+    
+
+
+
+
+
+
+
+
+
+
