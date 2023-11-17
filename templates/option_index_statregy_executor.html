@@ -1647,7 +1647,7 @@ $.ajax({
         Swal.fire({
             icon: 'error',
             title: 'Error',
-            text: 'Failed to add/update broker.',
+            text: error.responseJSON.message,
         });
 
         // Display validation message
@@ -5494,7 +5494,33 @@ color: green;
 
     function send_quote_data(trading_quote, zerodha_trading_symbol, zerodha_lotSize) {
 
-      console.log('trading_quote' + JSON.stringify(trading_quote));
+
+      $.ajax({
+          type: 'GET',
+          url: '/check_user_logged_in', // Update the URL to the appropriate endpoint
+          success: function (response) {
+            // If the user is logged in, toggle the broker activation modal
+
+            if (response.user_logged_in) {
+              
+              $("#signinModal").modal("show");
+              return 
+            } else {
+
+              if (!$('.activate_api').is(':checked')) {
+            
+                Swal.fire({
+        icon: 'warning',
+        title: 'Warning',
+        text:"Please activate you api to place order !!"
+,
+    });
+            } else {
+                // If not checked, show an alert
+            
+
+              $("#execute").modal("show")
+              console.log('trading_quote' + JSON.stringify(trading_quote));
       console.log('zerodha_trading_symbol' + JSON.stringify(zerodha_trading_symbol));
       console.log('zerodha_lotSize' + JSON.stringify(zerodha_lotSize));
 
@@ -5513,7 +5539,102 @@ color: green;
         success: function (response) {
           console.log(response);
 
-          if (response.status==="error") {
+
+          if (response.status==="success") {
+   
+
+   var zerodha_kite_profile = response.all_profile.data
+   $(".names_user_details h5").text(zerodha_kite_profile.user_name);
+   $(".names_user_details p").text(`Client ID:${zerodha_kite_profile.user_id}`);
+
+   var zerodha_margin= response.margin_info.data.commodity.available.cash
+   console.log(zerodha_margin);
+
+   $(".margin_available").val(zerodha_margin);  
+
+   if (
+     response &&
+     response.length > 0 &&
+     response[response.length - 1].hasOwnProperty("combined_data")
+   ) {
+     var combinedData = response[response.length - 1]["combined_data"];
+
+     // Now you can access the properties of 'combined_data'
+     var symbolSpot = combinedData["symbol_spot"];
+     // Remove 'NSE:' if it exists at the beginning of the string
+     if (symbolSpot.startsWith("NSE:")) {
+       symbolSpot = symbolSpot.substring(4);
+     }
+     var niftyLtp = combinedData["nifty_ltp"];
+     var percentageChange = combinedData["percentage_change"];
+     var profile = combinedData["profile"];
+     var available_cash = combinedData["available_cash"];
+     var userId = combinedData["user_id"];
+     var total_sum = combinedData["total_sum"];
+     var formattedPercentageChange;
+     var precent_color = "";
+     if (percentageChange > 0) {
+       formattedPercentageChange = "+" + percentageChange.toFixed(2);
+       precent_color = "text-success";
+     } else if (percentageChange < 0) {
+       formattedPercentageChange =
+         "-" + Math.abs(percentageChange).toFixed(2);
+       precent_color = "text-danger";
+     } else {
+       formattedPercentageChange = percentageChange.toFixed(2);
+     }
+
+     
+
+     $(".margin_needed").val(total_sum.toFixed(2));
+     $(".symbol_name_order p").text(symbolSpot);
+     $(".strike_price_order p").text(niftyLtp);
+     $(".change_per_order p")
+       .text(formattedPercentageChange)
+       .addClass(precent_color);
+
+     // Use these values as needed in your JavaScript code
+     console.log("Symbol Spot:", symbolSpot);
+     console.log("Nifty LTP:", niftyLtp);
+     console.log("Percentage Change:", percentageChange);
+     console.log("Profile:", profile);
+     console.log("User ID:", userId);
+   }
+
+   console.log(response.result_data.ohlc_market_indepth);
+
+   // Assuming response is an array of objects
+// Assuming 'response' is the JSON response from your server
+for (let i = 0; i < response.result_data.ohlc_market_indepth.length; i++) {
+// const trading_data = response.result_data.ohlc_market_indepth[i];
+// const trading_symbol = trading_data.instrument_token; // Assuming instrument_token is the trading symbol
+  const trading_symbol = Object.keys(response.result_data.ohlc_market_indepth[i])[0];
+      const trading_data = response.result_data.ohlc_market_indepth[i][trading_symbol];
+    console.log(trading_symbol);
+  console.log(trading_data);
+
+
+
+// Generate the table HTML
+$(".indepth_details").eq(i).empty();
+$(".indepth_details_offer").eq(i).empty();
+$(".main_spot_order").eq(i).empty();
+
+const table = generateBidTable(trading_data.depth.buy);
+const tableOffer = generateOfferTable(trading_data.depth.sell);
+const spot_data_order = generateSpotData(trading_data);
+
+// Append the table to the elements with the corresponding classes
+$(".indepth_details").eq(i).append(table);
+$(".indepth_details_offer").eq(i).append(tableOffer);
+$(".main_spot_order").eq(i).append(spot_data_order);
+}
+
+
+
+          }
+
+         else if (response.status==="error") {
 
             Swal.fire({
         icon: 'warning',
@@ -5528,107 +5649,25 @@ color: green;
       $("#signinModal").modal("show")
     }
             
-          else{
-            $("#execute").modal("show")
-   
-
-          var zerodha_kite_profile = response.all_profile.data
-          $(".names_user_details h5").text(zerodha_kite_profile.user_name);
-          $(".names_user_details p").text(`Client ID:${zerodha_kite_profile.user_id}`);
-
-          var zerodha_margin= response.margin_info.data.commodity.available.cash
-          console.log(zerodha_margin);
-
-          $(".margin_available").val(zerodha_margin);  
-
-          if (
-            response &&
-            response.length > 0 &&
-            response[response.length - 1].hasOwnProperty("combined_data")
-          ) {
-            var combinedData = response[response.length - 1]["combined_data"];
-
-            // Now you can access the properties of 'combined_data'
-            var symbolSpot = combinedData["symbol_spot"];
-            // Remove 'NSE:' if it exists at the beginning of the string
-            if (symbolSpot.startsWith("NSE:")) {
-              symbolSpot = symbolSpot.substring(4);
-            }
-            var niftyLtp = combinedData["nifty_ltp"];
-            var percentageChange = combinedData["percentage_change"];
-            var profile = combinedData["profile"];
-            var available_cash = combinedData["available_cash"];
-            var userId = combinedData["user_id"];
-            var total_sum = combinedData["total_sum"];
-            var formattedPercentageChange;
-            var precent_color = "";
-            if (percentageChange > 0) {
-              formattedPercentageChange = "+" + percentageChange.toFixed(2);
-              precent_color = "text-success";
-            } else if (percentageChange < 0) {
-              formattedPercentageChange =
-                "-" + Math.abs(percentageChange).toFixed(2);
-              precent_color = "text-danger";
-            } else {
-              formattedPercentageChange = percentageChange.toFixed(2);
-            }
-
-            
-
-            $(".margin_needed").val(total_sum.toFixed(2));
-            $(".symbol_name_order p").text(symbolSpot);
-            $(".strike_price_order p").text(niftyLtp);
-            $(".change_per_order p")
-              .text(formattedPercentageChange)
-              .addClass(precent_color);
-       
-            // Use these values as needed in your JavaScript code
-            console.log("Symbol Spot:", symbolSpot);
-            console.log("Nifty LTP:", niftyLtp);
-            console.log("Percentage Change:", percentageChange);
-            console.log("Profile:", profile);
-            console.log("User ID:", userId);
-          }
-
-          console.log(response.result_data.ohlc_market_indepth);
-
-          // Assuming response is an array of objects
-// Assuming 'response' is the JSON response from your server
-for (let i = 0; i < response.result_data.ohlc_market_indepth.length; i++) {
-    // const trading_data = response.result_data.ohlc_market_indepth[i];
-    // const trading_symbol = trading_data.instrument_token; // Assuming instrument_token is the trading symbol
-         const trading_symbol = Object.keys(response.result_data.ohlc_market_indepth[i])[0];
-             const trading_data = response.result_data.ohlc_market_indepth[i][trading_symbol];
-           console.log(trading_symbol);
-         console.log(trading_data);
-
-
-
-    // Generate the table HTML
-    $(".indepth_details").eq(i).empty();
-     $(".indepth_details_offer").eq(i).empty();
-    $(".main_spot_order").eq(i).empty();
-
-     const table = generateBidTable(trading_data.depth.buy);
-     const tableOffer = generateOfferTable(trading_data.depth.sell);
-     const spot_data_order = generateSpotData(trading_data);
-
-    // Append the table to the elements with the corresponding classes
-    $(".indepth_details").eq(i).append(table);
-    $(".indepth_details_offer").eq(i).append(tableOffer);
-    $(".main_spot_order").eq(i).append(spot_data_order);
-}
-
-
-
-
-        }
+         
         },
         error: function (error) {
           console.error(error);
         },
       });
     
+
+            }
+            }
+          },
+          error: function (xhr, status, error) {
+            // Handle the error, for example, display an error message
+            console.error("Error:", error);
+            alert("Error checking user login status.");
+          }
+        });
+    
+
     
       // $.ajax({
       //   type: "POST",
