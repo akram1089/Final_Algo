@@ -6844,7 +6844,7 @@ def add_broker_api_main(request):
             print(enctoken)
             
             if enctoken:
-                zerodha_api = ZerodhaAPI(enctoken)
+                zerodha_api = GetEncToken(enctoken)
 
                 user_profile = zerodha_api.get_user_profile()
                 
@@ -6877,36 +6877,18 @@ def add_broker_api_main(request):
     elif request.method == 'GET':
         # Retrieve all brokers for the current user
         user = request.user
-        brokers = Broker.objects.filter(user=user)
+        brokers = Broker.objects.filter(user=user).values()
 
-        # Convert the queryset to a list of dictionaries
-        broker_list = [
-            {
-                'broker_name': broker.broker_name,
-                'trading_platform': broker.trading_platform,
-                'logging_id': broker.logging_id,
-                'password': broker.password,
-                'totp_key': broker.totp_key,
-                'fa_pin': broker.fa_pin,
-                'phone_number': broker.phone_number,
-                'api_key': broker.api_key,
-                'api_secret': broker.api_secret,
-                'app_name': broker.app_name,
-                'active_api': broker.active_api,
-                'added_at': broker.added_at.strftime('%Y-%m-%d %H:%M:%S'),
-                'updated_at': broker.updated_at.strftime('%Y-%m-%d %H:%M:%S'),
-            }
-            for broker in brokers
-        ]
+        # Convert brokers to JSON
+        brokers_json = list(brokers)
 
         # Return the list of brokers as a JSON response
-        return JsonResponse({'brokers': broker_list})
-    
+        return JsonResponse({'brokers': brokers_json})
+        
     else:
         return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
-    
 
-class ZerodhaAPI:
+class GetEncToken:
     def __init__(self, enctoken):
         self.headers = {"Authorization": f"enctoken {enctoken}"}
         self.session = requests.Session()
@@ -6917,10 +6899,7 @@ class ZerodhaAPI:
         profile_url = f"{self.root_url}/user/profile/full"
         response = self.session.get(profile_url, headers=self.headers)
         return response.json() if response.status_code == 200 else None
-
-
-
-
+ 
 
 
 
@@ -6973,3 +6952,306 @@ class ZerodhaAPI:
 
 
 
+
+
+
+
+
+
+
+import requests
+import json
+from django.http import HttpResponse
+from home.models import Broker  # Replace 'your_app' with the actual name of your Django app
+
+class ZerodhaPlaceOrder:
+    def __init__(self, enctoken):
+        # print("enctoken  :" + enctoken)
+        self.headers = {"Authorization": f"enctoken {enctoken}"}
+        self.session = requests.Session()
+        self.root_url = "https://kite.zerodha.com/oms"
+        self.session.get(self.root_url, headers=self.headers)
+
+    def get_user_profile(self):
+        profile_url = f"{self.root_url}/user/profile/full"
+        response = self.session.get(profile_url, headers=self.headers)
+        return response.json() if response.status_code == 200 else None
+    def quote(self, instruments):
+        data = self.session.get(f"{self.root_url}/quote", params={"i": instruments}, headers=self.headers).json()["data"]
+        return data
+    
+        
+    def margins(self):
+        margins = self.session.get(f"{self.root_url}/user/margins", headers=self.headers).json()
+        return margins
+
+       
+    PRODUCT_MIS = "MIS"
+    PRODUCT_CNC = "CNC"
+    PRODUCT_NRML = "NRML"
+    PRODUCT_CO = "CO"
+
+    # Order types
+    ORDER_TYPE_MARKET = "MARKET"
+    ORDER_TYPE_LIMIT = "LIMIT"
+    ORDER_TYPE_SLM = "SL-M"
+    ORDER_TYPE_SL = "SL"
+
+    # Varities
+    VARIETY_REGULAR = "regular"
+    VARIETY_CO = "co"
+    VARIETY_AMO = "amo"
+
+    # Transaction type
+    TRANSACTION_TYPE_BUY = "BUY"
+    TRANSACTION_TYPE_SELL = "SELL"
+
+    # Validity
+    VALIDITY_DAY = "DAY"
+    VALIDITY_IOC = "IOC"
+
+    # Exchanges
+    EXCHANGE_NSE = "NSE"
+    EXCHANGE_BSE = "BSE"
+    EXCHANGE_NFO = "NFO"
+    EXCHANGE_CDS = "CDS"
+    EXCHANGE_BFO = "BFO"
+    EXCHANGE_MCX = "MCX"
+
+    def place_order(self, variety, exchange, tradingsymbol, transaction_type, quantity, product, order_type, price=None,
+                    validity=None, disclosed_quantity=None, trigger_price=None, squareoff=None, stoploss=None,
+                    trailing_stoploss=None, tag=None):
+        # Check if the provided product, order type, variety, transaction type, validity, and exchange are valid
+        if product not in [self.PRODUCT_MIS, self.PRODUCT_CNC, self.PRODUCT_NRML, self.PRODUCT_CO]:
+            raise ValueError("Invalid product type")
+
+        if order_type not in [self.ORDER_TYPE_MARKET, self.ORDER_TYPE_LIMIT, self.ORDER_TYPE_SLM, self.ORDER_TYPE_SL]:
+            raise ValueError("Invalid order type")
+
+        if variety not in [self.VARIETY_REGULAR, self.VARIETY_CO, self.VARIETY_AMO]:
+            raise ValueError("Invalid variety")
+
+        if transaction_type not in [self.TRANSACTION_TYPE_BUY, self.TRANSACTION_TYPE_SELL]:
+            raise ValueError("Invalid transaction type")
+
+        if validity not in [self.VALIDITY_DAY, self.VALIDITY_IOC]:
+            raise ValueError("Invalid validity")
+
+        if exchange not in [self.EXCHANGE_NSE, self.EXCHANGE_BSE, self.EXCHANGE_NFO, self.EXCHANGE_CDS, 
+                            self.EXCHANGE_BFO, self.EXCHANGE_MCX]:
+            raise ValueError("Invalid exchange")
+
+        params = locals()
+        print(params)
+        del params["self"]
+        for k in list(params.keys()):
+            if params[k] is None:
+                del params[k]
+        # print(f"{self.root_url}/orders/{variety}")
+        params_json = json.dumps(params, indent=2)
+        # print(params_json)
+        # print(self.headers)
+        order_response = self.session.post(f"{self.root_url}/orders/{variety}", data=params, headers=self.headers)
+        if order_response.status_code == 200:
+            order_id = order_response.json()
+            # print(order_id)
+            return order_id
+        else:
+            print(order_response.text)
+            # print(f"Failed to place order. Status Code: {response.status_code}")
+            return order_response.text
+        
+
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# Import your required functions and classes here
+# Assuming you have the necessary imports and classes like Broker, ZerodhaPlaceOrder, and get_enctoken_internal
+@csrf_exempt
+def kite_order_zerodha(request):
+    broker_instance = Broker.objects.first()  # Assuming you have a Broker model defined
+
+    if request.method == 'POST':
+        data_trade = json.loads(request.body)
+        print("data_trade", data_trade)
+
+        if broker_instance:
+            logging_id = broker_instance.logging_id
+            password = broker_instance.password
+            totp_key = broker_instance.totp_key
+            print(broker_instance)
+            enctoken = get_enctoken_internal(logging_id, password, totp_key)
+            print(enctoken)
+
+            # Check if login was successful
+            if enctoken:
+                zerodha_api = ZerodhaPlaceOrder(enctoken)
+                order_details = []
+
+                for trade_data in data_trade:
+                    tradingsymbol = trade_data.get('tradingsymbol', '')
+                    sell_buy_indicator = trade_data.get('sell_buy_indicator', '').upper()  # Ensure it's uppercase
+                    quantity = int(trade_data.get('Quantity', 0))
+                    price = float(trade_data.get('price', 0))
+                    mis_select = trade_data.get('mis_select', '').lower()  # Ensure it's lowercase
+                    isRadioChecked = trade_data.get('isRadioChecked', '')  # assuming 'isRadioChecked' is present in each trade_data
+
+                    # Map sell_buy_indicator to TRANSACTION_TYPE
+                    if sell_buy_indicator == 'BUY':
+                        transaction_type = zerodha_api.TRANSACTION_TYPE_BUY
+                    elif sell_buy_indicator == 'SELL':
+                        transaction_type = zerodha_api.TRANSACTION_TYPE_SELL
+                    else:
+                        print(f"Invalid sell_buy_indicator: {sell_buy_indicator}")
+                        continue  # Skip processing this trade_data if the indicator is invalid
+
+                    # Map mis_select to product type
+                    if mis_select == 'overnight':
+                        product_type = zerodha_api.PRODUCT_NRML
+                    elif mis_select == 'intraday':
+                        product_type = zerodha_api.PRODUCT_MIS
+                    else:
+                        print(f"Invalid mis_select: {mis_select}")
+                        continue  # Skip processing this trade_data if the mis_select is invalid
+
+                    # Map isRadioChecked to order type
+                    if isRadioChecked == 'market':
+                        order_type = zerodha_api.ORDER_TYPE_MARKET
+                    elif isRadioChecked == 'limit':
+                        order_type = zerodha_api.ORDER_TYPE_LIMIT
+                    else:
+                        print(f"Invalid isRadioChecked: {isRadioChecked}")
+                        continue  # Skip processing this trade_data if the isRadioChecked is invalid
+
+                    order = zerodha_api.place_order(
+                        variety=zerodha_api.VARIETY_REGULAR,
+                        exchange=zerodha_api.EXCHANGE_NFO,
+                        tradingsymbol=tradingsymbol,
+                        transaction_type=transaction_type,
+                        quantity=quantity,
+                        product=product_type,
+                        order_type=order_type,
+                        price=price,
+                        validity=zerodha_api.VALIDITY_DAY,
+                        disclosed_quantity=0,
+                        trigger_price=0,
+                        squareoff=0,
+                        stoploss=0,
+                        trailing_stoploss=0,
+                    )
+                    order_details.append({
+                        'tradingsymbol': tradingsymbol,
+                        'transaction_type': transaction_type,
+                        'mis_select': mis_select,
+                        'order_type': order_type,
+                        'order_id': order,
+                    })
+
+                    print(f"Order ID for {tradingsymbol} ({transaction_type}, {mis_select}, {order_type}): {order}")
+
+                    # Continue with your logic here, e.g., handling the order response
+
+                return JsonResponse({'status': 'success', 'message': 'Orders placed successfully', 'order_details': order_details})
+
+
+            else:
+                print("Login failed.")
+                return HttpResponse("Login failed.")
+
+        else:
+            print("No Broker instance found.")
+            return HttpResponse("No Broker instance found.")
+
+    else:
+        print("Invalid request method.")
+        return HttpResponse("Invalid request method.")
+
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+import json
+
+@csrf_exempt  # Use only for demonstration. Consider using CSRF protection in production.
+def quote_data_from_broker(request):
+    user = request.user  # Assuming the user is authenticated
+
+    # Check if the user is authenticated
+    if not user.is_authenticated:
+        return JsonResponse({'status': 'user_not_unthenticated', 'message': 'User not authenticated'})
+
+    # Retrieve the Broker instance for the user with broker_name "zerodha" and active_api set to True
+    broker_instance = Broker.objects.filter(user=user, broker_name="zerodha", active_api=True).first()
+
+    if broker_instance is None:
+        return JsonResponse({'status': 'error', 'message': 'No active API for the user'})
+
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        logging_id = broker_instance.logging_id
+        password = broker_instance.password
+        totp_key = broker_instance.totp_key
+        enctoken = get_enctoken_internal(logging_id, password, totp_key)
+
+        trading_quotes = data.get('trading_quote')
+
+        # Modify the trading_quotes as per your requirements
+        for quote in trading_quotes:
+            quote['combinedString'] = f'NFO:{quote["combinedString"]}'
+
+        result_data = {'trading_quotes': trading_quotes, 'ohlc_market_indepth': []}
+
+        if enctoken:
+            zerodha_api = ZerodhaPlaceOrder(enctoken)
+            all_profile = zerodha_api.get_user_profile()
+            margin_info = zerodha_api.margins()
+            print(zerodha_api.margins())
+            print(all_profile)
+
+            for quote in trading_quotes:
+                ohlc_market_indepth = zerodha_api.quote(quote["combinedString"])
+                result_data['ohlc_market_indepth'].append(ohlc_market_indepth)
+
+        response_data = {'status': 'success', 'message': 'Data received successfully', 'result_data': result_data, 'all_profile': all_profile, "margin_info": margin_info}
+        return JsonResponse(response_data)
+
+    else:
+        return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
+
+
+
+
+
+
+from django.shortcuts import get_object_or_404
+from django.http import JsonResponse
+from django.views.decorators.http import require_POST
+
+from .models import Broker
+@csrf_exempt
+@require_POST
+def update_active_api(request):
+    broker_id = request.POST.get('broker_id')
+    is_active = request.POST.get('is_active') == 'true'  # Convert the string to a boolean
+
+    broker = get_object_or_404(Broker, pk=broker_id)
+    broker.active_api = is_active
+    broker.save()
+
+    return JsonResponse({'message': 'API activation status updated successfully'})

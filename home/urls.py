@@ -325,6 +325,10 @@ urlpatterns = [
     path('update_user_data/', views.update_user_data, name='update_user_data'),
     path('order_history', views.order_history, name='order_history'),
     path('add_broker_api_main', views.add_broker_api_main, name='add_broker_api_main'),
+    path('kite_order_zerodha', views.kite_order_zerodha, name='kite_order_zerodha'),
+    path('quote_data_from_broker', views.quote_data_from_broker, name='quote_data_from_broker'),
+    path('update_active_api', views.update_active_api, name='update_active_api'),
+
 #     path('your_template', views.your_template, name='your_template'),
     
 

@@ -1453,9 +1453,9 @@
               <option value="zerodha_kite">zerodha_kite</option>
               <!-- Add more options if needed -->
             </select>
-            <input type="text" class="form-control" id="zerodha_login_id" name="zerodha_login_id" placeholder="Enter Trading Platform Login ID" value="TWB026" required />
-            <input type="password" class="form-control" id="zerodha_password" name="zerodha_password" placeholder="Enter Password" value="Grow@7879" required />
-            <input type="text" class="form-control" id="zerodha_totp_key" name="zerodha_totp_key" placeholder="Enter TOTP Key" value="CUSYEXAYVMKJ6X332W7FT2F2VKUVAH4R" required />
+            <input type="text" class="form-control" id="zerodha_login_id" name="zerodha_login_id" placeholder="Enter Trading Platform Login ID"  required />
+            <input type="password" class="form-control" id="zerodha_password" name="zerodha_password" placeholder="Enter Password"  required />
+            <input type="text" class="form-control" id="zerodha_totp_key" name="zerodha_totp_key" placeholder="Enter TOTP Key"  required />
             <input type="text" class="form-control" id="zerodha_app_name" name="zerodha_app_name" placeholder="Enter App Name" required />
           </div>
           
@@ -1483,6 +1483,56 @@
       </div>
 
 
+
+
+
+
+
+
+
+
+
+
+
+ 
+     
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<style>
+  .main_broker_api_box{
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+    margin: 13px;
+    padding: 11px;
+  }
+</style>
       
       <script>
         $(document).ready(function () {
@@ -1585,6 +1635,7 @@ $.ajax({
             title: 'Success',
             text: response.message,
         });
+        getAllBrokers()
 
         // Add more fields if needed
 
@@ -1614,31 +1665,78 @@ $.ajax({
 
 
     });
-
     function getAllBrokers() {
-        // Make an AJAX GET request to your Django view
-        $.ajax({
-            type: 'GET',
-            url: '/add_broker_api_main',  // Replace with your actual Django view URL
-            dataType: 'json',
-            success: function(response) {
-                // Log the response to the console
-                console.log(response);
+    // Make an AJAX GET request to your Django view
+    $.ajax({
+        type: 'GET',
+        url: '/add_broker_api_main',  // Replace with your actual Django view URL
+        dataType: 'json',
+        success: function(response) {
+            // Log the response to the console
+            console.log(response.brokers);
 
-                // Handle the response as needed
-                // For example, you can update the UI with the broker data
-            },
-            error: function(error) {
-                // Log the error to the console
-                console.error(error);
+            // Clear the existing content in #zerodha_data_display
+            $('#zerodha_data_display').empty();
 
-                // Handle the error as needed
-                // For example, you can show an error message to the user
+            // Loop through the brokers array and display the data
+            var brokers = response.brokers;
+            var displayElement = $('#zerodha_data_display');
+
+            for (var i = 0; i < brokers.length; i++) {
+                var broker = brokers[i];
+
+                var checkboxState = broker.active_api ? 'checked' : '';
+
+                var brokerHtml = `
+                    <div class="main_broker_api_box">
+                        <p>Login Id: ${broker.logging_id}</p>
+                        <p>Broker Name: ${broker.broker_name}</p>
+                        <p>App Name: ${broker.app_name}</p>
+                        <div class="checkbox-wrapper-14">
+                            <input id="s1-14" type="checkbox" class="switch activate_api" ${checkboxState} data-id="${broker.id}">
+                            <label for="s1-14">Switch</label>
+                        </div>
+                    </div>
+                `;
+                displayElement.append(brokerHtml);
             }
-        });
-    }
+
+            // Add event listener for checkbox change
+            $('.activate_api').on('change', function() {
+                var brokerId = $(this).data('id');
+                var isActive = $(this).prop('checked');
+
+                // Make an AJAX POST request to update the active_api value
+                $.ajax({
+                    type: 'POST',
+                    url: '/update_active_api',
+                    data: {
+                        'broker_id': brokerId,
+                        'is_active': isActive
+                    },
+                    success: function(response) {
+                        console.log('API activation status updated successfully.');
+                    },
+                    error: function(error) {
+                        console.error('Error updating API activation status:', error);
+                    }
+                });
+            });
+
+        },
+        error: function(error) {
+            // Log the error to the console
+            console.error(error);
+
+            // Handle the error as needed
+            // For example, you can show an error message to the user
+        }
+    });
+}
 
 
+// Call the function to get and display brokers
+getAllBrokers();
 
 
 
@@ -3307,8 +3405,8 @@ $.ajax({
                         </svg>
                       </div>
                       <div class="names_user_details">
-                        <h5>Biswajit Panda</h5>
-                        <p>Client ID: TWB026</p>
+                        <h5></h5>
+                        <p></p>
                       </div>
                     </div>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -3775,8 +3873,8 @@ $.ajax({
             Strategy</button>
           <button class="reset_button d-flex gap-1 align-items-center" disabled
             title="Please Activate your API for placing order">
-            <p style="margin-bottom: auto; margin-top: auto; font-size: 12px" data-bs-toggle="modal"
-              data-bs-target="#execute" class="execute_all_strategies">
+            <p style="margin-bottom: auto; margin-top: auto; font-size: 12px"
+             class="execute_all_strategies">
               Execute Order
             </p>
           </button>
@@ -4756,6 +4854,35 @@ $.ajax({
     border-radius: 2px;
 
   }
+
+  .box_shadow_order_execution_success{
+    border-radius: 11px;
+    box-shadow: rgb(0, 204, 44) 0px 0px 0px 1px;
+  }
+  .box_shadow_order_execution_error{
+    border-radius: 11px;
+    box-shadow: rgb(204, 0, 0) 0px 0px 0px 1px;
+  }
+
+  .order_success_text{
+color: green;
+    text-wrap: pretty;
+    text-align: center;
+    font-size: 12px;
+    background: #ddffee;
+    padding: 4px;
+    border-radius: 9px;
+  }
+  .order_error_text{
+    color: rgb(204, 0, 0);
+    text-wrap: pretty;
+    text-align: center;
+    font-size: 12px;
+    background: #F9E3E3;
+    padding: 4px;
+    border-radius: 9px;
+  }
+
 </style>
 </div>
 <div class="modal fade" id="editPositionModal">
@@ -4935,6 +5062,9 @@ $.ajax({
         $(".main_indepth").hide();
       }
     });
+
+
+    
 
     // // ACess_TOKEN
 
@@ -5272,7 +5402,9 @@ $.ajax({
         var buy_sale_bg = long_short_inner === "-" ? "sellTrade" : "buyTrade";
         var orderContent = `
              
-            <div class="inner_order_modal">
+            <div class="inner_order_modal mt-2" style="border-radius: 11px;"> 
+              <div class="order_status mb-2"> <p style="       text-wrap: pretty;
+                     text-align: center;"></p></div>
                 <div class="main_symbol_sell_buy">
                     <div class='sell_buy_indicator ${buy_sale_bg}'>${sell_buy_indicator}</div>
                 <div class="tradingsymbol">${combinedString}</div>
@@ -5371,7 +5503,7 @@ $.ajax({
 
       $.ajax({
         type: "POST",
-        url: "/quote_data_zerodha", // Replace with your Django endpoint
+        url: "/quote_data_from_broker", // Replace with your Django endpoint
         data: JSON.stringify({
           trading_quote: trading_quote,
           zerodha_trading_symbol: zerodha_trading_symbol,
@@ -5380,6 +5512,34 @@ $.ajax({
         contentType: "application/json",
         success: function (response) {
           console.log(response);
+
+          if (response.status==="error") {
+
+            Swal.fire({
+        icon: 'warning',
+        title: 'Warning',
+        text: response.message
+,
+    });
+    return; // Stop execution if any field is an empty string
+  }
+    else if (response.status==="user_not_unthenticated") {
+      
+      $("#signinModal").modal("show")
+    }
+            
+          else{
+            $("#execute").modal("show")
+   
+
+          var zerodha_kite_profile = response.all_profile.data
+          $(".names_user_details h5").text(zerodha_kite_profile.user_name);
+          $(".names_user_details p").text(`Client ID:${zerodha_kite_profile.user_id}`);
+
+          var zerodha_margin= response.margin_info.data.commodity.available.cash
+          console.log(zerodha_margin);
+
+          $(".margin_available").val(zerodha_margin);  
 
           if (
             response &&
@@ -5412,8 +5572,8 @@ $.ajax({
             } else {
               formattedPercentageChange = percentageChange.toFixed(2);
             }
-            $(".names_user_details h5").text(profile);
-            $(".names_user_details p").text(`Client ID:${userId}`);
+
+            
 
             $(".margin_needed").val(total_sum.toFixed(2));
             $(".symbol_name_order p").text(symbolSpot);
@@ -5421,7 +5581,7 @@ $.ajax({
             $(".change_per_order p")
               .text(formattedPercentageChange)
               .addClass(precent_color);
-            $(".margin_available").val(available_cash);
+       
             // Use these values as needed in your JavaScript code
             console.log("Symbol Spot:", symbolSpot);
             console.log("Nifty LTP:", niftyLtp);
@@ -5430,37 +5590,140 @@ $.ajax({
             console.log("User ID:", userId);
           }
 
+          console.log(response.result_data.ohlc_market_indepth);
+
           // Assuming response is an array of objects
-          for (let i = 0; i < response.length; i++) {
-            const trading_symbol = Object.keys(response[i])[0];
-            const trading_data = response[i][trading_symbol];
-            console.log(trading_symbol);
-            console.log(trading_data);
-            // Generate the table HTML
+// Assuming 'response' is the JSON response from your server
+for (let i = 0; i < response.result_data.ohlc_market_indepth.length; i++) {
+    // const trading_data = response.result_data.ohlc_market_indepth[i];
+    // const trading_symbol = trading_data.instrument_token; // Assuming instrument_token is the trading symbol
+         const trading_symbol = Object.keys(response.result_data.ohlc_market_indepth[i])[0];
+             const trading_data = response.result_data.ohlc_market_indepth[i][trading_symbol];
+           console.log(trading_symbol);
+         console.log(trading_data);
 
-            $(".indepth_details").eq(i).empty();
-            $(".indepth_details_offer").eq(i).empty();
-            $(".main_spot_order").eq(i).empty();
 
-            // Generate the table HTML
-            const table = generateBidTable(trading_data.depth.buy);
-            const tableOffer = generateOfferTable(trading_data.depth.sell);
 
-            const spot_data_order = generateSpotData(trading_data);
-            // const Offer_table = generateOfferTable(trading_data.depth.buy);
+    // Generate the table HTML
+    $(".indepth_details").eq(i).empty();
+     $(".indepth_details_offer").eq(i).empty();
+    $(".main_spot_order").eq(i).empty();
 
-            // Append the table to the element with the class 'indepth_details' at the corresponding index
-            $(".indepth_details").eq(i).append(table);
-            $(".indepth_details_offer").eq(i).append(tableOffer);
-            $(".main_spot_order").eq(i).append(spot_data_order);
+     const table = generateBidTable(trading_data.depth.buy);
+     const tableOffer = generateOfferTable(trading_data.depth.sell);
+     const spot_data_order = generateSpotData(trading_data);
 
-            // Append the table to the element with the class 'indepth_details' at the corresponding index
-          }
+    // Append the table to the elements with the corresponding classes
+    $(".indepth_details").eq(i).append(table);
+    $(".indepth_details_offer").eq(i).append(tableOffer);
+    $(".main_spot_order").eq(i).append(spot_data_order);
+}
+
+
+
+
+        }
         },
         error: function (error) {
           console.error(error);
         },
       });
+    
+    
+      // $.ajax({
+      //   type: "POST",
+      //   url: "/quote_data_zerodha", // Replace with your Django endpoint
+      //   data: JSON.stringify({
+      //     trading_quote: trading_quote,
+      //     zerodha_trading_symbol: zerodha_trading_symbol,
+      //     zerodha_lotSize, zerodha_lotSize
+      //   }),
+      //   contentType: "application/json",
+      //   success: function (response) {
+      //     console.log(response);
+
+      //     if (
+      //       response &&
+      //       response.length > 0 &&
+      //       response[response.length - 1].hasOwnProperty("combined_data")
+      //     ) {
+      //       var combinedData = response[response.length - 1]["combined_data"];
+
+      //       // Now you can access the properties of 'combined_data'
+      //       var symbolSpot = combinedData["symbol_spot"];
+      //       // Remove 'NSE:' if it exists at the beginning of the string
+      //       if (symbolSpot.startsWith("NSE:")) {
+      //         symbolSpot = symbolSpot.substring(4);
+      //       }
+      //       var niftyLtp = combinedData["nifty_ltp"];
+      //       var percentageChange = combinedData["percentage_change"];
+      //       var profile = combinedData["profile"];
+      //       var available_cash = combinedData["available_cash"];
+      //       var userId = combinedData["user_id"];
+      //       var total_sum = combinedData["total_sum"];
+      //       var formattedPercentageChange;
+      //       var precent_color = "";
+      //       if (percentageChange > 0) {
+      //         formattedPercentageChange = "+" + percentageChange.toFixed(2);
+      //         precent_color = "text-success";
+      //       } else if (percentageChange < 0) {
+      //         formattedPercentageChange =
+      //           "-" + Math.abs(percentageChange).toFixed(2);
+      //         precent_color = "text-danger";
+      //       } else {
+      //         formattedPercentageChange = percentageChange.toFixed(2);
+      //       }
+      //       $(".names_user_details h5").text(profile);
+      //       $(".names_user_details p").text(`Client ID:${userId}`);
+
+      //       $(".margin_needed").val(total_sum.toFixed(2));
+      //       $(".symbol_name_order p").text(symbolSpot);
+      //       $(".strike_price_order p").text(niftyLtp);
+      //       $(".change_per_order p")
+      //         .text(formattedPercentageChange)
+      //         .addClass(precent_color);
+      //       $(".margin_available").val(available_cash);
+      //       // Use these values as needed in your JavaScript code
+      //       console.log("Symbol Spot:", symbolSpot);
+      //       console.log("Nifty LTP:", niftyLtp);
+      //       console.log("Percentage Change:", percentageChange);
+      //       console.log("Profile:", profile);
+      //       console.log("User ID:", userId);
+      //     }
+
+      //     // Assuming response is an array of objects
+      //     for (let i = 0; i < response.length; i++) {
+      //       const trading_symbol = Object.keys(response[i])[0];
+      //       const trading_data = response[i][trading_symbol];
+      //       console.log(trading_symbol);
+      //       console.log(trading_data);
+      //       // Generate the table HTML
+
+      //       $(".indepth_details").eq(i).empty();
+      //       $(".indepth_details_offer").eq(i).empty();
+      //       $(".main_spot_order").eq(i).empty();
+
+      //       // Generate the table HTML
+      //       const table = generateBidTable(trading_data.depth.buy);
+      //       const tableOffer = generateOfferTable(trading_data.depth.sell);
+
+      //       const spot_data_order = generateSpotData(trading_data);
+      //       // const Offer_table = generateOfferTable(trading_data.depth.buy);
+
+      //       // Append the table to the element with the class 'indepth_details' at the corresponding index
+      //       $(".indepth_details").eq(i).append(table);
+      //       $(".indepth_details_offer").eq(i).append(tableOffer);
+      //       $(".main_spot_order").eq(i).append(spot_data_order);
+
+      //       // Append the table to the element with the class 'indepth_details' at the corresponding index
+      //     }
+      //   },
+      //   error: function (error) {
+      //     console.error(error);
+      //   },
+      // });
+    
+    
     }
 
     $(".main_updates_price_btn button").click(function () {
@@ -5656,29 +5919,48 @@ $.ajax({
         });
       });
 
-      sendPosition_to_kite(All_positionTrade);
-    });
-
-    function sendPosition_to_kite(All_positionTrade) {
-      console.log(All_positionTrade);
-
-      // Send the data to the Django view using AJAX
+      // sendPosition_to_kite(All_positionTrade);
       $.ajax({
-        url: "/kiteOrder", // Replace with the actual URL of your Django view
+        url: "/kite_order_zerodha", // Replace with the actual URL of your Django view
         type: "POST",
         data: JSON.stringify(All_positionTrade),
         contentType: "application/json",
         success: function (response) {
           // Handle the response from the Django view if needed
-          // console.log(response);
+
+          var order_status = $(".order_status p")
+          var inner_order_modal = $(".inner_order_modal")
+          console.log(response.order_details);
+
+   
+response.order_details.forEach((order, index) => {
+    var order_status_text = order.order_id;
+
+    console.log(order_status_text);
+
+    // Check if order_status_text is not an object
+    if (typeof order_status_text === 'object') {
+        // Run this code block if it's not an object
+        inner_order_modal.eq(index).addClass("box_shadow_order_execution_success");
+        order_status.eq(index).text(`Order Placed Successfully : Order Id - ${order_status_text.data.order_id}`).addClass("order_success_text");
+    } else {
+        // If it's an object, proceed with JSON parsing
+        var orderObject = JSON.parse(order_status_text);
+
+        if (orderObject.status === "error") {
+            inner_order_modal.eq(index).addClass("box_shadow_order_execution_error");
+            order_status.eq(index).text(orderObject.message).addClass("order_error_text");
+        }
+    }
+});
 
           // Check if there's a success message in the response
-          if (response.message) {
-            displayAlert(response.message, "success");
-          } else if (response.error) {
-            // Check if there's an error message in the response
-            displayAlert(response.error, "error");
-          }
+          // if (response.message) {
+          //   displayAlert(response.message, "success");
+          // } else if (response.error) {
+          //   // Check if there's an error message in the response
+          //   displayAlert(response.error, "error");
+          // }
 
           All_positionTrade = [];
         },
@@ -5692,7 +5974,45 @@ $.ajax({
           );
         },
       });
-    }
+
+
+
+    });
+
+    // function sendPosition_to_kite(All_positionTrade) {
+    //   console.log(All_positionTrade);
+
+    //   // Send the data to the Django view using AJAX
+    //   $.ajax({
+    //     url: "/kiteOrder", // Replace with the actual URL of your Django view
+    //     type: "POST",
+    //     data: JSON.stringify(All_positionTrade),
+    //     contentType: "application/json",
+    //     success: function (response) {
+    //       // Handle the response from the Django view if needed
+    //       // console.log(response);
+
+    //       // Check if there's a success message in the response
+    //       if (response.message) {
+    //         displayAlert(response.message, "success");
+    //       } else if (response.error) {
+    //         // Check if there's an error message in the response
+    //         displayAlert(response.error, "error");
+    //       }
+
+    //       All_positionTrade = [];
+    //     },
+    //     error: function (error) {
+    //       console.error(error);
+
+    //       // Display a generic error alert
+    //       displayAlert(
+    //         "An error occurred while processing your request.",
+    //         "error"
+    //       );
+    //     },
+    //   });
+    // }
 
     function displayAlert(message, type) {
       var alertElement = $(".alert-dismissible");
@@ -10506,37 +10826,37 @@ $.ajax({
       });
     }
     function margin_calculations() {
-      // var main_margin_positions = [];
-      // var lot_size_value = parseFloat($("#lot_size_value").text());
-      // $(".main_add_position_actions").each(function () {
-      //     var $this = $(this);
-      //     var symbol_name_margin = $this.find(".symbol").text();
-      //     var expiry_margin = $this.find(".expiry").text();
-      //     var option_lot_size_input = $this.find(".option_lot_size_input").text();
-      //     var strikePrice_edit = $this.find(".strikePrice").text();
-      //     var long_shorts = $this.find(".long_short_inner").text();
-      //     var requiredStringValue = $this.find(".call_put_entrance").text();
+      var main_margin_positions = [];
+      var lot_size_value = parseFloat($("#lot_size_value").text());
+      $(".main_add_position_actions").each(function () {
+          var $this = $(this);
+          var symbol_name_margin = $this.find(".symbol").text();
+          var expiry_margin = $this.find(".expiry").text();
+          var option_lot_size_input = $this.find(".option_lot_size_input").text();
+          var strikePrice_edit = $this.find(".strikePrice").text();
+          var long_shorts = $this.find(".long_short_inner").text();
+          var requiredStringValue = $this.find(".call_put_entrance").text();
 
-      //     var parts = expiry_margin.split('20');
-      //     var formatted_expiry_margin = parts[0] + parts[1].slice(-2);
+          var parts = expiry_margin.split('20');
+          var formatted_expiry_margin = parts[0] + parts[1].slice(-2);
 
-      //     // console.log(expiry_margin);
-      //     // console.log(formatted_expiry_margin);
-      //     // console.log(symbol_name_margin);
+          // console.log(expiry_margin);
+          // console.log(formatted_expiry_margin);
+          // console.log(symbol_name_margin);
 
-      //     var main_margin_position = {
-      //         "contract": `${symbol_name_margin}-${formatted_expiry_margin}`,
-      //         "exchange": "NFO",
-      //         "product": "OPTION",
-      //         "qty": lot_size_value * parseInt(option_lot_size_input),
-      //         "strikePrice": parseInt(strikePrice_edit),
-      //         "tradeType": long_shorts === "+" ? "BUY" : "SELL",
-      //         "optionType": long_shorts === "CE" ? "CALL" : "PUT"
-      //     };
+          var main_margin_position = {
+              "contract": `${symbol_name_margin}-${formatted_expiry_margin}`,
+              "exchange": "NFO",
+              "product": "OPTION",
+              "qty": lot_size_value * parseInt(option_lot_size_input),
+              "strikePrice": parseInt(strikePrice_edit),
+              "tradeType": long_shorts === "+" ? "BUY" : "SELL",
+              "optionType": long_shorts === "CE" ? "CALL" : "PUT"
+          };
 
-      //     main_margin_positions.push(main_margin_position);
-      // });
-      // // console.log("main_margin_positions", main_margin_positions);
+          main_margin_positions.push(main_margin_position);
+      });
+      // console.log("main_margin_positions", main_margin_positions);
 
 
 
@@ -10567,40 +10887,40 @@ $.ajax({
       });
 
       // Send data to the Django backend using AJAX
-      $.ajax({
-        type: "POST",
-        url: "/margin_calculations", // Change the URL to match your Django URL
-        data: JSON.stringify(updatedData),
-        contentType: "application/json; charset=utf-8",
-        dataType: "json",
-        success: function (response) {
-          // console.log("Data sent successfully!");
-          // console.log(response.main_margin_amout); // Print the response from the Django backend
-          $("#margin_required").text(response.main_margin_amout);
-        },
-        error: function (error) {
-          console.error("Error sending data:", error);
-        }
-      });
+      // $.ajax({
+      //   type: "POST",
+      //   url: "/margin_calculations", // Change the URL to match your Django URL
+      //   data: JSON.stringify(updatedData),
+      //   contentType: "application/json; charset=utf-8",
+      //   dataType: "json",
+      //   success: function (response) {
+      //     // console.log("Data sent successfully!");
+      //     // console.log(response.main_margin_amout); // Print the response from the Django backend
+      //     $("#margin_required").text(response.main_margin_amout);
+      //   },
+      //   error: function (error) {
+      //     console.error("Error sending data:", error);
+      //   }
+      // });
       // console.log( JSON.stringify(main_margin_positions));
 
 
 
-      //       $.ajax({
-      //     type: "POST",
-      //     url: "/angel_one_margin_calculations", // Change the URL to match your Django URL
-      //     data: JSON.stringify(main_margin_positions), // Stringify the data before sending
-      //     contentType: "application/json; charset=utf-8",
-      //     dataType: "json",
-      //     success: function (data) {
-      //         // console.log("Data sent successfully!");
-      //         // console.log(data.margin.totalMargin); // Print the response from the Django backend
-      //         $("#margin_required").text(data.margin.totalMargin.toFixed(2));
-      //     },
-      //     error: function (error) {
-      //         console.error("Error sending data:", error);
-      //     }
-      // });
+            $.ajax({
+          type: "POST",
+          url: "/angel_one_margin_calculations", // Change the URL to match your Django URL
+          data: JSON.stringify(main_margin_positions), // Stringify the data before sending
+          contentType: "application/json; charset=utf-8",
+          dataType: "json",
+          success: function (data) {
+              // console.log("Data sent successfully!");
+              // console.log(data.margin.totalMargin); // Print the response from the Django backend
+              $("#margin_required").text(data.margin.totalMargin.toFixed(2));
+          },
+          error: function (error) {
+              console.error("Error sending data:", error);
+          }
+      });
 
 
 
