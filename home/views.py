@@ -6820,6 +6820,7 @@ def get_enctoken_internal(zerodha_username, zerodha_password, totp_secret):
 
 
 
+from django.http import JsonResponse
 
 @csrf_exempt
 @login_required
@@ -6828,9 +6829,14 @@ def add_broker_api_main(request):
         data = json.loads(request.body)
         user = request.user
 
+        logging_id = data.get('logging_id')
+
+        # Check if logging_id already exists
+        if Broker.objects.filter(user=user, logging_id=logging_id).exists():
+            return JsonResponse({"message": "You have been already logged in with this login ID !!"}, status=400)
+
         broker_name = data.get('broker_name')
         trading_platform = data.get('trading_platform')
-        logging_id = data.get('logging_id')
         password = data.get('password')
         totp_key = data.get('totp_key')
         fa_pin = data.get('fa_pin', '')
@@ -7242,16 +7248,55 @@ def quote_data_from_broker(request):
 from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
+from django.views.decorators.csrf import csrf_exempt
 
 from .models import Broker
+
 @csrf_exempt
 @require_POST
 def update_active_api(request):
     broker_id = request.POST.get('broker_id')
     is_active = request.POST.get('is_active') == 'true'  # Convert the string to a boolean
 
-    broker = get_object_or_404(Broker, pk=broker_id)
+    # Get the user associated with the broker
+    user = request.user
+
+    # Set is_active to False for all brokers of this user
+    Broker.objects.filter(user=user).exclude(pk=broker_id).update(active_api=False)
+
+    # Set is_active to True for the specified broker
+    broker = get_object_or_404(Broker, pk=broker_id, user=user)
     broker.active_api = is_active
     broker.save()
 
     return JsonResponse({'message': 'API activation status updated successfully'})
+
+
+
+
+
+from django.shortcuts import render, get_object_or_404
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from .models import Broker  # Import your Broker model
+
+@csrf_exempt
+def delete_broker(request):
+    # Ensure the request is a POST method
+    if request.method == 'POST':
+        # Get the broker ID from the AJAX request
+        broker_id = request.POST.get('brokerId')
+        print(broker_id)
+
+        # Get the current user
+        current_user = request.user
+
+        # Get the broker or return a 404 response if not found
+        broker = get_object_or_404(Broker, id=broker_id, user=current_user)
+
+        # Delete the broker
+        broker.delete()
+
+        return JsonResponse({'message': 'Broker deleted successfully.'})
+    else:
+        return JsonResponse({'message': 'Invalid request method.'}, status=400)

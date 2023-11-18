@@ -328,6 +328,8 @@ urlpatterns = [
     path('kite_order_zerodha', views.kite_order_zerodha, name='kite_order_zerodha'),
     path('quote_data_from_broker', views.quote_data_from_broker, name='quote_data_from_broker'),
     path('update_active_api', views.update_active_api, name='update_active_api'),
+    path('delete_broker', views.delete_broker, name='delete_broker'),
+
 
 #     path('your_template', views.your_template, name='your_template'),
     
