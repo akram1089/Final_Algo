@@ -1,0 +1,119 @@
+{% extends "base_dashboard.html" %}
+{% load static %}
+{% block dashboard_body %}
+
+<section class="option_basic p-5">
+ 
+    <div class="traders_heading mt-5 pb-5">
+        <h1>Option Assignment</h1>
+        <h5>Option assignment is when the option buyer exercises the option and the seller is required to fulfill the obligation of the option contract’s terms.</h5>
+        <a class="mt-4" href="{% url "disclousre_agreement" %} ">View risk disclosures</a>
+    </div>
+    
+    <hr>
+
+    <div>
+        <h3>Option Assignment Overview</h3>
+    <p>
+        Option assignment is when an option seller is required to fulfill the obligation of the option per the
+        contract’s terms. If an option buyer exercises their right to buy or sell shares of stock at the strike price,
+        the option seller must honor this request and fulfill their obligation. Option assignment is random and cannot be
+        refused.
+    </p>
+
+    <p>
+        Options can be assigned until 30 minutes after the market closes (4:30 pm EST). An option must be closed before
+        the end of the market day to avoid potential assignment. If a short option is not closed before the market
+        closes at 4:00 pm EST, the option is subject to assignment.
+    </p>
+
+    <p>
+        If assigned a call option, you must sell 100 shares per contract at the option’s strike price. Conversely, if you
+        are assigned a put option, you’re required to buy 100 shares per contract at the option’s strike price.
+    </p>
+
+    <h3>How Option Assignment Works</h3>
+    <p>
+        Option assignment occurs when the owner of an option exercises their right to buy or sell the underlying asset at
+        a specific price on or before expiration. When a call option is assigned, the owner buys shares at the strike
+        price.
+    </p>
+
+    <p>
+        For example, if XYZ stock is trading for $45 and you sold one XYZ 50 Put, the put buyer has the right to sell 100
+        shares of XYZ at $50 any time until expiration. If XYZ drops below $50 before expiration and the buyer exercises
+        the option, then you will be assigned 100 shares at $50 and are obligated to purchase the shares.
+    </p>
+
+    <p>
+        The OCC facilitates the assignment process.
+    </p>
+
+    
+
+    <h3>How to Avoid Early Option Assignment</h3>
+    <p>
+        Options are typically assigned near expiration when the strike price is in-the-money (ITM). Option buyers tend to
+        hold the contract as long as possible to capture as much extrinsic value as possible. To manage assignment risk
+        and potentially avoid assignment, you should consider closing short options with intrinsic value near expiration.
+    </p>
+
+    <p>
+        You can use Option Alpha automations to manage assignment risk. It is important to note that there is no way to
+        guarantee you’ll avoid assignment, but you can use a series of decision recipes to check for key contributing
+        factors such as days until expiration and moneyness automatically inside a bot.
+    </p>
+
+    <h3>Best Practices: What to Know About Assignment</h3>
+    <ol>
+        <li><strong>Don’t panic!</strong> Assignment comes with the territory when selling options. Typically, your
+            broker will give you a day to exit the assigned position. Check with your broker for specific details about
+            their assignment process.</li>
+        <li><strong>Use vertical spreads.</strong> Credit spreads have defined risk, so you know your max potential loss.
+            A credit spread’s max loss is the premium received minus the spread width. For example, if you sell a $5 wide
+            spread and collect $2, your max loss is -$300 per contract. So, even if the short option is $8 ITM and
+            assigned, you can exercise the long option for $3. Added to the initial $2 premium, your loss is -$300.</li>
+        <li><strong>If you have enough capital</strong> to cover the cost of assignment (and the appropriate margin
+            account type for holding short stock if a call option is assigned), you can consider holding the position if
+            you believe it will become profitable.</li>
+    </ol>
+
+    <p>
+        Remember, option assignment is rare. The majority of options contracts are closed prior to expiration or expire
+        worthless, and assignment does not typically occur. According to the OCC, options holders only exercise about
+        8% of options contracts.
+    </p>
+
+    <h2>FAQs</h2>
+
+    <h3>What is Option Assignment?</h3>
+    <p>
+        Option assignment is when an option seller is required to fulfill the obligation of the option per the
+        contract’s terms. If an option buyer exercises their right to buy or sell shares of stock at the strike price,
+        the option seller must honor this request and fulfill their obligation.
+    </p>
+
+    <h3>Why do Options get Assigned?</h3>
+    <p>
+        The most common reason for an option to be assigned is when it is in-the-money (ITM) and near expiration. At
+        this point, there is no financial incentive for the buyer not to exercise the option since they will make money,
+        because there is little to no extrinsic value remaining.
+    </p>
+
+    <h3>What Time does Option Assignment Occur?</h3>
+    <p>
+        Although the stock market closes at 4 pm EST, options can be exercised until 4:30 pm EST on the day of expiration.
+    </p>
+
+    <h3>What Happens to In-The-Money Call Options at Expiration?</h3>
+    <p>
+        If a call option is in-the-money at expiration, it will be exercised automatically. The buyer of the long call
+        option will be delivered shares of the underlying security per the terms of the contract, and the buyer will,
+        therefore, be long stock. The long call seller will be obligated to deliver shares of the underlying security
+        and, therefore, be short stock.
+    </p>
+    </div>
+
+</section>    
+
+{% endblock dashboard_body %}
