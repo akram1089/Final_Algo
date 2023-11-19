@@ -329,9 +329,125 @@ urlpatterns = [
     path('quote_data_from_broker', views.quote_data_from_broker, name='quote_data_from_broker'),
     path('update_active_api', views.update_active_api, name='update_active_api'),
     path('delete_broker', views.delete_broker, name='delete_broker'),
+    path('traders_handbook', views.traders_handbook, name='traders_handbook'),
 
 
-#     path('your_template', views.your_template, name='your_template'),
+
+
+
+    path('traders_handbook', views.traders_handbook, name='traders_handbook'),
+    path('disclosure_agreement', views.disclosure_agreement, name='disclosure_agreement'),
+    path('option_basic', views.option_basic, name='option_basic'),
+    path('option_contract', views.option_contract, name='option_contract'),
+    path('call_option_basic', views.call_option_basic, name='call_option_basic'),
+    path('put_option_explained', views.put_option_explained, name='put_option_explained'),
+    path('strike_price', views.strike_price, name='strike_price'),
+    path('risk_averse', views.risk_averse, name='risk_averse'),
+    path('mental_model', views.mental_model, name='mental_model'),
+    path('prospect_theory', views.prospect_theory, name='prospect_theory'),
+    path('heuristics', views.heuristics, name='heuristics'),
+    path('herd_mentality', views.herd_mentality, name='herd_mentality'),
+    path('what_automate', views.what_automate, name='what_automate'),
+    path('why_automate', views.why_automate, name='why_automate'),
+    path('backtesting', views.backtesting, name='backtesting'),
+    path('technical_analysis', views.technical_analysis, name='technical_analysis'),
+    path('stock_gap', views.stock_gap, name='stock_gap'),
+    path('fill_the_gap', views.fill_the_gap, name='fill_the_gap'),
+    path('dead_cat_bounce', views.dead_cat_bounce, name='dead_cat_bounce'),
+    path('mean_reversion', views.mean_reversion, name='mean_reversion'),
+
+    path('option_pricing', views.option_pricing, name='option_pricing'),
+    path('Extrinsic_Value', views.Extrinsic_Value, name='Extrinsic_Value'),
+    path('option_moneyness', views.option_moneyness, name='option_moneyness'),
+    path('implied_volatility', views.implied_volatility, name='implied_volatility'),
+    path('back_school', views.back_school, name='back_school'),
+
+    path('option_expiry', views.option_expiry, name='option_expiry'),
+    path('option_assignment', views.option_assignment, name='option_assignment'),
+    path('option_exercise', views.option_exercise, name='option_exercise'),
+    path('europe_america_option', views.europe_america_option, name='europe_america_option'),
+    path('dividend_assignment_risk', views.dividend_assignment_risk, name='dividend_assignment_risk'),
+
+    path('sma', views.sma, name='sma'),
+    path('ema', views.ema, name='ema'),
+    path('macd', views.macd, name='macd'),
+    path('rsi', views.rsi, name='rsi'),
+    path('bollinger_band', views.bollinger_band, name='bollinger_band'),
+
+    path('broker_dealers', views.broker_dealers, name='broker_dealers'),
+    path('brokerage_firm', views.brokerage_firm, name='brokerage_firm'),
+    path('clearing_transaction', views.clearing_transaction, name='clearing_transaction'),
+    path('rule_390', views.rule_390, name='rule_390'),
+
+    path('beta_weighting', views.beta_weighting, name='beta_weighting'),
+    path('diversification', views.diversification, name='diversification'),
+    path('return_calculation', views.return_calculation, name='return_calculation'),
+    path('duration', views.duration, name='duration'),
+    path('performance_metrics', views.performance_metrics, name='performance_metrics'),
+
+    path('buying_stock', views.buying_stock, name='buying_stock'),
+    path('selling_stock', views.selling_stock, name='selling_stock'),
+    path('fractional_share', views.fractional_share, name='fractional_share'),
+    path('stock_split', views.stock_split, name='stock_split'),
+    path('reverse_stock_split', views.reverse_stock_split, name='reverse_stock_split'),
+
+    path('exchanges', views.exchanges, name='exchanges'),
+    path('cboe', views.cboe, name='cboe'),
+
+    path('efficient_frontier', views.efficient_frontier, name='efficient_frontier'),
+    path('correlation', views.correlation, name='correlation'),
+    path('black_swan', views.black_swan, name='black_swan'),
+    path('unsystematic_risk', views.unsystematic_risk, name='unsystematic_risk'),
+
+    path('margin_account', views.margin_account, name='margin_account'),
+    path('naked_option_margin', views.naked_option_margin, name='naked_option_margin'),
+    path('limit_order', views.limit_order, name='limit_order'),
+    path('ira_vs_401k', views.ira_vs_401k, name='ira_vs_401k'),
+
+    path('regulatory', views.regulatory, name='regulatory'),
+    path('bull_market', views.bull_market, name='bull_market'),
+    path('bear_market', views.bear_market, name='bear_market'),
+    path('corrections', views.corrections, name='corrections'),
+
+    path('inflation', views.inflation, name='inflation'),
+    path('gold_standard', views.gold_standard, name='gold_standard'),
+    path('unemployment', views.unemployment, name='unemployment'),
+    path('bretton_woods_agreement', views.bretton_woods_agreement, name='bretton_woods_agreement'),
+    path('modern_monetary_theory', views.modern_monetary_theory, name='modern_monetary_theory'),
+
+    path('common_stock', views.common_stock, name='common_stock'),
+    path('preferred_stock', views.preferred_stock, name='preferred_stock'),
+    path('index_mutual_fund', views.index_mutual_fund, name='index_mutual_fund'),
+
+    path('pre_market_trading', views.pre_market_trading, name='pre_market_trading'),
+    path('after_hours', views.after_hours, name='after_hours'),
+
+    path('hedging', views.hedging, name='hedging'),
+    path('position_sizing', views.position_sizing, name='position_sizing'),
+    path('delta_neutral', views.delta_neutral, name='delta_neutral'),
+    path('rolling_option', views.rolling_option, name='rolling_option'),
+
+    path('calculate_present_value', views.calculate_present_value, name='calculate_present_value'),
+    path('calculate_future_value', views.calculate_future_value, name='calculate_future_value'),
+    path('present_value_annuity', views.present_value_annuity, name='present_value_annuity'),
+    path('future_value_annuity', views.future_value_annuity, name='future_value_annuity'),
+    path('discounted_cash_flow', views.discounted_cash_flow, name='discounted_cash_flow'),
+
+
+
+
+
+
+
+
+
+    path('content_management', views.content_management, name='content_management'),
+#     path('contents_data', views.contents_data, name='contents_data'),
+#     path('get_content_data', views.get_content_data, name='get_content_data'),
+
+
+
+#  path('your_template', views.your_template, name='your_template'),
     
 
 
