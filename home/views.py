@@ -6761,6 +6761,279 @@ def order_history(request):
 
 
 
+
+
+
+
+
+
+
+def traders_handbook(request):
+    return render(request, "handbook/traders_handbook.html")
+
+
+
+
+
+
+
+
+
+from django.shortcuts import render
+
+def traders_handbook(request):
+    return render(request, "handbook/traders_handbook.html")
+
+def disclosure_agreement(request):
+    return render(request, "handbook/risk_disclosure_agreement.html")
+
+def option_basic(request):
+    return render(request, "handbook/option_basic.html")
+
+def option_contract(request):
+    return render(request, "handbook/option_contract.html")
+
+def call_option_basic(request):
+    return render(request, "handbook/call_option_basic.html")
+
+def put_option_explained(request):
+    return render(request, "handbook/put_option_explained.html")
+
+def strike_price(request):
+    return render(request, "handbook/strike_price.html")
+
+def risk_averse(request):
+    return render(request, "handbook/risk_averse.html")
+
+def mental_model(request):
+    return render(request, "handbook/mental_model.html")
+
+def prospect_theory(request):
+    return render(request, "handbook/prospect_theory.html")
+
+def heuristics(request):
+    return render(request, "handbook/heuristics.html")
+
+def herd_mentality(request):
+    return render(request, "handbook/herd_mentality.html")
+
+def what_automate(request):
+    return render(request, "handbook/what_automate.html")
+
+def why_automate(request):
+    return render(request, "handbook/why_automate.html")
+
+def backtesting(request):
+    return render(request, "handbook/backtesting.html")
+
+def technical_analysis(request):
+    return render(request, "handbook/technical_analysis.html")
+
+def stock_gap(request):
+    return render(request, "handbook/stock_gap.html")
+
+def fill_the_gap(request):
+    return render(request, "handbook/fill_the_gap.html")
+
+def dead_cat_bounce(request):
+    return render(request, "handbook/dead_cat_bounce.html")
+
+def mean_reversion(request):
+    return render(request, "handbook/mean_reversion.html")
+
+def option_pricing(request):
+    return render(request, "handbook/option_pricing.html")
+
+def Extrinsic_Value(request):
+    return render(request, "handbook/Extrinsic_Value.html")
+
+def option_moneyness(request):
+    return render(request, "handbook/option_moneyness.html")
+
+def implied_volatility(request):
+    return render(request, "handbook/implied_volatility.html")
+
+def back_school(request):
+    return render(request, "handbook/back_school.html")
+
+def option_expiry(request):
+    return render(request, "handbook/option_expiry.html")
+
+def option_assignment(request):
+    return render(request, "handbook/option_assignment.html")
+
+def option_exercise(request):
+    return render(request, "handbook/option_exercise.html")
+
+def europe_america_option(request):
+    return render(request, "handbook/europe_america_option.html")
+
+def dividend_assignment_risk(request):
+    return render(request, "handbook/dividend_assignment_risk.html")
+
+def sma(request):
+    return render(request, "handbook/sma.html")
+
+def ema(request):
+    return render(request, "handbook/ema.html")
+
+def macd(request):
+    return render(request, "handbook/macd.html")
+
+def rsi(request):
+    return render(request, "handbook/rsi.html")
+
+def bollinger_band(request):
+    return render(request, "handbook/bollinger_band.html")
+
+def broker_dealers(request):
+    return render(request, "handbook/broker_dealers.html")
+
+def brokerage_firm(request):
+    return render(request, "handbook/brokerage_firm.html")
+
+def clearing_transaction(request):
+    return render(request, "handbook/clearing_transaction.html")
+
+def rule_390(request):
+    return render(request, "handbook/rule_390.html")
+
+def beta_weighting(request):
+    return render(request, "handbook/beta_weighting.html")
+
+def diversification(request):
+    return render(request, "handbook/diversification.html")
+
+def return_calculation(request):
+    return render(request, "handbook/return_calculation.html")
+
+def duration(request):
+    return render(request, "handbook/duration.html")
+
+def performance_metrics(request):
+    return render(request, "handbook/performance_metrics.html")
+
+def buying_stock(request):
+    return render(request, "handbook/buying_stock.html")
+
+def selling_stock(request):
+    return render(request, "handbook/selling_stock.html")
+
+def fractional_share(request):
+    return render(request, "handbook/fractional_share.html")
+
+def stock_split(request):
+    return render(request, "handbook/stock_split.html")
+
+def reverse_stock_split(request):
+    return render(request, "handbook/reverse_stock_split.html")
+
+def exchanges(request):
+    return render(request, "handbook/exchanges.html")
+
+def cboe(request):
+    return render(request, "handbook/cboe.html")
+
+def efficient_frontier(request):
+    return render(request, "handbook/efficient_frontier.html")
+
+def correlation(request):
+    return render(request, "handbook/correlation.html")
+
+def black_swan(request):
+    return render(request, "handbook/black_swan.html")
+
+def unsystematic_risk(request):
+    return render(request, "handbook/unsystematic_risk.html")
+
+def margin_account(request):
+    return render(request, "handbook/margin_account.html")
+
+def naked_option_margin(request):
+    return render(request, "handbook/naked_option_margin.html")
+
+def limit_order(request):
+    return render(request, "handbook/limit_order.html")
+
+def ira_vs_401k(request):
+    return render(request, "handbook/ira_vs_401k.html")
+
+def regulatory(request):
+    return render(request, "handbook/regulatory.html")
+
+def bull_market(request):
+    return render(request, "handbook/bull_market.html")
+
+def bear_market(request):
+    return render(request, "handbook/bear_market.html")
+
+def corrections(request):
+    return render(request, "handbook/corrections.html")
+
+def inflation(request):
+    return render(request, "handbook/inflation.html")
+
+def gold_standard(request):
+    return render(request, "handbook/gold_standard.html")
+
+def unemployment(request):
+    return render(request, "handbook/unemployment.html")
+
+def bretton_woods_agreement(request):
+    return render(request, "handbook/bretton_woods_agreement.html")
+
+def modern_monetary_theory(request):
+    return render(request, "handbook/modern_monetary_theory.html")
+
+def common_stock(request):
+    return render(request, "handbook/common_stock.html")
+
+def preferred_stock(request):
+    return render(request, "handbook/preferred_stock.html")
+
+def index_mutual_fund(request):
+    return render(request, "handbook/index_mutual_fund.html")
+
+def pre_market_trading(request):
+    return render(request, "handbook/pre_market_trading.html")
+
+def after_hours(request):
+    return render(request, "handbook/after_hours.html")
+
+def hedging(request):
+    return render(request, "handbook/hedging.html")
+
+def position_sizing(request):
+    return render(request, "handbook/position_sizing.html")
+
+def delta_neutral(request):
+    return render(request, "handbook/delta_neutral.html")
+
+def rolling_option(request):
+    return render(request, "handbook/rolling_option.html")
+
+def calculate_present_value(request):
+    return render(request, "handbook/calculate_present_value.html")
+
+def calculate_future_value(request):
+    return render(request, "handbook/calculate_future_value.html")
+
+def present_value_annuity(request):
+    return render(request, "handbook/present_value_annuity.html")
+
+def future_value_annuity(request):
+    return render(request, "handbook/future_value_annuity.html")
+
+def discounted_cash_flow(request):
+    return render(request, "handbook/discounted_cash_flow.html")
+
+
+
+
+
+
+
+
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.utils import timezone
@@ -7093,7 +7366,9 @@ class ZerodhaPlaceOrder:
 # Assuming you have the necessary imports and classes like Broker, ZerodhaPlaceOrder, and get_enctoken_internal
 @csrf_exempt
 def kite_order_zerodha(request):
-    broker_instance = Broker.objects.first()  # Assuming you have a Broker model defined
+    user = request.user
+    # broker_instance = Broker.objects.first()  # Assuming you have a Broker model defined
+    broker_instance = Broker.objects.filter(user=user, broker_name="zerodha", active_api=True).first()
 
     if request.method == 'POST':
         data_trade = json.loads(request.body)
@@ -7304,268 +7579,3 @@ def delete_broker(request):
 
 
 
-
-
-
-
-
-
-
-def traders_handbook(request):
-    return render(request, "handbook/traders_handbook.html")
-
-
-
-
-
-
-
-
-
-from django.shortcuts import render
-
-def traders_handbook(request):
-    return render(request, "handbook/traders_handbook.html")
-
-def disclosure_agreement(request):
-    return render(request, "handbook/risk_disclosure_agreement.html")
-
-def option_basic(request):
-    return render(request, "handbook/option_basic.html")
-
-def option_contract(request):
-    return render(request, "handbook/option_contract.html")
-
-def call_option_basic(request):
-    return render(request, "handbook/call_option_basic.html")
-
-def put_option_explained(request):
-    return render(request, "handbook/put_option_explained.html")
-
-def strike_price(request):
-    return render(request, "handbook/strike_price.html")
-
-def risk_averse(request):
-    return render(request, "handbook/risk_averse.html")
-
-def mental_model(request):
-    return render(request, "handbook/mental_model.html")
-
-def prospect_theory(request):
-    return render(request, "handbook/prospect_theory.html")
-
-def heuristics(request):
-    return render(request, "handbook/heuristics.html")
-
-def herd_mentality(request):
-    return render(request, "handbook/herd_mentality.html")
-
-def what_automate(request):
-    return render(request, "handbook/what_automate.html")
-
-def why_automate(request):
-    return render(request, "handbook/why_automate.html")
-
-def backtesting(request):
-    return render(request, "handbook/backtesting.html")
-
-def technical_analysis(request):
-    return render(request, "handbook/technical_analysis.html")
-
-def stock_gap(request):
-    return render(request, "handbook/stock_gap.html")
-
-def fill_the_gap(request):
-    return render(request, "handbook/fill_the_gap.html")
-
-def dead_cat_bounce(request):
-    return render(request, "handbook/dead_cat_bounce.html")
-
-def mean_reversion(request):
-    return render(request, "handbook/mean_reversion.html")
-
-def option_pricing(request):
-    return render(request, "handbook/option_pricing.html")
-
-def Extrinsic_Value(request):
-    return render(request, "handbook/Extrinsic_Value.html")
-
-def option_moneyness(request):
-    return render(request, "handbook/option_moneyness.html")
-
-def implied_volatility(request):
-    return render(request, "handbook/implied_volatility.html")
-
-def back_school(request):
-    return render(request, "handbook/back_school.html")
-
-def option_expiry(request):
-    return render(request, "handbook/option_expiry.html")
-
-def option_assignment(request):
-    return render(request, "handbook/option_assignment.html")
-
-def option_exercise(request):
-    return render(request, "handbook/option_exercise.html")
-
-def europe_america_option(request):
-    return render(request, "handbook/europe_america_option.html")
-
-def dividend_assignment_risk(request):
-    return render(request, "handbook/dividend_assignment_risk.html")
-
-def sma(request):
-    return render(request, "handbook/sma.html")
-
-def ema(request):
-    return render(request, "handbook/ema.html")
-
-def macd(request):
-    return render(request, "handbook/macd.html")
-
-def rsi(request):
-    return render(request, "handbook/rsi.html")
-
-def bollinger_band(request):
-    return render(request, "handbook/bollinger_band.html")
-
-def broker_dealers(request):
-    return render(request, "handbook/broker_dealers.html")
-
-def brokerage_firm(request):
-    return render(request, "handbook/brokerage_firm.html")
-
-def clearing_transaction(request):
-    return render(request, "handbook/clearing_transaction.html")
-
-def rule_390(request):
-    return render(request, "handbook/rule_390.html")
-
-def beta_weighting(request):
-    return render(request, "handbook/beta_weighting.html")
-
-def diversification(request):
-    return render(request, "handbook/diversification.html")
-
-def return_calculation(request):
-    return render(request, "handbook/return_calculation.html")
-
-def duration(request):
-    return render(request, "handbook/duration.html")
-
-def performance_metrics(request):
-    return render(request, "handbook/performance_metrics.html")
-
-def buying_stock(request):
-    return render(request, "handbook/buying_stock.html")
-
-def selling_stock(request):
-    return render(request, "handbook/selling_stock.html")
-
-def fractional_share(request):
-    return render(request, "handbook/fractional_share.html")
-
-def stock_split(request):
-    return render(request, "handbook/stock_split.html")
-
-def reverse_stock_split(request):
-    return render(request, "handbook/reverse_stock_split.html")
-
-def exchanges(request):
-    return render(request, "handbook/exchanges.html")
-
-def cboe(request):
-    return render(request, "handbook/cboe.html")
-
-def efficient_frontier(request):
-    return render(request, "handbook/efficient_frontier.html")
-
-def correlation(request):
-    return render(request, "handbook/correlation.html")
-
-def black_swan(request):
-    return render(request, "handbook/black_swan.html")
-
-def unsystematic_risk(request):
-    return render(request, "handbook/unsystematic_risk.html")
-
-def margin_account(request):
-    return render(request, "handbook/margin_account.html")
-
-def naked_option_margin(request):
-    return render(request, "handbook/naked_option_margin.html")
-
-def limit_order(request):
-    return render(request, "handbook/limit_order.html")
-
-def ira_vs_401k(request):
-    return render(request, "handbook/ira_vs_401k.html")
-
-def regulatory(request):
-    return render(request, "handbook/regulatory.html")
-
-def bull_market(request):
-    return render(request, "handbook/bull_market.html")
-
-def bear_market(request):
-    return render(request, "handbook/bear_market.html")
-
-def corrections(request):
-    return render(request, "handbook/corrections.html")
-
-def inflation(request):
-    return render(request, "handbook/inflation.html")
-
-def gold_standard(request):
-    return render(request, "handbook/gold_standard.html")
-
-def unemployment(request):
-    return render(request, "handbook/unemployment.html")
-
-def bretton_woods_agreement(request):
-    return render(request, "handbook/bretton_woods_agreement.html")
-
-def modern_monetary_theory(request):
-    return render(request, "handbook/modern_monetary_theory.html")
-
-def common_stock(request):
-    return render(request, "handbook/common_stock.html")
-
-def preferred_stock(request):
-    return render(request, "handbook/preferred_stock.html")
-
-def index_mutual_fund(request):
-    return render(request, "handbook/index_mutual_fund.html")
-
-def pre_market_trading(request):
-    return render(request, "handbook/pre_market_trading.html")
-
-def after_hours(request):
-    return render(request, "handbook/after_hours.html")
-
-def hedging(request):
-    return render(request, "handbook/hedging.html")
-
-def position_sizing(request):
-    return render(request, "handbook/position_sizing.html")
-
-def delta_neutral(request):
-    return render(request, "handbook/delta_neutral.html")
-
-def rolling_option(request):
-    return render(request, "handbook/rolling_option.html")
-
-def calculate_present_value(request):
-    return render(request, "handbook/calculate_present_value.html")
-
-def calculate_future_value(request):
-    return render(request, "handbook/calculate_future_value.html")
-
-def present_value_annuity(request):
-    return render(request, "handbook/present_value_annuity.html")
-
-def future_value_annuity(request):
-    return render(request, "handbook/future_value_annuity.html")
-
-def discounted_cash_flow(request):
-    return render(request, "handbook/discounted_cash_flow.html")
