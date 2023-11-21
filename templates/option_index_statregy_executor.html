@@ -1723,7 +1723,7 @@
         }
       </style>
 
-      <script>
+      <!-- <script>
         $(document).ready(function () {
           // Set default selected option
           $("#all_brokers").val("zerodha");
@@ -2043,7 +2043,7 @@
 
 
         });
-      </script>
+      </script> -->
 
 
 
@@ -2063,7 +2063,8 @@
 
 
 
-        <button type="button" class="btn-close" id="update_broker_canvas" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        <button type="button" class="btn-close" id="update_broker_canvas" data-bs-dismiss="offcanvas"
+          aria-label="Close"></button>
       </div>
       <div class="offcanvas-body">
         <form>
@@ -2425,20 +2426,23 @@
               // Clear the existing content in #zerodha_data_display
               $('#zerodha_data_display').empty();
 
-              // Loop through the brokers array and display the data
-              var brokers = response.brokers;
-              var displayElement = $('#zerodha_data_display');
+              if (response.brokers.length === 0) {
+                $('#zerodha_data_display').append('<p>No APIs Available</p>');
+              } else {
 
-              for (var i = 0; i < brokers.length; i++) {
-                var broker = brokers[i];
+                var brokers = response.brokers;
+                var displayElement = $('#zerodha_data_display');
 
-                var checkboxState = broker.active_api ? 'checked' : '';
-                var switch_text = broker.active_api ? 'Activated' : 'Inactive';
-                var delete_btn_action_con = broker.active_api ? 'd-none' : '';
-                var broker_activation_status = broker.active_api ? 'broker_active_status' : 'broker_deactive_status';
-                var broker_activation_status_text = broker.active_api ? 'broker_activation_status_text_true' : 'broker_activation_status_text_false';
+                for (var i = 0; i < brokers.length; i++) {
+                  var broker = brokers[i];
 
-                var brokerHtml = `
+                  var checkboxState = broker.active_api ? 'checked' : '';
+                  var switch_text = broker.active_api ? 'Activated' : 'Inactive';
+                  var delete_btn_action_con = broker.active_api ? 'd-none' : '';
+                  var broker_activation_status = broker.active_api ? 'broker_active_status' : 'broker_deactive_status';
+                  var broker_activation_status_text = broker.active_api ? 'broker_activation_status_text_true' : 'broker_activation_status_text_false';
+
+                  var brokerHtml = `
                 <div class="main_broker_card">
 
                                   <div class="top_head_broker_card">
@@ -2478,9 +2482,10 @@
 
                                   </div>
                 `;
-                displayElement.append(brokerHtml);
-              }
+                  displayElement.append(brokerHtml);
+                }             // Loop through the brokers array and display the data
 
+              }
               $(".delete_btn_broker .delete_broker").click(function () {
                 var brokerId = $(this).data("delete_id");
 
@@ -4236,6 +4241,12 @@
                 justify-content: flex-end;
                 cursor: pointer;
               }
+
+              .broker_icon{
+
+                width: 35px;
+    height: 23px;
+}
             </style>
 
             <!-- Modal -->
@@ -4245,23 +4256,8 @@
                 <div class="modal-content">
                   <div class="modal-header">
                     <div class="user_details">
-                      <div class="zerodha_icon">
-                        <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 90 60">
-                          <defs>
-                            <style>
-                              .cls-1 {
-                                fill: #f6461a;
-                              }
-
-                              .cls-2 {
-                                fill: #db342c;
-                              }
-                            </style>
-                          </defs>
-                          <title>Kite logo trimmed</title>
-                          <polygon class="cls-1" points="30 0 0 30 30 60 60 30 90 0 30 0" />
-                          <polygon class="cls-2" points="30 60 60 30 90 60 30 60" />
-                        </svg>
+                      <div class="broker_icon">
+                     
                       </div>
                       <div class="names_user_details">
                         <h5></h5>
@@ -4295,8 +4291,8 @@
                         </div>
                         <div class="main_limit_select">
                           <select name="limit_select" id="limit_select" class="form-select limit_select">
-                            <option value="limit">Limit</option>
                             <option value="market">Market</option>
+                            <option value="limit">Limit</option>
                           </select>
                           <i class="bx bx-info-circle"></i>
                         </div>
@@ -6247,6 +6243,11 @@
         console.log(combinedString);
         trading_quote.push({
           combinedString: combinedString,
+          symbol: symbol,
+          expiry: expiry,
+          strikePrice: strikePrice,
+          callPutEntrance: callPutEntrance
+
         });
 
 
@@ -6267,7 +6268,9 @@
                      text-align: center;"></p></div>
                 <div class="main_symbol_sell_buy">
                     <div class='sell_buy_indicator ${buy_sale_bg}'>${sell_buy_indicator}</div>
-                <div class="tradingsymbol">${combinedString}</div>
+                <div class="tradingsymbol">${combinedString}</div> 
+                <div class="d-block strikePrice_order_window">${strikePrice}</div>
+                <div class="d-block main_trading_symbol"></div>
                     
                     </div>
                   
@@ -6397,81 +6400,209 @@
                 }),
                 contentType: "application/json",
                 success: function (response) {
-                  console.log(response);
+                  // console.log(response.broker_name);
+
+                  if (response.broker_name === "zerodha") {
+                    console.log(response);
+
+                    if (response.status === "success") {
+
+                      $(".broker_icon").empty().append(`<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 90 60">
+                          <defs>
+                            <style>
+                              .cls-1 {
+                                fill: #f6461a;
+                              }
+
+                              .cls-2 {
+                                fill: #db342c;
+                              }
+                            </style>
+                          </defs>
+                          <title>Kite logo trimmed</title>
+                          <polygon class="cls-1" points="30 0 0 30 30 60 60 30 90 0 30 0" />
+                          <polygon class="cls-2" points="30 60 60 30 90 60 30 60" />
+                        </svg>`)
 
 
-                  if (response.status === "success") {
+                      var zerodha_kite_profile = response.all_profile.data
+                      $(".names_user_details h5").text(zerodha_kite_profile.user_name);
+                      $(".names_user_details p").text(`Client ID:${zerodha_kite_profile.user_id}`);
+
+                      var zerodha_margin = response.margin_info.data.commodity.available.cash
+                      console.log(zerodha_margin);
+
+                      $(".margin_available").val(zerodha_margin);
+
+                      if (
+                        response &&
+                        response.length > 0 &&
+                        response[response.length - 1].hasOwnProperty("combined_data")
+                      ) {
+                        var combinedData = response[response.length - 1]["combined_data"];
+
+                        // Now you can access the properties of 'combined_data'
+                        var symbolSpot = combinedData["symbol_spot"];
+                        // Remove 'NSE:' if it exists at the beginning of the string
+                        if (symbolSpot.startsWith("NSE:")) {
+                          symbolSpot = symbolSpot.substring(4);
+                        }
+                        var niftyLtp = combinedData["nifty_ltp"];
+                        var percentageChange = combinedData["percentage_change"];
+                        var profile = combinedData["profile"];
+                        var available_cash = combinedData["available_cash"];
+                        var userId = combinedData["user_id"];
+                        var total_sum = combinedData["total_sum"];
+                        var formattedPercentageChange;
+                        var precent_color = "";
+                        if (percentageChange > 0) {
+                          formattedPercentageChange = "+" + percentageChange.toFixed(2);
+                          precent_color = "text-success";
+                        } else if (percentageChange < 0) {
+                          formattedPercentageChange =
+                            "-" + Math.abs(percentageChange).toFixed(2);
+                          precent_color = "text-danger";
+                        } else {
+                          formattedPercentageChange = percentageChange.toFixed(2);
+                        }
 
 
-                    var zerodha_kite_profile = response.all_profile.data
-                    $(".names_user_details h5").text(zerodha_kite_profile.user_name);
-                    $(".names_user_details p").text(`Client ID:${zerodha_kite_profile.user_id}`);
 
-                    var zerodha_margin = response.margin_info.data.commodity.available.cash
-                    console.log(zerodha_margin);
+                        $(".margin_needed").val(total_sum.toFixed(2));
+                        $(".symbol_name_order p").text(symbolSpot);
+                        $(".strike_price_order p").text(niftyLtp);
+                        $(".change_per_order p")
+                          .text(formattedPercentageChange)
+                          .addClass(precent_color);
 
-                    $(".margin_available").val(zerodha_margin);
-
-                    if (
-                      response &&
-                      response.length > 0 &&
-                      response[response.length - 1].hasOwnProperty("combined_data")
-                    ) {
-                      var combinedData = response[response.length - 1]["combined_data"];
-
-                      // Now you can access the properties of 'combined_data'
-                      var symbolSpot = combinedData["symbol_spot"];
-                      // Remove 'NSE:' if it exists at the beginning of the string
-                      if (symbolSpot.startsWith("NSE:")) {
-                        symbolSpot = symbolSpot.substring(4);
+                        // Use these values as needed in your JavaScript code
+                        console.log("Symbol Spot:", symbolSpot);
+                        console.log("Nifty LTP:", niftyLtp);
+                        console.log("Percentage Change:", percentageChange);
+                        console.log("Profile:", profile);
+                        console.log("User ID:", userId);
                       }
-                      var niftyLtp = combinedData["nifty_ltp"];
-                      var percentageChange = combinedData["percentage_change"];
-                      var profile = combinedData["profile"];
-                      var available_cash = combinedData["available_cash"];
-                      var userId = combinedData["user_id"];
-                      var total_sum = combinedData["total_sum"];
-                      var formattedPercentageChange;
-                      var precent_color = "";
-                      if (percentageChange > 0) {
-                        formattedPercentageChange = "+" + percentageChange.toFixed(2);
-                        precent_color = "text-success";
-                      } else if (percentageChange < 0) {
-                        formattedPercentageChange =
-                          "-" + Math.abs(percentageChange).toFixed(2);
-                        precent_color = "text-danger";
-                      } else {
-                        formattedPercentageChange = percentageChange.toFixed(2);
+
+                      console.log(response.result_data.ohlc_market_indepth);
+
+                      // Assuming response is an array of objects
+                      // Assuming 'response' is the JSON response from your server
+                      for (let i = 0; i < response.result_data.ohlc_market_indepth.length; i++) {
+                        // const trading_data = response.result_data.ohlc_market_indepth[i];
+                        // const trading_symbol = trading_data.instrument_token; // Assuming instrument_token is the trading symbol
+                        const trading_symbol = Object.keys(response.result_data.ohlc_market_indepth[i])[0];
+                        const trading_data = response.result_data.ohlc_market_indepth[i][trading_symbol];
+                        console.log(trading_symbol);
+                        console.log(trading_data);
+
+
+
+                        // Generate the table HTML
+                        $(".indepth_details").eq(i).empty();
+                        $(".indepth_details_offer").eq(i).empty();
+                        $(".main_spot_order").eq(i).empty();
+
+                        const table = generateBidTable(trading_data.depth.buy);
+                        const tableOffer = generateOfferTable(trading_data.depth.sell);
+                        const spot_data_order = generateSpotData(trading_data);
+
+                        // Append the table to the elements with the corresponding classes
+       
+                        $(".indepth_details").eq(i).append(table);
+                        $(".indepth_details_offer").eq(i).append(tableOffer);
+                        $(".main_spot_order").eq(i).append(spot_data_order);
                       }
 
 
 
-                      $(".margin_needed").val(total_sum.toFixed(2));
-                      $(".symbol_name_order p").text(symbolSpot);
-                      $(".strike_price_order p").text(niftyLtp);
-                      $(".change_per_order p")
-                        .text(formattedPercentageChange)
-                        .addClass(precent_color);
-
-                      // Use these values as needed in your JavaScript code
-                      console.log("Symbol Spot:", symbolSpot);
-                      console.log("Nifty LTP:", niftyLtp);
-                      console.log("Percentage Change:", percentageChange);
-                      console.log("Profile:", profile);
-                      console.log("User ID:", userId);
                     }
 
-                    console.log(response.result_data.ohlc_market_indepth);
+                  } else if (response.broker_name === "angelone") {
 
-                    // Assuming response is an array of objects
-                    // Assuming 'response' is the JSON response from your server
-                    for (let i = 0; i < response.result_data.ohlc_market_indepth.length; i++) {
-                      // const trading_data = response.result_data.ohlc_market_indepth[i];
-                      // const trading_symbol = trading_data.instrument_token; // Assuming instrument_token is the trading symbol
-                      const trading_symbol = Object.keys(response.result_data.ohlc_market_indepth[i])[0];
-                      const trading_data = response.result_data.ohlc_market_indepth[i][trading_symbol];
-                      console.log(trading_symbol);
-                      console.log(trading_data);
+                    console.log(response);
+                    console.log(response.market_data.data.fetched);
+
+                    $(".broker_icon").empty().append(`  <img src="https://d2u8j8b25aupc8.cloudfront.net/assets/icons/logo.svg" alt="AngelOne Logo" class="h-5 w-5 mr-3">`)
+
+
+
+
+// Assuming response.market_data.data.fetched is an array of objects with a 'tradingSymbol' property
+
+// Custom sorting function
+function customSort(a, b) {
+    // Extract the numerical part from the tradingSymbol and convert to integers
+    const numA = parseInt(a.tradingSymbol.slice(12, 18), 10); // Assuming the numerical part is from index 13 to 17
+    const numB = parseInt(b.tradingSymbol.slice(12, 18), 10);
+
+    
+    console.log(numA);
+    console.log(numB);
+    // Extract the suffix (CE or PE) from the tradingSymbol
+    const suffixA = a.tradingSymbol.slice(-2);
+    const suffixB = b.tradingSymbol.slice(-2);
+
+    // Compare based on the numerical part in descending order
+    return numB - numA || a.tradingSymbol.localeCompare(b.tradingSymbol) || suffixA.localeCompare(suffixB);
+}
+
+// Sorting the market data array using the custom sorting function
+response.market_data.data.fetched.sort(customSort);
+// Display the sorted market data
+for (let i = 0; i < response.market_data.data.fetched.length; i++) {
+    // Log the current value at index i
+    console.log(response.market_data.data.fetched[i].tradingSymbol);
+}
+
+
+                    // Assuming response is the variable containing your data
+                    for (let i = 0; i < response.market_data.data.fetched.length; i++) {
+                      // Log the current value at index i
+                      console.log(response.market_data.data.fetched[i].depth);
+
+                      var marketData = response.market_data.data.fetched[i]
+
+                      console.log(marketData.close);
+
+
+                      //     let gatheredValues = {
+                      //     'last_price': marketData.ltp,
+                      //     'open': marketData.open,
+                      //     'high': marketData.high,
+                      //     'low': marketData.low,
+                      //     'Close': marketData.close,
+                      //     'volume': marketData.tradeVolume,
+                      //     'last_quantity': marketData.lastTradeQty,
+                      //     'average_price': marketData.avgPrice,
+                      //     'LTT': marketData.exchTradeTime,
+                      //     'oi': marketData.opnInterest
+                      // };
+
+                      const {
+                        ltp: last_price,
+                        open: open,
+                        high: high,
+                        low: low,
+                        close: Close,
+                        tradeVolume: volume,
+                        lastTradeQty: last_quantity,
+                        avgPrice: average_price,
+                        exchTradeTime: LTT,
+                        opnInterest: oi
+                      } = marketData;
+
+                      const gatheredValues = {
+                        last_price,
+                        ohlc: { open, high, low, close: Close },
+                        volume,
+                        last_quantity,
+                        average_price,
+                        timestamp: LTT,
+                        oi
+                      };
+
+
+
 
 
 
@@ -6480,9 +6611,11 @@
                       $(".indepth_details_offer").eq(i).empty();
                       $(".main_spot_order").eq(i).empty();
 
-                      const table = generateBidTable(trading_data.depth.buy);
-                      const tableOffer = generateOfferTable(trading_data.depth.sell);
-                      const spot_data_order = generateSpotData(trading_data);
+                      const table = generateBidTable(response.market_data.data.fetched[i].depth.buy);
+                      const tableOffer = generateOfferTable(response.market_data.data.fetched[i].depth.sell);
+                      const spot_data_order = generateSpotData(gatheredValues);
+
+                      $(".main_trading_symbol").eq(i).append(response.market_data.data.fetched[i].tradingSymbol);
 
                       // Append the table to the elements with the corresponding classes
                       $(".indepth_details").eq(i).append(table);
@@ -6492,7 +6625,16 @@
 
 
 
+                    $(".names_user_details h5").text(response.all_profile.data.name);
+                    $(".names_user_details p").text(`Client ID:${response.all_profile.data.clientcode}`);
+
+                    $(".margin_available").val(response.margin_info.data.availablecash);
+
+
                   }
+
+
+
 
                   else if (response.status === "error") {
 
@@ -6716,6 +6858,8 @@
     }
 
     function generateSpotData(trading_data) {
+
+      console.log(trading_data);
       // Extract the data for the first instrument
       const firstInstrument = trading_data;
       const {
@@ -6727,6 +6871,12 @@
         timestamp,
         oi,
       } = firstInstrument;
+
+
+
+
+
+
 
       // Convert the timestamp to a more readable format
       const ltt = new Date(timestamp).toLocaleString();
@@ -6797,8 +6947,12 @@
         var order_level = $(this);
         var sell_buy_indicator = order_level.find(".sell_buy_indicator").text();
         var tradingsymbol = order_level.find(".tradingsymbol").text();
+        var main_trading_symbol = order_level.find(".main_trading_symbol").text();
         var priceTrade = order_level.find(".priceTrade").val();
         var quantityTrade = order_level.find(".quantityTrade").val();
+        var strikePrice_order_window = order_level.find(".strikePrice_order_window").text();
+        console.log(strikePrice_order_window);
+
 
         // Check if the radio button is checked
         var isRadioChecked = $(
@@ -6811,12 +6965,16 @@
           orderNumber: OrderId++,
           sell_buy_indicator: sell_buy_indicator,
           tradingsymbol: tradingsymbol,
+          main_trading_symbol: main_trading_symbol,
+          strikePrice_order_window: strikePrice_order_window,
           Quantity: quantityTrade,
           price: priceTrade,
           isRadioChecked: isRadioChecked, // Add this property to the object
           mis_select: mis_select
         });
       });
+
+      console.log(All_positionTrade);
 
       // sendPosition_to_kite(All_positionTrade);
       $.ajax({
@@ -6825,8 +6983,10 @@
         data: JSON.stringify(All_positionTrade),
         contentType: "application/json",
         success: function (response) {
-          // Handle the response from the Django view if needed
+          // console.log(response);
 
+          if (response.broker==="zerodha") {
+            
           var order_status = $(".order_status p")
           var inner_order_modal = $(".inner_order_modal")
           console.log(response.order_details);
@@ -6852,6 +7012,32 @@
               }
             }
           });
+          }else if(response.broker==="angel_one"){
+            var order_status = $(".order_status p")
+          var inner_order_modal = $(".inner_order_modal")
+            response.order_details.forEach((order, index) => {
+
+              console.log(order);
+         
+
+
+            // Check if order_status_text is not an object
+            if (order.orderstatus=== "rejected") {
+              // Run this code block if it's not an object
+              inner_order_modal.eq(index).addClass("box_shadow_order_execution_error");
+                order_status.eq(index).text(order.text).addClass("order_error_text");
+              
+            } else {
+              // If it's an object, proceed with JSON parsing
+
+              inner_order_modal.eq(index).addClass("box_shadow_order_execution_success");
+              order_status.eq(index).text(`Order Placed Successfully : Order Id - ${order.orderid}`).addClass("order_success_text");
+              
+            }
+          });
+          }
+          // Handle the response from the Django view if needed
+
 
           // Check if there's a success message in the response
           // if (response.message) {
@@ -9060,18 +9246,7 @@
                 }
               }
 
-              $("#put_strikeSelect_strangle")
-                .find("option")
-                .each(function () {
-                  var optionValue = parseFloat($(this).val());
-                  var lastPrevValue = parseFloat(prev5[prev5.length - 1]);
-
-                  if (optionValue === lastPrevValue) {
-                    // console.log(optionValue, lastPrevValue);
-                    $(this).prop("selected", true);
-                  }
-                });
-
+ 
               // Calculate the next 5 strike prices
               var forw5 = [];
               for (
@@ -9096,6 +9271,19 @@
                     $(this).prop("selected", true);
                   }
                 });
+
+                $("#put_strikeSelect_strangle")
+                .find("option")
+                .each(function () {
+                  var optionValue = parseFloat($(this).val());
+                  var lastPrevValue = parseFloat(prev5[prev5.length - 1]);
+
+                  if (optionValue === lastPrevValue) {
+                    // console.log(optionValue, lastPrevValue);
+                    $(this).prop("selected", true);
+                  }
+                });
+
 
               var expiryDate_strangle = $("#expiryDate_strangle");
               var optionExpiryDropdown = $("#optionExpiryDropdown");
@@ -9146,20 +9334,7 @@
                 if (put_strikeSelect_strangle) {
                   // Find the closest row for lastIndexPrev and click on Auto_puts_short_click
 
-                  var closestRowPrev = optionChainTable
-                    .find(
-                      ".strike_price:contains(" +
-                      put_strikeSelect_strangle +
-                      ")"
-                    )
-                    .closest(".call_put_tr");
-                  if (closestRowPrev.length) {
-                    closestRowPrev
-                      .find("#Auto_puts_short_click")
-                      .data("HI1", "HI1There")
-                      .click();
-                  }
-
+     
                   // Find the closest row for lastIndexForw and click on Auto_calls_short_click
                   var closestRowForw = optionChainTable
                     .find(
@@ -9174,6 +9349,22 @@
                       .data("HI1", "HI1There")
                       .click();
                   }
+
+
+                  var closestRowPrev = optionChainTable
+                    .find(
+                      ".strike_price:contains(" +
+                      put_strikeSelect_strangle +
+                      ")"
+                    )
+                    .closest(".call_put_tr");
+                  if (closestRowPrev.length) {
+                    closestRowPrev
+                      .find("#Auto_puts_short_click")
+                      .data("HI1", "HI1There")
+                      .click();
+                  }
+
                   var counterInputValue = $("#counter_input_strangle").val();
                   $(".option_lot_size_input").val(counterInputValue);
                   $(".option_lot_size_input").text(counterInputValue);
@@ -9288,6 +9479,20 @@
                   $("#put_strikeSelect_spread").val()
                 ); // Convert to a number
 
+                var lastIndexForw = $("#call_strikeSelect_spread").val();
+
+
+                       // Find the closest row for lastIndexForw and click on Auto_calls_short_click
+                       var closestRowForw = optionChainTable
+                  .find(".strike_price:contains(" + lastIndexForw + ")")
+                  .closest(".call_put_tr");
+                if (closestRowForw.length) {
+                  closestRowForw
+                    .find("#Auto_calls_long_click")
+                    .data("HI1", "HI1There")
+                    .click();
+                }
+
                 strikePrices.forEach(function (rowStrikePrice) {
                   if (rowStrikePrice === put_strikeSelect_spread) {
                     // console.log(rowStrikePrice, put_strikeSelect_spread);
@@ -9309,7 +9514,6 @@
 
                 // Get the values of lastIndexPrev and lastIndexForw
 
-                var lastIndexForw = $("#call_strikeSelect_spread").val();
 
                 // Find the closest row for lastIndexPrev and click on Auto_puts_short_click
                 var closestRowPrev = optionChainTable
@@ -9322,17 +9526,7 @@
                     .click();
                 }
 
-                // Find the closest row for lastIndexForw and click on Auto_calls_short_click
-                var closestRowForw = optionChainTable
-                  .find(".strike_price:contains(" + lastIndexForw + ")")
-                  .closest(".call_put_tr");
-                if (closestRowForw.length) {
-                  closestRowForw
-                    .find("#Auto_calls_long_click")
-                    .data("HI1", "HI1There")
-                    .click();
-                }
-
+         
                 // Click on #calculate after a longer delay
                 var counterInputValue = $("#counter_input_spread").val();
                 $(".option_lot_size_input").text(counterInputValue);
@@ -9662,12 +9856,23 @@
                 $(".inner_p_l_greeks").show();
                 $(".main_position").empty();
 
-                var closestRowPrev = optionChainTable
-                  .find(".strike_price:contains(" + lastIndexPrev + ")")
+
+                var closestRowForw3 = optionChainTable
+                  .find(".strike_price:contains(" + lastIndexForw3 + ")")
                   .closest(".call_put_tr");
-                if (closestRowPrev.length) {
-                  closestRowPrev
-                    .find("#Auto_puts_long_click")
+                if (closestRowForw3.length) {
+                  closestRowForw3
+                    .find("#Auto_calls_long_click")
+                    .data("HI1", "HI1There")
+                    .click();
+                }
+
+                var closestRowPrev3 = optionChainTable
+                  .find(".strike_price:contains(" + lastIndexPrev3 + ")")
+                  .closest(".call_put_tr");
+                if (closestRowPrev3.length) {
+                  closestRowPrev3
+                    .find("#Auto_calls_short_click")
                     .data("HI1", "HI1There")
                     .click();
                 }
@@ -9681,26 +9886,22 @@
                     .data("HI1", "HI1There")
                     .click();
                 }
-                var closestRowPrev3 = optionChainTable
-                  .find(".strike_price:contains(" + lastIndexPrev3 + ")")
+
+
+                var closestRowPrev = optionChainTable
+                  .find(".strike_price:contains(" + lastIndexPrev + ")")
                   .closest(".call_put_tr");
-                if (closestRowPrev3.length) {
-                  closestRowPrev3
-                    .find("#Auto_calls_short_click")
-                    .data("HI1", "HI1There")
-                    .click();
-                }
-                // Find the closest row for lastIndexForw and click on Auto_calls_short_click
-                var closestRowForw3 = optionChainTable
-                  .find(".strike_price:contains(" + lastIndexForw3 + ")")
-                  .closest(".call_put_tr");
-                if (closestRowForw3.length) {
-                  closestRowForw3
-                    .find("#Auto_calls_long_click")
+                if (closestRowPrev.length) {
+                  closestRowPrev
+                    .find("#Auto_puts_long_click")
                     .data("HI1", "HI1There")
                     .click();
                 }
 
+      
+           
+                // Find the closest row for lastIndexForw and click on Auto_calls_short_click
+    
                 // Click on #calculate after a longer delay
                 var counterInputValue = $("#counter_input_ironCondor").val();
                 $(".option_lot_size_input").text(counterInputValue);
@@ -9840,6 +10041,17 @@
                 // Find the closest row for lastIndexPrev and click on Auto_puts_short_click
 
                 // Find the closest row for lastIndexForw and click on Auto_calls_short_click
+
+                
+                var closestRowForw = optionChainTable
+                  .find(".strike_price:contains(" + lastIndexForw + ")")
+                  .closest(".call_put_tr");
+                if (closestRowForw.length) {
+                  closestRowForw
+                    .find("#Auto_calls_long_click")
+                    .data("HI1", "HI2there")
+                    .click();
+                }
                 var closestRowForw2 = optionChainTable
                   .find(".strike_price:contains(" + lastIndexForw2 + ")")
                   .closest(".call_put_tr");
@@ -9850,15 +10062,6 @@
                     .click();
                 }
 
-                var closestRowForw = optionChainTable
-                  .find(".strike_price:contains(" + lastIndexForw + ")")
-                  .closest(".call_put_tr");
-                if (closestRowForw.length) {
-                  closestRowForw
-                    .find("#Auto_calls_long_click")
-                    .data("HI1", "HI2there")
-                    .click();
-                }
 
                 var closestRowPrev = optionChainTable
                   .find(".strike_price:contains(" + lastIndexPrev + ")")

@@ -442,8 +442,8 @@ urlpatterns = [
 
 
     path('content_management', views.content_management, name='content_management'),
-#     path('contents_data', views.contents_data, name='contents_data'),
-#     path('get_content_data', views.get_content_data, name='get_content_data'),
+    path('contents_data', views.contents_data, name='contents_data'),
+    path('get_content_data', views.get_content_data, name='get_content_data'),
 
 
 

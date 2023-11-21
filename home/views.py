@@ -7092,8 +7092,15 @@ def get_enctoken_internal(zerodha_username, zerodha_password, totp_secret):
 
 
 
-
 from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.decorators import login_required
+from django.utils import timezone
+import json
+
+# Assuming you have these imports for the functions used in your code
+
+
 
 @csrf_exempt
 @login_required
@@ -7101,58 +7108,16 @@ def add_broker_api_main(request):
     if request.method == 'POST':
         data = json.loads(request.body)
         user = request.user
-
-        logging_id = data.get('logging_id')
-
-        # Check if logging_id already exists
-        if Broker.objects.filter(user=user, logging_id=logging_id).exists():
-            return JsonResponse({"message": "You have been already logged in with this login ID !!"}, status=400)
-
-        broker_name = data.get('broker_name')
         trading_platform = data.get('trading_platform')
-        password = data.get('password')
-        totp_key = data.get('totp_key')
-        fa_pin = data.get('fa_pin', '')
-        phone_number = data.get('phone_number', '')
-        api_key = data.get('api_key', '')
-        api_secret = data.get('api_secret', '')
-        app_name = data.get('app_name')
 
         if trading_platform == 'zerodha_kite':
-            enctoken = get_enctoken_internal(logging_id, password, totp_key)
-            print(enctoken)
-            
-            if enctoken:
-                zerodha_api = GetEncToken(enctoken)
+            return add_zerodha_broker(request, data)
+        elif trading_platform == 'smart_api':
+            return add_angel_one_broker(request, data)
+        else:
+            # Handle other trading platforms or return an error response
+            return JsonResponse({"message": "Unsupported trading platform"}, status=400)
 
-                user_profile = zerodha_api.get_user_profile()
-                
-                if user_profile:
-                    print(f"User Profile: {user_profile}")
-
-                    # Save enctoken to the Broker model
-                    broker = Broker.objects.create(
-                        user=user,
-                        broker_name=broker_name,
-                        trading_platform=trading_platform,
-                        logging_id=logging_id,
-                        password=password,
-                        totp_key=totp_key,
-                        fa_pin=fa_pin,
-                        phone_number=phone_number,
-                        api_key=api_key,
-                        api_secret=api_secret,
-                        app_name=app_name,
-                        enctoken=enctoken,
-                        added_at=timezone.now(),
-                        updated_at=timezone.now()
-                    )
-
-                    return JsonResponse({"message": "Broker added successfully"})
-                else:
-                    return JsonResponse({"message": "Invalid API credentials"}, status=400)
-
-      
     elif request.method == 'GET':
         # Retrieve all brokers for the current user
         user = request.user
@@ -7166,6 +7131,142 @@ def add_broker_api_main(request):
         
     else:
         return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
+
+
+from SmartApi import SmartConnect #or from SmartApi.smartConnect import SmartConnect
+import pyotp
+
+
+
+
+
+def add_angel_one_broker(request, data):
+    # Handle the logic for 'smart_api' trading platform
+    print("Handling 'smart_api' broker addition:")
+    
+    # Print each data individually
+    print("Broker Name:", data.get('broker_name'))
+    print("Trading Platform:", data.get('trading_platform'))
+    print("Logging ID:", data.get('logging_id'))
+    print("Password:", data.get('password'))
+    print("TOTP Key:", data.get('totp_key'))
+    print("API Key:", data.get('api_key'))
+    print("App Name:", data.get('app_name'))
+
+    try:
+        trading_plateform =data.get('trading_platform')
+        broker_name = data.get('broker_name')
+  
+    
+        fa_pin = data.get('fa_pin', '')
+        phone_number = data.get('phone_number', '')
+
+        api_secret = data.get('api_secret', '')
+        app_name = data.get('app_name')
+        api_key = data.get('api_key')
+        clientId = data.get('logging_id')
+        pwd = data.get('password')
+        smartApi = SmartConnect(api_key)
+        token = data.get('totp_key')
+        totp = pyotp.TOTP(token).now()
+        
+        data = smartApi.generateSession(clientId, pwd, totp)
+        authToken = data['data']['jwtToken']
+        refreshToken = data['data']['refreshToken']
+
+        # fetch the feedtoken
+        feedToken = smartApi.getfeedToken()
+
+        print("Feed Token:", feedToken)
+
+        # Check if getting the profile is successful
+        profile_data = smartApi.getProfile(feedToken)
+
+        if profile_data :
+            # Extract relevant data from the profile_data
+            print(profile_data)
+            
+
+
+
+            if Broker.objects.filter(user=request.user, logging_id=clientId).exists():
+              return JsonResponse({"message": "You have already logged in with this login ID !!"}, status=400)
+
+            # Save the data to the Broker model
+            broker = Broker.objects.create(
+                user=request.user,
+                broker_name=broker_name,
+                trading_platform=trading_plateform,
+                logging_id=clientId,
+                password=pwd,
+                totp_key=token,
+                fa_pin=fa_pin,
+                phone_number=phone_number,
+                api_key=api_key,
+                api_secret=api_secret,
+                app_name=app_name,
+                enctoken=feedToken,  # You may need to generate enctoken or adjust this field based on your requirements
+                added_at=timezone.now(),
+                updated_at=timezone.now()
+            )
+
+            return JsonResponse({"message": "'smart_api' broker added successfully"})
+    except Exception as e:
+        print("Error adding 'smart_api' broker:", str(e))
+        return JsonResponse({"message": "Your API details are incorrect or an error occurred"}, status=400)
+
+
+
+def add_zerodha_broker(request, data):
+    user = request.user
+    logging_id = data.get('logging_id')
+
+    # Check if logging_id already exists
+    if Broker.objects.filter(user=user, logging_id=logging_id).exists():
+        return JsonResponse({"message": "You have already logged in with this login ID !!"}, status=400)
+
+    broker_name = data.get('broker_name')
+    password = data.get('password')
+    totp_key = data.get('totp_key')
+    fa_pin = data.get('fa_pin', '')
+    phone_number = data.get('phone_number', '')
+    api_key = data.get('api_key', '')
+    api_secret = data.get('api_secret', '')
+    app_name = data.get('app_name')
+
+    enctoken = get_enctoken_internal(logging_id, password, totp_key)
+    
+    if enctoken:
+        zerodha_api = GetEncToken(enctoken)
+        user_profile = zerodha_api.get_user_profile()
+        
+        if user_profile:
+            print(f"User Profile: {user_profile}")
+
+            # Save enctoken to the Broker model
+            broker = Broker.objects.create(
+                user=user,
+                broker_name=broker_name,
+                trading_platform='zerodha_kite',
+                logging_id=logging_id,
+                password=password,
+                totp_key=totp_key,
+                fa_pin=fa_pin,
+                phone_number=phone_number,
+                api_key=api_key,
+                api_secret=api_secret,
+                app_name=app_name,
+                enctoken=enctoken,
+                added_at=timezone.now(),
+                updated_at=timezone.now()
+            )
+
+            return JsonResponse({"message": "Broker added successfully"})
+        else:
+            return JsonResponse({"message": "Invalid API credentials"}, status=400)
+    else:
+        return JsonResponse({"message": "Failed to generate enctoken"}, status=400)
+
 
 class GetEncToken:
     def __init__(self, enctoken):
@@ -7369,10 +7470,11 @@ def kite_order_zerodha(request):
     user = request.user
     # broker_instance = Broker.objects.first()  # Assuming you have a Broker model defined
     broker_instance = Broker.objects.filter(user=user, broker_name="zerodha", active_api=True).first()
+    broker_instance_angelone = Broker.objects.filter(user=user, broker_name="angelone", active_api=True).first()
 
     if request.method == 'POST':
         data_trade = json.loads(request.body)
-        print("data_trade", data_trade)
+        # print("data_trade", data_trade)
 
         if broker_instance:
             logging_id = broker_instance.logging_id
@@ -7450,12 +7552,29 @@ def kite_order_zerodha(request):
 
                     # Continue with your logic here, e.g., handling the order response
 
-                return JsonResponse({'status': 'success', 'message': 'Orders placed successfully', 'order_details': order_details})
+                return JsonResponse({'status': 'success','broker':'zerodha', 'message': 'Orders placed successfully', 'order_details': order_details})
 
 
             else:
                 print("Login failed.")
                 return HttpResponse("Login failed.")
+        elif broker_instance_angelone:
+            df = pd.read_csv('data.csv')
+
+            # angel_one=angel_one_order_place(broker_instance_angelone,data_trade)
+            response_data = angel_one_order_place(
+                    data_trade=data_trade,
+                    logging_id=broker_instance_angelone.logging_id,
+                    password=broker_instance_angelone.password,
+                    totp_key=broker_instance_angelone.totp_key,
+                    api_key=broker_instance_angelone.api_key,
+                     df=df  # Use the loaded DataFrame
+                )
+            print("angel_one")
+            print(response_data)
+
+            
+            return JsonResponse({'status': 'success','broker':'angel_one', 'message': 'Orders placed successfully', 'order_details': response_data})
 
         else:
             print("No Broker instance found.")
@@ -7464,60 +7583,309 @@ def kite_order_zerodha(request):
     else:
         print("Invalid request method.")
         return HttpResponse("Invalid request method.")
+    
+
+
+
+
+    
+    
+def angel_one_order_place(data_trade, logging_id, password, totp_key, api_key,df):
+    print(data_trade)
+    
+    # Initialize SmartConnect with API key
+    smart_api = SmartConnect(api_key)
+
+    # Generate TOTP token
+    token = pyotp.TOTP(totp_key).now()
+
+    # Login API call
+    data = smart_api.generateSession(logging_id, password, token)
+
+    # Extract authentication tokens
+    authToken = data['data']['jwtToken']
+    refreshToken = data['data']['refreshToken']
+
+    # Fetch the feed token
+    feedToken = smart_api.getfeedToken()
+
+    # Get profile information
+    all_profile = smart_api.getProfile(feedToken)
+
+    if all_profile:
+        print("pass")
+
+        # Loop through data_trade and set order_params
+        All_angel_one_order = []
+
+        for order_data in data_trade:
+            tradingsymbol = order_data['main_trading_symbol']
+
+            # Get the symboltoken dynamically based on tradingsymbol
+            filtered_df = df[df['symbol'] == tradingsymbol]
+            token_values = filtered_df['token'].tolist()
+            symboltoken = token_values[0] if token_values else None
+
+            if symboltoken is not None:
+                print(symboltoken)
+
+                try:
+                        product_type = "CARRYFORWARD" if order_data['mis_select'].lower() == "overnight" else order_data['mis_select'].upper()
+
+                        orderparams = {
+                            "variety": "NORMAL",
+                            "tradingsymbol": order_data['main_trading_symbol'],
+                            "symboltoken": symboltoken,
+                            "transactiontype": order_data['sell_buy_indicator'],
+                            "exchange": "NFO",
+                            "ordertype": order_data['isRadioChecked'].upper(),
+                            "producttype": product_type,
+                            "duration": "DAY",
+                            "price":  order_data['price'],
+                       
+                            "squareoff": "0",
+                            "stoploss": "0",
+                            "quantity": order_data['Quantity']
+                            }
+                        print(orderparams)
+                        orderId=smart_api.placeOrder(orderparams)
+                        print(orderId)
+            
+                        OrderBook = smart_api.orderBook()['data']
+                        # print(OrderBook)
+                        for i in OrderBook:
+                            if i['orderid'] == orderId:
+                                print(i['orderid'], i['text'])
+                                All_angel_one_order.append(i)
+
+                # Example order placement code
+                except Exception as e:
+                   print("Order placement failed: {}".format(e.message))
+                # ...
+
+            else:
+                print(f"Symboltoken not found for {tradingsymbol}")
+        
+        # ... (rest of the code remains unchanged)
+        return All_angel_one_order  
+    else:
+        print("Profile data is empty or not available.")
+
+
+
+
+
+
+
 
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
 
-@csrf_exempt  # Use only for demonstration. Consider using CSRF protection in production.
+@csrf_exempt
 def quote_data_from_broker(request):
-    user = request.user  # Assuming the user is authenticated
+    user = request.user
 
-    # Check if the user is authenticated
     if not user.is_authenticated:
-        return JsonResponse({'status': 'user_not_unthenticated', 'message': 'User not authenticated'})
+        return JsonResponse({'status': 'user_not_authenticated', 'message': 'User not authenticated'})
 
-    # Retrieve the Broker instance for the user with broker_name "zerodha" and active_api set to True
-    broker_instance = Broker.objects.filter(user=user, broker_name="zerodha", active_api=True).first()
-
-    if broker_instance is None:
-        return JsonResponse({'status': 'error', 'message': 'No active API for the user'})
+    # Assuming you have a Broker model defined somewhere in your code
+    broker_instance_zerodha = Broker.objects.filter(user=user, broker_name="zerodha", active_api=True).first()
+    broker_instance_angelone = Broker.objects.filter(user=user, broker_name="angelone", active_api=True).first()
 
     if request.method == 'POST':
         data = json.loads(request.body)
-        logging_id = broker_instance.logging_id
-        password = broker_instance.password
-        totp_key = broker_instance.totp_key
-        enctoken = get_enctoken_internal(logging_id, password, totp_key)
 
-        trading_quotes = data.get('trading_quote')
+        if broker_instance_zerodha:
+            enctoken = get_enctoken_internal(
+                broker_instance_zerodha.logging_id,
+                broker_instance_zerodha.password,
+                broker_instance_zerodha.totp_key
+            )
 
-        # Modify the trading_quotes as per your requirements
-        for quote in trading_quotes:
-            quote['combinedString'] = f'NFO:{quote["combinedString"]}'
-
-        result_data = {'trading_quotes': trading_quotes, 'ohlc_market_indepth': []}
-
-        if enctoken:
-            zerodha_api = ZerodhaPlaceOrder(enctoken)
-            all_profile = zerodha_api.get_user_profile()
-            margin_info = zerodha_api.margins()
-            print(zerodha_api.margins())
-            print(all_profile)
+            trading_quotes = data.get('trading_quote')
+            # print("trading_quotes",trading_quotes)
 
             for quote in trading_quotes:
-                ohlc_market_indepth = zerodha_api.quote(quote["combinedString"])
-                result_data['ohlc_market_indepth'].append(ohlc_market_indepth)
+                quote['combinedString'] = f'NFO:{quote["combinedString"]}'
 
-        response_data = {'status': 'success', 'message': 'Data received successfully', 'result_data': result_data, 'all_profile': all_profile, "margin_info": margin_info}
-        return JsonResponse(response_data)
+            result_data = {'trading_quotes': trading_quotes, 'ohlc_market_indepth': []}
 
+            if enctoken:
+                zerodha_api = ZerodhaPlaceOrder(enctoken)
+                all_profile = zerodha_api.get_user_profile()
+                margin_info = zerodha_api.margins()
+
+                for quote in trading_quotes:
+                    ohlc_market_indepth = zerodha_api.quote(quote["combinedString"])
+                    result_data['ohlc_market_indepth'].append(ohlc_market_indepth)
+
+                response_data = {'status': 'success', 'message': 'Data received successfully',"broker_name":"zerodha",
+                                 'result_data': result_data, 'all_profile': all_profile, "margin_info": margin_info}
+                return JsonResponse(response_data)
+            else:
+                return JsonResponse({'status': 'error', 'message': 'Failed to get enctoken'})
+        elif broker_instance_angelone:
+                data = json.loads(request.body)
+                trading_quotes = data.get('trading_quote')
+                response_data = get_angel_one_quote(
+                    trading_quotes=trading_quotes,
+                    logging_id=broker_instance_angelone.logging_id,
+                    password=broker_instance_angelone.password,
+                    totp_key=broker_instance_angelone.totp_key,
+                    api_key=broker_instance_angelone.api_key
+                )
+                return JsonResponse(response_data)
+            
+           
+
+      
+        else:
+            return JsonResponse({'status': 'error', 'message': 'No active API for the user'})
     else:
         return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
 
 
 
+import pyotp
+import requests
+import pandas as pd
 
+
+def get_angel_one_quote(trading_quotes, logging_id, password, totp_key, api_key):
+    # Add code specific to Angel One broker here
+    print("trading_quotes", logging_id)
+    modified_strikes = []
+
+    for entry in trading_quotes:
+        symbol = entry['symbol']
+        expiry = entry['expiry'][0:2] + entry['expiry'][2:6] + entry['expiry'][8:9]  # rearrange date format
+        strike_price = entry['strikePrice']
+        call_put_entrance = entry['callPutEntrance']
+
+        # Create the modified strike format
+        modified_strike = f"{symbol}{expiry}{strike_price}{call_put_entrance}"
+        
+        # Append the modified strike to the new list
+        modified_strikes.append(modified_strike)
+
+    # Print the modified strikes
+    print(modified_strikes)
+
+    api_key = api_key
+    client_id = logging_id
+    pwd = password
+    smart_api = SmartConnect(api_key)
+    token = totp_key
+    totp = pyotp.TOTP(token).now()
+
+    # Login API call
+    data = smart_api.generateSession(client_id, pwd, totp)
+    authToken = data['data']['jwtToken']
+    refreshToken = data['data']['refreshToken']
+
+    # Fetch the feed token
+    feedToken = smart_api.getfeedToken()
+    print(feedToken)
+    print(smart_api.getProfile(feedToken))
+    all_profile = smart_api.getProfile(feedToken)
+    margin_info = smart_api.rmsLimit()
+    print(margin_info)
+    
+
+    # Fetch data from Angel One Margin Calculator API
+
+    # Check if the CSV file exists
+    if os.path.exists('data.csv'):
+        # Load data from CSV file
+        df = pd.read_csv('data.csv')
+
+        token_list = []  # Create a new list to store 'token' values
+
+        # Loop through modified_strikes and fetch data
+        for symbol_filter in modified_strikes:
+            filtered_df = df[df['symbol'] == symbol_filter]
+
+            # Extract 'token' values and append to the new list
+            token_values = filtered_df['token'].tolist()
+            token_list.extend(token_values)
+
+            print(filtered_df)
+
+        print("All Token Values:", token_list)
+
+        # Loop through token_list and create exchangeTokens dictionary
+        exchange_tokens_dict = {}
+        for token_value in token_list:
+            exchange = "NFO"  # Assuming the exchange is NFO for all tokens, adjust if needed
+            if exchange not in exchange_tokens_dict:
+                exchange_tokens_dict[exchange] = []
+            exchange_tokens_dict[exchange].append(str(token_value))
+
+        # Print the created exchangeTokens dictionary
+        print("exchangeTokens:", exchange_tokens_dict)
+
+        # Fetch market data using the created exchangeTokens dictionary
+        mode = "FULL"
+        market_data = smart_api.getMarketData(mode, exchange_tokens_dict)
+
+        # Print the market data
+        print("Market Data:", market_data)
+
+    else:
+        # Fetch data from the API if the CSV file doesn't exist
+        url = "https://margincalculator.angelbroking.com/OpenAPI_File/files/OpenAPIScripMaster.json"
+        response = requests.get(url)
+
+        # Check if the request was successful (status code 200)
+        if response.status_code == 200:
+            # Parse the JSON data
+            data = response.json()
+
+            # Convert the JSON data to a Pandas DataFrame
+            df = pd.DataFrame(data)
+
+            # Save the DataFrame to the CSV file
+            df.to_csv('data.csv', index=False)
+
+            token_list = []  # Create a new list to store 'token' values
+
+            # Loop through modified_strikes and fetch data
+            for symbol_filter in modified_strikes:
+                filtered_df = df[df['symbol'] == symbol_filter]
+
+                # Extract 'token' values and append to the new list
+                token_values = filtered_df['token'].tolist()
+                token_list.extend(token_values)
+
+                print(filtered_df)
+
+            print("All Token Values:", token_list)
+
+            # Loop through token_list and create exchangeTokens dictionary
+            exchange_tokens_dict = {}
+            for token_value in token_list:
+                exchange = "NFO"  # Assuming the exchange is NFO for all tokens, adjust if needed
+                if exchange not in exchange_tokens_dict:
+                    exchange_tokens_dict[exchange] = []
+                exchange_tokens_dict[exchange].append(str(token_value))
+
+            # Print the created exchangeTokens dictionary
+            print("exchangeTokens:", exchange_tokens_dict)
+
+            # Fetch market data using the created exchangeTokens dictionary
+            mode = "FULL"
+            market_data = smart_api.getMarketData(mode, exchange_tokens_dict)
+
+            # Print the market data
+            print("Market Data:", market_data)
+# Other parts of your script...
+
+
+
+    result_data = {'status': 'success', 'message': 'Data received successfully for Angel One broker',"market_data":market_data,
+                   "margin_info": margin_info, "broker_name": "angelone", 'all_profile': all_profile}
+    return result_data
 
 
 from django.shortcuts import get_object_or_404
@@ -7579,3 +7947,46 @@ def delete_broker(request):
 
 
 
+
+
+
+
+
+
+
+
+
+def content_managemnt(request):
+    return render(request, "content_management.html")
+
+
+from .models import PopupContent
+
+@csrf_exempt
+def contents_data(request):
+    if request.method == "POST":
+     title = request.POST.get("title")
+     description = request.POST.get("description")
+     image = request.FILES.get("image")
+     if title:
+            if image:
+                new_data = PopupContent(title=title, content=description, image=image)
+                new_data.save()
+                return JsonResponse({"message": "Success"})
+            else:
+                return JsonResponse({"error": "Image file is required."}, status=400)
+    else:
+        return JsonResponse({"error": "Title is required."}, status=400)
+    
+    return JsonResponse({"error": "Invalid request method."}, status=405)
+
+def get_content_data(request):
+    latest_item = PopupContent.objects.latest('created_at')
+
+    content_data = {
+        'title': latest_item.title,
+        'description': latest_item.content,
+        'image': latest_item.image.url  # Assuming 'image' is an ImageField in your model
+    }
+    print(content_data)
+    return JsonResponse({'contentData':content_data})
