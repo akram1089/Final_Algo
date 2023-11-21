@@ -1198,6 +1198,8 @@ to {
         
         
         </div> -->
+
+
         
         </div>        
             
@@ -4280,8 +4282,46 @@ font-weight: 100;
 
 
 
+ <style>
+  .overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7); /* Semi-transparent black overlay */
+      justify-content: center;
+      align-items: center;
+    }
+
+    .content_body {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: white; /* Add your desired background color */
+      padding: 20px; /* Add your desired padding */
+      z-index: 99999999999999999;
+    }
+</style>
+<div class="overlay" id="overlay"></div>
+ <div class="content_body text-center" style="z-index: 99999999999999999;">
+  <i class="bi bi-x" style="font-size: 30px !important; color:white; position: absolute; right: -8px; top: -14px; background:black; width:30px; height:30px; border-radius:50%;" id="close_btn"></i>
+ </div>
+
+
+
   </div>
   </div>
+
+
+
+
+  
+  
+  
       <!-- Footer start -->
       <footer class="footer" >
         <div class="container p-5">
@@ -4386,9 +4426,98 @@ font-weight: 100;
           </div>
         </div>
         <div class="text-right">
+
+
+
           <script>
 
+   
             $(document).ready(function() {
+
+
+
+              console.log('Hii there');
+      
+         
+
+              function showContentModal() {
+                // Check if enough time has passed since the last close
+                if (!hasEnoughTimePassed()) {
+                    return;
+                }
+
+                $(".content_body").show()
+                $(".overlay").show()
+
+                $.ajax({
+                    type: "get",
+                    url: "/get_content_data",
+                    dataType: "json",
+                    success: function (data) {
+                        console.log(data.contentData)
+                        var contentCard = `<div class="row mt-4">
+                                            <div class="col-12">
+                                                <img src="${data.contentData.image}" class="card-img img-fluid" alt="..." style="height:500px; width:100%;">
+                                            </div>
+                                        </div>`
+                        $(".content_body").append(contentCard);
+                    }
+                })
+            }
+
+            setTimeout(showContentModal, 3000);
+
+            $("#close_btn").click(function () {
+                closePopup()
+            });
+
+            function closePopup() {
+                $(".content_body").hide()
+                $(".overlay").hide()
+
+                // Set a cookie to store the timestamp of the last close
+                setLastCloseTimestamp();
+            }
+
+            // Function to check if enough time has passed since the last close
+            function hasEnoughTimePassed() {
+                var lastCloseTimestamp = getLastCloseTimestamp();
+                var currentTime = new Date().getTime();
+                var timePassed = currentTime - lastCloseTimestamp;
+
+                // Time threshold (24 hours)
+                var timeThreshold = 24 * 60 * 60 * 1000;
+
+                console.log(lastCloseTimestamp)
+
+                
+
+                return timePassed >= timeThreshold;
+            }
+
+            // Function to get the timestamp of the last close from the cookie
+            function getLastCloseTimestamp() {
+                var lastCloseTimestamp = getCookie("lastCloseTimestamp");
+     
+                return lastCloseTimestamp ? parseInt(lastCloseTimestamp) : 0;
+            }
+
+            // Function to set the timestamp of the last close in the cookie
+            function setLastCloseTimestamp() {
+                var currentTime = new Date().getTime();
+                document.cookie = `lastCloseTimestamp=${currentTime}; expires=${new Date(currentTime + 24 * 60 * 60 * 1000).toUTCString()}; path=/`;
+            }
+
+            // Function to get a cookie value by name
+            function getCookie(name) {
+                var match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+                return match ? match[2] : null;
+            }
+
+
+
+
+
               $('.subscribe_input').focus(function () {
                 $('#subscribe_main').addClass("border_change");
             });

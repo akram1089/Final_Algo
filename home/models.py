@@ -283,5 +283,12 @@ class Broker(models.Model):
 
 
 
+class PopupContent(models.Model):
+    title = models.CharField(max_length=100)
+    content = models.TextField()
+    image = models.ImageField(upload_to='popup_images/', blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    active = models.BooleanField(default=True)
 
-
+    def __str__(self):
+            return self.title
