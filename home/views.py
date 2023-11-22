@@ -7629,38 +7629,36 @@ def angel_one_order_place(data_trade, logging_id, password, totp_key, api_key,df
             if symboltoken is not None:
                 print(symboltoken)
 
-                try:
-                        product_type = "CARRYFORWARD" if order_data['mis_select'].lower() == "overnight" else order_data['mis_select'].upper()
 
-                        orderparams = {
-                            "variety": "NORMAL",
-                            "tradingsymbol": order_data['main_trading_symbol'],
-                            "symboltoken": symboltoken,
-                            "transactiontype": order_data['sell_buy_indicator'],
-                            "exchange": "NFO",
-                            "ordertype": order_data['isRadioChecked'].upper(),
-                            "producttype": product_type,
-                            "duration": "DAY",
-                            "price":  order_data['price'],
-                       
-                            "squareoff": "0",
-                            "stoploss": "0",
-                            "quantity": order_data['Quantity']
-                            }
-                        print(orderparams)
-                        orderId=smart_api.placeOrder(orderparams)
-                        print(orderId)
-            
-                        OrderBook = smart_api.orderBook()['data']
-                        # print(OrderBook)
-                        for i in OrderBook:
-                            if i['orderid'] == orderId:
-                                print(i['orderid'], i['text'])
-                                All_angel_one_order.append(i)
+                product_type = "CARRYFORWARD" if order_data['mis_select'].lower() == "overnight" else order_data['mis_select'].upper()
 
-                # Example order placement code
-                except Exception as e:
-                   print("Order placement failed: {}".format(e.message))
+                orderparams = {
+                    "variety": "NORMAL",
+                    "tradingsymbol": order_data['main_trading_symbol'],
+                    "symboltoken": symboltoken,
+                    "transactiontype": order_data['sell_buy_indicator'],
+                    "exchange": "NFO",
+                    "ordertype": order_data['isRadioChecked'].upper(),
+                    "producttype": product_type,
+                    "duration": "DAY",
+                    "price":  order_data['price'],
+                
+                    "squareoff": "0",
+                    "stoploss": "0",
+                    "quantity": order_data['Quantity']
+                    }
+                print(orderparams)
+                orderId=smart_api.placeOrder(orderparams)
+                print(orderId)
+    
+                OrderBook = smart_api.orderBook()['data']
+                # print(OrderBook)
+                for i in OrderBook:
+                    if i['orderid'] == orderId:
+                        print(i['orderid'], i['text'])
+                        All_angel_one_order.append(i)
+
+
                 # ...
 
             else:
