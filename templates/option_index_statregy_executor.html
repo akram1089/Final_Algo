@@ -6192,78 +6192,67 @@
       var trading_quote = [];
       var zerodha_trading_symbol = [];
       var zerodha_lotSize = []
+      var sortedOrderContent = []; // Array to store sorted order content
+
+
 
       $(".inner_position").each(function (index) {
-        // Get values from the current card
-        var card = $(this);
-        var symbol = card.find(".symbol").text();
-        var expiry = card.find(".expiry").text();
-        console.log(expiry);
-        var strikePrice = card.find(".strikePrice").text();
-        var callPutEntrance = card.find(".call_put_entrance").text();
-        var entryPrice = card.find(".entryPrice").text();
-        var exitPrice = card.find(".exit_price").text();
-        var currentPrice = card.find(".current_price").text();
-        var long_short_inner = card.find(".long_short_inner").text();
+    // Get values from the current card
+    var card = $(this);
+    var symbol = card.find(".symbol").text();
+    var expiry = card.find(".expiry").text();
+    var strikePrice = card.find(".strikePrice").text();
+    var callPutEntrance = card.find(".call_put_entrance").text();
+    var entryPrice = card.find(".entryPrice").text();
+    var long_short_inner = card.find(".long_short_inner").text();
+    var option_lot_size_input = card.find(".option_lot_size_input").text();
+    var lot_size_value = $("#lot_size_value").text();
 
+    var final_lot_size_along_with_qty = parseFloat(option_lot_size_input) * parseFloat(lot_size_value);
 
-        var option_lot_size_input = card.find(".option_lot_size_input").text();
-        var lot_size_value = $("#lot_size_value").text();
+    if (symbol === "NIFTY") {
+      zerodha_trading_symbol.push({
+        tradingsymbol: "NSE:NIFTY 50",
+      });
+    } else if (symbol === "BANKNIFTY") {
+      zerodha_trading_symbol.push({
+        tradingsymbol: "NSE:NIFTY BANK",
+      });
+    } else if (symbol === "FINNIFTY") {
+      zerodha_trading_symbol.push({
+        tradingsymbol: "NSE:NIFTY FIN SERVICE",
+      });
+    } else {
+      zerodha_trading_symbol.push({
+        tradingsymbol: `NSE:${symbol}`,
+      });
+    }
 
-        console.log('option_lot_size_input', option_lot_size_input);
-        console.log('lot_size_value', lot_size_value);
+    const dayPart = expiry.slice(0, 2);
+    const monthPart = expiry.slice(2, 5).charAt(0);
+    const yearPart = expiry.slice(7);
+    const combinedString = `${symbol}${yearPart}${monthPart}${dayPart}${strikePrice}${callPutEntrance}`;
+    trading_quote.push({
+  combinedString: combinedString,
+  symbol: symbol,
+  expiry: expiry,
+  strikePrice: parseFloat(strikePrice), // Parse strikePrice to float
+  callPutEntrance: callPutEntrance
+});
+    var sell_buy_indicator = long_short_inner === "-" ? "SELL" : "BUY";
 
-        var final_lot_size_along_with_qty = parseFloat(option_lot_size_input) * parseFloat(lot_size_value)
+    zerodha_lotSize.push({
+      combinedString,
+      final_lot_size_along_with_qty,
+      sell_buy_indicator,
+      entryPrice
+    });
 
-        console.log('final_lot_size_along_with_qty', final_lot_size_along_with_qty);
+    var buy_sale_bg = long_short_inner === "-" ? "sellTrade" : "buyTrade";
 
+    var orderContent = `
 
-        if (symbol === "NIFTY") {
-          zerodha_trading_symbol.push({
-            tradingsymbol: "NSE:NIFTY 50",
-          });
-        } else if (symbol === "BANKNIFTY") {
-          zerodha_trading_symbol.push({
-            tradingsymbol: "NSE:NIFTY BANK",
-          });
-        } else if (symbol === "FINNIFTY") {
-          zerodha_trading_symbol.push({
-            tradingsymbol: "NSE:NIFTY FIN SERVICE",
-          });
-        } else {
-          zerodha_trading_symbol.push({
-            tradingsymbol: `NSE:${symbol}`,
-          });
-        }
-        // Create the HTML content to append
-        const dayPart = expiry.slice(0, 2);
-        const monthPart = expiry.slice(2, 5).charAt(0); // Get the first letter of the month
-        const yearPart = expiry.slice(7);
-        const combinedString = `${symbol}${yearPart}${monthPart}${dayPart}${strikePrice}${callPutEntrance}`;
-        console.log(combinedString);
-        trading_quote.push({
-          combinedString: combinedString,
-          symbol: symbol,
-          expiry: expiry,
-          strikePrice: strikePrice,
-          callPutEntrance: callPutEntrance
-
-        });
-
-
-
-        var sell_buy_indicator = long_short_inner === "-" ? "SELL" : "BUY";
-
-        zerodha_lotSize.push({
-          combinedString,
-          final_lot_size_along_with_qty,
-          sell_buy_indicator,
-          entryPrice
-        })
-        var buy_sale_bg = long_short_inner === "-" ? "sellTrade" : "buyTrade";
-        var orderContent = `
-             
-            <div class="inner_order_modal mt-2" style="border-radius: 11px;"> 
+    <div class="inner_order_modal mt-2" style="border-radius: 11px;"> 
               <div class="order_status mb-2"> <p style="       text-wrap: pretty;
                      text-align: center;"></p></div>
                 <div class="main_symbol_sell_buy">
@@ -6326,15 +6315,30 @@
               
    
             </div>
-        `;
+    `;
 
-        // Append the content to the ".order_modal" element
-        $(".order_modal").append(orderContent);
-      });
+    // Add the orderContent to the sortedOrderContent array
+    sortedOrderContent.push({ strikePrice: parseFloat(strikePrice), content: orderContent });
+  });
+
+  // Sort the sortedOrderContent array based on strikePrice in descending order
+  sortedOrderContent.sort(function (a, b) {
+    return b.strikePrice - a.strikePrice;
+  });
+
+  // Iterate over the sortedOrderContent array and append the content to the ".order_modal" element
+  sortedOrderContent.forEach(function (sortedContent) {
+    $(".order_modal").append(sortedContent.content);
+  });
+
 
       console.log(trading_quote);
       console.log(zerodha_trading_symbol);
       console.log(zerodha_lotSize);
+      trading_quote.sort(function(a, b) {
+  return b.strikePrice - a.strikePrice;
+});
+
 
       send_quote_data(trading_quote, zerodha_trading_symbol[0], zerodha_lotSize);
       // if (intervalId === null) { // Start the interval only if it's not already running
@@ -6518,6 +6522,7 @@
                     }
 
                   } else if (response.broker_name === "angelone") {
+                    // $(".tradingsymbol").hide();
 
                     console.log(response);
                     console.log(response.market_data.data.fetched);
@@ -6548,7 +6553,7 @@ function customSort(a, b) {
 
 // Sorting the market data array using the custom sorting function
 response.market_data.data.fetched.sort(customSort);
-// Display the sorted market data
+// // Display the sorted market data
 for (let i = 0; i < response.market_data.data.fetched.length; i++) {
     // Log the current value at index i
     console.log(response.market_data.data.fetched[i].tradingSymbol);
@@ -6616,6 +6621,7 @@ for (let i = 0; i < response.market_data.data.fetched.length; i++) {
                       const spot_data_order = generateSpotData(gatheredValues);
 
                       $(".main_trading_symbol").eq(i).append(response.market_data.data.fetched[i].tradingSymbol);
+                  
 
                       // Append the table to the elements with the corresponding classes
                       $(".indepth_details").eq(i).append(table);
@@ -10275,36 +10281,27 @@ for (let i = 0; i < response.market_data.data.fetched.length; i++) {
                 var call_twelve_hundred_positive_strikeSelect_double_iron_fly = $("#call_twelve_hundred_positive_strikeSelect_double_iron_fly").val();
 
 
-                var closest_put_strike_eight_hundred_Select_double_iron_fly = optionChainTable
-                  .find(".strike_price:contains(" + put_strike_eight_hundred_Select_double_iron_fly + ")")
-                  .closest(".call_put_tr");
-                if (closest_put_strike_eight_hundred_Select_double_iron_fly.length) {
-                  closest_put_strike_eight_hundred_Select_double_iron_fly
-                    .find("#Auto_puts_long_click")
-                    .data("HI1", "HI1there")
-                    .click();
-                }
 
-                var closest_call_put_four_hundred_Select_double_iron_fly = optionChainTable
-                  .find(".strike_price:contains(" + call_put_four_hundred_Select_double_iron_fly + ")")
-                  .closest(".call_put_tr");
-                if (closest_call_put_four_hundred_Select_double_iron_fly.length) {
-                  closest_call_put_four_hundred_Select_double_iron_fly
-                    .find("#Auto_puts_short_click , #Auto_calls_short_click")
-                    .data("HI1", "HI2there")
-                    .click();
-                }
 
-                // Find the closest row for lastIndexPrev and click on Auto_puts_short_click
-
-                // Find the closest row for lastIndexForw and click on Auto_calls_short_click
-                var closest_call_spot_strikeSelect_double_iron_fly = optionChainTable
-                  .find(".strike_price:contains(" + call_spot_strikeSelect_double_iron_fly + ")")
+                
+                var closest_call_twelve_hundred_positive_strikeSelect_double_iron_fly = optionChainTable
+                  .find(".strike_price:contains(" + call_twelve_hundred_positive_strikeSelect_double_iron_fly + ")")
                   .closest(".call_put_tr");
-                if (closest_call_spot_strikeSelect_double_iron_fly.length) {
-                  closest_call_spot_strikeSelect_double_iron_fly
+                if (closest_call_twelve_hundred_positive_strikeSelect_double_iron_fly.length) {
+                  closest_call_twelve_hundred_positive_strikeSelect_double_iron_fly
                     .find("#Auto_calls_long_click")
-                    .data("HI1", "HI3There")
+                    .data("HI1", "HI6there")
+                    .click();
+                }
+
+
+                var closest_call_put_positive_eight_hundred_strikeSelect_double_iron_fly = optionChainTable
+                  .find(".strike_price:contains(" + call_put_positive_eight_hundred_strikeSelect_double_iron_fly + ")")
+                  .closest(".call_put_tr");
+                if (closest_call_put_positive_eight_hundred_strikeSelect_double_iron_fly.length) {
+                  closest_call_put_positive_eight_hundred_strikeSelect_double_iron_fly
+                    .find("#Auto_puts_short_click , #Auto_calls_short_click")
+                    .data("HI1", "HI5there")
                     .click();
                 }
 
@@ -10318,27 +10315,46 @@ for (let i = 0; i < response.market_data.data.fetched.length; i++) {
                     .click();
                 }
 
-                var closest_call_put_positive_eight_hundred_strikeSelect_double_iron_fly = optionChainTable
-                  .find(".strike_price:contains(" + call_put_positive_eight_hundred_strikeSelect_double_iron_fly + ")")
+      
+                                // Find the closest row for lastIndexForw and click on Auto_calls_short_click
+                                var closest_call_spot_strikeSelect_double_iron_fly = optionChainTable
+                  .find(".strike_price:contains(" + call_spot_strikeSelect_double_iron_fly + ")")
                   .closest(".call_put_tr");
-                if (closest_call_put_positive_eight_hundred_strikeSelect_double_iron_fly.length) {
-                  closest_call_put_positive_eight_hundred_strikeSelect_double_iron_fly
-                    .find("#Auto_puts_short_click , #Auto_calls_short_click")
-                    .data("HI1", "HI5there")
-                    .click();
-                }
-
-
-                var closest_call_twelve_hundred_positive_strikeSelect_double_iron_fly = optionChainTable
-                  .find(".strike_price:contains(" + call_twelve_hundred_positive_strikeSelect_double_iron_fly + ")")
-                  .closest(".call_put_tr");
-                if (closest_call_twelve_hundred_positive_strikeSelect_double_iron_fly.length) {
-                  closest_call_twelve_hundred_positive_strikeSelect_double_iron_fly
+                if (closest_call_spot_strikeSelect_double_iron_fly.length) {
+                  closest_call_spot_strikeSelect_double_iron_fly
                     .find("#Auto_calls_long_click")
-                    .data("HI1", "HI6there")
+                    .data("HI1", "HI3There")
                     .click();
                 }
 
+
+
+                var closest_call_put_four_hundred_Select_double_iron_fly = optionChainTable
+                  .find(".strike_price:contains(" + call_put_four_hundred_Select_double_iron_fly + ")")
+                  .closest(".call_put_tr");
+                if (closest_call_put_four_hundred_Select_double_iron_fly.length) {
+                  closest_call_put_four_hundred_Select_double_iron_fly
+                    .find("#Auto_puts_short_click , #Auto_calls_short_click")
+                    .data("HI1", "HI2there")
+                    .click();
+                }
+
+
+
+                var closest_put_strike_eight_hundred_Select_double_iron_fly = optionChainTable
+                  .find(".strike_price:contains(" + put_strike_eight_hundred_Select_double_iron_fly + ")")
+                  .closest(".call_put_tr");
+                if (closest_put_strike_eight_hundred_Select_double_iron_fly.length) {
+                  closest_put_strike_eight_hundred_Select_double_iron_fly
+                    .find("#Auto_puts_long_click")
+                    .data("HI1", "HI1there")
+                    .click();
+                }
+
+                // Find the closest row for lastIndexPrev and click on Auto_puts_short_click
+
+
+  
 
 
 
