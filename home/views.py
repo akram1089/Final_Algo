@@ -7562,6 +7562,7 @@ def kite_order_zerodha(request):
             df = pd.read_csv('data.csv')
 
             # angel_one=angel_one_order_place(broker_instance_angelone,data_trade)
+    
             response_data = angel_one_order_place(
                     data_trade=data_trade,
                     logging_id=broker_instance_angelone.logging_id,
@@ -7588,11 +7589,13 @@ def kite_order_zerodha(request):
 
 
 
+import time
     
-    
-def angel_one_order_place(data_trade, logging_id, password, totp_key, api_key,df):
+
+
+def angel_one_order_place(data_trade, logging_id, password, totp_key, api_key, df):
     print(data_trade)
-    
+
     # Initialize SmartConnect with API key
     smart_api = SmartConnect(api_key)
 
@@ -7615,7 +7618,8 @@ def angel_one_order_place(data_trade, logging_id, password, totp_key, api_key,df
     if all_profile:
         print("pass")
 
-        # Loop through data_trade and set order_params
+        # Lists to store orderId and order details
+        order_ids = []
         All_angel_one_order = []
 
         for order_data in data_trade:
@@ -7629,7 +7633,6 @@ def angel_one_order_place(data_trade, logging_id, password, totp_key, api_key,df
             if symboltoken is not None:
                 print(symboltoken)
 
-
                 product_type = "CARRYFORWARD" if order_data['mis_select'].lower() == "overnight" else order_data['mis_select'].upper()
 
                 orderparams = {
@@ -7641,31 +7644,37 @@ def angel_one_order_place(data_trade, logging_id, password, totp_key, api_key,df
                     "ordertype": order_data['isRadioChecked'].upper(),
                     "producttype": product_type,
                     "duration": "DAY",
-                    "price":  order_data['price'],
-                
+                    "price": order_data['price'],
                     "squareoff": "0",
                     "stoploss": "0",
                     "quantity": order_data['Quantity']
-                    }
+                }
                 print(orderparams)
-                orderId=smart_api.placeOrder(orderparams)
+                orderId = smart_api.placeOrder(orderparams)
                 print(orderId)
-    
-                OrderBook = smart_api.orderBook()['data']
-                # print(OrderBook)
-                for i in OrderBook:
-                    if i['orderid'] == orderId:
-                        print(i['orderid'], i['text'])
-                        All_angel_one_order.append(i)
 
+                # Collect orderId in the list
+                order_ids.append(orderId)
 
-                # ...
+                # Introduce a 1-second interval
+                time.sleep(1)
 
             else:
                 print(f"Symboltoken not found for {tradingsymbol}")
-        
+
+        # Loop through the orderId list to get order details with a 1-second interval
+        for orderId in order_ids:
+            OrderBook = smart_api.orderBook()['data']
+            for i in OrderBook:
+                if i['orderid'] == orderId:
+                    print(i['orderid'], i['text'])
+                    All_angel_one_order.append(i)
+
+            # Introduce a 1-second interval
+            time.sleep(1)
+
         # ... (rest of the code remains unchanged)
-        return All_angel_one_order  
+        return All_angel_one_order
     else:
         print("Profile data is empty or not available.")
 
