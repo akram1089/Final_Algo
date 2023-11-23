@@ -1,0 +1,131 @@
+{% extends "base_admin_panel.html" %}
+{% load static %}
+{% block dashboard_admin_body %}
+
+
+<style>
+    .content_management button{
+      background:#01A3FF;
+      border: none;
+      padding: 8px 10px;
+      border-radius: 5px;
+      color: white;
+    }
+</style>
+<section>
+    <div class="row">
+        <div class="col-6">
+            <div class="content_management mt-4">
+                <div class="mb-3">
+                     <label for="">Title</label>
+                    <input type="text" name="title" class="form-control" id="title">
+                </div>
+                <div class="mb-3">
+                <label for="exampleFormControlTextarea1" class="form-label">Description textarea</label>
+                <textarea class="form-control" id="descriptions" rows="3" ></textarea>
+                </div>
+                <div class="mb-3">
+                    <label for="formFile" class="form-label">Upload Image</label>
+                    <input class="form-control" type="file" id="formFile">
+                </div>
+                <button id="submit_btn">Submit</button> <button id="preview">Preview</button>
+            </div>
+        </div>
+        <div class="col-6">
+          <div class="preview_box">
+           
+          </div>
+            
+        </div>
+    </div>
+    
+</section>
+
+<script>
+    
+    $(document).ready(function () {
+        $("#submit_btn").click(function () {
+            var title = $("#title").val()
+            var description = $("#descriptions").val()
+            var image = $("#formFile")[0].files[0]
+            var formData = new FormData();
+             formData.append('title', title);
+             formData.append('description', description);
+             formData.append('image', image);
+            $.ajax({
+                 type:"post",
+                 url:"/contents_data",
+                 data:formData,
+                 processData: false,  // Prevent jQuery from converting the data to a query string
+                 contentType: false,
+                 success:function(data){
+                  console.log(data);
+                  $("#title").val("");
+                  $("#descriptions").val("");
+                  $("#formFile").val("");
+                 }
+
+            })
+        })
+
+        $("#preview").click(function () {
+            preview()
+
+        })
+
+        function preview() {
+            var title = $("#title").val()
+            var description = $("#descriptions").val()
+            var image = $("#formFile")[0].files[0]
+            var formValues = {
+                    title: title,
+                    description: description,
+                    image: image ? URL.createObjectURL(image) : null
+                };
+
+             var formValuesJSON = JSON.stringify(formValues);
+             localStorage.setItem('formData', formValuesJSON);
+             getLocalData()
+          
+        }
+
+function getLocalData() {
+    var storedData = localStorage.getItem("formData");
+
+if (storedData) {
+ // Parse the JSON string to an object
+ var dataObject = JSON.parse(storedData);
+
+   // Use the values from the object as needed
+    var storedTitle = dataObject.title;
+    var storedDescription = dataObject.description;
+    var storedImageURL = dataObject.image;
+    $(".preview_box").empty()
+    var dynamicCard = `<div class="card text-bg-dark">
+                    <img src=${storedImageURL} class="card-img" alt="...">
+                        <div class="card-img-overlay">
+                          <h5 class="card-title">${storedTitle}</h5>
+                            <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                            <p class="card-text"><small>Last updated 3 mins ago</small></p>
+                       </div>
+                   </div>`
+   $(".preview_box").append(dynamicCard)
+           
+}
+
+}
+getLocalData()
+        $("#editContent").click(function () {
+            var storedData = localStorage.getItem("formData");
+
+             if (storedData) {
+                var dataObject = JSON.parse(storedData);
+                $("#title").val(dataObject.title);
+                $("#descriptions").val(dataObject.description);
+                $("#formFile").attr("src", dataObject.image);
+             }
+        })
+    });
+</script>
+
+{% endblock dashboard_admin_body %}
