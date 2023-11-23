@@ -6981,6 +6981,10 @@ for (let i = 0; i < response.market_data.data.fetched.length; i++) {
       });
 
       console.log(All_positionTrade);
+      All_positionTrade.sort((a, b) => parseInt(a.strikePrice_order_window) - parseInt(b.strikePrice_order_window));
+
+// Sort based on sell_buy_indicator, putting "CE" first
+All_positionTrade.sort((a, b) => a.sell_buy_indicator === "BUY" ? -1 : 1);
 
       // sendPosition_to_kite(All_positionTrade);
       $.ajax({
