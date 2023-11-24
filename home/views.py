@@ -4799,12 +4799,12 @@ def kiteOrder(request):
                 order_ids = []
 
                 for order_data in dataTrade:
-                    tradingsymbol = order_data['tradingsymbol']
+                    tradingsymbol = order_data['main_trading_symbol']
                     isRadioChecked = order_data['isRadioChecked']
                     mis_select = order_data['mis_select']
                     quantity = int(order_data['Quantity'])
                     price = float(order_data['price'])
-                    print(tradingsymbol)
+                    print("tradingsymbol", tradingsymbol)
                     print(quantity)
                     print(price)
                     print(isRadioChecked)
@@ -5118,8 +5118,9 @@ def news_details(request, sno, heading):
 
 
 
-
+@csrf_exempt
 def option_index_statregy_executor(request):
+    print(f"User authenticated: {request.user.is_authenticated}")
     return render(request,'option_index_statregy_executor.html')
 
 
@@ -7490,7 +7491,7 @@ def kite_order_zerodha(request):
                 order_details = []
 
                 for trade_data in data_trade:
-                    tradingsymbol = trade_data.get('tradingsymbol', '')
+                    tradingsymbol = trade_data.get('main_trading_symbol', '')
                     sell_buy_indicator = trade_data.get('sell_buy_indicator', '').upper()  # Ensure it's uppercase
                     quantity = int(trade_data.get('Quantity', 0))
                     price = float(trade_data.get('price', 0))
@@ -7589,13 +7590,11 @@ def kite_order_zerodha(request):
 
 
 
-import time
     
-
-
-def angel_one_order_place(data_trade, logging_id, password, totp_key, api_key, df):
+    
+def angel_one_order_place(data_trade, logging_id, password, totp_key, api_key,df):
     print(data_trade)
-
+    
     # Initialize SmartConnect with API key
     smart_api = SmartConnect(api_key)
 
@@ -7618,8 +7617,7 @@ def angel_one_order_place(data_trade, logging_id, password, totp_key, api_key, d
     if all_profile:
         print("pass")
 
-        # Lists to store orderId and order details
-        order_ids = []
+        # Loop through data_trade and set order_params
         All_angel_one_order = []
 
         for order_data in data_trade:
@@ -7633,6 +7631,7 @@ def angel_one_order_place(data_trade, logging_id, password, totp_key, api_key, d
             if symboltoken is not None:
                 print(symboltoken)
 
+
                 product_type = "CARRYFORWARD" if order_data['mis_select'].lower() == "overnight" else order_data['mis_select'].upper()
 
                 orderparams = {
@@ -7644,37 +7643,31 @@ def angel_one_order_place(data_trade, logging_id, password, totp_key, api_key, d
                     "ordertype": order_data['isRadioChecked'].upper(),
                     "producttype": product_type,
                     "duration": "DAY",
-                    "price": order_data['price'],
+                    "price":  order_data['price'],
+                
                     "squareoff": "0",
                     "stoploss": "0",
                     "quantity": order_data['Quantity']
-                }
+                    }
                 print(orderparams)
-                orderId = smart_api.placeOrder(orderparams)
+                orderId=smart_api.placeOrder(orderparams)
                 print(orderId)
+    
+                OrderBook = smart_api.orderBook()['data']
+                # print(OrderBook)
+                for i in OrderBook:
+                    if i['orderid'] == orderId:
+                        print(i['orderid'], i['text'])
+                        All_angel_one_order.append(i)
 
-                # Collect orderId in the list
-                order_ids.append(orderId)
 
-                # Introduce a 1-second interval
-                time.sleep(1)
+                # ...
 
             else:
                 print(f"Symboltoken not found for {tradingsymbol}")
-
-        # Loop through the orderId list to get order details with a 1-second interval
-        for orderId in order_ids:
-            OrderBook = smart_api.orderBook()['data']
-            for i in OrderBook:
-                if i['orderid'] == orderId:
-                    print(i['orderid'], i['text'])
-                    All_angel_one_order.append(i)
-
-            # Introduce a 1-second interval
-            time.sleep(1)
-
+        
         # ... (rest of the code remains unchanged)
-        return All_angel_one_order
+        return All_angel_one_order  
     else:
         print("Profile data is empty or not available.")
 
@@ -7688,6 +7681,11 @@ def angel_one_order_place(data_trade, logging_id, password, totp_key, api_key, d
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
+import os
+import requests
+import pandas as pd
+from fuzzywuzzy import fuzz, process
+
 
 @csrf_exempt
 def quote_data_from_broker(request):
@@ -7702,6 +7700,7 @@ def quote_data_from_broker(request):
 
     if request.method == 'POST':
         data = json.loads(request.body)
+        # print("data  :"  ,  data)
 
         if broker_instance_zerodha:
             enctoken = get_enctoken_internal(
@@ -7714,9 +7713,19 @@ def quote_data_from_broker(request):
             # print("trading_quotes",trading_quotes)
 
             for quote in trading_quotes:
-                quote['combinedString'] = f'NFO:{quote["combinedString"]}'
+                print("quote :" , quote)
+                
 
-            result_data = {'trading_quotes': trading_quotes, 'ohlc_market_indepth': []}
+                target_string = {'symbol': quote["symbol"], 'optionType': quote["callPutEntrance"], 'expiry': quote["expiry_initial"], 'strikePrice': quote["strikePrice"]}
+                tradingsymbols = download_csv_and_display(target_string)
+
+                # Print only the 'tradingsymbol'
+                print(tradingsymbols.iloc[0])
+                closest_match=tradingsymbols.iloc[0]
+
+                quote['combinedString'] = f'NFO:{closest_match}'
+
+            result_data = {'trading_quotes': trading_quotes,'closest_match':closest_match, 'ohlc_market_indepth': []}
 
             if enctoken:
                 zerodha_api = ZerodhaPlaceOrder(enctoken)
@@ -7751,6 +7760,96 @@ def quote_data_from_broker(request):
             return JsonResponse({'status': 'error', 'message': 'No active API for the user'})
     else:
         return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
+
+
+
+import os
+import requests
+import pandas as pd
+
+def download_csv_and_display(target_string):
+    # Check if the CSV file already exists
+    csv_file_name = "zerodha_instruments.csv"
+    if os.path.exists(csv_file_name):
+        print(f"{csv_file_name} already exists. Skipping download.")
+    else:
+        # URL to download the CSV file
+        csv_url = "https://api.kite.trade/instruments"
+
+        try:
+            # Download the CSV file
+            response = requests.get(csv_url)
+
+            # Check if the request was successful (status code 200)
+            if response.status_code == 200:
+                # Save the downloaded content to a file
+                with open(csv_file_name, 'wb') as file:
+                    file.write(response.content)
+
+                print(f"CSV file downloaded successfully: {csv_file_name}")
+
+            else:
+                # Print an error message if the request was not successful
+                print(f"Error downloading CSV. Status Code: {response.status_code}")
+                return
+
+        except Exception as e:
+            # Handle exceptions, if any
+            print(f"An error occurred: {e}")
+            return
+
+    try:
+        # Read CSV into DataFrame
+        instruments_df = pd.read_csv(csv_file_name)
+
+        # Create a filter based on the given conditions
+        filter_condition = (
+            (instruments_df['name'] == target_string['symbol']) &
+            (instruments_df['instrument_type'] == target_string['optionType']) &
+            (instruments_df['expiry'] == target_string['expiry']) &
+            (instruments_df['strike'] == float(target_string['strikePrice']))
+        )
+
+        # Apply the filter to the DataFrame
+        filtered_df = instruments_df[filter_condition]
+
+        # Check if the target string is found
+        if filtered_df.empty:
+            print("Target string not found. Downloading CSV file again.")
+            download_csv_and_display(target_string)
+            return
+
+        # Print only the 'tradingsymbol' column
+        tradingsymbols = filtered_df['tradingsymbol']
+        # print(tradingsymbols)
+
+        return tradingsymbols
+
+    except Exception as e:
+        # Handle exceptions, if any
+        print(f"An error occurred while processing the CSV file: {e}")
+
+# Call the function to download CSV and display the filtered tradingsymbols
+target_string = {'symbol': 'NIFTY', 'optionType': 'CE', 'expiry': '2023-11-30', 'strikePrice': '19800'}
+tradingsymbols=download_csv_and_display(target_string)
+print(tradingsymbols.iloc[0])
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
