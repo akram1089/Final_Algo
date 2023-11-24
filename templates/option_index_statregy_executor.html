@@ -4244,11 +4244,11 @@
                 cursor: pointer;
               }
 
-              .broker_icon{
+              .broker_icon {
 
                 width: 35px;
-    height: 23px;
-}
+                height: 23px;
+              }
             </style>
 
             <!-- Modal -->
@@ -4259,7 +4259,7 @@
                   <div class="modal-header">
                     <div class="user_details">
                       <div class="broker_icon">
-                     
+
                       </div>
                       <div class="names_user_details">
                         <h5></h5>
@@ -6199,101 +6199,101 @@
 
 
       $(".inner_position").each(function (index) {
-    // Get values from the current card
-    var card = $(this);
-    var symbol = card.find(".symbol").text();
-    var expiry = card.find(".expiry").text();
-    var expiry_initial = card.find(".expiry_initial").text();
-    var strikePrice = card.find(".strikePrice").text();
-    var callPutEntrance = card.find(".call_put_entrance").text();
-    var entryPrice = card.find(".entryPrice").text();
-    var long_short_inner = card.find(".long_short_inner").text();
-    var option_lot_size_input = card.find(".option_lot_size_input").text();
-    var lot_size_value = $("#lot_size_value").text();
+        // Get values from the current card
+        var card = $(this);
+        var symbol = card.find(".symbol").text();
+        var expiry = card.find(".expiry").text();
+        var expiry_initial = card.find(".expiry_initial").text();
+        var strikePrice = card.find(".strikePrice").text();
+        var callPutEntrance = card.find(".call_put_entrance").text();
+        var entryPrice = card.find(".entryPrice").text();
+        var long_short_inner = card.find(".long_short_inner").text();
+        var option_lot_size_input = card.find(".option_lot_size_input").text();
+        var lot_size_value = $("#lot_size_value").text();
 
-    var final_lot_size_along_with_qty = parseFloat(option_lot_size_input) * parseFloat(lot_size_value);
+        var final_lot_size_along_with_qty = parseFloat(option_lot_size_input) * parseFloat(lot_size_value);
 
-    if (symbol === "NIFTY") {
-      zerodha_trading_symbol.push({
-        tradingsymbol: "NSE:NIFTY 50",
-      });
-    } else if (symbol === "BANKNIFTY") {
-      zerodha_trading_symbol.push({
-        tradingsymbol: "NSE:NIFTY BANK",
-      });
-    } else if (symbol === "FINNIFTY") {
-      zerodha_trading_symbol.push({
-        tradingsymbol: "NSE:NIFTY FIN SERVICE",
-      });
-    } else {
-      zerodha_trading_symbol.push({
-        tradingsymbol: `NSE:${symbol}`,
-      });
-    }
+        if (symbol === "NIFTY") {
+          zerodha_trading_symbol.push({
+            tradingsymbol: "NSE:NIFTY 50",
+          });
+        } else if (symbol === "BANKNIFTY") {
+          zerodha_trading_symbol.push({
+            tradingsymbol: "NSE:NIFTY BANK",
+          });
+        } else if (symbol === "FINNIFTY") {
+          zerodha_trading_symbol.push({
+            tradingsymbol: "NSE:NIFTY FIN SERVICE",
+          });
+        } else {
+          zerodha_trading_symbol.push({
+            tradingsymbol: `NSE:${symbol}`,
+          });
+        }
 
-    const dayPart = expiry.slice(0, 2);
-    const monthPart = expiry.slice(2, 5).charAt(0);
-    const yearPart = expiry.slice(7);
-
-
-    console.log("expiry" , expiry);
-    
-    function isLastThursday(expiryDate) {
-    // Extract day, month, and year from the expiry date string
-    const day = parseInt(expiryDate.substr(0, 2));
-    const monthAbbreviation = expiryDate.substr(2, 3);
-    const year = parseInt(expiryDate.substr(5, 4));
-
-    // Map month abbreviation to month index
-    const monthNames = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
-    const month = monthNames.indexOf(monthAbbreviation);
-
-    // Calculate the last day of the month
-    const lastDayOfMonth = new Date(year, month + 1, 0);
-
-    // Check if the expiry date is the last Thursday
-    const expiry = new Date(year, month, day);
-    const currentDay = expiry.getDay(); // 0 (Sunday) to 6 (Saturday)
-
-    // Check if the expiry date is the last Thursday
-    if (currentDay === 4 && day === lastDayOfMonth.getDate()) {
-        console.log("Yes, the expiry date is the last Thursday of the month.");
-    } else {
-        console.log("No, the expiry date is not the last Thursday of the month.");
-    }
-}
-
-// Call the function with the given expiry date
-
-isLastThursday(expiry);
+        const dayPart = expiry.slice(0, 2);
+        const monthPart = expiry.slice(2, 5).charAt(0);
+        const yearPart = expiry.slice(7);
 
 
+        console.log("expiry", expiry);
 
-    const combinedString = `${symbol}${yearPart}${monthPart}${dayPart}${strikePrice}${callPutEntrance}`;
+        function isLastThursday(expiryDate) {
+          // Extract day, month, and year from the expiry date string
+          const day = parseInt(expiryDate.substr(0, 2));
+          const monthAbbreviation = expiryDate.substr(2, 3);
+          const year = parseInt(expiryDate.substr(5, 4));
+
+          // Map month abbreviation to month index
+          const monthNames = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
+          const month = monthNames.indexOf(monthAbbreviation);
+
+          // Calculate the last day of the month
+          const lastDayOfMonth = new Date(year, month + 1, 0);
+
+          // Check if the expiry date is the last Thursday
+          const expiry = new Date(year, month, day);
+          const currentDay = expiry.getDay(); // 0 (Sunday) to 6 (Saturday)
+
+          // Check if the expiry date is the last Thursday
+          if (currentDay === 4 && day === lastDayOfMonth.getDate()) {
+            console.log("Yes, the expiry date is the last Thursday of the month.");
+          } else {
+            console.log("No, the expiry date is not the last Thursday of the month.");
+          }
+        }
+
+        // Call the function with the given expiry date
+
+        isLastThursday(expiry);
 
 
 
+        const combinedString = `${symbol}${yearPart}${monthPart}${dayPart}${strikePrice}${callPutEntrance}`;
 
-    trading_quote.push({
-  combinedString: combinedString,
-  symbol: symbol,
-  expiry: expiry,
-  strikePrice: parseFloat(strikePrice), // Parse strikePrice to float
-  callPutEntrance: callPutEntrance,
-  expiry_initial:expiry_initial
-});
-    var sell_buy_indicator = long_short_inner === "-" ? "SELL" : "BUY";
 
-    zerodha_lotSize.push({
-      combinedString,
-      final_lot_size_along_with_qty,
-      sell_buy_indicator,
-      entryPrice
-    });
 
-    var buy_sale_bg = long_short_inner === "-" ? "sellTrade" : "buyTrade";
 
-    var orderContent = `
+        trading_quote.push({
+          combinedString: combinedString,
+          symbol: symbol,
+          expiry: expiry,
+          strikePrice: parseFloat(strikePrice), // Parse strikePrice to float
+          callPutEntrance: callPutEntrance,
+          expiry_initial: expiry_initial
+        });
+        var sell_buy_indicator = long_short_inner === "-" ? "SELL" : "BUY";
+
+        zerodha_lotSize.push({
+          combinedString,
+          final_lot_size_along_with_qty,
+          sell_buy_indicator,
+          entryPrice
+        });
+
+        var buy_sale_bg = long_short_inner === "-" ? "sellTrade" : "buyTrade";
+
+        var orderContent = `
 
     <div class="inner_order_modal mt-2" style="border-radius: 11px;"> 
               <div class="order_status mb-2"> <p style="       text-wrap: pretty;
@@ -6360,27 +6360,27 @@ isLastThursday(expiry);
             </div>
     `;
 
-    // Add the orderContent to the sortedOrderContent array
-    sortedOrderContent.push({ strikePrice: parseFloat(strikePrice), content: orderContent });
-  });
+        // Add the orderContent to the sortedOrderContent array
+        sortedOrderContent.push({ strikePrice: parseFloat(strikePrice), content: orderContent });
+      });
 
-  // Sort the sortedOrderContent array based on strikePrice in descending order
-  sortedOrderContent.sort(function (a, b) {
-    return b.strikePrice - a.strikePrice;
-  });
+      // Sort the sortedOrderContent array based on strikePrice in descending order
+      sortedOrderContent.sort(function (a, b) {
+        return b.strikePrice - a.strikePrice;
+      });
 
-  // Iterate over the sortedOrderContent array and append the content to the ".order_modal" element
-  sortedOrderContent.forEach(function (sortedContent) {
-    $(".order_modal").append(sortedContent.content);
-  });
+      // Iterate over the sortedOrderContent array and append the content to the ".order_modal" element
+      sortedOrderContent.forEach(function (sortedContent) {
+        $(".order_modal").append(sortedContent.content);
+      });
 
 
       console.log(trading_quote);
       console.log(zerodha_trading_symbol);
       console.log(zerodha_lotSize);
-      trading_quote.sort(function(a, b) {
-  return b.strikePrice - a.strikePrice;
-});
+      trading_quote.sort(function (a, b) {
+        return b.strikePrice - a.strikePrice;
+      });
 
 
       send_quote_data(trading_quote, zerodha_trading_symbol[0], zerodha_lotSize);
@@ -6557,7 +6557,7 @@ isLastThursday(expiry);
                         const spot_data_order = generateSpotData(trading_data);
 
                         // Append the table to the elements with the corresponding classes
-       
+
                         $(".indepth_details").eq(i).append(table);
                         $(".indepth_details_offer").eq(i).append(tableOffer);
                         $(".main_spot_order").eq(i).append(spot_data_order);
@@ -6578,32 +6578,32 @@ isLastThursday(expiry);
 
 
 
-// Assuming response.market_data.data.fetched is an array of objects with a 'tradingSymbol' property
+                    // Assuming response.market_data.data.fetched is an array of objects with a 'tradingSymbol' property
 
-// Custom sorting function
-function customSort(a, b) {
-    // Extract the numerical part from the tradingSymbol and convert to integers
-    const numA = parseInt(a.tradingSymbol.slice(12, 18), 10); // Assuming the numerical part is from index 13 to 17
-    const numB = parseInt(b.tradingSymbol.slice(12, 18), 10);
+                    // Custom sorting function
+                    function customSort(a, b) {
+                      // Extract the numerical part from the tradingSymbol and convert to integers
+                      const numA = parseInt(a.tradingSymbol.slice(12, 18), 10); // Assuming the numerical part is from index 13 to 17
+                      const numB = parseInt(b.tradingSymbol.slice(12, 18), 10);
 
-    
-    console.log(numA);
-    console.log(numB);
-    // Extract the suffix (CE or PE) from the tradingSymbol
-    const suffixA = a.tradingSymbol.slice(-2);
-    const suffixB = b.tradingSymbol.slice(-2);
 
-    // Compare based on the numerical part in descending order
-    return numB - numA || a.tradingSymbol.localeCompare(b.tradingSymbol) || suffixA.localeCompare(suffixB);
-}
+                      console.log(numA);
+                      console.log(numB);
+                      // Extract the suffix (CE or PE) from the tradingSymbol
+                      const suffixA = a.tradingSymbol.slice(-2);
+                      const suffixB = b.tradingSymbol.slice(-2);
 
-// Sorting the market data array using the custom sorting function
-response.market_data.data.fetched.sort(customSort);
-// // Display the sorted market data
-for (let i = 0; i < response.market_data.data.fetched.length; i++) {
-    // Log the current value at index i
-    console.log(response.market_data.data.fetched[i].tradingSymbol);
-}
+                      // Compare based on the numerical part in descending order
+                      return numB - numA || a.tradingSymbol.localeCompare(b.tradingSymbol) || suffixA.localeCompare(suffixB);
+                    }
+
+                    // Sorting the market data array using the custom sorting function
+                    response.market_data.data.fetched.sort(customSort);
+                    // // Display the sorted market data
+                    for (let i = 0; i < response.market_data.data.fetched.length; i++) {
+                      // Log the current value at index i
+                      console.log(response.market_data.data.fetched[i].tradingSymbol);
+                    }
 
 
                     // Assuming response is the variable containing your data
@@ -6667,7 +6667,7 @@ for (let i = 0; i < response.market_data.data.fetched.length; i++) {
                       const spot_data_order = generateSpotData(gatheredValues);
 
                       $(".main_trading_symbol").eq(i).append(response.market_data.data.fetched[i].tradingSymbol);
-                  
+
 
                       // Append the table to the elements with the corresponding classes
                       $(".indepth_details").eq(i).append(table);
@@ -7029,8 +7029,8 @@ for (let i = 0; i < response.market_data.data.fetched.length; i++) {
       console.log(All_positionTrade);
       All_positionTrade.sort((a, b) => parseInt(a.strikePrice_order_window) - parseInt(b.strikePrice_order_window));
 
-// Sort based on sell_buy_indicator, putting "CE" first
-All_positionTrade.sort((a, b) => a.sell_buy_indicator === "BUY" ? -1 : 1);
+      // Sort based on sell_buy_indicator, putting "CE" first
+      All_positionTrade.sort((a, b) => a.sell_buy_indicator === "BUY" ? -1 : 1);
 
       // sendPosition_to_kite(All_positionTrade);
       $.ajax({
@@ -7041,56 +7041,58 @@ All_positionTrade.sort((a, b) => a.sell_buy_indicator === "BUY" ? -1 : 1);
         success: function (response) {
           // console.log(response);
 
-          if (response.broker==="zerodha") {
-            
-          var order_status = $(".order_status p")
-          var inner_order_modal = $(".inner_order_modal")
-          console.log(response.order_details);
+          if (response.broker === "zerodha") {
 
-
-          response.order_details.forEach((order, index) => {
-            var order_status_text = order.order_id;
-
-            console.log(order_status_text);
-
-            // Check if order_status_text is not an object
-            if (typeof order_status_text === 'object') {
-              // Run this code block if it's not an object
-              inner_order_modal.eq(index).addClass("box_shadow_order_execution_success");
-              order_status.eq(index).text(`Order Placed Successfully : Order Id - ${order_status_text.data.order_id}`).addClass("order_success_text");
-            } else {
-              // If it's an object, proceed with JSON parsing
-              var orderObject = JSON.parse(order_status_text);
-
-              if (orderObject.status === "error") {
-                inner_order_modal.eq(index).addClass("box_shadow_order_execution_error");
-                order_status.eq(index).text(orderObject.message).addClass("order_error_text");
-              }
-            }
-          });
-          }else if(response.broker==="angel_one"){
             var order_status = $(".order_status p")
-          var inner_order_modal = $(".inner_order_modal")
+            var inner_order_modal = $(".inner_order_modal")
+            console.log(response.order_details);
+
+
+            response.order_details.forEach((order, index) => {
+              var order_status_text = order.order_id;
+
+              console.log(order_status_text);
+
+              // Check if order_status_text is not an object
+              if (typeof order_status_text === 'object') {
+                // Run this code block if it's not an object
+                inner_order_modal.eq(index).addClass("box_shadow_order_execution_success");
+                order_status.eq(index).text(`Order Placed Successfully : Order Id - ${order_status_text.data.order_id}`).addClass("order_success_text");
+              } else {
+                // If it's an object, proceed with JSON parsing
+                var orderObject = JSON.parse(order_status_text);
+
+                if (orderObject.status === "error") {
+                  inner_order_modal.eq(index).addClass("box_shadow_order_execution_error");
+       
+
+                  order_status.eq(index).text( orderObject.message.replace(/\s*\[Read more.\].*$/, '')).addClass("order_error_text");
+                }
+              }
+            });
+          } else if (response.broker === "angel_one") {
+            var order_status = $(".order_status p")
+            var inner_order_modal = $(".inner_order_modal")
             response.order_details.forEach((order, index) => {
 
               console.log(order);
-         
 
 
-            // Check if order_status_text is not an object
-            if (order.orderstatus=== "rejected") {
-              // Run this code block if it's not an object
-              inner_order_modal.eq(index).addClass("box_shadow_order_execution_error");
+
+              // Check if order_status_text is not an object
+              if (order.orderstatus === "rejected") {
+                // Run this code block if it's not an object
+                inner_order_modal.eq(index).addClass("box_shadow_order_execution_error");
                 order_status.eq(index).text(` Order Id - ${order.orderid} ${order.text}`).addClass("order_error_text");
-              
-            } else {
-              // If it's an object, proceed with JSON parsing
 
-              inner_order_modal.eq(index).addClass("box_shadow_order_execution_success");
-              order_status.eq(index).text(`Order Placed Successfully : Order Id - ${order.orderid}`).addClass("order_success_text");
-              
-            }
-          });
+              } else {
+                // If it's an object, proceed with JSON parsing
+
+                inner_order_modal.eq(index).addClass("box_shadow_order_execution_success");
+                order_status.eq(index).text(`Order Placed Successfully : Order Id - ${order.orderid}`).addClass("order_success_text");
+
+              }
+            });
           }
           // Handle the response from the Django view if needed
 
@@ -9302,7 +9304,7 @@ All_positionTrade.sort((a, b) => a.sell_buy_indicator === "BUY" ? -1 : 1);
                 }
               }
 
- 
+
               // Calculate the next 5 strike prices
               var forw5 = [];
               for (
@@ -9328,7 +9330,7 @@ All_positionTrade.sort((a, b) => a.sell_buy_indicator === "BUY" ? -1 : 1);
                   }
                 });
 
-                $("#put_strikeSelect_strangle")
+              $("#put_strikeSelect_strangle")
                 .find("option")
                 .each(function () {
                   var optionValue = parseFloat($(this).val());
@@ -9390,7 +9392,7 @@ All_positionTrade.sort((a, b) => a.sell_buy_indicator === "BUY" ? -1 : 1);
                 if (put_strikeSelect_strangle) {
                   // Find the closest row for lastIndexPrev and click on Auto_puts_short_click
 
-     
+
                   // Find the closest row for lastIndexForw and click on Auto_calls_short_click
                   var closestRowForw = optionChainTable
                     .find(
@@ -9538,8 +9540,8 @@ All_positionTrade.sort((a, b) => a.sell_buy_indicator === "BUY" ? -1 : 1);
                 var lastIndexForw = $("#call_strikeSelect_spread").val();
 
 
-                       // Find the closest row for lastIndexForw and click on Auto_calls_short_click
-                       var closestRowForw = optionChainTable
+                // Find the closest row for lastIndexForw and click on Auto_calls_short_click
+                var closestRowForw = optionChainTable
                   .find(".strike_price:contains(" + lastIndexForw + ")")
                   .closest(".call_put_tr");
                 if (closestRowForw.length) {
@@ -9582,7 +9584,7 @@ All_positionTrade.sort((a, b) => a.sell_buy_indicator === "BUY" ? -1 : 1);
                     .click();
                 }
 
-         
+
                 // Click on #calculate after a longer delay
                 var counterInputValue = $("#counter_input_spread").val();
                 $(".option_lot_size_input").text(counterInputValue);
@@ -9954,10 +9956,10 @@ All_positionTrade.sort((a, b) => a.sell_buy_indicator === "BUY" ? -1 : 1);
                     .click();
                 }
 
-      
-           
+
+
                 // Find the closest row for lastIndexForw and click on Auto_calls_short_click
-    
+
                 // Click on #calculate after a longer delay
                 var counterInputValue = $("#counter_input_ironCondor").val();
                 $(".option_lot_size_input").text(counterInputValue);
@@ -10098,7 +10100,7 @@ All_positionTrade.sort((a, b) => a.sell_buy_indicator === "BUY" ? -1 : 1);
 
                 // Find the closest row for lastIndexForw and click on Auto_calls_short_click
 
-                
+
                 var closestRowForw = optionChainTable
                   .find(".strike_price:contains(" + lastIndexForw + ")")
                   .closest(".call_put_tr");
@@ -10333,7 +10335,7 @@ All_positionTrade.sort((a, b) => a.sell_buy_indicator === "BUY" ? -1 : 1);
 
 
 
-                
+
                 var closest_call_twelve_hundred_positive_strikeSelect_double_iron_fly = optionChainTable
                   .find(".strike_price:contains(" + call_twelve_hundred_positive_strikeSelect_double_iron_fly + ")")
                   .closest(".call_put_tr");
@@ -10365,9 +10367,9 @@ All_positionTrade.sort((a, b) => a.sell_buy_indicator === "BUY" ? -1 : 1);
                     .click();
                 }
 
-      
-                                // Find the closest row for lastIndexForw and click on Auto_calls_short_click
-                                var closest_call_spot_strikeSelect_double_iron_fly = optionChainTable
+
+                // Find the closest row for lastIndexForw and click on Auto_calls_short_click
+                var closest_call_spot_strikeSelect_double_iron_fly = optionChainTable
                   .find(".strike_price:contains(" + call_spot_strikeSelect_double_iron_fly + ")")
                   .closest(".call_put_tr");
                 if (closest_call_spot_strikeSelect_double_iron_fly.length) {
@@ -10404,7 +10406,7 @@ All_positionTrade.sort((a, b) => a.sell_buy_indicator === "BUY" ? -1 : 1);
                 // Find the closest row for lastIndexPrev and click on Auto_puts_short_click
 
 
-  
+
 
 
 
