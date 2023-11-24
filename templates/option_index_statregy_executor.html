@@ -1,5 +1,7 @@
 {% extends "base_dashboard.html" %} {% load static %} {% block dashboard_body %}
 
+
+
 <style>
   .day_1 {
     border-radius: 4px;
@@ -6201,6 +6203,7 @@
     var card = $(this);
     var symbol = card.find(".symbol").text();
     var expiry = card.find(".expiry").text();
+    var expiry_initial = card.find(".expiry_initial").text();
     var strikePrice = card.find(".strikePrice").text();
     var callPutEntrance = card.find(".call_put_entrance").text();
     var entryPrice = card.find(".entryPrice").text();
@@ -6231,13 +6234,53 @@
     const dayPart = expiry.slice(0, 2);
     const monthPart = expiry.slice(2, 5).charAt(0);
     const yearPart = expiry.slice(7);
+
+
+    console.log("expiry" , expiry);
+    
+    function isLastThursday(expiryDate) {
+    // Extract day, month, and year from the expiry date string
+    const day = parseInt(expiryDate.substr(0, 2));
+    const monthAbbreviation = expiryDate.substr(2, 3);
+    const year = parseInt(expiryDate.substr(5, 4));
+
+    // Map month abbreviation to month index
+    const monthNames = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
+    const month = monthNames.indexOf(monthAbbreviation);
+
+    // Calculate the last day of the month
+    const lastDayOfMonth = new Date(year, month + 1, 0);
+
+    // Check if the expiry date is the last Thursday
+    const expiry = new Date(year, month, day);
+    const currentDay = expiry.getDay(); // 0 (Sunday) to 6 (Saturday)
+
+    // Check if the expiry date is the last Thursday
+    if (currentDay === 4 && day === lastDayOfMonth.getDate()) {
+        console.log("Yes, the expiry date is the last Thursday of the month.");
+    } else {
+        console.log("No, the expiry date is not the last Thursday of the month.");
+    }
+}
+
+// Call the function with the given expiry date
+
+isLastThursday(expiry);
+
+
+
     const combinedString = `${symbol}${yearPart}${monthPart}${dayPart}${strikePrice}${callPutEntrance}`;
+
+
+
+
     trading_quote.push({
   combinedString: combinedString,
   symbol: symbol,
   expiry: expiry,
   strikePrice: parseFloat(strikePrice), // Parse strikePrice to float
-  callPutEntrance: callPutEntrance
+  callPutEntrance: callPutEntrance,
+  expiry_initial:expiry_initial
 });
     var sell_buy_indicator = long_short_inner === "-" ? "SELL" : "BUY";
 
@@ -6498,6 +6541,9 @@
                         const trading_data = response.result_data.ohlc_market_indepth[i][trading_symbol];
                         console.log(trading_symbol);
                         console.log(trading_data);
+
+                        $(".main_trading_symbol").eq(i).append(trading_symbol.replace("NFO:", ""));
+
 
 
 
