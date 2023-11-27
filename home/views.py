@@ -7361,6 +7361,16 @@ class ZerodhaPlaceOrder:
         data = self.session.get(f"{self.root_url}/quote", params={"i": instruments}, headers=self.headers).json()["data"]
         return data
     
+    def positions(self):
+        positions = self.session.get(f"{self.root_url}/portfolio/positions", headers=self.headers).json()["data"]
+        return positions
+    
+    def holdings(self):
+        holdings = self.session.get(f"{self.root_url}/portfolio/holdings", headers=self.headers).json()["data"]
+        return holdings
+    
+
+    
         
     def margins(self):
         margins = self.session.get(f"{self.root_url}/user/margins", headers=self.headers).json()
@@ -7713,14 +7723,14 @@ def quote_data_from_broker(request):
             # print("trading_quotes",trading_quotes)
 
             for quote in trading_quotes:
-                print("quote :" , quote)
+                # print("quote :" , quote)
                 
 
                 target_string = {'symbol': quote["symbol"], 'optionType': quote["callPutEntrance"], 'expiry': quote["expiry_initial"], 'strikePrice': quote["strikePrice"]}
                 tradingsymbols = download_csv_and_display(target_string)
 
                 # Print only the 'tradingsymbol'
-                print(tradingsymbols.iloc[0])
+                # print(tradingsymbols.iloc[0])
                 closest_match=tradingsymbols.iloc[0]
 
                 quote['combinedString'] = f'NFO:{closest_match}'
@@ -7828,13 +7838,6 @@ def download_csv_and_display(target_string):
     except Exception as e:
         # Handle exceptions, if any
         print(f"An error occurred while processing the CSV file: {e}")
-
-# Call the function to download CSV and display the filtered tradingsymbols
-target_string = {'symbol': 'NIFTY', 'optionType': 'CE', 'expiry': '2023-11-30', 'strikePrice': '19800'}
-tradingsymbols=download_csv_and_display(target_string)
-print(tradingsymbols.iloc[0])
-
-
 
 
 
@@ -8096,3 +8099,83 @@ def get_content_data(request):
     }
     print(content_data)
     return JsonResponse({'contentData':content_data})
+
+
+
+
+
+
+
+
+
+
+def get_order_positions_details(request):
+    try:
+        # Assuming 'user' is defined somewhere in your code
+        user = request.user
+        broker_instance_zerodha = Broker.objects.filter(user=user, broker_name="zerodha", active_api=True).first()
+        broker_instance_angelone = Broker.objects.filter(user=user, broker_name="angelone", active_api=True).first()
+
+        if broker_instance_zerodha:
+            enctoken = get_enctoken_internal(
+                broker_instance_zerodha.logging_id,
+                broker_instance_zerodha.password,
+                broker_instance_zerodha.totp_key
+            )
+
+            if enctoken:
+                zerodha_api = ZerodhaPlaceOrder(enctoken)
+                all_profile = zerodha_api.get_user_profile()
+                all_position = zerodha_api.positions()
+                all_holdings = zerodha_api.holdings()
+
+                return JsonResponse({"all_profile": all_profile, "all_position": all_position, "all_holdings": all_holdings})
+
+        elif broker_instance_angelone:
+            # Add your logic for Angel-one
+            print("Angel-one")
+        
+        # Return a response if no broker instance is found
+        return JsonResponse({"error": "No active broker instance found for the user."})
+
+    except Exception as e:
+        # Log the exception for further analysis
+        print(f"An error occurred: {str(e)}")
+        return JsonResponse({"error": "An unexpected error occurred. Please try again later."})
+    
+
+
+
+
+def beginnerTracks(request):
+    return render(request, "learningcenter/beginnerTracks.html")
+
+def intermediateTracks(request):
+    return render(request, "learningcenter/intermediateTrack.html")
+
+def advanceTracks(request):
+    return render(request, "learningcenter/advanceTracks.html")
+
+def optionBasic(request):
+    return render(request, "learningcenter/optionBasic.html")
+def entryandexit(request):
+    return render(request, "learningcenter/entryandexit.html")
+def optionExpiration(request):
+    return render(request, "learningcenter/optionExpiration.html")
+def bullishStrategy(request):
+    return render(request, "learningcenter/bullishStrategy.html")
+def neutralStrategy(request):
+    return render(request, "learningcenter/neutralStrategy.html")
+def bearishStrategy(request):
+    return render(request, "learningcenter/bearishStrategy.html")
+def portfoliomanagement(request):
+    return render(request, "learningcenter/portfoliomanagement.html")
+def pricingVolatility(request):
+    return render(request, "learningcenter/pricingVolatility.html")
+def tradeAdjustment(request):
+    return render(request, "learningcenter/tradeAdjustment.html")
+
+def learning_Books(request):
+    return render(request, "learningcenter/learning_Books.html")
+
+

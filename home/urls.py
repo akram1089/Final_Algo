@@ -446,6 +446,29 @@ urlpatterns = [
     path('get_content_data', views.get_content_data, name='get_content_data'),
 
 
+    path('get_order_positions_details', views.get_order_positions_details, name='get_order_positions_details'),
+
+    
+     path('beginnerTracks', views.beginnerTracks, name='beginnerTracks'),
+     path('intermediateTracks', views.intermediateTracks, name='intermediateTracks'),
+     path('advanceTracks', views.advanceTracks, name='advanceTracks'),
+
+     path('optionBasic', views.optionBasic, name='optionBasic'),
+     path('entryandexit', views.entryandexit, name='entryandexit'),
+     path('optionExpiration', views.optionExpiration, name='optionExpiration'),
+     path('bullishStrategy', views.bullishStrategy, name='bullishStrategy'),
+     path('neutralStrategy', views.neutralStrategy, name='neutralStrategy'),
+     path('bearishStrategy', views.bearishStrategy, name='bearishStrategy'),
+     path('portfoliomanagement', views.portfoliomanagement, name='portfoliomanagement'),
+     path('pricingVolatility', views.pricingVolatility, name='pricingVolatility'),
+     path('tradeAdjustment', views.tradeAdjustment, name='tradeAdjustment'),
+     path('learning_Books', views.learning_Books, name='learning_Books'),
+
+
+
+
+
+
 
 #  path('your_template', views.your_template, name='your_template'),
     
