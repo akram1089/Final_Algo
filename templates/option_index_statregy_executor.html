@@ -37,9 +37,9 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    margin: 0.5rem 0;
+    margin: 0 0 0;
     gap: 0.5rem;
-    padding: 17px 14px;
+    padding: 0px 15px 17px 14px;
   }
 
   .straddle {
@@ -84,7 +84,9 @@
     margin-bottom: auto !important;
   }
 
-  .main_option_chain_table {
+  .main_option_chain_table,
+  .main_option_oi,
+  .main_option_greeks {
     height: 75vh;
 
     overflow: auto;
@@ -123,7 +125,39 @@
     font-family: system-ui !important;
   }
 
-  .strategy_option_chain tr td {
+  .main_option_oi table thead tr th,
+  .main_option_greeks table thead tr th {
+    font-size: 14px !important;
+    color: #000000a3 !important;
+    font-family: system-ui !important;
+  }
+
+  .main_option_chain_table table thead {
+    width: 100%;
+    position: sticky;
+    top: -1px;
+    z-index: 70;
+    background-color: var(--backgroundColor);
+    box-shadow: 1px 0px 0 0.5px var(--dividerColor2);
+
+    background-color: white;
+  }
+
+  .main_option_oi table thead,
+  .main_option_greeks table thead {
+    width: 100%;
+    position: sticky;
+    top: -1px;
+    z-index: 70;
+    background-color: var(--backgroundColor);
+    box-shadow: 1px 0px 0 0.5px var(--dividerColor2);
+
+    background-color: white;
+  }
+
+  .strategy_option_chain tr td,
+  .strategy_option_chain_oi tr td,
+  .strategy_option_chain_greeks tr td {
     font-size: 13px;
     font-weight: 700;
     color: #0000009e;
@@ -184,6 +218,86 @@
     font-weight: 700;
     color: #00000099;
   }
+
+  .spot_strategies {
+    display: flex;
+    gap: 0.2rem;
+    background: #E4F3EF;
+    font-size: 16px;
+    padding: 6px 5px;
+  }
+
+  .main_max_pain_strategies {
+    display: flex;
+    align-items: center;
+    font-size: 16px;
+    background: #F6EDEB;
+    padding: 6px 5px;
+  }
+
+  .lot_size_strategies {
+
+    display: flex;
+    align-items: center;
+    font-size: 16px;
+    background: #E8F2FB;
+    gap: 0.2rem;
+    padding: 6px 5px;
+  }
+
+
+
+  .low52_strategies {
+    display: flex;
+    gap: 0.2rem;
+    background: #E8F7E4;
+    align-items: center;
+    padding: 6px 5px;
+
+
+  }
+
+  .high52_strategies {
+    display: flex;
+    gap: 0.2rem;
+    background: #F7E4E6;
+    align-items: center;
+    padding: 6px 5px;
+
+
+  }
+
+  .open_strategies {
+    display: flex;
+    gap: 0.2rem;
+    background: #EEEDFB;
+    align-items: center;
+    padding: 6px 5px;
+
+
+  }
+
+  .low_strategies {
+    display: flex;
+    gap: 0.2rem;
+    background: #E8F3FC;
+    align-items: center;
+    padding: 6px 5px;
+
+
+  }
+
+  .high_strategies {
+    display: flex;
+    gap: 0.2rem;
+    background: #F6EAE8;
+    align-items: center;
+    padding: 6px 5px;
+
+
+  }
+
+
 
   .option_chain_strategies:hover {
     color: #5cadfb;
@@ -1195,8 +1309,8 @@
   <div class="top_content_option_chain p-3">
     <div class="main_top_all_left_right d-flex align-items-center justify-content-between">
       <div class="left_side_top_strategies">
-        <div class="main_top_strategies d-flex align-items-center gap-4">
-          <select  class="form-select w-auto stockDropdown">
+        <div class="main_top_strategies d-flex align-items-center" style="gap: 0.88rem;">
+          <select class="form-select w-auto stockDropdown">
             <optgroup label="Indices">
               <option value="NIFTY">NIFTY</option>
               <option value="BANKNIFTY">BANKNIFTY</option>
@@ -1205,55 +1319,55 @@
             {% comment %} <optgroup label="Stocks"></optgroup> {% endcomment %}
           </select>
           <div class="spot_strategies">
-            <p class="spot_title">Spot</p>
+            <p class="spot_title">Spot :</p>
 
             <div id="last_traded_price"></div>
             <div id="closest_strike_price" style="display: none"></div>
             <div id="closen_expiry_date"></div>
           </div>
 
-          <div class="main_max_pain_strategies d-block">
+          <div class="main_max_pain_strategies">
             <div class="max_pain_strategies d-flex align-items-center gap-1">
-              <p>Max Pain</p>
-              <i class="bx bx-link-external"></i>
+              <p>Max Pain : </p>
+
             </div>
-            <div id="max_pain_value"></div>
+            <div id="max_pain_value" style="font-size: 16px;"></div>
           </div>
-          <div class="lot_size_strategies d-block">
-            <p>Lot Size</p>
+          <div class="lot_size_strategies">
+            <p>Lot Size :</p>
             <div id="lot_size_value"></div>
           </div>
           <div class="low52_strategies">
-            <p>Low 52 Wk</p>
+            <p>Low 52 Wk : </p>
 
             <div id="low52_value"></div>
           </div>
 
           <div class="high52_strategies">
-            <p>High 52 Wk</p>
+            <p>High 52 Wk :</p>
 
             <div id="high52_value"></div>
           </div>
           <div class="open_strategies">
-            <p>Open</p>
+            <p>Open :</p>
 
             <div id="open_value"></div>
           </div>
 
           <div class="low_strategies">
-            <p>Low</p>
+            <p>Low : </p>
 
             <div id="low_value"></div>
           </div>
           <div class="high_strategies">
-            <p>High</p>
+            <p>High : </p>
 
             <div id="high_value"></div>
           </div>
-          <div class="option_chain_strategies d-flex align-items-center gap-1">
+          <!-- <div class="option_chain_strategies d-flex align-items-center gap-1">
             <p>Option Chain</p>
             <i class="bx bx-link-external"></i>
-          </div>
+          </div> -->
 
         </div>
       </div>
@@ -1280,7 +1394,7 @@
     </div>
 
 
-    <div class="right_side_top_strategies mt-2">
+    <div class="right_side_top_strategies mt-3">
       <style>
         .zerodha_add_api {
           display: flex;
@@ -4337,22 +4451,32 @@
       align-items: center;
       margin-top: 6rem;
     }
-      /* Dynamically set background color based on the values */
-      .dynamic-width-bg.calls-oi {
-        background-color: #CFEFDF; /* You can adjust the color as needed */
-        border-radius: 0 10px 10px 0;
-        text-align: justify;
-        height: 20px;
 
-        color: #0000009e;
+    /* Dynamically set background color based on the values */
+    .dynamic-width-bg.calls-oi {
+      background-color: #CFEFDF;
+      /* You can adjust the color as needed */
+      border-radius: 10px 0 0 10px;
+      text-align: justify;
+      height: 20px;
+      position: absolute;
+      color: #0000009e;
     }
 
     .dynamic-width-bg.puts-oi {
-        background-color: #FFE2E3; /* You can adjust the color as needed */
-        border-radius: 0 10px 10px 0;
-        text-align: justify;
-        height: 20px;
-        color: #0000009e;
+      background-color: #FFE2E3;
+      /* You can adjust the color as needed */
+      border-radius: 0 10px 10px 0;
+      text-align: justify;
+      height: 20px;
+      color: #0000009e;
+    }
+
+    .main_calls_oi_option {
+      display: flex;
+      justify-content: flex-end;
+      color: #0000009e;
+      position: relative;
     }
   </style>
 
@@ -5061,7 +5185,62 @@
             <button class="" id="buid_custom_strategy_btn">Build Your Strategy</button>
           </div>
 
+          <style>
+            .main_strategy_builder_btn {
 
+              margin-right: 41px;
+            }
+
+            .main_option_expiry_date {
+              display: flex;
+              align-items: center;
+              gap: 2rem;
+            }
+
+            .main_option_chain_oi_ltp_greeks {
+              padding: 4px 2px;
+              border: 1px solid #c1c1c180;
+              display: flex;
+              gap: 0.2rem;
+              border-radius: 5px;
+            }
+
+            .main_option_chain_oi_ltp_greeks button {
+              width: 4.2rem;
+              border: none;
+              justify-content: center;
+              display: flex;
+              transition: color 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+              background: white;
+
+            }
+
+            .active_oi_ltp_greeks {
+
+
+
+
+              display: flex !important;
+              align-items: center !important;
+              background: linear-gradient(180deg, #4399eb, #5cadfb) !important;
+              color: #fff;
+
+              text-align: center;
+              font-size: 14px;
+
+              font-weight: 500;
+              border-radius: 4px;
+              border: 1px solid #4399eb !important;
+              -webkit-box-shadow: none !important;
+              box-shadow: none !important;
+              outline: 0 !important;
+
+
+              cursor: pointer;
+
+              font-weight: 600;
+            }
+          </style>
 
 
 
@@ -5078,50 +5257,158 @@
         </div>
       </div>
       <div class="offcanvas offcanvas-start" tabindex="-1" id="optionChain_canvas"
-      aria-labelledby="optionChain_canvasLabel" style="    z-index: 99999999999999999999;     width: 50%;">
-      <div class="offcanvas-header">
-        <select  class="form-select w-auto stockDropdown">
-          <optgroup label="Indices">
-            <option value="NIFTY">NIFTY</option>
-            <option value="BANKNIFTY">BANKNIFTY</option>
-            <option value="FINNIFTY">FINNIFTY</option>
-          </optgroup>
-          {% comment %} <optgroup label="Stocks"></optgroup> {% endcomment %}
-        </select>
-        <button type="button" class="btn-close option_chain_canvas" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-      </div>
-      <div class="offcanvas-body">
-        <div>
+        aria-labelledby="optionChain_canvasLabel" style="    z-index: 99999999999999999999;     width: 50%;">
+        <div class="offcanvas-header justify-content-end">
+
+          <button type="button" class="btn-close option_chain_canvas" data-bs-dismiss="offcanvas"
+            aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+          <div>
 
 
-  
+
             <div class="main_option_inner d-flex justify-content-between align-items-center">
-              <p class="text-secondary">*Note: OI IN QUANTITY</p>
-              <select id="optionExpiryDropdown" class="form-select w-auto">
-                <!-- Options will be populated dynamically from AJAX response -->
+              <select class="form-select w-auto stockDropdown">
+                <optgroup label="Indices">
+                  <option value="NIFTY">NIFTY</option>
+                  <option value="BANKNIFTY">BANKNIFTY</option>
+                  <option value="FINNIFTY">FINNIFTY</option>
+                </optgroup>
+                {% comment %} <optgroup label="Stocks"></optgroup> {% endcomment %}
               </select>
+
+
+              <!-- <p class="text-secondary">*Note: OI IN QUANTITY</p> -->
+
+              <div class="main_option_expiry_date">
+
+                <div class="main_option_chain_oi_ltp_greeks">
+                  <Button class="ltp_option active_oi_ltp_greeks" data-option="ltp">LTP</Button><Button
+                    class="oi_option" data-option="oi">OI</Button><Button class="greeks_option"
+                    data-option="greeks">Greeks</Button>
+                </div>
+
+                <select id="optionExpiryDropdown" class="form-select w-auto">
+                  <!-- Options will be populated dynamically from AJAX response -->
+                </select>
+              </div>
+
             </div>
 
             <div class="main_option_chain_table">
               <table class="table table-hover">
                 <thead>
-                  <th class="text-end bg-light-green">CALL IV</th>
-                  <th class="text-end bg-light-green">CALL OI</th>
-                  <th class="text-end bg-light-green">CALL LTP</th>
-                  <th class="text-center bg-light">STRIKE PRICE</th>
-                  <th class="text-start bg-light-red">PUT LTP</th>
-                  <th class="text-start bg-light-red">PUT OI</th>
-                  <th class="text-start bg-light-red">PUT IV</th>
+                  <th class="text-end">Call IV</th>
+                  <th class="text-end">Call OI</th>
+                  <th class="text-end">Call LTP</th>
+                  <th class="text-center bg-light">
+
+                    <div class="main_option_chain_strike_price">
+                      Strike Price
+                    </div>
+                  </th>
+                  <th class="text-start ">Put LTP</th>
+                  <th class="text-start ">Put OI</th>
+                  <th class="text-start ">Put IV</th>
                 </thead>
 
                 <tbody class="strategy_option_chain"></tbody>
               </table>
             </div>
+
+            <div class="main_option_oi">
+              <table class="table table-hover">
+                <thead>
+
+                  <th class="text-start">Call OI(Chg%)</th>
+                  <th class="text-end">Call OI</th>
+                  <th class="text-center bg-light">
+
+                    <div class="main_option_chain_strike_price">
+                      Strike Price
+                    </div>
+                  </th>
+
+                  <th class="text-start ">Put OI</th>
+                  <th class="text-end ">Put OI(Chg%)</th>
+                </thead>
+
+                <tbody class="strategy_option_chain_oi"></tbody>
+              </table>
+            </div>
+
+            <div class="main_option_greeks">
+              <table class="table table-hover">
+                <thead>
+
+                  <td class="text-start">Call Delta</td>
+                  <td class="text-center">Call IV</td>
+                  <td class="text-center bg-light">
+                    <div class="main_option_chain_strike_price">
+                      Strike Price
+                    </div>
+                  </td>
+                  <td class="text-center">Put IV</td>
+                  <td class="text-start">Put Delta</td>
+
+
+      
+
+  
+
+          
+                  <td>Theta</td>
+                  <td>Vega</td>
+                  <td>Gamma</td>
+
+
+               
+
+                
+
+
+
+                </thead>
+
+                <tbody class="strategy_option_chain_greeks"></tbody>
+              </table>
+            </div>
           </div>
 
 
+        </div>
       </div>
-    </div>
+
+
+      <script>
+        $(document).ready(function () {
+          $(".main_option_chain_oi_ltp_greeks button").click(function () {
+            $(".main_option_chain_oi_ltp_greeks button").removeClass("active_oi_ltp_greeks")
+            $(this).addClass("active_oi_ltp_greeks")
+            var filter_option = $(this).data("option")
+
+            if (filter_option === "ltp") {
+              $(".main_option_chain_table").show()
+              $(".main_option_oi").hide()
+              $(".main_option_greeks").hide()
+            } else if (filter_option === "oi") {
+              $(".main_option_chain_table").hide()
+              $(".main_option_oi").show()
+              $(".main_option_greeks").hide()
+            }
+            else if (filter_option === "greeks") {
+              $(".main_option_chain_table").hide()
+              $(".main_option_oi").hide()
+              $(".main_option_greeks").show()
+            }
+
+
+          })
+
+
+        })
+      </script>
 
       <div class="right_p_l_greeks col-md-7 col-lg-7 col-sm-12">
 
@@ -6299,12 +6586,12 @@
     $(".main_build_custom_strategy_empty").css("display", "flex")
 
     $("#buid_custom_strategy_btn").click(function () {
-    $("#optionChain_canvas").collapse("toggle");
-  });
+      $("#optionChain_canvas").collapse("toggle");
+    });
 
-  $(".option_chain_canvas").click(function () {
-    $("#optionChain_canvas").collapse("toggle");
-  });
+    $(".option_chain_canvas").click(function () {
+      $("#optionChain_canvas").collapse("toggle");
+    });
     loadSpotData("NIFTY");
     function checkMainPositionContent() {
       var mainPositionElements = $('.main_position');
@@ -9438,6 +9725,10 @@
           // console.log(selectedExpiry)
 
           var optionChainTable = $(".strategy_option_chain");
+          var strategy_option_chain_oi = $(".strategy_option_chain_oi");
+          var strategy_option_chain_greeks = $(".strategy_option_chain_greeks");
+          strategy_option_chain_greeks.empty();
+          strategy_option_chain_oi.empty();
           optionChainTable.empty();
 
           var spot_strike_price = $(".last_traded_price").text();
@@ -9446,47 +9737,62 @@
           var closestDiff = Number.MAX_VALUE;
           var all_callsOI_putsOI = []
           let maxCallsOI = -Infinity;
-let minCallsOI = Infinity;
-let maxPutsOI = -Infinity;
-let minPutsOI = Infinity;
-const maxCallsOIWidth = 100; // Set your desired maximum width for calls_oi
-const maxPutsOIWidth = 100; // Set your desired maximum width for puts_oi
+          let minCallsOI = Infinity;
+          let maxPutsOI = -Infinity;
+          let minPutsOI = Infinity;
+          const maxCallsOIWidth = 100; // Set your desired maximum width for calls_oi
+          const maxPutsOIWidth = 100; // Set your desired maximum width for puts_oi
 
-$.each(response.option_data.resultData.opDatas, function (index, optionChain) {
+          $.each(response.option_data.resultData.opDatas, function (index, optionChain) {
 
-    // Update maximum and minimum values for calls_oi
-    maxCallsOI = Math.max(maxCallsOI, optionChain.calls_oi);
-    minCallsOI = Math.min(minCallsOI, optionChain.calls_oi);
-    maxPutsOI = Math.max(maxPutsOI, optionChain.puts_oi);
-    minPutsOI = Math.min(minPutsOI, optionChain.puts_oi);
+            // Update maximum and minimum values for calls_oi
+            maxCallsOI = Math.max(maxCallsOI, optionChain.calls_oi);
+            minCallsOI = Math.min(minCallsOI, optionChain.calls_oi);
+            maxPutsOI = Math.max(maxPutsOI, optionChain.puts_oi);
+            minPutsOI = Math.min(minPutsOI, optionChain.puts_oi);
 
-    var strike_price = parseFloat(optionChain.strike_price);
-    var diff = Math.abs(spot_strike_price - strike_price);
+            var strike_price = parseFloat(optionChain.strike_price);
+            var diff = Math.abs(spot_strike_price - strike_price);
 
-    if (diff < closestDiff) {
-        closestDiff = diff;
-        closestStrikePrice = strike_price;
-    }
+            if (diff < closestDiff) {
+              closestDiff = diff;
+              closestStrikePrice = strike_price;
+            }
 
-    var strike_price_background_down =
-        strike_price < parseFloat(spot_strike_price) ? "bg_option_for" : "";
-    var strike_price_background_up =
-        strike_price > parseFloat(spot_strike_price) ? "bg_option_for" : "";
+            var strike_price_background_down =
+              strike_price < parseFloat(spot_strike_price) ? "bg_option_for" : "";
+            var strike_price_background_up =
+              strike_price > parseFloat(spot_strike_price) ? "bg_option_for" : "";
 
-    // Check if denominators are not zero to avoid NaN
-    const callsOIDenominator = maxCallsOI - minCallsOI !== 0 ? maxCallsOI - minCallsOI : 1;
-    const callsOIDynamicWidth = `${Math.max(1, Math.min(100, ((optionChain.calls_oi - minCallsOI) / callsOIDenominator) * 100))}%`;
+            // Check if denominators are not zero to avoid NaN
+            const callsOIDenominator = maxCallsOI - minCallsOI !== 0 ? maxCallsOI - minCallsOI : 1;
+            const callsOIDynamicWidth = `${Math.max(1, Math.min(100, ((optionChain.calls_oi - minCallsOI) / callsOIDenominator) * 100))}%`;
 
-    // Calculate dynamic width in percentage for puts_oi
-    const putsOIDenominator = maxPutsOI - minPutsOI !== 0 ? maxPutsOI - minPutsOI : 1;
-    const putsOIDynamicWidth = `${Math.max(1, Math.min(100, ((optionChain.puts_oi - minPutsOI) / putsOIDenominator) * 100))}%`;
+            // Calculate dynamic width in percentage for puts_oi
+            const putsOIDenominator = maxPutsOI - minPutsOI !== 0 ? maxPutsOI - minPutsOI : 1;
+            const putsOIDynamicWidth = `${Math.max(1, Math.min(100, ((optionChain.puts_oi - minPutsOI) / putsOIDenominator) * 100))}%`;
+            const callsOI = optionChain.calls_oi
+            const callsChangeOI = optionChain.calls_change_oi
+            const putsOI = optionChain.puts_oi
+            const putsChangeOI = optionChain.puts_change_oi
+            // Calculate Call OI (Chg%)
+            const callOIChangePercentage = ((callsChangeOI / (callsOI === 0 ? 1 : callsOI)) * 100).toFixed(2);
 
+            // Calculate Put OI (Chg%)
+            const putOIChangePercentage = ((putsChangeOI / (putsOI === 0 ? 1 : putsOI)) * 100).toFixed(2);
 
-
-    var rowContent = `
+            var rowContent = `
         <tr class="call_put_tr">
             <td class="text-end ${strike_price_background_down}">${optionChain.calls_iv}</td>
-            <td class="text-end oi_calls">      <div style="width:${callsOIDynamicWidth}" class="dynamic-width-bg calls-oi">${optionChain.calls_oi}</div></td>
+            <td class="text-end oi_calls ${strike_price_background_down}">   
+              <div class="main_calls_oi_option">
+                
+                <div style="width:${callsOIDynamicWidth}" class="dynamic-width-bg calls-oi"></div>
+                <div style="z-index:9"> ${optionChain.calls_oi}</div>
+                </div>
+
+              
+              </td>
             <td class="text-end call-ltp cursor-pointer  position-relative ${strike_price_background_down}">
                 <div class="d-flex position-absolute top-0 call-pul-ltp-btns d-none call-row">
                     <button id="Auto_calls_short_click" title="Short" data-action="Short" data-side="call" type="button" class="px-lg-3 py-lg-1 mx-1 bg-light-green put_call_btns common-border shadow-none fs-13 fw-600 btn btn-primary">S</button>
@@ -9511,13 +9817,99 @@ $.each(response.option_data.resultData.opDatas, function (index, optionChain) {
                     <button id="Auto_puts_long_click" title="Long" data-action="Long" data-side="put" type="button" class="px-lg-3 bg-light-red put_call_btns py-lg-1 mx-1  shadow-none fs-13 fw-600 btn btn-primary">B</button>
                 </div>
             </td>
-            <td class="text-start " oi_puts>     <div style="width:${putsOIDynamicWidth}" class="dynamic-width-bg puts-oi">${optionChain.puts_oi}</div></td>
+            <td class="text-start  oi_puts ${strike_price_background_up}">     <div style="width:${putsOIDynamicWidth}" class="dynamic-width-bg puts-oi">${optionChain.puts_oi}</div></td>
             <td class="text-start ${strike_price_background_up}">${optionChain.puts_iv}</td>
         </tr>
     `;
-    all_callsOI_putsOI.push({ "calls_oi": optionChain.calls_oi, "puts_oi": optionChain.puts_oi, "strikePrice": optionChain.strike_price })
-    optionChainTable.append(rowContent);
-});
+
+            var oi_content = `
+        <tr class="call_put_tr">
+            <td class="text-start ${strike_price_background_down}">       <p>${callOIChangePercentage}</p></td>
+
+            <td class="text-end call-ltp cursor-pointer  position-relative ${strike_price_background_down}">
+                <div class="d-flex position-absolute top-0 call-pul-ltp-btns d-none call-row" style="z-index:99">
+                    <button id="Auto_calls_short_click" title="Short" data-action="Short" data-side="call" type="button" class="px-lg-3 py-lg-1 mx-1 bg-light-green put_call_btns common-border shadow-none fs-13 fw-600 btn btn-primary">S</button>
+                    <button id="Auto_calls_long_click" title="Long" data-action="Long" data-side="call" type="button" class="px-lg-3 py-lg-1 mx-1 bg-light-red put_call_btns  shadow-none fs-13 fw-600 btn btn-primary">B</button>
+                </div>
+                <p class="calls_ltp text-start d-none" style="z-index=9999">${optionChain.calls_ltp}</p>
+                <div class="main_calls_oi_option">
+                
+                <div style="width:${callsOIDynamicWidth}" class="dynamic-width-bg calls-oi"></div>
+                <div style="z-index:9"> ${optionChain.calls_oi}</div>
+                </div>
+          
+            </td>
+            <td class="text-center strikePrice_main_bg bg-light text-dark">
+                <div class='strike_price'>${optionChain.strike_price}</div>
+                <div class=d-none>
+                    <div class="expiry_date">${option_expiry_date}</div>
+                    <div class="opiton_lot_size">${lot_size_value_option}</div>
+                    <div class="opiton_selected">${selectedOption}</div>
+                </div>
+            </td>
+            <td class="text-start put-ltp cursor-pointer  position-relative ${strike_price_background_up}">
+                <p class="puts_ltp text-start d-none" style="z-index=9999">${optionChain.puts_ltp}</p>
+                <div style="width:${putsOIDynamicWidth}" class="dynamic-width-bg puts-oi">${optionChain.puts_oi}</div>
+        
+           
+                <div class="d-flex position-absolute top-0 call-pul-ltp-btns  d-none" id="put_call_put">
+                    <button id="Auto_puts_short_click" title="Short" type="button" data-action="Short" data-side="put" class="px-lg-3 py-lg-1 mx-1 bg-light-green put_call_btns common-border shadow-none fs-13 fw-600 btn btn-primary">S</button>
+                    <button id="Auto_puts_long_click" title="Long" data-action="Long" data-side="put" type="button" class="px-lg-3 bg-light-red put_call_btns py-lg-1 mx-1  shadow-none fs-13 fw-600 btn btn-primary">B</button>
+                </div>
+            </td>
+
+       <td class="${strike_price_background_up} text-end">     <p>${putOIChangePercentage}</p></td>
+        </tr>
+    `;
+            var greeks_content = `
+        <tr class="call_put_tr">
+            <td class="text-start ${strike_price_background_down}">       <p>${optionChain.call_delta}</p></td>
+
+            <td class="text-end call-ltp cursor-pointer  position-relative ${strike_price_background_down}">
+                <div class="d-flex position-absolute top-0 call-pul-ltp-btns d-none call-row" style="z-index:99">
+                    <button id="Auto_calls_short_click" title="Short" data-action="Short" data-side="call" type="button" class="px-lg-3 py-lg-1 mx-1 bg-light-green put_call_btns common-border shadow-none fs-13 fw-600 btn btn-primary">S</button>
+                    <button id="Auto_calls_long_click" title="Long" data-action="Long" data-side="call" type="button" class="px-lg-3 py-lg-1 mx-1 bg-light-red put_call_btns  shadow-none fs-13 fw-600 btn btn-primary">B</button>
+                </div>
+                <p class="calls_ltp text-start d-none" style="z-index=9999">${optionChain.calls_ltp}</p>
+ 
+                <div style="z-index:9"> ${optionChain.calls_iv}</div>
+
+          
+            </td>
+            <td class="text-center strikePrice_main_bg bg-light text-dark">
+                <div class='strike_price'>${optionChain.strike_price}</div>
+                <div class=d-none>
+                    <div class="expiry_date">${option_expiry_date}</div>
+                    <div class="opiton_lot_size">${lot_size_value_option}</div>
+                    <div class="opiton_selected">${selectedOption}</div>
+                </div>
+            </td>
+
+            <td class="text-start put-ltp cursor-pointer  position-relative ${strike_price_background_up}">
+                <p class="puts_ltp text-start d-none" style="z-index=9999">${optionChain.puts_ltp}</p>
+                <div >${optionChain.calls_iv}</div>
+        
+           
+                <div class="d-flex position-absolute top-0 call-pul-ltp-btns  d-none" id="put_call_put">
+                    <button id="Auto_puts_short_click" title="Short" type="button" data-action="Short" data-side="put" class="px-lg-3 py-lg-1 mx-1 bg-light-green put_call_btns common-border shadow-none fs-13 fw-600 btn btn-primary">S</button>
+                    <button id="Auto_puts_long_click" title="Long" data-action="Long" data-side="put" type="button" class="px-lg-3 bg-light-red put_call_btns py-lg-1 mx-1  shadow-none fs-13 fw-600 btn btn-primary">B</button>
+                </div>
+            </td>
+
+       <td class="${strike_price_background_up} text-end">     <p>${optionChain.put_delta}</p></td>
+       <td class="${strike_price_background_up} text-end">     <p>${optionChain.put_theta}</p></td>
+       <td class="${strike_price_background_up} text-end">     <p>${optionChain.put_vega}</p></td>
+       <td class="${strike_price_background_up} text-end">     <p>${optionChain.put_gamma}</p></td>
+        </tr>
+    `;
+
+
+
+            all_callsOI_putsOI.push({ "calls_oi": optionChain.calls_oi, "puts_oi": optionChain.puts_oi, "strikePrice": optionChain.strike_price })
+            optionChainTable.append(rowContent);
+            strategy_option_chain_oi.append(oi_content);
+            strategy_option_chain_greeks.append(greeks_content);
+          });
 
           // console.log("Nearest Strike Price:", closestStrikePrice);
           $("#closest_strike_price").text(closestStrikePrice);
@@ -9538,21 +9930,21 @@ $.each(response.option_data.resultData.opDatas, function (index, optionChain) {
 
 
               // $strikePrice.addClass("closestStrike_bg");
-              var container = $(".main_option_chain_table");
+              var container = $(".main_option_chain_table,.main_option_oi,.main_option_greeks");
               var scrollTo =
                 $(this).position().top -
                 container.height() / 2 +
                 $(this).height() / 2;
 
               // Reset the scroll position first
-              $(".main_option_chain_table").animate(
+              $(".main_option_chain_table,.main_option_oi,.main_option_greeks").animate(
                 {
                   scrollTop: 0,
                 },
                 0,
                 function () {
                   // Scroll to the desired position after the reset
-                  $(".main_option_chain_table").animate(
+                  $(".main_option_chain_table,.main_option_oi,.main_option_greeks").animate(
                     {
                       scrollTop: scrollTo,
                     },
