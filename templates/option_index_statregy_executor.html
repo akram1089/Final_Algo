@@ -988,8 +988,7 @@
   #shortdouble_iron_fly,
   #shortdouble_iron_condor,
   #shortput_butterfly,
-  #shortcall_butter_fly
-   {
+  #shortcall_butter_fly {
     width: 68px;
     text-align: center;
     font-size: 12px;
@@ -1003,7 +1002,8 @@
     transition: 0.1s;
 
   }
-  #shortcustom_strategy{
+
+  #shortcustom_strategy {
     width: 122px;
     text-align: center;
     font-size: 16px;
@@ -1125,8 +1125,6 @@
     align-items: center;
     justify-content: center;
   }
-
-
 </style>
 
 <style>
@@ -2647,6 +2645,12 @@
         box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
         margin: 13px;
         padding: 11px;
+      }
+
+      .main_symbol_liqiuidity {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
       }
     </style>
 
@@ -4423,8 +4427,56 @@
       font-weight: 600;
       white-space: nowrap;
     }
+    .check_liquidity {
+      background: #fff;
+      color: #4399eb;
+      /* padding: 0px 57px; */
+      text-align: center;
+      font-size: 13px;
+      height: 34px;
+      font-weight: 500;
+      border-radius: 4px;
+      border: 1px solid #4399eb !important;
+      -webkit-box-shadow: none !important;
+      box-shadow: none !important;
+      outline: 0 !important;
+      -webkit-transition: all .2s ease-in-out !important;
+      -moz-transition: all .2s ease-in-out !important;
+      transition: all .2s ease-in-out !important;
+      cursor: pointer;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    .place_order_btn {
+  
+      /* padding: 0px 57px; */
 
-    .save_strategy:hover {
+      background: linear-gradient(180deg, #4399eb, #5cadfb);
+      color: #fff;
+      text-align: center;
+      font-size: 13px;
+      height: 34px;
+      font-weight: 500;
+      border-radius: 4px;
+      border: 1px solid #4399eb !important;
+      -webkit-box-shadow: none !important;
+      box-shadow: none !important;
+      outline: 0 !important;
+      -webkit-transition: all .2s ease-in-out !important;
+      -moz-transition: all .2s ease-in-out !important;
+      transition: all .2s ease-in-out !important;
+      cursor: pointer;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+.place_order_btn:hover {
+  background: #fff;
+      color: #4399eb;
+    }
+
+    .save_strategy:hover ,
+    .check_liquidity:hover {
       background: linear-gradient(180deg, #4399eb, #5cadfb);
       color: #fff;
     }
@@ -4743,6 +4795,12 @@
                     </div>
 
                     <div class="order_modal"></div>
+
+                    <div class="main_extented_status_liquidity">
+
+                      <p>Note : Please check the liquidity of all trades !!</p>
+
+                    </div>
                   </div>
                   <div class="modal-footer justify-content-between">
                     <div class="margin_footer">
@@ -4755,9 +4813,13 @@
                         <input type="number" value="4.1" class="margin_available form-control" disabled />
                       </div>
                     </div>
-                    <button type="button" class="btn btn-primary place_order_btn">
-                      Place All Order
-                    </button>
+                    <div class="right_place_order_check_liquidity">
+                      <button type="button" class="check_liquidity">Check Liquidity</button>
+                      <button type="button" class="place_order_btn" disabled>
+                        Place All Order
+                      </button>
+                    </div>
+
                   </div>
                 </div>
               </div>
@@ -5393,7 +5455,7 @@
 
       <script>
         $(document).ready(function () {
-          
+
           $(".main_option_chain_oi_ltp_greeks button").click(function () {
             $(".main_option_chain_oi_ltp_greeks button").removeClass("active_oi_ltp_greeks")
             $(this).addClass("active_oi_ltp_greeks")
@@ -6566,6 +6628,32 @@
   .bx-help-circle:hover::after {
     display: block;
   }
+
+  .liquidity_failed ,
+  .liquidity_passed {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .failed_liquidity{
+    text-align: center;
+    white-space: initial;
+    font-size: 12;
+    color: red;
+    border: 1px solid;
+    border-radius: 6px;
+    padding: 9px;
+  }
+  .passed_liquidity{
+    text-align: center;
+    white-space: initial;
+    font-size: 12;
+    color: green;
+    border: 1px solid;
+    border-radius: 6px;
+    padding: 9px;
+  }
 </style>
 
 
@@ -7014,13 +7102,18 @@
     <div class="inner_order_modal mt-2" style="border-radius: 11px;"> 
               <div class="order_status mb-2"> <p style="       text-wrap: pretty;
                      text-align: center;"></p></div>
+                     <div class="main_symbol_liqiuidity">
                 <div class="main_symbol_sell_buy">
                     <div class='sell_buy_indicator ${buy_sale_bg}'>${sell_buy_indicator}</div>
                 <div class="tradingsymbol">${combinedString}</div> 
+                <div class="expiry_initial">${expiry_initial}</div> 
                 <div class="d-block strikePrice_order_window">${strikePrice}</div>
                 <div class="d-block main_trading_symbol"></div>
                     
                     </div>
+
+                    <div class="liquidity_status"></div>
+                  </div>
                   
                          <div class="gap-1 main_indepth">
                     <div class="indepth_details"></div>
@@ -7115,6 +7208,13 @@
         // Clear the interval only if it's running
         clearInterval(intervalId);
         intervalId = null; // Reset the interval ID variable
+      }else{
+        $(".place_order_btn").prop("disabled", true);
+
+        $(".main_extented_status_liquidity")
+    .empty()
+    .append(`<p>Note: Please check the liquidity of all trades !!</p>`)
+    .removeClass("passed_liquidity failed_liquidity");
       }
     });
 
@@ -7705,6 +7805,121 @@
 
       return main_spot_data;
     }
+
+    $(".check_liquidity").click(function () {
+      var All_positionTrade = [];
+      var inner_order_modal = $(".inner_order_modal");
+      var mis_select = $(".mis_select").val()
+      inner_order_modal.each(function (index_order) {
+        var order_level = $(this);
+        var sell_buy_indicator = order_level.find(".sell_buy_indicator").text();
+        var expiry_initial = order_level.find(".expiry_initial").text();
+        var tradingsymbol = order_level.find(".tradingsymbol").text();
+        var main_trading_symbol = order_level.find(".main_trading_symbol").text();
+        var priceTrade = order_level.find(".priceTrade").val();
+        var quantityTrade = order_level.find(".quantityTrade").val();
+        var strikePrice_order_window = order_level.find(".strikePrice_order_window").text();
+        console.log(strikePrice_order_window);
+
+
+        // Check if the radio button is checked
+        var isRadioChecked = $(
+          `input[name='orderTypeLimit${index_order}']:checked`
+        ).val();
+
+        console.log(isRadioChecked);
+
+        All_positionTrade.push({
+          expiry_initial: expiry_initial,
+
+          sell_buy_indicator: sell_buy_indicator,
+          tradingsymbol: tradingsymbol,
+          main_trading_symbol: main_trading_symbol,
+          strikePrice_order_window: strikePrice_order_window,
+          Quantity: quantityTrade,
+          price: priceTrade,
+          isRadioChecked: isRadioChecked, // Add this property to the object
+          mis_select: mis_select
+        });
+      });
+      console.log(All_positionTrade);
+
+      $.ajax({
+  url: "/check_liquidity",
+  type: "POST",
+  data: JSON.stringify(All_positionTrade),
+  contentType: "application/json",
+  success: function (response) {
+    console.log(response);
+
+    // Initially, assume the button can be enabled
+    var isButtonDisabled =[]
+
+    var liquidity_failed_msg=[]
+
+    response.main_all_nudges.forEach(function (nudges, i) {
+      console.log(nudges.data);
+
+      // Variable to check if liquidity for this iteration has failed
+  
+
+      nudges.data.forEach(function (x) {
+        console.log(x);
+
+        if (x && Object.keys(x).length > 0) {
+          $(".liquidity_status").eq(i).empty().append(`
+            <div class="liquidity_failed">
+              <div class="liquidity_text">Liquidity :</div>
+              <div class="badge text-bg-danger">Failed</div>
+            </div>
+          `);
+
+          // Liquidity check failed for this iteration
+          isButtonDisabled.push(false)
+          x.forEach(function (failed_status) {
+            liquidity_failed_msg.push(failed_status.message);
+              
+            })
+        } else {
+          $(".liquidity_status").eq(i).empty().append(`
+          <div class="liquidity_passed">
+            <div class="liquidity_text">Liquidity :</div>
+            <div class="badge text-bg-success">Passed</div>
+            </div>
+            `);
+            isButtonDisabled.push(true)
+
+    
+        }
+      });
+
+      // If liquidity check failed for any iteration, set the flag to true
+   
+    });
+
+
+
+    console.log(isButtonDisabled);
+    if (isButtonDisabled.includes(false)) {
+      $(".place_order_btn").prop("disabled", true);
+      $(".main_extented_status_liquidity").empty().removeClass("passed_liquidity").addClass("failed_liquidity").append(`${liquidity_failed_msg[0]}`)
+    } else {
+      // If all the values are true, set
+      $(".place_order_btn").prop("disabled", false);
+      $(".main_extented_status_liquidity").empty().removeClass("failed_liquidity").addClass("passed_liquidity").append(`All the trade been passed the liquidity test, You can trade now. `)
+    }
+
+
+    // $(".place_order_btn").prop("disabled", isButtonDisabled);
+  },
+});
+
+
+
+    })
+
+
+
 
     var OrderId = 1;
     $(".place_order_btn").click(function () {
@@ -12228,7 +12443,7 @@
                     .find("#Auto_calls_long_click")
                     .data("HI1", "HI7there")
                     .click();
-                    $(".option_lot_size_input").text("5")
+                  $(".option_lot_size_input").text("5")
                 }
 
 
@@ -12240,7 +12455,7 @@
                     .find("#Auto_puts_long_click")
                     .data("HI1", "HI1there")
                     .click();
-                    $(".option_lot_size_input").text("5")
+                  $(".option_lot_size_input").text("5")
                 }
 
 

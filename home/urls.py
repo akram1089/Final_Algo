@@ -469,6 +469,13 @@ urlpatterns = [
 
 
 
+     path('check_liquidity', views.check_liquidity, name='check_liquidity'),
+
+
+
+
+
+
 
 #  path('your_template', views.your_template, name='your_template'),
     

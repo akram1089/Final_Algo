@@ -7368,6 +7368,12 @@ class ZerodhaPlaceOrder:
     def holdings(self):
         holdings = self.session.get(f"{self.root_url}/portfolio/holdings", headers=self.headers).json()["data"]
         return holdings
+    def nudges(self, params):
+        # print(params)
+        headers = {"Content-Type": "application/json", **self.headers}
+        nudges = self.session.post(f"{self.root_url}/nudge/orders", json=params, headers=headers)
+
+        return nudges.json() if nudges.status_code == 200 else None
     
 
     
@@ -7688,6 +7694,8 @@ def angel_one_order_place(data_trade, logging_id, password, totp_key, api_key,df
 
 
 
+
+
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
@@ -7741,6 +7749,7 @@ def quote_data_from_broker(request):
                 zerodha_api = ZerodhaPlaceOrder(enctoken)
                 all_profile = zerodha_api.get_user_profile()
                 margin_info = zerodha_api.margins()
+                print("trading_quotes",trading_quotes)
 
                 for quote in trading_quotes:
                     ohlc_market_indepth = zerodha_api.quote(quote["combinedString"])
@@ -7846,7 +7855,58 @@ def download_csv_and_display(target_string):
 
 
 
+@csrf_exempt  # Use this decorator to temporarily disable CSRF protection for simplicity
+def check_liquidity(request):
 
+
+    user = request.user
+    # broker_instance = Broker.objects.first()  # Assuming you have a Broker model defined
+    broker_instance = Broker.objects.filter(user=user, broker_name="zerodha", active_api=True).first()
+    broker_instance_angelone = Broker.objects.filter(user=user, broker_name="angelone", active_api=True).first()
+
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        print("data", data)
+
+        if broker_instance:
+            logging_id = broker_instance.logging_id
+            password = broker_instance.password
+            totp_key = broker_instance.totp_key
+            print(broker_instance)
+            enctoken = get_enctoken_internal(logging_id, password, totp_key)
+            print(enctoken)
+
+            # Check if login was successful
+            # data [{'expiry_initial': '2023-11-30', 'sell_buy_indicator': 'SELL', 'tradingsymbol': 'NIFTY23N3017350CE', 'main_trading_symbol': 'NIFTY23NOV17350CE', 'strikePrice_order_window': '17350', 'Quantity': '50', 'price': '0', 'isRadioChecked': 'market', 'mis_select': 'overnight'}, {'expiry_initial': '2023-11-30', 'sell_buy_indicator': 'SELL', 'tradingsymbol': 'NIFTY23N3017350PE', 'main_trading_symbol': 'NIFTY23NOV17350PE', 'strikePrice_order_window': '17350', 'Quantity': '50', 'price': '0.35', 'isRadioChecked': 'market', 'mis_select': 'overnight'}]
+            if enctoken:
+                zerodha_api = ZerodhaPlaceOrder(enctoken)
+                main_all_nudges=[]
+
+                for nudges in data:
+                    order_type = 'MARKET' if nudges['isRadioChecked'] == 'market' else 'LIMIT'
+                    product_type = 'NRML' if nudges['mis_select'] == 'overnight' else 'MIS'
+                    print(nudges)
+
+                    nudge = [{
+                        'exchange': 'NFO',
+                        'tradingsymbol': nudges['main_trading_symbol'],
+                        'transaction_type': nudges['sell_buy_indicator'],
+                        'variety': 'regular',
+                        'product': product_type,
+                        'order_type': order_type,
+                        'quantity': int(nudges["Quantity"]),
+                        'context': 'order_window.PLACE'
+                    }]
+                    All_nudges=zerodha_api.nudges(nudge)
+                    main_all_nudges.append(All_nudges)
+                    print(All_nudges)
+
+
+
+
+        # Perform any additional processing or validation here
+
+        return JsonResponse({'message': 'Data received successfully','main_all_nudges':main_all_nudges})
 
 
 
