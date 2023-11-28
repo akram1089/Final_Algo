@@ -988,8 +988,8 @@
   #shortdouble_iron_fly,
   #shortdouble_iron_condor,
   #shortput_butterfly,
-  #shortcall_butter_fly,
-  #shortcustom_strategy {
+  #shortcall_butter_fly
+   {
     width: 68px;
     text-align: center;
     font-size: 12px;
@@ -1002,6 +1002,18 @@
 
     transition: 0.1s;
 
+  }
+  #shortcustom_strategy{
+    width: 122px;
+    text-align: center;
+    font-size: 16px;
+    height: 37px;
+    font-weight: 700;
+    background: #dd0000;
+    color: white;
+    border: 1px solid;
+    border-radius: 5px;
+    transition: 0.1s;
   }
 
   #shortStraddle:hover,
@@ -1111,12 +1123,10 @@
 
   .main_counter {
     align-items: center;
-    margin-left: 34px;
+    justify-content: center;
   }
 
-  #put_call_select {
-    /* margin-left: 24px; */
-  }
+
 </style>
 
 <style>
@@ -4289,8 +4299,8 @@
 
                       <div class="main_counter d-flex gap-3 mb-3">
                         <div class="inner_inroFly_counter d-flex gap-2">
-                          <p class="fs-5 lot_title">Qty:</p>
-                          <div class="counter_custom_strategy d-flex justify-content-center gap-1">
+                          <!-- <p class="fs-5 lot_title">Qty:</p> -->
+                          <!-- <div class="counter_custom_strategy d-flex justify-content-center gap-1">
                             <button class="btn" id="decrement_custom_strategy">
                               <i class="bx bx-minus"></i>
                             </button>
@@ -4298,7 +4308,7 @@
                             <button class="btn" id="increment_custom_strategy">
                               <i class="bx bx-plus"></i>
                             </button>
-                          </div>
+                          </div> -->
 
                           <button class="" id="shortcustom_strategy">SELL</button>
                         </div>
@@ -5353,19 +5363,19 @@
                   <td class="text-start">Put Delta</td>
 
 
-      
 
-  
 
-          
+
+
+
                   <td>Theta</td>
                   <td>Vega</td>
                   <td>Gamma</td>
 
 
-               
 
-                
+
+
 
 
 
@@ -5383,6 +5393,7 @@
 
       <script>
         $(document).ready(function () {
+          
           $(".main_option_chain_oi_ltp_greeks button").click(function () {
             $(".main_option_chain_oi_ltp_greeks button").removeClass("active_oi_ltp_greeks")
             $(this).addClass("active_oi_ltp_greeks")
@@ -7753,6 +7764,50 @@
             console.log(response.order_details);
 
 
+            // Assuming the format is consistent (NIFTY23NOV20050CE)
+
+
+            response.order_details.sort((a, b) => {
+              // Extract the numeric part before "CE" or "PE"
+              let partsA = a.tradingsymbol.match(/(\d+)(CE|PE)/);
+              let partsB = b.tradingsymbol.match(/(\d+)(CE|PE)/);
+
+              // Extracted numeric parts for comparison
+              let numericPartA = partsA ? parseInt(partsA[1]) : 0;
+              let numericPartB = partsB ? parseInt(partsB[1]) : 0;
+
+              // First, sort by the extracted numeric part
+              const numericPartComparison = numericPartB - numericPartA;
+
+              if (numericPartComparison !== 0) {
+                return numericPartComparison;
+              }
+
+              // If numeric parts are equal, sort by strikeprice
+              const strikePriceComparison = parseInt(b.strikeprice) - parseInt(a.strikeprice);
+
+              if (strikePriceComparison !== 0) {
+                return strikePriceComparison;
+              }
+
+              // If strike prices are equal, sort by transaction type
+              return a.transaction_type === "BUY" ? -1 : 1;
+            });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
             response.order_details.forEach((order, index) => {
               var order_status_text = order.order_id;
 
@@ -7775,30 +7830,39 @@
                 }
               }
             });
-          } else if (response.broker === "angel_one") {
-            var order_status = $(".order_status p")
-            var inner_order_modal = $(".inner_order_modal")
+          }
+          else if (response.broker === "angel_one") {
+            var order_status = $(".order_status p");
+            var inner_order_modal = $(".inner_order_modal");
+
+            response.order_details.sort((a, b) => {
+              // First, sort by strikeprice
+              const strikePriceComparison = parseInt(b.strikeprice) - parseInt(a.strikeprice);
+
+              // If strike prices are equal, sort by transaction type
+              if (strikePriceComparison === 0) {
+                return a.transactiontype === "BUY" ? -1 : 1;
+              }
+
+              return strikePriceComparison;
+            });
+
             response.order_details.forEach((order, index) => {
-
               console.log(order);
-
-
 
               // Check if order_status_text is not an object
               if (order.orderstatus === "rejected") {
                 // Run this code block if it's not an object
                 inner_order_modal.eq(index).addClass("box_shadow_order_execution_error");
                 order_status.eq(index).text(` Order Id - ${order.orderid} ${order.text}`).addClass("order_error_text");
-
               } else {
                 // If it's an object, proceed with JSON parsing
-
                 inner_order_modal.eq(index).addClass("box_shadow_order_execution_success");
                 order_status.eq(index).text(`Order Placed Successfully : Order Id - ${order.orderid}`).addClass("order_success_text");
-
               }
             });
           }
+
           // Handle the response from the Django view if needed
 
 
@@ -9955,7 +10019,7 @@
             }
           });
 
-          $(".right_side_top_strategies #option_chain_button").click(
+          $(".right_side_top_strategies #option_chain_button,#buid_custom_strategy_btn").click(
             function () {
 
               $("#buid_custom_strategy_btn").click()
@@ -9971,21 +10035,21 @@
 
 
                   // $strikePrice.addClass("closestStrike_bg");
-                  var container = $(".main_option_chain_table");
+                  var container = $(".main_option_chain_table,.main_option_oi,.main_option_greeks");
                   var scrollTo =
                     $(this).position().top -
                     container.height() / 2 +
                     $(this).height() / 2;
 
                   // Reset the scroll position first
-                  $(".main_option_chain_table").animate(
+                  $(".main_option_chain_table,.main_option_oi,.main_option_greeks").animate(
                     {
                       scrollTop: 0,
                     },
                     0,
                     function () {
                       // Scroll to the desired position after the reset
-                      $(".main_option_chain_table").animate(
+                      $(".main_option_chain_table,.main_option_oi,.main_option_greeks").animate(
                         {
                           scrollTop: scrollTo,
                         },
@@ -12164,6 +12228,7 @@
                     .find("#Auto_calls_long_click")
                     .data("HI1", "HI7there")
                     .click();
+                    $(".option_lot_size_input").text("5")
                 }
 
 
@@ -12175,6 +12240,7 @@
                     .find("#Auto_puts_long_click")
                     .data("HI1", "HI1there")
                     .click();
+                    $(".option_lot_size_input").text("5")
                 }
 
 
@@ -12254,7 +12320,7 @@
                 // Click on #calculate after a longer delay
 
                 var counterInputValue = $("#counter_input_custom_strategy").val();
-                $(".option_lot_size_input").text(counterInputValue);
+                // $(".option_lot_size_input").text(counterInputValue);
                 localStorage.setItem("strategy_builder", "nifty_custom_strategy");
                 calculate_data();
                 $("#custom_strategy_modal").hide();
