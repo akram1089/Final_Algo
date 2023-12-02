@@ -7605,7 +7605,7 @@ def kite_order_zerodha(request):
 
 
 
-
+import time
     
     
 def angel_one_order_place(data_trade, logging_id, password, totp_key, api_key,df):
@@ -7675,6 +7675,7 @@ def angel_one_order_place(data_trade, logging_id, password, totp_key, api_key,df
                     if i['orderid'] == orderId:
                         print(i['orderid'], i['text'])
                         All_angel_one_order.append(i)
+                        time.sleep(1)
 
 
                 # ...
