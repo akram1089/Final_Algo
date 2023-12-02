@@ -1664,6 +1664,9 @@
                 <tbody>
                   <!-- DataTable will populate this tbody dynamically -->
                 </tbody>
+                <tfoot><tr><td colspan="3"><button type="button" class="button-small button-blue" fdprocessedid="x3nu1">
+                  Exit 1 position<!----> <!----></button></td> <td colspan="2"></td> <td class="text-right">Total</td> <td class="text-right text-green"><span>+</span>15,855.00
+            </td> <td colspan="2"></td></tr></tfoot>
               </table>
 
             </div>
@@ -1682,13 +1685,16 @@
         $("#order_btn").click(function () {
           $("#order_history").modal("show")
           var totalPLAdded = false; // Variable to track whether Total_p_l is already added
-          $.ajax({
-            type: "GET",
-            url: "/get_order_positions_details",  // Replace with the actual URL
+          var total_positions=  0
+          var all_holdings_pnl=0
+          const zerodha_socker = new WebSocket("ws://localhost:8000/ws/zerodha/")
+        console.log(zerodha_socker)
+        zerodha_socker.onmessage = function (event) {
+            const data = JSON.parse(event.data);
+            // console.log(data);
 
-            success: function (response) {
-              // Log the response
-              console.log(response);
+           var response=data
+            console.log(response);
 
 
               $(".broker_position_icon").empty().append(`<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 90 60">
@@ -1748,9 +1754,20 @@
                 `;
 
               // Populate table body dynamically
+              
               response.all_position.net.forEach(function (position) {
+                 total_positions+= position.pnl
                 $('#positionsTable tbody').append(rowTemplate(position));
               });
+     
+              response.all_holding.forEach(function (holdings) {
+                all_holdings_pnl+=holdings.pnl
+                // console.log(holdings);
+                
+              })
+
+              console.log(total_positions);
+              console.log(all_holdings_pnl);
               // Initialize DataTable with custom drawCallback option
               $('#positionsTable').DataTable({
                 order: [[6, 'asc']], // 6 is the column index for "Unrealised P&L"
@@ -1779,13 +1796,118 @@
                     // Set totalPLAdded to true to indicate that Total_p_l is added
                     totalPLAdded = true;
                   }
+                   // Reset total_positions after DataTable is drawn
+            total_positions = 0;
+            all_holdings_pnl = 0;
                 }
               });
-            },
-            error: function (error) {
-              console.error("Error:", error);
-            }
-          });
+
+
+        }
+          // $.ajax({
+          //   type: "GET",
+          //   url: "/get_order_positions_details",  // Replace with the actual URL
+
+          //   success: function (response) {
+          //     // Log the response
+          //     console.log(response);
+
+
+          //     $(".broker_position_icon").empty().append(`<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 90 60">
+          //                 <defs>
+          //                   <style>
+          //                     .cls-1 {
+          //                       fill: #f6461a;
+          //                     }
+
+          //                     .cls-2 {
+          //                       fill: #db342c;
+          //                     }
+          //                   </style>
+          //                 </defs>
+          //                 <title>Kite logo trimmed</title>
+          //                 <polygon class="cls-1" points="30 0 0 30 30 60 60 30 90 0 30 0" />
+          //                 <polygon class="cls-2" points="30 60 60 30 90 60 30 60" />
+          //               </svg>`)
+
+
+          //     var zerodha_kite_profile = response.all_profile.data
+          //     $(".position_names_user_details h5").text(zerodha_kite_profile.user_name);
+          //     $(".position_names_user_details p").text(`Client ID:${zerodha_kite_profile.user_id}`);
+
+          //     if ($.fn.DataTable.isDataTable('#positionsTable')) {
+          //       $('#positionsTable').DataTable().destroy();
+          //     }
+
+
+          //     $('#positionsTable tbody').empty();
+          //     // Create a template for table rows
+          //     // Create a template for table rows
+          //     const rowTemplate = (position) =>
+
+
+          //       `
+
+            
+
+
+          //           <tr>
+
+          //             <td><div class="form-check">
+          //             <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+           
+          //           </div></td>
+          //               <td ><div class="${position.product === "NRML" ? 'normal_order_background' : 'text-danger'}">${position.product}</div></td>
+          //               <td >${position.tradingsymbol}</td>
+          //               <td>${position.exchange}</td>
+          //               <td class="${parseFloat(position.exchange) > 0 ? 'text-success' : 'text-danger'}">${position.quantity}</td>
+          //               <td>${position.average_price}</td>
+          //               <td>${position.close_price}</td>
+          //               <td>${position.last_price}</td>
+          //               <td class="${position.pnl > 0 ? 'text-success' : 'text-danger'}">${position.pnl > 0 ? '+' : '-'}${position.pnl}</td>
+  
+          //           </tr>
+          //       `;
+
+          //     // Populate table body dynamically
+          //     response.all_position.net.forEach(function (position) {
+          //       $('#positionsTable tbody').append(rowTemplate(position));
+          //     });
+          //     // Initialize DataTable with custom drawCallback option
+          //     $('#positionsTable').DataTable({
+          //       order: [[6, 'asc']], // 6 is the column index for "Unrealised P&L"
+          //       drawCallback: function () {
+          //         // Check if Total_p_l is already added
+          //         if (!totalPLAdded) {
+          //           // Calculate and display the total value
+          //           var totalUnrealised = response.all_position.net.reduce(function (sum, position) {
+          //             return sum + position.unrealised;
+          //           }, 0);
+
+          //           // Add Total_p_l class within DataTable after the table
+          //           var totalPLDiv = $(`
+          //                        <div class="Total_p_l">
+          //                             <div class="main_exit_positions">
+          //             <button class="exit_all_positions_zerodha">Exit Positions</button>
+          //             </div>
+
+
+          //                             <div class="main_p_l_table">  Total P&L: <span class="${totalUnrealised > 0 ? 'text-success' : 'text-danger'}">${totalUnrealised > 0 ? '+' : '-'}${totalUnrealised.toFixed(2)}</span></div>
+          //                           </div>
+          //                       `);
+
+          //           $('#positionsTable_wrapper').append(totalPLDiv);
+
+          //           // Set totalPLAdded to true to indicate that Total_p_l is added
+          //           totalPLAdded = true;
+          //         }
+          //       }
+          //     });
+          //   },
+          //   error: function (error) {
+          //     console.error("Error:", error);
+          //   }
+          // });
 
         })
       })
@@ -1865,7 +1987,7 @@
               <option value="dhan">Dhan</option>
               <option value="geojit">Geojit</option>
             </select>
-            
+
           </div>
 
 
@@ -4440,6 +4562,7 @@
       font-weight: 600;
       white-space: nowrap;
     }
+
     .check_liquidity {
       background: #fff;
       color: #4399eb;
@@ -4460,8 +4583,9 @@
       font-weight: 600;
       white-space: nowrap;
     }
+
     .place_order_btn {
-  
+
       /* padding: 0px 57px; */
 
       background: linear-gradient(180deg, #4399eb, #5cadfb);
@@ -4483,12 +4607,12 @@
       white-space: nowrap;
     }
 
-.place_order_btn:hover {
-  background: #fff;
+    .place_order_btn:hover {
+      background: #fff;
       color: #4399eb;
     }
 
-    .save_strategy:hover ,
+    .save_strategy:hover,
     .check_liquidity:hover {
       background: linear-gradient(180deg, #4399eb, #5cadfb);
       color: #fff;
@@ -6642,14 +6766,14 @@
     display: block;
   }
 
-  .liquidity_failed ,
+  .liquidity_failed,
   .liquidity_passed {
     display: flex;
     align-items: center;
     gap: 6px;
   }
 
-  .failed_liquidity{
+  .failed_liquidity {
     text-align: center;
     white-space: initial;
     font-size: 12;
@@ -6658,7 +6782,8 @@
     border-radius: 6px;
     padding: 9px;
   }
-  .passed_liquidity{
+
+  .passed_liquidity {
     text-align: center;
     white-space: initial;
     font-size: 12;
@@ -7221,13 +7346,13 @@
         // Clear the interval only if it's running
         clearInterval(intervalId);
         intervalId = null; // Reset the interval ID variable
-      }else{
+      } else {
         $(".place_order_btn").prop("disabled", true);
 
         $(".main_extented_status_liquidity")
-    .empty()
-    .append(`<p>Note: Please check the liquidity of all trades !!</p>`)
-    .removeClass("passed_liquidity failed_liquidity");
+          .empty()
+          .append(`<p>Note: Please check the liquidity of all trades !!</p>`)
+          .removeClass("passed_liquidity failed_liquidity");
       }
     });
 
@@ -7858,74 +7983,80 @@
       console.log(All_positionTrade);
 
       $.ajax({
-  url: "/check_liquidity",
-  type: "POST",
-  data: JSON.stringify(All_positionTrade),
-  contentType: "application/json",
-  success: function (response) {
-    console.log(response);
+        url: "/check_liquidity",
+        type: "POST",
+        data: JSON.stringify(All_positionTrade),
+        contentType: "application/json",
+        success: function (response) {
+          console.log(response);
 
-    // Initially, assume the button can be enabled
-    var isButtonDisabled =[]
+          // Initially, assume the button can be enabled
 
-    var liquidity_failed_msg=[]
+          if (response.broker === "zerodha") {
 
-    response.main_all_nudges.forEach(function (nudges, i) {
-      console.log(nudges.data);
+            var isButtonDisabled = []
 
-      // Variable to check if liquidity for this iteration has failed
-  
+            var liquidity_failed_msg = []
 
-      nudges.data.forEach(function (x) {
-        console.log(x);
+            response.main_all_nudges.forEach(function (nudges, i) {
+              console.log(nudges.data);
 
-        if (x && Object.keys(x).length > 0) {
-          $(".liquidity_status").eq(i).empty().append(`
-            <div class="liquidity_failed">
-              <div class="liquidity_text">Liquidity :</div>
-              <div class="badge text-bg-danger">Failed</div>
-            </div>
-          `);
+              // Variable to check if liquidity for this iteration has failed
 
-          // Liquidity check failed for this iteration
-          isButtonDisabled.push(false)
-          x.forEach(function (failed_status) {
-            liquidity_failed_msg.push(failed_status.message);
-              
-            })
-        } else {
-          $(".liquidity_status").eq(i).empty().append(`
-          <div class="liquidity_passed">
-            <div class="liquidity_text">Liquidity :</div>
-            <div class="badge text-bg-success">Passed</div>
-            </div>
-            `);
-            isButtonDisabled.push(true)
 
-    
-        }
+              nudges.data.forEach(function (x) {
+                console.log(x);
+
+                if (x && Object.keys(x).length > 0) {
+                  $(".liquidity_status").eq(i).empty().append(`
+  <div class="liquidity_failed">
+    <div class="liquidity_text">Liquidity :</div>
+    <div class="badge text-bg-danger">Failed</div>
+  </div>
+`);
+
+                  // Liquidity check failed for this iteration
+                  isButtonDisabled.push(false)
+                  x.forEach(function (failed_status) {
+                    liquidity_failed_msg.push(failed_status.message);
+
+                  })
+                } else {
+                  $(".liquidity_status").eq(i).empty().append(`
+<div class="liquidity_passed">
+  <div class="liquidity_text">Liquidity :</div>
+  <div class="badge text-bg-success">Passed</div>
+  </div>
+  `);
+                  isButtonDisabled.push(true)
+
+
+                }
+              });
+
+              // If liquidity check failed for any iteration, set the flag to true
+
+            });
+
+
+
+            console.log(isButtonDisabled);
+            if (isButtonDisabled.includes(false)) {
+              $(".place_order_btn").prop("disabled", true);
+              $(".main_extented_status_liquidity").empty().removeClass("passed_liquidity").addClass("failed_liquidity").append(`${liquidity_failed_msg[0]}`)
+            } else {
+              // If all the values are true, set
+              $(".place_order_btn").prop("disabled", false);
+              $(".main_extented_status_liquidity").empty().removeClass("failed_liquidity").addClass("passed_liquidity").append(`All the trade been passed the liquidity test, You can trade now. `)
+            }
+
+
+          } else {
+            $(".place_order_btn").prop("disabled", false);
+          }
+          // $(".place_order_btn").prop("disabled", isButtonDisabled);
+        },
       });
-
-      // If liquidity check failed for any iteration, set the flag to true
-   
-    });
-
-
-
-    console.log(isButtonDisabled);
-    if (isButtonDisabled.includes(false)) {
-      $(".place_order_btn").prop("disabled", true);
-      $(".main_extented_status_liquidity").empty().removeClass("passed_liquidity").addClass("failed_liquidity").append(`${liquidity_failed_msg[0]}`)
-    } else {
-      // If all the values are true, set
-      $(".place_order_btn").prop("disabled", false);
-      $(".main_extented_status_liquidity").empty().removeClass("failed_liquidity").addClass("passed_liquidity").append(`All the trade been passed the liquidity test, You can trade now. `)
-    }
-
-
-    // $(".place_order_btn").prop("disabled", isButtonDisabled);
-  },
-});
 
 
 
@@ -7937,10 +8068,10 @@
     var OrderId = 1;
     $(".place_order_btn").click(function () {
 
-      
 
-    $(".main_extented_status_liquidity")
-    .empty().removeClass("passed_liquidity failed_liquidity");
+
+      $(".main_extented_status_liquidity")
+        .empty().removeClass("passed_liquidity failed_liquidity");
       var All_positionTrade = [];
       var inner_order_modal = $(".inner_order_modal");
       var mis_select = $(".mis_select").val()

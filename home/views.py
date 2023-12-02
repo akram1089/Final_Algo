@@ -7900,13 +7900,18 @@ def check_liquidity(request):
                     All_nudges=zerodha_api.nudges(nudge)
                     main_all_nudges.append(All_nudges)
                     print(All_nudges)
+            return JsonResponse({'message': 'Data received successfully','broker':'zerodha','main_all_nudges':main_all_nudges})        
+
+
+        elif broker_instance_angelone:
+
 
 
 
 
         # Perform any additional processing or validation here
 
-        return JsonResponse({'message': 'Data received successfully','main_all_nudges':main_all_nudges})
+         return JsonResponse({'message': 'Data received successfully','broker':'angel_one'})
 
 
 
