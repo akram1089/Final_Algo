@@ -8212,7 +8212,6 @@ def get_order_positions_details(request):
 
 
 
-
 def beginnerTracks(request):
     return render(request, "learningcenter/beginnerTracks.html")
 
@@ -8243,5 +8242,5 @@ def tradeAdjustment(request):
 
 def learning_Books(request):
     return render(request, "learningcenter/learning_Books.html")
-
-
+def researchreports(request):
+    return render(request, "researchreports.html")

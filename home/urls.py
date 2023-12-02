@@ -471,6 +471,23 @@ urlpatterns = [
 
      path('check_liquidity', views.check_liquidity, name='check_liquidity'),
 
+     
+     path('beginnerTracks', views.beginnerTracks, name='beginnerTracks'),
+     path('intermediateTracks', views.intermediateTracks, name='intermediateTracks'),
+     path('advanceTracks', views.advanceTracks, name='advanceTracks'),
+
+     path('optionBasic', views.optionBasic, name='optionBasic'),
+     path('entryandexit', views.entryandexit, name='entryandexit'),
+     path('optionExpiration', views.optionExpiration, name='optionExpiration'),
+     path('bullishStrategy', views.bullishStrategy, name='bullishStrategy'),
+     path('neutralStrategy', views.neutralStrategy, name='neutralStrategy'),
+     path('bearishStrategy', views.bearishStrategy, name='bearishStrategy'),
+     path('portfoliomanagement', views.portfoliomanagement, name='portfoliomanagement'),
+     path('pricingVolatility', views.pricingVolatility, name='pricingVolatility'),
+     path('tradeAdjustment', views.tradeAdjustment, name='tradeAdjustment'),
+     path('learning_Books', views.learning_Books, name='learning_Books'),
+     path('researchreports', views.researchreports, name='researchreports'),
+
 
 
 
