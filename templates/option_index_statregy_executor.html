@@ -1317,7 +1317,7 @@
   <div class="top_content_option_chain p-3">
     <div class="main_top_all_left_right d-flex align-items-center justify-content-between">
       <div class="left_side_top_strategies">
-        <div class="main_top_strategies d-flex align-items-center" style="gap: 0.88rem;">
+        <div class="main_top_strategies d-flex align-items-center" style="gap: 0.80rem;">
           <select class="form-select w-auto stockDropdown">
             <optgroup label="Indices">
               <option value="NIFTY">NIFTY</option>
@@ -1655,7 +1655,7 @@
                     <th>Exchange</th>
                     <th>Quantity</th>
                     <th>Average Price</th>
-                    <th>Close Price</th>
+
                     <th>Last Price</th>
                     <th>P&L</th>
 
@@ -1664,9 +1664,17 @@
                 <tbody>
                   <!-- DataTable will populate this tbody dynamically -->
                 </tbody>
-                <tfoot><tr><td colspan="3"><button type="button" class="button-small button-blue" fdprocessedid="x3nu1">
-                  Exit 1 position<!----> <!----></button></td> <td colspan="2"></td> <td class="text-right">Total</td> <td class="text-right text-green"><span>+</span>15,855.00
-            </td> <td colspan="2"></td></tr></tfoot>
+                <tfoot>
+                  <tr>
+                    <td colspan="4"><button type="button" class="button-small button-blue" fdprocessedid="x3nu1">
+                        Exit 1 position<!----> <!----></button></td>
+                    <td colspan="2"></td>
+                    <td class="text-right">Total</td>
+                    <td class="text-right"><span class="main_all_pnl"></span>
+                    </td>
+
+                  </tr>
+                </tfoot>
               </table>
 
             </div>
@@ -1679,43 +1687,304 @@
       </div>
     </div>
 
+    <!-- <script>
+
+      $(document).ready(function () {
+
+
+
+        $("#order_btn").click(function () {
+          $("#order_history").modal("show")
+          //   var totalPLAdded = false; // Variable to track whether Total_p_l is already added
+          //   var total_positions=  0
+          //   var all_holdings_pnl=0
+          //   const zerodha_socker = new WebSocket("ws://localhost:8001/ws/zerodha/")
+          // console.log(zerodha_socker)
+          // zerodha_socker.onmessage = function (event) {
+          //     const data = JSON.parse(event.data);
+          //     // console.log(data);
+
+          //    var response=data
+          //     console.log(response);
+
+
+          //       $(".broker_position_icon").empty().append(`<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 90 60">
+          //                   <defs>
+          //                     <style>
+          //                       .cls-1 {
+          //                         fill: #f6461a;
+          //                       }
+
+          //                       .cls-2 {
+          //                         fill: #db342c;
+          //                       }
+          //                     </style>
+          //                   </defs>
+          //                   <title>Kite logo trimmed</title>
+          //                   <polygon class="cls-1" points="30 0 0 30 30 60 60 30 90 0 30 0" />
+          //                   <polygon class="cls-2" points="30 60 60 30 90 60 30 60" />
+          //                 </svg>`)
+
+
+          //       var zerodha_kite_profile = response.all_profile.data
+          //       $(".position_names_user_details h5").text(zerodha_kite_profile.user_name);
+          //       $(".position_names_user_details p").text(`Client ID:${zerodha_kite_profile.user_id}`);
+
+          //       if ($.fn.DataTable.isDataTable('#positionsTable')) {
+          //         $('#positionsTable').DataTable().destroy();
+          //       }
+
+
+          //       $('#positionsTable tbody').empty();
+          //       // Create a template for table rows
+          //       // Create a template for table rows
+          //       const rowTemplate = (position) =>
+
+
+          //         `
+
+
+
+
+          //             <tr>
+
+          //               <td><div class="form-check">
+          //               <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+
+          //             </div></td>
+          //                 <td ><div class="${position.product === "NRML" ? 'normal_order_background' : 'text-danger'}">${position.product}</div></td>
+          //                 <td >${position.tradingsymbol}</td>
+          //                 <td>${position.exchange}</td>
+          //                 <td class="${parseFloat(position.exchange) > 0 ? 'text-success' : 'text-danger'}">${position.quantity}</td>
+          //                 <td>${position.average_price}</td>
+          //                 <td>${position.close_price}</td>
+          //                 <td>${position.last_price}</td>
+          //                 <td class="${position.pnl > 0 ? 'text-success' : 'text-danger'}">${position.pnl > 0 ? '+' : '-'}${position.pnl}</td>
+
+          //             </tr>
+          //         `;
+
+          //       // Populate table body dynamically
+
+          //       response.all_position.net.forEach(function (position) {
+          //          total_positions+= position.pnl
+          //         $('#positionsTable tbody').append(rowTemplate(position));
+          //       });
+
+          //       response.all_holding.forEach(function (holdings) {
+          //         all_holdings_pnl+=holdings.pnl
+          //         // console.log(holdings);
+
+          //       })
+
+          //       console.log(total_positions);
+          //       console.log(all_holdings_pnl);
+          //       // Initialize DataTable with custom drawCallback option
+          //       $('#positionsTable').DataTable({
+          //         order: [[6, 'asc']], // 6 is the column index for "Unrealised P&L"
+          //         drawCallback: function () {
+          //           // Check if Total_p_l is already added
+          //           if (!totalPLAdded) {
+          //             // Calculate and display the total value
+          //             var totalUnrealised = response.all_position.net.reduce(function (sum, position) {
+          //               return sum + position.unrealised;
+          //             }, 0);
+
+          //             // Add Total_p_l class within DataTable after the table
+          //             var totalPLDiv = $(`
+          //                          <div class="Total_p_l">
+          //                               <div class="main_exit_positions">
+          //               <button class="exit_all_positions_zerodha">Exit Positions</button>
+          //               </div>
+
+
+          //                               <div class="main_p_l_table">  Total P&L: <span class="${totalUnrealised > 0 ? 'text-success' : 'text-danger'}">${totalUnrealised > 0 ? '+' : '-'}${totalUnrealised.toFixed(2)}</span></div>
+          //                             </div>
+          //                         `);
+
+          //             $('#positionsTable_wrapper').append(totalPLDiv);
+
+          //             // Set totalPLAdded to true to indicate that Total_p_l is added
+          //             totalPLAdded = true;
+          //           }
+          //            // Reset total_positions after DataTable is drawn
+          //     total_positions = 0;
+          //     all_holdings_pnl = 0;
+          //         }
+          //       });
+
+
+          // }
+
+          var intervalId_order = null; // Initialize the interval ID variable
+          var totalPLAdded = false; // Variable to track if Total_p_l is added
+
+          function fetchData() {
+            $.ajax({
+              type: "GET",
+              url: "/get_order_positions_details", // Replace with the actual URL
+              success: function (response) {
+                // Log the response
+                console.log(response);
+
+                $(".broker_position_icon").empty().append(`<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 90 60">
+                  <defs>
+                    <style>
+                      .cls-1 {
+                        fill: #f6461a;
+                      }
+
+                      .cls-2 {
+                        fill: #db342c;
+                      }
+                    </style>
+                  </defs>
+                  <title>Kite logo trimmed</title>
+                  <polygon class="cls-1" points="30 0 0 30 30 60 60 30 90 0 30 0" />
+                  <polygon class="cls-2" points="30 60 60 30 90 60 30 60" />
+                </svg>`);
+
+                var zerodha_kite_profile = response.all_profile.data;
+                $(".position_names_user_details h5").text(zerodha_kite_profile.user_name);
+                $(".position_names_user_details p").text(`Client ID:${zerodha_kite_profile.user_id}`);
+
+                if ($.fn.DataTable.isDataTable('#positionsTable')) {
+                  $('#positionsTable').DataTable().destroy();
+                }
+
+                $('#positionsTable tbody').empty();
+
+                const rowTemplate = (position) => `
+        <tr>
+          <td><div class="form-check">
+            <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+          </div></td>
+          <td><div class="${position.product === "NRML" ? 'normal_order_background' : 'text-danger'}">${position.product}</div></td>
+          <td>${position.tradingsymbol}</td>
+          <td>${position.exchange}</td>
+          <td class="${parseFloat(position.exchange) > 0 ? 'text-success' : 'text-danger'}">${position.quantity}</td>
+          <td>${position.average_price}</td>
+          <td>${position.close_price}</td>
+          <td>${position.last_price}</td>
+          <td class="${position.pnl > 0 ? 'text-success' : 'text-danger'}">${position.pnl > 0 ? '+' : '-'}${position.pnl}</td>
+        </tr>`;
+
+                response.all_position.net.forEach(function (position) {
+                  $('#positionsTable tbody').append(rowTemplate(position));
+                });
+
+                $('#positionsTable').DataTable({
+                  order: [[6, 'asc']], // 6 is the column index for "Unrealised P&L"
+                  drawCallback: function () {
+                    if (!totalPLAdded) {
+                      var totalUnrealised = response.all_position.net.reduce(function (sum, position) {
+                        return sum + position.unrealised;
+                      }, 0);
+
+                      var totalPLDiv = $(`
+              <div class="Total_p_l">
+                <div class="main_exit_positions">
+                  <button class="exit_all_positions_zerodha">Exit Positions</button>
+                </div>
+                <div class="main_p_l_table">Total P&L: <span class="${totalUnrealised > 0 ? 'text-success' : 'text-danger'}">${totalUnrealised > 0 ? '+' : '-'}${totalUnrealised.toFixed(2)}</span></div>
+              </div>`);
+
+                      $('#positionsTable_wrapper').append(totalPLDiv);
+                      totalPLAdded = true;
+                    }
+                  }
+                });
+              },
+              error: function (error) {
+                console.error("Error:", error);
+              }
+            });
+          }
+
+          $("#order_btn").click(function () {
+            $("#order_history").modal("show");
+
+            if (intervalId_order === null) {
+              console.log('Show');
+
+              // Run the fetchData function every 1000 milliseconds (1 second)
+              intervalId_order = setInterval(fetchData, 1000);
+            }
+          });
+
+        })
+        $("#order_history").on("hidden.bs.modal", function () {
+          if (intervalId_order !== null) {
+            // Clear the interval only if it's running
+            clearInterval(intervalId_order);
+            intervalId_order = null; // Reset the interval ID variable
+          }
+        });
+        fetchData()
+
+
+      })
+
+
+    </script> -->
+
+
+
+    <!-- Ajax_order_hostory -->
+
+
+
+
     <script>
 
       $(document).ready(function () {
-        $("#order_btn").click(function () {
-          $("#order_history").modal("show")
-          var totalPLAdded = false; // Variable to track whether Total_p_l is already added
-          var total_positions=  0
-          var all_holdings_pnl=0
-          const zerodha_socker = new WebSocket("ws://localhost:8000/ws/zerodha/")
-        console.log(zerodha_socker)
-        zerodha_socker.onmessage = function (event) {
-            const data = JSON.parse(event.data);
-            // console.log(data);
+        var intervalId_order = null; // Initialize the interval ID variable
+        var totalPLAdded = false; // Variable to track if Total_p_l is added
 
-           var response=data
-            console.log(response);
+        function fetchData() {
+          $.ajax({
+            type: "GET",
+            url: "/get_order_positions_details", // Replace with the actual URL
+            success: function (response) {
+              // Log the response
+              // console.log(response.main_net_ohlc);
+              let mainNetOHLC = response.main_net_ohlc;
+              let lastPrices = {};
 
+              // Loop through the mainNetOHLC array
+              for (let i = 0; i < mainNetOHLC.length; i++) {
+                let tradingsymbol = Object.keys(mainNetOHLC[i])[0];
+                let lastPrice = mainNetOHLC[i][tradingsymbol].last_price;
 
-              $(".broker_position_icon").empty().append(`<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 90 60">
-                          <defs>
-                            <style>
-                              .cls-1 {
-                                fill: #f6461a;
-                              }
+                // Remove "NFO:" from the tradingsymbol
+                tradingsymbol = tradingsymbol.replace('NFO:', '');
 
-                              .cls-2 {
-                                fill: #db342c;
-                              }
-                            </style>
-                          </defs>
-                          <title>Kite logo trimmed</title>
-                          <polygon class="cls-1" points="30 0 0 30 30 60 60 30 90 0 30 0" />
-                          <polygon class="cls-2" points="30 60 60 30 90 60 30 60" />
-                        </svg>`)
+                // Store lastPrice in the object
+                lastPrices[tradingsymbol] = lastPrice;
+              }
 
+              console.log(lastPrices);
 
-              var zerodha_kite_profile = response.all_profile.data
+              $(".broker_position_icon").empty().append(`
+                      <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 90 60">
+                        <defs>
+                          <style>
+                            .cls-1 {
+                              fill: #f6461a;
+                            }
+
+                            .cls-2 {
+                              fill: #db342c;
+                            }
+                          </style>
+                        </defs>
+                        <title>Kite logo trimmed</title>
+                        <polygon class="cls-1" points="30 0 0 30 30 60 60 30 90 0 30 0" />
+                        <polygon class="cls-2" points="30 60 60 30 90 60 30 60" />
+                      </svg>
+                    `);
+
+              var zerodha_kite_profile = response.all_profile.data;
               $(".position_names_user_details h5").text(zerodha_kite_profile.user_name);
               $(".position_names_user_details p").text(`Client ID:${zerodha_kite_profile.user_id}`);
 
@@ -1723,203 +1992,126 @@
                 $('#positionsTable').DataTable().destroy();
               }
 
-
               $('#positionsTable tbody').empty();
-              // Create a template for table rows
-              // Create a template for table rows
-              const rowTemplate = (position) =>
 
-
-                `
-
-            
-
-
-                    <tr>
-
-                      <td><div class="form-check">
-                      <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-           
-                    </div></td>
-                        <td ><div class="${position.product === "NRML" ? 'normal_order_background' : 'text-danger'}">${position.product}</div></td>
-                        <td >${position.tradingsymbol}</td>
-                        <td>${position.exchange}</td>
-                        <td class="${parseFloat(position.exchange) > 0 ? 'text-success' : 'text-danger'}">${position.quantity}</td>
-                        <td>${position.average_price}</td>
-                        <td>${position.close_price}</td>
-                        <td>${position.last_price}</td>
-                        <td class="${position.pnl > 0 ? 'text-success' : 'text-danger'}">${position.pnl > 0 ? '+' : '-'}${position.pnl}</td>
-  
-                    </tr>
-                `;
-
-              // Populate table body dynamically
-              
-              response.all_position.net.forEach(function (position) {
-                 total_positions+= position.pnl
-                $('#positionsTable tbody').append(rowTemplate(position));
-              });
-     
-              response.all_holding.forEach(function (holdings) {
-                all_holdings_pnl+=holdings.pnl
-                // console.log(holdings);
-                
-              })
-
-              console.log(total_positions);
-              console.log(all_holdings_pnl);
-              // Initialize DataTable with custom drawCallback option
-              $('#positionsTable').DataTable({
-                order: [[6, 'asc']], // 6 is the column index for "Unrealised P&L"
-                drawCallback: function () {
-                  // Check if Total_p_l is already added
-                  if (!totalPLAdded) {
-                    // Calculate and display the total value
-                    var totalUnrealised = response.all_position.net.reduce(function (sum, position) {
-                      return sum + position.unrealised;
-                    }, 0);
-
-                    // Add Total_p_l class within DataTable after the table
-                    var totalPLDiv = $(`
-                                 <div class="Total_p_l">
-                                      <div class="main_exit_positions">
-                      <button class="exit_all_positions_zerodha">Exit Positions</button>
-                      </div>
-
-
-                                      <div class="main_p_l_table">  Total P&L: <span class="${totalUnrealised > 0 ? 'text-success' : 'text-danger'}">${totalUnrealised > 0 ? '+' : '-'}${totalUnrealised.toFixed(2)}</span></div>
+              const rowTemplate = (position, lastPrice, main_p_n_l) => `
+                                <tr class="selected">
+                                  <td>
+                                    <div class="form-check">
+                                      <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
                                     </div>
-                                `);
+                                  </td>
+                                  <td>
+                                    <div class="${position.product === "NRML" ? 'normal_order_background' : 'text-danger'}">${position.product}</div>
+                                  </td>
+                                  <td>${position.tradingsymbol}</td>
+                                  <td>${position.exchange}</td>
+                                  <td class="${parseFloat(position.exchange) > 0 ? 'text-success' : 'text-danger'}">${position.quantity}</td>
+                                  <td>${position.average_price.toFixed(2)}</td>
 
-                    $('#positionsTable_wrapper').append(totalPLDiv);
 
-                    // Set totalPLAdded to true to indicate that Total_p_l is added
-                    totalPLAdded = true;
-                  }
-                   // Reset total_positions after DataTable is drawn
-            total_positions = 0;
-            all_holdings_pnl = 0;
+                                  <td>${lastPrice}</td>
+                                  <td class="${main_p_n_l > 0 ? 'text-success' : 'text-danger'}">${main_p_n_l > 0 ? '+' : ''}${main_p_n_l}</td>
+                                </tr>`;
+
+              // Assuming 'tradingsymbol' is available in the position object
+              // Initialize a variable to store the total P&L
+              let totalMainPNL = 0;
+
+              response.all_position.net.forEach(function (position) {
+                let tradingsymbol = position.tradingsymbol;
+                console.log(tradingsymbol);
+
+                // Remove "NFO:" from the tradingsymbol
+                tradingsymbol = tradingsymbol.replace('NFO:', '');
+
+                let lastPrice = lastPrices[tradingsymbol] || ''; // Retrieve lastPrice from the object
+                var average_price_main = position.average_price;
+                var quantity_main = position.quantity;
+
+                // Check if both average_price_main and quantity_main are zero
+                if (average_price_main === 0 && quantity_main === 0) {
+                  var main_p_n_l = position.pnl;
+                } else {
+                  var main_p_n_l = lastPrice * quantity_main - average_price_main * quantity_main;
                 }
+
+                console.log(main_p_n_l);
+
+                // Add main_p_n_l to the total
+                totalMainPNL += main_p_n_l;
+
+                // Use the modified row template with lastPrice
+                $('#positionsTable tbody').append(rowTemplate(position, lastPrice, main_p_n_l));
               });
 
+              // Display the total P&L in the element with the class .main_all_pnl
+              let totalPNLElement = $('.main_all_pnl');
+              totalPNLElement.text(`Total P&L: ${(totalMainPNL.toFixed(2))}`);
 
+              // Add class based on the condition
+              if (totalMainPNL < 0) {
+                totalPNLElement.addClass('text-danger');
+              } else {
+                totalPNLElement.addClass('text-success');
+              }
+
+
+
+
+              //     $('#positionsTable').DataTable({
+              //       order: [[6, 'asc']], // 6 is the column index for "Unrealised P&L"
+              //       drawCallback: function () {
+              //         if (!totalPLAdded) {
+              //           var totalUnrealised = response.all_position.net.reduce(function (sum, position) {
+              //             return sum + position.unrealised;
+              //           }, 0);
+
+              //           var totalPLDiv = $(`
+              // <div class="Total_p_l">
+              //   <div class="main_exit_positions">
+              //     <button class="exit_all_positions_zerodha">Exit Positions</button>
+              //   </div>
+              //   <div class="main_p_l_table">Total P&L: <span class="${totalUnrealised > 0 ? 'text-success' : 'text-danger'}">${totalUnrealised > 0 ? '+' : '-'}${totalUnrealised.toFixed(2)}</span></div>
+              // </div>`);
+
+              //           $('#positionsTable_wrapper').append(totalPLDiv);
+              //           totalPLAdded = true;
+              //         }
+              //       }
+              //     });
+            },
+            error: function (error) {
+              console.error("Error:", error);
+            }
+          });
         }
-          // $.ajax({
-          //   type: "GET",
-          //   url: "/get_order_positions_details",  // Replace with the actual URL
 
-          //   success: function (response) {
-          //     // Log the response
-          //     console.log(response);
+        $("#order_btn").click(function () {
+          $("#order_history").modal("show");
 
+          if (intervalId_order === null) {
+            console.log('Show');
 
-          //     $(".broker_position_icon").empty().append(`<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 90 60">
-          //                 <defs>
-          //                   <style>
-          //                     .cls-1 {
-          //                       fill: #f6461a;
-          //                     }
+            // Run the fetchData function every 1000 milliseconds (1 second)
+            intervalId_order = setInterval(fetchData, 5000);
+          }
+        });
 
-          //                     .cls-2 {
-          //                       fill: #db342c;
-          //                     }
-          //                   </style>
-          //                 </defs>
-          //                 <title>Kite logo trimmed</title>
-          //                 <polygon class="cls-1" points="30 0 0 30 30 60 60 30 90 0 30 0" />
-          //                 <polygon class="cls-2" points="30 60 60 30 90 60 30 60" />
-          //               </svg>`)
+        $("#order_history").on("hidden.bs.modal", function () {
+          if (intervalId_order !== null) {
+            // Clear the interval only if it's running
+            clearInterval(intervalId_order);
+            intervalId_order = null; // Reset the interval ID variable
+          }
+        });
 
-
-          //     var zerodha_kite_profile = response.all_profile.data
-          //     $(".position_names_user_details h5").text(zerodha_kite_profile.user_name);
-          //     $(".position_names_user_details p").text(`Client ID:${zerodha_kite_profile.user_id}`);
-
-          //     if ($.fn.DataTable.isDataTable('#positionsTable')) {
-          //       $('#positionsTable').DataTable().destroy();
-          //     }
-
-
-          //     $('#positionsTable tbody').empty();
-          //     // Create a template for table rows
-          //     // Create a template for table rows
-          //     const rowTemplate = (position) =>
-
-
-          //       `
-
-            
-
-
-          //           <tr>
-
-          //             <td><div class="form-check">
-          //             <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-           
-          //           </div></td>
-          //               <td ><div class="${position.product === "NRML" ? 'normal_order_background' : 'text-danger'}">${position.product}</div></td>
-          //               <td >${position.tradingsymbol}</td>
-          //               <td>${position.exchange}</td>
-          //               <td class="${parseFloat(position.exchange) > 0 ? 'text-success' : 'text-danger'}">${position.quantity}</td>
-          //               <td>${position.average_price}</td>
-          //               <td>${position.close_price}</td>
-          //               <td>${position.last_price}</td>
-          //               <td class="${position.pnl > 0 ? 'text-success' : 'text-danger'}">${position.pnl > 0 ? '+' : '-'}${position.pnl}</td>
-  
-          //           </tr>
-          //       `;
-
-          //     // Populate table body dynamically
-          //     response.all_position.net.forEach(function (position) {
-          //       $('#positionsTable tbody').append(rowTemplate(position));
-          //     });
-          //     // Initialize DataTable with custom drawCallback option
-          //     $('#positionsTable').DataTable({
-          //       order: [[6, 'asc']], // 6 is the column index for "Unrealised P&L"
-          //       drawCallback: function () {
-          //         // Check if Total_p_l is already added
-          //         if (!totalPLAdded) {
-          //           // Calculate and display the total value
-          //           var totalUnrealised = response.all_position.net.reduce(function (sum, position) {
-          //             return sum + position.unrealised;
-          //           }, 0);
-
-          //           // Add Total_p_l class within DataTable after the table
-          //           var totalPLDiv = $(`
-          //                        <div class="Total_p_l">
-          //                             <div class="main_exit_positions">
-          //             <button class="exit_all_positions_zerodha">Exit Positions</button>
-          //             </div>
-
-
-          //                             <div class="main_p_l_table">  Total P&L: <span class="${totalUnrealised > 0 ? 'text-success' : 'text-danger'}">${totalUnrealised > 0 ? '+' : '-'}${totalUnrealised.toFixed(2)}</span></div>
-          //                           </div>
-          //                       `);
-
-          //           $('#positionsTable_wrapper').append(totalPLDiv);
-
-          //           // Set totalPLAdded to true to indicate that Total_p_l is added
-          //           totalPLAdded = true;
-          //         }
-          //       }
-          //     });
-          //   },
-          //   error: function (error) {
-          //     console.error("Error:", error);
-          //   }
-          // });
-
-        })
-      })
+        // Initial call to fetchData
+        fetchData();
+      });
 
 
     </script>
-
-
-
-
-
-
 
 
 
@@ -4678,7 +4870,14 @@
       position: relative;
     }
   </style>
-
+<style>
+  .toastr-custom {
+    z-index: 99999999999999999; 
+  }
+  #toast-container{
+    z-index: 999999999999999999 !important;
+  }
+</style>
   <script>
 
   </script>
@@ -5220,44 +5419,61 @@
 
 
 
+                toastr.options = {
+  "closeButton": true,
+  "debug": true,
+  "newestOnTop": true,
+  "progressBar": true,
+  "positionClass": "toast-bottom-right",
+  "preventDuplicates": true,
+  "showDuration": "300",
+  "hideDuration": "1000",
+  "timeOut": "5000",
+  "extendedTimeOut": "1000",
+  "showEasing": "swing",
+  "hideEasing": "linear",
+  "showMethod": "fadeIn",
+  "hideMethod": "fadeOut",
+  "toastClass": "toastr-custom", // Add a custom class
+};
 
+// Additional style for the custom class
 
-
-
-                $(".saveNotes").click(function () {
-                  var noteText = $("#editInput").val();
-                  $.ajax({
-                    type: "POST",
-                    url: "/save_note",
-                    data: {
-                      'id': 1,
-                      'text': noteText,
-                      'csrfmiddlewaretoken': '{{ csrf_token }}'
-                    },
-                    success: function (response) {
-                      // handle success
-
-                      if (response.not_logged_in) {
-                        $("#signinModal").modal("show");
-
-                      } else {
-                        alert(response.message);
-                        displayNotes();
-                        disableNote();
-                      }
-
-
-                    },
-                    error: function (response) {
-                      // handle error
-                      if (response.status === 401) {
-
-                      } else {
-                        alert(response.message);
-                      }
-                    }
-                  });
-                });
+$(".saveNotes").click(function () {
+  var noteText = $("#editInput").val();
+  $.ajax({
+    type: "POST",
+    url: "/save_note",
+    data: {
+      'id': 1,
+      'text': noteText,
+      'csrfmiddlewaretoken': '{{ csrf_token }}'
+    },
+    success: function (response) {
+      // handle success
+      if (response.not_logged_in) {
+        $("#signinModal").modal("show");
+      } else {
+        // Use Toastr for success message
+        $("#notesModal").modal('hide')
+        toastr.success(response.message);
+        
+        // Other actions
+        displayNotes();
+        disableNote();
+      }
+    },
+    error: function (response) {
+      // handle error
+      if (response.status === 401) {
+        // Handle 401 Unauthorized
+      } else {
+        // Use Toastr for error message
+        toastr.error(response.message);
+      }
+    }
+  });
+});
 
 
                 // Add code to open the sign-in modal here
@@ -12766,7 +12982,7 @@
                 opiton_selected
               );
               Table_chart_pyoff()
-              // margin_calculations()
+              margin_calculations()
               $(".main_position,.main_all_profit_loss,.main_bottom_strategy_positions").show()
               $(".main_build_custom_strategy_empty").css("display", "none")
 
@@ -12803,7 +13019,7 @@
               $(".main_build_custom_strategy_empty").css("display", "none")
 
               $("#resultTable tbody,#table-PL,.option_oi_charts,#chartdiv,.payoff_table_data").show()
-              // margin_calculations()
+              margin_calculations()
 
             }
             $(".inner_p_l_greeks").show();
@@ -13247,38 +13463,38 @@
         },
       });
     }
-    // function margin_calculations() {
-    //   var main_margin_positions = [];
-    //   var lot_size_value = parseFloat($("#lot_size_value").text());
-    //   $(".main_add_position_actions").each(function () {
-    //     var $this = $(this);
-    //     var symbol_name_margin = $this.find(".symbol").text();
-    //     var expiry_margin = $this.find(".expiry").text();
-    //     var option_lot_size_input = $this.find(".option_lot_size_input").text();
-    //     var strikePrice_edit = $this.find(".strikePrice").text();
-    //     var long_shorts = $this.find(".long_short_inner").text();
-    //     var requiredStringValue = $this.find(".call_put_entrance").text();
+    function margin_calculations() {
+      var main_margin_positions = [];
+      var lot_size_value = parseFloat($("#lot_size_value").text());
+      $(".main_add_position_actions").each(function () {
+        var $this = $(this);
+        var symbol_name_margin = $this.find(".symbol").text();
+        var expiry_margin = $this.find(".expiry").text();
+        var option_lot_size_input = $this.find(".option_lot_size_input").text();
+        var strikePrice_edit = $this.find(".strikePrice").text();
+        var long_shorts = $this.find(".long_short_inner").text();
+        var requiredStringValue = $this.find(".call_put_entrance").text();
 
-    //     var parts = expiry_margin.split('20');
-    //     var formatted_expiry_margin = parts[0] + parts[1].slice(-2);
+        var parts = expiry_margin.split('20');
+        var formatted_expiry_margin = parts[0] + parts[1].slice(-2);
 
-    //     // console.log(expiry_margin);
-    //     // console.log(formatted_expiry_margin);
-    //     // console.log(symbol_name_margin);
+        // console.log(expiry_margin);
+        // console.log(formatted_expiry_margin);
+        // console.log(symbol_name_margin);
 
-    //     var main_margin_position = {
-    //       "contract": `${symbol_name_margin}-${formatted_expiry_margin}`,
-    //       "exchange": "NFO",
-    //       "product": "OPTION",
-    //       "qty": lot_size_value * parseInt(option_lot_size_input),
-    //       "strikePrice": parseInt(strikePrice_edit),
-    //       "tradeType": long_shorts === "+" ? "BUY" : "SELL",
-    //       "optionType": long_shorts === "CE" ? "CALL" : "PUT"
-    //     };
+        var main_margin_position = {
+          "contract": `${symbol_name_margin}-${formatted_expiry_margin}`,
+          "exchange": "NFO",
+          "product": "OPTION",
+          "qty": lot_size_value * parseInt(option_lot_size_input),
+          "strikePrice": parseInt(strikePrice_edit),
+          "tradeType": long_shorts === "+" ? "BUY" : "SELL",
+          "optionType": requiredStringValue === "CE" ? "CALL" : "PUT"
+        };
 
-    //     main_margin_positions.push(main_margin_position);
-    //   });
-    //   // console.log("main_margin_positions", main_margin_positions);
+        main_margin_positions.push(main_margin_position);
+      });
+      console.log("main_margin_positions", main_margin_positions);
 
 
 
@@ -13328,26 +13544,26 @@
 
 
 
-    //   $.ajax({
-    //     type: "POST",
-    //     url: "/angel_one_margin_calculations", // Change the URL to match your Django URL
-    //     data: JSON.stringify(main_margin_positions), // Stringify the data before sending
-    //     contentType: "application/json; charset=utf-8",
-    //     dataType: "json",
-    //     success: function (data) {
-    //       // console.log("Data sent successfully!");
-    //       // console.log(data.margin.totalMargin); // Print the response from the Django backend
-    //       $("#margin_required").text(data.margin.totalMargin.toFixed(2));
-    //     },
-    //     error: function (error) {
-    //       console.error("Error sending data:", error);
-    //     }
-    //   });
+      $.ajax({
+        type: "POST",
+        url: "/angel_one_margin_calculations", // Change the URL to match your Django URL
+        data: JSON.stringify(main_margin_positions), // Stringify the data before sending
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (data) {
+          // console.log("Data sent successfully!");
+          console.log(data.margin.totalMargin); // Print the response from the Django backend
+          $("#margin_required").text(data.margin.totalMargin.toFixed(2));
+        },
+        error: function (error) {
+          console.error("Error sending data:", error);
+        }
+      });
 
 
 
 
-    // }
+    }
 
 
 

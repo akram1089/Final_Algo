@@ -487,6 +487,7 @@ urlpatterns = [
      path('tradeAdjustment', views.tradeAdjustment, name='tradeAdjustment'),
      path('learning_Books', views.learning_Books, name='learning_Books'),
      path('researchreports', views.researchreports, name='researchreports'),
+     path('user', views.user, name='user'),
 
 
 

@@ -6452,13 +6452,14 @@ def angel_one_margin_calculations(request):
                     "optionType": item["optionType"]
                 })
 
-                print(payload)
+            print("payload",payload)
 
             # Send a POST request
             response = requests.post(url, json=payload)
 
             # Check the response
             if response.status_code == 200:
+                print("response",response.json())
                 # Return the response data as JSON
                 return JsonResponse(response.json(), safe=False)
             else:
@@ -8173,8 +8174,6 @@ def get_content_data(request):
 
 
 
-
-
 def get_order_positions_details(request):
     try:
         # Assuming 'user' is defined somewhere in your code
@@ -8195,7 +8194,33 @@ def get_order_positions_details(request):
                 all_position = zerodha_api.positions()
                 all_holdings = zerodha_api.holdings()
 
-                return JsonResponse({"all_profile": all_profile, "all_position": all_position, "all_holdings": all_holdings})
+                # Create separate lists for 'tradingsymbol' values with exchange
+                net_tradingsymbols = [f"{entry['exchange']}:{entry['tradingsymbol']}" for entry in all_position['net']]
+                day_tradingsymbols = [f"{entry['exchange']}:{entry['tradingsymbol']}" for entry in all_position['day']]
+
+                # Fetch OHLC for net_tradingsymbols
+                main_net_ohlc = []
+                for net_symbol in net_tradingsymbols:
+                    ohlc_market_indepth_net = zerodha_api.quote(net_symbol)
+                    main_net_ohlc.append(ohlc_market_indepth_net)
+                    print(f"Net Trading Symbol: {net_symbol}")
+
+                # Fetch OHLC for day_tradingsymbols
+                main_day_ohlc = []
+                for day_symbol in day_tradingsymbols:
+                    ohlc_market_indepth_day = zerodha_api.quote(day_symbol)
+                    main_day_ohlc.append(ohlc_market_indepth_day)
+                    print(f"Day Trading Symbol: {day_symbol}")
+
+                return JsonResponse({
+                    "all_profile": all_profile,
+                    "all_position": all_position,
+                    "all_holdings": all_holdings,
+                    "net_tradingsymbols": net_tradingsymbols,
+                    "day_tradingsymbols": day_tradingsymbols,
+                    "main_net_ohlc": main_net_ohlc,
+                    "main_day_ohlc": main_day_ohlc
+                })
 
         elif broker_instance_angelone:
             # Add your logic for Angel-one
@@ -8208,7 +8233,7 @@ def get_order_positions_details(request):
         # Log the exception for further analysis
         print(f"An error occurred: {str(e)}")
         return JsonResponse({"error": "An unexpected error occurred. Please try again later."})
-    
+
 
 
 
@@ -8244,3 +8269,5 @@ def learning_Books(request):
     return render(request, "learningcenter/learning_Books.html")
 def researchreports(request):
     return render(request, "researchreports.html")
+def user(request):
+    return render(request, "templates/user.html")
