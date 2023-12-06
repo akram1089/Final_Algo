@@ -5767,10 +5767,11 @@ def save_strategy(request):
     if request.method == 'POST':
         strategy_input = request.POST.get('strategy_input', None)
         trading_positions = request.POST.get('trading_positions', None)  # Get trading positions
+        strategy_notes = request.POST.get('main_strategy_notes', None)  # Get trading positions
         user = request.user  # Assuming you have a way to retrieve the current user
         if user.is_authenticated:
             if strategy_input and trading_positions:
-                strategy = my_strategies.objects.create(user=user, strategy_name=strategy_input, trading_positions=trading_positions)
+                strategy = my_strategies.objects.create(user=user, strategy_name=strategy_input, trading_positions=trading_positions,strategy_notes=strategy_notes)
                 strategy.save()
                 return JsonResponse({'message': 'Strategy saved successfully.'})
             else:

@@ -1963,7 +1963,7 @@
                 lastPrices[tradingsymbol] = lastPrice;
               }
 
-              console.log(lastPrices);
+              // console.log(lastPrices);
 
               $(".broker_position_icon").empty().append(`
                       <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 90 60">
@@ -2011,7 +2011,7 @@
 
 
                                   <td>${lastPrice}</td>
-                                  <td class="${main_p_n_l > 0 ? 'text-success' : 'text-danger'}">${main_p_n_l > 0 ? '+' : ''}${main_p_n_l}</td>
+                                  <td class="${main_p_n_l > 0 ? 'text-success' : 'text-danger'}">${main_p_n_l > 0 ? '+' : ''}${(main_p_n_l).toFixed(2)}</td>
                                 </tr>`;
 
               // Assuming 'tradingsymbol' is available in the position object
@@ -2020,7 +2020,7 @@
 
               response.all_position.net.forEach(function (position) {
                 let tradingsymbol = position.tradingsymbol;
-                console.log(tradingsymbol);
+                // console.log(tradingsymbol);
 
                 // Remove "NFO:" from the tradingsymbol
                 tradingsymbol = tradingsymbol.replace('NFO:', '');
@@ -2036,7 +2036,7 @@
                   var main_p_n_l = lastPrice * quantity_main - average_price_main * quantity_main;
                 }
 
-                console.log(main_p_n_l);
+                // console.log(main_p_n_l);
 
                 // Add main_p_n_l to the total
                 totalMainPNL += main_p_n_l;
@@ -2088,10 +2088,11 @@
         }
 
         $("#order_btn").click(function () {
+          fetchData();
           $("#order_history").modal("show");
 
           if (intervalId_order === null) {
-            console.log('Show');
+            // console.log('Show');
 
             // Run the fetchData function every 1000 milliseconds (1 second)
             intervalId_order = setInterval(fetchData, 5000);
@@ -4870,14 +4871,15 @@
       position: relative;
     }
   </style>
-<style>
-  .toastr-custom {
-    z-index: 99999999999999999; 
-  }
-  #toast-container{
-    z-index: 999999999999999999 !important;
-  }
-</style>
+  <style>
+    .toastr-custom {
+      z-index: 99999999999999999;
+    }
+
+    #toast-container {
+      z-index: 999999999999999999 !important;
+    }
+  </style>
   <script>
 
   </script>
@@ -5174,6 +5176,12 @@
 
                       <input type="text" class="form-control" id="strategy_input" placeholder="Enter strategy name">
                     </div>
+                    <div class="mb-3">
+
+                      <textarea class="form-control" placeholder="Write your strategy notes.." id="main_strategy_notes"
+                        style="height: 100px"></textarea>
+
+                    </div>
                   </div>
                   <div class="modal-footer">
 
@@ -5233,8 +5241,50 @@
 
 
                 $(".saveStrategy").click(function () {
+                  var tradingPositions = [];
+
+                  $(".inner_position").each(function (index) {
+                    // Get values from the current card
+                    var card = $(this);
+                    var symbol = card.find(".symbol").text();
+                    var expiry = card.find(".expiry").text();
+                    var expiry_initial = card.find(".expiry_initial").text();
+                    var strikePrice = card.find(".strikePrice").text();
+                    var callPutEntrance = card.find(".call_put_entrance").text();
+                    var entryPrice = card.find(".entryPrice").text();
+                    var long_short_inner = card.find(".long_short_inner").text();
+                    var option_lot_size_input = card.find(".option_lot_size_input").text();
+
+                    // Create an object with the gathered values
+                    var position = {
+                      symbol: symbol,
+                      expiry: expiry,
+                      expiry_initial: expiry_initial,
+                      strikePrice: strikePrice,
+                      callPutEntrance: callPutEntrance,
+                      entryPrice: entryPrice,
+                      long_short_inner: long_short_inner,
+                      option_lot_size_input: option_lot_size_input
+                    };
+
+                    // Push the object into the array
+                    tradingPositions.push(position);
+                  });
+
+                  console.log(tradingPositions);
+
+
+
+
                   var strategy_input = $("#strategy_input").val();
-                  var tempTradingPositions = localStorage.getItem('Temp_TradingPositions');
+                  var main_strategy_notes = $("#main_strategy_notes").val();
+
+                  if (strategy_input.trim() === '') {
+    toastr.error("Please enter the strategy name");
+    return; // Stop further execution
+  }
+
+
 
                   $.ajax({
                     type: "POST",
@@ -5242,7 +5292,8 @@
                     data: {
 
                       'strategy_input': strategy_input,
-                      'trading_positions': tempTradingPositions,  // Add the retrieved value here
+                      'main_strategy_notes': main_strategy_notes,
+                      'trading_positions': JSON.stringify(tradingPositions),  // Convert array to JSON string
 
                       'csrfmiddlewaretoken': '{{ csrf_token }}'
                     },
@@ -5252,9 +5303,12 @@
                       if (response.user_not_logged_in) {
                         $("#signinModal").modal("show");
                       } else {
-                        alert(response.message);
+                        // alert(response.message);
+                        $("#save_startegyModal").modal("hide")
+                        toastr.success(response.message);
                         getStrategies_data()
                         $("#strategy_input").val('')
+                        $("#main_strategy_notes").val('');
                       }
 
 
@@ -5385,6 +5439,7 @@
                             },
                             success: function (response) {
                               // handle success
+                              $("#editStrategyModal").modal("hide")
                               // console.log(response.message);
                               getStrategies_data(); // Refresh the strategies list
 
@@ -5420,60 +5475,60 @@
 
 
                 toastr.options = {
-  "closeButton": true,
-  "debug": true,
-  "newestOnTop": true,
-  "progressBar": true,
-  "positionClass": "toast-bottom-right",
-  "preventDuplicates": true,
-  "showDuration": "300",
-  "hideDuration": "1000",
-  "timeOut": "5000",
-  "extendedTimeOut": "1000",
-  "showEasing": "swing",
-  "hideEasing": "linear",
-  "showMethod": "fadeIn",
-  "hideMethod": "fadeOut",
-  "toastClass": "toastr-custom", // Add a custom class
-};
+                  "closeButton": true,
+                  "debug": true,
+                  "newestOnTop": true,
+                  "progressBar": true,
+                  "positionClass": "toast-bottom-right",
+                  "preventDuplicates": true,
+                  "showDuration": "300",
+                  "hideDuration": "1000",
+                  "timeOut": "5000",
+                  "extendedTimeOut": "1000",
+                  "showEasing": "swing",
+                  "hideEasing": "linear",
+                  "showMethod": "fadeIn",
+                  "hideMethod": "fadeOut",
+                  "toastClass": "toastr-custom", // Add a custom class
+                };
 
-// Additional style for the custom class
+                // Additional style for the custom class
 
-$(".saveNotes").click(function () {
-  var noteText = $("#editInput").val();
-  $.ajax({
-    type: "POST",
-    url: "/save_note",
-    data: {
-      'id': 1,
-      'text': noteText,
-      'csrfmiddlewaretoken': '{{ csrf_token }}'
-    },
-    success: function (response) {
-      // handle success
-      if (response.not_logged_in) {
-        $("#signinModal").modal("show");
-      } else {
-        // Use Toastr for success message
-        $("#notesModal").modal('hide')
-        toastr.success(response.message);
-        
-        // Other actions
-        displayNotes();
-        disableNote();
-      }
-    },
-    error: function (response) {
-      // handle error
-      if (response.status === 401) {
-        // Handle 401 Unauthorized
-      } else {
-        // Use Toastr for error message
-        toastr.error(response.message);
-      }
-    }
-  });
-});
+                $(".saveNotes").click(function () {
+                  var noteText = $("#editInput").val();
+                  $.ajax({
+                    type: "POST",
+                    url: "/save_note",
+                    data: {
+                      'id': 1,
+                      'text': noteText,
+                      'csrfmiddlewaretoken': '{{ csrf_token }}'
+                    },
+                    success: function (response) {
+                      // handle success
+                      if (response.not_logged_in) {
+                        $("#signinModal").modal("show");
+                      } else {
+                        // Use Toastr for success message
+                        $("#notesModal").modal('hide')
+                        toastr.success(response.message);
+
+                        // Other actions
+                        displayNotes();
+                        disableNote();
+                      }
+                    },
+                    error: function (response) {
+                      // handle error
+                      if (response.status === 401) {
+                        // Handle 401 Unauthorized
+                      } else {
+                        // Use Toastr for error message
+                        toastr.error(response.message);
+                      }
+                    }
+                  });
+                });
 
 
                 // Add code to open the sign-in modal here
@@ -13509,38 +13564,38 @@ $(".saveNotes").click(function () {
 
 
 
-    //   // Assuming main_row_instances is already defined
-    //   // Remove the specific data associated with the key 'main_row_instances' from local storage
+      //   // Assuming main_row_instances is already defined
+      //   // Remove the specific data associated with the key 'main_row_instances' from local storage
 
-    //   // Retrieve main_row_instances from local storage
-    //   var retrievedData = localStorage.getItem('main_row_instances');
-    //   var parsedData = JSON.parse(retrievedData);
+      //   // Retrieve main_row_instances from local storage
+      //   var retrievedData = localStorage.getItem('main_row_instances');
+      //   var parsedData = JSON.parse(retrievedData);
 
-    //   // Log the data to the console
-    //   console.log(parsedData);
+      //   // Log the data to the console
+      //   console.log(parsedData);
 
-    //   // Remove 'id' from each object in parsedData
-    //   var updatedData = parsedData.map(function (obj) {
-    //     return Object.fromEntries(Object.entries(obj).filter(([key, value]) => key !== 'id'));
-    //   });
+      //   // Remove 'id' from each object in parsedData
+      //   var updatedData = parsedData.map(function (obj) {
+      //     return Object.fromEntries(Object.entries(obj).filter(([key, value]) => key !== 'id'));
+      //   });
 
-    //   // Send data to the Django backend using AJAX
-    //   // $.ajax({
-    //   //   type: "POST",
-    //   //   url: "/margin_calculations", // Change the URL to match your Django URL
-    //   //   data: JSON.stringify(updatedData),
-    //   //   contentType: "application/json; charset=utf-8",
-    //   //   dataType: "json",
-    //   //   success: function (response) {
-    //   //     // console.log("Data sent successfully!");
-    //   //     // console.log(response.main_margin_amout); // Print the response from the Django backend
-    //   //     $("#margin_required").text(response.main_margin_amout);
-    //   //   },
-    //   //   error: function (error) {
-    //   //     console.error("Error sending data:", error);
-    //   //   }
-    //   // });
-    //   // console.log( JSON.stringify(main_margin_positions));
+      //   // Send data to the Django backend using AJAX
+      //   // $.ajax({
+      //   //   type: "POST",
+      //   //   url: "/margin_calculations", // Change the URL to match your Django URL
+      //   //   data: JSON.stringify(updatedData),
+      //   //   contentType: "application/json; charset=utf-8",
+      //   //   dataType: "json",
+      //   //   success: function (response) {
+      //   //     // console.log("Data sent successfully!");
+      //   //     // console.log(response.main_margin_amout); // Print the response from the Django backend
+      //   //     $("#margin_required").text(response.main_margin_amout);
+      //   //   },
+      //   //   error: function (error) {
+      //   //     console.error("Error sending data:", error);
+      //   //   }
+      //   // });
+      //   // console.log( JSON.stringify(main_margin_positions));
 
 
 

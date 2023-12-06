@@ -222,6 +222,7 @@ class Note(models.Model):
 class my_strategies(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     strategy_name = models.CharField(max_length=100)
+    strategy_notes = models.CharField(max_length=256)
     trading_positions = models.TextField()
     def __str__(self):
         return self.strategy_name
