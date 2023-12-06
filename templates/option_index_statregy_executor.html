@@ -5280,9 +5280,9 @@
                   var main_strategy_notes = $("#main_strategy_notes").val();
 
                   if (strategy_input.trim() === '') {
-    toastr.error("Please enter the strategy name");
-    return; // Stop further execution
-  }
+                    toastr.error("Please enter the strategy name");
+                    return; // Stop further execution
+                  }
 
 
 
@@ -9644,7 +9644,7 @@
 
       calculate_data();
       Table_chart_pyoff()
-      // margin_calculations()
+      margin_calculations()
     });
     // Load spot data for "NIFTY" initially
 
@@ -13519,106 +13519,76 @@
       });
     }
     function margin_calculations() {
-      var main_margin_positions = [];
-      var lot_size_value = parseFloat($("#lot_size_value").text());
-      $(".main_add_position_actions").each(function () {
-        var $this = $(this);
-        var symbol_name_margin = $this.find(".symbol").text();
-        var expiry_margin = $this.find(".expiry").text();
-        var option_lot_size_input = $this.find(".option_lot_size_input").text();
-        var strikePrice_edit = $this.find(".strikePrice").text();
-        var long_shorts = $this.find(".long_short_inner").text();
-        var requiredStringValue = $this.find(".call_put_entrance").text();
+  var main_margin_positions = [];
+  var totalMargin = 0;
+  var hasSellPosition = false; // Add global variable to check if there is any SELL position
 
-        var parts = expiry_margin.split('20');
-        var formatted_expiry_margin = parts[0] + parts[1].slice(-2);
+  var lot_size_value = parseFloat($("#lot_size_value").text());
 
-        // console.log(expiry_margin);
-        // console.log(formatted_expiry_margin);
-        // console.log(symbol_name_margin);
+  $(".main_add_position_actions").each(function () {
+    var $this = $(this);
+    var symbol_name_margin = $this.find(".symbol").text();
+    var expiry_margin = $this.find(".expiry").text();
+    var option_lot_size_input = $this.find(".option_lot_size_input").text();
+    var strikePrice_edit = $this.find(".strikePrice").text();
+    var long_shorts = $this.find(".long_short_inner").text();
+    var requiredStringValue = $this.find(".call_put_entrance").text();
+    var entryPrice = $this.find(".entryPrice").text();
 
-        var main_margin_position = {
-          "contract": `${symbol_name_margin}-${formatted_expiry_margin}`,
-          "exchange": "NFO",
-          "product": "OPTION",
-          "qty": lot_size_value * parseInt(option_lot_size_input),
-          "strikePrice": parseInt(strikePrice_edit),
-          "tradeType": long_shorts === "+" ? "BUY" : "SELL",
-          "optionType": requiredStringValue === "CE" ? "CALL" : "PUT"
-        };
+    var parts = expiry_margin.split('20');
+    var formatted_expiry_margin = parts[0] + parts[1].slice(-2);
 
-        main_margin_positions.push(main_margin_position);
-      });
-      console.log("main_margin_positions", main_margin_positions);
+    var main_margin_position = {
+      "contract": `${symbol_name_margin}-${formatted_expiry_margin}`,
+      "exchange": "NFO",
+      "product": "OPTION",
+      "qty": lot_size_value * parseInt(option_lot_size_input),
+      "strikePrice": parseInt(strikePrice_edit),
+      "tradeType": long_shorts === "+" ? "BUY" : "SELL",
+      "optionType": requiredStringValue === "CE" ? "CALL" : "PUT",
+      "entryPrice": parseFloat(entryPrice)
+    };
 
+    main_margin_positions.push(main_margin_position);
 
-
-
-
-
-
-
-
-
-
-
-
-
-      //   // Assuming main_row_instances is already defined
-      //   // Remove the specific data associated with the key 'main_row_instances' from local storage
-
-      //   // Retrieve main_row_instances from local storage
-      //   var retrievedData = localStorage.getItem('main_row_instances');
-      //   var parsedData = JSON.parse(retrievedData);
-
-      //   // Log the data to the console
-      //   console.log(parsedData);
-
-      //   // Remove 'id' from each object in parsedData
-      //   var updatedData = parsedData.map(function (obj) {
-      //     return Object.fromEntries(Object.entries(obj).filter(([key, value]) => key !== 'id'));
-      //   });
-
-      //   // Send data to the Django backend using AJAX
-      //   // $.ajax({
-      //   //   type: "POST",
-      //   //   url: "/margin_calculations", // Change the URL to match your Django URL
-      //   //   data: JSON.stringify(updatedData),
-      //   //   contentType: "application/json; charset=utf-8",
-      //   //   dataType: "json",
-      //   //   success: function (response) {
-      //   //     // console.log("Data sent successfully!");
-      //   //     // console.log(response.main_margin_amout); // Print the response from the Django backend
-      //   //     $("#margin_required").text(response.main_margin_amout);
-      //   //   },
-      //   //   error: function (error) {
-      //   //     console.error("Error sending data:", error);
-      //   //   }
-      //   // });
-      //   // console.log( JSON.stringify(main_margin_positions));
-
-
-
-      $.ajax({
-        type: "POST",
-        url: "/angel_one_margin_calculations", // Change the URL to match your Django URL
-        data: JSON.stringify(main_margin_positions), // Stringify the data before sending
-        contentType: "application/json; charset=utf-8",
-        dataType: "json",
-        success: function (data) {
-          // console.log("Data sent successfully!");
-          console.log(data.margin.totalMargin); // Print the response from the Django backend
-          $("#margin_required").text(data.margin.totalMargin.toFixed(2));
-        },
-        error: function (error) {
-          console.error("Error sending data:", error);
-        }
-      });
-
-
-
-
+    // Check if tradeType is SELL and set hasSellPosition to true
+    if (main_margin_position.tradeType === "SELL") {
+      hasSellPosition = true;
+      console.log('sell');
+      
+    } else {
+      console.log('buy');
+      
+      // Multiply entryPrice by qty and add to totalMargin for BUY positions
+      totalMargin += main_margin_position.entryPrice * main_margin_position.qty;
     }
+  });
+
+  // Display totalMargin in $("#margin_required") only if there are no SELL positions
+  if (!hasSellPosition) {
+    console.log(hasSellPosition);
+    
+    $("#margin_required").text(totalMargin.toFixed(2));
+  } else {
+    console.log(hasSellPosition);
+    // Call AJAX if there are SELL positions
+    $.ajax({
+      type: "POST",
+      url: "/angel_one_margin_calculations",
+      data: JSON.stringify(main_margin_positions),
+      contentType: "application/json; charset=utf-8",
+      dataType: "json",
+      success: function (data) {
+        // Handle success response if needed
+        console.log(data.margin.totalMargin);
+        $("#margin_required").text(data.margin.totalMargin.toFixed(2));
+      },
+      error: function (error) {
+        console.error("Error sending data:", error);
+      }
+    });
+  }
+}
 
 
 
