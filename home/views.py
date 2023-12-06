@@ -5822,7 +5822,7 @@ def get_all_strategies(request):
 
 from django.http import JsonResponse
 from .models import my_strategies
-
+@csrf_exempt
 def delete_strategy(request):
     if request.method == 'POST':
         strategy_id = request.POST.get('strategy_id', None)
@@ -5872,7 +5872,7 @@ def get_unique_strategy(request):
 
 from django.http import JsonResponse
 from .models import my_strategies
-
+@csrf_exempt
 def update_strategy(request):
     if request.method == 'POST':
         strategy_id = request.POST.get('strategy_id', None)
