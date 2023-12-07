@@ -7838,8 +7838,48 @@ def download_csv_and_display(target_string):
         # Check if the target string is found
         if filtered_df.empty:
             print("Target string not found. Downloading CSV file again.")
-            download_csv_and_display(target_string)
-            return
+            csv_url = "https://api.kite.trade/instruments"
+
+            try:
+                # Download the CSV file
+                response = requests.get(csv_url)
+
+                # Check if the request was successful (status code 200)
+                if response.status_code == 200:
+                    # Save the downloaded content to a file
+                    with open(csv_file_name, 'wb') as file:
+                        file.write(response.content)
+
+                    print(f"CSV file downloaded successfully: {csv_file_name}")
+
+                      # Read CSV into DataFrame
+                    instruments_df = pd.read_csv(csv_file_name)
+
+                    # Create a filter based on the given conditions
+                    filter_condition = (
+                        (instruments_df['name'] == target_string['symbol']) &
+                        (instruments_df['instrument_type'] == target_string['optionType']) &
+                        (instruments_df['expiry'] == target_string['expiry']) &
+                        (instruments_df['strike'] == float(target_string['strikePrice']))
+                    )
+
+                    # Apply the filter to the DataFrame
+                    filtered_df = instruments_df[filter_condition]
+                    tradingsymbols = filtered_df['tradingsymbol']
+        # print(tradingsymbols)
+
+                    return tradingsymbols
+
+                else:
+                    # Print an error message if the request was not successful
+                    print(f"Error downloading CSV. Status Code: {response.status_code}")
+                    return
+
+            except Exception as e:
+                # Handle exceptions, if any
+                print(f"An error occurred: {e}")
+                
+                return
 
         # Print only the 'tradingsymbol' column
         tradingsymbols = filtered_df['tradingsymbol']
