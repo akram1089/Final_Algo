@@ -7958,12 +7958,7 @@ def check_liquidity(request):
 
 
 
-
-
-
-
-
-
+import os
 import pyotp
 import requests
 import pandas as pd
@@ -7971,23 +7966,11 @@ import pandas as pd
 
 def get_angel_one_quote(trading_quotes, logging_id, password, totp_key, api_key):
     # Add code specific to Angel One broker here
-    print("trading_quotes", logging_id)
-    modified_strikes = []
 
-    for entry in trading_quotes:
-        symbol = entry['symbol']
-        expiry = entry['expiry'][0:2] + entry['expiry'][2:6] + entry['expiry'][8:9]  # rearrange date format
-        strike_price = entry['strikePrice']
-        call_put_entrance = entry['callPutEntrance']
-
-        # Create the modified strike format
-        modified_strike = f"{symbol}{expiry}{strike_price}{call_put_entrance}"
-        
-        # Append the modified strike to the new list
-        modified_strikes.append(modified_strike)
+    modified_strikes = [f"{entry['symbol']}{entry['expiry'][0:2]}{entry['expiry'][2:6]}{entry['expiry'][8:9]}{entry['strikePrice']}{entry['callPutEntrance']}" for entry in trading_quotes]
 
     # Print the modified strikes
-    print(modified_strikes)
+    print("Modified Strikes:", modified_strikes)
 
     api_key = api_key
     client_id = logging_id
@@ -8003,92 +7986,112 @@ def get_angel_one_quote(trading_quotes, logging_id, password, totp_key, api_key)
 
     # Fetch the feed token
     feedToken = smart_api.getfeedToken()
-    print(feedToken)
-    print(smart_api.getProfile(feedToken))
+    print("Feed Token:", feedToken)
+    print("Profile:", smart_api.getProfile(feedToken))
     all_profile = smart_api.getProfile(feedToken)
     margin_info = smart_api.rmsLimit()
-    print(margin_info)
-    
+    print("Margin Info:", margin_info)
 
     # Fetch data from Angel One Margin Calculator API
 
-    # Check if the CSV file exists
     if os.path.exists('data.csv'):
         # Load data from CSV file
         df = pd.read_csv('data.csv')
 
-        token_list = []  # Create a new list to store 'token' values
+        token_list = []  
+        # Create a new list to store 'token' values
 
-        # Loop through modified_strikes and fetch data
         for symbol_filter in modified_strikes:
             filtered_df = df[df['symbol'] == symbol_filter]
 
-            # Extract 'token' values and append to the new list
-            token_values = filtered_df['token'].tolist()
-            token_list.extend(token_values)
-
-            print(filtered_df)
-
-        print("All Token Values:", token_list)
-
-        # Loop through token_list and create exchangeTokens dictionary
-        exchange_tokens_dict = {}
-        for token_value in token_list:
-            exchange = "NFO"  # Assuming the exchange is NFO for all tokens, adjust if needed
-            if exchange not in exchange_tokens_dict:
-                exchange_tokens_dict[exchange] = []
-            exchange_tokens_dict[exchange].append(str(token_value))
-
-        # Print the created exchangeTokens dictionary
-        print("exchangeTokens:", exchange_tokens_dict)
-
-        # Fetch market data using the created exchangeTokens dictionary
-        mode = "FULL"
-        market_data = smart_api.getMarketData(mode, exchange_tokens_dict)
-
-        # Print the market data
-        print("Market Data:", market_data)
-
-    else:
-        # Fetch data from the API if the CSV file doesn't exist
-        url = "https://margincalculator.angelbroking.com/OpenAPI_File/files/OpenAPIScripMaster.json"
-        response = requests.get(url)
-
-        # Check if the request was successful (status code 200)
-        if response.status_code == 200:
-            # Parse the JSON data
-            data = response.json()
-
-            # Convert the JSON data to a Pandas DataFrame
-            df = pd.DataFrame(data)
-
-            # Save the DataFrame to the CSV file
-            df.to_csv('data.csv', index=False)
-
-            token_list = []  # Create a new list to store 'token' values
-
-            # Loop through modified_strikes and fetch data
-            for symbol_filter in modified_strikes:
-                filtered_df = df[df['symbol'] == symbol_filter]
-
-                # Extract 'token' values and append to the new list
+            if not filtered_df.empty:
                 token_values = filtered_df['token'].tolist()
                 token_list.extend(token_values)
 
                 print(filtered_df)
+                print("All Token Values:", token_list)
+
+                exchange_tokens_dict = {"NFO": list(map(str, token_list))}
+
+                print("Exchange Tokens:", exchange_tokens_dict)
+
+                # Fetch market data using the created exchangeTokens dictionary
+                mode = "FULL"
+                market_data = smart_api.getMarketData(mode, exchange_tokens_dict)
+
+                # Print the market data
+                print("Market Data:", market_data)
+            else:
+                print(f"No trading symbol found for {symbol_filter}")
+                print("downloading the angel one trading symbols")
+                # Move the code to download new data and get all datas here
+
+                # Fetch data from the API if the CSV file doesn't exist
+                url = "https://margincalculator.angelbroking.com/OpenAPI_File/files/OpenAPIScripMaster.json"
+                response = requests.get(url)
+
+                if response.status_code == 200:
+                    data = response.json()
+                    df = pd.DataFrame(data)
+
+                    df.to_csv('data.csv', index=False)
+
+                    token_list = []
+
+                    for symbol_filter in modified_strikes:
+                        filtered_df = df[df['symbol'] == symbol_filter]
+
+                        if not filtered_df.empty:
+                            token_values = filtered_df['token'].tolist()
+                            token_list.extend(token_values)
+
+                            print(filtered_df)
+                        else:
+                            print(f"No trading symbol found for {symbol_filter}")
+
+                    print("All Token Values:", token_list)
+
+                    exchange_tokens_dict = {"NFO": list(map(str, token_list))}
+
+                    print("Exchange Tokens:", exchange_tokens_dict)
+
+                    # Fetch market data using the created exchangeTokens dictionary
+                    mode = "FULL"
+                    market_data = smart_api.getMarketData(mode, exchange_tokens_dict)
+
+                    # Print the market data
+                    print("Market Data:", market_data)
+    else:
+
+        # Fetch data from the API if the CSV file doesn't exist
+        url = "https://margincalculator.angelbroking.com/OpenAPI_File/files/OpenAPIScripMaster.json"
+        response = requests.get(url)
+
+        if response.status_code == 200:
+            data = response.json()
+            df = pd.DataFrame(data)
+
+            df.to_csv('data.csv', index=False)
+
+            token_list = []
+
+            for symbol_filter in modified_strikes:
+                filtered_df = df[df['symbol'] == symbol_filter]
+
+                if not filtered_df.empty:
+                    token_values = filtered_df['token'].tolist()
+                    token_list.extend(token_values)
+
+                    print(filtered_df)
+                else:
+                    print(f"No trading symbol found for {symbol_filter}")
+                    # Move the print statement here if the condition is true
 
             print("All Token Values:", token_list)
 
-            # Loop through token_list and create exchangeTokens dictionary
-            exchange_tokens_dict = {}
-            for token_value in token_list:
-                exchange = "NFO"  # Assuming the exchange is NFO for all tokens, adjust if needed
-                if exchange not in exchange_tokens_dict:
-                    exchange_tokens_dict[exchange] = []
-                exchange_tokens_dict[exchange].append(str(token_value))
+            exchange_tokens_dict = {"NFO": list(map(str, token_list))}
 
-            # Print the created exchangeTokens dictionary
-            print("exchangeTokens:", exchange_tokens_dict)
+            print("Exchange Tokens:", exchange_tokens_dict)
 
             # Fetch market data using the created exchangeTokens dictionary
             mode = "FULL"
@@ -8096,13 +8099,17 @@ def get_angel_one_quote(trading_quotes, logging_id, password, totp_key, api_key)
 
             # Print the market data
             print("Market Data:", market_data)
-# Other parts of your script...
+    result_data = {
+        'status': 'success',
+        'message': 'Data received successfully for Angel One broker',
+        "market_data": market_data,
+        "margin_info": margin_info,
+        "broker_name": "angelone",
+        'all_profile': all_profile
+    }
 
-
-
-    result_data = {'status': 'success', 'message': 'Data received successfully for Angel One broker',"market_data":market_data,
-                   "margin_info": margin_info, "broker_name": "angelone", 'all_profile': all_profile}
     return result_data
+
 
 
 from django.shortcuts import get_object_or_404
