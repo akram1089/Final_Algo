@@ -8005,6 +8005,7 @@ def get_angel_one_quote(trading_quotes, logging_id, password, totp_key, api_key)
             filtered_df = df[df['symbol'] == symbol_filter]
 
             if not filtered_df.empty:
+
                 token_values = filtered_df['token'].tolist()
                 token_list.extend(token_values)
 
@@ -8022,6 +8023,7 @@ def get_angel_one_quote(trading_quotes, logging_id, password, totp_key, api_key)
                 # Print the market data
                 print("Market Data:", market_data)
             else:
+                token_list=[]
                 print(f"No trading symbol found for {symbol_filter}")
                 print("downloading the angel one trading symbols")
                 # Move the code to download new data and get all datas here
@@ -8036,22 +8038,23 @@ def get_angel_one_quote(trading_quotes, logging_id, password, totp_key, api_key)
 
                     df.to_csv('data.csv', index=False)
 
-                    token_list = []
+                    token_list_not_found = []
 
                     for symbol_filter in modified_strikes:
                         filtered_df = df[df['symbol'] == symbol_filter]
 
                         if not filtered_df.empty:
+      
                             token_values = filtered_df['token'].tolist()
-                            token_list.extend(token_values)
+                            token_list_not_found.extend(token_values)
 
                             print(filtered_df)
                         else:
                             print(f"No trading symbol found for {symbol_filter}")
 
-                    print("All Token Values:", token_list)
+                    print("All Token Values:", token_list_not_found)
 
-                    exchange_tokens_dict = {"NFO": list(map(str, token_list))}
+                    exchange_tokens_dict = {"NFO": list(map(str, token_list_not_found))}
 
                     print("Exchange Tokens:", exchange_tokens_dict)
 
@@ -8073,23 +8076,24 @@ def get_angel_one_quote(trading_quotes, logging_id, password, totp_key, api_key)
 
             df.to_csv('data.csv', index=False)
 
-            token_list = []
+            token_list_else = []
 
             for symbol_filter in modified_strikes:
                 filtered_df = df[df['symbol'] == symbol_filter]
 
                 if not filtered_df.empty:
+                    
                     token_values = filtered_df['token'].tolist()
-                    token_list.extend(token_values)
+                    token_list_else.extend(token_values)
 
                     print(filtered_df)
                 else:
                     print(f"No trading symbol found for {symbol_filter}")
                     # Move the print statement here if the condition is true
 
-            print("All Token Values:", token_list)
+            print("All Token Values:", token_list_else)
 
-            exchange_tokens_dict = {"NFO": list(map(str, token_list))}
+            exchange_tokens_dict = {"NFO": list(map(str, token_list_else))}
 
             print("Exchange Tokens:", exchange_tokens_dict)
 
