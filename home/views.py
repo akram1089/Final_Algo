@@ -7965,11 +7965,8 @@ import pandas as pd
 
 
 def get_angel_one_quote(trading_quotes, logging_id, password, totp_key, api_key):
-    # Add code specific to Angel One broker here
-
     modified_strikes = [f"{entry['symbol']}{entry['expiry'][0:2]}{entry['expiry'][2:6]}{entry['expiry'][8:9]}{entry['strikePrice']}{entry['callPutEntrance']}" for entry in trading_quotes]
 
-    # Print the modified strikes
     print("Modified Strikes:", modified_strikes)
 
     api_key = api_key
@@ -7995,38 +7992,22 @@ def get_angel_one_quote(trading_quotes, logging_id, password, totp_key, api_key)
     # Fetch data from Angel One Margin Calculator API
 
     if os.path.exists('data.csv'):
-        # Load data from CSV file
         df = pd.read_csv('data.csv')
 
-        token_list = []  
-        # Create a new list to store 'token' values
+        token_list = []
+        token_list_not_found = []
 
         for symbol_filter in modified_strikes:
             filtered_df = df[df['symbol'] == symbol_filter]
 
             if not filtered_df.empty:
-
                 token_values = filtered_df['token'].tolist()
                 token_list.extend(token_values)
-
                 print(filtered_df)
                 print("All Token Values:", token_list)
-
-                exchange_tokens_dict = {"NFO": list(map(str, token_list))}
-
-                print("Exchange Tokens:", exchange_tokens_dict)
-
-                # Fetch market data using the created exchangeTokens dictionary
-                mode = "FULL"
-                market_data = smart_api.getMarketData(mode, exchange_tokens_dict)
-
-                # Print the market data
-                print("Market Data:", market_data)
             else:
-                token_list=[]
                 print(f"No trading symbol found for {symbol_filter}")
-                print("downloading the angel one trading symbols")
-                # Move the code to download new data and get all datas here
+                print("Downloading Angel One trading symbols")
 
                 # Fetch data from the API if the CSV file doesn't exist
                 url = "https://margincalculator.angelbroking.com/OpenAPI_File/files/OpenAPIScripMaster.json"
@@ -8035,45 +8016,35 @@ def get_angel_one_quote(trading_quotes, logging_id, password, totp_key, api_key)
                 if response.status_code == 200:
                     data = response.json()
                     df = pd.DataFrame(data)
-
                     df.to_csv('data.csv', index=False)
-
-                    token_list_not_found = []
 
                     for symbol_filter in modified_strikes:
                         filtered_df = df[df['symbol'] == symbol_filter]
 
                         if not filtered_df.empty:
-      
                             token_values = filtered_df['token'].tolist()
                             token_list_not_found.extend(token_values)
-
                             print(filtered_df)
                         else:
                             print(f"No trading symbol found for {symbol_filter}")
 
-                    print("All Token Values:", token_list_not_found)
+        print("All Token Values not found:", token_list_not_found)
+        if token_list or token_list_not_found:
+            exchange_tokens_dict = {"NFO": list(map(str, token_list + token_list_not_found))}
+            print("Exchange Tokens:", exchange_tokens_dict)
 
-                    exchange_tokens_dict = {"NFO": list(map(str, token_list_not_found))}
+            # Fetch market data using the created exchangeTokens dictionary
+            mode = "FULL"
+            market_data = smart_api.getMarketData(mode, exchange_tokens_dict)
+            print("Market Data:", market_data)
 
-                    print("Exchange Tokens:", exchange_tokens_dict)
-
-                    # Fetch market data using the created exchangeTokens dictionary
-                    mode = "FULL"
-                    market_data = smart_api.getMarketData(mode, exchange_tokens_dict)
-
-                    # Print the market data
-                    print("Market Data:", market_data)
     else:
-
-        # Fetch data from the API if the CSV file doesn't exist
         url = "https://margincalculator.angelbroking.com/OpenAPI_File/files/OpenAPIScripMaster.json"
         response = requests.get(url)
 
         if response.status_code == 200:
             data = response.json()
             df = pd.DataFrame(data)
-
             df.to_csv('data.csv', index=False)
 
             token_list_else = []
@@ -8082,31 +8053,27 @@ def get_angel_one_quote(trading_quotes, logging_id, password, totp_key, api_key)
                 filtered_df = df[df['symbol'] == symbol_filter]
 
                 if not filtered_df.empty:
-                    
                     token_values = filtered_df['token'].tolist()
                     token_list_else.extend(token_values)
-
                     print(filtered_df)
                 else:
                     print(f"No trading symbol found for {symbol_filter}")
-                    # Move the print statement here if the condition is true
 
             print("All Token Values:", token_list_else)
 
-            exchange_tokens_dict = {"NFO": list(map(str, token_list_else))}
+            if token_list_else:
+                exchange_tokens_dict = {"NFO": list(map(str, token_list_else))}
+                print("Exchange Tokens:", exchange_tokens_dict)
 
-            print("Exchange Tokens:", exchange_tokens_dict)
+                # Fetch market data using the created exchangeTokens dictionary
+                mode = "FULL"
+                market_data = smart_api.getMarketData(mode, exchange_tokens_dict)
+                print("Market Data:", market_data)
 
-            # Fetch market data using the created exchangeTokens dictionary
-            mode = "FULL"
-            market_data = smart_api.getMarketData(mode, exchange_tokens_dict)
-
-            # Print the market data
-            print("Market Data:", market_data)
     result_data = {
         'status': 'success',
         'message': 'Data received successfully for Angel One broker',
-        "market_data": market_data,
+        "market_data": market_data if 'market_data' in locals() else None,
         "margin_info": margin_info,
         "broker_name": "angelone",
         'all_profile': all_profile
