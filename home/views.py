@@ -8290,3 +8290,35 @@ def researchreports(request):
     return render(request, "researchreports.html")
 def user(request):
     return render(request, "templates/user.html")
+
+
+
+
+
+
+
+
+
+
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+import requests
+
+class MarketStatusView(APIView):
+    def get(self, request, *args, **kwargs):
+        url = "https://www.nseindia.com/api/marketStatus"
+
+        headers = {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
+            "Accept-Language": "en-US,en;q=0.9",
+            "Accept-Encoding": "gzip, deflate, br",
+            "Connection": "keep-alive"
+        }
+
+        try:
+            response = requests.get(url, headers=headers)
+            data = response.json()
+            return Response(data, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

@@ -6,6 +6,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.views.static import serve
+from .views import MarketStatusView
 urlpatterns = [
     path('', views.home, name="home"),
     path('features', views.features, name="features"),
@@ -488,6 +489,9 @@ urlpatterns = [
      path('learning_Books', views.learning_Books, name='learning_Books'),
      path('researchreports', views.researchreports, name='researchreports'),
      path('user', views.user, name='user'),
+     path('market-status/', MarketStatusView.as_view(), name='market-status'),
+
+     
 
 
 
