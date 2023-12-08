@@ -5140,7 +5140,7 @@
 
                     </div>
                   </div>
-                  <div class="modal-footer justify-content-between">
+                  <div class="modal-footer justify-content-between align-items-end">
                     <div class="margin_footer">
                       <div class="form-group order_place_input">
                         <label for="expiryEdit">Margin Needed</label>
@@ -5152,10 +5152,17 @@
                       </div>
                     </div>
                     <div class="right_place_order_check_liquidity">
-                      <button type="button" class="check_liquidity">Check Liquidity</button>
-                      <button type="button" class="place_order_btn" disabled>
-                        Place All Order
-                      </button>
+                      <div class="maket_status">
+                        
+
+                      </div>
+                      <div class="main_place_order_check_liquidity">
+                        <button type="button" class="check_liquidity">Check Liquidity</button>
+                        <button type="button" class="place_order_btn" disabled>
+                          Place All Order
+                        </button>
+                      </div>
+
                     </div>
 
                   </div>
@@ -7091,6 +7098,7 @@
 
 
 
+
 <script>
   $(document).ready(function () {
     $("#resultTable tbody,#table-PL,.option_oi_charts,#chartdiv,.payoff_table_data").hide()
@@ -7660,6 +7668,11 @@
 
 
               $("#execute").modal("show")
+
+
+
+
+
               console.log('trading_quote' + JSON.stringify(trading_quote));
               console.log('zerodha_trading_symbol' + JSON.stringify(zerodha_trading_symbol));
               console.log('zerodha_lotSize' + JSON.stringify(zerodha_lotSize));
@@ -7678,6 +7691,8 @@
                 contentType: "application/json",
                 success: function (response) {
                   // console.log(response.broker_name);
+
+
 
                   if (response.broker_name === "zerodha") {
                     console.log(response);
@@ -8049,6 +8064,10 @@
 
     }
 
+
+
+
+
     $(".main_updates_price_btn button").click(function () {
       // Select the second <p> tag inside .main_last_price_order
 
@@ -8258,81 +8277,116 @@
       });
       console.log(All_positionTrade);
 
+
+
       $.ajax({
-        url: "/check_liquidity",
-        type: "POST",
-        data: JSON.stringify(All_positionTrade),
-        contentType: "application/json",
-        success: function (response) {
-          console.log(response);
+        url: '/market-status/',  // Replace with your Django server URL
+        type: 'GET',
+        dataType: 'json',
+        success: function (data) {
 
-          // Initially, assume the button can be enabled
+          console.log(data);
 
-          if (response.broker === "zerodha") {
+          const filteredMarket = data.marketState.find(item => item.market === "Capital Market");
 
-            var isButtonDisabled = []
+          if (filteredMarket.marketStatus === "Open") {
 
-            var liquidity_failed_msg = []
+            $(".maket_status").text(filteredMarket.marketStatusMessage);
+            $.ajax({
+              url: "/check_liquidity",
+              type: "POST",
+              data: JSON.stringify(All_positionTrade),
+              contentType: "application/json",
+              success: function (response) {
+                console.log(response);
 
-            response.main_all_nudges.forEach(function (nudges, i) {
-              console.log(nudges.data);
+                // Initially, assume the button can be enabled
 
-              // Variable to check if liquidity for this iteration has failed
+                if (response.broker === "zerodha") {
+
+                  var isButtonDisabled = []
+
+                  var liquidity_failed_msg = []
+
+                  response.main_all_nudges.forEach(function (nudges, i) {
+                    console.log(nudges.data);
+
+                    // Variable to check if liquidity for this iteration has failed
 
 
-              nudges.data.forEach(function (x) {
-                console.log(x);
+                    nudges.data.forEach(function (x) {
+                      console.log(x);
 
-                if (x && Object.keys(x).length > 0) {
-                  $(".liquidity_status").eq(i).empty().append(`
+                      if (x && Object.keys(x).length > 0) {
+                        $(".liquidity_status").eq(i).empty().append(`
   <div class="liquidity_failed">
     <div class="liquidity_text">Liquidity :</div>
     <div class="badge text-bg-danger">Failed</div>
   </div>
 `);
 
-                  // Liquidity check failed for this iteration
-                  isButtonDisabled.push(false)
-                  x.forEach(function (failed_status) {
-                    liquidity_failed_msg.push(failed_status.message);
+                        // Liquidity check failed for this iteration
+                        isButtonDisabled.push(false)
+                        x.forEach(function (failed_status) {
+                          liquidity_failed_msg.push(failed_status.message);
 
-                  })
-                } else {
-                  $(".liquidity_status").eq(i).empty().append(`
+                        })
+                      } else {
+                        $(".liquidity_status").eq(i).empty().append(`
 <div class="liquidity_passed">
   <div class="liquidity_text">Liquidity :</div>
   <div class="badge text-bg-success">Passed</div>
   </div>
   `);
-                  isButtonDisabled.push(true)
+                        isButtonDisabled.push(true)
 
 
+                      }
+                    });
+
+                    // If liquidity check failed for any iteration, set the flag to true
+
+                  });
+
+
+
+                  console.log(isButtonDisabled);
+                  if (isButtonDisabled.includes(false)) {
+                    $(".place_order_btn").prop("disabled", true);
+                    $(".main_extented_status_liquidity").empty().removeClass("passed_liquidity").addClass("failed_liquidity").append(`${filteredMarket.marketStatusMessage} : ${liquidity_failed_msg[0]}`)
+                  } else {
+                    // If all the values are true, set
+                    $(".place_order_btn").prop("disabled", false);
+                    $(".main_extented_status_liquidity").empty().removeClass("failed_liquidity").addClass("passed_liquidity").append(`${filteredMarket.marketStatusMessage} : All the trade been passed the liquidity test, You can trade now. `)
+                  }
+
+
+                } else {
+                  $(".place_order_btn").prop("disabled", false);
                 }
-              });
-
-              // If liquidity check failed for any iteration, set the flag to true
-
+                // $(".place_order_btn").prop("disabled", isButtonDisabled);
+              },
             });
-
-
-
-            console.log(isButtonDisabled);
-            if (isButtonDisabled.includes(false)) {
-              $(".place_order_btn").prop("disabled", true);
-              $(".main_extented_status_liquidity").empty().removeClass("passed_liquidity").addClass("failed_liquidity").append(`${liquidity_failed_msg[0]}`)
-            } else {
-              // If all the values are true, set
-              $(".place_order_btn").prop("disabled", false);
-              $(".main_extented_status_liquidity").empty().removeClass("failed_liquidity").addClass("passed_liquidity").append(`All the trade been passed the liquidity test, You can trade now. `)
-            }
-
-
           } else {
-            $(".place_order_btn").prop("disabled", false);
+            console.log("Market not found.");
+            $(".maket_status").text(filteredMarket.marketStatusMessage);
+
+            $(".main_extented_status_liquidity").empty().removeClass("passed_liquidity").addClass("failed_liquidity").append(`${filteredMarket.marketStatusMessage}`)
+
+            
+
+            $(".check_liquidity").prop("disabled", true)
           }
-          // $(".place_order_btn").prop("disabled", isButtonDisabled);
+
+
         },
+        error: function (error) {
+          console.log('Error:', error);
+        }
       });
+
+
+
 
 
 
@@ -13838,97 +13892,97 @@
 
 
       var sumArray = resultArray.map(function (array) {
-  var sum = array.reduce(function (acc, value) {
-    return acc + value;
-  }, 0);
-  return sum * lot_size;
-});
+        var sum = array.reduce(function (acc, value) {
+          return acc + value;
+        }, 0);
+        return sum * lot_size;
+      });
 
 
 
-var positiveValues = sumArray.filter(value => value > 0);
-var negativeValues = sumArray.filter(value => value < 0);
+      var positiveValues = sumArray.filter(value => value > 0);
+      var negativeValues = sumArray.filter(value => value < 0);
 
-console.log("Positive Values:", positiveValues);
-console.log("Negative Values:", negativeValues);
+      console.log("Positive Values:", positiveValues);
+      console.log("Negative Values:", negativeValues);
 
-// Find the maximum value in positiveValues
-var maxPositive = Math.max(...positiveValues);
+      // Find the maximum value in positiveValues
+      var maxPositive = Math.max(...positiveValues);
 
-// Find the minimum value in negativeValues
-var minNegative = Math.min(...negativeValues);
-var maxProfit = Math.max(...positiveValues);
+      // Find the minimum value in negativeValues
+      var minNegative = Math.min(...negativeValues);
+      var maxProfit = Math.max(...positiveValues);
 
-// Find the minimum value in negativeValues
-var maxLoss = Math.min(...negativeValues);
+      // Find the minimum value in negativeValues
+      var maxLoss = Math.min(...negativeValues);
 
-console.log("Maximum Value in Positive Values:", maxPositive);
-console.log("Minimum Value in Negative Values:", minNegative);
+      console.log("Maximum Value in Positive Values:", maxPositive);
+      console.log("Minimum Value in Negative Values:", minNegative);
 
-// Check if maxPositive has duplicates in positiveValues
-var positiveDuplicates = positiveValues.filter(value => value === maxPositive);
-if (positiveDuplicates.length > 1) {
-  console.log("Max Positive Value has Duplicates in Positive Values:", positiveDuplicates);
-} else {
-  console.log("Max Positive Value does not have Duplicates in Positive Values");
-}
+      // Check if maxPositive has duplicates in positiveValues
+      var positiveDuplicates = positiveValues.filter(value => value === maxPositive);
+      if (positiveDuplicates.length > 1) {
+        console.log("Max Positive Value has Duplicates in Positive Values:", positiveDuplicates);
+      } else {
+        console.log("Max Positive Value does not have Duplicates in Positive Values");
+      }
 
-// Check if minNegative has duplicates in negativeValues
-var negativeDuplicates = negativeValues.filter(value => value === minNegative);
-if (negativeDuplicates.length > 1) {
-  console.log("Min Negative Value has Duplicates in Negative Values:", negativeDuplicates);
-} else {
-  console.log("Min Negative Value does not have Duplicates in Negative Values");
-}
-
-
+      // Check if minNegative has duplicates in negativeValues
+      var negativeDuplicates = negativeValues.filter(value => value === minNegative);
+      if (negativeDuplicates.length > 1) {
+        console.log("Min Negative Value has Duplicates in Negative Values:", negativeDuplicates);
+      } else {
+        console.log("Min Negative Value does not have Duplicates in Negative Values");
+      }
 
 
 
 
-console.log('main_strike_price_dynamic', main_strike_price_dynamic);
-
-var plusCount = main_strike_price_dynamic.filter(obj => obj.long_shorts === '+').length;
-var minusCount = main_strike_price_dynamic.filter(obj => obj.long_shorts === '-').length;
-
-if (plusCount > minusCount) {
-  console.log("'+' appears more");
-  // Check if sumArray contains only positive values
-
-  $("#max_profit").text("Unlimited");
-  $("#max_loss").text((maxLoss).toFixed(2));
 
 
-  var positiveDuplicates = positiveValues.filter(value => value === maxPositive);
-if (positiveDuplicates.length > 1) {
-  console.log("Max Positive Value has Duplicates in Positive Values:", positiveDuplicates);
-  $("#max_profit").text((maxProfit).toFixed(2));
-} else {
-  console.log("Max Positive Value does not have Duplicates in Positive Values");
-  $("#max_profit").text("Unlimited");
-}
+      console.log('main_strike_price_dynamic', main_strike_price_dynamic);
 
-} else if (minusCount > plusCount) {
-  console.log("'-' appears more");
+      var plusCount = main_strike_price_dynamic.filter(obj => obj.long_shorts === '+').length;
+      var minusCount = main_strike_price_dynamic.filter(obj => obj.long_shorts === '-').length;
 
-  $("#max_profit").text((maxProfit).toFixed(2));
-  $("#max_loss").text("Unlimited");
+      if (plusCount > minusCount) {
+        console.log("'+' appears more");
+        // Check if sumArray contains only positive values
 
-  var negativeDuplicates = negativeValues.filter(value => value === minNegative);
-if (negativeDuplicates.length > 1) {
-  console.log("Min Negative Value has Duplicates in Negative Values:", negativeDuplicates);
-  $("#max_loss").text((maxLoss).toFixed(2));
-} else {
-  console.log("Min Negative Value does not have Duplicates in Negative Values");
-  $("#max_loss").text("Unlimited");
-}
+        $("#max_profit").text("Unlimited");
+        $("#max_loss").text((maxLoss).toFixed(2));
 
-} else {
-  console.log("'+' and '-' appear the same number of times");
 
-  $("#max_profit").text((maxProfit).toFixed(2));
-  $("#max_loss").text((maxLoss).toFixed(2));
-}
+        var positiveDuplicates = positiveValues.filter(value => value === maxPositive);
+        if (positiveDuplicates.length > 1) {
+          console.log("Max Positive Value has Duplicates in Positive Values:", positiveDuplicates);
+          $("#max_profit").text((maxProfit).toFixed(2));
+        } else {
+          console.log("Max Positive Value does not have Duplicates in Positive Values");
+          $("#max_profit").text("Unlimited");
+        }
+
+      } else if (minusCount > plusCount) {
+        console.log("'-' appears more");
+
+        $("#max_profit").text((maxProfit).toFixed(2));
+        $("#max_loss").text("Unlimited");
+
+        var negativeDuplicates = negativeValues.filter(value => value === minNegative);
+        if (negativeDuplicates.length > 1) {
+          console.log("Min Negative Value has Duplicates in Negative Values:", negativeDuplicates);
+          $("#max_loss").text((maxLoss).toFixed(2));
+        } else {
+          console.log("Min Negative Value does not have Duplicates in Negative Values");
+          $("#max_loss").text("Unlimited");
+        }
+
+      } else {
+        console.log("'+' and '-' appear the same number of times");
+
+        $("#max_profit").text((maxProfit).toFixed(2));
+        $("#max_loss").text((maxLoss).toFixed(2));
+      }
 
 
 
