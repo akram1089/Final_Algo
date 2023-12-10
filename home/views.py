@@ -8322,3 +8322,65 @@ class MarketStatusView(APIView):
             return Response(data, status=status.HTTP_200_OK)
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+
+
+
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+import numpy as np
+from scipy.stats import norm
+import json
+
+@csrf_exempt
+def black_scholes_option_price(request):
+    if request.method == 'POST':
+        options_data_str = request.POST.get('options_data')
+        option_expiry = request.POST.get('option_expiry')
+        last_traded_price = request.POST.get('last_traded_price')
+
+        options_data = json.loads(options_data_str)
+
+        main_premiums = []
+
+        for option in options_data:
+            # Use the provided parameters
+            S = float(last_traded_price)
+            K = float(option["strike_price"])
+            T = 6/365
+            r = 0.10
+            calls_sigma = float(option["calls_iv"])/100
+            puts_sigma = float(option["puts_iv"])/100
+
+            # For Call Option
+            d1_call = (np.log(S / K) + ((r + calls_sigma**2 / 2) * T)) / (calls_sigma * np.sqrt(T))
+            d2_call = d1_call - (calls_sigma * np.sqrt(T))
+
+            call_price = S * norm.cdf(d1_call) - norm.cdf(d2_call) * K * np.exp(-r * T)
+
+            # For Put Option
+            d1_put = (np.log(S / K) + ((r + puts_sigma**2 / 2) * T)) / (puts_sigma * np.sqrt(T))
+            d2_put = d1_put - (puts_sigma * np.sqrt(T))
+
+            put_price = norm.cdf(-d2_put) * K * np.exp(-r * T) - S * norm.cdf(-d1_put)
+
+            main_premiums.append({'call_price': call_price, 'strikePrice': float(option['strike_price']), 'put_price': put_price})
+
+        print(main_premiums)
+
+        # Process the data as needed (e.g., save to database)
+
+        # Send a response back to the JavaScript
+        response_data = {'main_premiums': main_premiums}
+        return JsonResponse(response_data)
+    else:
+        return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
+
+
+
+def books(request):
+    return render(request, "books.html")
+
+def investment_book(request):
+    return render(request, "investment_book.html")

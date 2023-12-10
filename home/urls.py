@@ -490,6 +490,11 @@ urlpatterns = [
      path('researchreports', views.researchreports, name='researchreports'),
      path('user', views.user, name='user'),
      path('market-status/', MarketStatusView.as_view(), name='market-status'),
+     path('black_scholes_option_price', views.black_scholes_option_price, name='black_scholes_option_price'),
+
+
+     path('books', views.books, name='books'),
+     path('investment_book', views.investment_book, name='investment_book'),
 
      
 
