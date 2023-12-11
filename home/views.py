@@ -8339,8 +8339,10 @@ def black_scholes_option_price(request):
         options_data_str = request.POST.get('options_data')
         option_expiry = request.POST.get('option_expiry')
         last_traded_price = request.POST.get('last_traded_price')
+        onDate = request.POST.get('onDate')
 
         options_data = json.loads(options_data_str)
+        print(onDate)
 
         main_premiums = []
 
@@ -8348,7 +8350,7 @@ def black_scholes_option_price(request):
             # Use the provided parameters
             S = float(last_traded_price)
             K = float(option["strike_price"])
-            T = 6/365
+            T = int(onDate)/365
             r = 0.10
             calls_sigma = float(option["calls_iv"])/100
             puts_sigma = float(option["puts_iv"])/100
@@ -8367,7 +8369,7 @@ def black_scholes_option_price(request):
 
             main_premiums.append({'call_price': call_price, 'strikePrice': float(option['strike_price']), 'put_price': put_price})
 
-        print(main_premiums)
+        # print(main_premiums)
 
         # Process the data as needed (e.g., save to database)
 

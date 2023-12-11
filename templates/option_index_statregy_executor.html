@@ -5153,7 +5153,7 @@
                     </div>
                     <div class="right_place_order_check_liquidity">
                       <div class="maket_status">
-                        
+
 
                       </div>
                       <div class="main_place_order_check_liquidity">
@@ -5945,6 +5945,7 @@
                       Strike Price
                     </div>
                   </th>
+                  <th>On Date</th>
                   <th class="d-flex gap-2 align-items-center">
 
                     <div class="on_expiry_profits">
@@ -6165,6 +6166,7 @@
                 <div id="emailHelp" class="form-text"></div>
               </div>
         </div>
+
         </td>
         <td><button class="setTarget">Set Target</button></td>
 
@@ -6484,7 +6486,66 @@
     </div>
 
   </div>
+  <label for="customRange1" class="form-label" id="target_date">Target Date:</label>
+  <input type="range" class="form-range" min="0" max="5" id="customRange2">
 </div>
+<style>
+  input[type="range"]::-webkit-slider-runnable-track {
+  background-color: #c4c4c4;
+  border-radius: 0.5rem;
+  height: 0.5rem;
+}
+
+</style>
+<script>
+  $(document).ready(function () {
+    // Get today's date
+    var todayDate = new Date();
+    var todayDateString = formatDate(todayDate);
+
+    // Generate options for the dropdown
+    for (var i = 0; i <= 7; i++) {
+      var optionDate = new Date();
+      optionDate.setDate(todayDate.getDate() + i);
+      var optionDateString = formatDate(optionDate);
+      // $("#optionExpiryDropdown").append("<option value='" + optionDateString + "'>" + optionDateString + "</option>");
+    }
+
+    // Set the range min value as today's date
+
+
+    // Event listener for dropdown change
+
+
+    // Function to format date as 'YYYY-MM-DD'
+    function formatDate(date) {
+      var year = date.getFullYear();
+      var month = (date.getMonth() + 1).toString().padStart(2, '0');
+      var day = date.getDate().toString().padStart(2, '0');
+      return year + '-' + month + '-' + day;
+    }
+
+    // Function to update the range max value based on dropdown selection
+    function updateRangeLimits() {
+      var selectedDate = new Date($("#optionExpiryDropdown").val());
+      var daysLeft = Math.ceil((selectedDate - todayDate) / (1000 * 60 * 60 * 24));
+      logDateInfo("customRange2");
+    }
+
+    // Function to log current date and days left to the selected date
+    function logDateInfo(rangeId) {
+      var currentDate = new Date();
+      var selectedDate = new Date($("#optionExpiryDropdown").val());
+      var daysLeft = Math.ceil((selectedDate - currentDate) / (1000 * 60 * 60 * 24));
+      $("#customRange2").attr("max", daysLeft);
+      console.log("Current Date: " + formatDate(currentDate));
+      console.log("Days Left to Selected Date for " + rangeId + ": " + daysLeft);
+    }
+    updateRangeLimits();
+
+
+  });
+</script>
 </div>
 </div>
 
@@ -8373,7 +8434,7 @@
 
             $(".main_extented_status_liquidity").empty().removeClass("passed_liquidity").addClass("failed_liquidity").append(`${filteredMarket.marketStatusMessage}`)
 
-            
+
 
             $(".check_liquidity").prop("disabled", true)
           }
@@ -10471,7 +10532,19 @@
 
           if (selectedExpiry) {
             $("#optionExpiryDropdown").val(selectedExpiry);
+
+
+
+
+
           }
+
+
+          getDate_on_date()
+
+
+
+
           var option_chain_data = response.option_data.resultData.opDatas;
           // console.log(option_chain_data[0]);
           // console.log($("#optionExpiryDropdown").val());
@@ -10540,8 +10613,8 @@
             const putOIChangePercentage = ((putsChangeOI / (putsOI === 0 ? 1 : putsOI)) * 100).toFixed(2);
 
             var rowContent = `
-        <tr class="call_put_tr">
-            <td class="text-end ${strike_price_background_down}">${optionChain.calls_iv}</td>
+        <tr class="call_put_tr  main_option_chain">
+            <td class="text-end ${strike_price_background_down} calls_iv">${optionChain.calls_iv}</td>
             <td class="text-end oi_calls ${strike_price_background_down}">   
               <div class="main_calls_oi_option">
                 
@@ -10576,7 +10649,7 @@
                 </div>
             </td>
             <td class="text-start  oi_puts ${strike_price_background_up}">     <div style="width:${putsOIDynamicWidth}" class="dynamic-width-bg puts-oi">${optionChain.puts_oi}</div></td>
-            <td class="text-start ${strike_price_background_up}">${optionChain.puts_iv}</td>
+            <td class="text-start ${strike_price_background_up} puts_iv">${optionChain.puts_iv}</td>
         </tr>
     `;
 
@@ -13579,6 +13652,78 @@
       });
     }
 
+    function getDate_on_date() {
+      var todayDate = new Date();
+      var todayDateString = formatDate(todayDate);
+
+      // Generate options for the dropdown
+      for (var i = 0; i <= 7; i++) {
+        var optionDate = new Date();
+        optionDate.setDate(todayDate.getDate() + i);
+        var optionDateString = formatDate(optionDate);
+        // $("#optionExpiryDropdown").append("<option value='" + optionDateString + "'>" + optionDateString + "</option>");
+      }
+
+      // Set the range min value as today's date
+      logDateInfo("customRange2");
+
+      // Event listener for dropdown change
+      // $("#optionExpiryDropdown").change(function () {
+      //   updateRangeLimits();
+      //   logDateInfo("customRange2");
+      // });
+
+      // // Event listener for range input change
+      // $("#customRange2").on("input", function () {
+      //   logDateInfo("customRange2");
+      // });
+
+      // Function to format date as 'YYYY-MM-DD'
+      function formatDate(date) {
+        var year = date.getFullYear();
+        var month = (date.getMonth() + 1).toString().padStart(2, '0');
+        var day = date.getDate().toString().padStart(2, '0');
+        return year + '-' + month + '-' + day;
+      }
+
+      // Function to update the range max value based on dropdown selection
+      function updateRangeLimits() {
+        var selectedDate = new Date($("#optionExpiryDropdown").val());
+        var daysLeft = Math.ceil((selectedDate - todayDate) / (1000 * 60 * 60 * 24));
+
+        // Set the range max to the maximum possible value (0) and min to the minimum days left
+        $("#customRange2").attr("max", daysLeft);
+        $("#customRange2").attr("min", 0);
+
+        logDateInfo("customRange2");
+      }
+
+      // Function to log current date, days left, and current value of the range input
+      function logDateInfo(rangeId) {
+        var selectedDate = new Date($("#optionExpiryDropdown").val());
+        var currentValue = $("#customRange2").val();
+        var difference = parseFloat($("#customRange2").attr("max"));
+
+        // Calculate the current date based on the difference in minutes
+        var currentDate = new Date(selectedDate.getTime() - difference * (60 * 1000)); // Adjusted for minutes
+
+        console.log("Current Date: " + formatDate(currentDate));
+        console.log("Days Left to Selected Date for " + rangeId + ": " + difference);
+        console.log("Current Value of " + rangeId + ": " + currentValue);
+        console.log("Difference between Max and Current Value for " + rangeId + ": " + (difference - currentValue));
+
+        var result = difference - currentValue;
+
+        // Convert the result to a string if needed
+        var resultAsString = String(currentValue);
+
+        // Set the value into localstorage
+        localStorage.setItem(rangeId, resultAsString);
+      }
+
+      updateRangeLimits();
+
+    }
     function margin_calculations() {
       var main_margin_positions = [];
       var totalMargin = 0;
@@ -14159,28 +14304,6 @@
         chartData.push({ category: strikePrices[i], value: sumArray[i] });
       }
 
-      // console.log(tableData);
-      var tableBody = $(".payoff_table_data");
-
-      // Clear any existing rows
-      tableBody.empty();
-
-      // Loop through the tableData array and create table rows and cells
-      tableData.forEach(function (item) {
-        var main_payoff_table_condition = item.value < 0 ? "text-danger" : "text-success"
-        var row = $("<tr>");
-
-        var categoryCell = $("<td>").text(item.category);
-        var valueCell = $("<td>").text(item.value.toFixed(2)).addClass(main_payoff_table_condition);
-
-        row.append(categoryCell);
-        row.append(valueCell);
-
-        tableBody.append(row);
-      });
-
-      $(".payoff_expiry").text($("#optionExpiryDropdown").val())
-
 
 
 
@@ -14318,15 +14441,363 @@
       chart.height = am4core.percent(100);
 
 
+
+
+
       // console.log('Hi');
+      black_scholes_table(tableData)
+
+      var todayDate = new Date();
+      var todayDateString = formatDate(todayDate);
+
+      // Generate options for the dropdown
+      for (var i = 0; i <= 7; i++) {
+        var optionDate = new Date();
+        optionDate.setDate(todayDate.getDate() + i);
+        var optionDateString = formatDate(optionDate);
+        // $("#optionExpiryDropdown").append("<option value='" + optionDateString + "'>" + optionDateString + "</option>");
+      }
+
+      // Set the range min value as today's date
+      logDateInfo("customRange2");
+
+      // Event listener for dropdown change
+      $("#optionExpiryDropdown").change(function () {
+        updateRangeLimits();
+        logDateInfo("customRange2");
+        black_scholes_table(tableData)
+      });
+
+      // Event listener for range input change
+      $("#customRange2").on("input", function () {
+        logDateInfo("customRange2");
+        black_scholes_table(tableData)
+      });
+
+      // Function to format date as 'YYYY-MM-DD'
+      function formatDate(date) {
+        var year = date.getFullYear();
+        var month = (date.getMonth() + 1).toString().padStart(2, '0');
+        var day = date.getDate().toString().padStart(2, '0');
+        return year + '-' + month + '-' + day;
+      }
+
+      // Function to update the range max value based on dropdown selection
+      function updateRangeLimits() {
+
+// Select all elements with the class "expiry_initial"
+var expiryElements = $(".expiry_initial");
+
+// Check if there are any elements with the class
+if (expiryElements.length > 0) {
+
+  // Initialize the variable to store the minimum date
+  var minDate = null;
+
+  // Loop through each element with the class "expiry_initial"
+  expiryElements.each(function () {
+
+    // Get the text content of the current element
+    var currentDateText = $(this).text().trim();
+
+    // Parse the date string into a JavaScript Date object
+    var currentDate = new Date(currentDateText);
+
+    // Check if the date is valid
+    if (!isNaN(currentDate.getTime())) {
+
+      // If minDate is null or the current date is earlier than minDate, update minDate
+      if (minDate === null || currentDate < minDate) {
+        minDate = currentDate;
+      }
+    }
+  });
+
+  // Check if a valid minimum date was found
+  if (minDate !== null) {
+
+    // Convert the minimum date to a string in the desired format (e.g., "YYYY-MM-DD")
+    var minDateString = minDate.toISOString().split('T')[0];
+
+    // Log the minimum date
+    console.log(minDateString);
 
 
+    var selectedDate = new Date(minDateString);
+        var daysLeft = Math.ceil((selectedDate - todayDate) / (1000 * 60 * 60 * 24));
+
+        // Set the range max to the maximum possible value (0) and min to the minimum days left
+        $("#customRange2").attr("max", daysLeft);
+        $("#customRange2").attr("min", 0);
+
+        logDateInfo("customRange2");
+  } else {
+    // Log a message if no valid dates were found
+    console.log("No valid dates found.");
+  }
+
+} else {
+  // Log a message if no elements with the class "expiry_initial" were found
+  console.log("No elements with the class 'expiry_initial' found.");
+}
+
+      }
+
+      // Function to log current date, days left, and current value of the range input
+      function logDateInfo(rangeId) {
+        var selectedDate = new Date($("#optionExpiryDropdown").val());
+        var currentValue = $("#customRange2").val();
+        var difference = parseFloat($("#customRange2").attr("max"));
+
+        // Calculate the current date based on the difference in minutes
+        var currentDate = new Date(selectedDate.getTime() - difference * (60 * 1000)); // Adjusted for minutes
+
+        console.log("Current Date: " + formatDate(currentDate));
+        console.log("Days Left to Selected Date for " + rangeId + ": " + difference);
+        console.log("Current Value of " + rangeId + ": " + currentValue);
+        console.log("Difference between Max and Current Value for " + rangeId + ": " + (difference - currentValue));
+
+        var result = difference - currentValue;
+
+        // Convert the result to a string if needed
+        var resultAsString = String(currentValue);
+
+        // Set the value into localstorage
+        localStorage.setItem(rangeId, resultAsString);
+
+        $("#target_date").empty().append(`Target Date: ${result}D to expiry`)
+      }
+
+      updateRangeLimits();
+
+    }
+
+
+    function black_scholes_table(tableData) {
+
+      console.log(tableData);
+      var option_simulator_body = $(".main_option_chain");
+      var optionExpiryDropdown = $("#optionExpiryDropdown").val();
+      var last_traded_price = $(".last_traded_price").text();
+
+      var optionsData = []; // Array to store option data as objects
+
+      option_simulator_body.each(function () {
+        var strike_price = $(this).find(".strike_price").text();
+        var calls_iv = $(this).find(".calls_iv").text();
+        var puts_iv = $(this).find(".puts_iv").text();
+
+        var optionObject = {
+          strike_price: parseFloat(strike_price),
+          calls_iv: parseFloat(calls_iv),
+          puts_iv: parseFloat(puts_iv)
+        };
+
+        optionsData.push(optionObject);
+      });
+
+      console.log(optionsData);
+
+      var retrievedValue = localStorage.getItem("customRange2");
+      console.log("Retrieved value from localstorage for " + "customRange2" + ": " + retrievedValue);
+
+      // Use jQuery AJAX to send the data to Django
+      $.ajax({
+        type: 'POST',
+        url: '/black_scholes_option_price',
+        data: {
+          'options_data': JSON.stringify(optionsData),
+          'option_expiry': optionExpiryDropdown,
+          'last_traded_price': last_traded_price,
+          'onDate': retrievedValue,
+          csrfmiddlewaretoken: '{{ csrf_token }}' // Add CSRF token for security
+        },
+
+        dataType: 'json', // Expect JSON response from Django
+        success: function (data) {
+          // Print the response from Django (you can handle it as needed)
+          console.log(data);
+
+
+          var premiumsData = data.main_premiums;
+          var main_all_data = [];
+
+          $(".main_add_position_actions").each(function () {
+            var lot_size_value = parseFloat($("#lot_size_value").text());
+            var long_shorts = $(this).find(".long_short_inner").text();
+            var strikePrice_edit = parseFloat($(this).find(".strikePrice").text());
+            var requiredStringValue = $(this).find(".call_put_entrance").text();
+            var option_lot_size_input = $(this).find(".option_lot_size_input").text();
+
+            var matchingPremium = premiumsData.find(function (premium) {
+              return parseFloat(premium.strikePrice) === strikePrice_edit;
+            });
+
+            if (matchingPremium) {
+              var main_premiums_black_scholes = {
+                "StrikePrice": parseFloat(matchingPremium.strikePrice),
+                "long_shorts": long_shorts,
+                "requiredStringValue": requiredStringValue,
+                "option_lot_size_input": option_lot_size_input,
+              };
+
+              if (requiredStringValue === "CE") {
+                main_premiums_black_scholes["ltp"] = parseFloat(matchingPremium.call_price);
+              } else if (requiredStringValue === "PE") {
+                main_premiums_black_scholes["ltp"] = parseFloat(matchingPremium.put_price);
+              }
+
+              main_all_data.push(main_premiums_black_scholes);
+            }
+          });
+
+          console.log(main_all_data);
+
+          var resultArray = [];
+
+          var lot_size = parseInt($("#lot_size_value").text())
+
+          var option_simulator_body = $(".strategy_option_chain");
+
+          function ULTRAMAX(a, b) {
+            return a > b ? a : b;
+          }
+
+          premiumsData.forEach(function (strike) {
+            var ultra_strike_price = strike.strikePrice
+            var tempArray = [];
+
+            main_all_data.forEach(function (item) {
+              if (item.requiredStringValue === 'CE' && item.long_shorts === '+') {
+                tempArray.push(ULTRAMAX(0, ultra_strike_price - parseFloat(item.StrikePrice)) - parseFloat(item.ltp));
+              }
+              if (item.requiredStringValue === 'CE' && item.long_shorts === '-') {
+                tempArray.push(parseFloat(item.ltp) - ULTRAMAX(0, ultra_strike_price - parseFloat(item.StrikePrice)));
+              }
+              if (item.requiredStringValue === 'PE' && item.long_shorts === '+') {
+                tempArray.push(ULTRAMAX(0, parseFloat(item.StrikePrice) - ultra_strike_price) - parseFloat(item.ltp));
+              }
+              if (item.requiredStringValue === 'PE' && item.long_shorts === '-') {
+                tempArray.push(parseFloat(item.ltp) - ULTRAMAX(0, parseFloat(item.StrikePrice) - ultra_strike_price));
+              }
+            });
+
+            resultArray.push(tempArray);
+          });
+
+          console.log(resultArray);
+
+          var arrayOfArrays = resultArray;
+
+          var lotSizeValues = premiumsData.map(element => parseInt(element.option_lot_size_input));
+
+          for (var i = 0; i < arrayOfArrays.length; i++) {
+            for (var j = 0; j < arrayOfArrays[i].length; j++) {
+              arrayOfArrays[i][j] *= lotSizeValues[j] || 1;
+            }
+          }
+
+          console.log(arrayOfArrays);
+
+
+
+
+
+          var sumArray = resultArray.map(function (array) {
+            var sum = array.reduce(function (acc, value) {
+              return acc + value;
+            }, 0);
+            return sum * lot_size;
+          });
+
+          console.log(sumArray);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          var sumArray = resultArray.map(function (array) {
+            var sum = array.reduce(function (acc, value) {
+              return acc + value;
+            }, 0);
+            return sum * lot_size;
+          });
+
+
+
+
+
+
+
+          for (var i = 0; i < tableData.length; i++) {
+            // Assuming that each object in tableData has a property named 'black_scholes_val'
+            var sumValue = sumArray[i] || 0;
+            // Use isFinite to check if sumValue is a valid finite number
+            tableData[i].black_scholes_val = isFinite(sumValue) ? sumValue : 0;
+          }
+
+          console.log(tableData);
+
+
+
+
+
+          // console.log(tableData);
+          var tableBody = $(".payoff_table_data");
+
+          // Clear any existing rows
+          tableBody.empty();
+
+          // Loop through the tableData array and create table rows and cells
+          tableData.forEach(function (item) {
+            var main_payoff_table_condition = item.value < 0 ? "text-danger" : "text-success"
+            var main_payoff_table_condition_black_scholes_val = item.black_scholes_val < 0 ? "text-danger" : "text-success"
+            var row = $("<tr>");
+
+            var categoryCell = $("<td>").text(item.category);
+            var black_scholes_val_cell = $("<td>").text(item.black_scholes_val.toFixed(2)).addClass(main_payoff_table_condition_black_scholes_val);
+            var valueCell = $("<td>").text(item.value.toFixed(2)).addClass(main_payoff_table_condition);
+
+            row.append(categoryCell);
+            row.append(black_scholes_val_cell);
+            row.append(valueCell);
+
+            tableBody.append(row);
+          });
+
+          $(".payoff_expiry").text($("#optionExpiryDropdown").val())
+
+
+
+        },
+        error: function (error) {
+          console.log('Error:', error);
+        }
+      });
     }
 
 
 
     // Select the elements
   });
+</script>
+
+<script>
+
 </script>
 
 {% endblock dashboard_body %}
