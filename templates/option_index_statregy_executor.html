@@ -5732,6 +5732,10 @@
 
               font-weight: 600;
             }
+
+            #taget_date_table{
+              display: flex;
+            }
           </style>
 
 
@@ -5945,7 +5949,18 @@
                       Strike Price
                     </div>
                   </th>
-                  <th>On Date</th>
+
+
+                  <th class="">
+
+
+                    <span class="on_date_expiry">
+
+                    </span>
+                  </th>
+
+
+
                   <th class="d-flex gap-2 align-items-center">
 
                     <div class="on_expiry_profits">
@@ -5955,6 +5970,8 @@
 
                     </div>
                   </th>
+
+
                 </tr>
               </thead>
 
@@ -6486,16 +6503,19 @@
     </div>
 
   </div>
-  <label for="customRange1" class="form-label" id="target_date">Target Date:</label>
+  <label for="customRange1" class="form-label justify-content-between" id="taget_date_table">
+
+    <div id="target_date"></div>
+    <div id="target_date_full"></div>
+  </label>
   <input type="range" class="form-range" min="0" max="5" id="customRange2">
 </div>
 <style>
   input[type="range"]::-webkit-slider-runnable-track {
-  background-color: #c4c4c4;
-  border-radius: 0.5rem;
-  height: 0.5rem;
-}
-
+    background-color: #c4c4c4;
+    border-radius: 0.5rem;
+    height: 0.5rem;
+  }
 </style>
 <script>
   $(document).ready(function () {
@@ -7164,7 +7184,8 @@
   $(document).ready(function () {
     $("#resultTable tbody,#table-PL,.option_oi_charts,#chartdiv,.payoff_table_data").hide()
     $(".main_position,.main_all_profit_loss,.main_bottom_strategy_positions").hide()
-
+$("#customRange2").hide()
+$('#taget_date_table').hide()
     $(".main_build_custom_strategy_empty").css("display", "flex")
 
     $("#buid_custom_strategy_btn").click(function () {
@@ -8783,6 +8804,8 @@
       $(".main_position,.main_all_profit_loss,.main_bottom_strategy_positions").hide()
 
       $(".main_build_custom_strategy_empty").css("display", "flex")
+      $("#customRange2").hide()
+      $('#taget_date_table').hide()
 
       greeks = 1;
       p_l = 1;
@@ -10431,6 +10454,8 @@
       $(".main_build_custom_strategy_empty").css("display", "flex")
 
       $(".straddle").removeClass("option_strategies_active")
+      $("#customRange2").hide()
+      $('#taget_date_table').hide()
 
 
       $(".main_position").empty();
@@ -13172,6 +13197,8 @@
               margin_calculations()
               $(".main_position,.main_all_profit_loss,.main_bottom_strategy_positions").show()
               $(".main_build_custom_strategy_empty").css("display", "none")
+              $("#customRange2").show()
+              $('#taget_date_table').show()
 
               $("#resultTable tbody,#table-PL,.option_oi_charts,#chartdiv,.payoff_table_data").show()
 
@@ -13204,7 +13231,8 @@
               Table_chart_pyoff()
               $(".main_position,.main_all_profit_loss,.main_bottom_strategy_positions").show()
               $(".main_build_custom_strategy_empty").css("display", "none")
-
+              $("#customRange2").show()
+              $('#taget_date_table').show()
               $("#resultTable tbody,#table-PL,.option_oi_charts,#chartdiv,.payoff_table_data").show()
               margin_calculations()
 
@@ -13515,6 +13543,8 @@
                 // If it has no children, hide .main_table_instruments_data
                 $(".main_position,.main_all_profit_loss,.main_bottom_strategy_positions").hide()
                 $(".main_build_custom_strategy_empty").css("display", "flex")
+                $("#customRange2").hide()
+                $('#taget_date_table').hide()
 
 
                 $("#resultTable tbody,#table-PL,.option_oi_charts,#chartdiv,.payoff_table_data").hide()
@@ -14479,67 +14509,68 @@
         var year = date.getFullYear();
         var month = (date.getMonth() + 1).toString().padStart(2, '0');
         var day = date.getDate().toString().padStart(2, '0');
-        return year + '-' + month + '-' + day;
+        var hours = date.getHours().toString().padStart(2, '0');
+        var minutes = date.getMinutes().toString().padStart(2, '0');
+        return year + '-' + month + '-' + day
       }
-
       // Function to update the range max value based on dropdown selection
       function updateRangeLimits() {
 
-// Select all elements with the class "expiry_initial"
-var expiryElements = $(".expiry_initial");
+        // Select all elements with the class "expiry_initial"
+        var expiryElements = $(".expiry_initial");
 
-// Check if there are any elements with the class
-if (expiryElements.length > 0) {
+        // Check if there are any elements with the class
+        if (expiryElements.length > 0) {
 
-  // Initialize the variable to store the minimum date
-  var minDate = null;
+          // Initialize the variable to store the minimum date
+          var minDate = null;
 
-  // Loop through each element with the class "expiry_initial"
-  expiryElements.each(function () {
+          // Loop through each element with the class "expiry_initial"
+          expiryElements.each(function () {
 
-    // Get the text content of the current element
-    var currentDateText = $(this).text().trim();
+            // Get the text content of the current element
+            var currentDateText = $(this).text().trim();
 
-    // Parse the date string into a JavaScript Date object
-    var currentDate = new Date(currentDateText);
+            // Parse the date string into a JavaScript Date object
+            var currentDate = new Date(currentDateText);
 
-    // Check if the date is valid
-    if (!isNaN(currentDate.getTime())) {
+            // Check if the date is valid
+            if (!isNaN(currentDate.getTime())) {
 
-      // If minDate is null or the current date is earlier than minDate, update minDate
-      if (minDate === null || currentDate < minDate) {
-        minDate = currentDate;
-      }
-    }
-  });
+              // If minDate is null or the current date is earlier than minDate, update minDate
+              if (minDate === null || currentDate < minDate) {
+                minDate = currentDate;
+              }
+            }
+          });
 
-  // Check if a valid minimum date was found
-  if (minDate !== null) {
+          // Check if a valid minimum date was found
+          if (minDate !== null) {
 
-    // Convert the minimum date to a string in the desired format (e.g., "YYYY-MM-DD")
-    var minDateString = minDate.toISOString().split('T')[0];
+            // Convert the minimum date to a string in the desired format (e.g., "YYYY-MM-DD")
+            var minDateString = minDate.toISOString().split('T')[0];
 
-    // Log the minimum date
-    console.log(minDateString);
+            // Log the minimum date
+            console.log(minDateString);
 
 
-    var selectedDate = new Date(minDateString);
-        var daysLeft = Math.ceil((selectedDate - todayDate) / (1000 * 60 * 60 * 24));
+            var selectedDate = new Date(minDateString);
+            var daysLeft = Math.ceil((selectedDate - todayDate) / (1000 * 60 * 60 * 24));
 
-        // Set the range max to the maximum possible value (0) and min to the minimum days left
-        $("#customRange2").attr("max", daysLeft);
-        $("#customRange2").attr("min", 0);
+            // Set the range max to the maximum possible value (0) and min to the minimum days left
+            $("#customRange2").attr("max", daysLeft);
+            $("#customRange2").attr("min", 0);
 
-        logDateInfo("customRange2");
-  } else {
-    // Log a message if no valid dates were found
-    console.log("No valid dates found.");
-  }
+            logDateInfo("customRange2");
+          } else {
+            // Log a message if no valid dates were found
+            console.log("No valid dates found.");
+          }
 
-} else {
-  // Log a message if no elements with the class "expiry_initial" were found
-  console.log("No elements with the class 'expiry_initial' found.");
-}
+        } else {
+          // Log a message if no elements with the class "expiry_initial" were found
+          console.log("No elements with the class 'expiry_initial' found.");
+        }
 
       }
 
@@ -14565,7 +14596,11 @@ if (expiryElements.length > 0) {
         // Set the value into localstorage
         localStorage.setItem(rangeId, resultAsString);
 
-        $("#target_date").empty().append(`Target Date: ${result}D to expiry`)
+        var targetDate = new Date(currentDate.getTime() - result * 24 * 60 * 60 * 1000);
+
+        $("#target_date_full").empty().append("On Date : " + formatDate(targetDate));
+        $(".on_date_expiry").empty().append("On Date " + formatDate(targetDate));
+        $("#target_date").empty().append(`Target Date: ${result}D to expiry`);
       }
 
       updateRangeLimits();
