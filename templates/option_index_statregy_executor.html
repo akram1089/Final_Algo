@@ -496,6 +496,11 @@
   .table-striped-custom>tbody>tr:nth-child(2n)>th {
     background-color: rgb(240, 247, 253) !important;
   }
+
+  .table-striped-custom>tr:nth-child(2n)>td,
+  .table-striped-custom>tr:nth-child(2n)>th {
+    background-color: rgb(240, 247, 253) !important;
+  }
 </style>
 <style>
   .inner_greek_p_l {
@@ -1243,6 +1248,13 @@
 
   .savedStrategies:hover .left_strategy_name {
     color: #4399EB;
+  }
+
+  .text-danger{
+color: #C22E00 !important;
+  }
+  .text-success{
+    color: #039855 !important;
   }
 </style>
 <div class="title my-2 d-flex">
@@ -5733,7 +5745,7 @@
               font-weight: 600;
             }
 
-            #taget_date_table{
+            #taget_date_table {
               display: flex;
             }
           </style>
@@ -6503,12 +6515,12 @@
     </div>
 
   </div>
-  <label for="customRange1" class="form-label justify-content-between" id="taget_date_table">
+  <label for="customRange1" class="form-label justify-content-between d-none" id="taget_date_table">
 
     <div id="target_date"></div>
     <div id="target_date_full"></div>
   </label>
-  <input type="range" class="form-range" min="0" max="5" id="customRange2">
+  <input type="range" class="form-range d-none" min="0" max="5" id="customRange2">
 </div>
 <style>
   input[type="range"]::-webkit-slider-runnable-track {
@@ -7184,8 +7196,8 @@
   $(document).ready(function () {
     $("#resultTable tbody,#table-PL,.option_oi_charts,#chartdiv,.payoff_table_data").hide()
     $(".main_position,.main_all_profit_loss,.main_bottom_strategy_positions").hide()
-$("#customRange2").hide()
-$('#taget_date_table').hide()
+    $("#customRange2").hide()
+    $('#taget_date_table').hide()
     $(".main_build_custom_strategy_empty").css("display", "flex")
 
     $("#buid_custom_strategy_btn").click(function () {
@@ -10791,6 +10803,7 @@ $('#taget_date_table').hide()
                 $(this).position().top -
                 container.height() / 2 +
                 $(this).height() / 2;
+                // console.log("scrollTo",scrollTo);
 
               // Reset the scroll position first
               $(".main_option_chain_table,.main_option_oi,.main_option_greeks").animate(
@@ -13748,7 +13761,7 @@ $('#taget_date_table').hide()
         var resultAsString = String(currentValue);
 
         // Set the value into localstorage
-        localStorage.setItem(rangeId, resultAsString);
+        localStorage.setItem(rangeId, result);
       }
 
       updateRangeLimits();
@@ -13995,11 +14008,14 @@ $('#taget_date_table').hide()
 
         var tempArray = []; // Temporary array to store values
         main_strike_price_dynamic.forEach(function (item) {
+          console.log("item", item);
           if (item.requiredStringValue === 'CE' && item.long_shorts === '+') {
             // console.log('Inside CE and + condition');
             // console.log(parseFloat(item.final_strikePrice_edit));
             // console.log(parseFloat(item.final_lot_premium));
-            // console.log(ultra_strike_price);
+            console.log(ultra_strike_price);
+
+
             tempArray.push(ULTRAMAX(0, ultra_strike_price - parseFloat(item.final_strikePrice_edit)) - parseFloat(item.final_lot_premium));
 
             // console.log(ULTRAMAX(0, ultra_strike_price - parseFloat(item.final_strikePrice_edit)) - parseFloat(item.final_lot_premium));
@@ -14017,11 +14033,11 @@ $('#taget_date_table').hide()
             tempArray.push(parseFloat(item.final_lot_premium) - ULTRAMAX(0, parseFloat(item.final_strikePrice_edit) - ultra_strike_price));
           }
         });
-        // console.log(tempArray);
+        console.log(tempArray);
         resultArray.push(tempArray); // Push the tempArray into the resultArray
       });
 
-      // console.log(resultArray);
+      console.log("resultArray", resultArray);
 
 
       // Sample array of arrays
@@ -14032,6 +14048,7 @@ $('#taget_date_table').hide()
 
       // Convert the text content of each element to an integer and store in an array
       var lotSizeValues = Array.from(lotSizeElements).map(element => parseInt(element.textContent));
+      console.log("lotSizeValues", lotSizeValues);
 
       // Loop through the array of arrays and perform index-wise multiplication
       for (var i = 0; i < arrayOfArrays.length; i++) {
@@ -14504,6 +14521,12 @@ $('#taget_date_table').hide()
         black_scholes_table(tableData)
       });
 
+      $("#saveChangesButton").click(function () {
+        updateRangeLimits();
+        logDateInfo("customRange2");
+        black_scholes_table(tableData)
+      })
+
       // Function to format date as 'YYYY-MM-DD'
       function formatDate(date) {
         var year = date.getFullYear();
@@ -14551,7 +14574,7 @@ $('#taget_date_table').hide()
             var minDateString = minDate.toISOString().split('T')[0];
 
             // Log the minimum date
-            console.log(minDateString);
+            // console.log(minDateString);
 
 
             var selectedDate = new Date(minDateString);
@@ -14583,10 +14606,10 @@ $('#taget_date_table').hide()
         // Calculate the current date based on the difference in minutes
         var currentDate = new Date(selectedDate.getTime() - difference * (60 * 1000)); // Adjusted for minutes
 
-        console.log("Current Date: " + formatDate(currentDate));
-        console.log("Days Left to Selected Date for " + rangeId + ": " + difference);
-        console.log("Current Value of " + rangeId + ": " + currentValue);
-        console.log("Difference between Max and Current Value for " + rangeId + ": " + (difference - currentValue));
+        // console.log("Current Date: " + formatDate(currentDate));
+        // console.log("Days Left to Selected Date for " + rangeId + ": " + difference);
+        // console.log("Current Value of " + rangeId + ": " + currentValue);
+        // console.log("Difference between Max and Current Value for " + rangeId + ": " + (difference - currentValue));
 
         var result = difference - currentValue;
 
@@ -14594,7 +14617,7 @@ $('#taget_date_table').hide()
         var resultAsString = String(currentValue);
 
         // Set the value into localstorage
-        localStorage.setItem(rangeId, resultAsString);
+        localStorage.setItem(rangeId, result);
 
         var targetDate = new Date(currentDate.getTime() - result * 24 * 60 * 60 * 1000);
 
@@ -14610,7 +14633,7 @@ $('#taget_date_table').hide()
 
     function black_scholes_table(tableData) {
 
-      console.log(tableData);
+      // console.log(tableData);
       var option_simulator_body = $(".main_option_chain");
       var optionExpiryDropdown = $("#optionExpiryDropdown").val();
       var last_traded_price = $(".last_traded_price").text();
@@ -14631,10 +14654,10 @@ $('#taget_date_table').hide()
         optionsData.push(optionObject);
       });
 
-      console.log(optionsData);
+      // console.log(optionsData);
 
       var retrievedValue = localStorage.getItem("customRange2");
-      console.log("Retrieved value from localstorage for " + "customRange2" + ": " + retrievedValue);
+      // console.log("Retrieved value from localstorage for " + "customRange2" + ": " + retrievedValue);
 
       // Use jQuery AJAX to send the data to Django
       $.ajax({
@@ -14651,170 +14674,580 @@ $('#taget_date_table').hide()
         dataType: 'json', // Expect JSON response from Django
         success: function (data) {
           // Print the response from Django (you can handle it as needed)
-          console.log(data);
+          // console.log(data);
 
 
           var premiumsData = data.main_premiums;
           var main_all_data = [];
+
+          var single_premiumData = premiumsData[0]
+
+          // console.log(single_premiumData);
+
+
+
+
+
 
           $(".main_add_position_actions").each(function () {
             var lot_size_value = parseFloat($("#lot_size_value").text());
             var long_shorts = $(this).find(".long_short_inner").text();
             var strikePrice_edit = parseFloat($(this).find(".strikePrice").text());
             var requiredStringValue = $(this).find(".call_put_entrance").text();
-            var option_lot_size_input = $(this).find(".option_lot_size_input").text();
+            var option_lot_size_input = parseFloat($(this).find(".option_lot_size_input").text()); // Assuming this should be a number
 
-            var matchingPremium = premiumsData.find(function (premium) {
-              return parseFloat(premium.strikePrice) === strikePrice_edit;
-            });
+            // Your existing code
+            var matchingPremiumsArray = [];
 
-            if (matchingPremium) {
-              var main_premiums_black_scholes = {
-                "StrikePrice": parseFloat(matchingPremium.strikePrice),
-                "long_shorts": long_shorts,
-                "requiredStringValue": requiredStringValue,
-                "option_lot_size_input": option_lot_size_input,
-              };
+            $.each(premiumsData, function (index, dayData) {
+              var dayDiv = $('<div>').appendTo('#premiums-container');
+              dayDiv.append('<h3>Day ' + dayData.day + '</h3');
 
-              if (requiredStringValue === "CE") {
-                main_premiums_black_scholes["ltp"] = parseFloat(matchingPremium.call_price);
-              } else if (requiredStringValue === "PE") {
-                main_premiums_black_scholes["ltp"] = parseFloat(matchingPremium.put_price);
+              // New array to store matching premiums for the current day
+              var matchingPremiumsForDay = [];
+
+              // Check if dayData.premiums is defined
+              if (dayData.premiums) {
+                // Loop through daily premiums
+                $.each(dayData.premiums, function (i, optionData) {
+                  var optionDiv = $('<div>').appendTo(dayDiv);
+                  optionDiv.append('<p>Strike Price: ' + optionData.strikePrice + '</p>');
+                  optionDiv.append('<p>Call Price: ' + optionData.call_price + '</p>');
+                  optionDiv.append('<p>Put Price: ' + optionData.put_price + '</p>');
+
+                  // Check if optionData is defined and compare strikePrice
+                  if (optionData && optionData.strikePrice === strikePrice_edit) {
+                    // If the strikePrice matches, push the premium to the array
+                    matchingPremiumsForDay.push(optionData);
+                  }
+                });
               }
 
-              main_all_data.push(main_premiums_black_scholes);
-            }
+              // Log the matching premiums for the current day
+              // console.log('Matching Premiums for Day ' + dayData.day, matchingPremiumsForDay);
+
+              // Add key-value pair to the matchingPremiumsArray
+              matchingPremiumsArray.push({ day: dayData.day, premiums: matchingPremiumsForDay });
+
+              // Your existing code
+              $.each(matchingPremiumsForDay, function (i, matchingPremium) {
+                var main_premiums_black_scholes = {
+                  "StrikePrice": parseFloat(matchingPremium.strikePrice),
+                  "long_shorts": long_shorts,
+                  "requiredStringValue": requiredStringValue,
+                  "option_lot_size_input": option_lot_size_input,
+                  "day": dayData.day, // Include the day information here
+                };
+
+                if (requiredStringValue === "CE") {
+                  main_premiums_black_scholes["ltp"] = parseFloat(matchingPremium.call_price);
+                } else if (requiredStringValue === "PE") {
+                  main_premiums_black_scholes["ltp"] = parseFloat(matchingPremium.put_price);
+                }
+
+                main_all_data.push(main_premiums_black_scholes);
+              });
+            });
+
+            // console.log('All Matching Premiums:', matchingPremiumsArray);
           });
 
-          console.log(main_all_data);
+
+          // Sort main_all_data based on the "day" property
+          main_all_data.sort((a, b) => a.day - b.day);
+
+          // Create an object to store grouped data
+          var groupedData = {};
+
+          // Group data by day
+          main_all_data.forEach(function (item) {
+            var day = item.day;
+
+            // Convert day to a string
+            var dayString = 'Day ' + day;
+
+            // Create an array for the day if it doesn't exist
+            if (!groupedData[dayString]) {
+              groupedData[dayString] = [];
+            }
+
+            // Push the item to the array for the corresponding day
+            groupedData[dayString].push(item);
+          });
+
+          // Now groupedData contains the data grouped by day
+          // console.log('Grouped Data:', groupedData);
 
           var resultArray = [];
-
-          var lot_size = parseInt($("#lot_size_value").text())
-
+          var lot_size = parseInt($("#lot_size_value").text());
           var option_simulator_body = $(".strategy_option_chain");
 
           function ULTRAMAX(a, b) {
             return a > b ? a : b;
           }
 
-          premiumsData.forEach(function (strike) {
-            var ultra_strike_price = strike.strikePrice
-            var tempArray = [];
+          if (single_premiumData.premiums) {
+            single_premiumData.premiums.forEach(function (premium, index) {
+              var ultra_strike_price = premium.strikePrice;
 
-            main_all_data.forEach(function (item) {
-              if (item.requiredStringValue === 'CE' && item.long_shorts === '+') {
-                tempArray.push(ULTRAMAX(0, ultra_strike_price - parseFloat(item.StrikePrice)) - parseFloat(item.ltp));
-              }
-              if (item.requiredStringValue === 'CE' && item.long_shorts === '-') {
-                tempArray.push(parseFloat(item.ltp) - ULTRAMAX(0, ultra_strike_price - parseFloat(item.StrikePrice)));
-              }
-              if (item.requiredStringValue === 'PE' && item.long_shorts === '+') {
-                tempArray.push(ULTRAMAX(0, parseFloat(item.StrikePrice) - ultra_strike_price) - parseFloat(item.ltp));
-              }
-              if (item.requiredStringValue === 'PE' && item.long_shorts === '-') {
-                tempArray.push(parseFloat(item.ltp) - ULTRAMAX(0, parseFloat(item.StrikePrice) - ultra_strike_price));
+              Object.values(groupedData).forEach(function (items, dayIndex) {
+                var tempArray = []; // Move tempArray initialization inside the day loop
+
+                items.forEach(function (item) {
+                  if (item.requiredStringValue === 'CE' && item.long_shorts === '+') {
+                    tempArray.push(ULTRAMAX(0, ultra_strike_price - parseFloat(item.StrikePrice)) - parseFloat(item.ltp));
+                  }
+                  if (item.requiredStringValue === 'CE' && item.long_shorts === '-') {
+                    tempArray.push(parseFloat(item.ltp) - ULTRAMAX(0, ultra_strike_price - parseFloat(item.StrikePrice)));
+                  }
+                  if (item.requiredStringValue === 'PE' && item.long_shorts === '+') {
+                    tempArray.push(ULTRAMAX(0, parseFloat(item.StrikePrice) - ultra_strike_price) - parseFloat(item.ltp));
+                  }
+                  if (item.requiredStringValue === 'PE' && item.long_shorts === '-') {
+                    tempArray.push(parseFloat(item.ltp) - ULTRAMAX(0, parseFloat(item.StrikePrice) - ultra_strike_price));
+                  }
+                });
+
+
+                // Push each day's data individually
+                resultArray.push({ day: dayIndex + 1, values: tempArray });
+              });
+            });
+          }
+
+          resultArray.sort((a, b) => a.day - b.day);
+
+          // Group the sorted resultArray by day
+          var groupedResultArray = resultArray.reduce((acc, obj) => {
+            var key = obj.day;
+            (acc[key] || (acc[key] = [])).push(obj);
+            return acc;
+          }, {});
+
+          // console.log(groupedResultArray);
+
+
+          // var arrayOfArrays = groupedResultArray;
+
+          // var lotSizeValues = premiumsData.map(element => parseInt(element.option_lot_size_input));
+
+          // for (var i = 0; i < arrayOfArrays.length; i++) {
+          //   for (var j = 0; j < arrayOfArrays[i].length; j++) {
+          //     arrayOfArrays[i][j] *= lotSizeValues[j] || 1;
+          //   }
+          // }
+
+          // console.log(arrayOfArrays);
+          var groupedLotSizes = {};
+
+          Object.values(groupedData).forEach(function (items, dayIndex) {
+            var lotSizesForDay = [];
+
+            items.forEach(function (item) {
+              // console.log(item.option_lot_size_input);
+
+              // Push the option_lot_size_input into lotSizesForDay
+              lotSizesForDay.push(item.option_lot_size_input);
+            });
+
+            // Assign the array of lot sizes to the corresponding day in groupedLotSizes
+            groupedLotSizes[dayIndex + 1] = lotSizesForDay;
+          });
+
+          // console.log(groupedLotSizes);
+
+
+          // groupedResultArray.forEach((group)=>{
+          //   console.log(group);
+          // })
+
+          // Assuming groupedResultArray is your inner_group
+          const multipliedValuesArray = [];
+
+          Object.values(groupedResultArray).forEach(function (group, dayIndex) {
+            const dayMultipliedValues = [];
+
+            group.forEach((inner_group) => {
+              const matchingLotSizeValues = groupedLotSizes[inner_group.day];
+
+              if (matchingLotSizeValues) {
+                const multipliedValues = inner_group.values.map((value, valueIndex) => {
+                  const matchingLotSizeValue = matchingLotSizeValues[valueIndex] || 1;
+                  return value * matchingLotSizeValue * lot_size;
+                });
+
+                dayMultipliedValues.push({
+                  day: inner_group.day,
+                  values: multipliedValues
+                });
+              } else {
+                // console.log("No matching lot sizes found for day", inner_group.day);
               }
             });
 
-            resultArray.push(tempArray);
+            multipliedValuesArray.push({
+              day: dayIndex + 1,
+              multipliedValues: dayMultipliedValues
+            });
           });
 
-          console.log(resultArray);
-
-          var arrayOfArrays = resultArray;
-
-          var lotSizeValues = premiumsData.map(element => parseInt(element.option_lot_size_input));
-
-          for (var i = 0; i < arrayOfArrays.length; i++) {
-            for (var j = 0; j < arrayOfArrays[i].length; j++) {
-              arrayOfArrays[i][j] *= lotSizeValues[j] || 1;
-            }
-          }
-
-          console.log(arrayOfArrays);
-
-
-
-
-
-          var sumArray = resultArray.map(function (array) {
-            var sum = array.reduce(function (acc, value) {
-              return acc + value;
-            }, 0);
-            return sum * lot_size;
-          });
-
-          console.log(sumArray);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-          var sumArray = resultArray.map(function (array) {
-            var sum = array.reduce(function (acc, value) {
-              return acc + value;
-            }, 0);
-            return sum * lot_size;
-          });
-
-
-
-
-
-
-
-          for (var i = 0; i < tableData.length; i++) {
-            // Assuming that each object in tableData has a property named 'black_scholes_val'
-            var sumValue = sumArray[i] || 0;
-            // Use isFinite to check if sumValue is a valid finite number
-            tableData[i].black_scholes_val = isFinite(sumValue) ? sumValue : 0;
-          }
-
-          console.log(tableData);
-
-
-
-
-
+          // console.log("Multiplied Values Array:", multipliedValuesArray);
           // console.log(tableData);
-          var tableBody = $(".payoff_table_data");
 
-          // Clear any existing rows
-          tableBody.empty();
 
-          // Loop through the tableData array and create table rows and cells
-          tableData.forEach(function (item) {
-            var main_payoff_table_condition = item.value < 0 ? "text-danger" : "text-success"
-            var main_payoff_table_condition_black_scholes_val = item.black_scholes_val < 0 ? "text-danger" : "text-success"
+          const allValuesDayWise = [];
+
+          // Iterate through the data and push all values day-wise
+          multipliedValuesArray.forEach(dayData => {
+            dayData.multipliedValues.forEach(innerData => {
+              allValuesDayWise.push({
+                day: dayData.day,
+                values: innerData.values
+              });
+            });
+          });
+
+          // console.log(allValuesDayWise);
+
+
+          const result = {};
+
+          allValuesDayWise.forEach((individual) => {
+            const day = individual.day;
+            const sum = individual.values.reduce((acc, value) => acc + value, 0);
+
+            if (!result[day]) {
+              result[day] = [];
+            }
+
+            result[day].push(sum);
+          });
+
+          // Create a new array of objects
+          const All_day_data = Object.keys(result).map(day => ({ day: Number(day), sums: result[day] || [] }));
+
+          // Display the new array
+          // console.log(All_day_data);
+          // console.log(tableData);
+
+
+
+
+          var dynamicDayKey = "Day-";
+
+          var mergedData = [];
+
+          // Iterate over each day data
+          All_day_data.forEach((dayData) => {
+            // Check if the dayData has sums for the current day
+            if (dayData.sums.length > 0) {
+              // Iterate over each category in dayData
+              dayData.sums.forEach((sum) => {
+                // Create a new merged item for each category
+                var mergedItem = {
+                  category: "", // Set the category dynamically based on your logic
+                  value: 0,      // Set the value dynamically based on your logic
+                };
+
+                // Set the dynamic day key
+                var dayKey = dynamicDayKey + dayData.day;
+                mergedItem[dayKey] = sum;
+
+                // Push the merged item into mergedData
+                mergedData.push(mergedItem);
+              });
+            }
+          });
+
+          // Iterate over each item in tableData
+          tableData.forEach((data, dataIndex) => {
+            // Find the corresponding entry in mergedData based on the index
+            var mergedItem = mergedData[dataIndex];
+
+            // If a corresponding entry is found, set category and value
+            if (mergedItem) {
+              mergedItem.category = data.category; // Set the category based on your logic
+              mergedItem.value = data.value;       // Set the value based on your logic
+            }
+          });
+
+          // Print the final merged array
+          var all_day_merged_data = [];
+
+          mergedData.forEach((day_data) => {
+            let dayObject = {};
+
+            for (let i = 1; i <= 7; i++) {
+              const dayKey = "Day-" + i;
+
+              if (day_data.hasOwnProperty(dayKey)) {
+                dayObject[dayKey] = day_data[dayKey];
+              }
+            }
+
+            all_day_merged_data.push(dayObject);
+          });
+
+          // console.log(all_day_merged_data);
+
+
+          var grouped_data = {};
+
+          all_day_merged_data.forEach(function (data_point) {
+            for (var day in data_point) {
+              if (!grouped_data[day]) {
+                grouped_data[day] = [];
+              }
+              grouped_data[day].push(data_point[day]);
+            }
+          });
+
+          var _result = Object.entries(grouped_data).map(([day, values]) => ({ [day]: values }));
+
+          // console.log(_result);
+          // var sumArray = resultArray.map(function (array) {
+          //   var sum = array.reduce(function (acc, value) {
+          //     return acc + value;
+          //   }, 0);
+          //   return sum * lot_size;
+          // });
+
+          // console.log(sumArray);
+          var categories = tableData.map(data => parseInt(data.category));
+          var values = tableData.map(data => data.value);
+
+          // Structure _result with category and value arrays
+          _result = [
+            { "Strikes": categories },
+            ..._result,
+            { "ON-Expiry": values }
+          ];
+
+          // Print the merged _result
+
+          // Print the merged _result
+          // console.log(_result);
+
+
+          var table = $(".payoff_table_main_table");
+
+          // Clear any existing content
+          table.empty();
+
+          // Find the maximum number of values among all days
+          var maxValuesCount = Math.max(..._result.map(dayData => dayData[Object.keys(dayData)[0]].length));
+
+          // Create the table header dynamically
+          var thead = $("<thead>");
+          var headerRow = $("<tr>");
+
+          // Add header cells for each day
+          _result.forEach(function (dayData) {
+            var day = Object.keys(dayData)[0];
+            headerRow.append($("<th>").text(day));
+          });
+
+          thead.append(headerRow);
+          table.append(thead);
+
+          // Loop through values row-wise and create table rows and cells
+          for (var i = 0; i < maxValuesCount; i++) {
             var row = $("<tr>");
 
-            var categoryCell = $("<td>").text(item.category);
-            var black_scholes_val_cell = $("<td>").text(item.black_scholes_val.toFixed(2)).addClass(main_payoff_table_condition_black_scholes_val);
-            var valueCell = $("<td>").text(item.value.toFixed(2)).addClass(main_payoff_table_condition);
+            // Loop through each day's values
+            _result.forEach(function (dayData) {
+              var dayKey = Object.keys(dayData)[0]; // Extract day key outside the loop
+              var values = dayData[dayKey];
+      
+              var values_con = values[i] < 0 ? "text-danger" : "text-success"
+              var cell = $("<td>").text(values[i] ? values[i].toFixed(0) : "").addClass(values_con).css("font-size", "13px");
+              row.append(cell);
+            });
 
-            row.append(categoryCell);
-            row.append(black_scholes_val_cell);
-            row.append(valueCell);
+            table.append(row);
+          }
+          $('table.payoff_table_main_table tr').each(function() {
+        // Find the first <td> in each <tr> and remove the specified class
+        $(this).find('td:first').removeClass("text-success");
+    });
 
-            tableBody.append(row);
-          });
 
-          $(".payoff_expiry").text($("#optionExpiryDropdown").val())
+
+
+
+
+
+
+
+// Get the value of closest_strike_price
+
+
+// // Find the corresponding row in the "payoff_table_main_table"
+// var correspondingRow = $(".payoff_table_main_table tr").filter(function() {
+//     // Extract the value from the first TD in the row
+//     var rowValue = parseInt($(this).find("td:first").text());
+//     return rowValue === closestStrikePrice;
+// });
+
+// // Check if a corresponding row was found
+// if (correspondingRow.length > 0) {
+
+
+//     // Scroll to the corresponding row
+//     var container = $(".payoff_table_main_table");
+
+//     var scrollTo =
+//                 1200 -
+//                 container.height() / 2 +
+//                 1200/ 2;
+//                 console.log("scrollTo",scrollTo);
+
+
+//     // Reset the scroll position first
+//     container.animate(
+//         {
+//             scrollTop: 0,
+//         },
+//         0,
+//         function () {
+//             // Scroll to the desired position after the reset
+//             container.animate(
+//                 {
+//                     scrollTop: scrollTo,
+//                 },
+//                 1000
+//             ); // You can adjust the scrolling speed here (in milliseconds)
+//         }
+//     );
+// } else {
+//     console.log("No corresponding row found.");
+// }
+
+
+
+var closestStrikePriceText = $("#closest_strike_price").text();
+var closestStrikePrice = parseInt(closestStrikePriceText);
+
+$(".payoff_table_main_table tr").each(function () {
+  var $strikePrice = $(this).find("td:first");
+  var currentStrikePrice = parseInt($strikePrice.text()); // Assuming the text is numeric
+
+  if (currentStrikePrice === closestStrikePrice) {
+    console.log(currentStrikePrice);
+
+    // $strikePrice.addClass("closestStrike_bg");
+    var container = $("#payoff_table");
+    var scrollTo =
+      $(this).position().top -
+      container.height() / 2 +
+      $(this).height() / 2;
+
+      console.log("  $(this).position().top",  $(this).position().top);
+      console.log(" $(this).height() / 2", $(this).height() / 2);
+      console.log(container.height() / 2);
+    console.log(scrollTo);
+
+    // Reset the scroll position first
+    container.animate(
+      {
+        scrollTop: 0,
+      },
+      0,
+      function () {
+        // Scroll to the desired position after the reset
+        container.animate(
+          {
+            scrollTop: scrollTo,
+          },
+          1000
+        ); // You can adjust the scrolling speed here (in milliseconds)
+      }
+    );
+  }
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          // var sumArray = resultArray.map(function (array) {
+          //   var sum = array.reduce(function (acc, value) {
+          //     return acc + value;
+          //   }, 0);
+          //   return sum * lot_size;
+          // });
+
+
+
+
+
+
+
+          // for (var i = 0; i < tableData.length; i++) {
+          //   // Assuming that each object in tableData has a property named 'black_scholes_val'
+          //   var sumValue = sumArray[i] || 0;
+          //   // Use isFinite to check if sumValue is a valid finite number
+          //   tableData[i].black_scholes_val = isFinite(sumValue) ? sumValue : 0;
+          // }
+
+          // console.log(tableData);
+
+
+
+
+
+          // // console.log(tableData);
+          // var tableBody = $(".payoff_table_data");
+
+          // // Clear any existing rows
+          // tableBody.empty();
+
+          // // Loop through the tableData array and create table rows and cells
+          // tableData.forEach(function (item) {
+          //   var main_payoff_table_condition = item.value < 0 ? "text-danger" : "text-success"
+          //   var main_payoff_table_condition_black_scholes_val = item.black_scholes_val < 0 ? "text-danger" : "text-success"
+          //   var row = $("<tr>");
+
+          //   var categoryCell = $("<td>").text(item.category);
+          //   var black_scholes_val_cell = $("<td>").text(item.black_scholes_val.toFixed(2)).addClass(main_payoff_table_condition_black_scholes_val);
+          //   var valueCell = $("<td>").text(item.value.toFixed(2)).addClass(main_payoff_table_condition);
+
+          //   row.append(categoryCell);
+          //   row.append(black_scholes_val_cell);
+          //   row.append(valueCell);
+
+          //   tableBody.append(row);
+          // });
+
+          // $(".payoff_expiry").text($("#optionExpiryDropdown").val())
 
 
 

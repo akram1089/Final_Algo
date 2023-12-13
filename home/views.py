@@ -8326,7 +8326,6 @@ class MarketStatusView(APIView):
 
 
 
-
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import numpy as np
@@ -8339,37 +8338,42 @@ def black_scholes_option_price(request):
         options_data_str = request.POST.get('options_data')
         option_expiry = request.POST.get('option_expiry')
         last_traded_price = request.POST.get('last_traded_price')
-        onDate = request.POST.get('onDate')
+        onDate = int(request.POST.get('onDate'))
+        print(onDate)
+
+        # Limit onDate to 7 if it's greater than 7
+        onDate = min(onDate, 7)
 
         options_data = json.loads(options_data_str)
-        print(onDate)
 
         main_premiums = []
 
-        for option in options_data:
-            # Use the provided parameters
-            S = float(last_traded_price)
-            K = float(option["strike_price"])
-            T = int(onDate)/365
-            r = 0.10
-            calls_sigma = float(option["calls_iv"])/100
-            puts_sigma = float(option["puts_iv"])/100
+        for day in range(1, onDate + 1):  # Loop for each day from 1 to 7 or the specified onDate
+            T = day / 365  # Update time to expiration for each day
 
-            # For Call Option
-            d1_call = (np.log(S / K) + ((r + calls_sigma**2 / 2) * T)) / (calls_sigma * np.sqrt(T))
-            d2_call = d1_call - (calls_sigma * np.sqrt(T))
+            daily_premiums = []
 
-            call_price = S * norm.cdf(d1_call) - norm.cdf(d2_call) * K * np.exp(-r * T)
+            for option in options_data:
+                S = float(last_traded_price)
+                K = float(option["strike_price"])
+                r = 0.10
+                calls_sigma = float(option["calls_iv"]) / 100
+                puts_sigma = float(option["puts_iv"]) / 100
 
-            # For Put Option
-            d1_put = (np.log(S / K) + ((r + puts_sigma**2 / 2) * T)) / (puts_sigma * np.sqrt(T))
-            d2_put = d1_put - (puts_sigma * np.sqrt(T))
+                # For Call Option
+                d1_call = (np.log(S / K) + ((r + calls_sigma ** 2 / 2) * T)) / (calls_sigma * np.sqrt(T))
+                d2_call = d1_call - (calls_sigma * np.sqrt(T))
+                call_price = S * norm.cdf(d1_call) - norm.cdf(d2_call) * K * np.exp(-r * T)
 
-            put_price = norm.cdf(-d2_put) * K * np.exp(-r * T) - S * norm.cdf(-d1_put)
+                # For Put Option
+                d1_put = (np.log(S / K) + ((r + puts_sigma ** 2 / 2) * T)) / (puts_sigma * np.sqrt(T))
+                d2_put = d1_put - (puts_sigma * np.sqrt(T))
+                put_price = norm.cdf(-d2_put) * K * np.exp(-r * T) - S * norm.cdf(-d1_put)
 
-            main_premiums.append({'call_price': call_price, 'strikePrice': float(option['strike_price']), 'put_price': put_price})
+                daily_premiums.append({'call_price': call_price, 'strikePrice': float(option['strike_price']),
+                                       'put_price': put_price})
 
-        # print(main_premiums)
+            main_premiums.append({'day': day, 'premiums': daily_premiums})
 
         # Process the data as needed (e.g., save to database)
 
