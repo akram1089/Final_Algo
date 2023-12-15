@@ -3458,17 +3458,21 @@
       display: flex;
     }
 
-    .edit-button,
+    .edit-button,.edit_strategy,.delete_strategy,
     .delete-button {
       color: #767f88;
       transition: 0.3s;
     }
+.right_strategy_action{
 
-    .edit-button:hover {
+  display: flex;
+    gap: 0.6rem;
+}
+    .edit-button:hover,.edit_strategy:hover {
       color: #4399eb !important;
     }
 
-    .delete-button:hover {
+    .delete-button:hover,.delete_strategy:hover {
       color: #c70000 !important;
     }
 
@@ -5392,8 +5396,8 @@
                                                               ${strategy.strategy_name}
                                                           </div>
                                                           <div class="right_strategy_action">
-                                                              <i class='bx bx-edit fs-4 text-success cursor-pointer edit_strategy'  data-bs-toggle="modal" data-bs-target="#editStrategyModal" data-edit="${strategy.id}"></i>
-                                                              <i class='bx bxs-trash-alt fs-4 text-danger cursor-pointer delete_strategy' data-delete="${strategy.id}"></i>
+                                                              <i class='bi bi-pencil-square fs-5 cursor-pointer edit_strategy'  data-bs-toggle="modal" data-bs-target="#editStrategyModal" data-edit="${strategy.id}"></i>
+                                                              <i class='bi bi-trash-fill fs-5 cursor-pointer delete_strategy' data-delete="${strategy.id}"></i>
                                                           </div>
                                                       </div>
                                                   `;
@@ -13991,15 +13995,22 @@
 
         var lot_size_value = $("#lot_size_value").text()
 
-        all_premium_sum += premiums * parseFloat(lot_size_value);
+        if (long_shorts==="+") {
+          
+          all_premium_sum += premiums * parseFloat(lot_size_value);
+        }else if (long_shorts==="-") {
+          all_premium_sum += -premiums * parseFloat(lot_size_value);
+          
+        }
+
 
 
       });
 
-      if (all_premium_sum < 0) {
+      if (all_premium_sum > 0) {
         $("#net_credit").text("0");
       } else {
-        $("#net_credit").text((all_premium_sum).toFixed(2));
+        $("#net_credit").text((Math.abs(all_premium_sum)).toFixed(2));
       }
       console.log("Net Credit ", (all_premium_sum).toFixed(2));
       // console.log("main_strike_price_dynamic", main_strike_price_dynamic);
