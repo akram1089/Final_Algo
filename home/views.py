@@ -903,6 +903,9 @@ def market_wide_position(request):
     normalized_list_entrance = [
         round(float(d), decimal_places) for d in entrance_chart_data]
     url = "https://webapi.niftytrader.in/webapi/Resource/ban-list"
+
+
+
     headers = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
         "Accept-Language": "en-US,en;q=0.9",
@@ -8390,3 +8393,26 @@ def books(request):
 
 def investment_book(request):
     return render(request, "investment_book.html")
+
+
+
+
+
+
+
+class BanListView(APIView):
+    def get(self, request, *args, **kwargs):
+        url = "https://webapi.niftytrader.in/webapi/Resource/ban-list"
+
+        headers = {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
+            "Accept-Language": "en-US,en;q=0.9",
+            "Accept-Encoding": "gzip, deflate, br",
+            "Connection": "keep-alive"
+        }
+
+        response = requests.get(url, headers=headers)
+        data = response.json()
+
+        return JsonResponse(data)
+

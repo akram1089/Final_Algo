@@ -1,10 +1,13 @@
-{% extends "base_dashboard.html" %}
-{% load static %}
-{% block dashboard_body %}
+{% extends "base_dashboard.html" %} {% load static %} {% block dashboard_body %}
 <style>
+  .title_market_ban {
+    align-items: baseline;
+    justify-content: space-between;
+    margin-top: 1rem;
+  }
 
-    .inner_ban_card{
-        width: 45%;
+  .inner_ban_card {
+        width: 35%;
         text-align: center;
         height: 30rem;
         margin-top: 1rem;
@@ -14,186 +17,282 @@
         padding: 1rem;
         padding-bottom: 3rem;
 
-    
-    }
-    .main_ban_card{
-        flex-wrap: wrap;
-        justify-content: space-around;
-    }
-    @media screen and (max-width: 760px) {
-        .inner_ban_card{
-            width: 100% !important;
-            text-align: center;
-            height: 30rem;
-            margin-top: 1rem;
-            color: #000000ab;
-            box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
-            border-radius: 11px;
-            padding: 1rem;
-            padding-bottom: 3rem;
-    
-        
-        }
-    }
-</style>
 
-<div class="title_market_ban d-flex" style="    align-items: center;
-justify-content: space-between;
-margin-top: 2rem;
-border-bottom: 1px solid #00000033;">
+    }
+
+
+.main_all_list{
+
+height: 1000px;
+padding: 23px 43px 56px 45px;
+box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+}
+
+
+</style>
+<div class="title_market_ban d-flex p-2">
+  <div class="market_dataTitle">
     <h4>
-        Market-Wide Position Limit
+      Market-Wide Position Limit
 
     </h4>
+  </div>
+  <div class="updated_date_main d-flex gap-1">
+
+
     <h5>
-        Last Updated: {{date_str}}
+      Last Updated: <h5 class="last_ban_list_updated "></h5>
     </h5>
+  </div>
+
 
 </div>
-<div class="main_ban_card d-flex">
-    <div class="inner_ban_card">
+
+
+<div class="main_ban_datas d-flex gap-2">
+  <div class="ban_charts inner_ban_card">
+
     <h5>Stocks Under Ban</h5>
 
-
-        <canvas id="chart"></canvas>
-    </div>
-
-    <div class="inner_ban_card" >
+    <canvas id="ban_charts" ></canvas>
+  </div>
+  <div class="possible_entrants_result inner_ban_card">
     <h5>Possible Entrants</h5>
+    <canvas id="possible_entrants_result" ></canvas>
+  </div>
+  <div class="possible_exits_result inner_ban_card">
+    <h5>Possible Exits</h5>
+    <canvas id="possible_exits_result" ></canvas>
+  </div>
+</div>
+<div class="ultra_main_25_datas">
 
-
-        <canvas id="Entrance_chart"></canvas>
-    </div>
+  <div class="main_all_list mt-4 text-center">
+    <h5>Top 25 Market Wide Position Limit</h5>
+    <canvas id="all_list_result"></canvas>
+  </div>
 </div>
 
-<div class="All_ban_datas mb-3">
-<h4 class="text-center mt-4 border-bottom pb-2">Top 25 Market Wide Position Limit</h4>
 
-<canvas id="Ban_list"></canvas>
-</div>
+
+
 <script>
-    var all_labels = {{ all_labels|safe }};
-    var all_values = {{ all_values|safe }};
-    var ctx = document.getElementById('Ban_list').getContext('2d');
-    var chart = new Chart(ctx, {
+  $(document).ready(function () {
+    $.ajax({
+      url: "/ban-list/",  // Update the URL to match your Django endpoint
+      type: "GET",
+      success: function (data) {
+        console.log("Response:", data);
+
+        // Here you can handle the response data as needed.
+        // For example, display it on the page.
+
+        $(".last_ban_list_updated").text(data.resultData.date)
+        $("#response-container").text(JSON.stringify(data, null, 2));
+
+
+        securities_ban_result(data.resultData.securities_ban_result)
+        possible_entrants_result(data.resultData.possible_entrants_result)
+        possible_exits_result(data.resultData.possible_exits_result)
+        all_list_result(data.resultData.all_list_result)
+      },
+      error: function (error) {
+        console.error("Error:", error);
+      }
+    });
+
+    function securities_ban_result(securities_banned) {
+    console.log(securities_banned);
+
+    // Extract data for labels and values
+    var labels = securities_banned.map(function(security) {
+        return security.symbol_name;
+    });
+
+    var currentPercentData = securities_banned.map(function(security) {
+        return security.current_percent;
+    });
+
+    // Create a horizontal bar chart
+    var ctx = document.getElementById('ban_charts').getContext('2d');
+    var ban_charts = new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: all_labels,
-            datasets: [{
-                label: 'Symbol Name',
-                data: all_values,
-                backgroundColor: 'rgba(255, 0, 0, 0.2)',  // Red background color
-                borderColor: 'rgba(255, 0, 0, 1)',  // Red border color
-                borderWidth: 1
-            }]
+            labels: labels,
+            datasets: [
+                {
+                    label: 'Current Percent',
+                    data: currentPercentData,
+                    backgroundColor: 'rgba(255, 100, 100, 0.72)',
+                borderColor: 'rgba(255, 0, 0, 0.72)',
+                    borderWidth: 1
+                }
+            ]
         },
         options: {
-            indexAxis: 'y',  // Display labels on the y-axis
-            scales: {
+          indexAxis: 'y',  // Display labels on the y-axis
+          responsive: true,
+            maintainAspectRatio: false,
+          scales: {
                 x: {
                     beginAtZero: true,
+                    min: 50, // Set the minimum value for the x-axis
                     grid: {
+                      
                         display: false, // Hide y-axis background border
-                      },
+                    },
                 }
             }
         }
     });
+}
 
+    function possible_entrants_result(securities_entransts) {
+    console.log(securities_entransts);
 
+    // Extract data for labels and values
+    var labels = securities_entransts.map(function(security) {
+        return security.symbol_name;
+    });
 
+    var currentPercentData = securities_entransts.map(function(security) {
+        return security.current_percent;
+    });
 
-
-
-
-
-
-
-
-
-
-
-    var labels = {{ labels| safe }};
-    var chart_data = {{ chart_data| safe }};
-
-    var ctx = document.getElementById('chart').getContext('2d');
-    var chart = new Chart(ctx, {
+    // Create a horizontal bar chart
+    var ctx = document.getElementById('possible_entrants_result').getContext('2d');
+    var possible_entrants_result = new Chart(ctx, {
         type: 'bar',
         data: {
             labels: labels,
-            datasets: [{
-                label: '% of MWPL ',
-                data: chart_data,
-                backgroundColor: 'rgba(255, 100, 100, 0.72)',
-                borderColor: 'rgba(255, 0, 0, 0.72)',
-                borderWidth: 1
-            }]
+            datasets: [
+                {
+                    label: 'Current Percent',
+                    data: currentPercentData,
+                     backgroundColor: 'rgba(255, 124, 0, 0.8)',
+                borderColor: 'rgba(255, 198, 0, 0.8)',
+                    borderWidth: 1
+                }
+            ]
         },
         options: {
-            indexAxis: 'y',
-            responsive: true,
+          indexAxis: 'y',  // Display labels on the y-axis
+          responsive: true,
             maintainAspectRatio: false,
-            scales: {
-                x:{
+          scales: {
+                x: {
+                    beginAtZero: true,
+                    min: 50, // Set the minimum value for the x-axis
                     grid: {
                         display: false, // Hide y-axis background border
-                      },
-                },
-                y: {
-                    beginAtZero: true
-                },
-                xAxes: [{
-                    barPercentage: 0.6
-                }]
-            },
-
-        },
-        title: {
-            display: true,
-            text: 'Chart.js Horizontal Bar Chart'
+                    },
+                }
+            }
         }
     });
+}
 
-    var Entrance_labels = {{ Entrance_labels| safe }};
-    var normalized_list_entrance = {{ normalized_list_entrance| safe }};
 
-    var ctx = document.getElementById('Entrance_chart').getContext('2d');
-    var chart = new Chart(ctx, {
+    function possible_exits_result(possible_exits_result) {
+    console.log(possible_exits_result);
+
+    // Extract data for labels and values
+    var labels = possible_exits_result.map(function(security) {
+        return security.symbol_name;
+    });
+
+    var currentPercentData = possible_exits_result.map(function(security) {
+        return security.current_percent;
+    });
+
+    // Create a horizontal bar chart
+    var ctx = document.getElementById('possible_exits_result').getContext('2d');
+    var possible_exits_result = new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: Entrance_labels,
-            datasets: [{
-                label: '% of MWPL ',
-                data: normalized_list_entrance,
-                backgroundColor: 'rgba(255, 124, 0, 0.8)',
-                borderColor: 'rgba(255, 198, 0, 0.8)',
-                borderWidth: 1
-            }]
+            labels: labels,
+            datasets: [
+                {
+                    label: 'Current Percent',
+                    data: currentPercentData,
+                    backgroundColor: 'rgba(0, 128, 0, 0.7)', // Green background color
+                    borderColor: 'rgba(0, 128, 0, 0.8)', // Dark green border color
+                    borderWidth: 1
+                }
+            ]
         },
         options: {
-            indexAxis: 'y',
-            responsive: true,
+          indexAxis: 'y',  // Display labels on the y-axis
+          responsive: true,
             maintainAspectRatio: false,
-            scales: {
-                x:{
+          scales: {
+                x: {
+                    beginAtZero: true,
+                    min: 50, // Set the minimum value for the x-axis
                     grid: {
                         display: false, // Hide y-axis background border
-                      },
-                },
-                y: {
-                    beginAtZero: true
-                },
-                xAxes: [{
-                    barPercentage: 0.6
-                }]
-            },
-
-        },
-        title: {
-            display: true,
-            text: 'Chart.js Horizontal Bar Chart'
+                    },
+                }
+            }
         }
     });
+}
 
+
+    function all_list_result(all_list_result) {
+
+      var slicedData = all_list_result.slice(0, 25);
+    console.log(slicedData);
+
+    // Extract data for labels and values
+    var labels = slicedData.map(function(security) {
+        return security.symbol_name;
+    });
+
+    var currentPercentData = slicedData.map(function(security) {
+        return security.current_percent;
+    });
+
+    // Create a horizontal bar chart
+    var ctx = document.getElementById('all_list_result').getContext('2d');
+    var all_list_result = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [
+                {
+                    label: 'Current Percent',
+                    data: currentPercentData,
+                    backgroundColor: 'rgba(255, 0, 0, 0.2)',  // Red background color
+                borderColor: 'rgba(255, 0, 0, 1)',  // Red border color
+                    borderWidth: 1
+                }
+            ]
+        },
+        options: {
+          indexAxis: 'y',  // Display labels on the y-axis
+          responsive: true,
+            maintainAspectRatio: false,
+          scales: {
+                x: {
+                    beginAtZero: true,
+                    min: 50, // Set the minimum value for the x-axis
+                    grid: {
+                        display: false, // Hide y-axis background border
+                    },
+                }
+            }
+        }
+    });
+}
+
+
+
+  });
 </script>
+
+
+
+
+
 {% endblock dashboard_body %}
