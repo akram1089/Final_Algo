@@ -1288,7 +1288,7 @@
       dataType: "json",
       success: function (data) {
         // Handle the data here as per your requirements
-        // console.log(data);
+        // //console.log(data);
 
         // Clear existing data
         $(".main_all_indices").empty();
@@ -1725,13 +1725,13 @@
           //   var total_positions=  0
           //   var all_holdings_pnl=0
           //   const zerodha_socker = new WebSocket("ws://localhost:8001/ws/zerodha/")
-          // console.log(zerodha_socker)
+          // //console.log(zerodha_socker)
           // zerodha_socker.onmessage = function (event) {
           //     const data = JSON.parse(event.data);
-          //     // console.log(data);
+          //     // //console.log(data);
 
           //    var response=data
-          //     console.log(response);
+          //     //console.log(response);
 
 
           //       $(".broker_position_icon").empty().append(`<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 90 60">
@@ -1799,12 +1799,12 @@
 
           //       response.all_holding.forEach(function (holdings) {
           //         all_holdings_pnl+=holdings.pnl
-          //         // console.log(holdings);
+          //         // //console.log(holdings);
 
           //       })
 
-          //       console.log(total_positions);
-          //       console.log(all_holdings_pnl);
+          //       //console.log(total_positions);
+          //       //console.log(all_holdings_pnl);
           //       // Initialize DataTable with custom drawCallback option
           //       $('#positionsTable').DataTable({
           //         order: [[6, 'asc']], // 6 is the column index for "Unrealised P&L"
@@ -1851,7 +1851,7 @@
               url: "/get_order_positions_details", // Replace with the actual URL
               success: function (response) {
                 // Log the response
-                console.log(response);
+                //console.log(response);
 
                 $(".broker_position_icon").empty().append(`<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 90 60">
                   <defs>
@@ -1931,7 +1931,7 @@
             $("#order_history").modal("show");
 
             if (intervalId_order === null) {
-              console.log('Show');
+              //console.log('Show');
 
               // Run the fetchData function every 1000 milliseconds (1 second)
               intervalId_order = setInterval(fetchData, 1000);
@@ -1973,7 +1973,7 @@
             url: "/get_order_positions_details", // Replace with the actual URL
             success: function (response) {
               // Log the response
-              // console.log(response.main_net_ohlc);
+              // //console.log(response.main_net_ohlc);
               let mainNetOHLC = response.main_net_ohlc;
               let lastPrices = {};
 
@@ -1989,7 +1989,7 @@
                 lastPrices[tradingsymbol] = lastPrice;
               }
 
-              // console.log(lastPrices);
+              // //console.log(lastPrices);
 
               $(".broker_position_icon").empty().append(`
                       <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 90 60">
@@ -2046,7 +2046,7 @@
 
               response.all_position.net.forEach(function (position) {
                 let tradingsymbol = position.tradingsymbol;
-                // console.log(tradingsymbol);
+                // //console.log(tradingsymbol);
 
                 // Remove "NFO:" from the tradingsymbol
                 tradingsymbol = tradingsymbol.replace('NFO:', '');
@@ -2062,7 +2062,7 @@
                   var main_p_n_l = lastPrice * quantity_main - average_price_main * quantity_main;
                 }
 
-                // console.log(main_p_n_l);
+                // //console.log(main_p_n_l);
 
                 // Add main_p_n_l to the total
                 totalMainPNL += main_p_n_l;
@@ -2118,7 +2118,7 @@
           $("#order_history").modal("show");
 
           if (intervalId_order === null) {
-            // console.log('Show');
+            // //console.log('Show');
 
             // Run the fetchData function every 1000 milliseconds (1 second)
             intervalId_order = setInterval(fetchData, 5000);
@@ -2491,13 +2491,13 @@
 
 
             // Log the values
-            console.log("Broker: " + selectedBroker);
-            console.log("Platform: " + platform);
-            console.log("Login ID: " + loginId);
-            console.log("Password: " + password);
-            console.log("TOTP Key: " + totpKey);
-            console.log("App Name: " + appName);
-            console.log("Api Key: " + apiKey);
+            //console.log("Broker: " + selectedBroker);
+            //console.log("Platform: " + platform);
+            //console.log("Login ID: " + loginId);
+            //console.log("Password: " + password);
+            //console.log("TOTP Key: " + totpKey);
+            //console.log("App Name: " + appName);
+            //console.log("Api Key: " + apiKey);
 
             var data = {
               'broker_name': selectedBroker,
@@ -2511,7 +2511,7 @@
             };
             data = Object.fromEntries(Object.entries(data).filter(([_, v]) => v !== undefined));
 
-            console.log(data);
+            //console.log(data);
 
 
             // Display loading indicator
@@ -2528,7 +2528,7 @@
                 // Example: $('.loader').show();
               },
               success: function (response) {
-                console.log('Success:', response);
+                //console.log('Success:', response);
 
                 // Reset form fields
                 // $("#" + selectedBroker + "_platform").val('');
@@ -2550,7 +2550,7 @@
 
               },
               error: function (error) {
-                console.log('Error:', error);
+                //console.log('Error:', error);
 
                 // Display SweetAlert2 error message
                 Swal.fire({
@@ -2582,7 +2582,7 @@
               dataType: 'json',
               success: function (response) {
                 // Log the response to the console
-                console.log(response.brokers);
+                //console.log(response.brokers);
 
                 // Clear the existing content in #zerodha_data_display
                 $('#zerodha_data_display').empty();
@@ -2646,7 +2646,7 @@
                 $(".delete_btn_broker .delete_broker").click(function () {
                   var brokerId = $(this).data("delete_id");
 
-                  console.log(brokerId);
+                  //console.log(brokerId);
 
                   Swal.fire({
                     title: "Are you sure?",
@@ -2680,7 +2680,7 @@
                           // $(this).closest('.broker-container').remove();
                         },
                         error: function (error) {
-                          console.log("Error deleting broker:", error);
+                          //console.log("Error deleting broker:", error);
                           Swal.fire({
                             title: "Error!",
                             text: "There was an error deleting the broker.",
@@ -2693,7 +2693,7 @@
                 });
 
                $(".edit_broker").click(function () {
-    console.log($(this).data("edit_id"));
+    //console.log($(this).data("edit_id"));
 
     // Use slideDown to show the element with a slide animation
     $("#update_api").slideDown();
@@ -2735,7 +2735,7 @@
                       'is_active': isActive
                     },
                     success: function (response) {
-                      console.log('API activation status updated successfully.');
+                      //console.log('API activation status updated successfully.');
 
                       getAllBrokers()
                     },
@@ -3056,13 +3056,13 @@
 
 
           // Log the values
-          console.log("Broker: " + selectedBroker);
-          console.log("Platform: " + platform);
-          console.log("Login ID: " + loginId);
-          console.log("Password: " + password);
-          console.log("TOTP Key: " + totpKey);
-          console.log("App Name: " + appName);
-          console.log("Api Key: " + apiKey);
+          //console.log("Broker: " + selectedBroker);
+          //console.log("Platform: " + platform);
+          //console.log("Login ID: " + loginId);
+          //console.log("Password: " + password);
+          //console.log("TOTP Key: " + totpKey);
+          //console.log("App Name: " + appName);
+          //console.log("Api Key: " + apiKey);
 
           var data = {
             'broker_name': selectedBroker,
@@ -3076,7 +3076,7 @@
           };
           data = Object.fromEntries(Object.entries(data).filter(([_, v]) => v !== undefined));
 
-          console.log(data);
+          //console.log(data);
 
 
           // Display loading indicator
@@ -3093,7 +3093,7 @@
               // Example: $('.loader').show();
             },
             success: function (response) {
-              console.log('Success:', response);
+              //console.log('Success:', response);
 
               // Reset form fields
               // $("#" + selectedBroker + "_platform").val('');
@@ -3115,7 +3115,7 @@
 
             },
             error: function (error) {
-              console.log('Error:', error);
+              //console.log('Error:', error);
 
               // Display SweetAlert2 error message
               Swal.fire({
@@ -3147,7 +3147,7 @@
             dataType: 'json',
             success: function (response) {
               // Log the response to the console
-              console.log(response.brokers);
+              //console.log(response.brokers);
 
               // Clear the existing content in #zerodha_data_display
               $('#zerodha_data_display').empty();
@@ -3215,7 +3215,7 @@
               $(".delete_btn_broker .delete_broker").click(function () {
                 var brokerId = $(this).data("delete_id");
 
-                console.log(brokerId);
+                //console.log(brokerId);
 
                 Swal.fire({
                   title: "Are you sure?",
@@ -3249,7 +3249,7 @@
                         // $(this).closest('.broker-container').remove();
                       },
                       error: function (error) {
-                        console.log("Error deleting broker:", error);
+                        //console.log("Error deleting broker:", error);
                         Swal.fire({
                           title: "Error!",
                           text: "There was an error deleting the broker.",
@@ -3263,7 +3263,7 @@
 
               $(".edit_broker").click(function () {
 
-                console.log($(this).data("edit_id"));
+                //console.log($(this).data("edit_id"));
 
                 $("#update_api").collapse("show")
 
@@ -3303,7 +3303,7 @@
                     'is_active': isActive
                   },
                   success: function (response) {
-                    console.log('API activation status updated successfully.');
+                    //console.log('API activation status updated successfully.');
 
                     getAllBrokers()
                   },
@@ -5313,7 +5313,7 @@
                     tradingPositions.push(position);
                   });
 
-                  console.log(tradingPositions);
+                  //console.log(tradingPositions);
 
 
 
@@ -5374,7 +5374,7 @@
                     url: "/get_all_strategies",
                     success: function (response) {
                       if (response.user_not_logged_in) {
-                        // console.log("not logged");
+                        // //console.log("not logged");
                         $("#signinModal").modal("show");
                       } else {
                         // handle success
@@ -5407,11 +5407,11 @@
 
 
 
-                        // console.log(strategyData);
+                        // //console.log(strategyData);
 
                         $(".delete_strategy").click(function () {
                           var strategyId = $(this).data('delete');
-                          // console.log(strategyId);
+                          // //console.log(strategyId);
 
                           if (confirm("Are you sure you want to delete this strategy?")) {
                             // Perform delete operation with strategyId
@@ -5425,7 +5425,7 @@
                             })
                               .done(function (response) {
                                 // handle success
-                                // console.log(response.message);
+                                // //console.log(response.message);
                                 getStrategies_data();
                                 // Refresh the strategies list or remove the deleted strategy from the DOM
                               })
@@ -5439,7 +5439,7 @@
                         // Open the modal on clicking the edit icon
                         $(".edit_strategy").click(function () {
                           var strategyId = $(this).data('edit');
-                          // console.log(strategyId);
+                          // //console.log(strategyId);
 
                           $.ajax({
                             type: "POST",
@@ -5450,14 +5450,14 @@
                             },
                             success: function (response) {
                               // handle success
-                              // console.log(response.strategy_data);
+                              // //console.log(response.strategy_data);
 
                               $("#updateStrategyname").val(response.strategy_data.strategy_name).attr('data-id-update', strategyId);
 
                             },
                             error: function (response) {
                               // handle error
-                              // console.log('Error updating strategy:', response);
+                              // //console.log('Error updating strategy:', response);
                             }
                           });
 
@@ -5482,13 +5482,13 @@
                             success: function (response) {
                               // handle success
                               $("#editStrategyModal").modal("hide")
-                              // console.log(response.message);
+                              // //console.log(response.message);
                               getStrategies_data(); // Refresh the strategies list
 
                             },
                             error: function (response) {
                               // handle error
-                              console.log('Error updating strategy:', response);
+                              //console.log('Error updating strategy:', response);
                             }
                           });
                         });
@@ -5504,7 +5504,7 @@
                     },
                     error: function (response) {
                       // handle error
-                      console.log('Error fetching strategies:', response);
+                      //console.log('Error fetching strategies:', response);
                     }
                   });
 
@@ -5594,7 +5594,7 @@
                       }
                     },
                     error: function (error) {
-                      console.log('Error fetching notes:', error);
+                      //console.log('Error fetching notes:', error);
                     }
                   });
                 }
@@ -6593,8 +6593,8 @@
       var selectedDate = new Date($("#optionExpiryDropdown").val());
       var daysLeft = Math.ceil((selectedDate - currentDate) / (1000 * 60 * 60 * 24));
       $("#customRange2").attr("max", daysLeft);
-      console.log("Current Date: " + formatDate(currentDate));
-      console.log("Days Left to Selected Date for " + rangeId + ": " + daysLeft);
+      //console.log("Current Date: " + formatDate(currentDate));
+      //console.log("Days Left to Selected Date for " + rangeId + ": " + daysLeft);
     }
     updateRangeLimits();
 
@@ -7291,7 +7291,7 @@
     //       csrfmiddlewaretoken: "{{ csrf_token }}", // Include CSRF token for security
     //     },
     //     success: function (response) {
-    //       // console.log(response.message);
+    //       // //console.log(response.message);
     //       get_api_data();
 
     //       $("#app_name").val("");
@@ -7314,7 +7314,7 @@
     //     type: "GET",
     //     success: function (data) {
     //       // Handle the retrieved data
-    //       // console.log(data);
+    //       // //console.log(data);
 
     //       var all_data = "";
 
@@ -7442,7 +7442,7 @@
     //           // var storedData_Id_access_token = localStorage.getItem("data_Id_access_token");
     //         } else {
     //           // If the browser does not support local storage, you can handle it here
-    //           console.log("Local storage is not supported in this browser.");
+    //           //console.log("Local storage is not supported in this browser.");
     //         }
     //       });
 
@@ -7469,13 +7469,13 @@
 
     //         // Check if 'requestToken' has a value and do something with it
     //         if (requestToken) {
-    //           console.log("request_token:", requestToken);
+    //           //console.log("request_token:", requestToken);
     //           editAccessToken(uniqueId, requestToken);
     //           var urlWithoutParams = currentUrl.split("?")[0];
     //           window.history.replaceState({}, document.title, urlWithoutParams);
     //           // Now you can use 'requestToken' in your JavaScript code as needed.
     //         } else {
-    //           console.log("Hii king");
+    //           //console.log("Hii king");
     //         }
 
     //         hasRunOnPageLoad = true; // Set the flag to true after running the code on page load
@@ -7489,12 +7489,12 @@
     //   });
     // }
     // function deleteItem(itemId) {
-    //   console.log(itemId);
+    //   //console.log(itemId);
     //   $.ajax({
     //     url: `/delete_zerodha_config/${itemId}/`, // URL of your Django delete view
     //     type: "POST",
     //     success: function (response) {
-    //       console.log(response.message);
+    //       //console.log(response.message);
     //       // Refresh the data display after successful deletion
     //       get_api_data();
     //     },
@@ -7506,7 +7506,7 @@
 
     // function editAccessToken(uniqueId, newAccessToken) {
 
-    //   console.log(newAccessToken);
+    //   //console.log(newAccessToken);
 
     //   $.ajax({
     //     url: "/edit_access_token",
@@ -7516,7 +7516,7 @@
     //       access_token: newAccessToken,
     //     },
     //     success: function (data) {
-    //       console.log(data.message); // Print the response message
+    //       //console.log(data.message); // Print the response message
     //       get_api_data();
     //     },
     //     error: function (xhr, status, error) {
@@ -7579,7 +7579,7 @@
         const yearPart = expiry.slice(7);
 
 
-        console.log("expiry", expiry);
+        //console.log("expiry", expiry);
 
         function isLastThursday(expiryDate) {
           // Extract day, month, and year from the expiry date string
@@ -7600,9 +7600,9 @@
 
           // Check if the expiry date is the last Thursday
           if (currentDay === 4 && day === lastDayOfMonth.getDate()) {
-            console.log("Yes, the expiry date is the last Thursday of the month.");
+            //console.log("Yes, the expiry date is the last Thursday of the month.");
           } else {
-            console.log("No, the expiry date is not the last Thursday of the month.");
+            //console.log("No, the expiry date is not the last Thursday of the month.");
           }
         }
 
@@ -7723,9 +7723,9 @@
       });
 
 
-      console.log(trading_quote);
-      console.log(zerodha_trading_symbol);
-      console.log(zerodha_lotSize);
+      //console.log(trading_quote);
+      //console.log(zerodha_trading_symbol);
+      //console.log(zerodha_lotSize);
       trading_quote.sort(function (a, b) {
         return b.strikePrice - a.strikePrice;
       });
@@ -7733,7 +7733,7 @@
 
       send_quote_data(trading_quote, zerodha_trading_symbol[0], zerodha_lotSize);
       // if (intervalId === null) { // Start the interval only if it's not already running
-      //     console.log('Show');
+      //     //console.log('Show');
 
       //     // Run the function every 1000 milliseconds (1 second)
       //     intervalId = setInterval(function () {
@@ -7790,9 +7790,9 @@
 
 
 
-              console.log('trading_quote' + JSON.stringify(trading_quote));
-              console.log('zerodha_trading_symbol' + JSON.stringify(zerodha_trading_symbol));
-              console.log('zerodha_lotSize' + JSON.stringify(zerodha_lotSize));
+              //console.log('trading_quote' + JSON.stringify(trading_quote));
+              //console.log('zerodha_trading_symbol' + JSON.stringify(zerodha_trading_symbol));
+              //console.log('zerodha_lotSize' + JSON.stringify(zerodha_lotSize));
 
               // Save trading_quote data to local storage
               localStorage.setItem("trading_quote", JSON.stringify(trading_quote));
@@ -7807,12 +7807,12 @@
                 }),
                 contentType: "application/json",
                 success: function (response) {
-                  // console.log(response.broker_name);
+                  // //console.log(response.broker_name);
 
 
 
                   if (response.broker_name === "zerodha") {
-                    console.log(response);
+                    //console.log(response);
 
                     if (response.status === "success") {
 
@@ -7839,7 +7839,7 @@
                       $(".names_user_details p").text(`Client ID:${zerodha_kite_profile.user_id}`);
 
                       var zerodha_margin = response.margin_info.data.commodity.available.cash
-                      console.log(zerodha_margin);
+                      //console.log(zerodha_margin);
 
                       $(".margin_available").val(zerodha_margin);
 
@@ -7885,14 +7885,14 @@
                           .addClass(precent_color);
 
                         // Use these values as needed in your JavaScript code
-                        console.log("Symbol Spot:", symbolSpot);
-                        console.log("Nifty LTP:", niftyLtp);
-                        console.log("Percentage Change:", percentageChange);
-                        console.log("Profile:", profile);
-                        console.log("User ID:", userId);
+                        //console.log("Symbol Spot:", symbolSpot);
+                        //console.log("Nifty LTP:", niftyLtp);
+                        //console.log("Percentage Change:", percentageChange);
+                        //console.log("Profile:", profile);
+                        //console.log("User ID:", userId);
                       }
 
-                      console.log(response.result_data.ohlc_market_indepth);
+                      //console.log(response.result_data.ohlc_market_indepth);
 
                       // Assuming response is an array of objects
                       // Assuming 'response' is the JSON response from your server
@@ -7901,8 +7901,8 @@
                         // const trading_symbol = trading_data.instrument_token; // Assuming instrument_token is the trading symbol
                         const trading_symbol = Object.keys(response.result_data.ohlc_market_indepth[i])[0];
                         const trading_data = response.result_data.ohlc_market_indepth[i][trading_symbol];
-                        console.log(trading_symbol);
-                        console.log(trading_data);
+                        //console.log(trading_symbol);
+                        //console.log(trading_data);
 
                         $(".main_trading_symbol").eq(i).append(trading_symbol.replace("NFO:", ""));
 
@@ -7932,8 +7932,8 @@
                   } else if (response.broker_name === "angelone") {
                     // $(".tradingsymbol").hide();
 
-                    console.log(response);
-                    console.log(response.market_data.data.fetched);
+                    //console.log(response);
+                    //console.log(response.market_data.data.fetched);
 
                     $(".broker_icon").empty().append(`  <img src="https://d2u8j8b25aupc8.cloudfront.net/assets/icons/logo.svg" alt="AngelOne Logo" class="h-5 w-5 mr-3">`)
 
@@ -7949,8 +7949,8 @@
                       const numB = parseInt(b.tradingSymbol.slice(12, 18), 10);
 
 
-                      console.log(numA);
-                      console.log(numB);
+                      //console.log(numA);
+                      //console.log(numB);
                       // Extract the suffix (CE or PE) from the tradingSymbol
                       const suffixA = a.tradingSymbol.slice(-2);
                       const suffixB = b.tradingSymbol.slice(-2);
@@ -7964,18 +7964,18 @@
                     // // Display the sorted market data
                     for (let i = 0; i < response.market_data.data.fetched.length; i++) {
                       // Log the current value at index i
-                      console.log(response.market_data.data.fetched[i].tradingSymbol);
+                      //console.log(response.market_data.data.fetched[i].tradingSymbol);
                     }
 
 
                     // Assuming response is the variable containing your data
                     for (let i = 0; i < response.market_data.data.fetched.length; i++) {
                       // Log the current value at index i
-                      console.log(response.market_data.data.fetched[i].depth);
+                      //console.log(response.market_data.data.fetched[i].depth);
 
                       var marketData = response.market_data.data.fetched[i]
 
-                      console.log(marketData.close);
+                      //console.log(marketData.close);
 
 
                       //     let gatheredValues = {
@@ -8095,7 +8095,7 @@
       //   }),
       //   contentType: "application/json",
       //   success: function (response) {
-      //     console.log(response);
+      //     //console.log(response);
 
       //     if (
       //       response &&
@@ -8139,19 +8139,19 @@
       //         .addClass(precent_color);
       //       $(".margin_available").val(available_cash);
       //       // Use these values as needed in your JavaScript code
-      //       console.log("Symbol Spot:", symbolSpot);
-      //       console.log("Nifty LTP:", niftyLtp);
-      //       console.log("Percentage Change:", percentageChange);
-      //       console.log("Profile:", profile);
-      //       console.log("User ID:", userId);
+      //       //console.log("Symbol Spot:", symbolSpot);
+      //       //console.log("Nifty LTP:", niftyLtp);
+      //       //console.log("Percentage Change:", percentageChange);
+      //       //console.log("Profile:", profile);
+      //       //console.log("User ID:", userId);
       //     }
 
       //     // Assuming response is an array of objects
       //     for (let i = 0; i < response.length; i++) {
       //       const trading_symbol = Object.keys(response[i])[0];
       //       const trading_data = response[i][trading_symbol];
-      //       console.log(trading_symbol);
-      //       console.log(trading_data);
+      //       //console.log(trading_symbol);
+      //       //console.log(trading_data);
       //       // Generate the table HTML
 
       //       $(".indepth_details").eq(i).empty();
@@ -8205,7 +8205,7 @@
 
     $("#limit_select").change(function () {
       var selectedOption = $(this).val(); // Get the selected option value
-      console.log(selectedOption);
+      //console.log(selectedOption);
       // Loop through each .inner_position element
       $(".left_bottom_card_order").each(function (index) {
         var card = $(this);
@@ -8213,8 +8213,8 @@
         // Find the radio buttons inside this .inner_position
         var limitRadio = card.find(`#limitOrder${index}`);
         var marketRadio = card.find(`#marketOrder${index}`);
-        console.log(limitRadio);
-        console.log(marketRadio);
+        //console.log(limitRadio);
+        //console.log(marketRadio);
 
         // Depending on the selected option, check/uncheck the radio buttons
         if (selectedOption === "limit") {
@@ -8277,7 +8277,7 @@
 
     function generateSpotData(trading_data) {
 
-      console.log(trading_data);
+      //console.log(trading_data);
       // Extract the data for the first instrument
       const firstInstrument = trading_data;
       const {
@@ -8369,7 +8369,7 @@
         var priceTrade = order_level.find(".priceTrade").val();
         var quantityTrade = order_level.find(".quantityTrade").val();
         var strikePrice_order_window = order_level.find(".strikePrice_order_window").text();
-        console.log(strikePrice_order_window);
+        //console.log(strikePrice_order_window);
 
 
         // Check if the radio button is checked
@@ -8377,7 +8377,7 @@
           `input[name='orderTypeLimit${index_order}']:checked`
         ).val();
 
-        console.log(isRadioChecked);
+        //console.log(isRadioChecked);
 
         All_positionTrade.push({
           expiry_initial: expiry_initial,
@@ -8392,7 +8392,7 @@
           mis_select: mis_select
         });
       });
-      console.log(All_positionTrade);
+      //console.log(All_positionTrade);
 
 
 
@@ -8402,7 +8402,7 @@
         dataType: 'json',
         success: function (data) {
 
-          console.log(data);
+          //console.log(data);
 
           const filteredMarket = data.marketState.find(item => item.market === "Capital Market");
 
@@ -8415,7 +8415,7 @@
               data: JSON.stringify(All_positionTrade),
               contentType: "application/json",
               success: function (response) {
-                console.log(response);
+                //console.log(response);
 
                 // Initially, assume the button can be enabled
 
@@ -8426,13 +8426,13 @@
                   var liquidity_failed_msg = []
 
                   response.main_all_nudges.forEach(function (nudges, i) {
-                    console.log(nudges.data);
+                    //console.log(nudges.data);
 
                     // Variable to check if liquidity for this iteration has failed
 
 
                     nudges.data.forEach(function (x) {
-                      console.log(x);
+                      //console.log(x);
 
                       if (x && Object.keys(x).length > 0) {
                         $(".liquidity_status").eq(i).empty().append(`
@@ -8467,7 +8467,7 @@
 
 
 
-                  console.log(isButtonDisabled);
+                  //console.log(isButtonDisabled);
                   if (isButtonDisabled.includes(false)) {
                     $(".place_order_btn").prop("disabled", true);
                     $(".main_extented_status_liquidity").empty().removeClass("passed_liquidity").addClass("failed_liquidity").append(`${filteredMarket.marketStatusMessage} : ${liquidity_failed_msg[0]}`)
@@ -8485,7 +8485,7 @@
               },
             });
           } else {
-            console.log("Market not found.");
+            //console.log("Market not found.");
             $(".maket_status").text(filteredMarket.marketStatusMessage);
 
             $(".main_extented_status_liquidity").empty().removeClass("passed_liquidity").addClass("failed_liquidity").append(`${filteredMarket.marketStatusMessage}`)
@@ -8498,7 +8498,7 @@
 
         },
         error: function (error) {
-          console.log('Error:', error);
+          //console.log('Error:', error);
         }
       });
 
@@ -8530,7 +8530,7 @@
         var priceTrade = order_level.find(".priceTrade").val();
         var quantityTrade = order_level.find(".quantityTrade").val();
         var strikePrice_order_window = order_level.find(".strikePrice_order_window").text();
-        console.log(strikePrice_order_window);
+        //console.log(strikePrice_order_window);
 
 
         // Check if the radio button is checked
@@ -8538,7 +8538,7 @@
           `input[name='orderTypeLimit${index_order}']:checked`
         ).val();
 
-        console.log(isRadioChecked);
+        //console.log(isRadioChecked);
 
         All_positionTrade.push({
           orderNumber: OrderId++,
@@ -8553,7 +8553,7 @@
         });
       });
 
-      console.log(All_positionTrade);
+      //console.log(All_positionTrade);
       All_positionTrade.sort((a, b) => parseInt(a.strikePrice_order_window) - parseInt(b.strikePrice_order_window));
 
       // Sort based on sell_buy_indicator, putting "CE" first
@@ -8566,13 +8566,13 @@
         data: JSON.stringify(All_positionTrade),
         contentType: "application/json",
         success: function (response) {
-          // console.log(response);
+          // //console.log(response);
 
           if (response.broker === "zerodha") {
 
             var order_status = $(".order_status p")
             var inner_order_modal = $(".inner_order_modal")
-            console.log(response.order_details);
+            //console.log(response.order_details);
 
 
             // Assuming the format is consistent (NIFTY23NOV20050CE)
@@ -8622,7 +8622,7 @@
             response.order_details.forEach((order, index) => {
               var order_status_text = order.order_id;
 
-              console.log(order_status_text);
+              //console.log(order_status_text);
 
               // Check if order_status_text is not an object
               if (typeof order_status_text === 'object') {
@@ -8659,7 +8659,7 @@
             });
 
             response.order_details.forEach((order, index) => {
-              console.log(order);
+              //console.log(order);
 
               // Check if order_status_text is not an object
               if (order.orderstatus === "rejected") {
@@ -8703,7 +8703,7 @@
     });
 
     // function sendPosition_to_kite(All_positionTrade) {
-    //   console.log(All_positionTrade);
+    //   //console.log(All_positionTrade);
 
     //   // Send the data to the Django view using AJAX
     //   $.ajax({
@@ -8713,7 +8713,7 @@
     //     contentType: "application/json",
     //     success: function (response) {
     //       // Handle the response from the Django view if needed
-    //       // console.log(response);
+    //       // //console.log(response);
 
     //       // Check if there's a success message in the response
     //       if (response.message) {
@@ -8762,7 +8762,7 @@
 
     var stockDropdown_edit = $(".stockDropdown").val();
     $("#selectExpiry").change(function () {
-      // console.log($(this).val());
+      // //console.log($(this).val());
       get_edit_entry_price(stockDropdown_edit, $(this).val());
     });
     $("#selectStrikePrice").change(function () {
@@ -8782,7 +8782,7 @@
           selectedExpiry,
         type: "GET",
         success: function (response) {
-          // console.log(response.option_data.resultData.opDatas);
+          // //console.log(response.option_data.resultData.opDatas);
 
           var option_Date = response.option_data.resultData.opDatas;
           Entry_edit(option_Date);
@@ -8804,9 +8804,9 @@
           // Do something when a matching strike_price is found
           if (optionType === "CE") {
             $(".edit_entry ").val(option_Date[i].calls_ltp);
-            // console.log("Matching strike_price:", option_Date[i].calls_ltp);
+            // //console.log("Matching strike_price:", option_Date[i].calls_ltp);
           } else {
-            // console.log("Matching strike_price:", option_Date[i].puts_ltp);
+            // //console.log("Matching strike_price:", option_Date[i].puts_ltp);
             $(".edit_entry ").val(option_Date[i].puts_ltp);
           }
         }
@@ -9032,7 +9032,7 @@
 
     expiryDateStraddle.on("change", function () {
       var selectedValue_straddle = $(this).val();
-      // console.log(selectedValue_straddle);
+      // //console.log(selectedValue_straddle);
 
       // Set the value of optionExpiryDropdown to match the selected value
       optionExpiryDropdown.val(selectedValue_straddle).change();
@@ -9074,7 +9074,7 @@
       var latestStrikePrice = $("#strikeSelect_straddle").val(); // Parse as a float
 
 
-      // console.log(latestStrikePrice);
+      // //console.log(latestStrikePrice);
     });
 
     $(".dismiss_icon").click(function () {
@@ -9742,13 +9742,13 @@
       var exit_price = closest_edit_data.find(".exit_price").val();
 
       // Log all the values
-      // console.log("selectExpiry:", selectExpiry);
-      // console.log("selectStrikePrice:", selectStrikePrice);
-      // console.log("optionType:", optionType);
-      // console.log("selectedLongShort:", selectedLongShort);
-      // console.log("counter_input_edit:", counter_input_edit);
-      // console.log("editEntryValue:", editEntryValue);
-      // console.log("exit_price:", exit_price);
+      // //console.log("selectExpiry:", selectExpiry);
+      // //console.log("selectStrikePrice:", selectStrikePrice);
+      // //console.log("optionType:", optionType);
+      // //console.log("selectedLongShort:", selectedLongShort);
+      // //console.log("counter_input_edit:", counter_input_edit);
+      // //console.log("editEntryValue:", editEntryValue);
+      // //console.log("exit_price:", exit_price);
       var modal = $("#editPositionModal");
       var position = modal.data("position");
 
@@ -9830,7 +9830,7 @@
     function calculate_data() {
       var selectedOption = $(".stockDropdown").val();
       $("#spinner").show();
-      // console.log("ca=" + selectedOption);
+      // //console.log("ca=" + selectedOption);
       loadExpiryData(selectedOption);
 
       var All_positions = $(".main_position").find(
@@ -9870,10 +9870,10 @@
         var main_conditionOrder = conditionOrder++;
 
         var childrenLength = $(".main_position").children().length;
-        // console.log('childrenLength', childrenLength);
+        // //console.log('childrenLength', childrenLength);
 
         if (parseInt(childrenLength) < 1) {
-          // console.log("hii there zero");
+          // //console.log("hii there zero");
           $("#spinner").hide();
           return false;
         } else {
@@ -9892,7 +9892,7 @@
       });
 
       get_position_data_from_django(allData);
-      // console.log("AllData", allData);
+      // //console.log("AllData", allData);
       $("#spinner").show();
     }
 
@@ -9908,8 +9908,8 @@
         data: JSON.stringify(allData),
         contentType: "application/json",
         success: function (response) {
-          // console.log("Data sent to Django:", response);
-          // console.log(response.stock_data.resultData);
+          // //console.log("Data sent to Django:", response);
+          // //console.log(response.stock_data.resultData);
 
           // Clear previous table data
           $("#table-PL").empty();
@@ -9934,7 +9934,7 @@
             const position = item.position;
             const iv = item.calls_iv || item.puts_iv;
 
-            // console.log('optionType' + optionType);
+            // //console.log('optionType' + optionType);
 
             const delta =
               optionType === "Call" ? item.call_delta : item.put_delta;
@@ -9984,7 +9984,7 @@
             const inputDate = formattedDate_initial;
             const formattedDate = formatDate(inputDate);
             const absoluteQuantity = Math.abs(item.quantity);
-            // console.log(formattedDate); // Output: "14SEP"
+            // //console.log(formattedDate); // Output: "14SEP"
             var stockDropdown = $(".stockDropdown").val();
             // Create the table row for each option
 
@@ -10101,16 +10101,16 @@
               }
 
               // Log the values for debugging
-              // console.log('ltpValue', ltpValue);
-              // console.log('parsedLtpValue', parsedLtpValue);
-              // console.log('item.unitPrice', item.unitPrice);
+              // //console.log('ltpValue', ltpValue);
+              // //console.log('parsedLtpValue', parsedLtpValue);
+              // //console.log('item.unitPrice', item.unitPrice);
 
               // Return an object with ltpValue and item.unitPrice added
               return { ...item, ltpValue: parsedLtpValue };
             }
           );
 
-          // console.log(updatedResultData);
+          // //console.log(updatedResultData);
 
           function createTable(data) {
             let tableHTML = "";
@@ -10148,7 +10148,7 @@
             for (let i = 0; i < data.length; i++) {
               const item = data[i];
 
-              // console.log(item.ltpValue);
+              // //console.log(item.ltpValue);
               var All_positions = $(".main_position").find(
                 ".main_add_position_actions"
               );
@@ -10217,7 +10217,7 @@
               const inputDate = formattedDate_initial;
               const formattedDate = formatDate(inputDate);
 
-              // console.log(formattedDate); // Output: "14SEP"
+              // //console.log(formattedDate); // Output: "14SEP"
               var stockDropdown = $(".stockDropdown").val();
 
               const legRow = `
@@ -10262,10 +10262,10 @@
               premiumPain += parseFloat(item.unitPrice);
             }
 
-            // console.log(totalStrikePrice);
+            // //console.log(totalStrikePrice);
             const averageStrikePrice = totalStrikePrice / itemCount;
-            // console.log("Average of the :" + averageStrikePrice);
-            // console.log(positionLabel);
+            // //console.log("Average of the :" + averageStrikePrice);
+            // //console.log(positionLabel);
             var min_breakPoints = averageStrikePrice - premiumPain;
             var max_breakPoints = averageStrikePrice + premiumPain;
 
@@ -10302,20 +10302,20 @@
               } else {
                 long_short_final.push(Math.abs(entryPrice));
               }
-              // console.log(long_short_final);
+              // //console.log(long_short_final);
               if (previousStrikePrice !== null) {
                 var strikePriceDifference = strikePrice - previousStrikePrice;
                 strike_price_diff = strikePriceDifference;
-                // console.log(
+                // //console.log(
                 //   "Difference in Strike Price: " + strikePriceDifference
                 // );
               }
               if (previousEntryPrice !== null) {
                 var entryPriceDifference = entryPrice + previousEntryPrice;
                 max_profit_strategy = entryPriceDifference;
-                // console.log("max_profit_strategy", max_profit_strategy);
+                // //console.log("max_profit_strategy", max_profit_strategy);
 
-                // console.log(
+                // //console.log(
                 //   "Difference in Entry Price: " + entryPriceDifference
                 // );
               }
@@ -10326,7 +10326,7 @@
 
             var sum = long_short_final.reduce((total, num) => total + num, 0);
 
-            // console.log("Sum of long_short_final array:", sum);
+            // //console.log("Sum of long_short_final array:", sum);
 
             var final_max_profit = Math.abs(
               sum * lot_size_value_strategy
@@ -10391,79 +10391,90 @@
 
     var Oi_chart = null;
 
+
+
+
     function OI_charts(all_callsOI_putsOI) {
-      // console.log("inside:", all_callsOI_putsOI);
-
-      am4core.ready(function () {
-        if (Oi_chart) {
-          Oi_chart.dispose();
-        }
-
-        // Create chart instance
-        var chart = am4core.create("oi_charts", am4charts.XYChart);
-        Oi_chart = chart; // Store the chart instance
-
-        var chartData = all_callsOI_putsOI.map(function (data, index) {
-          return {
-            category: data.strikePrice,
-            calls_oi: data.calls_oi,
-            puts_oi: data.puts_oi,
-          };
-        });
-        // console.log(chartData);
-
-        // Add data
-        chart.data = chartData;
-
-        // Create axes
-        var categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
-        categoryAxis.dataFields.category = "category";
-        categoryAxis.renderer.grid.template.location = 0;
-        categoryAxis.renderer.minGridDistance = 80;
-        chart.logo.disabled = true;
-
-        var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
-        valueAxis.renderer.minGridDistance = 30; // Adjust the grid distance according to your requirement
-
-        // Create series
-        function createSeries(field, name, color) {
-          var series = chart.series.push(new am4charts.ColumnSeries());
-          series.dataFields.valueY = field;
-          series.dataFields.categoryX = "category";
-          series.name = name;
-          series.columns.template.tooltipText = "{category}: {name}: [bold]{valueY}[/]";
-          series.columns.template.width = am4core.percent(80); // Adjust the width of the columns
-          series.columns.template.strokeWidth = 0; // Set stroke width to 0 for the columns to add gaps
-
-          // Set the color for the series
-          if (color === "red") {
-            series.columns.template.fill = am4core.color("#F96C92");
-          } else if (color === "green") {
-            series.columns.template.fill = am4core.color("#2196F3");
-          }
-
-
-
-        }
-
-        createSeries("calls_oi", "Calls OI", "green");
-        createSeries("puts_oi", "Puts OI", "red");
-
-        // Add legend
-        chart.legend = new am4charts.Legend();
-        var cursor = new am4charts.XYCursor();
-        cursor.lineX.stroke = am4core.color("black"); // set color for the X-axis cursor line
-        cursor.lineY.stroke = am4core.color("#000"); // set color for the Y-axis cursor line
-        cursor.lineX.strokeWidth = 2; // set width of the X-axis cursor line
-        cursor.lineY.strokeWidth = 0; // set width of the Y-axis cursor line
-        chart.cursor = cursor;
-
-
-        // ...
-        // ...
-        // ...
-      });
+  am4core.ready(function () {
+    if (Oi_chart) {
+      Oi_chart.dispose();
     }
+
+    // Create chart instance
+    var chart = am4core.create("oi_charts", am4charts.XYChart);
+    Oi_chart = chart; // Store the chart instance
+
+    var referenceStrikePrice = parseInt($("#closest_strike_price").text());
+
+    var chartData = all_callsOI_putsOI.map(function (data, index) {
+      return {
+        category: data.strikePrice,
+        calls_oi: data.calls_oi,
+        puts_oi: data.puts_oi,
+      };
+    });
+
+    // Add data
+    chart.data = chartData;
+
+    // Find the index of the closest value
+    var closestIndex = chartData.findIndex(function (item) {
+      return item.category === referenceStrikePrice;
+    });
+
+    // Create axes
+    var categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
+    categoryAxis.dataFields.category = "category";
+    categoryAxis.renderer.grid.template.location = 0;
+    categoryAxis.renderer.minGridDistance = 80;
+    chart.logo.disabled = true;
+
+    var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
+    valueAxis.renderer.minGridDistance = 30;
+
+    // Create series
+    function createSeries(field, name, color) {
+      var series = chart.series.push(new am4charts.ColumnSeries());
+      series.dataFields.valueY = field;
+      series.dataFields.categoryX = "category";
+      series.name = name;
+      series.columns.template.tooltipText = "{category}: {name}: [bold]{valueY}[/]";
+      series.columns.template.width = am4core.percent(80);
+      series.columns.template.strokeWidth = 0;
+
+      // Set the color for the series
+      if (color === "red") {
+        series.columns.template.fill = am4core.color("#F96C92");
+      } else if (color === "green") {
+        series.columns.template.fill = am4core.color("#2196F3");
+      }
+    }
+
+    createSeries("calls_oi", "Calls OI", "green");
+    createSeries("puts_oi", "Puts OI", "red");
+
+    // Add legend
+    chart.legend = new am4charts.Legend();
+
+    // Add cursor for zooming
+    var cursor = new am4charts.XYCursor();
+    cursor.behavior = "zoomX"; // Enable zooming along the X-axis
+    chart.cursor = cursor;
+
+    // Set initial zoom
+    chart.events.on("ready", function () {
+      chart.xAxes.getIndex(0).zoomToIndexes(Math.max(0, closestIndex - 10), Math.min(chartData.length - 1, closestIndex + 10));
+    });
+
+    // ...
+    // ...
+    // ...
+  });
+}
+
+
+
+
 
     // Handle stock dropdown change
     $(".stockDropdown").change(function () {
@@ -10511,7 +10522,7 @@
 
     // Function to load spot data
     function loadSpotData(selectedOption) {
-      // console.log(selectedOption);
+      // //console.log(selectedOption);
 
       $.ajax({
         url:
@@ -10520,7 +10531,7 @@
         type: "GET",
         success: function (response) {
           // Handle the response as needed
-          // console.log(response.spot_data.resultData);
+          // //console.log(response.spot_data.resultData);
           $("#max_pain_value").text(response.spot_data.resultData.max_pain);
           $("#lot_size_value").text(response.spot_data.resultData.lot_size);
           $("#open_value").text(response.spot_data.resultData.open);
@@ -10566,7 +10577,7 @@
           selectedExpiry,
         type: "GET",
         success: function (response) {
-          console.log(response.option_data);
+          //console.log(response.option_data);
           var optionExpiryDropdown = $("#optionExpiryDropdown");
           optionExpiryDropdown.empty();
           $.each(
@@ -10582,8 +10593,8 @@
                 .text(formattedDate)
                 .val(expiryDate.split("T")[0]);
 
-              // console.log(formattedDate);
-              // console.log(expiryDate.split("T")[0]);
+              // //console.log(formattedDate);
+              // //console.log(expiryDate.split("T")[0]);
 
               // Append the option to the dropdown
               optionExpiryDropdown.append(option);
@@ -10606,14 +10617,14 @@
 
 
           var option_chain_data = response.option_data.resultData.opDatas;
-          // console.log(option_chain_data[0]);
-          // console.log($("#optionExpiryDropdown").val());
+          // //console.log(option_chain_data[0]);
+          // //console.log($("#optionExpiryDropdown").val());
           var option_expiry_date = $("#optionExpiryDropdown").val();
           var lot_size_value_option = $("#lot_size_value").text();
-          // console.log(lot_size_value_option);
-          // console.log(selectedOption);
+          // //console.log(lot_size_value_option);
+          // //console.log(selectedOption);
 
-          // console.log(selectedExpiry)
+          // //console.log(selectedExpiry)
 
           var optionChainTable = $(".strategy_option_chain");
           var strategy_option_chain_oi = $(".strategy_option_chain_oi");
@@ -10802,9 +10813,9 @@
             strategy_option_chain_greeks.append(greeks_content);
           });
 
-          // console.log("Nearest Strike Price:", closestStrikePrice);
+          // //console.log("Nearest Strike Price:", closestStrikePrice);
           $("#closest_strike_price").text(closestStrikePrice);
-          // console.log(all_callsOI_putsOI);
+          // //console.log(all_callsOI_putsOI);
 
           OI_charts(all_callsOI_putsOI)
 
@@ -10826,7 +10837,7 @@
                 $(this).position().top -
                 container.height() / 2 +
                 $(this).height() / 2;
-              // console.log("scrollTo",scrollTo);
+              // //console.log("scrollTo",scrollTo);
 
               // Reset the scroll position first
               $(".main_option_chain_table,.main_option_oi,.main_option_greeks").animate(
@@ -10907,7 +10918,7 @@
           function selectStrategy(filter_arg_strategy) {
             if (filter_arg_strategy === "straddle") {
               var latestStrikePrice = $("#strikeSelect_straddle").val(); // Parse as a float
-              // console.log(latestStrikePrice);
+              // //console.log(latestStrikePrice);
               $("#closest_strike_price").text(latestStrikePrice);
               var expirySelect = $(".expiry_date_input");
               var strikeSelect = $(".strike_price_input");
@@ -10917,7 +10928,7 @@
               var closest_strike_price = $("#closest_strike_price");
               strikeSelect.find("option").each(function () {
                 // Log the value of the current option
-                // console.log($(this).val());
+                // //console.log($(this).val());
               });
 
               $("#straddle").addClass("option_strategies_active");
@@ -11024,7 +11035,7 @@
                   var lastPrevValue_call = parseFloat(forw5[forw5.length - 1]);
 
                   if (optionValue_call === lastPrevValue_call) {
-                    // console.log(optionValue_call, lastPrevValue_call);
+                    // //console.log(optionValue_call, lastPrevValue_call);
                     $(this).prop("selected", true);
                   }
                 });
@@ -11036,7 +11047,7 @@
                   var lastPrevValue = parseFloat(prev5[prev5.length - 1]);
 
                   if (optionValue === lastPrevValue) {
-                    // console.log(optionValue, lastPrevValue);
+                    // //console.log(optionValue, lastPrevValue);
                     $(this).prop("selected", true);
                   }
                 });
@@ -11047,7 +11058,7 @@
 
               expiryDate_strangle.on("change", function () {
                 var selectedValue_straddle = $(this).val();
-                // console.log(selectedValue_straddle);
+                // //console.log(selectedValue_straddle);
 
                 // Set the value of optionExpiryDropdown to match the selected value
                 optionExpiryDropdown.val(selectedValue_straddle).change();
@@ -11055,8 +11066,8 @@
                 // Trigger a click event on the selected option
               });
 
-              // console.log("Previous 5 Strike Prices:", prev5);
-              // console.log("Next 5 Strike Prices:", forw5);
+              // //console.log("Previous 5 Strike Prices:", prev5);
+              // //console.log("Next 5 Strike Prices:", forw5);
 
               $("#shortStrangle").click(function () {
                 // Empty the specified elements before making any selection
@@ -11153,7 +11164,7 @@
                   var optionValue = parseFloat($(this).val());
 
                   if (optionValue === parseFloat(closest_strike_price)) {
-                    // console.log(optionValue, closest_strike_price);
+                    // //console.log(optionValue, closest_strike_price);
                     $(this).prop("selected", true);
                   }
                 });
@@ -11188,7 +11199,7 @@
                   var optionValue = parseFloat($(this).val());
 
                   if (optionValue === parseFloat(forw3[forw3.length - 1])) {
-                    // console.log(optionValue, closest_strike_price);
+                    // //console.log(optionValue, closest_strike_price);
                     $(this).prop("selected", true);
                   }
                 });
@@ -11198,7 +11209,7 @@
 
               expiryDate_spread.on("change", function () {
                 var selectedValue_straddle = $(this).val();
-                // console.log(selectedValue_straddle);
+                // //console.log(selectedValue_straddle);
 
                 // Set the value of optionExpiryDropdown to match the selected value
                 optionExpiryDropdown.val(selectedValue_straddle).change();
@@ -11252,7 +11263,7 @@
 
                 strikePrices.forEach(function (rowStrikePrice) {
                   if (rowStrikePrice === put_strikeSelect_spread) {
-                    // console.log(rowStrikePrice, put_strikeSelect_spread);
+                    // //console.log(rowStrikePrice, put_strikeSelect_spread);
 
                     // Find the closest row and click on Auto_calls_short_click
                     var closestRow = optionChainTable
@@ -11332,7 +11343,7 @@
                   var optionValue = parseFloat($(this).val());
 
                   if (optionValue === parseFloat(prev4[prev4.length - 1])) {
-                    // console.log(optionValue, closest_strike_price);
+                    // //console.log(optionValue, closest_strike_price);
                     $(this).prop("selected", true);
                   }
                 });
@@ -11345,7 +11356,7 @@
                   var optionValue = parseFloat($(this).val());
 
                   if (optionValue === parseFloat(closest_strike_price)) {
-                    // console.log(optionValue, closest_strike_price);
+                    // //console.log(optionValue, closest_strike_price);
                     $(this).prop("selected", true);
                   }
                 });
@@ -11367,7 +11378,7 @@
                   var optionValue = parseFloat($(this).val());
 
                   if (optionValue === parseFloat(forw4[forw4.length - 1])) {
-                    // console.log(optionValue, closest_strike_price);
+                    // //console.log(optionValue, closest_strike_price);
                     $(this).prop("selected", true);
                   }
                 });
@@ -11377,7 +11388,7 @@
 
               expiryDate_ironFly.on("change", function () {
                 var selectedValue_straddle = $(this).val();
-                // console.log(selectedValue_straddle);
+                // //console.log(selectedValue_straddle);
 
                 // Set the value of optionExpiryDropdown to match the selected value
                 optionExpiryDropdown.val(selectedValue_straddle).change();
@@ -11385,8 +11396,8 @@
                 // Trigger a click event on the selected option
               });
 
-              // console.log("Previous 4 Strike Prices:", prev4);
-              // console.log("Next 4 Strike Prices:", forw4);
+              // //console.log("Previous 4 Strike Prices:", prev4);
+              // //console.log("Next 4 Strike Prices:", forw4);
 
               // Keep the existing logic for closestStrikePrice
               $("#shortironFly").click(function () {
@@ -11517,7 +11528,7 @@
                   var optionValue = parseFloat($(this).val());
 
                   if (optionValue === parseFloat(prev4[prev4.length - 1])) {
-                    // console.log(optionValue, closest_strike_price);
+                    // //console.log(optionValue, closest_strike_price);
                     $(this).prop("selected", true);
                   }
                 });
@@ -11527,7 +11538,7 @@
                   var optionValue = parseFloat($(this).val());
 
                   if (optionValue === parseFloat(prev3[prev3.length - 1])) {
-                    // console.log(optionValue, closest_strike_price);
+                    // //console.log(optionValue, closest_strike_price);
                     $(this).prop("selected", true);
                   }
                 });
@@ -11554,7 +11565,7 @@
                   var optionValue = parseFloat($(this).val());
 
                   if (optionValue === parseFloat(forw3[forw3.length - 1])) {
-                    // console.log(optionValue, closest_strike_price);
+                    // //console.log(optionValue, closest_strike_price);
                     $(this).prop("selected", true);
                   }
                 });
@@ -11564,7 +11575,7 @@
                   var optionValue = parseFloat($(this).val());
 
                   if (optionValue === parseFloat(forw4[forw4.length - 1])) {
-                    // console.log(optionValue, closest_strike_price);
+                    // //console.log(optionValue, closest_strike_price);
                     $(this).prop("selected", true);
                   }
                 });
@@ -11574,7 +11585,7 @@
 
               expiryDate_ironCondor.on("change", function () {
                 var selectedValue_ironCondor = $(this).val();
-                // console.log(selectedValue_ironCondor);
+                // //console.log(selectedValue_ironCondor);
 
                 // Set the value of optionExpiryDropdown to match the selected value
                 optionExpiryDropdown.val(selectedValue_ironCondor).change();
@@ -11582,10 +11593,10 @@
                 // Trigger a click event on the selected option
               });
 
-              // console.log("Previous 3 Strike Prices:", prev3);
-              // console.log("Previous 4 Strike Prices:", prev4);
-              // console.log("Next 4 Strike Prices:", forw4);
-              // console.log("Next 3 Strike Prices:", forw3);
+              // //console.log("Previous 3 Strike Prices:", prev3);
+              // //console.log("Previous 4 Strike Prices:", prev4);
+              // //console.log("Next 4 Strike Prices:", forw4);
+              // //console.log("Next 3 Strike Prices:", forw3);
 
               // Get the values of lastIndexPrev and lastIndexForw
               var lastIndexPrev = $("#put_strikeSelect_ironCondor").val();
@@ -11717,7 +11728,7 @@
                   var optionValue = parseFloat($(this).val());
 
                   if (optionValue === parseFloat(forw4[forw4.length - 1])) {
-                    // console.log(optionValue, closest_strike_price);
+                    // //console.log(optionValue, closest_strike_price);
                     $(this).prop("selected", true);
                   }
                 });
@@ -11727,7 +11738,7 @@
                   var optionValue = parseFloat($(this).val());
 
                   if (optionValue === parseFloat(forw2[forw2.length - 1])) {
-                    // console.log(optionValue, closest_strike_price);
+                    // //console.log(optionValue, closest_strike_price);
                     $(this).prop("selected", true);
                   }
                 });
@@ -11746,15 +11757,15 @@
                   var optionValue = parseFloat($(this).val());
 
                   if (optionValue === parseFloat(prev4[prev4.length - 1])) {
-                    // console.log(optionValue, closest_strike_price);
+                    // //console.log(optionValue, closest_strike_price);
                     $(this).prop("selected", true);
                   }
                 });
 
-              // console.log("Next 4 Strike Prices:", forw4);
-              // console.log("Next 2 Strike Prices:", forw2);
+              // //console.log("Next 4 Strike Prices:", forw4);
+              // //console.log("Next 2 Strike Prices:", forw2);
 
-              // console.log("Previous 4 Strike Prices:", prev4);
+              // //console.log("Previous 4 Strike Prices:", prev4);
               // Get the values of lastIndexPrev and lastIndexForw
 
               var expiryDate_jaze_lizard = $("#expiryDate_jaze_lizard");
@@ -11762,7 +11773,7 @@
 
               expiryDate_jaze_lizard.on("change", function () {
                 var selectedValue_jaze_lizard = $(this).val();
-                // console.log(selectedValue_jaze_lizard);
+                // //console.log(selectedValue_jaze_lizard);
 
                 // Set the value of optionExpiryDropdown to match the selected value
                 optionExpiryDropdown.val(selectedValue_jaze_lizard).change();
@@ -11868,7 +11879,7 @@
                   var optionValue = parseFloat($(this).val());
 
                   if (optionValue === parseFloat(closest_strike_price)) {
-                    // console.log(optionValue, closest_strike_price);
+                    // //console.log(optionValue, closest_strike_price);
                     $(this).prop("selected", true);
                   }
                 });
@@ -11897,7 +11908,7 @@
                   var optionValue = parseFloat($(this).val());
 
                   if (optionValue === parseFloat(prev8[prev8.length - 1])) {
-                    // console.log(optionValue, closest_strike_price);
+                    // //console.log(optionValue, closest_strike_price);
                     $(this).prop("selected", true);
                   }
                 });
@@ -11907,7 +11918,7 @@
                   var optionValue = parseFloat($(this).val());
 
                   if (optionValue === parseFloat(prev4[prev4.length - 1])) {
-                    // console.log(optionValue, closest_strike_price);
+                    // //console.log(optionValue, closest_strike_price);
                     $(this).prop("selected", true);
                   }
                 });
@@ -11947,7 +11958,7 @@
                   var optionValue = parseFloat($(this).val());
 
                   if (optionValue === parseFloat(forw4[forw4.length - 1])) {
-                    // console.log(optionValue, closest_strike_price);
+                    // //console.log(optionValue, closest_strike_price);
                     $(this).prop("selected", true);
                   }
                 });
@@ -11957,7 +11968,7 @@
                   var optionValue = parseFloat($(this).val());
 
                   if (optionValue === parseFloat(forw8[forw8.length - 1])) {
-                    // console.log(optionValue, closest_strike_price);
+                    // //console.log(optionValue, closest_strike_price);
                     $(this).prop("selected", true);
                   }
                 });
@@ -11967,7 +11978,7 @@
                   var optionValue = parseFloat($(this).val());
 
                   if (optionValue === parseFloat(forw12[forw12.length - 1])) {
-                    // console.log(optionValue, closest_strike_price);
+                    // //console.log(optionValue, closest_strike_price);
                     $(this).prop("selected", true);
                   }
                 });
@@ -11980,15 +11991,15 @@
                   var optionValue = parseFloat($(this).val());
 
                   if (optionValue === parseFloat(prev4[prev4.length - 1])) {
-                    // console.log(optionValue, closest_strike_price);
+                    // //console.log(optionValue, closest_strike_price);
                     $(this).prop("selected", true);
                   }
                 });
 
-              // console.log("Next 4 Strike Prices:", forw4);
-              // console.log("Next 2 Strike Prices:", forw2);
+              // //console.log("Next 4 Strike Prices:", forw4);
+              // //console.log("Next 2 Strike Prices:", forw2);
 
-              // console.log("Previous 4 Strike Prices:", prev4);
+              // //console.log("Previous 4 Strike Prices:", prev4);
               // Get the values of lastIndexPrev and lastIndexForw
 
               var expiryDate_jaze_lizard = $("#expiryDate_double_iron_fly");
@@ -11996,7 +12007,7 @@
 
               expiryDate_jaze_lizard.on("change", function () {
                 var selectedValue_jaze_lizard = $(this).val();
-                // console.log(selectedValue_jaze_lizard);
+                // //console.log(selectedValue_jaze_lizard);
 
                 // Set the value of optionExpiryDropdown to match the selected value
                 optionExpiryDropdown.val(selectedValue_jaze_lizard).change();
@@ -12152,7 +12163,7 @@
                   var optionValue = parseFloat($(this).val());
 
                   if (optionValue === parseFloat(closest_strike_price)) {
-                    // console.log(optionValue, closest_strike_price);
+                    // //console.log(optionValue, closest_strike_price);
                     $(this).prop("selected", true);
                   }
                 });
@@ -12189,7 +12200,7 @@
                   var optionValue = parseFloat($(this).val());
 
                   if (optionValue === parseFloat(prev4[prev4.length - 1])) {
-                    // console.log(optionValue, closest_strike_price);
+                    // //console.log(optionValue, closest_strike_price);
                     $(this).prop("selected", true);
                   }
                 });
@@ -12200,7 +12211,7 @@
                   var optionValue = parseFloat($(this).val());
 
                   if (optionValue === parseFloat(prev8[prev8.length - 1])) {
-                    // console.log(optionValue, closest_strike_price);
+                    // //console.log(optionValue, closest_strike_price);
                     $(this).prop("selected", true);
                   }
                 });
@@ -12212,7 +12223,7 @@
                   var optionValue = parseFloat($(this).val());
 
                   if (optionValue === parseFloat(prev12[prev12.length - 1])) {
-                    // console.log(optionValue, closest_strike_price);
+                    // //console.log(optionValue, closest_strike_price);
                     $(this).prop("selected", true);
                   }
                 });
@@ -12222,7 +12233,7 @@
                   var optionValue = parseFloat($(this).val());
 
                   if (optionValue === parseFloat(prev16[prev16.length - 1])) {
-                    // console.log(optionValue, closest_strike_price);
+                    // //console.log(optionValue, closest_strike_price);
                     $(this).prop("selected", true);
                   }
                 });
@@ -12263,7 +12274,7 @@
                   var optionValue = parseFloat($(this).val());
 
                   if (optionValue === parseFloat(forw4[forw4.length - 1])) {
-                    // console.log(optionValue, closest_strike_price);
+                    // //console.log(optionValue, closest_strike_price);
                     $(this).prop("selected", true);
                   }
                 });
@@ -12273,7 +12284,7 @@
                   var optionValue = parseFloat($(this).val());
 
                   if (optionValue === parseFloat(forw8[forw8.length - 1])) {
-                    // console.log(optionValue, closest_strike_price);
+                    // //console.log(optionValue, closest_strike_price);
                     $(this).prop("selected", true);
                   }
                 });
@@ -12283,7 +12294,7 @@
                   var optionValue = parseFloat($(this).val());
 
                   if (optionValue === parseFloat(forw12[forw12.length - 1])) {
-                    // console.log(optionValue, closest_strike_price);
+                    // //console.log(optionValue, closest_strike_price);
                     $(this).prop("selected", true);
                   }
                 });
@@ -12293,7 +12304,7 @@
                   var optionValue = parseFloat($(this).val());
 
                   if (optionValue === parseFloat(forw16[forw16.length - 1])) {
-                    // console.log(optionValue, closest_strike_price);
+                    // //console.log(optionValue, closest_strike_price);
                     $(this).prop("selected", true);
                   }
                 });
@@ -12301,10 +12312,10 @@
 
 
 
-              // console.log("Next 4 Strike Prices:", forw4);
-              // console.log("Next 2 Strike Prices:", forw2);
+              // //console.log("Next 4 Strike Prices:", forw4);
+              // //console.log("Next 2 Strike Prices:", forw2);
 
-              // console.log("Previous 4 Strike Prices:", prev4);
+              // //console.log("Previous 4 Strike Prices:", prev4);
               // Get the values of lastIndexPrev and lastIndexForw
 
               var expiryDate_jaze_lizard = $("#expiryDate_double_iron_condor");
@@ -12312,7 +12323,7 @@
 
               expiryDate_jaze_lizard.on("change", function () {
                 var selectedValue_jaze_lizard = $(this).val();
-                // console.log(selectedValue_jaze_lizard);
+                // //console.log(selectedValue_jaze_lizard);
 
                 // Set the value of optionExpiryDropdown to match the selected value
                 optionExpiryDropdown.val(selectedValue_jaze_lizard).change();
@@ -12483,7 +12494,7 @@
                   var optionValue = parseFloat($(this).val());
 
                   if (optionValue === parseFloat(closest_strike_price)) {
-                    // console.log(optionValue, closest_strike_price);
+                    // //console.log(optionValue, closest_strike_price);
                     $(this).prop("selected", true);
                   }
                 });
@@ -12518,7 +12529,7 @@
                   var optionValue = parseFloat($(this).val());
 
                   if (optionValue === parseFloat(prev19[prev19.length - 1])) {
-                    // console.log(optionValue, closest_strike_price);
+                    // //console.log(optionValue, closest_strike_price);
                     $(this).prop("selected", true);
                   }
                 });
@@ -12529,7 +12540,7 @@
                   var optionValue = parseFloat($(this).val());
 
                   if (optionValue === parseFloat(prev10[prev10.length - 1])) {
-                    // console.log(optionValue, closest_strike_price);
+                    // //console.log(optionValue, closest_strike_price);
                     $(this).prop("selected", true);
                   }
                 });
@@ -12541,7 +12552,7 @@
                   var optionValue = parseFloat($(this).val());
 
                   if (optionValue === parseFloat(prev1[prev1.length - 1])) {
-                    // console.log(optionValue, closest_strike_price);
+                    // //console.log(optionValue, closest_strike_price);
                     $(this).prop("selected", true);
                   }
                 });
@@ -12550,10 +12561,10 @@
 
 
 
-              // console.log("Next 4 Strike Prices:", forw4);
-              // console.log("Next 2 Strike Prices:", forw2);
+              // //console.log("Next 4 Strike Prices:", forw4);
+              // //console.log("Next 2 Strike Prices:", forw2);
 
-              // console.log("Previous 4 Strike Prices:", prev4);
+              // //console.log("Previous 4 Strike Prices:", prev4);
               // Get the values of lastIndexPrev and lastIndexForw
 
               var expiryDate_put_butterfly = $("#expiryDate_put_butterfly");
@@ -12561,7 +12572,7 @@
 
               expiryDate_put_butterfly.on("change", function () {
                 var selectedValue_put_butterfly = $(this).val();
-                // console.log(selectedValue_put_butterfly);
+                // //console.log(selectedValue_put_butterfly);
 
                 // Set the value of optionExpiryDropdown to match the selected value
                 optionExpiryDropdown.val(selectedValue_put_butterfly).change();
@@ -12702,7 +12713,7 @@
                   var optionValue = parseFloat($(this).val());
 
                   if (optionValue === parseFloat(forw1[forw1.length - 1])) {
-                    // console.log(optionValue, closest_strike_price);
+                    // //console.log(optionValue, closest_strike_price);
                     $(this).prop("selected", true);
                   }
                 });
@@ -12713,7 +12724,7 @@
                   var optionValue = parseFloat($(this).val());
 
                   if (optionValue === parseFloat(forw10[forw10.length - 1])) {
-                    // console.log(optionValue, closest_strike_price);
+                    // //console.log(optionValue, closest_strike_price);
                     $(this).prop("selected", true);
                   }
                 });
@@ -12725,7 +12736,7 @@
                   var optionValue = parseFloat($(this).val());
 
                   if (optionValue === parseFloat(forw19[forw19.length - 1])) {
-                    // console.log(optionValue, closest_strike_price);
+                    // //console.log(optionValue, closest_strike_price);
                     $(this).prop("selected", true);
                   }
                 });
@@ -12734,10 +12745,10 @@
 
 
 
-              // console.log("Next 4 Strike Prices:", forw4);
-              // console.log("Next 2 Strike Prices:", forw2);
+              // //console.log("Next 4 Strike Prices:", forw4);
+              // //console.log("Next 2 Strike Prices:", forw2);
 
-              // console.log("Previous 4 Strike Prices:", prev4);
+              // //console.log("Previous 4 Strike Prices:", prev4);
               // Get the values of lastIndexPrev and lastIndexForw
 
               var expiryDate_call_butter_fly = $("#expiryDate_call_butter_fly");
@@ -12745,7 +12756,7 @@
 
               expiryDate_call_butter_fly.on("change", function () {
                 var selectedValue_put_butterfly = $(this).val();
-                // console.log(selectedValue_put_butterfly);
+                // //console.log(selectedValue_put_butterfly);
 
                 // Set the value of optionExpiryDropdown to match the selected value
                 optionExpiryDropdown.val(selectedValue_put_butterfly).change();
@@ -12867,7 +12878,7 @@
                   var optionValue = parseFloat($(this).val());
 
                   if (optionValue === parseFloat(closest_strike_price)) {
-                    // console.log(optionValue, closest_strike_price);
+                    // //console.log(optionValue, closest_strike_price);
                     $(this).prop("selected", true);
                   }
                 });
@@ -12901,7 +12912,7 @@
                   var optionValue = parseFloat($(this).val());
 
                   if (optionValue === parseFloat(forw4[forw4.length - 1])) {
-                    // console.log(optionValue, closest_strike_price);
+                    // //console.log(optionValue, closest_strike_price);
                     $(this).prop("selected", true);
                   }
                 });
@@ -12911,7 +12922,7 @@
                   var optionValue = parseFloat($(this).val());
 
                   if (optionValue === parseFloat(forw2[forw2.length - 1])) {
-                    // console.log(optionValue, closest_strike_price);
+                    // //console.log(optionValue, closest_strike_price);
                     $(this).prop("selected", true);
                   }
                 });
@@ -12923,7 +12934,7 @@
                   var optionValue = parseFloat($(this).val());
 
                   if (optionValue === parseFloat(forw1[forw1.length - 1])) {
-                    // console.log(optionValue, closest_strike_price);
+                    // //console.log(optionValue, closest_strike_price);
                     $(this).prop("selected", true);
                   }
                 });
@@ -12956,7 +12967,7 @@
                   var optionValue = parseFloat($(this).val());
 
                   if (optionValue === parseFloat(prev4[prev4.length - 1])) {
-                    // console.log(optionValue, closest_strike_price);
+                    // //console.log(optionValue, closest_strike_price);
                     $(this).prop("selected", true);
                   }
                 });
@@ -12967,7 +12978,7 @@
                   var optionValue = parseFloat($(this).val());
 
                   if (optionValue === parseFloat(prev2[prev2.length - 1])) {
-                    // console.log(optionValue, closest_strike_price);
+                    // //console.log(optionValue, closest_strike_price);
                     $(this).prop("selected", true);
                   }
                 });
@@ -12977,7 +12988,7 @@
                   var optionValue = parseFloat($(this).val());
 
                   if (optionValue === parseFloat(prev1[prev1.length - 1])) {
-                    // console.log(optionValue, closest_strike_price);
+                    // //console.log(optionValue, closest_strike_price);
                     $(this).prop("selected", true);
                   }
                 });
@@ -12990,7 +13001,7 @@
                   var optionValue = parseFloat($(this).val());
 
                   if (optionValue === parseFloat(forw4[forw4.length - 1])) {
-                    // console.log(optionValue, closest_strike_price);
+                    // //console.log(optionValue, closest_strike_price);
                     $(this).prop("selected", true);
                   }
                 });
@@ -13000,10 +13011,10 @@
 
 
 
-              // console.log("Next 4 Strike Prices:", forw4);
-              // console.log("Next 2 Strike Prices:", forw2);
+              // //console.log("Next 4 Strike Prices:", forw4);
+              // //console.log("Next 2 Strike Prices:", forw2);
 
-              // console.log("Previous 4 Strike Prices:", prev4);
+              // //console.log("Previous 4 Strike Prices:", prev4);
               // Get the values of lastIndexPrev and lastIndexForw
 
               var expiryDate_custom_strategy = $("#expiryDate_custom_strategy");
@@ -13011,7 +13022,7 @@
 
               expiryDate_custom_strategy.on("change", function () {
                 var selectedValue_custom_strategy = $(this).val();
-                // console.log(selectedValue_custom_strategy);
+                // //console.log(selectedValue_custom_strategy);
 
                 // Set the value of optionExpiryDropdown to match the selected value
                 optionExpiryDropdown.val(selectedValue_custom_strategy).change();
@@ -13214,14 +13225,14 @@
               var opiton_selected = row.find(".opiton_selected").text();
               var option_side = "Call";
 
-              // console.log(option_side);
-              // console.log("Call Side - Action:", action);
-              // console.log("Call Side - calls_iv:", calls_iv);
-              // console.log("Call Side - calls_oi:", calls_oi);
-              // console.log("Call Side - calls_ltp:", ltpValue);
-              // console.log("Call Side - strike_price:", strike_price);
-              // console.log(expiry_date);
-              // console.log(opiton_lot_size);
+              // //console.log(option_side);
+              // //console.log("Call Side - Action:", action);
+              // //console.log("Call Side - calls_iv:", calls_iv);
+              // //console.log("Call Side - calls_oi:", calls_oi);
+              // //console.log("Call Side - calls_ltp:", ltpValue);
+              // //console.log("Call Side - strike_price:", strike_price);
+              // //console.log(expiry_date);
+              // //console.log(opiton_lot_size);
               populateInputTable(
                 option_side,
                 expiry_date,
@@ -13249,14 +13260,14 @@
               var strike_price = row.find(".strike_price").text();
               var opiton_lot_size = row.find(".opiton_lot_size").text();
               var opiton_selected = row.find(".opiton_selected").text();
-              // console.log(option_side);
-              // console.log("Put Side - Action:", action);
-              // console.log("Put Side - puts_ltp:", ltpValue);
-              // console.log("Put Side - puts_oi:", puts_oi);
-              // console.log("Put Side - puts_iv:", puts_iv);
-              // console.log(expiry_date);
-              // console.log(opiton_lot_size);
-              // console.log(strike_price);
+              // //console.log(option_side);
+              // //console.log("Put Side - Action:", action);
+              // //console.log("Put Side - puts_ltp:", ltpValue);
+              // //console.log("Put Side - puts_oi:", puts_oi);
+              // //console.log("Put Side - puts_iv:", puts_iv);
+              // //console.log(expiry_date);
+              // //console.log(opiton_lot_size);
+              // //console.log(strike_price);
               populateInputTable(
                 option_side,
                 expiry_date,
@@ -13277,12 +13288,12 @@
             }
             $(".inner_p_l_greeks").show();
             if ($(this).data("HI1") === undefined) {
-              // console.log("Yes");
+              // //console.log("Yes");
               // Remove the "HI1" data attribute
 
               calculate_data();
             } else {
-              // console.log("No");
+              // //console.log("No");
               $(this).removeData("HI1");
             }
             checkMainPositionContent();
@@ -13394,20 +13405,20 @@
           ) {
 
 
-            // console.log("Option Side:", option_side);
-            // console.log("Expiry Date:", expiry_date);
-            // console.log("Strike Price:", strike_price);
-            // console.log("Action:", action);
+            // //console.log("Option Side:", option_side);
+            // //console.log("Expiry Date:", expiry_date);
+            // //console.log("Strike Price:", strike_price);
+            // //console.log("Action:", action);
 
-            // console.log("Option Lot Size:", option_lot_size);
-            // console.log("LTP Value:", ltpValue);
-            // console.log("opiton_selected:", opiton_selected);
+            // //console.log("Option Lot Size:", option_lot_size);
+            // //console.log("LTP Value:", ltpValue);
+            // //console.log("opiton_selected:", opiton_selected);
 
 
 
             let dateParts = expiry_date.split("-");
             var optionyear = dateParts[0].slice(-2);
-            // console.log(optionyear);
+            // //console.log(optionyear);
 
             // Converting month number to month name
             let monthNames = ["", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
@@ -13416,7 +13427,7 @@
             let dayOfYear = dateParts[2]
             let result = dayOfYear + opitonmonth.slice(0, 3).toLocaleUpperCase() + optionyear;
 
-            // console.log(result);
+            // //console.log(result);
             // NIFTY23N0919250CE
             // NIFTY23N0919250PE
 
@@ -13428,13 +13439,13 @@
             main_ce_pe = main_ce_pe.replace(/\s/g, "");
             option_lot_size = option_lot_size.replace(/\s/g, "");
             ltpValue = ltpValue.replace(/\s/g, "");
-            // console.log("main_result", result);
+            // //console.log("main_result", result);
 
             var main_nfo_trading_sytmbol = opiton_selected + result + strike_price + main_ce_pe
 
             var transaction_type = action === "Short" ? "SELL" : "BUY"
 
-            // console.log('MainNFO:' + main_nfo_trading_sytmbol);
+            // //console.log('MainNFO:' + main_nfo_trading_sytmbol);
 
             var margin_calculation = {
               "id": calc_id++,
@@ -13450,7 +13461,7 @@
 
             main_margin_calculations.push(margin_calculation)
 
-            // console.log(margin_calculations)
+            // //console.log(margin_calculations)
             var main_row_instances = JSON.parse(localStorage.getItem('main_row_instances')) || [];
 
             main_row_instances.push(margin_calculation);
@@ -13518,7 +13529,7 @@
             const inputDate = formattedDate_initial;
             const formattedDate = formatDate(inputDate);
 
-            // console.log(formattedDate); // Output: "14SEP"
+            // //console.log(formattedDate); // Output: "14SEP"
             var stockDropdown = $(".stockDropdown").val();
             // +1x NIFTY07SEP 19350CE - ₹ 125.3 (0.00)
             var add_position = $(`
@@ -13574,7 +13585,7 @@
                 .remove();
 
               var childrenLength = $(".main_position").children().length;
-              //console.log("Children length in #myTable:", childrenLength);
+              ////console.log("Children length in #myTable:", childrenLength);
 
               // Check if #myTable has no child elements
               if (childrenLength < 1) {
@@ -13599,12 +13610,12 @@
               }
 
               // Output the id value to the console
-              // console.log(idValue);
+              // //console.log(idValue);
             });
 
             $(".edit-button").on("click", function (event) {
               event.stopPropagation();
-              // console.log('Hii there');
+              // //console.log('Hii there');
 
               var position = $(this).closest(".main_add_position_actions");
               var option_lot_size_input = position
@@ -13650,13 +13661,13 @@
                   $(this).prop("selected", true);
                 }
               });
-              // console.log(expiry_initial);
+              // //console.log(expiry_initial);
               var selectExpiry = $("#selectExpiry");
 
               selectExpiry.find("option").each(function () {
                 // Get the value of the current option
                 var expiryDate = $(this).val();
-                // console.log(expiryDate);
+                // //console.log(expiryDate);
 
                 // Check if the option value matches the value of closest_strike_price
                 if (expiryDate === expiry_initial) {
@@ -13674,7 +13685,7 @@
 
               $("#counter_input_edit").val(option_lot_size_input);
 
-              // console.log(entryPrice);
+              // //console.log(entryPrice);
 
               function Edit_counter() {
                 var counterValue = position
@@ -13705,7 +13716,7 @@
               }
 
               $("#editPositionModal").data("position", position);
-              // console.log($('#editPositionModal').data('position', position));
+              // //console.log($('#editPositionModal').data('position', position));
 
               Edit_counter();
 
@@ -13713,7 +13724,7 @@
 
           }
 
-          // console.log(main_margin_calculations);
+          // //console.log(main_margin_calculations);
           // Add a click event handler to the delete-button
 
         },
@@ -13775,10 +13786,10 @@
         // Calculate the current date based on the difference in minutes
         var currentDate = new Date(selectedDate.getTime() - difference * (60 * 1000)); // Adjusted for minutes
 
-        console.log("Current Date: " + formatDate(currentDate));
-        console.log("Days Left to Selected Date for " + rangeId + ": " + difference);
-        console.log("Current Value of " + rangeId + ": " + currentValue);
-        console.log("Difference between Max and Current Value for " + rangeId + ": " + (difference - currentValue));
+        //console.log("Current Date: " + formatDate(currentDate));
+        //console.log("Days Left to Selected Date for " + rangeId + ": " + difference);
+        //console.log("Current Value of " + rangeId + ": " + currentValue);
+        //console.log("Difference between Max and Current Value for " + rangeId + ": " + (difference - currentValue));
 
         var result = difference - currentValue;
 
@@ -13828,10 +13839,10 @@
         // Check if tradeType is SELL and set hasSellPosition to true
         if (main_margin_position.tradeType === "SELL") {
           hasSellPosition = true;
-          console.log('sell');
+          //console.log('sell');
 
         } else {
-          console.log('buy');
+          //console.log('buy');
 
           // Multiply entryPrice by qty and add to totalMargin for BUY positions
           totalMargin += main_margin_position.entryPrice * main_margin_position.qty;
@@ -13840,11 +13851,11 @@
 
       // Display totalMargin in $("#margin_required") only if there are no SELL positions
       if (!hasSellPosition) {
-        console.log(hasSellPosition);
+        //console.log(hasSellPosition);
 
         $("#margin_required").text(totalMargin.toFixed(2));
       } else {
-        console.log(hasSellPosition);
+        //console.log(hasSellPosition);
         // Call AJAX if there are SELL positions
         $.ajax({
           type: "POST",
@@ -13854,7 +13865,7 @@
           dataType: "json",
           success: function (data) {
             // Handle success response if needed
-            console.log(data.margin.totalMargin);
+            //console.log(data.margin.totalMargin);
             $("#margin_required").text(data.margin.totalMargin.toFixed(2));
           },
           error: function (error) {
@@ -13873,7 +13884,7 @@
     loadOptionData("NIFTY", "");
     loadOptionData(selectedOption, selectedExpiry);
     function loadExpiryData(selectedOption) {
-      // console.log("Hi there" + selectedOption);
+      // //console.log("Hi there" + selectedOption);
       $.ajax({
         url: "/option_strategies_expiry",
         method: "GET",
@@ -13895,7 +13906,7 @@
 
     function populateExpiry_Strike(expiryDates, expiryStrikes) {
       // Get the existing selected values before appending new options
-      // console.log('Log Expiry');
+      // //console.log('Log Expiry');
 
       // Add each expiry date as an option without duplicates
       var addedExpiryDates = [];
@@ -13927,7 +13938,7 @@
       $(".strike_price_input option").each(function () {
         addedStrikes.push(parseInt(this.value));
       });
-      // console.log(addedStrikes);
+      // //console.log(addedStrikes);
       expiryStrikes.forEach((strike) => {
         if (!addedStrikes.includes(strike)) {
           addedStrikes.push(strike);
@@ -14012,8 +14023,8 @@
       } else {
         $("#net_credit").text((Math.abs(all_premium_sum)).toFixed(2));
       }
-      console.log("Net Credit ", (all_premium_sum).toFixed(2));
-      // console.log("main_strike_price_dynamic", main_strike_price_dynamic);
+      //console.log("Net Credit ", (all_premium_sum).toFixed(2));
+      // //console.log("main_strike_price_dynamic", main_strike_price_dynamic);
 
 
 
@@ -14035,41 +14046,41 @@
       option_simulator_body.find(".strike_price").each(function () {
         var ultra_strike_price = parseInt($(this).text());
 
-        // console.log("ultra_strike_price         "  + ultra_strike_price);
+        // //console.log("ultra_strike_price         "  + ultra_strike_price);
 
 
         var tempArray = []; // Temporary array to store values
         main_strike_price_dynamic.forEach(function (item) {
-          console.log("item", item);
+          //console.log("item", item);
           if (item.requiredStringValue === 'CE' && item.long_shorts === '+') {
-            // console.log('Inside CE and + condition');
-            // console.log(parseFloat(item.final_strikePrice_edit));
-            // console.log(parseFloat(item.final_lot_premium));
-            console.log(ultra_strike_price);
+            // //console.log('Inside CE and + condition');
+            // //console.log(parseFloat(item.final_strikePrice_edit));
+            // //console.log(parseFloat(item.final_lot_premium));
+            //console.log(ultra_strike_price);
 
 
             tempArray.push(ULTRAMAX(0, ultra_strike_price - parseFloat(item.final_strikePrice_edit)) - parseFloat(item.final_lot_premium));
 
-            // console.log(ULTRAMAX(0, ultra_strike_price - parseFloat(item.final_strikePrice_edit)) - parseFloat(item.final_lot_premium));
+            // //console.log(ULTRAMAX(0, ultra_strike_price - parseFloat(item.final_strikePrice_edit)) - parseFloat(item.final_lot_premium));
           }
           if (item.requiredStringValue === 'CE' && item.long_shorts === '-') {
-            // console.log('Inside CE and - condition');
+            // //console.log('Inside CE and - condition');
             tempArray.push(parseFloat(item.final_lot_premium) - ULTRAMAX(0, ultra_strike_price - parseFloat(item.final_strikePrice_edit)));
           }
           if (item.requiredStringValue === 'PE' && item.long_shorts === '+') {
-            // console.log('Inside PE and + condition');
+            // //console.log('Inside PE and + condition');
             tempArray.push(ULTRAMAX(0, parseFloat(item.final_strikePrice_edit) - ultra_strike_price) - parseFloat(item.final_lot_premium));
           }
           if (item.requiredStringValue === 'PE' && item.long_shorts === '-') {
-            // console.log('Inside PE and - condition');
+            // //console.log('Inside PE and - condition');
             tempArray.push(parseFloat(item.final_lot_premium) - ULTRAMAX(0, parseFloat(item.final_strikePrice_edit) - ultra_strike_price));
           }
         });
-        console.log(tempArray);
+        //console.log(tempArray);
         resultArray.push(tempArray); // Push the tempArray into the resultArray
       });
 
-      console.log("resultArray", resultArray);
+      //console.log("resultArray", resultArray);
 
 
       // Sample array of arrays
@@ -14080,7 +14091,7 @@
 
       // Convert the text content of each element to an integer and store in an array
       var lotSizeValues = Array.from(lotSizeElements).map(element => parseInt(element.textContent));
-      console.log("lotSizeValues", lotSizeValues);
+      //console.log("lotSizeValues", lotSizeValues);
 
       // Loop through the array of arrays and perform index-wise multiplication
       for (var i = 0; i < arrayOfArrays.length; i++) {
@@ -14090,7 +14101,7 @@
       }
 
       // Print the modified array of arrays
-      // console.log(arrayOfArrays);
+      // //console.log(arrayOfArrays);
 
 
 
@@ -14127,8 +14138,8 @@
       var positiveValues = sumArray.filter(value => value > 0);
       var negativeValues = sumArray.filter(value => value < 0);
 
-      console.log("Positive Values:", positiveValues);
-      console.log("Negative Values:", negativeValues);
+      //console.log("Positive Values:", positiveValues);
+      //console.log("Negative Values:", negativeValues);
 
       // Find the maximum value in positiveValues
       var maxPositive = Math.max(...positiveValues);
@@ -14140,23 +14151,23 @@
       // Find the minimum value in negativeValues
       var maxLoss = Math.min(...negativeValues);
 
-      console.log("Maximum Value in Positive Values:", maxPositive);
-      console.log("Minimum Value in Negative Values:", minNegative);
+      //console.log("Maximum Value in Positive Values:", maxPositive);
+      //console.log("Minimum Value in Negative Values:", minNegative);
 
       // Check if maxPositive has duplicates in positiveValues
       var positiveDuplicates = positiveValues.filter(value => value === maxPositive);
       if (positiveDuplicates.length > 1) {
-        console.log("Max Positive Value has Duplicates in Positive Values:", positiveDuplicates);
+        //console.log("Max Positive Value has Duplicates in Positive Values:", positiveDuplicates);
       } else {
-        console.log("Max Positive Value does not have Duplicates in Positive Values");
+        //console.log("Max Positive Value does not have Duplicates in Positive Values");
       }
 
       // Check if minNegative has duplicates in negativeValues
       var negativeDuplicates = negativeValues.filter(value => value === minNegative);
       if (negativeDuplicates.length > 1) {
-        console.log("Min Negative Value has Duplicates in Negative Values:", negativeDuplicates);
+        //console.log("Min Negative Value has Duplicates in Negative Values:", negativeDuplicates);
       } else {
-        console.log("Min Negative Value does not have Duplicates in Negative Values");
+        //console.log("Min Negative Value does not have Duplicates in Negative Values");
       }
 
 
@@ -14164,13 +14175,13 @@
 
 
 
-      console.log('main_strike_price_dynamic', main_strike_price_dynamic);
+      //console.log('main_strike_price_dynamic', main_strike_price_dynamic);
 
       var plusCount = main_strike_price_dynamic.filter(obj => obj.long_shorts === '+').length;
       var minusCount = main_strike_price_dynamic.filter(obj => obj.long_shorts === '-').length;
 
       if (plusCount > minusCount) {
-        console.log("'+' appears more");
+        //console.log("'+' appears more");
         // Check if sumArray contains only positive values
 
         $("#max_profit").text("Unlimited");
@@ -14179,30 +14190,30 @@
 
         var positiveDuplicates = positiveValues.filter(value => value === maxPositive);
         if (positiveDuplicates.length > 1) {
-          console.log("Max Positive Value has Duplicates in Positive Values:", positiveDuplicates);
+          //console.log("Max Positive Value has Duplicates in Positive Values:", positiveDuplicates);
           $("#max_profit").text((maxProfit).toFixed(2));
         } else {
-          console.log("Max Positive Value does not have Duplicates in Positive Values");
+          //console.log("Max Positive Value does not have Duplicates in Positive Values");
           $("#max_profit").text("Unlimited");
         }
 
       } else if (minusCount > plusCount) {
-        console.log("'-' appears more");
+        //console.log("'-' appears more");
 
         $("#max_profit").text((maxProfit).toFixed(2));
         $("#max_loss").text("Unlimited");
 
         var negativeDuplicates = negativeValues.filter(value => value === minNegative);
         if (negativeDuplicates.length > 1) {
-          console.log("Min Negative Value has Duplicates in Negative Values:", negativeDuplicates);
+          //console.log("Min Negative Value has Duplicates in Negative Values:", negativeDuplicates);
           $("#max_loss").text((maxLoss).toFixed(2));
         } else {
-          console.log("Min Negative Value does not have Duplicates in Negative Values");
+          //console.log("Min Negative Value does not have Duplicates in Negative Values");
           $("#max_loss").text("Unlimited");
         }
 
       } else {
-        console.log("'+' and '-' appear the same number of times");
+        //console.log("'+' and '-' appear the same number of times");
 
         $("#max_profit").text((maxProfit).toFixed(2));
         $("#max_loss").text((maxLoss).toFixed(2));
@@ -14252,7 +14263,7 @@
       $(".main_logic").each(function () {
         var premium_condition = $(this).find(".short_long").text()
         var premuim_values = parseFloat($(this).find(".ltp_edit").text())
-        // console.log(premium_condition);
+        // //console.log(premium_condition);
         if (premium_condition === "-") {
           all_premium_chart.push(-Math.abs(premuim_values))
         } else {
@@ -14260,16 +14271,16 @@
 
         }
       })
-      // console.log(all_premium_chart);
+      // //console.log(all_premium_chart);
 
       var sum_all_premium_chart = all_premium_chart.reduce(function (a, b) {
         return a + b;
       }, 0);
 
-      // console.log("Sum of all elements in all_premium_chart array: ", sum_all_premium_chart);
+      // //console.log("Sum of all elements in all_premium_chart array: ", sum_all_premium_chart);
       // Your existing code to generate chart data goes here
       var option_simulator_body = $(".strategy_option_chain");
-      // console.log(option_simulator_body);
+      // //console.log(option_simulator_body);
       const closest_value = parseInt($(".closest_value").text()); // Parse closest_value as an integer
       // Create a new array to store strike prices
       var strikePrices = [];
@@ -14280,7 +14291,7 @@
       option_simulator_body.find(".strike_price").each(function () {
         var strike_price = $(this).text(); // Get the text value of the current element
         strikePrices.push(strike_price); // Push it into the array
-        // console.log(strike_price);
+        // //console.log(strike_price);
 
         if (parseInt(strike_price) === closest_value) {
           var calls_ltp = $(this).closest('.call_put_tr').find(".calls_ltp").text();
@@ -14347,9 +14358,9 @@
       });
 
       // Display the results
-      // console.log("Final Long Call New: ", final_long_call_new);
-      // console.log("Final Long Put New: ", final_long_put_new);
-      // console.log("Addition Result: ", addition_result);
+      // //console.log("Final Long Call New: ", final_long_call_new);
+      // //console.log("Final Long Put New: ", final_long_put_new);
+      // //console.log("Addition Result: ", addition_result);
 
 
 
@@ -14357,17 +14368,17 @@
 
 
 
-      // console.log(strikePrices);
-      // console.log("Main calls_ltp: " + main_calls_ltp);
-      // console.log("Main puts_ltp: " + main_puts_ltp);
+      // //console.log(strikePrices);
+      // //console.log("Main calls_ltp: " + main_calls_ltp);
+      // //console.log("Main puts_ltp: " + main_puts_ltp);
 
       var final_p_l = []
       const priceDifferences = strikePrices.map((strikePrice) => Math.abs(closest_value - strikePrice));
-      // console.log(priceDifferences);
+      // //console.log(priceDifferences);
       priceDifferences.forEach((p_l) => {
         final_p_l.push(-(sum_all_premium_chart - p_l) * parseInt(lot_size))
       });
-      // console.log(final_p_l)
+      // //console.log(final_p_l)
 
       var spot_price = $(".last_traded_price").text()
 
@@ -14523,7 +14534,7 @@
 
 
 
-      // console.log('Hi');
+      // //console.log('Hi');
       black_scholes_table(tableData)
 
       var todayDate = new Date();
@@ -14606,7 +14617,7 @@
             var minDateString = minDate.toISOString().split('T')[0];
 
             // Log the minimum date
-            // console.log(minDateString);
+            // //console.log(minDateString);
 
 
             var selectedDate = new Date(minDateString);
@@ -14619,12 +14630,12 @@
             logDateInfo("customRange2");
           } else {
             // Log a message if no valid dates were found
-            console.log("No valid dates found.");
+            //console.log("No valid dates found.");
           }
 
         } else {
           // Log a message if no elements with the class "expiry_initial" were found
-          console.log("No elements with the class 'expiry_initial' found.");
+          //console.log("No elements with the class 'expiry_initial' found.");
         }
 
       }
@@ -14638,10 +14649,10 @@
         // Calculate the current date based on the difference in minutes
         var currentDate = new Date(selectedDate.getTime() - difference * (60 * 1000)); // Adjusted for minutes
 
-        // console.log("Current Date: " + formatDate(currentDate));
-        // console.log("Days Left to Selected Date for " + rangeId + ": " + difference);
-        // console.log("Current Value of " + rangeId + ": " + currentValue);
-        // console.log("Difference between Max and Current Value for " + rangeId + ": " + (difference - currentValue));
+        // //console.log("Current Date: " + formatDate(currentDate));
+        // //console.log("Days Left to Selected Date for " + rangeId + ": " + difference);
+        // //console.log("Current Value of " + rangeId + ": " + currentValue);
+        // //console.log("Difference between Max and Current Value for " + rangeId + ": " + (difference - currentValue));
 
         var result = difference - currentValue;
 
@@ -14665,7 +14676,7 @@
 
     function black_scholes_table(tableData) {
 
-      // console.log(tableData);
+      // //console.log(tableData);
       var option_simulator_body = $(".main_option_chain");
       var optionExpiryDropdown = $("#optionExpiryDropdown").val();
       var last_traded_price = $(".last_traded_price").text();
@@ -14686,10 +14697,10 @@
         optionsData.push(optionObject);
       });
 
-      // console.log(optionsData);
+      // //console.log(optionsData);
 
       var retrievedValue = localStorage.getItem("customRange2");
-      // console.log("Retrieved value from localstorage for " + "customRange2" + ": " + retrievedValue);
+      // //console.log("Retrieved value from localstorage for " + "customRange2" + ": " + retrievedValue);
 
       // Use jQuery AJAX to send the data to Django
       $.ajax({
@@ -14706,7 +14717,7 @@
         dataType: 'json', // Expect JSON response from Django
         success: function (data) {
           // Print the response from Django (you can handle it as needed)
-          // console.log(data);
+          // //console.log(data);
 
 
           var premiumsData = data.main_premiums;
@@ -14714,7 +14725,7 @@
 
           var single_premiumData = premiumsData[0]
 
-          // console.log(single_premiumData);
+          // //console.log(single_premiumData);
 
 
 
@@ -14756,7 +14767,7 @@
               }
 
               // Log the matching premiums for the current day
-              // console.log('Matching Premiums for Day ' + dayData.day, matchingPremiumsForDay);
+              // //console.log('Matching Premiums for Day ' + dayData.day, matchingPremiumsForDay);
 
               // Add key-value pair to the matchingPremiumsArray
               matchingPremiumsArray.push({ day: dayData.day, premiums: matchingPremiumsForDay });
@@ -14781,7 +14792,7 @@
               });
             });
 
-            // console.log('All Matching Premiums:', matchingPremiumsArray);
+            // //console.log('All Matching Premiums:', matchingPremiumsArray);
           });
 
 
@@ -14808,7 +14819,7 @@
           });
 
           // Now groupedData contains the data grouped by day
-          // console.log('Grouped Data:', groupedData);
+          // //console.log('Grouped Data:', groupedData);
 
           var resultArray = [];
           var lot_size = parseInt($("#lot_size_value").text());
@@ -14856,7 +14867,7 @@
             return acc;
           }, {});
 
-          // console.log(groupedResultArray);
+          // //console.log(groupedResultArray);
 
 
           // var arrayOfArrays = groupedResultArray;
@@ -14869,14 +14880,14 @@
           //   }
           // }
 
-          // console.log(arrayOfArrays);
+          // //console.log(arrayOfArrays);
           var groupedLotSizes = {};
 
           Object.values(groupedData).forEach(function (items, dayIndex) {
             var lotSizesForDay = [];
 
             items.forEach(function (item) {
-              // console.log(item.option_lot_size_input);
+              // //console.log(item.option_lot_size_input);
 
               // Push the option_lot_size_input into lotSizesForDay
               lotSizesForDay.push(item.option_lot_size_input);
@@ -14886,11 +14897,11 @@
             groupedLotSizes[dayIndex + 1] = lotSizesForDay;
           });
 
-          // console.log(groupedLotSizes);
+          // //console.log(groupedLotSizes);
 
 
           // groupedResultArray.forEach((group)=>{
-          //   console.log(group);
+          //   //console.log(group);
           // })
 
           // Assuming groupedResultArray is your inner_group
@@ -14913,7 +14924,7 @@
                   values: multipliedValues
                 });
               } else {
-                // console.log("No matching lot sizes found for day", inner_group.day);
+                // //console.log("No matching lot sizes found for day", inner_group.day);
               }
             });
 
@@ -14923,8 +14934,8 @@
             });
           });
 
-          // console.log("Multiplied Values Array:", multipliedValuesArray);
-          // console.log(tableData);
+          // //console.log("Multiplied Values Array:", multipliedValuesArray);
+          // //console.log(tableData);
 
 
           const allValuesDayWise = [];
@@ -14939,7 +14950,7 @@
             });
           });
 
-          // console.log(allValuesDayWise);
+          // //console.log(allValuesDayWise);
 
 
           const result = {};
@@ -14959,8 +14970,8 @@
           const All_day_data = Object.keys(result).map(day => ({ day: Number(day), sums: result[day] || [] }));
 
           // Display the new array
-          // console.log(All_day_data);
-          // console.log(tableData);
+          // //console.log(All_day_data);
+          // //console.log(tableData);
 
 
 
@@ -15020,7 +15031,7 @@
             all_day_merged_data.push(dayObject);
           });
 
-          // console.log(all_day_merged_data);
+          // //console.log(all_day_merged_data);
 
 
           var grouped_data = {};
@@ -15036,7 +15047,7 @@
 
           var _result = Object.entries(grouped_data).map(([day, values]) => ({ [day]: values }));
 
-          // console.log(_result);
+          // //console.log(_result);
           // var sumArray = resultArray.map(function (array) {
           //   var sum = array.reduce(function (acc, value) {
           //     return acc + value;
@@ -15044,7 +15055,7 @@
           //   return sum * lot_size;
           // });
 
-          // console.log(sumArray);
+          // //console.log(sumArray);
           var categories = tableData.map(data => parseInt(data.category));
           var values = tableData.map(data => data.value);
 
@@ -15058,7 +15069,7 @@
           // Print the merged _result
 
           // Print the merged _result
-          // console.log(_result);
+          // //console.log(_result);
 
 
           var table = $(".payoff_table_main_table");
@@ -15132,7 +15143,7 @@
           //                 1200 -
           //                 container.height() / 2 +
           //                 1200/ 2;
-          //                 console.log("scrollTo",scrollTo);
+          //                 //console.log("scrollTo",scrollTo);
 
 
           //     // Reset the scroll position first
@@ -15152,7 +15163,7 @@
           //         }
           //     );
           // } else {
-          //     console.log("No corresponding row found.");
+          //     //console.log("No corresponding row found.");
           // }
 
 
@@ -15165,7 +15176,7 @@
             var currentStrikePrice = parseInt($strikePrice.text()); // Assuming the text is numeric
 
             if (currentStrikePrice === closestStrikePrice) {
-              console.log(currentStrikePrice);
+              //console.log(currentStrikePrice);
 
               // $strikePrice.addClass("closestStrike_bg");
               var container = $("#payoff_table");
@@ -15174,10 +15185,10 @@
                 container.height() / 2 +
                 $(this).height() / 2;
 
-              console.log("  $(this).position().top", $(this).position().top);
-              console.log(" $(this).height() / 2", $(this).height() / 2);
-              console.log(container.height() / 2);
-              console.log(scrollTo);
+              //console.log("  $(this).position().top", $(this).position().top);
+              //console.log(" $(this).height() / 2", $(this).height() / 2);
+              //console.log(container.height() / 2);
+              //console.log(scrollTo);
 
               // Reset the scroll position first
               container.animate(
@@ -15250,13 +15261,13 @@
           //   tableData[i].black_scholes_val = isFinite(sumValue) ? sumValue : 0;
           // }
 
-          // console.log(tableData);
+          // //console.log(tableData);
 
 
 
 
 
-          // // console.log(tableData);
+          // // //console.log(tableData);
           // var tableBody = $(".payoff_table_data");
 
           // // Clear any existing rows
@@ -15285,7 +15296,7 @@
 
         },
         error: function (error) {
-          console.log('Error:', error);
+          //console.log('Error:', error);
         }
       });
     }
