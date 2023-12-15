@@ -1257,6 +1257,19 @@
   .text-success {
     color: #039855 !important;
   }
+
+  .payoff_table_main_table tr td:nth-child(n+2):nth-child(-n+7) {
+        text-align: center;
+    }
+  .payoff_table_main_table thead th:nth-child(n+2):nth-child(-n+7) {
+        text-align: center;
+    }
+    .payoff_table_main_table td:nth-child(8) {
+        text-align: center; /* Set to 'end' for right alignment */
+    }
+    .payoff_table_main_table thead th:nth-child(8) {
+        text-align: center; /* Set to 'end' for right alignment */
+    }
 </style>
 <div class="title my-2 d-flex">
   <h5>Option Strategy Tester</h5>
@@ -5897,7 +5910,7 @@
 
       <script>
         $(document).ready(function () {
-
+      
           $(".main_option_chain_oi_ltp_greeks button").click(function () {
             $(".main_option_chain_oi_ltp_greeks button").removeClass("active_oi_ltp_greeks")
             $(this).addClass("active_oi_ltp_greeks")
@@ -10832,7 +10845,9 @@
 
           $(".right_side_top_strategies #option_chain_button,#buid_custom_strategy_btn").click(
             function () {
-
+              $(".main_option_chain_table").show()
+              $(".main_option_oi").hide()
+              $(".main_option_greeks").hide()
               $("#buid_custom_strategy_btn").click()
               $(".call_put_tr").each(function () {
                 var $strikePrice = $(this).find(".strike_price");
@@ -15066,7 +15081,7 @@
               var values = dayData[dayKey];
 
               var values_con = values[i] < 0 ? "text-danger" : "text-success"
-              var cell = $("<td>").text(values[i] ? values[i].toFixed(0) : "").addClass(values_con).css("font-size", "13px");
+              var cell = $("<td>").text(values[i] ? values[i].toFixed(0) : "").addClass(values_con).css("font-size", "10px");
               row.append(cell);
             });
 
