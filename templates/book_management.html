@@ -2,51 +2,118 @@
 {% load static %}
 {% block dashboard_admin_body %}
 
+
+<style>
+    .books_btn{
+        background-color: #2196f3;
+        border: 1px solid #2196f3;
+        padding: 10px !important;
+        color: white;
+        border-radius: 8px;
+    }
+
+    .books_btn:hover{
+        background-color: white;
+        color: #2196f3;
+        border: 1px solid #2196f3;
+        
+    }
+
+    .delete-btn{
+    font-size: 25px;
+    color: grey;
+    }
+
+    .delete-btn:hover{
+    color: red !important;
+    }
+
+    #bookTable thead tr{
+        background: -webkit-gradient(linear, left top, left bottom, from(#4399eb), to(#5cadfb));
+    background: -moz-linear-gradient(top, #4399eb 0, #5cadfb 100%);
+    background: linear-gradient(180deg, #4399eb, #5cadfb);
+    color: #fff;
+    }
+
+    .border_collapsed {
+    border-color: inherit !important;
+    border: none;
+    border-bottom-style: inherit !important;
+    border-width: 1 !important;
+}
+
+.table-striped-custom>tbody>tr:nth-child(2n)>td,
+  .table-striped-custom>tbody>tr:nth-child(2n)>th {
+    background-color: rgb(240, 247, 253) !important;
+  }
+
+</style>
+
 <section class="mt-5">
-    
+  
+    <button class="books_btn"  id="addBooksBtn" >ADD BOOKS</button>
 
-    <div class="row">
-        <div class="col-lg-6">
-            <div class="mb-3">
-                <label for="id_title">Title:</label>
-                <input type="text" name="title" id="id_title" class="form-control" required>
-            </div>
-            <div class="mb-3">
-                <label for="id_description">Description:</label>
-                <textarea name="description" id="id_description" class="form-control" required></textarea>
-            </div>
 
-            <div class="mb-3">
-                <label for="id_image">Image:</label>
-                <input type="file" name="image" id="id_image" class="form-control" required>
+    <div class="modal fade" id="addBookModal" tabindex="-1" role="dialog" aria-labelledby="addBookModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addBookModalLabel">Add Book</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="col-lg-12">
+                        <div class="mb-3">
+                            <label for="id_title">Title:</label>
+                            <input type="text" name="title" id="id_title" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="id_description">Description:</label>
+                            <textarea name="description" id="id_description" class="form-control" required></textarea>
+                        </div>
+            
+                        <div class="mb-3">
+                            <label for="id_image">Image:</label>
+                            <input type="file" name="image" id="id_image" class="form-control" required>
+                        </div>
+            
+                        <div class="mb-3">
+                            <label for="id_page">Page:</label>
+                            <input type="number" name="page" id="id_page" class="form-control" required>
+                        </div>
+            
+                        <div class="mb-3">
+                            <label for="id_read_sample">Read Sample (Enter URLs, one per line):</label>
+                            <textarea name="read_sample" id="id_read_sample" class="form-control"></textarea>
+                        </div>
+            
+                        <div class="mb-3">
+                            <label for="id_book_category">Book Category:</label>
+                            <select name="book_category" id="id_book_category" class="form-control" required>
+                                <option value="Trading">Trading</option>
+                                <option value="Option Trading">Option Trading</option>
+                                <option value="Investment">Investment</option>
+                                <option value="Technical Analysis">Technical Analysis</option>
+                            </select>
+                        </div>
+            
+                        <button class="btn btn-primary" type="submit" id="submitBtn">Submit</button>
+                    </div>
+                </div>
+                <!-- <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save Book</button>
+                </div> -->
             </div>
-
-            <div class="mb-3">
-                <label for="id_page">Page:</label>
-                <input type="number" name="page" id="id_page" class="form-control" required>
-            </div>
-
-            <div class="mb-3">
-                <label for="id_read_sample">Read Sample (Enter URLs, one per line):</label>
-                <textarea name="read_sample" id="id_read_sample" class="form-control"></textarea>
-            </div>
-
-            <div class="mb-3">
-                <label for="id_book_category">Book Category:</label>
-                <select name="book_category" id="id_book_category" class="form-control" required>
-                    <option value="Trading">Trading</option>
-                    <option value="Option Trading">Option Trading</option>
-                    <option value="Investment">Investment</option>
-                    <option value="Technical Analysis">Technical Analysis</option>
-                </select>
-            </div>
-
-            <button class="btn btn-primary" type="submit" id="submitBtn">Submit</button>
         </div>
+    </div>
+  
+    <div class="row mt-3">
+       
 
 
-        <div class="col-lg-6">
-            <table class="table" id="bookTable">
+        <div class="col-lg-12">
+            <table class="table table-striped-custom" id="bookTable" >
                 <thead>
                     <tr>
                         <th scope="col">Id</th>
@@ -119,7 +186,10 @@
         //     });
         // });
 
-
+        $('#addBooksBtn').on('click', function () {
+    // Trigger the modal to open
+    $('#addBookModal').modal('show');
+});
 
 
     $('#submitBtn').on('click', function () {
@@ -189,6 +259,34 @@
         }
 
 
+       // Function to delete a book
+function deleteBook(bookId, rowId) {
+  
+  $.ajax({
+    type: 'DELETE',
+    url: `/books_list/${bookId}`,  
+    success: function (response) {
+      console.log('Book deleted successfully:', response);
+
+      // Remove the corresponding row from the table
+      $(`#${rowId}`).remove();
+    },
+    error: function (error) {
+      console.error('Error deleting book:', error);
+    }
+  });
+}
+
+
+// Event delegation for the Delete button
+$('#bookTable tbody').on('click', '.delete-btn', function () {
+  const bookId = $(this).data('book-id');
+  const rowId = $(this).closest('tr').attr('id');
+
+  deleteBook(bookId, rowId);
+});
+
+
         function fetchBooks() {
     $.ajax({
       type: 'GET',
@@ -199,15 +297,20 @@
 
         // Iterate through each book and append a new row to the table
         data.forEach(function (book) {
+
+            const rowId = `bookRow_${book.id}`;
           $('#bookTable tbody').append(
-            `<tr>
+            `<tr id="${rowId}">
                <td>${book.id}</td>
                <td>${book.title}</td>
                <td>${book.description}</td>
-               <td>${book.imgUrl}</td>
+               <td> <img src="${book.image}" alt="Book Image" style="max-width: 30px;"> </td>
                <td>${book.page}</td>
-               
                <td>${book.book_category}</td>
+               <td>
+          
+               <i class="bi bi-trash delete-btn" data-book-id="${book.id}")"></i>
+               </td>
              </tr>`
           );
         });
