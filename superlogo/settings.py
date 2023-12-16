@@ -34,6 +34,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
 
+TIME_ZONE = 'Asia/Kolkata'
+USE_TZ = True
 
 # Application definition
 
@@ -43,6 +45,7 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    # 'daphne',
     'django.contrib.staticfiles',
     'home',
     'rest_framework',
@@ -51,29 +54,54 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
+    'channels',
+    'corsheaders',
+
+    
 ]
 REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': [
         'rest_framework.renderers.JSONRenderer',
     ]
 }
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:8000",
+    "http://127.0.0.1:8000",
+    "http://127.0.0.1:80",
+    "http://127.0.0.1:8001",
+
+    "https://www.algotrde.com",
+
+    "http://www.algotrde.com",
+]
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'corsheaders.middleware.CorsMiddleware',
-    
+
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'allauth.account.middleware.AccountMiddleware',  # Add this line to include AccountMiddleware
+    
+
+    
+    
+    
 ]
 
-CORS_ORIGIN_WHITELIST = ["*"]
 
+CORS_ORIGIN_WHITELIST = ["*"]
+CROS_ORIGIN_ALLOW_ALL = True
 
 ROOT_URLCONF = 'superlogo.urls'
+# AUTH_USER_MODEL = 'home.User'
+# settings.py
 AUTH_USER_MODEL = 'home.User'
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -92,8 +120,9 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'superlogo.wsgi.application'
+ASGI_APPLICATION = 'superlogo.asgi.application'
 
-
+CORS_ALLOW_CREDENTIALS = True
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
@@ -163,6 +192,11 @@ STATICFILES_DIRS = [
 ]
 STATIC_ROOT = 'home/static'
 
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
+
+
+
 
 MESSAGE_TAGS = {
     messages.DEBUG: 'secondary',
@@ -193,3 +227,18 @@ EMAIL_HOST_USER = 'tufailakram8190@gmail.com'
 EMAIL_HOST_PASSWORD = 'sxwwgptgifiljqsj'
 
 SITE_ID = 1
+
+# settings.py
+
+# Use channels layer as the default backend for Django.
+ASGI_APPLICATION = 'your_project.routing.application'
+
+# Channels Redis settings
+CHANNEL_LAYERS = {
+   'default': {
+       'BACKEND': 'channels_redis.core.RedisChannelLayer',
+       'CONFIG': {
+           "hosts": [('localhost', 6379)],
+       },
+   },
+}
