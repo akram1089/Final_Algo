@@ -15102,22 +15102,28 @@ $("#Activate_broker_btn").click()
           thead.append(headerRow);
           table.append(thead);
 
-          // Loop through values row-wise and create table rows and cells
-          for (var i = 0; i < maxValuesCount; i++) {
-            var row = $("<tr>");
+  // Loop through values row-wise and create table rows and cells
+for (var i = 0; i < maxValuesCount; i++) {
+  var row = $("<tr>");
 
-            // Loop through each day's values
-            _result.forEach(function (dayData) {
-              var dayKey = Object.keys(dayData)[0]; // Extract day key outside the loop
-              var values = dayData[dayKey];
+  // Loop through each day's values
+  _result.forEach(function (dayData) {
+    var dayKey = Object.keys(dayData)[0]; // Extract day key outside the loop
+    var values = dayData[dayKey];
 
-              var values_con = values[i] < 0 ? "text-danger" : "text-success"
-              var cell = $("<td>").text(values[i] ? values[i].toFixed(0) : "").addClass(values_con).css("font-size", "12px");
-              row.append(cell);
-            });
+    var values_con = values[i] < 0 ? "text-danger" : "text-success";
+    var cell = $("<td>").addClass("cell-container"); // Create a td element and add a class for styling
 
-            table.append(row);
-          }
+    // Add a div element inside the td
+    var div = $("<div>").text(values[i] ? values[i].toFixed(0) : "").addClass(values_con).css("font-size", "12px");
+
+    cell.append(div); // Append the div to the td
+    row.append(cell); // Append the td to the row
+  });
+
+  table.append(row);
+}
+
           $('table.payoff_table_main_table tr').each(function () {
             // Find the first <td> in each <tr> and remove the specified class
             $(this).find('td:first').removeClass("text-success");
