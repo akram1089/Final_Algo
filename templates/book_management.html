@@ -1,0 +1,226 @@
+{% extends "base_admin_panel.html" %}
+{% load static %}
+{% block dashboard_admin_body %}
+
+<section class="mt-5">
+    
+
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="mb-3">
+                <label for="id_title">Title:</label>
+                <input type="text" name="title" id="id_title" class="form-control" required>
+            </div>
+            <div class="mb-3">
+                <label for="id_description">Description:</label>
+                <textarea name="description" id="id_description" class="form-control" required></textarea>
+            </div>
+
+            <div class="mb-3">
+                <label for="id_image">Image:</label>
+                <input type="file" name="image" id="id_image" class="form-control" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="id_page">Page:</label>
+                <input type="number" name="page" id="id_page" class="form-control" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="id_read_sample">Read Sample (Enter URLs, one per line):</label>
+                <textarea name="read_sample" id="id_read_sample" class="form-control"></textarea>
+            </div>
+
+            <div class="mb-3">
+                <label for="id_book_category">Book Category:</label>
+                <select name="book_category" id="id_book_category" class="form-control" required>
+                    <option value="Trading">Trading</option>
+                    <option value="Option Trading">Option Trading</option>
+                    <option value="Investment">Investment</option>
+                    <option value="Technical Analysis">Technical Analysis</option>
+                </select>
+            </div>
+
+            <button class="btn btn-primary" type="submit" id="submitBtn">Submit</button>
+        </div>
+
+
+        <div class="col-lg-6">
+            <table class="table" id="bookTable">
+                <thead>
+                    <tr>
+                        <th scope="col">Id</th>
+                        <th scope="col">Title</th>
+                        <th scope="col">Description</th>
+                        <th scope="col">Image URL</th>
+                        <th scope="col">Read Sample</th>
+                        <th scope="col">Book Category</th>
+                        <th scope="col">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</section>
+
+<script>
+
+    $(document).ready(function () {
+
+        // $('#submitBtn').on('click', function () {
+
+
+        //     const readSampleValue = $('#id_read_sample').val();
+        //     let readSampleArray = [];
+
+        //     try {
+        //         readSampleArray = JSON.parse(readSampleValue);
+
+        //         // Ensure readSampleArray is an array
+        //         if (!Array.isArray(readSampleArray)) {
+        //             throw new Error('Invalid JSON format for read_sample');
+        //         }
+        //     } catch (error) {
+        //         console.error('Error parsing read_sample:', error);
+        //     }
+
+        //     // Collect form data
+        //     const formData = {
+        //         title: $('#id_title').val(),
+        //         description: $('#id_description').val(),
+        //         imgUrl: $('#id_imgUrl').val(),
+        //         page: $('#id_page').val(),
+        //         read_sample: readSampleArray,
+        //         book_category: $('#id_book_category').val(),
+        //     };
+
+        //     // Send a POST request using AJAX
+        //     const csrftoken = getCookie('csrftoken');
+        //     $.ajax({
+        //         type: 'POST',
+        //         url: 'http://localhost:8001/books_list',  // Adjust the URL to your API endpoint
+        //         contentType: 'application/json',
+        //         data: JSON.stringify(formData),
+        //         headers: {
+        //             'X-CSRFToken': csrftoken,
+        //         },
+        //         success: function (response) {
+        //             // Handle success
+        //             console.log('Data sent successfully:', response);
+        //         },
+        //         error: function (error) {
+        //             // Handle error
+        //             console.error('Error sending data:', error);
+        //         }
+        //     });
+        // });
+
+
+
+
+    $('#submitBtn').on('click', function () {
+    // Create a FormData object to handle file uploads
+    const formData = new FormData();
+
+    // Add non-file fields to FormData
+    formData.append('title', $('#id_title').val());
+    formData.append('description', $('#id_description').val());
+    formData.append('page', $('#id_page').val());
+    formData.append('book_category', $('#id_book_category').val());
+
+    // Add main book image
+    const mainImageInput = $('#id_image')[0].files[0];
+    formData.append('image', mainImageInput);
+
+    // Add read samples
+    const readSampleUrls = $('#id_read_sample').val().split('\n').map(url => url.trim());
+    console.log(readSampleUrls);
+    formData.append('read_sample', JSON.stringify(readSampleUrls));
+    
+    
+    // Send a POST request using AJAX with FormData
+    const csrftoken = getCookie('csrftoken');
+    $.ajax({
+        type: 'POST',
+        url: '/books_list',  // Adjust the URL to your API endpoint
+        processData: false,  // Prevent jQuery from processing the data
+        contentType: false, // Prevent jQuery from setting contentType
+        data: formData,
+        headers: {
+            'X-CSRFToken': csrftoken,
+        },
+        success: function (response) {
+
+            $('#id_title').val('');
+            $('#id_description').val('');
+            $('#id_page').val('');
+            $('#id_book_category').val('');
+            $('#id_image').val('');
+            $('#id_read_sample').val('');
+            // Handle success
+            console.log('Data sent successfully:', response);
+        },
+        error: function (error) {
+            // Handle error
+            console.error('Error sending data:', error);
+        }
+    });
+});
+
+
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    // Check if the cookie name matches the expected format
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+
+        function fetchBooks() {
+    $.ajax({
+      type: 'GET',
+      url: 'http://localhost:8001/books_list',  // Adjust the URL to your API endpoint
+      success: function (data) {
+        // Clear existing table data
+        $('#bookTable tbody').empty();
+
+        // Iterate through each book and append a new row to the table
+        data.forEach(function (book) {
+          $('#bookTable tbody').append(
+            `<tr>
+               <td>${book.id}</td>
+               <td>${book.title}</td>
+               <td>${book.description}</td>
+               <td>${book.imgUrl}</td>
+               <td>${book.page}</td>
+               
+               <td>${book.book_category}</td>
+             </tr>`
+          );
+        });
+      },
+      error: function (error) {
+        console.error('Error fetching data:', error);
+      }
+    });
+  }
+
+  // Fetch data when the page loads
+  fetchBooks();
+
+    });
+</script>
+{% endblock dashboard_admin_body %}
