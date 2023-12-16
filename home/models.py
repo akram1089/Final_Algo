@@ -293,3 +293,39 @@ class PopupContent(models.Model):
 
     def __str__(self):
             return self.title
+
+
+
+from django.utils import timezone
+
+class Book(models.Model):
+    TRADING = 'Trading'
+    OPTION_TRADING = 'Option Trading'
+    INVESTMENT = 'Investment'
+    TECHNICAL_ANALYSIS = 'Technical Analysis'
+
+    CATEGORY_CHOICES = [
+        (TRADING, 'Trading'),
+        (OPTION_TRADING, 'Option Trading'),
+        (INVESTMENT, 'Investment'),
+        (TECHNICAL_ANALYSIS, 'Technical Analysis'),
+    ]
+
+    title = models.CharField(max_length=255)
+    description = models.TextField()
+    image = models.ImageField(upload_to='book_images/', blank=True )  # Set your desired upload path
+    page = models.IntegerField()
+    read_sample = models.CharField(max_length=2000)
+    book_category = models.CharField(
+        max_length=255,
+        choices=CATEGORY_CHOICES,
+        default=TRADING,  # Set the default category if needed
+    )
+    updated_at = models.DateTimeField(default=timezone.now)
+
+    def save(self, *args, **kwargs):
+        self.updated_at = timezone.now()
+        super().save(*args, **kwargs)
+    
+    def __str__(self):
+        return self.title

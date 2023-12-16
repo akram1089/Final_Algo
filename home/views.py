@@ -8416,3 +8416,37 @@ class BanListView(APIView):
 
         return JsonResponse(data)
 
+
+
+def book_management(request):
+    return render(request, "book_management.html")
+
+
+
+from rest_framework import status
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from .models import Book
+from .serializers import BookSerializer
+from rest_framework import viewsets
+from rest_framework.parsers import MultiPartParser
+# class BookListCreateView(viewsets.ModelViewSet):
+#     serializer_class = BookSerializer
+#     queryset = Book.objects.all()
+
+class BookListCreateView(APIView):
+    parser_classes = [MultiPartParser]
+    def get(self, request, *args, **kwargs):
+        # Handle GET request, return a list of books or any other desired response
+        books = Book.objects.all()
+        serializer = BookSerializer(books, many=True)
+        return Response(serializer.data)
+
+    def post(self, request, *args, **kwargs):
+        serializer = BookSerializer(data=request.data)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

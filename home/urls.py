@@ -8,6 +8,7 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.views.static import serve
 from .views import MarketStatusView
 from .views import BanListView
+from .views import BookListCreateView
 urlpatterns = [
     path('', views.home, name="home"),
     path('features', views.features, name="features"),
@@ -497,6 +498,10 @@ urlpatterns = [
      path('books', views.books, name='books'),
      path('investment_book', views.investment_book, name='investment_book'),
      path('ban-list/', BanListView.as_view(), name='ban-list'),
+
+     path('book_management', views.book_management, name='book_management'),
+     path('books', views.books, name='books'),
+     path('books_list', BookListCreateView.as_view(), name='books_list'),
 
      
 
