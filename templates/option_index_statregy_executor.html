@@ -4751,11 +4751,12 @@
       font-weight: 600;
     }
 
+       .deploy_btn,
     .reset_button {
 
       background: linear-gradient(180deg, #4399eb, #5cadfb);
       color: #fff;
-      padding: 0px 57px;
+      padding: 0px 27px;
       text-align: center;
       font-size: 13px;
       height: 34px;
@@ -4777,7 +4778,7 @@
     .save_strategy {
       background: #fff;
       color: #4399eb;
-      padding: 0px 57px;
+      padding: 0px 27px;
       text-align: center;
       font-size: 13px;
       height: 34px;
@@ -5033,6 +5034,7 @@
               .left_positions_reset_notes button,
               .saveNotes,
               .editNotes,
+           
               .updateStrategy,
               .saveStrategy {
                 display: flex !important;
@@ -5056,6 +5058,7 @@
                 font-weight: 600;
               }
 
+              .deploy_btn:hover,
               .reset_button:hover,
               .left_positions_reset_notes button:hover,
               .saveNotes:hover,
@@ -5654,10 +5657,18 @@
               <p class="fs-14 fw-500 label-color-6">Net Credit:</p>
               <p class="fs-14 fw-500 label-color-6" id="net_credit">null</p>
             </div>
+
+
+            <div class="d-flex align-items-center justify-content-between" id="brokrage_needed">
+              <p class="fs-14 fw-500 label-color-6">Approx Brokerage:</p>
+              <p class="fs-14 fw-500 label-color-6" id="brokrage_fees">40</p>
+            </div>
             <div class="d-flex align-items-center justify-content-between" id="margin_needed">
               <p class="fs-14 fw-500 label-color-6">Margin required:</p>
               <p class="fs-14 fw-500 label-color-6" id="margin_required">null</p>
             </div>
+
+
           </div>
         </div>
         <div class="main_bottom_strategy_positions" style="display: none;">
@@ -5669,6 +5680,8 @@
               Execute Order
             </p>
           </button>
+
+          <button class="deploy_btn">Deploy</button>
 
         </div>
 
@@ -5991,7 +6004,7 @@
           </div>
           <div id="payoff_table" style="width: 100%; height: 400px;     overflow: auto;">
 
-            <table class="payoff_table_main_table table table-striped-custom">
+            <table class="payoff_table_main_table table">
               <thead>
                 <tr>
                   <th>
@@ -15167,29 +15180,49 @@ for (var i = 0; i < maxValuesCount; i++) {
             dateForTH.setDate(currentDate.getDate() + index);
 
             // Format the date as "On Target Date Mon DD MMM"
-            var formattedDate = "On Date - " + getDayOfWeek(dateForTH) + " " + formatDate(dateForTH);
+            var formattedDate =   getDayOfWeek(dateForTH) + ", " + formatDate(dateForTH);
 
             // Display the formatted date
             $(this).text(formattedDate);
+
+
         });
 
+
+        
         // Function to get the day of the week
         function getDayOfWeek(date) {
             var daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
             return daysOfWeek[date.getDay()];
         }
 
-        // Function to format the date as "DD MMM"
+        // Function to format the date as "DDth MMM"
         function formatDate(date) {
+            var day = date.getDate();
+            var suffix = getDaySuffix(day);
             var options = { day: 'numeric', month: 'short' };
-            return date.toLocaleDateString('en-US', options);
+            return date.toLocaleDateString('en-US', options).replace(/\b\d{1,2}\b/, day + suffix);
         }
 
-        // Function to format the dropdown value as "Thu 21 Dec"
+        // Function to format the dropdown value as "Thu 21th Dec"
         function formatDropdownDate(value) {
             var date = new Date(value);
             var options = { weekday: 'short', day: 'numeric', month: 'short' };
             return date.toLocaleDateString('en-US', options);
+        }
+
+        // Function to get the day suffix (st, nd, rd, th)
+        function getDaySuffix(day) {
+            if (day >= 11 && day <= 13) {
+                return 'th';
+            }
+            var lastDigit = day % 10;
+            switch (lastDigit) {
+                case 1: return 'st';
+                case 2: return 'nd';
+                case 3: return 'rd';
+                default: return 'th';
+            }
         }
           // Get the value of closest_strike_price
 
