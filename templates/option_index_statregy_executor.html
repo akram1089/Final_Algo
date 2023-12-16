@@ -15123,14 +15123,55 @@ $("#Activate_broker_btn").click()
             $(this).find('td:first').removeClass("text-success");
           });
 
+          var table = $('.payoff_table_main_table');
+        var firstRow = table.find('thead tr');
 
+        // Select all th elements
+        var thElements = firstRow.find('th').slice(1, -1);
 
+        // Select the last th element
+        var thLastElement = firstRow.find('th:last');
 
+        // Assume #optionExpiryDropdown is an input field
+        var dropdownValue = $('#optionExpiryDropdown').val();
 
+        // Set the last th element text to the formatted dropdown value
+        thLastElement.text(`On Expiry - ${formatDropdownDate(dropdownValue)}`);
 
+        // Get the current date
+        var currentDate = new Date();
 
+        // Display dates based on the number of th elements
+        thElements.each(function (index) {
+            // Calculate the date for each th
+            var dateForTH = new Date(currentDate);
+            dateForTH.setDate(currentDate.getDate() + index);
 
+            // Format the date as "On Target Date Mon DD MMM"
+            var formattedDate = "On Date - " + getDayOfWeek(dateForTH) + " " + formatDate(dateForTH);
 
+            // Display the formatted date
+            $(this).text(formattedDate);
+        });
+
+        // Function to get the day of the week
+        function getDayOfWeek(date) {
+            var daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+            return daysOfWeek[date.getDay()];
+        }
+
+        // Function to format the date as "DD MMM"
+        function formatDate(date) {
+            var options = { day: 'numeric', month: 'short' };
+            return date.toLocaleDateString('en-US', options);
+        }
+
+        // Function to format the dropdown value as "Thu 21 Dec"
+        function formatDropdownDate(value) {
+            var date = new Date(value);
+            var options = { weekday: 'short', day: 'numeric', month: 'short' };
+            return date.toLocaleDateString('en-US', options);
+        }
           // Get the value of closest_strike_price
 
 
@@ -15315,9 +15356,11 @@ $("#Activate_broker_btn").click()
     // Select the elements
   });
 </script>
-
 <script>
+  $(document).ready(function () {
+      // Select the table and the first row inside the thead
 
+  });
 </script>
 
 {% endblock dashboard_body %}
