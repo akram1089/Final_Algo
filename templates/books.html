@@ -81,7 +81,8 @@
         border-radius: 1rem;
         display: flex;
     flex-direction: column;
-    justify-content: space-around;
+
+    justify-content: space-between;
     }
 
     .split-card-outlined {
@@ -232,6 +233,11 @@
         .content-grid-3 {
             grid-template-columns: repeat(5, minmax(250px, 1fr));
         }
+    }
+
+    #title_books{
+        padding: 6px 1.5rem;
+
     }
 </style>
 
@@ -831,86 +837,99 @@
                     // Iterate through each book and append a new row to the table
                     data.forEach(function (book) {
                         var cardHtml = `
-        <div role="listitem" class="w-dyn-item" data-title="${book.title}" data-category="${book.book_category.toLowerCase()}">
-
-            <a href="#" class="split-card-outlined w-inline-block">
-        <div class="card_section background-color-gray100">
-            <div class="card-category-head card-library-head">
-                <img width="198" src="${book.image}" alt="" style="min-height:300px">
-            </div>
-        </div>
-        <div class="card_section">
-            <div class="margin-bottom margin-xsmall">
-                <h3 class="heading-xxsmall">${book.title}</h3>
-            </div>
-            <div class="card-meta-items-wrapper text-color-gray500 card-meta">
-                <div class="text-size-small">${book.page} pages</div>
-                <div class="text-size-small text-style-2lines">${book.description}</div>
-                <a href="#" class="read-more" data-bs-toggle="modal" data-bs-target="#bookDetailsModal_${book.id}">Read more</a>
-            </div>
-        </div>
-
-                </div>
-            </a>
-        </div>
 
 
-        <div class="modal fade" id="bookDetailsModal_${book.id}" tabindex="-1" aria-labelledby="bookDetailsModalLabel_${book.id}" aria-hidden="true">
-            <div class="modal-dialog modal-xl modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h3 class="modal-title heading-xxsmall" id="bookDetailsModalLabel_${book.id}">${book.title}</h3>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+
+                        <div role="listitem" class="w-dyn-item" data-title="${book.title}"
+        data-category="${book.book_category.toLowerCase()}">
+
+
+        <a href="#" class="split-card-outlined w-inline-block">
+            <div class="main_img_title">
+                <div class="card_section background-color-gray100">
+                    <div class="card-category-head card-library-head">
+                        <img width="198" src="${book.image}" alt="" style="min-height:300px">
                     </div>
-                    <div class="modal-body">
-                        <div class="row">
-                           <div class="col-lg-6">
-                             <div class="card_section background-color-gray100">
-                               <div class="card-category-head card-library-head">
-                                <img width="198" src="${book.image}" alt="" style="min-height:300px">
-                               </div>
-                               </div>
-                               <a href="#" class="btn btn-primary read_sample_btn mt-3" data-bs-toggle="modal" data-bs-target="#readSampleModal_${book.id}">Read Sample</a>
-                           </div>
-                           <div class="col-lg-6">
-                               <div class="collapsed">${book.description}</div>
-                                 <div class="card-meta-items-wrapper text-color-gray500 mt-3">
-                                   <div class="text-size-small">${book.page} pages</div>
-                                 </div>
-                               </div>
-                           </div>
-                         <!-- Add other book details as needed -->
-                       </div>
+                </div>
+
+                <div class="margin-bottom margin-xsmall" id="title_books">
+                    <h3 class="heading-xxsmall">${book.title}</h3>
                 </div>
             </div>
-        </div>
+
+
+
+            <div class="card_section">
+
+                <div class="card-meta-items-wrapper text-color-gray500 card-meta">
+                    <div class="text-size-small">${book.page} pages</div>
+                    <div class="text-size-small text-style-2lines">${book.description}</div>
+                    <a href="#" class="read-more" data-bs-toggle="modal"
+                        data-bs-target="#bookDetailsModal_${book.id}">Read
+                        more</a>
+                </div>
+            </div>
+
+        </a>
+
+    </div>
+
+                        <div class="modal fade" id="bookDetailsModal_${book.id}" tabindex="-1" aria-labelledby="bookDetailsModalLabel_${book.id}" aria-hidden="true">
+                            <div class="modal-dialog modal-xl modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h3 class="modal-title heading-xxsmall" id="bookDetailsModalLabel_${book.id}">${book.title}</h3>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="row">
+                                        <div class="col-lg-6">
+                                            <div class="card_section background-color-gray100">
+                                            <div class="card-category-head card-library-head">
+                                                <img width="198" src="${book.image}" alt="" style="min-height:300px">
+                                            </div>
+                                            </div>
+                                            <a href="#" class="btn btn-primary read_sample_btn mt-3" data-bs-toggle="modal" data-bs-target="#readSampleModal_${book.id}">Read Sample</a>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <div class="collapsed">${book.description}</div>
+                                                <div class="card-meta-items-wrapper text-color-gray500 mt-3">
+                                                <div class="text-size-small">${book.page} pages</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- Add other book details as needed -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
         
 
-<div class="modal fade" id="readSampleModal_${book.id}" tabindex="-1" aria-labelledby="readSampleModalLabel_${book.id}" aria-hidden="true" style="z-index: 999999999999999999999999999999">
-    <div class="modal-dialog modal-xl modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="readSampleModalLabel_${book.id}">Read Sample</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                ${book.read_sample ?
-        `<div class="row">
-            ${JSON.parse(book.read_sample).map((imageUrl, index) => `
-                <div class="col-lg-4 mb-3">
-                    <img src="${imageUrl.trim()}" class="img-fluid" alt="Read Sample Image ${index + 1}" 
-                        onerror="console.error('Error loading image:', '${imageUrl.trim()}')">
-                </div>
-            `).join('')}
-        </div>` :
-        '<p>No read sample available</p>'
-    }
-</div>
+                        <div class="modal fade" id="readSampleModal_${book.id}" tabindex="-1" aria-labelledby="readSampleModalLabel_${book.id}" aria-hidden="true" style="z-index: 999999999999999999999999999999">
+                            <div class="modal-dialog modal-xl modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="readSampleModalLabel_${book.id}">Read Sample</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        ${book.read_sample ?
+                                `<div class="row">
+                                    ${JSON.parse(book.read_sample).map((imageUrl, index) => `
+                                        <div class="col-lg-4 mb-3">
+                                            <img src="${imageUrl.trim()}" class="img-fluid" alt="Read Sample Image ${index + 1}" 
+                                                onerror="console.error('Error loading image:', '${imageUrl.trim()}')">
+                                        </div>
+                                    `).join('')}
+                                </div>` :
+                                '<p>No read sample available</p>'
+                            }
+                        </div>
 
-        </div>
-    </div>
-</div>
+                                </div>
+                            </div>
+                        </div>
 
 
 
