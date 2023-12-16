@@ -502,6 +502,7 @@ urlpatterns = [
      path('book_management', views.book_management, name='book_management'),
      path('books', views.books, name='books'),
      path('books_list', BookListCreateView.as_view(), name='books_list'),
+     path('books_list/<int:book_id>/', views.delete_book, name='delete_book'),
 
      
 

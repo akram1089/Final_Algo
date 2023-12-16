@@ -8450,3 +8450,24 @@ class BookListCreateView(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+
+from django.http import JsonResponse
+from django.shortcuts import get_object_or_404
+from django.views.decorators.http import require_POST
+
+from .models import Book
+
+@csrf_exempt
+def delete_book(request, book_id):
+    # Get the book object or return a 404 response if not found
+    book = get_object_or_404(Book, id=book_id)
+
+    # Delete the book
+    book.delete()
+
+    # Return a JSON response indicating success
+    return JsonResponse({'message': 'Book deleted successfully'})
+
