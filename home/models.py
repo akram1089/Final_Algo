@@ -303,11 +303,13 @@ class Book(models.Model):
     OPTION_TRADING = 'Option Trading'
     INVESTMENT = 'Investment'
     TECHNICAL_ANALYSIS = 'Technical Analysis'
+    BEST_SELLERS = 'Best Sellers'
 
     CATEGORY_CHOICES = [
         (TRADING, 'Trading'),
         (OPTION_TRADING, 'Option Trading'),
         (INVESTMENT, 'Investment'),
+        (BEST_SELLERS, 'Best Sellers'),
         (TECHNICAL_ANALYSIS, 'Technical Analysis'),
     ]
 
@@ -315,7 +317,7 @@ class Book(models.Model):
     description = models.TextField()
     image = models.ImageField(upload_to='book_images/', blank=True )  # Set your desired upload path
     page = models.IntegerField()
-    read_sample = models.CharField(max_length=2000)
+    read_sample = models.CharField(max_length=8000)
     book_category = models.CharField(
         max_length=255,
         choices=CATEGORY_CHOICES,
