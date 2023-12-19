@@ -9,6 +9,8 @@ from django.views.static import serve
 from .views import MarketStatusView
 from .views import BanListView
 from .views import BookListCreateView
+from .views import Fetch_Future_Data
+from .views import Fetch_Future_Unique_Data
 urlpatterns = [
     path('', views.home, name="home"),
     path('features', views.features, name="features"),
@@ -503,6 +505,8 @@ urlpatterns = [
      path('books', views.books, name='books'),
      path('books_list', BookListCreateView.as_view(), name='books_list'),
      path('books_list/<int:book_id>/', views.delete_book, name='delete_book'),
+     path('fetch-future-data', Fetch_Future_Data.as_view(), name='fetch-future-data'),
+     path('fetch-future-unique-data', Fetch_Future_Unique_Data.as_view(), name='fetch-future-unique-data'),
 
      
 

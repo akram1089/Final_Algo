@@ -182,7 +182,8 @@
     background-color: #004597f7 !important;
     color: white !important;
   }
-  .background_opiton_closest_payoff_table{
+
+  .background_opiton_closest_payoff_table {
     background: #dddddd9c;
   }
 
@@ -227,6 +228,13 @@
     display: flex;
     gap: 0.2rem;
     background: #E4F3EF;
+    font-size: 16px;
+    padding: 6px 5px;
+  }
+  .main_futures_price_as_per_expiries {
+    display: flex;
+    gap: 0.2rem;
+    background: #E8F7E4;
     font-size: 16px;
     padding: 6px 5px;
   }
@@ -527,6 +535,24 @@
     margin-bottom: 0.5rem;
   }
 
+  .futures_segements_main {
+    position: relative;
+    width: 124px;
+    display: flex;
+    gap: 0.5rem;
+    height: 2.5rem !important;
+    margin-bottom: 0.5rem;
+  }
+
+  .futures_segements_main_expiry {
+    position: relative;
+    width: 144px;
+    display: flex;
+    gap: 0.5rem;
+    height: 2.5rem !important;
+    margin-bottom: 0.5rem;
+  }
+
   .add_broker_api_fields {
     position: relative;
 
@@ -544,6 +570,8 @@
     margin-bottom: 0.5rem;
   }
 
+  .futures_segements_main label,
+  .futures_segements_main_expiry label,
   .strategy_inputs label,
   .add_broker_api_fields label,
   .textOnInput_edit label,
@@ -561,6 +589,8 @@
   }
 
   .strategy_inputs select:focus,
+  .futures_segements_main select:focus,
+  .futures_segements_main_expiry select:focus,
   .add_broker_api_fields select:focus,
   .textOnInput_edit select:focus {
     box-shadow: none !important;
@@ -568,6 +598,8 @@
 
   .add_broker_api_fields label:after,
   .strategy_inputs label:after,
+  .futures_segements_main label:after,
+  .futures_segements_main_expiry label:after,
   .textOnInput_edit label:after,
   .order_place_input label:after {
     content: " ";
@@ -1263,17 +1295,22 @@
   }
 
   .payoff_table_main_table tr td:nth-child(n+2):nth-child(-n+7) {
-        text-align: center;
-    }
+    text-align: center;
+  }
+
   .payoff_table_main_table thead th:nth-child(n+2):nth-child(-n+7) {
-        text-align: center;
-    }
-    .payoff_table_main_table td:nth-child(8) {
-        text-align: center; /* Set to 'end' for right alignment */
-    }
-    .payoff_table_main_table thead th:nth-child(8) {
-        text-align: center; /* Set to 'end' for right alignment */
-    }
+    text-align: center;
+  }
+
+  .payoff_table_main_table td:nth-child(8) {
+    text-align: center;
+    /* Set to 'end' for right alignment */
+  }
+
+  .payoff_table_main_table thead th:nth-child(8) {
+    text-align: center;
+    /* Set to 'end' for right alignment */
+  }
 </style>
 <div class="title my-2 d-flex">
   <h5>Option Strategy Tester</h5>
@@ -1364,6 +1401,12 @@
             <div id="closen_expiry_date"></div>
           </div>
 
+          <div class="main_futures_price_as_per_expiries">
+            <p class="futures_title">Futures :</p>
+
+            <div class="futures_ltp"></div>
+          </div>
+
           <div class="main_max_pain_strategies">
             <div class="max_pain_strategies d-flex align-items-center gap-1">
               <p>Max Pain : </p>
@@ -1409,30 +1452,8 @@
 
         </div>
       </div>
-      <div class="modal fade" id="saved_startegyModal" tabindex="-1" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h1 class="modal-title fs-5" id="exampleModalLabel">Saved Strategies</h1>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body p-0">
-
-              <div class="all_strategies">
-
-              </div>
-
-            </div>
-
-          </div>
-        </div>
-      </div>
-
-    </div>
 
 
-    <div class="right_side_top_strategies mt-3">
       <style>
         .zerodha_add_api {
           display: flex;
@@ -1484,109 +1505,66 @@
           border: 1px solid red;
         }
       </style>
-      <button class="d-flex align-items-center" id="saveStrategies"><i class='bx bxs-bookmark'></i>
-        <p style="margin-bottom: 0;">Strategies saved</p>
-      </button>
-      <button class="btn_outline_primary" type="button" data-bs-toggle="collapse" id="option_chain_button">
-        Option Chain
-        <i class="bx bx-chevron-down"></i>
-      </button>
 
-      <button class="btn_add_broker" data-bs-toggle="offcanvas" data-bs-target="#add_api" aria-controls="add_api">
-        Add Broker
-      </button>
+      <style>
+        .dismiss_active_modal {
+          display: flex;
+          padding: 5px 10px;
+          position: relative;
+        }
 
-      <div class="activate_broker_toggle_main_btn">
+        .dismiss_icon_active_modal {
+          font-size: 18px;
+          transform: rotate(45deg);
+          cursor: pointer;
+        }
 
+        .triangle-up-active-modal {
+          width: 0;
+          right: 12px;
+          height: 0;
+          position: absolute;
+        }
 
+        .triangle-up-active-modal::before {
+          content: "";
+          position: absolute;
+          width: 0;
+          height: 0;
+          top: -2px;
+          margin-left: -0.5em;
 
-        <button class="btn_outline_primary" class="all_api_details" data-bs-toggle="collapse" id="Activate_broker_btn">
-          Activate Broker <i class="bx bx-chevron-down"></i>
-        </button>
+          box-sizing: border-box;
+          border: 11px solid #ffecec00;
+          border-color: transparent transparent #ffffff #ffffff;
+          transform-origin: 0 0;
+          box-shadow: -3px 3px 3px 0 #4399eb3b;
+          transform: rotate(135deg);
+        }
 
-        <style>
-          .dismiss_active_modal {
-            display: flex;
-            padding: 5px 10px;
-            position: relative;
-          }
+        #active_broker_modal {
+          width: max-content;
+          box-shadow: 0px 0px 1px 2px #4399eb3b;
+          position: absolute;
+          right: 153px;
+          z-index: 99;
+          border-radius: 8px;
+          background-color: white;
+          margin: 12px 0 0 0;
+          padding: 0 0 31px 0;
+        }
 
-          .dismiss_icon_active_modal {
-            font-size: 18px;
-            transform: rotate(45deg);
-            cursor: pointer;
-          }
-
-          .triangle-up-active-modal {
-            width: 0;
-            right: 12px;
-            height: 0;
-            position: absolute;
-          }
-
-          .triangle-up-active-modal::before {
-            content: "";
-            position: absolute;
-            width: 0;
-            height: 0;
-            top: -2px;
-            margin-left: -0.5em;
-
-            box-sizing: border-box;
-            border: 11px solid #ffecec00;
-            border-color: transparent transparent #ffffff #ffffff;
-            transform-origin: 0 0;
-            box-shadow: -3px 3px 3px 0 #4399eb3b;
-            transform: rotate(135deg);
-          }
-
-          #active_broker_modal {
-            width: max-content;
-            box-shadow: 0px 0px 1px 2px #4399eb3b;
-            position: absolute;
-            right: 153px;
-            z-index: 99;
-            border-radius: 8px;
-            background-color: white;
-            margin: 12px 0 0 0;
-            padding: 0 0 31px 0;
-          }
-
-          #overlay {
-            display: none;
-            position: fixed;
-            z-index: 99;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-          }
-        </style>
-        <div id="overlay"></div>
-
-        <div class="" id="active_broker_modal" style="display: none;">
-          <div class="dismiss_active_modal">
-            <!-- <i class="bx bx-plus dismiss_icon_active_modal"></i> -->
-            <div class="triangle-up-active-modal"></div>
-          </div>
-          <div class="modal_dialog">
-            <div class="modal_content">
-
-
-              <div class="all_broker">
-                <div id="zerodha_data_display"></div>
-              </div>
-
-
-
-
-
-            </div>
-          </div>
-        </div>
-
-      </div>
+        #overlay {
+          display: none;
+          position: fixed;
+          z-index: 99;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background: rgba(0, 0, 0, 0.5);
+        }
+      </style>
 
       <style>
         #order_btn {
@@ -1646,13 +1624,218 @@
         .main_exit_positions {
           margin-left: 30px;
         }
+
+        .main_futures_option_chains {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+        }
+
+        .futures_segements_main {
+          margin-top: 1rem;
+        }
+
+        .futures_segements_main_expiry {
+          margin-top: 1rem;
+        }
+
+        .main_futures_inputs {
+          display: flex;
+          gap: 0.5rem;
+          align-items: center;
+        }
+
+
+        #callBuyRadio,
+        #putBuyRadio {
+
+          border-radius: 13% !important;
+          cursor: pointer;
+        }
+
+        #callBuyRadio:checked,
+        #putBuyRadio:checked {
+          background-color: #00b865 !important;
+          border-color: #00b865 !important;
+        }
+
+        #callBuyRadio:focus,
+        #putBuyRadio:focus {
+          box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+          background-color: #00b865 !important;
+          border-color: #00b865 !important;
+        }
+
+        #callSellRadio,
+        #putSellRadio {
+
+          border-radius: 13% !important;
+          cursor: pointer;
+
+        }
+
+        #callSellRadio:focus,
+        #putSellRadio:focus {
+          background-color: #e6191e !important;
+          border-color: #e6191e !important;
+          box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+        }
+
+        #callSellRadio:checked,
+        #putSellRadio:checked {
+          background-color: #e6191e !important;
+          border-color: #e6191e !important;
+
+        }
+
+        .main_futures_buy_sell {
+          display: flex;
+          gap: 0.3rem;
+        }
+
+        .main_futures_buy_sell.form-check label {
+          margin-bottom: 0 !important;
+        }
       </style>
 
 
-      <button id="order_btn">Order History</button>
 
+
+      <div class="modal fade" id="saved_startegyModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1 class="modal-title fs-5" id="exampleModalLabel">Saved Strategies</h1>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-0">
+
+              <div class="all_strategies">
+
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+      </div>
 
     </div>
+
+
+    <div class="main_futures_option_chains mt-2">
+
+      <div class="main_futures_inputs">
+
+        <div class="futures_segements_main">
+          <label for="">Select Segment</label>
+          <select class="form-select">
+
+            <option value="futures">Futures</option>
+          </select>
+        </div>
+
+
+        <div class="futures_segements_main_expiry">
+          <label for="">Select Expiry</label>
+          <select class="form-select futures_expiry">
+
+
+          </select>
+        </div>
+
+        <div class="main_futures_buy_sell">
+          <div class="form-check mb-0">
+            <input class="form-check-input" type="radio" name="callAction" id="callBuyRadio" value="buy" checked>
+            <label class="form-check-label mb-0" for="callBuyRadio">
+              Buy
+            </label>
+          </div>
+          <div class="form-check mb-0">
+            <input class="form-check-input" type="radio" name="callAction" id="callSellRadio" value="sell">
+            <label class="form-check-label mb-0" for="callSellRadio">
+              Sell
+            </label>
+          </div>
+        </div>
+
+        <div class="innerStraddle_lot_size">
+          <p class="fs-6 lot_title">Qty:</p>
+          <div class="counter_straddle d-flex justify-content-center gap-1">
+            <button class="btn" id="decrement">
+              <i class="bx bx-minus"></i>
+            </button>
+            <input type="text" name="" id="counter_input" min="1" disabled="">
+            <button class="btn" id="increment">
+              <i class="bx bx-plus"></i>
+            </button>
+          </div>
+        </div>
+
+        <button class="btn btn-primary" id="future_add_positions">ADD POSITION</button>
+      </div>
+
+
+
+      <div class="right_side_top_strategies">
+
+        <button class="d-flex align-items-center" id="saveStrategies"><i class='bx bxs-bookmark'></i>
+          <p style="margin-bottom: 0;">Strategies saved</p>
+        </button>
+        <button class="btn_outline_primary" type="button" data-bs-toggle="collapse" id="option_chain_button">
+          Option Chain
+          <i class="bx bx-chevron-down"></i>
+        </button>
+
+        <button class="btn_add_broker" data-bs-toggle="offcanvas" data-bs-target="#add_api" aria-controls="add_api">
+          Add Broker
+        </button>
+
+        <div class="activate_broker_toggle_main_btn">
+
+
+
+          <button class="btn_outline_primary" class="all_api_details" data-bs-toggle="collapse"
+            id="Activate_broker_btn">
+            Activate Broker <i class="bx bx-chevron-down"></i>
+          </button>
+
+
+          <div id="overlay"></div>
+
+          <div class="" id="active_broker_modal" style="display: none;">
+            <div class="dismiss_active_modal">
+              <!-- <i class="bx bx-plus dismiss_icon_active_modal"></i> -->
+              <div class="triangle-up-active-modal"></div>
+            </div>
+            <div class="modal_dialog">
+              <div class="modal_content">
+
+
+                <div class="all_broker">
+                  <div id="zerodha_data_display"></div>
+                </div>
+
+
+
+
+
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+
+
+
+        <button id="order_btn">Order History</button>
+
+
+      </div>
+    </div>
+
 
 
 
@@ -3462,21 +3645,27 @@
       display: flex;
     }
 
-    .edit-button,.edit_strategy,.delete_strategy,
+    .edit-button,
+    .edit_strategy,
+    .delete_strategy,
     .delete-button {
       color: #767f88;
       transition: 0.3s;
     }
-.right_strategy_action{
 
-  display: flex;
-    gap: 0.6rem;
-}
-    .edit-button:hover,.edit_strategy:hover {
+    .right_strategy_action {
+
+      display: flex;
+      gap: 0.6rem;
+    }
+
+    .edit-button:hover,
+    .edit_strategy:hover {
       color: #4399eb !important;
     }
 
-    .delete-button:hover,.delete_strategy:hover {
+    .delete-button:hover,
+    .delete_strategy:hover {
       color: #c70000 !important;
     }
 
@@ -4751,7 +4940,7 @@
       font-weight: 600;
     }
 
-       .deploy_btn,
+    .deploy_btn,
     .reset_button {
 
       background: linear-gradient(180deg, #4399eb, #5cadfb);
@@ -5034,7 +5223,7 @@
               .left_positions_reset_notes button,
               .saveNotes,
               .editNotes,
-           
+
               .updateStrategy,
               .saveStrategy {
                 display: flex !important;
@@ -5738,7 +5927,7 @@
             .main_option_expiry_date {
               display: flex;
               align-items: center;
-              gap: 2rem;
+              gap: 1rem;
             }
 
             .main_option_chain_oi_ltp_greeks {
@@ -5789,17 +5978,92 @@
               display: flex;
             }
 
-        .swal2-confirm{
-              background-color:linear-gradient(180deg,#4399eb,#5cadfb) !important;
+            .swal2-confirm {
+              background-color: linear-gradient(180deg, #4399eb, #5cadfb) !important;
             }
 
 
-            .border_collapsed{
+            .border_collapsed {
 
               border-color: inherit !important;
-    border: none;
-    border-bottom-style: inherit !important;
-    border-width: 1 !important;
+              border: none;
+              border-bottom-style: inherit !important;
+              border-width: 1 !important;
+            }
+
+
+            .main_indices_fut_opt_filter {
+              display: flex;
+              align-items: center;
+              gap: 1rem;
+            }
+
+            .fut_opt_btns {
+              padding: 4px 2px;
+              border: 1px solid #c1c1c180;
+              display: flex;
+              gap: 0.2rem;
+              border-radius: 5px;
+            }
+
+            .fut_opt_btns button {
+              width: 4.2rem;
+              border: none;
+              justify-content: center;
+              display: flex;
+              transition: color 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+              background: white;
+
+            }
+
+            .active_opt_fut {
+
+
+
+
+              display: flex !important;
+              align-items: center !important;
+              background: linear-gradient(180deg, #4399eb, #5cadfb) !important;
+              color: #fff;
+
+              text-align: center;
+              font-size: 14px;
+
+              font-weight: 500;
+              border-radius: 4px;
+              border: 1px solid #4399eb !important;
+              -webkit-box-shadow: none !important;
+              box-shadow: none !important;
+              outline: 0 !important;
+
+
+              cursor: pointer;
+
+              font-weight: 600;
+            }
+
+            .action_future_buy,
+            .action_future_sell {
+              border: 1px solid #D8DCE3;
+              padding: 0 9px;
+              border-radius: 4px;
+
+              cursor: pointer;
+              transition: 0.2s;
+            }
+
+            .action_future_buy:hover,
+            .action_future_sell:hover {
+              color: #5cadfb;
+              background-color: white;
+            }
+
+            .action_future_buy {
+              background-color: #c9ffed;
+            }
+
+            .action_future_sell {
+              background-color: #ffd2cf;
             }
           </style>
 
@@ -5830,24 +6094,208 @@
 
 
             <div class="main_option_inner d-flex justify-content-between align-items-center">
-              <select class="form-select w-auto stockDropdown">
-                <optgroup label="Indices">
-                  <option value="NIFTY">NIFTY</option>
-                  <option value="BANKNIFTY">BANKNIFTY</option>
-                  <option value="FINNIFTY">FINNIFTY</option>
-                </optgroup>
-                {% comment %} <optgroup label="Stocks"></optgroup> {% endcomment %}
-              </select>
+
+              <div class="main_indices_fut_opt_filter">
+                <select class="form-select w-auto stockDropdown">
+                  <optgroup label="Indices">
+                    <option value="NIFTY">NIFTY</option>
+                    <option value="BANKNIFTY">BANKNIFTY</option>
+                    <option value="FINNIFTY">FINNIFTY</option>
+                  </optgroup>
+                  {% comment %} <optgroup label="Stocks"></optgroup> {% endcomment %}
+                </select>
+                <div class="fut_opt_btns">
+                  <button class="opt_btn active_opt_fut" data-opt_fut="opt">OPT</button>
+
+                  <button class="fut_btn" data-opt_fut="fut">FUT</button>
+                </div>
+              </div>
+
+              <script>
+                $(document).ready(function () {
+                  $(".fut_opt_btns button").click(function () {
+                    $(".fut_opt_btns button").removeClass("active_opt_fut")
+                    // Check the data attribute value
+                    var optionType = $(this).data("opt_fut");
+
+                    // Handle the case when "opt" button is clicked
+                    if (optionType === "opt") {
 
 
+
+                      $(this).addClass("active_opt_fut")
+                      $(".main_option_expiry_date").show()
+                      $(".main_options_tables").show()
+                      $(".main_futures_table").hide()
+                      // Add your code logic here for the "opt" case
+                      // For example, you can log a message or perform some action
+                      console.log("OPT button clicked");
+                    } else if (optionType === "fut") {
+                      $(this).addClass("active_opt_fut")
+
+
+
+                      getFutureData($(".stockDropdown").val());
+
+
+
+                      $(".main_option_expiry_date").hide()
+                      $(".main_options_tables").hide()
+                      $(".main_futures_table").show()
+                      // Handle the case when "fut" button is clicked
+                      // Add your code logic here for the "fut" case
+                      console.log("FUT button clicked");
+                    }
+                  });
+
+
+                  $(".stockDropdown").change(function () {
+                    var symbolIndices = $(this).val();
+                    getFutureData(symbolIndices);
+                  });
+
+
+                  function formatFutureDate(inputDate) {
+                    const options = { day: 'numeric', month: 'short' };
+                    const formattedDate = new Date(inputDate).toLocaleDateString('en-US', options);
+                    return formattedDate;
+                  }
+
+                  function getFutureData(symbolIndices) {
+                    // Make an Ajax request to Django backend
+                    $.ajax({
+                      url: "/fetch-future-data",
+                      method: "GET",
+                      data: { symbol_indices: symbolIndices },
+                      success: function (data) {
+                        // Handle the successful response, e.g., update the table body
+                        console.log(data);
+                        populateExpiryDropdown(data.resultData.map(future => future.expiry), data);
+
+                        var futureTableBody = $(".future_table_body");
+
+                        // Clear existing table rows
+                        futureTableBody.empty();
+
+                        // Iterate through resultData and append rows to the table
+                        $.each(data.resultData, function (index, future) {
+                          console.log(future.expiry);
+                          if (index === 0) {
+                            $(".futures_ltp").text(future.last_price);
+                          }
+                          // Format the date using the formatFutureDate function
+                          const formattedDate = formatFutureDate(future.expiry);
+
+                          // Use template literals for creating HTML row
+                          var row = `
+                                            <tr>
+                                                <td > 
+                                                  <div class="future_expiry" style="display: flex;justify-content: space-between;">
+                                                  <div class="future_expiry_main" style="display: none;">${future.expiry}</div>${formattedDate} (${calculateDaysDifference(future.expiry)} Days)
+                                                  <button class="action action_future_buy actions_future_buy_sell" data-future_action="buy">B</button>
+
+                                                </div>
+                                                  </td>
+
+                                                <td class="" >
+                                                  <div class="future_close_action" style="display: flex;justify-content: space-between;">
+                                                    <button class="action action_future_sell actions_future_buy_sell" data-future_action="sell">S</button>
+                                                    <div class="future_close">${future.last_price}</div>
+                                                    </div>
+                                                  </td>
+                                            </tr>
+                                        `;
+
+                          futureTableBody.append(row);
+                        });
+
+
+                        $(".actions_future_buy_sell").click(function () {
+                          var future_tr = $(this).closest("tr")
+
+                          var action_buy_sell_futures = $(this).data("future_action")
+                          console.log(action_buy_sell_futures);
+
+                          var futures_strikePrice = future_tr.find(".future_close").text()
+                          console.log(futures_strikePrice);
+                          var future_expiry_main = future_tr.find(".future_expiry_main").text()
+                          console.log(future_expiry_main);
+
+                        })
+                      },
+                      error: function (error) {
+                        // Handle the error response
+                        console.error("Error fetching future data:", error);
+                      }
+                    });
+                  }
+                  function populateExpiryDropdown(expiries, data) {
+                    var expiryDropdown = $(".futures_expiry");
+
+                    // Clear existing dropdown options
+                    expiryDropdown.empty();
+
+                    // Add an option for each expiry date
+                    expiries.forEach(function (expiry) {
+                      var formattedDate = formatFutureDate(expiry);
+                      var option = `<option value="${expiry}">${expiry}</option>`;
+                      expiryDropdown.append(option);
+                    });
+
+                    console.log($(".futures_expiry").val());
+                    console.log(data);
+                  }
+
+                  // Function to calculate the difference in days
+                  function calculateDaysDifference(expiryDate) {
+                    const today = new Date();
+                    const expiry = new Date(expiryDate);
+                    const differenceInTime = expiry - today;
+                    const differenceInDays = Math.floor(differenceInTime / (1000 * 3600 * 24));
+                    return differenceInDays;
+                  }
+
+                  getFutureData($(".stockDropdown").val());
+
+
+
+                  $(".futures_expiry").change(function () {
+                    var symbol_names=$(".stockDropdown").val()
+                    var future_expiry = $(this).val()
+
+                    $.ajax({
+                      url: "/fetch-future-unique-data",
+                      method: "GET",
+                      data: { symbol_indices: symbol_names ,future_expiry:future_expiry},
+                      success: function (data) {
+                        // Handle the successful response, e.g., update the table body
+                        console.log(data);
+
+                        if (data && data.length > 0) {
+                var expiryValue = data[0].last_price;
+                $(".futures_ltp").text(expiryValue);
+            } else {
+                console.error("Empty or invalid data received");
+            }
+                    
+                      },
+                      error: function (error) {
+                        // Handle the error response
+                        console.error("Error fetching future data:", error);
+                      }
+                    });
+                  })
+
+                });
+              </script>
               <!-- <p class="text-secondary">*Note: OI IN QUANTITY</p> -->
 
               <div class="main_option_expiry_date">
 
                 <div class="main_option_chain_oi_ltp_greeks">
-                  <Button class="ltp_option active_oi_ltp_greeks" data-option="ltp">LTP</Button><Button
-                    class="oi_option" data-option="oi">OI</Button><Button class="greeks_option"
-                    data-option="greeks">Greeks</Button>
+                  <Button class="ltp_option active_oi_ltp_greeks" data-option="ltp">LTP</Button>
+                  <Button class="oi_option" data-option="oi">OI</Button>
+                  <Button class="greeks_option" data-option="greeks">Greeks</Button>
                 </div>
 
                 <select id="optionExpiryDropdown" class="form-select w-auto">
@@ -5857,83 +6305,99 @@
 
             </div>
 
-            <div class="main_option_chain_table">
-              <table class="table table-hover">
-                <thead>
-                  <th class="text-end">Call IV</th>
-                  <th class="text-end">Call OI</th>
-                  <th class="text-end">Call LTP</th>
-                  <th class="text-center bg-light">
+            <div class="main_options_tables">
 
-                    <div class="main_option_chain_strike_price">
-                      Strike Price
-                    </div>
-                  </th>
-                  <th class="text-start ">Put LTP</th>
-                  <th class="text-start ">Put OI</th>
-                  <th class="text-start ">Put IV</th>
-                </thead>
+              <div class="main_option_chain_table">
+                <table class="table table-hover">
+                  <thead>
+                    <th class="text-end">Call IV</th>
+                    <th class="text-end">Call OI</th>
+                    <th class="text-end">Call LTP</th>
+                    <th class="text-center bg-light">
 
-                <tbody class="strategy_option_chain"></tbody>
-              </table>
+                      <div class="main_option_chain_strike_price">
+                        Strike Price
+                      </div>
+                    </th>
+                    <th class="text-start ">Put LTP</th>
+                    <th class="text-start ">Put OI</th>
+                    <th class="text-start ">Put IV</th>
+                  </thead>
+
+                  <tbody class="strategy_option_chain"></tbody>
+                </table>
+              </div>
+
+              <div class="main_option_oi">
+                <table class="table table-hover">
+                  <thead>
+
+                    <th class="text-start">Call OI(Chg%)</th>
+                    <th class="text-end">Call OI</th>
+                    <th class="text-center bg-light">
+
+                      <div class="main_option_chain_strike_price">
+                        Strike Price
+                      </div>
+                    </th>
+
+                    <th class="text-start ">Put OI</th>
+                    <th class="text-end ">Put OI(Chg%)</th>
+                  </thead>
+
+                  <tbody class="strategy_option_chain_oi"></tbody>
+                </table>
+              </div>
+
+              <div class="main_option_greeks">
+                <table class="table table-hover">
+                  <thead>
+
+                    <td class="text-start">Call Delta</td>
+                    <td class="text-center">Call IV</td>
+                    <td class="text-center bg-light">
+                      <div class="main_option_chain_strike_price">
+                        Strike Price
+                      </div>
+                    </td>
+                    <td class="text-center">Put IV</td>
+                    <td class="text-start">Put Delta</td>
+
+
+
+
+
+
+
+                    <td>Theta</td>
+                    <td>Vega</td>
+                    <td>Gamma</td>
+
+
+
+
+
+
+
+
+                  </thead>
+
+                  <tbody class="strategy_option_chain_greeks"></tbody>
+                </table>
+              </div>
             </div>
 
-            <div class="main_option_oi">
+            <div class="main_futures_table" style="display: none;">
               <table class="table table-hover">
                 <thead>
-
-                  <th class="text-start">Call OI(Chg%)</th>
-                  <th class="text-end">Call OI</th>
-                  <th class="text-center bg-light">
-
-                    <div class="main_option_chain_strike_price">
-                      Strike Price
-                    </div>
-                  </th>
-
-                  <th class="text-start ">Put OI</th>
-                  <th class="text-end ">Put OI(Chg%)</th>
+                  <th>Expiry</th>
+                  <th>price</th>
                 </thead>
+                <tbody class="future_table_body">
 
-                <tbody class="strategy_option_chain_oi"></tbody>
+                </tbody>
               </table>
-            </div>
 
-            <div class="main_option_greeks">
-              <table class="table table-hover">
-                <thead>
-
-                  <td class="text-start">Call Delta</td>
-                  <td class="text-center">Call IV</td>
-                  <td class="text-center bg-light">
-                    <div class="main_option_chain_strike_price">
-                      Strike Price
-                    </div>
-                  </td>
-                  <td class="text-center">Put IV</td>
-                  <td class="text-start">Put Delta</td>
-
-
-
-
-
-
-
-                  <td>Theta</td>
-                  <td>Vega</td>
-                  <td>Gamma</td>
-
-
-
-
-
-
-
-
-                </thead>
-
-                <tbody class="strategy_option_chain_greeks"></tbody>
-              </table>
             </div>
           </div>
 
@@ -5944,7 +6408,7 @@
 
       <script>
         $(document).ready(function () {
-      
+
           $(".main_option_chain_oi_ltp_greeks button").click(function () {
             $(".main_option_chain_oi_ltp_greeks button").removeClass("active_oi_ltp_greeks")
             $(this).addClass("active_oi_ltp_greeks")
@@ -7811,10 +8275,10 @@
                 text: "Please activate you api to place order !!"
                 ,
               }).then((result) => {
-  if (result.isConfirmed) {
-$("#Activate_broker_btn").click()
-  }
-});
+                if (result.isConfirmed) {
+                  $("#Activate_broker_btn").click()
+                }
+              });
             } else {
               // If not checked, show an alert
 
@@ -10430,82 +10894,82 @@ $("#Activate_broker_btn").click()
 
 
     function OI_charts(all_callsOI_putsOI) {
-  am4core.ready(function () {
-    if (Oi_chart) {
-      Oi_chart.dispose();
+      am4core.ready(function () {
+        if (Oi_chart) {
+          Oi_chart.dispose();
+        }
+
+        // Create chart instance
+        var chart = am4core.create("oi_charts", am4charts.XYChart);
+        Oi_chart = chart; // Store the chart instance
+
+        var referenceStrikePrice = parseInt($("#closest_strike_price").text());
+
+        var chartData = all_callsOI_putsOI.map(function (data, index) {
+          return {
+            category: data.strikePrice,
+            calls_oi: data.calls_oi,
+            puts_oi: data.puts_oi,
+          };
+        });
+
+        // Add data
+        chart.data = chartData;
+
+        // Find the index of the closest value
+        var closestIndex = chartData.findIndex(function (item) {
+          return item.category === referenceStrikePrice;
+        });
+
+        // Create axes
+        var categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
+        categoryAxis.dataFields.category = "category";
+        categoryAxis.renderer.grid.template.location = 0;
+        categoryAxis.renderer.minGridDistance = 80;
+        chart.logo.disabled = true;
+
+        var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
+        valueAxis.renderer.minGridDistance = 30;
+
+        // Create series
+        function createSeries(field, name, color) {
+          var series = chart.series.push(new am4charts.ColumnSeries());
+          series.dataFields.valueY = field;
+          series.dataFields.categoryX = "category";
+          series.name = name;
+          series.columns.template.tooltipText = "{category}: {name}: [bold]{valueY}[/]";
+          series.columns.template.width = am4core.percent(80);
+          series.columns.template.strokeWidth = 0;
+
+          // Set the color for the series
+          if (color === "red") {
+            series.columns.template.fill = am4core.color("#F96C92");
+          } else if (color === "green") {
+            series.columns.template.fill = am4core.color("#2196F3");
+          }
+        }
+
+        createSeries("calls_oi", "Calls OI", "green");
+        createSeries("puts_oi", "Puts OI", "red");
+
+        // Add legend
+        chart.legend = new am4charts.Legend();
+
+        // Add cursor for zooming
+        var cursor = new am4charts.XYCursor();
+        cursor.behavior = "zoomX"; // Enable zooming along the X-axis
+        chart.cursor = cursor;
+
+        // Set initial zoom
+        chart.events.on("ready", function () {
+          chart.xAxes.getIndex(0).zoomToIndexes(Math.max(0, closestIndex - 10), Math.min(chartData.length - 1, closestIndex + 10));
+        });
+
+        // ...
+        // ...
+        // ...
+      });
     }
-
-    // Create chart instance
-    var chart = am4core.create("oi_charts", am4charts.XYChart);
-    Oi_chart = chart; // Store the chart instance
-
-    var referenceStrikePrice = parseInt($("#closest_strike_price").text());
-
-    var chartData = all_callsOI_putsOI.map(function (data, index) {
-      return {
-        category: data.strikePrice,
-        calls_oi: data.calls_oi,
-        puts_oi: data.puts_oi,
-      };
-    });
-
-    // Add data
-    chart.data = chartData;
-
-    // Find the index of the closest value
-    var closestIndex = chartData.findIndex(function (item) {
-      return item.category === referenceStrikePrice;
-    });
-
-    // Create axes
-    var categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
-    categoryAxis.dataFields.category = "category";
-    categoryAxis.renderer.grid.template.location = 0;
-    categoryAxis.renderer.minGridDistance = 80;
-    chart.logo.disabled = true;
-
-    var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
-    valueAxis.renderer.minGridDistance = 30;
-
-    // Create series
-    function createSeries(field, name, color) {
-      var series = chart.series.push(new am4charts.ColumnSeries());
-      series.dataFields.valueY = field;
-      series.dataFields.categoryX = "category";
-      series.name = name;
-      series.columns.template.tooltipText = "{category}: {name}: [bold]{valueY}[/]";
-      series.columns.template.width = am4core.percent(80);
-      series.columns.template.strokeWidth = 0;
-
-      // Set the color for the series
-      if (color === "red") {
-        series.columns.template.fill = am4core.color("#F96C92");
-      } else if (color === "green") {
-        series.columns.template.fill = am4core.color("#2196F3");
-      }
-    }
-
-    createSeries("calls_oi", "Calls OI", "green");
-    createSeries("puts_oi", "Puts OI", "red");
-
-    // Add legend
-    chart.legend = new am4charts.Legend();
-
-    // Add cursor for zooming
-    var cursor = new am4charts.XYCursor();
-    cursor.behavior = "zoomX"; // Enable zooming along the X-axis
-    chart.cursor = cursor;
-
-    // Set initial zoom
-    chart.events.on("ready", function () {
-      chart.xAxes.getIndex(0).zoomToIndexes(Math.max(0, closestIndex - 10), Math.min(chartData.length - 1, closestIndex + 10));
-    });
-
-    // ...
-    // ...
-    // ...
-  });
-}
 
 
 
@@ -10892,6 +11356,7 @@ $("#Activate_broker_btn").click()
               );
             }
           });
+
 
           $(".right_side_top_strategies #option_chain_button,#buid_custom_strategy_btn").click(
             function () {
@@ -13234,7 +13699,24 @@ $("#Activate_broker_btn").click()
           attachButtonClickEvent($("#call_butter_fly"), "call_butter_fly");
           attachButtonClickEvent($("#custom_strategy"), "custom_strategy");
 
+
+
+
+
           var isTableEmpty = true;
+
+          $(".actions_future_buy_sell").click(function () {
+            var future_tr = $(this).closest("tr")
+
+            var action_buy_sell_futures = $(this).data("future_action")
+            console.log(action_buy_sell_futures);
+
+            var futures_strikePrice = future_tr.find(".future_close").text()
+            console.log(futures_strikePrice);
+            var future_expiry_main = future_tr.find(".future_expiry_main").text()
+            console.log(future_expiry_main);
+
+          })
 
           $(".put_call_btns").click(function () {
             if (isTableEmpty) {
@@ -14041,12 +14523,12 @@ $("#Activate_broker_btn").click()
 
         var lot_size_value = $("#lot_size_value").text()
 
-        if (long_shorts==="+") {
-          
+        if (long_shorts === "+") {
+
           all_premium_sum += premiums * parseFloat(lot_size_value);
-        }else if (long_shorts==="-") {
+        } else if (long_shorts === "-") {
           all_premium_sum += -premiums * parseFloat(lot_size_value);
-          
+
         }
 
 
@@ -15128,27 +15610,27 @@ $("#Activate_broker_btn").click()
           thead.append(headerRow);
           table.append(thead);
 
-  // Loop through values row-wise and create table rows and cells
-for (var i = 0; i < maxValuesCount; i++) {
-  var row = $("<tr>")
+          // Loop through values row-wise and create table rows and cells
+          for (var i = 0; i < maxValuesCount; i++) {
+            var row = $("<tr>")
 
-  // Loop through each day's values
-  _result.forEach(function (dayData) {
-    var dayKey = Object.keys(dayData)[0]; // Extract day key outside the loop
-    var values = dayData[dayKey];
+            // Loop through each day's values
+            _result.forEach(function (dayData) {
+              var dayKey = Object.keys(dayData)[0]; // Extract day key outside the loop
+              var values = dayData[dayKey];
 
-    var values_con = values[i] < 0 ? "text-danger" : "text-success";
-    var cell = $("<td>").addClass("cell-container border_collapsed"); // Create a td element and add a class for styling
+              var values_con = values[i] < 0 ? "text-danger" : "text-success";
+              var cell = $("<td>").addClass("cell-container border_collapsed"); // Create a td element and add a class for styling
 
-    // Add a div element inside the td
-    var div = $("<div>").text(values[i] ? values[i].toFixed(0) : "").addClass(values_con).css("font-size", "12px");
+              // Add a div element inside the td
+              var div = $("<div>").text(values[i] ? values[i].toFixed(0) : "").addClass(values_con).css("font-size", "12px");
 
-    cell.append(div); // Append the div to the td
-    row.append(cell); // Append the td to the row
-  });
+              cell.append(div); // Append the div to the td
+              row.append(cell); // Append the td to the row
+            });
 
-  table.append(row);
-}
+            table.append(row);
+          }
 
           $('table.payoff_table_main_table tr').each(function () {
             // Find the first <td> in each <tr> and remove the specified class
@@ -15156,74 +15638,74 @@ for (var i = 0; i < maxValuesCount; i++) {
           });
 
           var table = $('.payoff_table_main_table');
-        var firstRow = table.find('thead tr');
+          var firstRow = table.find('thead tr');
 
-        // Select all th elements
-        var thElements = firstRow.find('th').slice(1, -1);
+          // Select all th elements
+          var thElements = firstRow.find('th').slice(1, -1);
 
-        // Select the last th element
-        var thLastElement = firstRow.find('th:last');
+          // Select the last th element
+          var thLastElement = firstRow.find('th:last');
 
-        // Assume #optionExpiryDropdown is an input field
-        var dropdownValue = $('#optionExpiryDropdown').val();
+          // Assume #optionExpiryDropdown is an input field
+          var dropdownValue = $('#optionExpiryDropdown').val();
 
-        // Set the last th element text to the formatted dropdown value
-        thLastElement.text(`On Expiry - ${formatDropdownDate(dropdownValue)}`);
+          // Set the last th element text to the formatted dropdown value
+          thLastElement.text(`On Expiry - ${formatDropdownDate(dropdownValue)}`);
 
-        // Get the current date
-        var currentDate = new Date();
+          // Get the current date
+          var currentDate = new Date();
 
-        // Display dates based on the number of th elements
-        thElements.each(function (index) {
+          // Display dates based on the number of th elements
+          thElements.each(function (index) {
             // Calculate the date for each th
             var dateForTH = new Date(currentDate);
             dateForTH.setDate(currentDate.getDate() + index);
 
             // Format the date as "On Target Date Mon DD MMM"
-            var formattedDate =   getDayOfWeek(dateForTH) + ", " + formatDate(dateForTH);
+            var formattedDate = getDayOfWeek(dateForTH) + ", " + formatDate(dateForTH);
 
             // Display the formatted date
             $(this).text(formattedDate);
 
 
-        });
+          });
 
 
-        
-        // Function to get the day of the week
-        function getDayOfWeek(date) {
+
+          // Function to get the day of the week
+          function getDayOfWeek(date) {
             var daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
             return daysOfWeek[date.getDay()];
-        }
+          }
 
-        // Function to format the date as "DDth MMM"
-        function formatDate(date) {
+          // Function to format the date as "DDth MMM"
+          function formatDate(date) {
             var day = date.getDate();
             var suffix = getDaySuffix(day);
             var options = { day: 'numeric', month: 'short' };
             return date.toLocaleDateString('en-US', options).replace(/\b\d{1,2}\b/, day + suffix);
-        }
+          }
 
-        // Function to format the dropdown value as "Thu 21th Dec"
-        function formatDropdownDate(value) {
+          // Function to format the dropdown value as "Thu 21th Dec"
+          function formatDropdownDate(value) {
             var date = new Date(value);
             var options = { weekday: 'short', day: 'numeric', month: 'short' };
             return date.toLocaleDateString('en-US', options);
-        }
+          }
 
-        // Function to get the day suffix (st, nd, rd, th)
-        function getDaySuffix(day) {
+          // Function to get the day suffix (st, nd, rd, th)
+          function getDaySuffix(day) {
             if (day >= 11 && day <= 13) {
-                return 'th';
+              return 'th';
             }
             var lastDigit = day % 10;
             switch (lastDigit) {
-                case 1: return 'st';
-                case 2: return 'nd';
-                case 3: return 'rd';
-                default: return 'th';
+              case 1: return 'st';
+              case 2: return 'nd';
+              case 3: return 'rd';
+              default: return 'th';
             }
-        }
+          }
           // Get the value of closest_strike_price
 
 
@@ -15280,7 +15762,7 @@ for (var i = 0; i < maxValuesCount; i++) {
             if (currentStrikePrice === closestStrikePrice) {
 
               $(this).addClass("background_opiton_closest_payoff_table");
-       
+
 
               //console.log(currentStrikePrice);
 
@@ -15414,7 +15896,7 @@ for (var i = 0; i < maxValuesCount; i++) {
 </script>
 <script>
   $(document).ready(function () {
-      // Select the table and the first row inside the thead
+    // Select the table and the first row inside the thead
 
   });
 </script>

@@ -8471,3 +8471,92 @@ def delete_book(request, book_id):
     # Return a JSON response indicating success
     return JsonResponse({'message': 'Book deleted successfully'})
 
+
+
+
+
+
+import requests
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+
+class Fetch_Future_Data(APIView):
+    def get(self, request, *args, **kwargs):
+        # URL of the API to fetch data
+        api_url = "https://webapi.niftytrader.in/webapi/Symbol/future-expiry-data"
+
+        symbol_indices = self.request.GET.get('symbol_indices', 'nifty').lower()
+        print(symbol_indices)
+
+        # Payload to send to the API
+        payload = {"symbol": symbol_indices}
+
+
+        try:
+            # Make a GET request to the API with the payload
+            response = requests.get(api_url, params=payload)
+
+            # Check if the request was successful (status code 200)
+            if response.status_code == 200:
+                # Parse the JSON response
+                response_json = response.json()
+                print(response_json)
+
+                # Return the response using DRF
+                return Response(response_json, status=status.HTTP_200_OK)
+            else:
+                # If the request was not successful, return an error response
+                return Response(
+                    {"error": f"Failed to fetch data. Status code: {response.status_code}"},
+                    status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                )
+        except Exception as e:
+            # If an exception occurs, return an error response
+            return Response(
+                {"error": f"An error occurred: {str(e)}"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
+
+
+
+class Fetch_Future_Unique_Data(APIView):
+    def get(self, request, *args, **kwargs):
+        # URL of the API to fetch data
+        api_url = "https://webapi.niftytrader.in/webapi/Symbol/future-expiry-data"
+
+        symbol_indices = self.request.GET.get('symbol_indices', 'nifty').lower()
+        future_expiry = self.request.GET.get('future_expiry')
+        print(symbol_indices)
+        print(future_expiry)
+
+        # Payload to send to the API
+        payload = {"symbol": symbol_indices}
+
+        try:
+            # Make a GET request to the API with the payload
+            response = requests.get(api_url, params=payload)
+
+            # Check if the request was successful (status code 200)
+            if response.status_code == 200:
+                # Parse the JSON response
+                response_json = response.json()
+                print(response_json)
+
+                # Filter data based on future_expiry
+                filtered_data = [entry for entry in response_json['resultData'] if entry.get('expiry') == future_expiry]
+
+                # Return the filtered response using DRF
+                return Response(filtered_data, status=status.HTTP_200_OK)
+            else:
+                # If the request was not successful, return an error response
+                return Response(
+                    {"error": f"Failed to fetch data. Status code: {response.status_code}"},
+                    status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                )
+        except Exception as e:
+            # If an exception occurs, return an error response
+            return Response(
+                {"error": f"An error occurred: {str(e)}"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
