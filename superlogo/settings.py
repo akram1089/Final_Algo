@@ -93,6 +93,7 @@ MIDDLEWARE = [
     
     
 ]
+CSRF_TRUSTED_ORIGINS = ['https://*.algotrde.com', 'https://*.127.0.0.1']
 
 
 CORS_ORIGIN_WHITELIST = ["*"]
@@ -243,3 +244,5 @@ CHANNEL_LAYERS = {
        },
    },
 }
+
+
