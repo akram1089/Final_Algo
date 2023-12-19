@@ -537,7 +537,7 @@
 
   .futures_segements_main {
     position: relative;
-    width: 124px;
+    width: 200px;
     display: flex;
     gap: 0.5rem;
     height: 2.5rem !important;
@@ -546,7 +546,7 @@
 
   .futures_segements_main_expiry {
     position: relative;
-    width: 144px;
+    width: 200px;
     display: flex;
     gap: 0.5rem;
     height: 2.5rem !important;
@@ -735,6 +735,7 @@
     font-size: 10px;
   }
 
+  #futures_counter_input,
   #counter_input,
   #counter_input_edit,
   #counter_input_strangle,
@@ -765,6 +766,8 @@
     align-items: center;
   }
 
+  #future_decrement,
+  #future_increment,
   #decrement,
   #increment,
   #decrement_edit,
@@ -802,6 +805,8 @@
     align-items: center;
   }
 
+  #futrue_decrement:hover,
+  #future_increment:hover,
   #decrement:hover,
   #increment:hover,
   #decrement_strangle:hover,
@@ -1641,8 +1646,9 @@
 
         .main_futures_inputs {
           display: flex;
-          gap: 0.5rem;
+          gap: 1.5rem;
           align-items: center;
+          flex-wrap: wrap;
         }
 
 
@@ -1690,7 +1696,7 @@
 
         .main_futures_buy_sell {
           display: flex;
-          gap: 0.3rem;
+          gap: 1.3rem;
         }
 
         .main_futures_buy_sell.form-check label {
@@ -1729,7 +1735,7 @@
       <div class="main_futures_inputs">
 
         <div class="futures_segements_main">
-          <label for="">Select Segment</label>
+          <label for="">Futures Segment</label>
           <select class="form-select">
 
             <option value="futures">Futures</option>
@@ -1763,11 +1769,11 @@
         <div class="innerStraddle_lot_size">
           <p class="fs-6 lot_title">Qty:</p>
           <div class="counter_straddle d-flex justify-content-center gap-1">
-            <button class="btn" id="decrement">
+            <button class="btn" id="future_decrement">
               <i class="bx bx-minus"></i>
             </button>
-            <input type="text" name="" id="counter_input" min="1" disabled="">
-            <button class="btn" id="increment">
+            <input type="text" name="" id="futures_counter_input" min="1" value="1" disabled="">
+            <button class="btn" id="future_increment">
               <i class="bx bx-plus"></i>
             </button>
           </div>
@@ -1778,64 +1784,64 @@
 
 
 
-      <div class="right_side_top_strategies">
+ 
+    </div>
+    <div class="right_side_top_strategies">
 
-        <button class="d-flex align-items-center" id="saveStrategies"><i class='bx bxs-bookmark'></i>
-          <p style="margin-bottom: 0;">Strategies saved</p>
+      <button class="d-flex align-items-center" id="saveStrategies"><i class='bx bxs-bookmark'></i>
+        <p style="margin-bottom: 0;">Strategies saved</p>
+      </button>
+      <button class="btn_outline_primary" type="button" data-bs-toggle="collapse" id="option_chain_button">
+        Option Chain
+        <i class="bx bx-chevron-down"></i>
+      </button>
+
+      <button class="btn_add_broker" data-bs-toggle="offcanvas" data-bs-target="#add_api" aria-controls="add_api">
+        Add Broker
+      </button>
+
+      <div class="activate_broker_toggle_main_btn">
+
+
+
+        <button class="btn_outline_primary" class="all_api_details" data-bs-toggle="collapse"
+          id="Activate_broker_btn">
+          Activate Broker <i class="bx bx-chevron-down"></i>
         </button>
-        <button class="btn_outline_primary" type="button" data-bs-toggle="collapse" id="option_chain_button">
-          Option Chain
-          <i class="bx bx-chevron-down"></i>
-        </button>
-
-        <button class="btn_add_broker" data-bs-toggle="offcanvas" data-bs-target="#add_api" aria-controls="add_api">
-          Add Broker
-        </button>
-
-        <div class="activate_broker_toggle_main_btn">
 
 
+        <div id="overlay"></div>
 
-          <button class="btn_outline_primary" class="all_api_details" data-bs-toggle="collapse"
-            id="Activate_broker_btn">
-            Activate Broker <i class="bx bx-chevron-down"></i>
-          </button>
-
-
-          <div id="overlay"></div>
-
-          <div class="" id="active_broker_modal" style="display: none;">
-            <div class="dismiss_active_modal">
-              <!-- <i class="bx bx-plus dismiss_icon_active_modal"></i> -->
-              <div class="triangle-up-active-modal"></div>
-            </div>
-            <div class="modal_dialog">
-              <div class="modal_content">
+        <div class="" id="active_broker_modal" style="display: none;">
+          <div class="dismiss_active_modal">
+            <!-- <i class="bx bx-plus dismiss_icon_active_modal"></i> -->
+            <div class="triangle-up-active-modal"></div>
+          </div>
+          <div class="modal_dialog">
+            <div class="modal_content">
 
 
-                <div class="all_broker">
-                  <div id="zerodha_data_display"></div>
-                </div>
-
-
-
-
-
+              <div class="all_broker">
+                <div id="zerodha_data_display"></div>
               </div>
+
+
+
+
+
             </div>
           </div>
-
         </div>
 
-
-
-
-        <button id="order_btn">Order History</button>
-
-
       </div>
-    </div>
 
+
+
+
+      <button id="order_btn">Order History</button>
+
+
+    </div>
 
 
 
