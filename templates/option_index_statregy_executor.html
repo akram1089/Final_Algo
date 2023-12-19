@@ -1809,7 +1809,7 @@
       <button class="d-flex align-items-center" id="saveStrategies"><i class='bx bxs-bookmark'></i>
         <p style="margin-bottom: 0;">Strategies saved</p>
       </button>
-      <button class="btn_outline_primary" type="button" data-bs-toggle="collapse" id="option_chain_button">
+      <button style="padding: 0px 14px;" class="btn_outline_primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#optionChain_canvas" aria-controls="optionChain_canvasLabel" id="buid_custom_strategy_btn">
         Option Chain
         <i class="bx bx-chevron-down"></i>
       </button>
@@ -3551,7 +3551,7 @@
   </div>
   <script>
     $(document).ready(function () {
-      const optionChainButton = $("#option_chain_button");
+      const optionChainButton = $("#optionChain_canvas");
       const allApiButton = $("#all_api_button");
       const optionChainCollapse = $("#collapseExample");
       const allApiCollapse = $("#all_api_collapse");
@@ -5938,7 +5938,7 @@
 
           </div>
           <div class="main_strategy_builder_btn">
-            <button class="" id="buid_custom_strategy_btn">Build Your Strategy</button>
+            <button class=""  type="button" data-bs-toggle="offcanvas" data-bs-target="#optionChain_canvas" aria-controls="optionChain_canvasLabel" id="buid_custom_strategy_btn" >Build Your Strategy</button>
           </div>
 
           <style>
@@ -7740,13 +7740,13 @@
     $('#taget_date_table').hide()
     $(".main_build_custom_strategy_empty").css("display", "flex")
 
-    $("#buid_custom_strategy_btn").click(function () {
-      $("#optionChain_canvas").collapse("toggle");
-    });
+    // $("#buid_custom_strategy_btn").click(function () {
+    //   $("#optionChain_canvas").collapse("toggle");
+    // });
 
-    $(".option_chain_canvas").click(function () {
-      $("#optionChain_canvas").collapse("toggle");
-    });
+    // $(".option_chain_canvas").click(function () {
+    //   $("#optionChain_canvas").collapse("toggle");
+    // });
     loadSpotData("NIFTY");
     function checkMainPositionContent() {
       var mainPositionElements = $('.main_position');
@@ -10797,7 +10797,7 @@ totalRho += parseFloat(rho) || 0;
                                         <div class="symbol_expiry"><span class="symbol">${stockDropdown}</span><span class="expiry">${formattedDate}</span></div>
                                         <div class="strike_price_call_put"> <span class="strikePrice">${parseFloat(
                   item.strikePrice
-                )}</span><span class="call_put_entrance">${optionType === "Call" ? "CE" : (optionType === "Put" ? "PE" : "FUTURE")
+                )}</span><span class="call_put_entrance">${item.optionType === "Call" ? "CE" : (item.optionType === "Put" ? "PE" : "FUTURE")
 }</span>
 </div> </div></td>
                                                                    
@@ -11424,7 +11424,7 @@ totalRho += parseFloat(rho) || 0;
           });
 
 
-          $(".right_side_top_strategies #option_chain_button,#buid_custom_strategy_btn").click(
+          $(".right_side_top_strategies ,#buid_custom_strategy_btn").click(
             function () {
               $(".main_option_chain_table").show()
               $(".main_option_oi").hide()
