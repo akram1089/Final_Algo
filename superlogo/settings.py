@@ -32,7 +32,7 @@ SECRET_KEY = 'django-insecure-bni-q+a&4eggvue+&l%__^n#q%-hlti_=sc-u1ff0joram2yb@
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = ['algotrde.com', '127.0.0.1', 'localhost']
 
 TIME_ZONE = 'Asia/Kolkata'
 USE_TZ = True
@@ -86,6 +86,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'allauth.account.middleware.AccountMiddleware',  # Add this line to include AccountMiddleware
+
     
 
     
