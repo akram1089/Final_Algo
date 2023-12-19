@@ -94,11 +94,11 @@
   }
 
   .bg-light-green {
-    background-color: #c9ffed !important;
+    background-color: #c9ffed;
   }
 
   .bg-light-red {
-    background-color: #ffd2cf !important;
+    background-color: #ffd2cf;
   }
 
   #put_call_put {
@@ -107,10 +107,10 @@
 
   .put_call_btns {
     outline: none;
-    border: none !important;
-    height: 30px !important;
-    margin: 2px 0 0 0 !important;
-    color: black !important;
+    border: none;
+    height: 30px;
+    margin: 2px 0 0 0;
+    color: black;
     transition: 0.3s;
   }
 
@@ -231,6 +231,7 @@
     font-size: 16px;
     padding: 6px 5px;
   }
+
   .main_futures_price_as_per_expiries {
     display: flex;
     gap: 0.2rem;
@@ -428,8 +429,8 @@
   }
 
   .put_call_btns:hover {
-    background-color: white !important;
-    color: #4399eb !important;
+    background-color: white;
+    color: #4399eb;
   }
 
   .put_max_profit {
@@ -805,7 +806,7 @@
     align-items: center;
   }
 
-  #futrue_decrement:hover,
+  #future_decrement:hover,
   #future_increment:hover,
   #decrement:hover,
   #increment:hover,
@@ -1651,6 +1652,21 @@
           flex-wrap: wrap;
         }
 
+        .main_futures_inputs#future_add_positions {
+          all: unset !important;
+
+          color: white !important;
+          background-color: #042452;
+          border-color: #021a3d;
+        }
+
+        .main_futures_inputs#future_add_positions:hover {
+          all: unset !important;
+
+          color: white !important;
+          background-color: #042452;
+          border-color: #021a3d;
+        }
 
         #callBuyRadio,
         #putBuyRadio {
@@ -1730,7 +1746,7 @@
     </div>
 
 
-    <div class="main_futures_option_chains mt-2">
+    <div class="main_futures_option_chains mt-2 mb-2">
 
       <div class="main_futures_inputs">
 
@@ -1753,13 +1769,13 @@
 
         <div class="main_futures_buy_sell">
           <div class="form-check mb-0">
-            <input class="form-check-input" type="radio" name="callAction" id="callBuyRadio" value="buy" checked>
+            <input class="form-check-input" type="radio" name="callAction" id="callBuyRadio" value="Long" checked>
             <label class="form-check-label mb-0" for="callBuyRadio">
               Buy
             </label>
           </div>
           <div class="form-check mb-0">
-            <input class="form-check-input" type="radio" name="callAction" id="callSellRadio" value="sell">
+            <input class="form-check-input" type="radio" name="callAction" id="callSellRadio" value="Short">
             <label class="form-check-label mb-0" for="callSellRadio">
               Sell
             </label>
@@ -1772,19 +1788,21 @@
             <button class="btn" id="future_decrement">
               <i class="bx bx-minus"></i>
             </button>
-            <input type="text" name="" id="futures_counter_input" min="1" value="1" disabled="">
+            <input type="text" name="" id="futures_counter_input" min="1" disabled>
             <button class="btn" id="future_increment">
               <i class="bx bx-plus"></i>
             </button>
           </div>
         </div>
 
-        <button class="btn btn-primary" id="future_add_positions">ADD POSITION</button>
+        <button class="btn btn-primary put_call_btns" id="future_add_positions" data-f&o="future" style=" color: white !important;
+        background-color: #042452; height: 36px;
+        border-color: #021a3d;">ADD POSITION</button>
       </div>
 
 
 
- 
+
     </div>
     <div class="right_side_top_strategies">
 
@@ -1804,8 +1822,7 @@
 
 
 
-        <button class="btn_outline_primary" class="all_api_details" data-bs-toggle="collapse"
-          id="Activate_broker_btn">
+        <button class="btn_outline_primary" class="all_api_details" data-bs-toggle="collapse" id="Activate_broker_btn">
           Activate Broker <i class="bx bx-chevron-down"></i>
         </button>
 
@@ -6266,24 +6283,24 @@
 
 
                   $(".futures_expiry").change(function () {
-                    var symbol_names=$(".stockDropdown").val()
+                    var symbol_names = $(".stockDropdown").val()
                     var future_expiry = $(this).val()
 
                     $.ajax({
                       url: "/fetch-future-unique-data",
                       method: "GET",
-                      data: { symbol_indices: symbol_names ,future_expiry:future_expiry},
+                      data: { symbol_indices: symbol_names, future_expiry: future_expiry },
                       success: function (data) {
                         // Handle the successful response, e.g., update the table body
                         console.log(data);
 
                         if (data && data.length > 0) {
-                var expiryValue = data[0].last_price;
-                $(".futures_ltp").text(expiryValue);
-            } else {
-                console.error("Empty or invalid data received");
-            }
-                    
+                          var expiryValue = data[0].last_price;
+                          $(".futures_ltp").text(expiryValue);
+                        } else {
+                          console.error("Empty or invalid data received");
+                        }
+
                       },
                       error: function (error) {
                         // Handle the error response
@@ -9607,6 +9624,37 @@
 
     // Set the initial value
 
+    var counterValue_future = 1;
+
+    // Function to update the input field with the current value
+    function updateCounterInput_future() {
+      $("#futures_counter_input").val(counterValue_future);
+    }
+
+    // Initialize the input field
+    updateCounterInput_future();
+
+    // Increment button click handler
+    $("#future_increment").click(function () {
+
+      counterValue_future++;
+      updateCounterInput_future();
+    });
+
+    // Decrement button click handler
+    $("#future_decrement").click(function () {
+      if (counterValue_future > 1) {
+        counterValue_future--;
+        updateCounterInput_future();
+      }
+    });
+
+
+
+
+
+
+
     var counterValue = 1;
 
     // Function to update the input field with the current value
@@ -10361,12 +10409,20 @@
           action = "Long";
         }
 
+        // var optionSide_main = "";
+        // if (optionSide == "CE") {
+        //   optionSide_main = "Call";
+        // } else {
+        //   optionSide_main = "Put";
+        // }
         var optionSide_main = "";
-        if (optionSide == "CE") {
-          optionSide_main = "Call";
-        } else {
-          optionSide_main = "Put";
-        }
+if (optionSide === "CE") {
+  optionSide_main = "Call";
+} else if (optionSide === "PE") {
+  optionSide_main = "Put";
+} else {
+  optionSide_main = "Future";
+}
 
         var quantity = row.find(".option_lot_size_input").text();
         var ltpValue = row.find(".entryPrice").text();
@@ -10397,13 +10453,11 @@
       });
 
       get_position_data_from_django(allData);
-      // //console.log("AllData", allData);
+      console.log("AllData", allData);
       $("#spinner").show();
     }
 
-    var greeks = 1;
-    var p_l = 1;
-
+   
 
     function get_position_data_from_django(allData) {
       $("#spinner").show();
@@ -10429,6 +10483,9 @@
           let totalVega = 0;
           let totalRho = 0;
           let leg = 1;
+          var greeks = 1;
+    var p_l = 1;
+
 
 
           for (const item of resultData) {
@@ -10504,8 +10561,9 @@
                                         <div class="symbol_expiry"><span class="symbol">${stockDropdown}</span><span class="expiry">${formattedDate}</span></div>
                                         <div class="strike_price_call_put"> <span class="strikePrice">${parseFloat(
                 strikePrice
-              )}</span><span class="call_put_entrance">${optionType === "Call" ? "CE" : "PE"
-              }</span></div> </div></td>
+              )}</span><span class="call_put_entrance">${optionType === "Call" ? "CE" : (optionType === "Put" ? "PE" : "FUTURE")
+}</span>
+</div> </div></td>
                                         
                                             <td><div class="greeks_iv">${iv !== null ? iv.toFixed(2) : 0
               }</div></td>
@@ -10535,11 +10593,12 @@
             $("#resultTable tbody").append(tableRow);
 
             // Calculate positional Greeks
-            totalDelta += parseFloat(delta);
-            totalTheta += parseFloat(theta);
-            totalGamma += parseFloat(gamma);
-            totalVega += parseFloat(vega);
-            totalRho += parseFloat(rho);
+            totalDelta += parseFloat(delta) || 0;
+totalTheta += parseFloat(theta) || 0;
+totalGamma += parseFloat(gamma) || 0;
+totalVega += parseFloat(vega) || 0;
+totalRho += parseFloat(rho) || 0;
+
           }
 
           // Add the row for positional Greeks
@@ -10738,8 +10797,9 @@
                                         <div class="symbol_expiry"><span class="symbol">${stockDropdown}</span><span class="expiry">${formattedDate}</span></div>
                                         <div class="strike_price_call_put"> <span class="strikePrice">${parseFloat(
                   item.strikePrice
-                )}</span><span class="call_put_entrance">${item.optionType === "Call" ? "CE" : "PE"
-                }</span></div> </div></td>
+                )}</span><span class="call_put_entrance">${optionType === "Call" ? "CE" : (optionType === "Put" ? "PE" : "FUTURE")
+}</span>
+</div> </div></td>
                                                                    
                                                                     <td><div class="ltpValue">${item.ltpValue
                 }</div></td>
@@ -11202,8 +11262,8 @@
               </td>
             <td class="text-end call-ltp cursor-pointer  position-relative ${strike_price_background_down}">
                 <div class="d-flex position-absolute top-0 call-pul-ltp-btns d-none call-row">
-                    <button id="Auto_calls_short_click" title="Short" data-action="Short" data-side="call" type="button" class="px-lg-3 py-lg-1 mx-1 bg-light-green put_call_btns common-border shadow-none fs-13 fw-600 btn btn-primary">S</button>
-                    <button id="Auto_calls_long_click" title="Long" data-action="Long" data-side="call" type="button" class="px-lg-3 py-lg-1 mx-1 bg-light-red put_call_btns  shadow-none fs-13 fw-600 btn btn-primary">B</button>
+                    <button id="Auto_calls_short_click" title="Short" data-action="Short" data-side="call" type="button" data-f&o="option" class="px-lg-3 py-lg-1 mx-1 bg-light-green put_call_btns common-border shadow-none fs-13 fw-600 btn btn-primary">S</button>
+                    <button id="Auto_calls_long_click" title="Long" data-action="Long" data-side="call" type="button" data-f&o="option" class="px-lg-3 py-lg-1 mx-1 bg-light-red put_call_btns  shadow-none fs-13 fw-600 btn btn-primary">B</button>
                 </div>
                 <p class="calls_ltp text-start" style="z-index=9999">${optionChain.calls_ltp}</p>
           
@@ -11220,8 +11280,8 @@
                 <p class="puts_ltp text-start" style="z-index=9999">${optionChain.puts_ltp}</p>
            
                 <div class="d-flex position-absolute top-0 call-pul-ltp-btns  d-none" id="put_call_put">
-                    <button id="Auto_puts_short_click" title="Short" type="button" data-action="Short" data-side="put" class="px-lg-3 py-lg-1 mx-1 bg-light-green put_call_btns common-border shadow-none fs-13 fw-600 btn btn-primary">S</button>
-                    <button id="Auto_puts_long_click" title="Long" data-action="Long" data-side="put" type="button" class="px-lg-3 bg-light-red put_call_btns py-lg-1 mx-1  shadow-none fs-13 fw-600 btn btn-primary">B</button>
+                    <button id="Auto_puts_short_click" title="Short" type="button" data-action="Short" data-side="put" data-f&o="option" class="px-lg-3 py-lg-1 mx-1 bg-light-green put_call_btns common-border shadow-none fs-13 fw-600 btn btn-primary">S</button>
+                    <button id="Auto_puts_long_click" title="Long" data-action="Long" data-side="put" type="button" data-f&o="option" class="px-lg-3 bg-light-red put_call_btns py-lg-1 mx-1  shadow-none fs-13 fw-600 btn btn-primary">B</button>
                 </div>
             </td>
             <td class="text-start  oi_puts ${strike_price_background_up}">     <div style="width:${putsOIDynamicWidth}" class="dynamic-width-bg puts-oi">${optionChain.puts_oi}</div></td>
@@ -11235,8 +11295,8 @@
 
             <td class="text-end call-ltp cursor-pointer  position-relative ${strike_price_background_down}">
                 <div class="d-flex position-absolute top-0 call-pul-ltp-btns d-none call-row" style="z-index:99">
-                    <button id="Auto_calls_short_click" title="Short" data-action="Short" data-side="call" type="button" class="px-lg-3 py-lg-1 mx-1 bg-light-green put_call_btns common-border shadow-none fs-13 fw-600 btn btn-primary">S</button>
-                    <button id="Auto_calls_long_click" title="Long" data-action="Long" data-side="call" type="button" class="px-lg-3 py-lg-1 mx-1 bg-light-red put_call_btns  shadow-none fs-13 fw-600 btn btn-primary">B</button>
+                    <button id="Auto_calls_short_click" title="Short" data-action="Short" data-side="call" type="button" data-f&o="option"  class="px-lg-3 py-lg-1 mx-1 bg-light-green put_call_btns common-border shadow-none fs-13 fw-600 btn btn-primary">S</button>
+                    <button id="Auto_calls_long_click" title="Long" data-action="Long" data-side="call" type="button" data-f&o="option" class="px-lg-3 py-lg-1 mx-1 bg-light-red put_call_btns  shadow-none fs-13 fw-600 btn btn-primary">B</button>
                 </div>
                 <p class="calls_ltp text-start d-none" style="z-index=9999">${optionChain.calls_ltp}</p>
                 <div class="main_calls_oi_option">
@@ -11260,8 +11320,8 @@
         
            
                 <div class="d-flex position-absolute top-0 call-pul-ltp-btns  d-none" id="put_call_put">
-                    <button id="Auto_puts_short_click" title="Short" type="button" data-action="Short" data-side="put" class="px-lg-3 py-lg-1 mx-1 bg-light-green put_call_btns common-border shadow-none fs-13 fw-600 btn btn-primary">S</button>
-                    <button id="Auto_puts_long_click" title="Long" data-action="Long" data-side="put" type="button" class="px-lg-3 bg-light-red put_call_btns py-lg-1 mx-1  shadow-none fs-13 fw-600 btn btn-primary">B</button>
+                    <button id="Auto_puts_short_click" title="Short" type="button" data-action="Short" data-side="put" data-f&o="option" class="px-lg-3 py-lg-1 mx-1 bg-light-green put_call_btns common-border shadow-none fs-13 fw-600 btn btn-primary">S</button>
+                    <button id="Auto_puts_long_click" title="Long" data-action="Long" data-side="put" type="button" data-f&o="option" class="px-lg-3 bg-light-red put_call_btns py-lg-1 mx-1  shadow-none fs-13 fw-600 btn btn-primary">B</button>
                 </div>
             </td>
 
@@ -11274,8 +11334,8 @@
 
             <td class="text-end call-ltp cursor-pointer  position-relative ${strike_price_background_down}">
                 <div class="d-flex position-absolute top-0 call-pul-ltp-btns d-none call-row" style="z-index:99">
-                    <button id="Auto_calls_short_click" title="Short" data-action="Short" data-side="call" type="button" class="px-lg-3 py-lg-1 mx-1 bg-light-green put_call_btns common-border shadow-none fs-13 fw-600 btn btn-primary">S</button>
-                    <button id="Auto_calls_long_click" title="Long" data-action="Long" data-side="call" type="button" class="px-lg-3 py-lg-1 mx-1 bg-light-red put_call_btns  shadow-none fs-13 fw-600 btn btn-primary">B</button>
+                    <button id="Auto_calls_short_click" title="Short" data-action="Short" data-side="call" type="button" data-f&o="option" class="px-lg-3 py-lg-1 mx-1 bg-light-green put_call_btns common-border shadow-none fs-13 fw-600 btn btn-primary">S</button>
+                    <button id="Auto_calls_long_click" title="Long" data-action="Long" data-side="call" type="button" data-f&o="option" class="px-lg-3 py-lg-1 mx-1 bg-light-red put_call_btns  shadow-none fs-13 fw-600 btn btn-primary">B</button>
                 </div>
                 <p class="calls_ltp text-start d-none" style="z-index=9999">${optionChain.calls_ltp}</p>
  
@@ -11298,8 +11358,8 @@
         
            
                 <div class="d-flex position-absolute top-0 call-pul-ltp-btns  d-none" id="put_call_put">
-                    <button id="Auto_puts_short_click" title="Short" type="button" data-action="Short" data-side="put" class="px-lg-3 py-lg-1 mx-1 bg-light-green put_call_btns common-border shadow-none fs-13 fw-600 btn btn-primary">S</button>
-                    <button id="Auto_puts_long_click" title="Long" data-action="Long" data-side="put" type="button" class="px-lg-3 bg-light-red put_call_btns py-lg-1 mx-1  shadow-none fs-13 fw-600 btn btn-primary">B</button>
+                    <button id="Auto_puts_short_click" title="Short" type="button" data-action="Short" data-side="put" data-f&o="option" class="px-lg-3 py-lg-1 mx-1 bg-light-green put_call_btns common-border shadow-none fs-13 fw-600 btn btn-primary">S</button>
+                    <button id="Auto_puts_long_click" title="Long" data-action="Long" data-side="put" type="button" data-f&o="option" class="px-lg-3 bg-light-red put_call_btns py-lg-1 mx-1  shadow-none fs-13 fw-600 btn btn-primary">B</button>
                 </div>
             </td>
 
@@ -13725,90 +13785,152 @@
           })
 
           $(".put_call_btns").click(function () {
+
+            if ($(this).data("f&o") === "option") {
+              var row = $(this).closest("tr"); // Find the closest table row
+              var action = $(this).attr("data-action"); // Get the action (Short/Long) from the button's data attribute
+              var side = $(this).attr("data-side"); // Get the side (Call/Put) from the button's data attribute
+
+              var ltpValue =
+                side === "call"
+                  ? row.find(".calls_ltp").text()
+                  : row.find(".puts_ltp").text();
+
+              // Now you can access the data from the row and log it as needed
+              if (side === "call") {
+                var calls_iv = row.find(".text-end").eq(0).text();
+                var calls_oi = row.find(".text-end").eq(1).text();
+                var expiry_date = row.find(".expiry_date").text();
+                var strike_price = row.find(".strike_price").text();
+                var opiton_lot_size = row.find(".opiton_lot_size").text();
+                var opiton_selected = row.find(".opiton_selected").text();
+                var option_side = "Call";
+
+                // console.log(option_side);
+                // console.log("Call Side - Action:", action);
+                // // console.log("Call Side - calls_iv:", calls_iv);
+                // // console.log("Call Side - calls_oi:", calls_oi);
+                // console.log("Call Side - calls_ltp:", ltpValue);
+                // console.log("Call Side - strike_price:", strike_price);
+                // console.log("opiton_selected:", opiton_selected);
+                // console.log(expiry_date);
+                // console.log(opiton_lot_size);
+
+                var lot_size_inner=1
+                populateInputTable(
+                  option_side,
+                  expiry_date,
+                  strike_price,
+                  action,
+                  opiton_lot_size,
+                  ltpValue,
+                  opiton_selected,lot_size_inner
+                );
+                Table_chart_pyoff()
+                margin_calculations()
+                $(".main_position,.main_all_profit_loss,.main_bottom_strategy_positions").show()
+                $(".main_build_custom_strategy_empty").css("display", "none")
+                $("#customRange2").show()
+                $('#taget_date_table').show()
+
+                $("#resultTable tbody,#table-PL,.option_oi_charts,#chartdiv,.payoff_table_data").show()
+
+
+              } else {
+                var option_side = "Put";
+                var puts_oi = row.find(".text-start").eq(1).text();
+                var puts_iv = row.find(".text-start").eq(2).text();
+                var expiry_date = row.find(".expiry_date").text();
+                var strike_price = row.find(".strike_price").text();
+                var opiton_lot_size = row.find(".opiton_lot_size").text();
+                var opiton_selected = row.find(".opiton_selected").text();
+                // //console.log(option_side);
+                // //console.log("Put Side - Action:", action);
+                // //console.log("Put Side - puts_ltp:", ltpValue);
+                // //console.log("Put Side - puts_oi:", puts_oi);
+                // //console.log("Put Side - puts_iv:", puts_iv);
+                // //console.log(expiry_date);
+                // //console.log(opiton_lot_size);
+                // //console.log(strike_price);
+
+                var lot_size_inner=1
+                populateInputTable(
+                  option_side,
+                  expiry_date,
+                  strike_price,
+                  action,
+                  opiton_lot_size,
+                  ltpValue,
+                  opiton_selected,lot_size_inner
+                );
+                Table_chart_pyoff()
+                $(".main_position,.main_all_profit_loss,.main_bottom_strategy_positions").show()
+                $(".main_build_custom_strategy_empty").css("display", "none")
+                $("#customRange2").show()
+                $('#taget_date_table').show()
+                $("#resultTable tbody,#table-PL,.option_oi_charts,#chartdiv,.payoff_table_data").show()
+                margin_calculations()
+
+              }
+
+
+            } else if ($(this).data("f&o") === "future") {
+
+
+  var option_side = "FUTURE";
+      console.log("Option Side: " + option_side);
+
+      var opiton_selected = $(".stockDropdown").val();
+      console.log("Option Selected: " + opiton_selected);
+
+      var expiry_date = $(".futures_expiry").val();
+      console.log("Expiry Date: " + expiry_date);
+
+      var opiton_lot_size = $("#lot_size_value").text();
+      console.log("Option Lot Size: " + opiton_lot_size);
+
+      var lot_size_inner = $("#futures_counter_input").val();
+      console.log("Lot Size Inner: " + lot_size_inner);
+
+      var strike_price = $(".futures_ltp").text();
+      console.log("Strike Price: " + strike_price);
+
+      var ltpValue = $(".futures_ltp").text();
+      console.log("LTP Value: " + ltpValue);
+
+      var action = $("input[name='callAction']:checked").val();
+      console.log("Action: " + action);
+
+
+      populateInputTable(
+                  option_side,
+                  expiry_date,
+                  strike_price,
+                  action,
+                  opiton_lot_size,
+                  ltpValue,
+                  opiton_selected,lot_size_inner
+                );
+
+              Table_chart_pyoff()
+                $(".main_position,.main_all_profit_loss,.main_bottom_strategy_positions").show()
+                $(".main_build_custom_strategy_empty").css("display", "none")
+                $("#customRange2").show()
+                $('#taget_date_table').show()
+                $("#resultTable tbody,#table-PL,.option_oi_charts,#chartdiv,.payoff_table_data").show()
+                margin_calculations()
+            }
+
+
             if (isTableEmpty) {
               $(".data-display-table").empty();
               isTableEmpty = false;
             }
-            var row = $(this).closest("tr"); // Find the closest table row
-            var action = $(this).attr("data-action"); // Get the action (Short/Long) from the button's data attribute
-            var side = $(this).attr("data-side"); // Get the side (Call/Put) from the button's data attribute
-
-            var ltpValue =
-              side === "call"
-                ? row.find(".calls_ltp").text()
-                : row.find(".puts_ltp").text();
-
-            // Now you can access the data from the row and log it as needed
-            if (side === "call") {
-              var calls_iv = row.find(".text-end").eq(0).text();
-              var calls_oi = row.find(".text-end").eq(1).text();
-              var expiry_date = row.find(".expiry_date").text();
-              var strike_price = row.find(".strike_price").text();
-              var opiton_lot_size = row.find(".opiton_lot_size").text();
-              var opiton_selected = row.find(".opiton_selected").text();
-              var option_side = "Call";
-
-              // //console.log(option_side);
-              // //console.log("Call Side - Action:", action);
-              // //console.log("Call Side - calls_iv:", calls_iv);
-              // //console.log("Call Side - calls_oi:", calls_oi);
-              // //console.log("Call Side - calls_ltp:", ltpValue);
-              // //console.log("Call Side - strike_price:", strike_price);
-              // //console.log(expiry_date);
-              // //console.log(opiton_lot_size);
-              populateInputTable(
-                option_side,
-                expiry_date,
-                strike_price,
-                action,
-                opiton_lot_size,
-                ltpValue,
-                opiton_selected
-              );
-              Table_chart_pyoff()
-              margin_calculations()
-              $(".main_position,.main_all_profit_loss,.main_bottom_strategy_positions").show()
-              $(".main_build_custom_strategy_empty").css("display", "none")
-              $("#customRange2").show()
-              $('#taget_date_table').show()
-
-              $("#resultTable tbody,#table-PL,.option_oi_charts,#chartdiv,.payoff_table_data").show()
 
 
-            } else {
-              var option_side = "Put";
-              var puts_oi = row.find(".text-start").eq(1).text();
-              var puts_iv = row.find(".text-start").eq(2).text();
-              var expiry_date = row.find(".expiry_date").text();
-              var strike_price = row.find(".strike_price").text();
-              var opiton_lot_size = row.find(".opiton_lot_size").text();
-              var opiton_selected = row.find(".opiton_selected").text();
-              // //console.log(option_side);
-              // //console.log("Put Side - Action:", action);
-              // //console.log("Put Side - puts_ltp:", ltpValue);
-              // //console.log("Put Side - puts_oi:", puts_oi);
-              // //console.log("Put Side - puts_iv:", puts_iv);
-              // //console.log(expiry_date);
-              // //console.log(opiton_lot_size);
-              // //console.log(strike_price);
-              populateInputTable(
-                option_side,
-                expiry_date,
-                strike_price,
-                action,
-                opiton_lot_size,
-                ltpValue,
-                opiton_selected
-              );
-              Table_chart_pyoff()
-              $(".main_position,.main_all_profit_loss,.main_bottom_strategy_positions").show()
-              $(".main_build_custom_strategy_empty").css("display", "none")
-              $("#customRange2").show()
-              $('#taget_date_table').show()
-              $("#resultTable tbody,#table-PL,.option_oi_charts,#chartdiv,.payoff_table_data").show()
-              margin_calculations()
 
-            }
+
+
             $(".inner_p_l_greeks").show();
             if ($(this).data("HI1") === undefined) {
               // //console.log("Yes");
@@ -13924,7 +14046,7 @@
             action,
             option_lot_size,
             ltpValue,
-            opiton_selected
+            opiton_selected,lot_size_inner
           ) {
 
 
@@ -13954,7 +14076,14 @@
             // NIFTY23N0919250CE
             // NIFTY23N0919250PE
 
-            var main_ce_pe = option_side === "Put" ? "PUT" : "CALL"
+            var main_ce_pe;
+      if (option_side === "Put") {
+        main_ce_pe = "PUT";
+      } else if (option_side === "Call") {
+        main_ce_pe = "CALL";
+      } else {
+        main_ce_pe = "FUTURE";
+      }
 
             opiton_selected = opiton_selected.replace(/\s/g, "");
             result = result.replace(/\s/g, "");
@@ -14056,18 +14185,17 @@
             var stockDropdown = $(".stockDropdown").val();
             // +1x NIFTY07SEP 19350CE - ₹ 125.3 (0.00)
             var add_position = $(`
-                                    <div class="main_add_position_actions d-flex justify-content-between" id=${positions++}>
+                                    <div class="main_add_position_actions d-flex justify-content-between" id="">
                                         <div class="inner_position d-flex gap-1">
                                           <div class="${action === "Long" ? "bg_indicator_buy" : "bg_indicator_sell"}" > ${action === "Long" ? "B" : "S"}</div>
                                             <div class="main_short_long_lot_size">
                                             <div class="short_long"><span class="long_short_inner">${action === "Long" ? "+" : "-"
-              }</span></div> <div class="option_lot_size_input">1</div>x
+              }</span></div> <div class="option_lot_size_input">${lot_size_inner}</div>x
                                         </div>
                                         <div class="symbol_expiry"><span class="symbol">${stockDropdown}</span><span class="expiry">${formattedDate}</span><span class="expiry_initial" style="display:none">${expiry_date}</span></div>
                                         <div class="strike_price_call_put"> <span class="strikePrice">${parseFloat(
                 strike_price
-              )}</span><span class="call_put_entrance">${option_side === "Call" ? "CE" : "PE"
-              }</span></div>
+              )}</span><span class="call_put_entrance">${ option_side === "Call" ? "CE" : (option_side === "Put" ? "PE" : "FUTURE")}</span></div>
                                         <div class="ltp_main">-₹<span class="entryPrice">${parseFloat(
                 ltpValue
               )}</span>(<span class="exit_price">0</span>) <span class="current_price">0</span></div></div>
@@ -14244,7 +14372,13 @@
               Edit_counter();
 
             });
+            var elements = $(".main_add_position_actions");
 
+// Iterate through each element and update its id
+elements.each(function (index) {
+  var newId = index + 1;
+  $(this).attr("id", newId);
+});
           }
 
           // //console.log(main_margin_calculations);
