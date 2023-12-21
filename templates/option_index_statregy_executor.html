@@ -1317,6 +1317,13 @@
     text-align: center;
     /* Set to 'end' for right alignment */
   }
+
+  .main_all_spot_futures_val{
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+}
 </style>
 <div class="title my-2 d-flex">
   <h5>Option Strategy Tester</h5>
@@ -1399,58 +1406,67 @@
             </optgroup>
             {% comment %} <optgroup label="Stocks"></optgroup> {% endcomment %}
           </select>
-          <div class="spot_strategies">
-            <p class="spot_title">Spot :</p>
 
-            <div id="last_traded_price"></div>
-            <div id="closest_strike_price" style="display: none"></div>
-            <div id="closen_expiry_date"></div>
-          </div>
 
-          <div class="main_futures_price_as_per_expiries">
-            <p class="futures_title">Futures :</p>
+          <div class="main_futures_option_chains mb-2">
 
-            <div class="futures_ltp"></div>
-          </div>
-
-          <div class="main_max_pain_strategies">
-            <div class="max_pain_strategies d-flex align-items-center gap-1">
-              <p>Max Pain : </p>
-
+            <div class="main_futures_inputs">
+      
+              <div class="futures_segements_main">
+                <label for="">Futures Segment</label>
+                <select class="form-select">
+      
+                  <option value="futures">Futures</option>
+                </select>
+              </div>
+      
+      
+              <div class="futures_segements_main_expiry">
+                <label for="">Select Expiry</label>
+                <select class="form-select futures_expiry">
+      
+      
+                </select>
+              </div>
+      
+              <div class="main_futures_buy_sell">
+                <div class="form-check mb-0">
+                  <input class="form-check-input" type="radio" name="callAction" id="callBuyRadio" value="Long" checked>
+                  <label class="form-check-label mb-0" for="callBuyRadio">
+                    Buy
+                  </label>
+                </div>
+                <div class="form-check mb-0">
+                  <input class="form-check-input" type="radio" name="callAction" id="callSellRadio" value="Short">
+                  <label class="form-check-label mb-0" for="callSellRadio">
+                    Sell
+                  </label>
+                </div>
+              </div>
+      
+              <div class="innerStraddle_lot_size">
+                <p class="fs-6 lot_title">Qty:</p>
+                <div class="counter_straddle d-flex justify-content-center gap-1">
+                  <button class="btn" id="future_decrement">
+                    <i class="bx bx-minus"></i>
+                  </button>
+                  <input type="text" name="" id="futures_counter_input" min="1" disabled>
+                  <button class="btn" id="future_increment">
+                    <i class="bx bx-plus"></i>
+                  </button>
+                </div>
+              </div>
+      
+              <button class="btn btn-primary put_call_btns" id="future_add_positions" data-f&o="future" style=" color: white !important;
+              background-color: #042452; height: 36px;
+              border-color: #021a3d;">ADD POSITION</button>
             </div>
-            <div id="max_pain_value" style="font-size: 16px;"></div>
+      
+      
+      
+      
           </div>
-          <div class="lot_size_strategies">
-            <p>Lot Size :</p>
-            <div id="lot_size_value"></div>
-          </div>
-          <div class="low52_strategies">
-            <p>Low 52 Wk : </p>
-
-            <div id="low52_value"></div>
-          </div>
-
-          <div class="high52_strategies">
-            <p>High 52 Wk :</p>
-
-            <div id="high52_value"></div>
-          </div>
-          <div class="open_strategies">
-            <p>Open :</p>
-
-            <div id="open_value"></div>
-          </div>
-
-          <div class="low_strategies">
-            <p>Low : </p>
-
-            <div id="low_value"></div>
-          </div>
-          <div class="high_strategies">
-            <p>High : </p>
-
-            <div id="high_value"></div>
-          </div>
+      
           <!-- <div class="option_chain_strategies d-flex align-items-center gap-1">
             <p>Option Chain</p>
             <i class="bx bx-link-external"></i>
@@ -1746,62 +1762,60 @@
     </div>
 
 
-    <div class="main_futures_option_chains mt-2 mb-2">
 
-      <div class="main_futures_inputs">
+    <div class="main_all_spot_futures_val">
+      <div class="spot_strategies">
+        <p class="spot_title">Spot :</p>
 
-        <div class="futures_segements_main">
-          <label for="">Futures Segment</label>
-          <select class="form-select">
-
-            <option value="futures">Futures</option>
-          </select>
-        </div>
-
-
-        <div class="futures_segements_main_expiry">
-          <label for="">Select Expiry</label>
-          <select class="form-select futures_expiry">
-
-
-          </select>
-        </div>
-
-        <div class="main_futures_buy_sell">
-          <div class="form-check mb-0">
-            <input class="form-check-input" type="radio" name="callAction" id="callBuyRadio" value="Long" checked>
-            <label class="form-check-label mb-0" for="callBuyRadio">
-              Buy
-            </label>
-          </div>
-          <div class="form-check mb-0">
-            <input class="form-check-input" type="radio" name="callAction" id="callSellRadio" value="Short">
-            <label class="form-check-label mb-0" for="callSellRadio">
-              Sell
-            </label>
-          </div>
-        </div>
-
-        <div class="innerStraddle_lot_size">
-          <p class="fs-6 lot_title">Qty:</p>
-          <div class="counter_straddle d-flex justify-content-center gap-1">
-            <button class="btn" id="future_decrement">
-              <i class="bx bx-minus"></i>
-            </button>
-            <input type="text" name="" id="futures_counter_input" min="1" disabled>
-            <button class="btn" id="future_increment">
-              <i class="bx bx-plus"></i>
-            </button>
-          </div>
-        </div>
-
-        <button class="btn btn-primary put_call_btns" id="future_add_positions" data-f&o="future" style=" color: white !important;
-        background-color: #042452; height: 36px;
-        border-color: #021a3d;">ADD POSITION</button>
+        <div id="last_traded_price"></div>
+        <div id="closest_strike_price" style="display: none"></div>
+        <div id="closen_expiry_date"></div>
       </div>
 
+      <div class="main_futures_price_as_per_expiries">
+        <p class="futures_title">Futures :</p>
 
+        <div class="futures_ltp"></div>
+      </div>
 
+      <div class="main_max_pain_strategies">
+        <div class="max_pain_strategies d-flex align-items-center gap-1">
+          <p>Max Pain : </p>
+
+        </div>
+        <div id="max_pain_value" style="font-size: 16px;"></div>
+      </div>
+      <div class="lot_size_strategies">
+        <p>Lot Size :</p>
+        <div id="lot_size_value"></div>
+      </div>
+      <div class="low52_strategies">
+        <p>Low 52 Wk : </p>
+
+        <div id="low52_value"></div>
+      </div>
+
+      <div class="high52_strategies">
+        <p>High 52 Wk :</p>
+
+        <div id="high52_value"></div>
+      </div>
+      <div class="open_strategies">
+        <p>Open :</p>
+
+        <div id="open_value"></div>
+      </div>
+
+      <div class="low_strategies">
+        <p>Low : </p>
+
+        <div id="low_value"></div>
+      </div>
+      <div class="high_strategies">
+        <p>High : </p>
+
+        <div id="high_value"></div>
+      </div>
 
     </div>
     <div class="right_side_top_strategies">
@@ -7057,12 +7071,12 @@
     </div>
 
   </div>
-  <label for="customRange1" class="form-label justify-content-between d-none" id="taget_date_table">
+  <label for="customRange1" class="form-label justify-content-between" id="taget_date_table">
 
     <div id="target_date"></div>
     <div id="target_date_full"></div>
   </label>
-  <input type="range" class="form-range d-none" min="0" max="5" id="customRange2">
+  <input type="range" class="form-range " min="0" max="5" id="customRange2">
 </div>
 <style>
   input[type="range"]::-webkit-slider-runnable-track {
@@ -15447,8 +15461,7 @@ position.find(".buy_sell_indicator_options_futures").removeClass("bg_indicator_b
 
 
       // ////console.log('Hi');
-      black_scholes_table(tableData)
-
+     
       var todayDate = new Date();
       var todayDateString = formatDate(todayDate);
 
@@ -15582,6 +15595,7 @@ position.find(".buy_sell_indicator_options_futures").removeClass("bg_indicator_b
       }
 
       updateRangeLimits();
+      black_scholes_table(tableData)
 
     }
 
@@ -15612,7 +15626,7 @@ position.find(".buy_sell_indicator_options_futures").removeClass("bg_indicator_b
       //console.log("optionsData", optionsData);
 
       var retrievedValue = localStorage.getItem("customRange2");
-      // ////console.log("Retrieved value from localstorage for " + "customRange2" + ": " + retrievedValue);
+     console.log("Retrieved value from localstorage for " + "customRange2" + ": " + retrievedValue);
 
       // Use jQuery AJAX to send the data to Django
       $.ajax({
@@ -15637,7 +15651,7 @@ position.find(".buy_sell_indicator_options_futures").removeClass("bg_indicator_b
 
           var single_premiumData = premiumsData[0]
 
-          // ////console.log(single_premiumData);
+          ////console.log(single_premiumData);
 
 
 
