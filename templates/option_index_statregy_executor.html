@@ -7075,15 +7075,16 @@
 
 
   <div class="main_range_inputs" style="display: none !important;">
-  
+
     <label for="customRange1" class="form-label justify-content-between" id="taget_date_table">
 
       <div id="target_date"></div>
       <div id="target_date_full"></div>
     </label>
-    <input type="range" class="form-range " min="0" max="5" id="customRange2"></div>
+    <input type="range" class="form-range " min="0" max="5" id="customRange2">
+  </div>
 
-  
+
 
 
 </div>
@@ -15330,7 +15331,7 @@
         tableData.push({ category: cleanCategory, value: sumArray[i] });
         chartData.push({ category: strikePrices[i], value: sumArray[i] });
       }
-
+      // console.log("@",tableData);
 
 
 
@@ -15500,11 +15501,6 @@
         black_scholes_table(tableData)
       });
 
-      $("#saveChangesButton").click(function () {
-        updateRangeLimits();
-        logDateInfo("customRange2");
-        black_scholes_table(tableData)
-      })
 
       // Function to format date as 'YYYY-MM-DD'
       function formatDate(date) {
@@ -15606,17 +15602,18 @@
       }
 
       updateRangeLimits();
-      black_scholes_table(tableData)
 
+      black_scholes_table(tableData)
     }
 
 
     function black_scholes_table(tableData) {
 
-      //console.log("tableData", tableData);
+      console.log("tableData", tableData);
       var option_simulator_body = $(".main_option_chain");
       var optionExpiryDropdown = $("#optionExpiryDropdown").val();
       var last_traded_price = $(".last_traded_price").text();
+      var futures_ltp = $(".futures_ltp").text();
 
       var optionsData = []; // Array to store option data as objects
 
@@ -15634,7 +15631,7 @@
         optionsData.push(optionObject);
       });
 
-      //console.log("optionsData", optionsData);
+      console.log("optionsData", optionsData);
 
       var retrievedValue = localStorage.getItem("customRange2");
       console.log("Retrieved value from localstorage for " + "customRange2" + ": " + retrievedValue);
@@ -15642,6 +15639,8 @@
       // Use jQuery AJAX to send the data to Django
 
       if (parseInt(retrievedValue) !== 0) {
+
+        console.log("Options more than one day");
         $.ajax({
           type: 'POST',
           url: '/black_scholes_option_price',
@@ -15650,6 +15649,7 @@
             'option_expiry': optionExpiryDropdown,
             'last_traded_price': last_traded_price,
             'onDate': retrievedValue,
+            'futures_ltp': futures_ltp,
             csrfmiddlewaretoken: '{{ csrf_token }}' // Add CSRF token for security
           },
 
@@ -15666,7 +15666,9 @@
 
             ////console.log(single_premiumData);
 
+            var All_futures = data.All_futures;
 
+            console.log("All_futures", All_futures);
 
 
 
@@ -15701,12 +15703,13 @@
                     if (optionData && optionData.strikePrice === strikePrice_edit) {
                       // If the strikePrice matches, push the premium to the array
                       matchingPremiumsForDay.push(optionData);
+                      // console.log("optionData",optionData);
                     }
                   });
                 }
 
                 // Log the matching premiums for the current day
-                // ////console.log('Matching Premiums for Day ' + dayData.day, matchingPremiumsForDay);
+                console.log('Matching Premiums for Day ' + dayData.day, matchingPremiumsForDay);
 
                 // Add key-value pair to the matchingPremiumsArray
                 matchingPremiumsArray.push({ day: dayData.day, premiums: matchingPremiumsForDay });
@@ -15722,16 +15725,22 @@
                   };
 
                   if (requiredStringValue === "CE") {
+                    console.log("CE");
                     main_premiums_black_scholes["ltp"] = parseFloat(matchingPremium.call_price);
                   } else if (requiredStringValue === "PE") {
+                    console.log("PE");
                     main_premiums_black_scholes["ltp"] = parseFloat(matchingPremium.put_price);
-                  }
+                  } else if (requiredStringValue === "FUTURE") {
+                    console.log("FUTURE");
+                    main_premiums_black_scholes["ltp"] = parseFloat(matchingPremium.future_price);
 
+                  }
+                  // console.log("main_premiums_black_scholes",main_premiums_black_scholes);
                   main_all_data.push(main_premiums_black_scholes);
                 });
               });
 
-              // ////console.log('All Matching Premiums:', matchingPremiumsArray);
+              console.log('All Matching Premiums:', matchingPremiumsArray);
             });
 
 
@@ -15758,7 +15767,7 @@
             });
 
             // Now groupedData contains the data grouped by day
-            // ////console.log('Grouped Data:', groupedData);
+            console.log('Grouped Data:', groupedData);
 
             var resultArray = [];
             var lot_size = parseInt($("#lot_size_value").text());
@@ -15777,18 +15786,34 @@
 
                   items.forEach(function (item) {
                     if (item.requiredStringValue === 'CE' && item.long_shorts === '+') {
+
+                      console.log('CE+');
+
                       tempArray.push(ULTRAMAX(0, ultra_strike_price - parseFloat(item.StrikePrice)) - parseFloat(item.ltp));
                     }
                     if (item.requiredStringValue === 'CE' && item.long_shorts === '-') {
+
+                      console.log('CE-');
                       tempArray.push(parseFloat(item.ltp) - ULTRAMAX(0, ultra_strike_price - parseFloat(item.StrikePrice)));
                     }
                     if (item.requiredStringValue === 'PE' && item.long_shorts === '+') {
+
+
+                      console.log('PE+');
                       tempArray.push(ULTRAMAX(0, parseFloat(item.StrikePrice) - ultra_strike_price) - parseFloat(item.ltp));
                     }
                     if (item.requiredStringValue === 'PE' && item.long_shorts === '-') {
+                      console.log('PE-');
                       tempArray.push(parseFloat(item.ltp) - ULTRAMAX(0, parseFloat(item.StrikePrice) - ultra_strike_price));
                     }
-
+                    if (item.requiredStringValue === "FUTURE" && item.long_shorts === "-") {
+                      console.log('FUTURE-');
+                      tempArray.push(parseFloat(item.StrikePrice) - ultra_strike_price);
+                    }
+                    if (item.requiredStringValue === "FUTURE" && item.long_shorts === "+") {
+                      console.log('FUTURE+');
+                      tempArray.push(ultra_strike_price - parseFloat(item.StrikePrice));
+                    }
                   });
 
 
@@ -15807,7 +15832,7 @@
               return acc;
             }, {});
 
-            // ////console.log(groupedResultArray);
+            console.log("groupedResultArray", groupedResultArray);
 
 
             // var arrayOfArrays = groupedResultArray;
@@ -15971,7 +15996,7 @@
               all_day_merged_data.push(dayObject);
             });
 
-            // ////console.log(all_day_merged_data);
+            //  console.log(all_day_merged_data);
 
 
             var grouped_data = {};
@@ -16009,7 +16034,7 @@
             // Print the merged _result
 
             // Print the merged _result
-            // ////console.log(_result);
+            console.log("_result", _result);
 
 
             var table = $(".payoff_table_main_table");
@@ -16101,7 +16126,7 @@
 
             // Get the current date
             var currentDate = new Date();
-    
+
 
             // Display dates based on the number of th elements
             thElements.each(function (index) {
@@ -16337,126 +16362,127 @@
         });
 
 
-      }else{
+      }
+      else {
 
-        
+        console.log("LESS");
         var table = $(".payoff_table_main_table");
 
-// Clear any existing content, including the body
-table.empty();
+        // Clear any existing content, including the body
+        table.empty();
 
-// Add the new headers
-var newHeaders = $("<thead><tr><th>Strikes</th><th >On expiry</th></tr></thead>");
-table.append(newHeaders);
+        // Add the new headers
+        var newHeaders = $("<thead><tr><th>Strikes</th><th >On expiry</th></tr></thead>");
+        table.append(newHeaders);
 
-// Create an empty tbody
-var newBody = $("<tbody>");
-table.append(newBody);
+        // Create an empty tbody
+        var newBody = $("<tbody>");
+        table.append(newBody);
 
-// Loop through the tableData array and create table rows and cells
-tableData.forEach(function (item) {
-    var main_payoff_table_condition = item.value < 0 ? "text-danger" : "text-success";
-    var row = $("<tr>");
+        // Loop through the tableData array and create table rows and cells
+        tableData.forEach(function (item) {
+          var main_payoff_table_condition = item.value < 0 ? "text-danger" : "text-success";
+          var row = $("<tr>");
 
-    var categoryCell = $("<td>").text(item.category);
-    var valueCell = $("<td>").text(item.value.toFixed(2)).addClass(main_payoff_table_condition);
+          var categoryCell = $("<td>").text(item.category);
+          var valueCell = $("<td>").text(item.value.toFixed(2)).addClass(main_payoff_table_condition);
 
-    row.append(categoryCell);
-    row.append(valueCell);
+          row.append(categoryCell);
+          row.append(valueCell);
 
-    newBody.append(row);
-});
-
-var table = $('.payoff_table_main_table');
-            var firstRow = table.find('thead tr');
-        
-            // Select the last th element
-            var thLastElement = firstRow.find('th:last');
+          newBody.append(row);
+        });
 
 
-            var expiryElements = $(".expiry_initial");
+        var firstRow = table.find('thead tr');
 
-            // Initialize an array to store parsed dates
-            var dates = [];
-
-            // Loop through each element
-            expiryElements.each(function () {
-              // Get the text content of the element
-              var dateString = $(this).text();
-
-              // Parse the date string into a JavaScript Date object
-              var dateObject = new Date(dateString);
-
-              // Add the date object to the array
-              dates.push(dateObject);
-            });
-
-            // Find the minimum date in the array
-            var minDate = new Date(Math.min.apply(null, dates));
-
-            // Log the minimum date
-            console.log("Minimum Expiry Date: " + minDate.toDateString());
-
-            // Assume #optionExpiryDropdown is an input field
-            var dropdownValue = minDate.toDateString()
-
-            // Set the last th element text to the formatted dropdown value
-            thLastElement.text(`${formatDropdownDate(dropdownValue)}`);
-
-            // Get the current date
-            var currentDate = new Date();
-            var thElements = firstRow.find('th').slice(1, -1);
-            // Display dates based on the number of th elements
-            thElements.each(function (index) {
-              // Calculate the date for each th
-              var dateForTH = new Date(currentDate);
-              dateForTH.setDate(currentDate.getDate() + index);
-
-              // Format the date as "On Target Date Mon DD MMM"
-              var formattedDate = getDayOfWeek(dateForTH) + ", " + formatDate(dateForTH);
-
-              // Display the formatted date
-              $(this).text(formattedDate);
+        // Select the last th element
+        var thLastElement = firstRow.find('th:last');
 
 
-            });
+        var expiryElements = $(".expiry_initial");
+
+        // Initialize an array to store parsed dates
+        var dates = [];
+
+        // Loop through each element
+        expiryElements.each(function () {
+          // Get the text content of the element
+          var dateString = $(this).text();
+
+          // Parse the date string into a JavaScript Date object
+          var dateObject = new Date(dateString);
+
+          // Add the date object to the array
+          dates.push(dateObject);
+        });
+
+        // Find the minimum date in the array
+        var minDate = new Date(Math.min.apply(null, dates));
+
+        // Log the minimum date
+        console.log("Minimum Expiry Date: " + minDate.toDateString());
+
+        // Assume #optionExpiryDropdown is an input field
+        var dropdownValue = minDate.toDateString()
+
+        // Set the last th element text to the formatted dropdown value
+        thLastElement.text(`${formatDropdownDate(dropdownValue)}`);
+
+        // Get the current date
+        var currentDate = new Date();
+        var thElements = firstRow.find('th').slice(1, -1);
+        // Display dates based on the number of th elements
+        thElements.each(function (index) {
+          // Calculate the date for each th
+          var dateForTH = new Date(currentDate);
+          dateForTH.setDate(currentDate.getDate() + index);
+
+          // Format the date as "On Target Date Mon DD MMM"
+          var formattedDate = getDayOfWeek(dateForTH) + ", " + formatDate(dateForTH);
+
+          // Display the formatted date
+          $(this).text(formattedDate);
+
+
+        });
 
 
 
-            // Function to get the day of the week
-            function getDayOfWeek(date) {
-              var daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-              return daysOfWeek[date.getDay()];
-            }
+        // Function to get the day of the week
+        function getDayOfWeek(date) {
+          var daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+          return daysOfWeek[date.getDay()];
+        }
 
-            // Function to format the date as "DDth MMM"
-            function formatDate(date) {
-              var day = date.getDate();
-              var suffix = getDaySuffix(day);
-              var options = { day: 'numeric', month: 'short' };
-              return date.toLocaleDateString('en-US', options).replace(/\b\d{1,2}\b/, day + suffix);
-            }
+        // Function to format the date as "DDth MMM"
+        function formatDate(date) {
+          var day = date.getDate();
+          var suffix = getDaySuffix(day);
+          var options = { day: 'numeric', month: 'short' };
+          return date.toLocaleDateString('en-US', options).replace(/\b\d{1,2}\b/, day + suffix);
+        }
 
-            // Function to format the dropdown value as "Thu 21th Dec"
-            function formatDropdownDate(value) {
-              var date = new Date(value);
-              var options = { weekday: 'short', day: 'numeric', month: 'short' };
-              return date.toLocaleDateString('en-US', options);
-            }
+        // Function to format the dropdown value as "Thu 21th Dec"
+        function formatDropdownDate(value) {
+          var date = new Date(value);
+          var options = { weekday: 'short', day: 'numeric', month: 'short' };
+          return date.toLocaleDateString('en-US', options);
+        }
 
-            // Function to get the day suffix (st, nd, rd, th)
-            function getDaySuffix(day) {
-              if (day >= 11 && day <= 13) {
-                return 'th';
-              }
-              var lastDigit = day % 10;
-              switch (lastDigit) {
-                case 1: return 'st';
-                case 2: return 'nd';
-                case 3: return 'rd';
-                default: return 'th';
-              }
-            }
+        // Function to get the day suffix (st, nd, rd, th)
+        function getDaySuffix(day) {
+          if (day >= 11 && day <= 13) {
+            return 'th';
+          }
+          var lastDigit = day % 10;
+          switch (lastDigit) {
+            case 1: return 'st';
+            case 2: return 'nd';
+            case 3: return 'rd';
+            default: return 'th';
+          }
+        }
 
 
       }

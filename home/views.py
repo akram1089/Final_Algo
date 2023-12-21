@@ -4156,6 +4156,7 @@ def filter_iv_data(request):
                 iv_payload["data"].append(iv_payload_item)
 
             # Send POST requests to retrieve data from two different URLs
+            print("stock_payload",stock_payload)    
             stock_data = requests.post(filter_data_url, json=stock_payload, headers=headers)
             iv_data = requests.post(iv_data_url, json=iv_payload, headers=headers)
 
@@ -8341,13 +8342,25 @@ def black_scholes_option_price(request):
         options_data_str = request.POST.get('options_data')
         option_expiry = request.POST.get('option_expiry')
         last_traded_price = request.POST.get('last_traded_price')
+        futures_ltp = request.POST.get('futures_ltp')
         onDate = int(request.POST.get('onDate'))
-        print(onDate)
+        print("futures_ltp",futures_ltp)
 
         # Limit onDate to 7 if it's greater than 7
         onDate = min(onDate, 7)
 
+        print("onDate",onDate)
+
+        All_futures=[]
+
+        for days in range(1,onDate + 1):
+            T=days/365
+            future_price = float(futures_ltp) * (1 + 0.10 * T)
+            print("future_price",future_price)
+            All_futures.append({"day":days,"future_price":future_price})
+
         options_data = json.loads(options_data_str)
+
 
         main_premiums = []
 
@@ -8362,6 +8375,7 @@ def black_scholes_option_price(request):
                 r = 0.10
                 calls_sigma = float(option["calls_iv"]) / 100
                 puts_sigma = float(option["puts_iv"]) / 100
+                future_price = float(futures_ltp) * (1 + 0.10 * T)
 
                 # For Call Option
                 d1_call = (np.log(S / K) + ((r + calls_sigma ** 2 / 2) * T)) / (calls_sigma * np.sqrt(T))
@@ -8374,14 +8388,14 @@ def black_scholes_option_price(request):
                 put_price = norm.cdf(-d2_put) * K * np.exp(-r * T) - S * norm.cdf(-d1_put)
 
                 daily_premiums.append({'call_price': call_price, 'strikePrice': float(option['strike_price']),
-                                       'put_price': put_price})
+                                       'put_price': put_price,"future_price":future_price})
 
             main_premiums.append({'day': day, 'premiums': daily_premiums})
 
         # Process the data as needed (e.g., save to database)
 
         # Send a response back to the JavaScript
-        response_data = {'main_premiums': main_premiums}
+        response_data = {'main_premiums': main_premiums,"All_futures":All_futures}
         return JsonResponse(response_data)
     else:
         return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
@@ -8487,7 +8501,7 @@ class Fetch_Future_Data(APIView):
         api_url = "https://webapi.niftytrader.in/webapi/Symbol/future-expiry-data"
 
         symbol_indices = self.request.GET.get('symbol_indices', 'nifty').lower()
-        print(symbol_indices)
+        # print(symbol_indices)
 
         # Payload to send to the API
         payload = {"symbol": symbol_indices}
@@ -8501,7 +8515,7 @@ class Fetch_Future_Data(APIView):
             if response.status_code == 200:
                 # Parse the JSON response
                 response_json = response.json()
-                print(response_json)
+                # print(response_json)
 
                 # Return the response using DRF
                 return Response(response_json, status=status.HTTP_200_OK)
@@ -8527,8 +8541,8 @@ class Fetch_Future_Unique_Data(APIView):
 
         symbol_indices = self.request.GET.get('symbol_indices', 'nifty').lower()
         future_expiry = self.request.GET.get('future_expiry')
-        print(symbol_indices)
-        print(future_expiry)
+        # print(symbol_indices)
+        # print(future_expiry)
 
         # Payload to send to the API
         payload = {"symbol": symbol_indices}
@@ -8541,7 +8555,7 @@ class Fetch_Future_Unique_Data(APIView):
             if response.status_code == 200:
                 # Parse the JSON response
                 response_json = response.json()
-                print(response_json)
+                # print(response_json)
 
                 # Filter data based on future_expiry
                 filtered_data = [entry for entry in response_json['resultData'] if entry.get('expiry') == future_expiry]
