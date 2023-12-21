@@ -634,7 +634,8 @@
     margin-bottom: 1rem !important;
   }
 
-  .Long_short,.Long_short_future {
+  .Long_short,
+  .Long_short_future {
     display: flex;
     gap: 1rem;
   }
@@ -1318,12 +1319,12 @@
     /* Set to 'end' for right alignment */
   }
 
-  .main_all_spot_futures_val{
+  .main_all_spot_futures_val {
     display: flex;
     gap: 1rem;
     margin-bottom: 1rem;
     flex-wrap: wrap;
-}
+  }
 </style>
 <div class="title my-2 d-flex">
   <h5>Option Strategy Tester</h5>
@@ -1411,24 +1412,24 @@
           <div class="main_futures_option_chains mb-2">
 
             <div class="main_futures_inputs">
-      
+
               <div class="futures_segements_main">
                 <label for="">Futures Segment</label>
                 <select class="form-select">
-      
+
                   <option value="futures">Futures</option>
                 </select>
               </div>
-      
-      
+
+
               <div class="futures_segements_main_expiry">
                 <label for="">Select Expiry</label>
                 <select class="form-select futures_expiry">
-      
-      
+
+
                 </select>
               </div>
-      
+
               <div class="main_futures_buy_sell">
                 <div class="form-check mb-0">
                   <input class="form-check-input" type="radio" name="callAction" id="callBuyRadio" value="Long" checked>
@@ -1443,7 +1444,7 @@
                   </label>
                 </div>
               </div>
-      
+
               <div class="innerStraddle_lot_size">
                 <p class="fs-6 lot_title">Qty:</p>
                 <div class="counter_straddle d-flex justify-content-center gap-1">
@@ -1456,17 +1457,17 @@
                   </button>
                 </div>
               </div>
-      
+
               <button class="btn btn-primary put_call_btns" id="future_add_positions" data-f&o="future" style=" color: white !important;
               background-color: #042452; height: 36px;
               border-color: #021a3d;">ADD POSITION</button>
             </div>
-      
-      
-      
-      
+
+
+
+
           </div>
-      
+
           <!-- <div class="option_chain_strategies d-flex align-items-center gap-1">
             <p>Option Chain</p>
             <i class="bx bx-link-external"></i>
@@ -7071,12 +7072,20 @@
     </div>
 
   </div>
-  <label for="customRange1" class="form-label justify-content-between" id="taget_date_table">
 
-    <div id="target_date"></div>
-    <div id="target_date_full"></div>
-  </label>
-  <input type="range" class="form-range " min="0" max="5" id="customRange2">
+
+  <div class="main_range_inputs" style="display: none !important;">
+  
+    <label for="customRange1" class="form-label justify-content-between" id="taget_date_table">
+
+      <div id="target_date"></div>
+      <div id="target_date_full"></div>
+    </label>
+    <input type="range" class="form-range " min="0" max="5" id="customRange2"></div>
+
+  
+
+
 </div>
 <style>
   input[type="range"]::-webkit-slider-runnable-track {
@@ -9453,6 +9462,8 @@
 
       $("#table-PL").empty();
       $(".main_position").empty();
+      $(".payoff_table_data").empty();
+      $(".payoff_table_main_table").empty();
       $(".main_position").empty();
       $("#resultTable tbody").empty();
 
@@ -10442,7 +10453,7 @@
         var long_short_val = "";
         if (selectedLongShort === "Short") {
           long_short_val = "-";
-position.find(".buy_sell_indicator_options_futures").removeClass("bg_indicator_buy").addClass("bg_indicator_sell").text("S")
+          position.find(".buy_sell_indicator_options_futures").removeClass("bg_indicator_buy").addClass("bg_indicator_sell").text("S")
 
         } else {
           long_short_val = "+";
@@ -10513,7 +10524,7 @@ position.find(".buy_sell_indicator_options_futures").removeClass("bg_indicator_b
         var long_short_val = "";
         if (selectedLongShort === "Short") {
           long_short_val = "-";
-position.find(".buy_sell_indicator_options_futures").removeClass("bg_indicator_buy").addClass("bg_indicator_sell").text("S")
+          position.find(".buy_sell_indicator_options_futures").removeClass("bg_indicator_buy").addClass("bg_indicator_sell").text("S")
 
         } else {
           long_short_val = "+";
@@ -15461,7 +15472,7 @@ position.find(".buy_sell_indicator_options_futures").removeClass("bg_indicator_b
 
 
       // ////console.log('Hi');
-     
+
       var todayDate = new Date();
       var todayDateString = formatDate(todayDate);
 
@@ -15626,677 +15637,830 @@ position.find(".buy_sell_indicator_options_futures").removeClass("bg_indicator_b
       //console.log("optionsData", optionsData);
 
       var retrievedValue = localStorage.getItem("customRange2");
-     console.log("Retrieved value from localstorage for " + "customRange2" + ": " + retrievedValue);
+      console.log("Retrieved value from localstorage for " + "customRange2" + ": " + retrievedValue);
 
       // Use jQuery AJAX to send the data to Django
-      $.ajax({
-        type: 'POST',
-        url: '/black_scholes_option_price',
-        data: {
-          'options_data': JSON.stringify(optionsData),
-          'option_expiry': optionExpiryDropdown,
-          'last_traded_price': last_traded_price,
-          'onDate': retrievedValue,
-          csrfmiddlewaretoken: '{{ csrf_token }}' // Add CSRF token for security
-        },
 
-        dataType: 'json', // Expect JSON response from Django
-        success: function (data) {
-          // Print the response from Django (you can handle it as needed)
-          // ////console.log(data);
+      if (parseInt(retrievedValue) !== 0) {
+        $.ajax({
+          type: 'POST',
+          url: '/black_scholes_option_price',
+          data: {
+            'options_data': JSON.stringify(optionsData),
+            'option_expiry': optionExpiryDropdown,
+            'last_traded_price': last_traded_price,
+            'onDate': retrievedValue,
+            csrfmiddlewaretoken: '{{ csrf_token }}' // Add CSRF token for security
+          },
 
-
-          var premiumsData = data.main_premiums;
-          var main_all_data = [];
-
-          var single_premiumData = premiumsData[0]
-
-          ////console.log(single_premiumData);
+          dataType: 'json', // Expect JSON response from Django
+          success: function (data) {
+            // Print the response from Django (you can handle it as needed)
+            // ////console.log(data);
 
 
+            var premiumsData = data.main_premiums;
+            var main_all_data = [];
+
+            var single_premiumData = premiumsData[0]
+
+            ////console.log(single_premiumData);
 
 
 
 
-          $(".main_add_position_actions").each(function () {
-            var lot_size_value = parseFloat($("#lot_size_value").text());
-            var long_shorts = $(this).find(".long_short_inner").text();
-            var strikePrice_edit = parseFloat($(this).find(".strikePrice").text());
-            var requiredStringValue = $(this).find(".call_put_entrance").text();
-            var option_lot_size_input = parseFloat($(this).find(".option_lot_size_input").text()); // Assuming this should be a number
 
-            // Your existing code
-            var matchingPremiumsArray = [];
 
-            $.each(premiumsData, function (index, dayData) {
-              var dayDiv = $('<div>').appendTo('#premiums-container');
-              dayDiv.append('<h3>Day ' + dayData.day + '</h3');
-
-              // New array to store matching premiums for the current day
-              var matchingPremiumsForDay = [];
-
-              // Check if dayData.premiums is defined
-              if (dayData.premiums) {
-                // Loop through daily premiums
-                $.each(dayData.premiums, function (i, optionData) {
-                  var optionDiv = $('<div>').appendTo(dayDiv);
-                  optionDiv.append('<p>Strike Price: ' + optionData.strikePrice + '</p>');
-                  optionDiv.append('<p>Call Price: ' + optionData.call_price + '</p>');
-                  optionDiv.append('<p>Put Price: ' + optionData.put_price + '</p>');
-
-                  // Check if optionData is defined and compare strikePrice
-                  if (optionData && optionData.strikePrice === strikePrice_edit) {
-                    // If the strikePrice matches, push the premium to the array
-                    matchingPremiumsForDay.push(optionData);
-                  }
-                });
-              }
-
-              // Log the matching premiums for the current day
-              // ////console.log('Matching Premiums for Day ' + dayData.day, matchingPremiumsForDay);
-
-              // Add key-value pair to the matchingPremiumsArray
-              matchingPremiumsArray.push({ day: dayData.day, premiums: matchingPremiumsForDay });
+            $(".main_add_position_actions").each(function () {
+              var lot_size_value = parseFloat($("#lot_size_value").text());
+              var long_shorts = $(this).find(".long_short_inner").text();
+              var strikePrice_edit = parseFloat($(this).find(".strikePrice").text());
+              var requiredStringValue = $(this).find(".call_put_entrance").text();
+              var option_lot_size_input = parseFloat($(this).find(".option_lot_size_input").text()); // Assuming this should be a number
 
               // Your existing code
-              $.each(matchingPremiumsForDay, function (i, matchingPremium) {
-                var main_premiums_black_scholes = {
-                  "StrikePrice": parseFloat(matchingPremium.strikePrice),
-                  "long_shorts": long_shorts,
-                  "requiredStringValue": requiredStringValue,
-                  "option_lot_size_input": option_lot_size_input,
-                  "day": dayData.day, // Include the day information here
-                };
+              var matchingPremiumsArray = [];
 
-                if (requiredStringValue === "CE") {
-                  main_premiums_black_scholes["ltp"] = parseFloat(matchingPremium.call_price);
-                } else if (requiredStringValue === "PE") {
-                  main_premiums_black_scholes["ltp"] = parseFloat(matchingPremium.put_price);
+              $.each(premiumsData, function (index, dayData) {
+                var dayDiv = $('<div>').appendTo('#premiums-container');
+                dayDiv.append('<h3>Day ' + dayData.day + '</h3');
+
+                // New array to store matching premiums for the current day
+                var matchingPremiumsForDay = [];
+
+                // Check if dayData.premiums is defined
+                if (dayData.premiums) {
+                  // Loop through daily premiums
+                  $.each(dayData.premiums, function (i, optionData) {
+                    var optionDiv = $('<div>').appendTo(dayDiv);
+                    optionDiv.append('<p>Strike Price: ' + optionData.strikePrice + '</p>');
+                    optionDiv.append('<p>Call Price: ' + optionData.call_price + '</p>');
+                    optionDiv.append('<p>Put Price: ' + optionData.put_price + '</p>');
+
+                    // Check if optionData is defined and compare strikePrice
+                    if (optionData && optionData.strikePrice === strikePrice_edit) {
+                      // If the strikePrice matches, push the premium to the array
+                      matchingPremiumsForDay.push(optionData);
+                    }
+                  });
                 }
 
-                main_all_data.push(main_premiums_black_scholes);
+                // Log the matching premiums for the current day
+                // ////console.log('Matching Premiums for Day ' + dayData.day, matchingPremiumsForDay);
+
+                // Add key-value pair to the matchingPremiumsArray
+                matchingPremiumsArray.push({ day: dayData.day, premiums: matchingPremiumsForDay });
+
+                // Your existing code
+                $.each(matchingPremiumsForDay, function (i, matchingPremium) {
+                  var main_premiums_black_scholes = {
+                    "StrikePrice": parseFloat(matchingPremium.strikePrice),
+                    "long_shorts": long_shorts,
+                    "requiredStringValue": requiredStringValue,
+                    "option_lot_size_input": option_lot_size_input,
+                    "day": dayData.day, // Include the day information here
+                  };
+
+                  if (requiredStringValue === "CE") {
+                    main_premiums_black_scholes["ltp"] = parseFloat(matchingPremium.call_price);
+                  } else if (requiredStringValue === "PE") {
+                    main_premiums_black_scholes["ltp"] = parseFloat(matchingPremium.put_price);
+                  }
+
+                  main_all_data.push(main_premiums_black_scholes);
+                });
               });
+
+              // ////console.log('All Matching Premiums:', matchingPremiumsArray);
             });
 
-            // ////console.log('All Matching Premiums:', matchingPremiumsArray);
-          });
 
+            // Sort main_all_data based on the "day" property
+            main_all_data.sort((a, b) => a.day - b.day);
 
-          // Sort main_all_data based on the "day" property
-          main_all_data.sort((a, b) => a.day - b.day);
+            // Create an object to store grouped data
+            var groupedData = {};
 
-          // Create an object to store grouped data
-          var groupedData = {};
+            // Group data by day
+            main_all_data.forEach(function (item) {
+              var day = item.day;
 
-          // Group data by day
-          main_all_data.forEach(function (item) {
-            var day = item.day;
+              // Convert day to a string
+              var dayString = 'Day ' + day;
 
-            // Convert day to a string
-            var dayString = 'Day ' + day;
+              // Create an array for the day if it doesn't exist
+              if (!groupedData[dayString]) {
+                groupedData[dayString] = [];
+              }
 
-            // Create an array for the day if it doesn't exist
-            if (!groupedData[dayString]) {
-              groupedData[dayString] = [];
+              // Push the item to the array for the corresponding day
+              groupedData[dayString].push(item);
+            });
+
+            // Now groupedData contains the data grouped by day
+            // ////console.log('Grouped Data:', groupedData);
+
+            var resultArray = [];
+            var lot_size = parseInt($("#lot_size_value").text());
+            var option_simulator_body = $(".strategy_option_chain");
+
+            function ULTRAMAX(a, b) {
+              return a > b ? a : b;
             }
 
-            // Push the item to the array for the corresponding day
-            groupedData[dayString].push(item);
-          });
+            if (single_premiumData.premiums) {
+              single_premiumData.premiums.forEach(function (premium, index) {
+                var ultra_strike_price = premium.strikePrice;
 
-          // Now groupedData contains the data grouped by day
-          // ////console.log('Grouped Data:', groupedData);
+                Object.values(groupedData).forEach(function (items, dayIndex) {
+                  var tempArray = []; // Move tempArray initialization inside the day loop
 
-          var resultArray = [];
-          var lot_size = parseInt($("#lot_size_value").text());
-          var option_simulator_body = $(".strategy_option_chain");
+                  items.forEach(function (item) {
+                    if (item.requiredStringValue === 'CE' && item.long_shorts === '+') {
+                      tempArray.push(ULTRAMAX(0, ultra_strike_price - parseFloat(item.StrikePrice)) - parseFloat(item.ltp));
+                    }
+                    if (item.requiredStringValue === 'CE' && item.long_shorts === '-') {
+                      tempArray.push(parseFloat(item.ltp) - ULTRAMAX(0, ultra_strike_price - parseFloat(item.StrikePrice)));
+                    }
+                    if (item.requiredStringValue === 'PE' && item.long_shorts === '+') {
+                      tempArray.push(ULTRAMAX(0, parseFloat(item.StrikePrice) - ultra_strike_price) - parseFloat(item.ltp));
+                    }
+                    if (item.requiredStringValue === 'PE' && item.long_shorts === '-') {
+                      tempArray.push(parseFloat(item.ltp) - ULTRAMAX(0, parseFloat(item.StrikePrice) - ultra_strike_price));
+                    }
 
-          function ULTRAMAX(a, b) {
-            return a > b ? a : b;
-          }
+                  });
 
-          if (single_premiumData.premiums) {
-            single_premiumData.premiums.forEach(function (premium, index) {
-              var ultra_strike_price = premium.strikePrice;
 
-              Object.values(groupedData).forEach(function (items, dayIndex) {
-                var tempArray = []; // Move tempArray initialization inside the day loop
-
-                items.forEach(function (item) {
-                  if (item.requiredStringValue === 'CE' && item.long_shorts === '+') {
-                    tempArray.push(ULTRAMAX(0, ultra_strike_price - parseFloat(item.StrikePrice)) - parseFloat(item.ltp));
-                  }
-                  if (item.requiredStringValue === 'CE' && item.long_shorts === '-') {
-                    tempArray.push(parseFloat(item.ltp) - ULTRAMAX(0, ultra_strike_price - parseFloat(item.StrikePrice)));
-                  }
-                  if (item.requiredStringValue === 'PE' && item.long_shorts === '+') {
-                    tempArray.push(ULTRAMAX(0, parseFloat(item.StrikePrice) - ultra_strike_price) - parseFloat(item.ltp));
-                  }
-                  if (item.requiredStringValue === 'PE' && item.long_shorts === '-') {
-                    tempArray.push(parseFloat(item.ltp) - ULTRAMAX(0, parseFloat(item.StrikePrice) - ultra_strike_price));
-                  }
-
+                  // Push each day's data individually
+                  resultArray.push({ day: dayIndex + 1, values: tempArray });
                 });
+              });
+            }
+
+            resultArray.sort((a, b) => a.day - b.day);
+
+            // Group the sorted resultArray by day
+            var groupedResultArray = resultArray.reduce((acc, obj) => {
+              var key = obj.day;
+              (acc[key] || (acc[key] = [])).push(obj);
+              return acc;
+            }, {});
+
+            // ////console.log(groupedResultArray);
 
 
-                // Push each day's data individually
-                resultArray.push({ day: dayIndex + 1, values: tempArray });
+            // var arrayOfArrays = groupedResultArray;
+
+            // var lotSizeValues = premiumsData.map(element => parseInt(element.option_lot_size_input));
+
+            // for (var i = 0; i < arrayOfArrays.length; i++) {
+            //   for (var j = 0; j < arrayOfArrays[i].length; j++) {
+            //     arrayOfArrays[i][j] *= lotSizeValues[j] || 1;
+            //   }
+            // }
+
+            // ////console.log(arrayOfArrays);
+            var groupedLotSizes = {};
+
+            Object.values(groupedData).forEach(function (items, dayIndex) {
+              var lotSizesForDay = [];
+
+              items.forEach(function (item) {
+                // ////console.log(item.option_lot_size_input);
+
+                // Push the option_lot_size_input into lotSizesForDay
+                lotSizesForDay.push(item.option_lot_size_input);
+              });
+
+              // Assign the array of lot sizes to the corresponding day in groupedLotSizes
+              groupedLotSizes[dayIndex + 1] = lotSizesForDay;
+            });
+
+            // ////console.log(groupedLotSizes);
+
+
+            // groupedResultArray.forEach((group)=>{
+            //   ////console.log(group);
+            // })
+
+            // Assuming groupedResultArray is your inner_group
+            const multipliedValuesArray = [];
+
+            Object.values(groupedResultArray).forEach(function (group, dayIndex) {
+              const dayMultipliedValues = [];
+
+              group.forEach((inner_group) => {
+                const matchingLotSizeValues = groupedLotSizes[inner_group.day];
+
+                if (matchingLotSizeValues) {
+                  const multipliedValues = inner_group.values.map((value, valueIndex) => {
+                    const matchingLotSizeValue = matchingLotSizeValues[valueIndex] || 1;
+                    return value * matchingLotSizeValue * lot_size;
+                  });
+
+                  dayMultipliedValues.push({
+                    day: inner_group.day,
+                    values: multipliedValues
+                  });
+                } else {
+                  // ////console.log("No matching lot sizes found for day", inner_group.day);
+                }
+              });
+
+              multipliedValuesArray.push({
+                day: dayIndex + 1,
+                multipliedValues: dayMultipliedValues
               });
             });
-          }
 
-          resultArray.sort((a, b) => a.day - b.day);
-
-          // Group the sorted resultArray by day
-          var groupedResultArray = resultArray.reduce((acc, obj) => {
-            var key = obj.day;
-            (acc[key] || (acc[key] = [])).push(obj);
-            return acc;
-          }, {});
-
-          // ////console.log(groupedResultArray);
+            // ////console.log("Multiplied Values Array:", multipliedValuesArray);
+            // ////console.log(tableData);
 
 
-          // var arrayOfArrays = groupedResultArray;
+            const allValuesDayWise = [];
 
-          // var lotSizeValues = premiumsData.map(element => parseInt(element.option_lot_size_input));
-
-          // for (var i = 0; i < arrayOfArrays.length; i++) {
-          //   for (var j = 0; j < arrayOfArrays[i].length; j++) {
-          //     arrayOfArrays[i][j] *= lotSizeValues[j] || 1;
-          //   }
-          // }
-
-          // ////console.log(arrayOfArrays);
-          var groupedLotSizes = {};
-
-          Object.values(groupedData).forEach(function (items, dayIndex) {
-            var lotSizesForDay = [];
-
-            items.forEach(function (item) {
-              // ////console.log(item.option_lot_size_input);
-
-              // Push the option_lot_size_input into lotSizesForDay
-              lotSizesForDay.push(item.option_lot_size_input);
+            // Iterate through the data and push all values day-wise
+            multipliedValuesArray.forEach(dayData => {
+              dayData.multipliedValues.forEach(innerData => {
+                allValuesDayWise.push({
+                  day: dayData.day,
+                  values: innerData.values
+                });
+              });
             });
 
-            // Assign the array of lot sizes to the corresponding day in groupedLotSizes
-            groupedLotSizes[dayIndex + 1] = lotSizesForDay;
-          });
-
-          // ////console.log(groupedLotSizes);
+            // ////console.log(allValuesDayWise);
 
 
-          // groupedResultArray.forEach((group)=>{
-          //   ////console.log(group);
-          // })
+            const result = {};
 
-          // Assuming groupedResultArray is your inner_group
-          const multipliedValuesArray = [];
+            allValuesDayWise.forEach((individual) => {
+              const day = individual.day;
+              const sum = individual.values.reduce((acc, value) => acc + value, 0);
 
-          Object.values(groupedResultArray).forEach(function (group, dayIndex) {
-            const dayMultipliedValues = [];
+              if (!result[day]) {
+                result[day] = [];
+              }
 
-            group.forEach((inner_group) => {
-              const matchingLotSizeValues = groupedLotSizes[inner_group.day];
+              result[day].push(sum);
+            });
 
-              if (matchingLotSizeValues) {
-                const multipliedValues = inner_group.values.map((value, valueIndex) => {
-                  const matchingLotSizeValue = matchingLotSizeValues[valueIndex] || 1;
-                  return value * matchingLotSizeValue * lot_size;
+            // Create a new array of objects
+            const All_day_data = Object.keys(result).map(day => ({ day: Number(day), sums: result[day] || [] }));
+
+            // Display the new array
+            // ////console.log(All_day_data);
+            // ////console.log(tableData);
+
+
+
+
+            var dynamicDayKey = "Day-";
+
+            var mergedData = [];
+
+            // Iterate over each day data
+            All_day_data.forEach((dayData) => {
+              // Check if the dayData has sums for the current day
+              if (dayData.sums.length > 0) {
+                // Iterate over each category in dayData
+                dayData.sums.forEach((sum) => {
+                  // Create a new merged item for each category
+                  var mergedItem = {
+                    category: "", // Set the category dynamically based on your logic
+                    value: 0,      // Set the value dynamically based on your logic
+                  };
+
+                  // Set the dynamic day key
+                  var dayKey = dynamicDayKey + dayData.day;
+                  mergedItem[dayKey] = sum;
+
+                  // Push the merged item into mergedData
+                  mergedData.push(mergedItem);
                 });
-
-                dayMultipliedValues.push({
-                  day: inner_group.day,
-                  values: multipliedValues
-                });
-              } else {
-                // ////console.log("No matching lot sizes found for day", inner_group.day);
               }
             });
 
-            multipliedValuesArray.push({
-              day: dayIndex + 1,
-              multipliedValues: dayMultipliedValues
-            });
-          });
+            // Iterate over each item in tableData
+            tableData.forEach((data, dataIndex) => {
+              // Find the corresponding entry in mergedData based on the index
+              var mergedItem = mergedData[dataIndex];
 
-          // ////console.log("Multiplied Values Array:", multipliedValuesArray);
-          // ////console.log(tableData);
-
-
-          const allValuesDayWise = [];
-
-          // Iterate through the data and push all values day-wise
-          multipliedValuesArray.forEach(dayData => {
-            dayData.multipliedValues.forEach(innerData => {
-              allValuesDayWise.push({
-                day: dayData.day,
-                values: innerData.values
-              });
-            });
-          });
-
-          // ////console.log(allValuesDayWise);
-
-
-          const result = {};
-
-          allValuesDayWise.forEach((individual) => {
-            const day = individual.day;
-            const sum = individual.values.reduce((acc, value) => acc + value, 0);
-
-            if (!result[day]) {
-              result[day] = [];
-            }
-
-            result[day].push(sum);
-          });
-
-          // Create a new array of objects
-          const All_day_data = Object.keys(result).map(day => ({ day: Number(day), sums: result[day] || [] }));
-
-          // Display the new array
-          // ////console.log(All_day_data);
-          // ////console.log(tableData);
-
-
-
-
-          var dynamicDayKey = "Day-";
-
-          var mergedData = [];
-
-          // Iterate over each day data
-          All_day_data.forEach((dayData) => {
-            // Check if the dayData has sums for the current day
-            if (dayData.sums.length > 0) {
-              // Iterate over each category in dayData
-              dayData.sums.forEach((sum) => {
-                // Create a new merged item for each category
-                var mergedItem = {
-                  category: "", // Set the category dynamically based on your logic
-                  value: 0,      // Set the value dynamically based on your logic
-                };
-
-                // Set the dynamic day key
-                var dayKey = dynamicDayKey + dayData.day;
-                mergedItem[dayKey] = sum;
-
-                // Push the merged item into mergedData
-                mergedData.push(mergedItem);
-              });
-            }
-          });
-
-          // Iterate over each item in tableData
-          tableData.forEach((data, dataIndex) => {
-            // Find the corresponding entry in mergedData based on the index
-            var mergedItem = mergedData[dataIndex];
-
-            // If a corresponding entry is found, set category and value
-            if (mergedItem) {
-              mergedItem.category = data.category; // Set the category based on your logic
-              mergedItem.value = data.value;       // Set the value based on your logic
-            }
-          });
-
-          // Print the final merged array
-          var all_day_merged_data = [];
-
-          mergedData.forEach((day_data) => {
-            let dayObject = {};
-
-            for (let i = 1; i <= 7; i++) {
-              const dayKey = "Day-" + i;
-
-              if (day_data.hasOwnProperty(dayKey)) {
-                dayObject[dayKey] = day_data[dayKey];
+              // If a corresponding entry is found, set category and value
+              if (mergedItem) {
+                mergedItem.category = data.category; // Set the category based on your logic
+                mergedItem.value = data.value;       // Set the value based on your logic
               }
-            }
+            });
 
-            all_day_merged_data.push(dayObject);
-          });
+            // Print the final merged array
+            var all_day_merged_data = [];
 
-          // ////console.log(all_day_merged_data);
+            mergedData.forEach((day_data) => {
+              let dayObject = {};
 
+              for (let i = 1; i <= 7; i++) {
+                const dayKey = "Day-" + i;
 
-          var grouped_data = {};
-
-          all_day_merged_data.forEach(function (data_point) {
-            for (var day in data_point) {
-              if (!grouped_data[day]) {
-                grouped_data[day] = [];
+                if (day_data.hasOwnProperty(dayKey)) {
+                  dayObject[dayKey] = day_data[dayKey];
+                }
               }
-              grouped_data[day].push(data_point[day]);
-            }
-          });
 
-          var _result = Object.entries(grouped_data).map(([day, values]) => ({ [day]: values }));
+              all_day_merged_data.push(dayObject);
+            });
 
-          // ////console.log(_result);
-          // var sumArray = resultArray.map(function (array) {
-          //   var sum = array.reduce(function (acc, value) {
-          //     return acc + value;
-          //   }, 0);
-          //   return sum * lot_size;
-          // });
-
-          // ////console.log(sumArray);
-          var categories = tableData.map(data => parseInt(data.category));
-          var values = tableData.map(data => data.value);
-
-          // Structure _result with category and value arrays
-          _result = [
-            { "Strikes": categories },
-            ..._result,
-            { "ON-Expiry": values }
-          ];
-
-          // Print the merged _result
-
-          // Print the merged _result
-          // ////console.log(_result);
+            // ////console.log(all_day_merged_data);
 
 
-          var table = $(".payoff_table_main_table");
+            var grouped_data = {};
 
-          // Clear any existing content
-          table.empty();
+            all_day_merged_data.forEach(function (data_point) {
+              for (var day in data_point) {
+                if (!grouped_data[day]) {
+                  grouped_data[day] = [];
+                }
+                grouped_data[day].push(data_point[day]);
+              }
+            });
 
-          // Find the maximum number of values among all days
-          var maxValuesCount = Math.max(..._result.map(dayData => dayData[Object.keys(dayData)[0]].length));
+            var _result = Object.entries(grouped_data).map(([day, values]) => ({ [day]: values }));
 
-          // Create the table header dynamically
-          var thead = $("<thead>");
-          var headerRow = $("<tr>");
+            // ////console.log(_result);
+            // var sumArray = resultArray.map(function (array) {
+            //   var sum = array.reduce(function (acc, value) {
+            //     return acc + value;
+            //   }, 0);
+            //   return sum * lot_size;
+            // });
 
-          // Add header cells for each day
-          _result.forEach(function (dayData) {
-            var day = Object.keys(dayData)[0];
-            headerRow.append($("<th>").text(day));
-          });
+            // ////console.log(sumArray);
+            var categories = tableData.map(data => parseInt(data.category));
+            var values = tableData.map(data => data.value);
 
-          thead.append(headerRow);
-          table.append(thead);
+            // Structure _result with category and value arrays
+            _result = [
+              { "Strikes": categories },
+              ..._result,
+              { "ON-Expiry": values }
+            ];
 
-          // Loop through values row-wise and create table rows and cells
-          for (var i = 0; i < maxValuesCount; i++) {
-            var row = $("<tr>")
+            // Print the merged _result
 
-            // Loop through each day's values
+            // Print the merged _result
+            // ////console.log(_result);
+
+
+            var table = $(".payoff_table_main_table");
+
+            // Clear any existing content
+            table.empty();
+
+            // Find the maximum number of values among all days
+            var maxValuesCount = Math.max(..._result.map(dayData => dayData[Object.keys(dayData)[0]].length));
+
+            // Create the table header dynamically
+            var thead = $("<thead>");
+            var headerRow = $("<tr>");
+
+            // Add header cells for each day
             _result.forEach(function (dayData) {
-              var dayKey = Object.keys(dayData)[0]; // Extract day key outside the loop
-              var values = dayData[dayKey];
-
-              var values_con = values[i] < 0 ? "text-danger" : "text-success";
-              var cell = $("<td>").addClass("cell-container border_collapsed"); // Create a td element and add a class for styling
-
-              // Add a div element inside the td
-              var div = $("<div>").text(values[i] ? values[i].toFixed(0) : "").addClass(values_con).css("font-size", "12px");
-
-              cell.append(div); // Append the div to the td
-              row.append(cell); // Append the td to the row
+              var day = Object.keys(dayData)[0];
+              headerRow.append($("<th>").text(day));
             });
 
-            table.append(row);
-          }
+            thead.append(headerRow);
+            table.append(thead);
 
-          $('table.payoff_table_main_table tr').each(function () {
-            // Find the first <td> in each <tr> and remove the specified class
-            $(this).find('td div:first').removeClass("text-success");
-          });
+            // Loop through values row-wise and create table rows and cells
+            for (var i = 0; i < maxValuesCount; i++) {
+              var row = $("<tr>")
 
-          var table = $('.payoff_table_main_table');
-          var firstRow = table.find('thead tr');
+              // Loop through each day's values
+              _result.forEach(function (dayData) {
+                var dayKey = Object.keys(dayData)[0]; // Extract day key outside the loop
+                var values = dayData[dayKey];
 
-          // Select all th elements
-          var thElements = firstRow.find('th').slice(1, -1);
+                var values_con = values[i] < 0 ? "text-danger" : "text-success";
+                var cell = $("<td>").addClass("cell-container border_collapsed"); // Create a td element and add a class for styling
 
-          // Select the last th element
-          var thLastElement = firstRow.find('th:last');
+                // Add a div element inside the td
+                var div = $("<div>").text(values[i] ? values[i].toFixed(0) : "").addClass(values_con).css("font-size", "12px");
 
-          // Assume #optionExpiryDropdown is an input field
-          var dropdownValue = $('#optionExpiryDropdown').val();
+                cell.append(div); // Append the div to the td
+                row.append(cell); // Append the td to the row
+              });
 
-          // Set the last th element text to the formatted dropdown value
-          thLastElement.text(`On Expiry - ${formatDropdownDate(dropdownValue)}`);
-
-          // Get the current date
-          var currentDate = new Date();
-
-          // Display dates based on the number of th elements
-          thElements.each(function (index) {
-            // Calculate the date for each th
-            var dateForTH = new Date(currentDate);
-            dateForTH.setDate(currentDate.getDate() + index);
-
-            // Format the date as "On Target Date Mon DD MMM"
-            var formattedDate = getDayOfWeek(dateForTH) + ", " + formatDate(dateForTH);
-
-            // Display the formatted date
-            $(this).text(formattedDate);
-
-
-          });
-
-
-
-          // Function to get the day of the week
-          function getDayOfWeek(date) {
-            var daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-            return daysOfWeek[date.getDay()];
-          }
-
-          // Function to format the date as "DDth MMM"
-          function formatDate(date) {
-            var day = date.getDate();
-            var suffix = getDaySuffix(day);
-            var options = { day: 'numeric', month: 'short' };
-            return date.toLocaleDateString('en-US', options).replace(/\b\d{1,2}\b/, day + suffix);
-          }
-
-          // Function to format the dropdown value as "Thu 21th Dec"
-          function formatDropdownDate(value) {
-            var date = new Date(value);
-            var options = { weekday: 'short', day: 'numeric', month: 'short' };
-            return date.toLocaleDateString('en-US', options);
-          }
-
-          // Function to get the day suffix (st, nd, rd, th)
-          function getDaySuffix(day) {
-            if (day >= 11 && day <= 13) {
-              return 'th';
+              table.append(row);
             }
-            var lastDigit = day % 10;
-            switch (lastDigit) {
-              case 1: return 'st';
-              case 2: return 'nd';
-              case 3: return 'rd';
-              default: return 'th';
+
+            $('table.payoff_table_main_table tr').each(function () {
+              // Find the first <td> in each <tr> and remove the specified class
+              $(this).find('td div:first').removeClass("text-success");
+            });
+
+            var table = $('.payoff_table_main_table');
+            var firstRow = table.find('thead tr');
+
+            // Select all th elements
+            var thElements = firstRow.find('th').slice(1, -1);
+
+            // Select the last th element
+            var thLastElement = firstRow.find('th:last');
+
+
+            var expiryElements = $(".expiry_initial");
+
+            // Initialize an array to store parsed dates
+            var dates = [];
+
+            // Loop through each element
+            expiryElements.each(function () {
+              // Get the text content of the element
+              var dateString = $(this).text();
+
+              // Parse the date string into a JavaScript Date object
+              var dateObject = new Date(dateString);
+
+              // Add the date object to the array
+              dates.push(dateObject);
+            });
+
+            // Find the minimum date in the array
+            var minDate = new Date(Math.min.apply(null, dates));
+
+            // Log the minimum date
+            console.log("Minimum Expiry Date: " + minDate.toDateString());
+
+            // Assume #optionExpiryDropdown is an input field
+            var dropdownValue = minDate.toDateString()
+
+            // Set the last th element text to the formatted dropdown value
+            thLastElement.text(`${formatDropdownDate(dropdownValue)}`);
+
+            // Get the current date
+            var currentDate = new Date();
+    
+
+            // Display dates based on the number of th elements
+            thElements.each(function (index) {
+              // Calculate the date for each th
+              var dateForTH = new Date(currentDate);
+              dateForTH.setDate(currentDate.getDate() + index);
+
+              // Format the date as "On Target Date Mon DD MMM"
+              var formattedDate = getDayOfWeek(dateForTH) + ", " + formatDate(dateForTH);
+
+              // Display the formatted date
+              $(this).text(formattedDate);
+
+
+            });
+
+
+
+            // Function to get the day of the week
+            function getDayOfWeek(date) {
+              var daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+              return daysOfWeek[date.getDay()];
             }
+
+            // Function to format the date as "DDth MMM"
+            function formatDate(date) {
+              var day = date.getDate();
+              var suffix = getDaySuffix(day);
+              var options = { day: 'numeric', month: 'short' };
+              return date.toLocaleDateString('en-US', options).replace(/\b\d{1,2}\b/, day + suffix);
+            }
+
+            // Function to format the dropdown value as "Thu 21th Dec"
+            function formatDropdownDate(value) {
+              var date = new Date(value);
+              var options = { weekday: 'short', day: 'numeric', month: 'short' };
+              return date.toLocaleDateString('en-US', options);
+            }
+
+            // Function to get the day suffix (st, nd, rd, th)
+            function getDaySuffix(day) {
+              if (day >= 11 && day <= 13) {
+                return 'th';
+              }
+              var lastDigit = day % 10;
+              switch (lastDigit) {
+                case 1: return 'st';
+                case 2: return 'nd';
+                case 3: return 'rd';
+                default: return 'th';
+              }
+            }
+            // Get the value of closest_strike_price
+
+
+            // // Find the corresponding row in the "payoff_table_main_table"
+            // var correspondingRow = $(".payoff_table_main_table tr").filter(function() {
+            //     // Extract the value from the first TD in the row
+            //     var rowValue = parseInt($(this).find("td:first").text());
+            //     return rowValue === closestStrikePrice;
+            // });
+
+            // // Check if a corresponding row was found
+            // if (correspondingRow.length > 0) {
+
+
+            //     // Scroll to the corresponding row
+            //     var container = $(".payoff_table_main_table");
+
+            //     var scrollTo =
+            //                 1200 -
+            //                 container.height() / 2 +
+            //                 1200/ 2;
+            //                 ////console.log("scrollTo",scrollTo);
+
+
+            //     // Reset the scroll position first
+            //     container.animate(
+            //         {
+            //             scrollTop: 0,
+            //         },
+            //         0,
+            //         function () {
+            //             // Scroll to the desired position after the reset
+            //             container.animate(
+            //                 {
+            //                     scrollTop: scrollTo,
+            //                 },
+            //                 1000
+            //             ); // You can adjust the scrolling speed here (in milliseconds)
+            //         }
+            //     );
+            // } else {
+            //     ////console.log("No corresponding row found.");
+            // }
+
+
+
+            var closestStrikePriceText = $("#closest_strike_price").text();
+            var closestStrikePrice = parseInt(closestStrikePriceText);
+
+            $(".payoff_table_main_table tr").each(function () {
+              var $strikePrice = $(this).find("td:first");
+              var currentStrikePrice = parseInt($strikePrice.text()); // Assuming the text is numeric
+
+              if (currentStrikePrice === closestStrikePrice) {
+
+                $(this).addClass("background_opiton_closest_payoff_table");
+
+
+                ////console.log(currentStrikePrice);
+
+                // $strikePrice.addClass("closestStrike_bg");
+                var container = $("#payoff_table");
+                var scrollTo =
+                  $(this).position().top -
+                  container.height() / 2 +
+                  $(this).height() / 2;
+
+                ////console.log("  $(this).position().top", $(this).position().top);
+                ////console.log(" $(this).height() / 2", $(this).height() / 2);
+                ////console.log(container.height() / 2);
+                ////console.log(scrollTo);
+
+                // Reset the scroll position first
+                container.animate(
+                  {
+                    scrollTop: 0,
+                  },
+                  0,
+                  function () {
+                    // Scroll to the desired position after the reset
+                    container.animate(
+                      {
+                        scrollTop: scrollTo,
+                      },
+                      1000
+                    ); // You can adjust the scrolling speed here (in milliseconds)
+                  }
+                );
+              }
+            });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            // var sumArray = resultArray.map(function (array) {
+            //   var sum = array.reduce(function (acc, value) {
+            //     return acc + value;
+            //   }, 0);
+            //   return sum * lot_size;
+            // });
+
+
+
+
+
+
+
+            // for (var i = 0; i < tableData.length; i++) {
+            //   // Assuming that each object in tableData has a property named 'black_scholes_val'
+            //   var sumValue = sumArray[i] || 0;
+            //   // Use isFinite to check if sumValue is a valid finite number
+            //   tableData[i].black_scholes_val = isFinite(sumValue) ? sumValue : 0;
+            // }
+
+            // ////console.log(tableData);
+
+
+
+
+
+            // // ////console.log(tableData);
+            // var tableBody = $(".payoff_table_data");
+
+            // // Clear any existing rows
+            // tableBody.empty();
+
+            // // Loop through the tableData array and create table rows and cells
+            // tableData.forEach(function (item) {
+            //   var main_payoff_table_condition = item.value < 0 ? "text-danger" : "text-success"
+            //   var main_payoff_table_condition_black_scholes_val = item.black_scholes_val < 0 ? "text-danger" : "text-success"
+            //   var row = $("<tr>");
+
+            //   var categoryCell = $("<td>").text(item.category);
+            //   var black_scholes_val_cell = $("<td>").text(item.black_scholes_val.toFixed(2)).addClass(main_payoff_table_condition_black_scholes_val);
+            //   var valueCell = $("<td>").text(item.value.toFixed(2)).addClass(main_payoff_table_condition);
+
+            //   row.append(categoryCell);
+            //   row.append(black_scholes_val_cell);
+            //   row.append(valueCell);
+
+            //   tableBody.append(row);
+            // });
+
+            // $(".payoff_expiry").text($("#optionExpiryDropdown").val())
+
+
+
+          },
+          error: function (error) {
+            ////console.log('Error:', error);
           }
-          // Get the value of closest_strike_price
+        });
 
 
-          // // Find the corresponding row in the "payoff_table_main_table"
-          // var correspondingRow = $(".payoff_table_main_table tr").filter(function() {
-          //     // Extract the value from the first TD in the row
-          //     var rowValue = parseInt($(this).find("td:first").text());
-          //     return rowValue === closestStrikePrice;
-          // });
+      }else{
 
-          // // Check if a corresponding row was found
-          // if (correspondingRow.length > 0) {
+        
+        var table = $(".payoff_table_main_table");
 
+// Clear any existing content, including the body
+table.empty();
 
-          //     // Scroll to the corresponding row
-          //     var container = $(".payoff_table_main_table");
+// Add the new headers
+var newHeaders = $("<thead><tr><th>Strikes</th><th >On expiry</th></tr></thead>");
+table.append(newHeaders);
 
-          //     var scrollTo =
-          //                 1200 -
-          //                 container.height() / 2 +
-          //                 1200/ 2;
-          //                 ////console.log("scrollTo",scrollTo);
+// Create an empty tbody
+var newBody = $("<tbody>");
+table.append(newBody);
 
+// Loop through the tableData array and create table rows and cells
+tableData.forEach(function (item) {
+    var main_payoff_table_condition = item.value < 0 ? "text-danger" : "text-success";
+    var row = $("<tr>");
 
-          //     // Reset the scroll position first
-          //     container.animate(
-          //         {
-          //             scrollTop: 0,
-          //         },
-          //         0,
-          //         function () {
-          //             // Scroll to the desired position after the reset
-          //             container.animate(
-          //                 {
-          //                     scrollTop: scrollTo,
-          //                 },
-          //                 1000
-          //             ); // You can adjust the scrolling speed here (in milliseconds)
-          //         }
-          //     );
-          // } else {
-          //     ////console.log("No corresponding row found.");
-          // }
+    var categoryCell = $("<td>").text(item.category);
+    var valueCell = $("<td>").text(item.value.toFixed(2)).addClass(main_payoff_table_condition);
+
+    row.append(categoryCell);
+    row.append(valueCell);
+
+    newBody.append(row);
+});
+
+var table = $('.payoff_table_main_table');
+            var firstRow = table.find('thead tr');
+        
+            // Select the last th element
+            var thLastElement = firstRow.find('th:last');
 
 
+            var expiryElements = $(".expiry_initial");
 
-          var closestStrikePriceText = $("#closest_strike_price").text();
-          var closestStrikePrice = parseInt(closestStrikePriceText);
+            // Initialize an array to store parsed dates
+            var dates = [];
 
-          $(".payoff_table_main_table tr").each(function () {
-            var $strikePrice = $(this).find("td:first");
-            var currentStrikePrice = parseInt($strikePrice.text()); // Assuming the text is numeric
+            // Loop through each element
+            expiryElements.each(function () {
+              // Get the text content of the element
+              var dateString = $(this).text();
 
-            if (currentStrikePrice === closestStrikePrice) {
+              // Parse the date string into a JavaScript Date object
+              var dateObject = new Date(dateString);
 
-              $(this).addClass("background_opiton_closest_payoff_table");
+              // Add the date object to the array
+              dates.push(dateObject);
+            });
+
+            // Find the minimum date in the array
+            var minDate = new Date(Math.min.apply(null, dates));
+
+            // Log the minimum date
+            console.log("Minimum Expiry Date: " + minDate.toDateString());
+
+            // Assume #optionExpiryDropdown is an input field
+            var dropdownValue = minDate.toDateString()
+
+            // Set the last th element text to the formatted dropdown value
+            thLastElement.text(`${formatDropdownDate(dropdownValue)}`);
+
+            // Get the current date
+            var currentDate = new Date();
+            var thElements = firstRow.find('th').slice(1, -1);
+            // Display dates based on the number of th elements
+            thElements.each(function (index) {
+              // Calculate the date for each th
+              var dateForTH = new Date(currentDate);
+              dateForTH.setDate(currentDate.getDate() + index);
+
+              // Format the date as "On Target Date Mon DD MMM"
+              var formattedDate = getDayOfWeek(dateForTH) + ", " + formatDate(dateForTH);
+
+              // Display the formatted date
+              $(this).text(formattedDate);
 
 
-              ////console.log(currentStrikePrice);
+            });
 
-              // $strikePrice.addClass("closestStrike_bg");
-              var container = $("#payoff_table");
-              var scrollTo =
-                $(this).position().top -
-                container.height() / 2 +
-                $(this).height() / 2;
 
-              ////console.log("  $(this).position().top", $(this).position().top);
-              ////console.log(" $(this).height() / 2", $(this).height() / 2);
-              ////console.log(container.height() / 2);
-              ////console.log(scrollTo);
 
-              // Reset the scroll position first
-              container.animate(
-                {
-                  scrollTop: 0,
-                },
-                0,
-                function () {
-                  // Scroll to the desired position after the reset
-                  container.animate(
-                    {
-                      scrollTop: scrollTo,
-                    },
-                    1000
-                  ); // You can adjust the scrolling speed here (in milliseconds)
-                }
-              );
+            // Function to get the day of the week
+            function getDayOfWeek(date) {
+              var daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+              return daysOfWeek[date.getDay()];
             }
-          });
+
+            // Function to format the date as "DDth MMM"
+            function formatDate(date) {
+              var day = date.getDate();
+              var suffix = getDaySuffix(day);
+              var options = { day: 'numeric', month: 'short' };
+              return date.toLocaleDateString('en-US', options).replace(/\b\d{1,2}\b/, day + suffix);
+            }
+
+            // Function to format the dropdown value as "Thu 21th Dec"
+            function formatDropdownDate(value) {
+              var date = new Date(value);
+              var options = { weekday: 'short', day: 'numeric', month: 'short' };
+              return date.toLocaleDateString('en-US', options);
+            }
+
+            // Function to get the day suffix (st, nd, rd, th)
+            function getDaySuffix(day) {
+              if (day >= 11 && day <= 13) {
+                return 'th';
+              }
+              var lastDigit = day % 10;
+              switch (lastDigit) {
+                case 1: return 'st';
+                case 2: return 'nd';
+                case 3: return 'rd';
+                default: return 'th';
+              }
+            }
 
 
+      }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-          // var sumArray = resultArray.map(function (array) {
-          //   var sum = array.reduce(function (acc, value) {
-          //     return acc + value;
-          //   }, 0);
-          //   return sum * lot_size;
-          // });
-
-
-
-
-
-
-
-          // for (var i = 0; i < tableData.length; i++) {
-          //   // Assuming that each object in tableData has a property named 'black_scholes_val'
-          //   var sumValue = sumArray[i] || 0;
-          //   // Use isFinite to check if sumValue is a valid finite number
-          //   tableData[i].black_scholes_val = isFinite(sumValue) ? sumValue : 0;
-          // }
-
-          // ////console.log(tableData);
-
-
-
-
-
-          // // ////console.log(tableData);
-          // var tableBody = $(".payoff_table_data");
-
-          // // Clear any existing rows
-          // tableBody.empty();
-
-          // // Loop through the tableData array and create table rows and cells
-          // tableData.forEach(function (item) {
-          //   var main_payoff_table_condition = item.value < 0 ? "text-danger" : "text-success"
-          //   var main_payoff_table_condition_black_scholes_val = item.black_scholes_val < 0 ? "text-danger" : "text-success"
-          //   var row = $("<tr>");
-
-          //   var categoryCell = $("<td>").text(item.category);
-          //   var black_scholes_val_cell = $("<td>").text(item.black_scholes_val.toFixed(2)).addClass(main_payoff_table_condition_black_scholes_val);
-          //   var valueCell = $("<td>").text(item.value.toFixed(2)).addClass(main_payoff_table_condition);
-
-          //   row.append(categoryCell);
-          //   row.append(black_scholes_val_cell);
-          //   row.append(valueCell);
-
-          //   tableBody.append(row);
-          // });
-
-          // $(".payoff_expiry").text($("#optionExpiryDropdown").val())
-
-
-
-        },
-        error: function (error) {
-          ////console.log('Error:', error);
-        }
-      });
     }
 
 
