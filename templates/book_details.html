@@ -1,0 +1,153 @@
+{% extends "base_dashboard.html" %}
+{% load static %}
+{% block dashboard_body %}
+
+
+<style>
+    .book_title h2{
+        font-weight: 500 !important;
+    }
+    .read_sample_btn{
+        background-color: #2196f3;
+    }
+    .read_sample_btn:hover{
+        background-color: white;
+        color: #2196f3;
+        border: 1px solid #2196f3;
+    }
+
+    .book_cart_box{
+        border-radius:10px;
+        box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    }
+
+    .add_cart_btn{
+        color: white;
+        background: #2397f3;
+        border: 1px solid #2397f3;
+        border-radius: 8px;
+        padding: 8px 39px;
+    }
+
+    .buy_btn{
+        color: white;
+        background: #2397f3;
+        border: 1px solid #2397f3;
+        border-radius: 8px;
+        padding: 8px 35px;
+    }
+    .inner_books a{
+        text-decoration: none;
+        color: black;
+    }
+    
+    .quantity_btn{
+        background: #4399eb;
+    border: 1px solid #4399eb;
+    width: 36px;
+    height: 36px;
+    border-radius: 0;
+    font-size: 22px;
+    color: white;
+    transition: ease-out 0.3s;
+    
+    }
+    .quantity_btn:hover{
+     color:#4399eb;
+     background:white;
+    }
+    #quantityValue{
+        width: 34px;
+    padding-top: 7px;
+    text-align: center;
+    }
+</style>
+<section>
+    <div class="mt-5">
+        <div class="inner_books" style=" padding: 2px 9px;">
+            <a href=" {% url "books" %}">
+                <i class="bi bi-arrow-left" style=" font-size: larger;"></i>
+                <h5 style="all: unset;">Back to Books</h5>
+            </a>
+        </div>
+        <div class="row mt-4">
+            <div class="col-lg-3">
+              <img src="{{book.image.url}}" alt="" width="100%">
+              <a href="#" class="btn btn-primary col-lg-12 read_sample_btn mt-3" data-bs-toggle="modal" data-bs-target="#readSampleModal_${book.id}">Read Sample</a>
+            </div>
+            <div class="col-lg-7">
+                <div class="book_title">
+                    <h2>{{ book.title }} Details</h2>
+                    <span>by {{book.author}}</span>
+                </div>
+                <hr>
+                <div>
+                    <p>Description: {{ book.description }}</p>
+                </div>
+                 <hr>
+                <div class="card-meta-items-wrapper text-color-gray500 d-flex justify-content-between">
+                    <div class="d-flex flex-column align-items-center gap-2">
+                     <span> Print length</span>  <i class="bi bi-file-earmark"></i> <span class="fw-5">{{book.page}}</span>
+                    </div>
+                    <div class="d-flex flex-column align-items-center gap-2">
+                     <span>language</span><i class="bi bi-translate"></i> <span class="fw-5">{{book.language}}</span>
+                    </div>
+                    <div class="d-flex flex-column align-items-center gap-2">
+                     <span>Publication Date</span><i class="bi bi-calendar-week"></i> <span >{{book.publish_date}}</span>
+                    </div>
+                  </div>
+                  <hr/>
+                </div>
+                <div class="col-lg-2">
+                <div class="book_cart_box p-3 ">
+
+                    <div class="price_detail d-flex justify-content-between">
+
+                        Buy new:
+                        <div>
+                            ₹{{book.discount_price}} <br> <del>₹{{book.price}}</del>
+                        </div>
+                    </div>
+
+                    <div class="quantity mt-4">
+                     Quantity : <button  class="quantity_btn" onclick="decrementQuantity()">-</button> <input type="text" min="1" value="1" id="quantityValue" disabled>
+                     <button class="quantity_btn" onclick="incrementQuantity()">+</button>
+                    </div>
+                    <div class="d-flex flex-column gap-2 mt-4">
+                        <button class="add_cart_btn">ADD TO CART</button>
+                        <button class="buy_btn">BUY NOW</button>
+                    </div>
+                </div>
+                 
+                </div>
+            </div>
+        </div>
+    </div>
+   
+</section>
+
+<script>
+
+    function incrementQuantity() {
+        updateQuantity(1);
+      }
+    
+      function decrementQuantity() {
+        updateQuantity(-1);
+      }
+    
+      function updateQuantity(change) {
+        var quantityElement = document.getElementById("quantityValue");
+        var currentQuantity = parseInt(quantityElement.value, 10);
+    
+        // Update the quantity by the specified change
+        var newQuantity = currentQuantity + change;
+    
+        // Ensure the quantity is not negative
+        newQuantity = Math.max(newQuantity, 0);
+    
+        // Update the quantity display
+        quantityElement.value = newQuantity;
+      }
+</script>
+{% endblock dashboard_body %}

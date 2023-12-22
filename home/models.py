@@ -303,19 +303,22 @@ class Book(models.Model):
     OPTION_TRADING = 'Option Trading'
     INVESTMENT = 'Investment'
     TECHNICAL_ANALYSIS = 'Technical Analysis'
-    BEST_SELLERS = 'Best Sellers'
 
     CATEGORY_CHOICES = [
         (TRADING, 'Trading'),
         (OPTION_TRADING, 'Option Trading'),
         (INVESTMENT, 'Investment'),
-        (BEST_SELLERS, 'Best Sellers'),
         (TECHNICAL_ANALYSIS, 'Technical Analysis'),
+    ]
+
+    LANGUAGE_CHOICES = [
+        ('English', 'English'),
+        ('Hindi', 'Hindi'),
     ]
 
     title = models.CharField(max_length=255)
     description = models.TextField()
-    image = models.ImageField(upload_to='book_images/', blank=True )  # Set your desired upload path
+    image = models.ImageField(upload_to='book_images/', blank=True)  # Set your desired upload path
     page = models.IntegerField()
     read_sample = models.CharField(max_length=8000)
     book_category = models.CharField(
@@ -323,6 +326,15 @@ class Book(models.Model):
         choices=CATEGORY_CHOICES,
         default=TRADING,  # Set the default category if needed
     )
+    language = models.CharField(
+        max_length=255,
+        choices=LANGUAGE_CHOICES,
+        default='English',  # Set the default language if needed
+    )
+    author = models.CharField(max_length=255, default='') 
+    publish_date = models.DateField(null=True, blank=True)  
+    price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True) 
+    discount_price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)  
     updated_at = models.DateTimeField(default=timezone.now)
 
     def save(self, *args, **kwargs):

@@ -8602,3 +8602,11 @@ class Fetch_Future_Unique_Data(APIView):
                 {"error": f"An error occurred: {str(e)}"},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
+
+
+def book_details(request, book_id):
+    # Retrieve the book based on the book_id
+    book = get_object_or_404(Book, id=book_id)
+
+    # Render the book_details page with the book details
+    return render(request, 'book_details.html', {'book': book})

@@ -497,16 +497,19 @@ urlpatterns = [
      path('black_scholes_option_price', views.black_scholes_option_price, name='black_scholes_option_price'),
 
 
-     path('books', views.books, name='books'),
+
      path('investment_book', views.investment_book, name='investment_book'),
      path('ban-list/', BanListView.as_view(), name='ban-list'),
 
+     path('fetch-future-data', Fetch_Future_Data.as_view(), name='fetch-future-data'),
+     path('fetch-future-unique-data', Fetch_Future_Unique_Data.as_view(), name='fetch-future-unique-data'),
+
+     
      path('book_management', views.book_management, name='book_management'),
      path('books', views.books, name='books'),
      path('books_list', BookListCreateView.as_view(), name='books_list'),
      path('books_list/<int:book_id>/', views.delete_book, name='delete_book'),
-     path('fetch-future-data', Fetch_Future_Data.as_view(), name='fetch-future-data'),
-     path('fetch-future-unique-data', Fetch_Future_Unique_Data.as_view(), name='fetch-future-unique-data'),
+     path('book_details/<int:book_id>/', views.book_details, name='book_details'),
 
      
 
