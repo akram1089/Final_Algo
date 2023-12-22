@@ -6447,24 +6447,35 @@ def angel_one_margin_calculations(request):
             # Run the loop to set the output
             payload = {"position": []}
             for item in parsed_data:
-                payload["position"].append({
-                    "contract": item["contract"],
-                    "exchange": item["exchange"],
-                    "product": item["product"],
-                    "qty": int(item["qty"]),
-                    "strikePrice": int(item["strikePrice"]),
-                    "tradeType": item["tradeType"],
-                    "optionType": item["optionType"]
-                })
+                # Check if the product is OPTION
+                if item["product"] == "OPTION":
+                    payload["position"].append({
+                        "contract": item["contract"],
+                        "exchange": item["exchange"],
+                        "product": item["product"],
+                        "qty": int(item["qty"]),
+                        "strikePrice": int(item["strikePrice"]),
+                        "tradeType": item["tradeType"],
+                        "optionType": item["optionType"]
+                    })
+                elif item["product"] == "FUTURE":
+                    payload["position"].append({
+                        "contract": item["contract"],
+                        "exchange": item["exchange"],
+                        "product": item["product"],
+                        "qty": int(item["qty"]),
+                        "strikePrice": 0,  # Set strikePrice to 0 for FUTURE
+                        "tradeType": item["tradeType"]
+                    })
 
-            print("payload",payload)
+            print("payload", payload)
 
             # Send a POST request
             response = requests.post(url, json=payload)
 
             # Check the response
             if response.status_code == 200:
-                print("response",response.json())
+                print("response", response.json())
                 # Return the response data as JSON
                 return JsonResponse(response.json(), safe=False)
             else:
@@ -6474,8 +6485,6 @@ def angel_one_margin_calculations(request):
             return JsonResponse({"error": "Invalid JSON format in request body"}, status=400)
         except Exception as e:
             return JsonResponse({"error": f"An error occurred: {e}"}, status=500)
-
-
 
 
 
@@ -7725,7 +7734,7 @@ def quote_data_from_broker(request):
 
     if request.method == 'POST':
         data = json.loads(request.body)
-        # print("data  :"  ,  data)
+        print("data  :"  ,  data)
 
         if broker_instance_zerodha:
             enctoken = get_enctoken_internal(
@@ -7738,14 +7747,22 @@ def quote_data_from_broker(request):
             # print("trading_quotes",trading_quotes)
 
             for quote in trading_quotes:
-                # print("quote :" , quote)
+                print("quote :" , quote)
+                target_string = {
+                    'symbol': quote["symbol"],
+                    'optionType': 'FUT' if quote["callPutEntrance"] == "FUTURE" else quote["callPutEntrance"],
+                    'expiry': quote["expiry_initial"],
+                    'strikePrice': quote["strikePrice"]
+                }
+
                 
 
-                target_string = {'symbol': quote["symbol"], 'optionType': quote["callPutEntrance"], 'expiry': quote["expiry_initial"], 'strikePrice': quote["strikePrice"]}
+
+                print("target_string",target_string)
                 tradingsymbols = download_csv_and_display(target_string)
 
                 # Print only the 'tradingsymbol'
-                # print(tradingsymbols.iloc[0])
+                print("tradingsymbols.iloc[0]",tradingsymbols.iloc[0])
                 closest_match=tradingsymbols.iloc[0]
 
                 quote['combinedString'] = f'NFO:{closest_match}'
@@ -7829,12 +7846,19 @@ def download_csv_and_display(target_string):
         instruments_df = pd.read_csv(csv_file_name)
 
         # Create a filter based on the given conditions
-        filter_condition = (
-            (instruments_df['name'] == target_string['symbol']) &
-            (instruments_df['instrument_type'] == target_string['optionType']) &
-            (instruments_df['expiry'] == target_string['expiry']) &
-            (instruments_df['strike'] == float(target_string['strikePrice']))
-        )
+        if target_string['optionType'] == 'FUT':
+            filter_condition = (
+                (instruments_df['name'] == target_string['symbol']) &
+                (instruments_df['instrument_type'] == target_string['optionType']) &
+                (instruments_df['expiry'] == target_string['expiry'])
+            )
+        else:
+            filter_condition = (
+                (instruments_df['name'] == target_string['symbol']) &
+                (instruments_df['instrument_type'] == target_string['optionType']) &
+                (instruments_df['expiry'] == target_string['expiry']) &
+                (instruments_df['strike'] == float(target_string['strikePrice']))
+            )
 
         # Apply the filter to the DataFrame
         filtered_df = instruments_df[filter_condition]
@@ -7969,9 +7993,13 @@ import pandas as pd
 
 
 def get_angel_one_quote(trading_quotes, logging_id, password, totp_key, api_key):
-    modified_strikes = [f"{entry['symbol']}{entry['expiry'][0:2]}{entry['expiry'][2:6]}{entry['expiry'][8:9]}{entry['strikePrice']}{entry['callPutEntrance']}" for entry in trading_quotes]
+    modified_strikes = [
+        f"{entry['symbol']}{entry['expiry'][0:2]}{entry['expiry'][2:6]}{entry['expiry'][8:9]}{'FUT'}" if entry['callPutEntrance'] == 'FUTURE'
+        else f"{entry['symbol']}{entry['expiry'][0:2]}{entry['expiry'][2:6]}{entry['expiry'][8:9]}{entry['strikePrice']}{entry['callPutEntrance']}"
+        for entry in trading_quotes
+    ]
 
-    print("Modified Strikes:", modified_strikes)
+    # print("Modified Strikes:", modified_strikes)
 
     api_key = api_key
     client_id = logging_id
@@ -7987,11 +8015,11 @@ def get_angel_one_quote(trading_quotes, logging_id, password, totp_key, api_key)
 
     # Fetch the feed token
     feedToken = smart_api.getfeedToken()
-    print("Feed Token:", feedToken)
-    print("Profile:", smart_api.getProfile(feedToken))
+    # print("Feed Token:", feedToken)
+    # print("Profile:", smart_api.getProfile(feedToken))
     all_profile = smart_api.getProfile(feedToken)
     margin_info = smart_api.rmsLimit()
-    print("Margin Info:", margin_info)
+    # print("Margin Info:", margin_info)
 
     # Fetch data from Angel One Margin Calculator API
 
