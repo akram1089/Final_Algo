@@ -32,7 +32,7 @@ SECRET_KEY = 'django-insecure-bni-q+a&4eggvue+&l%__^n#q%-hlti_=sc-u1ff0joram2yb@
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['www.algotrde.com', '127.0.0.1', 'localhost','algotrde.com','https://algotrde.com','http://algotrde.com','34.100.183.27']
+ALLOWED_HOSTS = ['www.algotrde.com', '127.0.0.1', 'localhost','algotrde.com','https://algotrde.com','http://algotrde.com','34.100.183.27','optionperks.com']
 
 TIME_ZONE = 'Asia/Kolkata'
 USE_TZ = True
