@@ -72,6 +72,8 @@ CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:8001",
 
     "https://www.algotrde.com",
+    "https://optionperks.com",
+    "http://optionperks.com",
 
     "http://www.algotrde.com",
 ]
@@ -93,7 +95,7 @@ MIDDLEWARE = [
     
     
 ]
-CSRF_TRUSTED_ORIGINS = ['https://*.algotrde.com', 'https://*.127.0.0.1']
+CSRF_TRUSTED_ORIGINS = ['https://*.algotrde.com', 'https://*.127.0.0.1' ,'https://*.optionperks.com']
 
 
 CORS_ORIGIN_WHITELIST = ["*"]
