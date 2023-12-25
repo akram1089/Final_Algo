@@ -4,24 +4,26 @@
 
 
 <style>
-    .book_title h2{
+    .book_title h3 {
         font-weight: 500 !important;
     }
-    .read_sample_btn{
+
+    .read_sample_btn {
         background-color: #2196f3;
     }
-    .read_sample_btn:hover{
+
+    .read_sample_btn:hover {
         background-color: white;
         color: #2196f3;
         border: 1px solid #2196f3;
     }
 
-    .book_cart_box{
-        border-radius:10px;
+    .book_cart_box {
+        border-radius: 10px;
         box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
     }
 
-    .add_cart_btn{
+    .add_cart_btn {
         color: white;
         background: #2397f3;
         border: 1px solid #2397f3;
@@ -29,41 +31,68 @@
         padding: 8px 39px;
     }
 
-    .buy_btn{
+    .buy_btn {
         color: white;
         background: #2397f3;
         border: 1px solid #2397f3;
         border-radius: 8px;
         padding: 8px 35px;
     }
-    .inner_books a{
+
+    .inner_books a {
         text-decoration: none;
         color: black;
     }
-    
-    .quantity_btn{
+
+    .quantity_btn {
         background: #4399eb;
-    border: 1px solid #4399eb;
-    width: 36px;
-    height: 36px;
-    border-radius: 0;
-    font-size: 22px;
-    color: white;
-    transition: ease-out 0.3s;
-    
+        border: 1px solid #4399eb;
+        width: 36px;
+        height: 36px;
+        border-radius: 0;
+        font-size: 22px;
+        color: white;
+        transition: ease-out 0.3s;
+
     }
-    .quantity_btn:hover{
-     color:#4399eb;
-     background:white;
+
+    .quantity_btn:hover {
+        color: #4399eb;
+        background: white;
     }
-    #quantityValue{
+
+    #quantityValue {
         width: 34px;
-    padding-top: 7px;
-    text-align: center;
+        padding-top: 7px;
+        text-align: center;
     }
+
+    .discount_box {
+        border: 3px solid #4399eb;
+        color: #4399eb;
+        padding: 6px 30px;
+        margin-left: 32px;
+        border-radius: 7px
+    }
+    .add_to_cart_btn button{
+    border-radius: 8px;
+    border: 1px solid #2196f3;
+    color: white;
+    background: #2196f3;
+    padding: 7px 14px 
+    }
+    .review_section i{
+        color: #fac81a;
+    }
+    #description{
+     font-weight: 400 !important;
+    color: #000000;
+    }
+
+    
 </style>
 <section>
-    <div class="mt-5">
+    <div class="mt-5 p-4">
         <div class="inner_books" style=" padding: 2px 9px;">
             <a href=" {% url "books" %}">
                 <i class="bi bi-arrow-left" style=" font-size: larger;"></i>
@@ -72,20 +101,43 @@
         </div>
         <div class="row mt-4">
             <div class="col-lg-3">
-              <img src="{{book.image.url}}" alt="" width="100%">
-              <a href="#" class="btn btn-primary col-lg-12 read_sample_btn mt-3" data-bs-toggle="modal" data-bs-target="#readSampleModal_${book.id}">Read Sample</a>
+                <div class="position-relative border" style="padding: 25px; min-height:300px; text-align: center;">
+
+                    <img src="{{book.image.url}}" alt="" width="100%" style="display: inline-block; max-width: 200px;">
+
+                </div>
+                <!-- <a href="#" class="btn btn-primary col-lg-12 read_sample_btn mt-3" data-bs-toggle="modal" data-bs-target="#readSampleModal_{{book.id}}">Read Sample</a> -->
             </div>
-            <div class="col-lg-7">
+            <div class="col-lg-9">
                 <div class="book_title">
-                    <h2>{{ book.title }} Details</h2>
-                    <span>by {{book.author}}</span>
+                    <h3>{{ book.title }} Details</h3>
+                    <span style="color: #585656;">Author: {{book.author}}</span>
+
+                    <div class="review_section d-flex align-items-center gap-3 mt-3">
+                        <div>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i> 
+                        </div>
+                        <span>400 reviews</span>
+                    </div>
+                    <div class="price_section mt-4">
+                        <div class="pr_d_price">
+                            <del> <span> ₹{{book.price}}</span> </del> <span
+                                class="discount_box">₹{{book.discount_price}}</span>
+                        </div>
+                    </div>
                 </div>
                 <hr>
                 <div>
-                    <p>Description: {{ book.description }}</p>
+                    <p id="descriptionParagraph">Description: <span id="description">{{ book.description }}</span></p>
+                    <a href="#" id="readMoreLink" style="display:none;">Read More</a>
+                    <a href="#" id="readLessLink" style="display:none;">Read Less</a>
                 </div>
-                 <hr>
-                <div class="card-meta-items-wrapper text-color-gray500 d-flex justify-content-between">
+
+                <!-- <div class="card-meta-items-wrapper text-color-gray500 d-flex justify-content-between">
                     <div class="d-flex flex-column align-items-center gap-2">
                      <span> Print length</span>  <i class="bi bi-file-earmark"></i> <span class="fw-5">{{book.page}}</span>
                     </div>
@@ -95,11 +147,24 @@
                     <div class="d-flex flex-column align-items-center gap-2">
                      <span>Publication Date</span><i class="bi bi-calendar-week"></i> <span >{{book.publish_date}}</span>
                     </div>
-                  </div>
-                  <hr/>
+                </div> -->
+
+
+                <div class="d-flex align-items-center justify-content-end gap-3">
+                    <div class="quantity">
+                        Quantity : <button  class="quantity_btn" onclick="decrementQuantity()">-</button> <input type="text" min="1" value="1" id="quantityValue" disabled>
+                        <button class="quantity_btn" onclick="incrementQuantity()">+</button>
+                    </div>
+
+                    <div class="add_to_cart_btn">
+                        <button>ADD TO CART</button>
+                    </div>
                 </div>
-                <div class="col-lg-2">
-                <div class="book_cart_box p-3 ">
+            </div>
+
+           
+            <!-- <div class="col-lg-2">
+                <!-- <div class="book_cart_box p-3 ">
 
                     <div class="price_detail d-flex justify-content-between">
 
@@ -117,37 +182,74 @@
                         <button class="add_cart_btn">ADD TO CART</button>
                         <button class="buy_btn">BUY NOW</button>
                     </div>
-                </div>
-                 
-                </div>
-            </div>
-        </div>
+                </div> -->
+
+        </div> -->
     </div>
-   
+    </div>
+    </div>
+
 </section>
 
 <script>
 
-    function incrementQuantity() {
-        updateQuantity(1);
-      }
-    
-      function decrementQuantity() {
-        updateQuantity(-1);
-      }
-    
-      function updateQuantity(change) {
-        var quantityElement = document.getElementById("quantityValue");
-        var currentQuantity = parseInt(quantityElement.value, 10);
-    
-        // Update the quantity by the specified change
-        var newQuantity = currentQuantity + change;
-    
-        // Ensure the quantity is not negative
-        newQuantity = Math.max(newQuantity, 0);
-    
-        // Update the quantity display
-        quantityElement.value = newQuantity;
-      }
+    // function incrementQuantity() {
+    //     updateQuantity(1);
+    // }
+
+    // function decrementQuantity() {
+    //     updateQuantity(-1);
+    // }
+
+    // function updateQuantity(change) {
+    //     var quantityElement = document.getElementById("quantityValue");
+    //     var currentQuantity = parseInt(quantityElement.value, 10);
+
+    //     // Update the quantity by the specified change
+    //     var newQuantity = currentQuantity + change;
+
+    //     // Ensure the quantity is not negative
+    //     newQuantity = Math.max(newQuantity, 0);
+
+    //     // Update the quantity display
+    //     quantityElement.value = newQuantity;
+    // }
+
+    $(document).ready(function () {
+        var maxDescriptionLength = 560;
+
+        // Get the actual dynamic content from the span
+        var fullDescription = $('#description').text();
+
+        // Check if the description is longer than the limit
+        if (fullDescription && fullDescription.length > maxDescriptionLength) {
+            // Set the initial short description
+            var shortDescription = fullDescription.slice(0, maxDescriptionLength);
+            $('#description').text(shortDescription);
+
+            // Show the "Read More" link
+            $('#readMoreLink').show();
+
+            // Toggle between short and full descriptions on "Read More"
+            $('#readMoreLink').on('click', function (e) {
+                e.preventDefault();
+                $('#description').text(fullDescription);
+                $('#readMoreLink').hide();
+                $('#readLessLink').show();
+            });
+
+            // Toggle between full and short descriptions on "Read Less"
+            $('#readLessLink').on('click', function (e) {
+                e.preventDefault();
+                $('#description').text(shortDescription);
+                $('#readLessLink').hide();
+                $('#readMoreLink').show();
+            });
+        } else {
+            // If the description is short, display it without the "Read More" link
+            $('#description').text(fullDescription);
+        }
+    });
+
 </script>
 {% endblock dashboard_body %}
