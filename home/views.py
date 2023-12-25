@@ -7123,6 +7123,7 @@ import json
 def add_broker_api_main(request):
     if request.method == 'POST':
         data = json.loads(request.body)
+        # print(data)
         user = request.user
         trading_platform = data.get('trading_platform')
 
@@ -7130,6 +7131,8 @@ def add_broker_api_main(request):
             return add_zerodha_broker(request, data)
         elif trading_platform == 'smart_api':
             return add_angel_one_broker(request, data)
+        elif trading_platform == 'upstox_api':
+            return add_upstox_broker(request, data)
         else:
             # Handle other trading platforms or return an error response
             return JsonResponse({"message": "Unsupported trading platform"}, status=400)
@@ -7147,6 +7150,165 @@ def add_broker_api_main(request):
         
     else:
         return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
+    
+
+
+import time
+import pyotp
+from urllib.parse import parse_qs, urlparse
+import requests
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+import upstox_client
+from upstox_client.rest import ApiException
+from pprint import pprint
+
+
+def add_upstox_broker(request ,data):
+#     {
+#     "broker_name": "upstocks",
+#     "trading_platform": "upstox_api",
+#     "logging_id": "ID",
+#     "password": "@FA",
+#     "totp_key": "TOTP",
+#     "api_key": "API",
+#     "app_name": "APP",
+#     "secret_key": "SECRET",
+#     "phone_number_val": "467465876"
+# }
+
+    print("Handling 'Upstox' broker addition:")
+    
+    # Print each data individually
+    print("Broker Name:", data.get('broker_name'))
+    print("Trading Platform:", data.get('trading_platform'))
+    print("Logging ID:", data.get('logging_id'))
+    print("Password:", data.get('password'))
+    print("TOTP Key:", data.get('totp_key'))
+    print("API Key:", data.get('api_key'))
+    print("App Name:", data.get('app_name'))
+    print("Secret Key:", data.get('secret_key'))
+    print("Phone Number:", data.get('phone_number_val'))
+
+
+    trading_plateform =data.get('trading_platform')
+    broker_name = data.get('broker_name')
+
+
+    fa_pin = data.get('fa_pin', '')
+    phone_number = data.get('phone_number', '')
+
+    api_secret = data.get('api_secret', '')
+    app_name = data.get('app_name')
+    api_key = data.get('api_key')
+    clientId = data.get('logging_id')
+    pwd = data.get('password')
+    token = data.get('totp_key')
+    secret=data.get('secret_key')
+
+    
+    API_KEY = api_key
+    SECRET_KEY = secret
+    RURL = 'https://apix.stocksdeveloper.in/oauth/upstox'
+
+    TOTP_KEY = token
+    MOBILE_NO = phone_number
+    PIN = pwd
+
+    AUTH_URL = f'https://api-v2.upstox.com/login/authorization/dialog?response_type=code&client_id={API_KEY}&redirect_uri={RURL}'
+
+    def get_access_token(code):
+        url = 'https://api-v2.upstox.com/login/authorization/token'
+        headers = {
+            'accept': 'application/json',
+            'Api-Version': '2.0',
+            'Content-Type': 'application/x-www-form-urlencoded'
+        }
+        data = {
+            'code': code,
+            'client_id': API_KEY,
+            'client_secret': SECRET_KEY,
+            'redirect_uri': RURL,
+            'grant_type': 'authorization_code'
+        }
+        response = requests.post(url, headers=headers, data=data)
+        json_response = response.json()
+        # Access the response data
+        # print(f"access_token:  {json_response['access_token']}")
+        return json_response['access_token']
+
+    def run_selenium():
+        driver = webdriver.Chrome()
+        driver.get(AUTH_URL)
+
+        try:
+            
+            mobile_num_input = WebDriverWait(driver, 10).until(
+                EC.presence_of_element_located((By.ID, 'mobileNum')))
+            mobile_num_input.click()
+            mobile_num_input.send_keys(MOBILE_NO)
+
+            get_otp_button = WebDriverWait(driver, 10).until(
+                EC.element_to_be_clickable((By.ID, "getOtp")))
+            get_otp_button.click()
+
+            otp_input = WebDriverWait(driver, 10).until(
+                EC.presence_of_element_located((By.ID, 'otpNum')))
+            otp = pyotp.TOTP(TOTP_KEY).now()
+            otp_input.send_keys(otp)
+
+            continue_button = WebDriverWait(driver, 10).until(
+                EC.element_to_be_clickable((By.ID, "continueBtn")))
+            continue_button.click()
+
+            pin_input = WebDriverWait(driver, 10).until(
+                EC.presence_of_element_located((By.ID, "pinCode")))
+            pin_input.click()
+            pin_input.send_keys(PIN)
+
+            continue_button = WebDriverWait(driver, 10).until(
+                EC.element_to_be_clickable((By.ID, "pinContinueBtn")))
+            continue_button.click()
+
+            WebDriverWait(driver, 10).until(EC.url_contains(RURL))
+            code = parse_qs(urlparse(driver.current_url).query)['code'][0]
+
+        finally:
+            driver.quit()
+
+        return code
+
+    # Run Selenium to get the code and then obtain the access token
+    code = run_selenium()
+    if code:
+        access_token = get_access_token(code)
+        print(access_token)
+        
+    # Configure OAuth2 access token for authorization: OAUTH2
+        configuration = upstox_client.Configuration()
+        configuration.access_token = access_token
+
+        # create an instance of the API class
+        api_instance = upstox_client.UserApi(upstox_client.ApiClient(configuration))
+        api_version = 'api_version_example' # str | API Version Header
+
+        try:
+            # Get profile
+            api_response = api_instance.get_profile(api_version)
+            pprint(api_response)
+        except ApiException as e:
+            print("Exception when calling UserApi->get_profile: %s\n" % e)
+    else:
+        print("Error retrieving code.")
+    return JsonResponse({"message": "'smart_api' broker added successfully"})
+
+
+
+
+
+
 
 
 from SmartApi import SmartConnect #or from SmartApi.smartConnect import SmartConnect
@@ -8610,3 +8772,59 @@ def book_details(request, book_id):
 
     # Render the book_details page with the book details
     return render(request, 'book_details.html', {'book': book})
+
+
+
+
+
+
+
+
+@csrf_exempt
+def get_indices_data(request):
+
+    if request.method == "POST":
+        if request.method == 'POST':
+        
+          selected_exchange = request.POST.get('exchange')
+
+        # Define the sets of symbols for NSE and BSE
+        nse_symbols = ['NIFTY', 'BANKNIFTY', 'FINNIFTY', 'MIDCPNIFTY']
+        bse_symbols = ['BANKEX', 'SENSEX']
+
+        # Save the selected symbols in your Django model or perform other actions
+        # For demonstration, let's print them
+        if selected_exchange == 'NSE':
+            selected_symbols = nse_symbols
+        elif selected_exchange == 'BSE':
+            selected_symbols = bse_symbols
+        else:
+            selected_symbols = []
+
+        for symbol in selected_symbols:
+            api_url = f"https://webapi.niftytrader.in/webapi/symbol/symbol-expiry-list?symbol={symbol}&exchange={selected_exchange}"
+
+            try:
+                # Make the API call
+                response = requests.get(api_url)
+                api_data = response.json()
+                
+                # For demonstration, let's print the API response
+                print(f"API Response for {symbol}: {api_data}")
+
+                # Append the API response to the list
+                selected_symbols.append({symbol: api_data})
+            except Exception as e:
+                # Handle the exception if the API call fails
+                print(f"Error for {symbol}: {str(e)}")
+
+        # If you want to send this information as a JSON response
+        return JsonResponse({'exchange': selected_exchange, 'symbols': selected_symbols})
+    else:
+        return JsonResponse({'error': 'Invalid request method'})
+
+
+
+
+def options_expiry_table(request):
+    return render(request, "options_expiry_table.html")
