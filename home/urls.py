@@ -510,6 +510,8 @@ urlpatterns = [
      path('books_list', BookListCreateView.as_view(), name='books_list'),
      path('books_list/<int:book_id>/', views.delete_book, name='delete_book'),
      path('book_details/<int:book_id>/', views.book_details, name='book_details'),
+     path('options_expiry_table', views.options_expiry_table, name='options_expiry_table'),
+     path('get_indices_data/', views.get_indices_data, name='get_indices_data'),
 
      
 

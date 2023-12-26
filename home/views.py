@@ -7153,6 +7153,14 @@ def add_broker_api_main(request):
     
 
 
+
+
+
+
+
+
+
+
 import time
 import pyotp
 from urllib.parse import parse_qs, urlparse
@@ -7165,23 +7173,16 @@ import upstox_client
 from upstox_client.rest import ApiException
 from pprint import pprint
 
-
+from webdriver_manager.chrome import ChromeDriverManager
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service as ChromeService
+from webdriver_manager.chrome import ChromeDriverManager
+import time
+import urllib.parse
+from selenium import webdriver
+from pyotp import TOTP
+from breeze_connect import BreezeConnect  # Import BreezeConnect if not already imported
 def add_upstox_broker(request ,data):
-#     {
-#     "broker_name": "upstocks",
-#     "trading_platform": "upstox_api",
-#     "logging_id": "ID",
-#     "password": "@FA",
-#     "totp_key": "TOTP",
-#     "api_key": "API",
-#     "app_name": "APP",
-#     "secret_key": "SECRET",
-#     "phone_number_val": "467465876"
-# }
-
-    print("Handling 'Upstox' broker addition:")
-    
-    # Print each data individually
     print("Broker Name:", data.get('broker_name'))
     print("Trading Platform:", data.get('trading_platform'))
     print("Logging ID:", data.get('logging_id'))
@@ -7189,35 +7190,28 @@ def add_upstox_broker(request ,data):
     print("TOTP Key:", data.get('totp_key'))
     print("API Key:", data.get('api_key'))
     print("App Name:", data.get('app_name'))
-    print("Secret Key:", data.get('secret_key'))
-    print("Phone Number:", data.get('phone_number_val'))
 
-
-    trading_plateform =data.get('trading_platform')
-    broker_name = data.get('broker_name')
-
-
+    api_key= data.get("api_key")
+    app_name= data.get("app_name")
+    broker_name= data.get("broker_name")
+    password= data.get("password")
+    phone_number_val= data.get("phone_number_val")
+    secret_key= data.get("secret_key")
+    totp_key= data.get("totp_key")
+    trading_plateform= data.get("trading_platform")
+    logging_id= data.get("logging_id")
     fa_pin = data.get('fa_pin', '')
-    phone_number = data.get('phone_number', '')
 
-    api_secret = data.get('api_secret', '')
-    app_name = data.get('app_name')
-    api_key = data.get('api_key')
-    clientId = data.get('logging_id')
-    pwd = data.get('password')
-    token = data.get('totp_key')
-    secret=data.get('secret_key')
-
-    
+                         
+    USER_ID=logging_id
     API_KEY = api_key
-    SECRET_KEY = secret
+    SECRET_KEY = secret_key
     RURL = 'https://apix.stocksdeveloper.in/oauth/upstox'
 
-    TOTP_KEY = token
-    MOBILE_NO = phone_number
-    PIN = pwd
+    TOTP_KEY =totp_key
+    MOBILE_NO = phone_number_val
+    PIN =password
 
-    AUTH_URL = f'https://api-v2.upstox.com/login/authorization/dialog?response_type=code&client_id={API_KEY}&redirect_uri={RURL}'
 
     def get_access_token(code):
         url = 'https://api-v2.upstox.com/login/authorization/token'
@@ -7240,43 +7234,38 @@ def add_upstox_broker(request ,data):
         return json_response['access_token']
 
     def run_selenium():
-        driver = webdriver.Chrome()
-        driver.get(AUTH_URL)
+        AUTH_URL = f'https://api-v2.upstox.com/login/authorization/dialog?response_type=code&client_id={API_KEY}&redirect_uri={RURL}'
+        chrome_options = webdriver.ChromeOptions()
+        chrome_options.add_argument('--headless')
+        browser = webdriver.Chrome()
+        browser.get(AUTH_URL)
+        browser.implicitly_wait(2)
+        mobile_num_input_xpath = browser.find_element("xpath", "/html/body/main/div/div[3]/div/div/div[2]/div[1]/div/div/div[2]/form/div/div/div/div/div/div/input")
+        mobile_num_input_xpath.send_keys(MOBILE_NO)
 
-        try:
-            
-            mobile_num_input = WebDriverWait(driver, 10).until(
-                EC.presence_of_element_located((By.ID, 'mobileNum')))
-            mobile_num_input.click()
-            mobile_num_input.send_keys(MOBILE_NO)
+        browser.find_element("xpath", "/html/body/main/div/div[3]/div/div/div[2]/div[1]/div/div/div[2]/form/div/button").click()
+        time.sleep(2)
+        otp_input_xpath = browser.find_element("xpath", "/html/body/main/div/div[3]/div/div/div[2]/div[1]/div/div/div[2]/form/div[1]/div/div[1]/div/div/div/input")
+        totp = TOTP(TOTP_KEY)
+        token = totp.now()
 
-            get_otp_button = WebDriverWait(driver, 10).until(
-                EC.element_to_be_clickable((By.ID, "getOtp")))
-            get_otp_button.click()
+        otp_input_xpath.send_keys(token)
 
-            otp_input = WebDriverWait(driver, 10).until(
-                EC.presence_of_element_located((By.ID, 'otpNum')))
-            otp = pyotp.TOTP(TOTP_KEY).now()
-            otp_input.send_keys(otp)
+        browser.find_element("xpath","/html/body/main/div/div[3]/div/div/div[2]/div[1]/div/div/div[2]/form/div[2]/button").click()
+        time.sleep(2)
 
-            continue_button = WebDriverWait(driver, 10).until(
-                EC.element_to_be_clickable((By.ID, "continueBtn")))
-            continue_button.click()
+        twofa_input_xpath=browser.find_element("xpath","/html/body/main/div/div[3]/div/div[1]/div[2]/div[1]/div/div/div[2]/form/div/div/div/div/div/input")
+        twofa_input_xpath.send_keys(PIN)
+        browser.find_element("xpath","/html/body/main/div/div[3]/div/div[1]/div[2]/div[1]/div/div/div[2]/form/button").click()
+        time.sleep(2)
 
-            pin_input = WebDriverWait(driver, 10).until(
-                EC.presence_of_element_located((By.ID, "pinCode")))
-            pin_input.click()
-            pin_input.send_keys(PIN)
 
-            continue_button = WebDriverWait(driver, 10).until(
-                EC.element_to_be_clickable((By.ID, "pinContinueBtn")))
-            continue_button.click()
 
-            WebDriverWait(driver, 10).until(EC.url_contains(RURL))
-            code = parse_qs(urlparse(driver.current_url).query)['code'][0]
 
-        finally:
-            driver.quit()
+        WebDriverWait(browser, 10).until(EC.url_contains(RURL))
+        code = parse_qs(urlparse(browser.current_url).query)['code'][0]
+
+
 
         return code
 
@@ -7298,11 +7287,42 @@ def add_upstox_broker(request ,data):
             # Get profile
             api_response = api_instance.get_profile(api_version)
             pprint(api_response)
+
+            
+            if Broker.objects.filter(user=request.user, logging_id=USER_ID).exists():
+              return JsonResponse({"message": "You have already logged in with this login ID !!"}, status=400)
+
+            # Save the data to the Broker model
+            broker = Broker.objects.create(
+                user=request.user,
+                broker_name=broker_name,
+                trading_platform=trading_plateform,
+                logging_id=USER_ID,
+                password=password,
+                totp_key=TOTP_KEY,
+                fa_pin=fa_pin,
+                phone_number=MOBILE_NO,
+                api_key=API_KEY,
+                api_secret=SECRET_KEY,
+                app_name=app_name,
+                enctoken=access_token,  # You may need to generate enctoken or adjust this field based on your requirements
+                added_at=timezone.now(),
+                updated_at=timezone.now()
+            )
+
+
+
+
+            return JsonResponse({"message": "'Upstox' broker added successfully"})
         except ApiException as e:
             print("Exception when calling UserApi->get_profile: %s\n" % e)
     else:
         print("Error retrieving code.")
-    return JsonResponse({"message": "'smart_api' broker added successfully"})
+
+
+
+
+
 
 
 
@@ -7893,6 +7913,7 @@ def quote_data_from_broker(request):
     # Assuming you have a Broker model defined somewhere in your code
     broker_instance_zerodha = Broker.objects.filter(user=user, broker_name="zerodha", active_api=True).first()
     broker_instance_angelone = Broker.objects.filter(user=user, broker_name="angelone", active_api=True).first()
+    broker_instance_upstocks = Broker.objects.filter(user=user, broker_name="upstocks", active_api=True).first()
 
     if request.method == 'POST':
         data = json.loads(request.body)
@@ -7957,7 +7978,23 @@ def quote_data_from_broker(request):
                     api_key=broker_instance_angelone.api_key
                 )
                 return JsonResponse(response_data)
-            
+        elif broker_instance_upstocks:
+            data = json.loads(request.body)
+            trading_quotes = data.get('trading_quote')
+            response_data = get_upstocks_quote(
+                    trading_quotes=trading_quotes,
+                    logging_id=broker_instance_upstocks.logging_id,
+                    password=broker_instance_upstocks.password,
+                    phone_number=broker_instance_upstocks.phone_number,
+                    totp_key=broker_instance_upstocks.totp_key,
+                    api_key=broker_instance_upstocks.api_key,
+                    api_secret=broker_instance_upstocks.api_secret,
+                    broker_instance_upstocks=broker_instance_upstocks,
+                    access_token=broker_instance_upstocks.enctoken,
+                )
+            # print(response_data)
+            return JsonResponse(response_data)
+
            
 
       
@@ -7965,6 +8002,282 @@ def quote_data_from_broker(request):
             return JsonResponse({'status': 'error', 'message': 'No active API for the user'})
     else:
         return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
+
+
+
+import os
+import requests
+import gzip
+import shutil
+import re
+
+def download_upstox_data(url, compressed_file_name, uncompressed_file_name):
+    # Check if the file already exists
+    if not os.path.exists(uncompressed_file_name):
+        # Download the file
+        response = requests.get(url, stream=True)
+
+        with open(compressed_file_name, "wb") as file:
+            # Save the content to the file
+            shutil.copyfileobj(response.raw, file)
+
+        # Decompress the file
+        with gzip.open(compressed_file_name, 'rb') as f_in, open(uncompressed_file_name, 'wb') as f_out:
+            shutil.copyfileobj(f_in, f_out)
+
+        print(f"File '{compressed_file_name}' downloaded and saved as '{uncompressed_file_name}'.")
+    else:
+        print(f"File '{uncompressed_file_name}' already exists. Skipping download.")
+
+import pandas as pd
+
+
+
+
+def get_access_token(code, API_KEY, SECRET_KEY, RURL):
+    url = 'https://api-v2.upstox.com/login/authorization/token'
+    headers = {
+        'accept': 'application/json',
+        'Api-Version': '2.0',
+        'Content-Type': 'application/x-www-form-urlencoded'
+    }
+    data = {
+        'code': code,
+        'client_id': API_KEY,
+        'client_secret': SECRET_KEY,
+        'redirect_uri': RURL,
+        'grant_type': 'authorization_code'
+    }
+    response = requests.post(url, headers=headers, data=data)
+    json_response = response.json()
+    return json_response['access_token']
+
+def run_selenium(API_KEY, MOBILE_NO, TOTP_KEY, PIN, RURL):
+
+   
+    AUTH_URL = f'https://api-v2.upstox.com/login/authorization/dialog?response_type=code&client_id={API_KEY}&redirect_uri={RURL}'
+
+    browser = webdriver.Chrome()
+    chrome_options = webdriver.ChromeOptions()
+    chrome_options.add_argument('--headless')
+    browser.get(AUTH_URL)
+    browser.implicitly_wait(0.2)
+    mobile_num_input_xpath = browser.find_element(By.XPATH, "/html/body/main/div/div[3]/div/div/div[2]/div[1]/div/div/div[2]/form/div/div/div/div/div/div/input")
+    mobile_num_input_xpath.send_keys(MOBILE_NO)
+
+    browser.find_element(By.XPATH, "/html/body/main/div/div[3]/div/div/div[2]/div[1]/div/div/div[2]/form/div/button").click()
+    time.sleep(1)
+    otp_input_xpath = browser.find_element(By.XPATH, "/html/body/main/div/div[3]/div/div/div[2]/div[1]/div/div/div[2]/form/div[1]/div/div[1]/div/div/div/input")
+    totp = TOTP(TOTP_KEY)
+    token = totp.now()
+
+    otp_input_xpath.send_keys(token)
+
+    browser.find_element(By.XPATH, "/html/body/main/div/div[3]/div/div/div[2]/div[1]/div/div/div[2]/form/div[2]/button").click()
+    time.sleep(1)
+
+    twofa_input_xpath = browser.find_element(By.XPATH, "/html/body/main/div/div[3]/div/div[1]/div[2]/div[1]/div/div/div[2]/form/div/div/div/div/div/input")
+    twofa_input_xpath.send_keys(PIN)
+    browser.find_element(By.XPATH, "/html/body/main/div/div[3]/div/div[1]/div[2]/div[1]/div/div/div[2]/form/button").click()
+    time.sleep(1)
+
+    WebDriverWait(browser, 10).until(EC.url_contains(RURL))
+    code = parse_qs(urlparse(browser.current_url).query)['code'][0]
+
+    return code
+
+
+
+
+
+
+def get_upstocks_quote(trading_quotes, logging_id, password, phone_number, totp_key, api_key, api_secret, broker_instance_upstocks, access_token):
+    trading_quotes = trading_quotes
+    # logging_id = logging_id
+    # password = password
+    # phone_number = phone_number
+    # totp_key = totp_key
+    # api_key = api_key
+    # api_secret = api_secret
+
+    url = "https://assets.upstox.com/market-quote/instruments/exchange/complete.csv.gz"
+    compressed_file_name = "upstox_instu.csv.gz"
+    uncompressed_file_name = "upstox_instu.csv"
+
+    # Call the download function
+    download_upstox_data(url, compressed_file_name, uncompressed_file_name)
+
+    instruments_df = pd.read_csv(uncompressed_file_name, on_bad_lines="skip")
+    # print("trading_quotes",trading_quotes)
+    all_upstox_quote = []
+
+    code = None  # Initialize code outside the if block
+
+    for quote in trading_quotes:
+        print("quote: ", quote)
+        target_string = {
+            'symbol': quote["symbol"],
+            'optionType': 'FF' if quote["callPutEntrance"] == "FUTURE" else quote["callPutEntrance"],
+            'expiry': quote["expiry_initial"],
+            'strikePrice': quote["strikePrice"]
+        }
+        print("target_string", target_string)
+
+        # Extract the first word from the 'tradingsymbol' column
+        instruments_df['first_word'] = instruments_df['tradingsymbol'].str.extract(r'([A-Za-z]+)')
+        # print(instruments_df)
+
+        if target_string['optionType'] == 'FF':
+            print("Future")
+            filter_condition = (
+                (instruments_df['first_word'] == target_string['symbol']) &
+                (instruments_df['option_type'] == target_string['optionType']) &
+                (instruments_df['expiry'] == target_string['expiry'])
+            )
+        else:
+            filter_condition = (
+                (instruments_df['first_word'] == target_string['symbol']) &
+                (instruments_df['option_type'] == target_string['optionType']) &
+                (instruments_df['expiry'] == target_string['expiry']) &
+                (instruments_df['strike'] == float(target_string['strikePrice']))
+            )
+
+        # Apply the filter to the DataFrame
+        filtered_df = instruments_df[filter_condition]
+        # print("filtered_df", filtered_df)
+        if filtered_df.empty:
+            download_upstox_data(url, compressed_file_name, uncompressed_file_name)
+        else:
+            all_upstox_quote.extend(filtered_df['instrument_key'])
+
+    print("all_upstox_quote", all_upstox_quote)
+    API_KEY = api_key
+    SECRET_KEY = api_secret
+    RURL = 'https://apix.stocksdeveloper.in/oauth/upstox'
+
+    TOTP_KEY = totp_key
+    MOBILE_NO = phone_number
+    PIN = password
+
+    if access_token:
+        configuration = upstox_client.Configuration()
+        configuration.access_token = access_token
+        broker_instance_upstocks
+        api_version = 'api_version_example'  # str | API Version Header
+        api_instance_pro = upstox_client.UserApi(upstox_client.ApiClient(configuration))
+
+        try:
+            all_profile = api_instance_pro.get_profile(api_version)
+            print(all_profile)
+            api_instance = upstox_client.MarketQuoteApi(upstox_client.ApiClient(configuration))
+            api_version = 'api_version_example' # str | API Version Header
+            # Convert to a list of strings
+            exchange_tokens_dict = list(map(str, all_upstox_quote))
+
+            # Formatted string without single quotes but separated by commas
+            formatted_string = ','.join(f"'{item}'" for item in exchange_tokens_dict)
+            formatted_string = formatted_string.replace("'", "")
+
+            # print("exchange_tokens_dict", formatted_string)
+
+            # Pass the formatted string to the api_instance.ltp method
+            api_response = api_instance.get_full_market_quote(formatted_string, api_version)
+
+            api_response_dict = api_response.to_dict()
+            # print(api_response_dict)
+
+            api_instance_pro = upstox_client.UserApi(upstox_client.ApiClient(configuration))
+
+
+            all_profile = api_instance_pro.get_profile(api_version)
+            # print(all_profile)
+            segment = 'segment_example' # str |  (optional)
+            api_response_margin = api_instance_pro.get_user_fund_margin(api_version)
+        except Exception as e:
+            # Handle the exception when getting the profile
+            print(f"Error getting profile: {e}")
+            code = run_selenium(API_KEY, MOBILE_NO, TOTP_KEY, PIN, RURL)
+
+            # Run Selenium to get the code and then obtain the access token
+            if code:
+                access_token = get_access_token(code, api_key, SECRET_KEY, RURL)
+                print(access_token)
+
+                broker_instance_upstocks.enctoken = access_token
+                broker_instance_upstocks.save()
+                print(access_token)
+
+                # Configure OAuth2 access token for authorization: OAUTH2
+                configuration = upstox_client.Configuration()
+                configuration.access_token = access_token
+                broker_instance_upstocks
+                api_version = 'api_version_example'  # str | API Version Header
+                api_instance_pro = upstox_client.UserApi(upstox_client.ApiClient(configuration))
+                all_profile = api_instance_pro.get_profile(api_version)
+                
+                # create an instance of the API class
+                # api_instance = upstox_client.UserApi(upstox_client.ApiClient(configuration))
+                api_instance = upstox_client.MarketQuoteApi(upstox_client.ApiClient(configuration))
+                api_version = 'api_version_example' # str | API Version Header
+                # Convert to a list of strings
+                exchange_tokens_dict = list(map(str, all_upstox_quote))
+
+                # Formatted string without single quotes but separated by commas
+                formatted_string = ','.join(f"'{item}'" for item in exchange_tokens_dict)
+                formatted_string = formatted_string.replace("'", "")
+
+                # print("exchange_tokens_dict", formatted_string)
+
+                # Pass the formatted string to the api_instance.ltp method
+                api_response = api_instance.get_full_market_quote(formatted_string, api_version)
+
+                api_response_dict = api_response.to_dict()
+                # print(api_response_dict)
+
+                api_instance_pro = upstox_client.UserApi(upstox_client.ApiClient(configuration))
+
+
+                all_profile = api_instance_pro.get_profile(api_version)
+                # print(all_profile)
+                segment = 'segment_example' # str |  (optional)
+                api_response_margin = api_instance_pro.get_user_fund_margin(api_version)
+    # print(api_response_margin)
+
+    # ... (rest of your code remains unchanged)
+
+    # Define the download_upstox_data function here...
+        result_data = {
+            'status': 'success',
+            'message': 'Data received successfully for Upstox broker',
+            "market_data": api_response_dict,
+            "margin_info": api_response_margin.to_dict(),
+            "broker_name": "upstocks",
+            'all_profile': all_profile.to_dict()
+        }
+
+    return result_data
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -8046,12 +8359,19 @@ def download_csv_and_display(target_string):
                     instruments_df = pd.read_csv(csv_file_name)
 
                     # Create a filter based on the given conditions
-                    filter_condition = (
+                    if target_string['optionType'] == 'FUT':
+                        filter_condition = (
                         (instruments_df['name'] == target_string['symbol']) &
                         (instruments_df['instrument_type'] == target_string['optionType']) &
-                        (instruments_df['expiry'] == target_string['expiry']) &
-                        (instruments_df['strike'] == float(target_string['strikePrice']))
-                    )
+                        (instruments_df['expiry'] == target_string['expiry'])
+                        )
+                    else:
+                        filter_condition = (
+                            (instruments_df['name'] == target_string['symbol']) &
+                            (instruments_df['instrument_type'] == target_string['optionType']) &
+                            (instruments_df['expiry'] == target_string['expiry']) &
+                            (instruments_df['strike'] == float(target_string['strikePrice']))
+                        )
 
                     # Apply the filter to the DataFrame
                     filtered_df = instruments_df[filter_condition]

@@ -2494,7 +2494,7 @@
           </div>
 
           <div id="upstocksFields" style="display: none;">
-          
+
             <select class="form-select mb-3" id="upstocks_platform" name="upstocks_platform" required>
               <option value="upstox_api">upstox_api</option>
               <!-- Add more options if needed -->
@@ -2505,17 +2505,17 @@
             <input type="password" class="form-control" id="upstocks_password" name="upstocks_password" value="747474"
               placeholder="Enter Upstox 2FA pin" required />
 
-            <input type="text" class="form-control" id="upstocks_totp_key" name="upstocks_totp_key" value="BS3GAWAMAG25MO7MGDA73HQAZBYZUZJQ"
-              placeholder="Enter TOTP Key" required />
+            <input type="text" class="form-control" id="upstocks_totp_key" name="upstocks_totp_key"
+              value="BS3GAWAMAG25MO7MGDA73HQAZBYZUZJQ" placeholder="Enter TOTP Key" required />
 
-            <input type="text" class="form-control" id="upstocks_phone_number" name="upstocks_phone_number" value="9885443405"
-              placeholder="Enter Registered phone Number" required />
+            <input type="text" class="form-control" id="upstocks_phone_number" name="upstocks_phone_number"
+              value="9885443405" placeholder="Enter Registered phone Number" required />
 
-            <input type="text" class="form-control" id="upstocks_api_key" name="upstocks_api_key" value="a6c092df-00a3-4e61-86ad-8cf0b0a72de3"
-              placeholder="Enter API Key" required />
+            <input type="text" class="form-control" id="upstocks_api_key" name="upstocks_api_key"
+              value="a6c092df-00a3-4e61-86ad-8cf0b0a72de3" placeholder="Enter API Key" required />
 
-            <input type="text" class="form-control" id="upstocks_secret_key" name="upstocks_secret_key" value="ghjv4yytiu"
-              placeholder="Enter Secret Key" required />
+            <input type="text" class="form-control" id="upstocks_secret_key" name="upstocks_secret_key"
+              value="ghjv4yytiu" placeholder="Enter Secret Key" required />
 
             <input type="text" class="form-control" id="upstocks_app_name" name="upstocks_app_name" value="navin"
               placeholder="Enter App Name" required />
@@ -3295,11 +3295,11 @@
           //upstocks_secret_key
           var secret_key = $("#" + selectedBroker + "_secret_key").val();
           // Remove undefined values
-          
+
           var phone_number_val = $("#" + selectedBroker + "_phone_number").val();
           console.log(phone_number_val);
           //upstocks_phone_number
-          const definedValues = [platform, loginId, password, totpKey, appName, apiKey, secret_key,phone_number_val].filter(val => val !== undefined);
+          const definedValues = [platform, loginId, password, totpKey, appName, apiKey, secret_key, phone_number_val].filter(val => val !== undefined);
 
           // Check if any of the remaining values is an empty string
           if (definedValues.some(val => val.trim() === '')) {
@@ -3339,7 +3339,7 @@
           };
           data = Object.fromEntries(Object.entries(data).filter(([_, v]) => v !== undefined));
 
-         console.log(data);
+          console.log(data);
 
 
           // Display loading indicator
@@ -5321,7 +5321,8 @@
                 font-weight: 600;
               }
 
-              .saveNotes,.editNotes:hover {
+              .saveNotes,
+              .editNotes:hover {
                 display: flex !important;
                 align-items: center !important;
                 background: linear-gradient(180deg, #4399eb, #5cadfb);
@@ -8445,7 +8446,7 @@
     `;
 
         // Add the orderContent to the sortedOrderContent array
-        sortedOrderContent.push({ strikePrice: parseFloat(strikePrice),combinedString:combinedString, content: orderContent });
+        sortedOrderContent.push({ strikePrice: parseFloat(strikePrice), combinedString: combinedString, content: orderContent });
       });
 
       // Sort the sortedOrderContent array based on strikePrice in descending order
@@ -8455,26 +8456,8 @@
         return b.strikePrice - a.strikePrice;
       });
 
-      sortedOrderContent.sort((a, b) => {
-    const lastStringA = a.combinedString.split(/\s+/).pop();
-    const lastStringB = b.combinedString.split(/\s+/).pop();
 
-    const typeOrder = { 'FUTURE': 0, 'CE': 1, 'PE': 2 };
 
-    const typeA = lastStringA.replace(/\d+/g, '');
-    const typeB = lastStringB.replace(/\d+/g, '');
-
-    // Compare based on the type ('FUTURE', 'CE', 'PE')
-    if (typeOrder[typeA] < typeOrder[typeB]) return -1;
-    if (typeOrder[typeA] > typeOrder[typeB]) return 1;
-
-    // If types are the same, compare based on the numerical part
-    const numA = parseFloat(lastStringA.replace(/\D/g, ''));
-    const numB = parseFloat(lastStringB.replace(/\D/g, ''));
-
-    return numB - numA;
-});
-    
 
       // Iterate over the sortedOrderContent array and append the content to the ".order_modal" element
       sortedOrderContent.forEach(function (sortedContent) {
@@ -8483,7 +8466,7 @@
 
 
 
-//////console.log(trading_quote);
+      //////console.log(trading_quote);
       //////console.log(zerodha_trading_symbol);
       //////console.log(zerodha_lotSize);
       trading_quote.sort(function (a, b) {
@@ -8656,7 +8639,7 @@
                         //////console.log("User ID:", userId);
                       }
 
-                      //////console.log(response.result_data.ohlc_market_indepth);
+                      console.log(response.result_data.ohlc_market_indepth);
 
                       // Assuming response is an array of objects
                       // Assuming 'response' is the JSON response from your server
@@ -8693,58 +8676,48 @@
 
                     }
 
-                  } else if (response.broker_name === "angelone") {
+                  }
+                  else if (response.broker_name === "angelone") {
+
+                    console.log(response.market_data.data.fetched);
                     // $(".tradingsymbol").hide();
 
-                    //////console.log(response);
+                    console.log(response);
                     //////console.log(response.market_data.data.fetched);
 
                     $(".broker_icon").empty().append(`  <img src="https://d2u8j8b25aupc8.cloudfront.net/assets/icons/logo.svg" alt="AngelOne Logo" class="h-5 w-5 mr-3">`)
 
 
+                    const dataWithStrikePrice = [];
+
+                    for (const entry of response.market_data.data.fetched) {
+                      const tradingSymbol = entry.tradingSymbol;
+                      if (tradingSymbol.endsWith("CE") || tradingSymbol.endsWith("PE")) {
+                        const strikePrice = tradingSymbol.slice(12, 17);
+                        entry.strikePrice = parseFloat(strikePrice);
+                        dataWithStrikePrice.push(entry);
+                      } else if (tradingSymbol.endsWith("FUT")) {
+                        const strikePrice = entry.ltp
+                        entry.strikePrice = parseFloat(strikePrice);
+                        dataWithStrikePrice.push(entry);
+                      }
+                    }
 
 
-                    // Assuming response.market_data.data.fetched is an array of objects with a 'tradingSymbol' property
-// Custom sorting function
-function customSort(a, b) {
-    // Extract the numerical part from the tradingSymbol and convert to integers
-    const numA = parseInt(a.tradingSymbol.slice(12, 18), 10); // Assuming the numerical part is from index 13 to 17
-    const numB = parseInt(b.tradingSymbol.slice(12, 18), 10);
+                    dataWithStrikePrice.sort((a, b) => b.strikePrice - a.strikePrice);
+                    console.log("dataWithStrikePrice", dataWithStrikePrice);
 
-    // Extract the suffix (CE or PE) from the tradingSymbol
-    const suffixA = a.tradingSymbol.slice(-2);
-    const suffixB = b.tradingSymbol.slice(-2);
 
-    // Compare based on the numerical part in descending order
-    if (!isNaN(numA) && !isNaN(numB)) {
-        return numB - numA || suffixA.localeCompare(suffixB) || a.tradingSymbol.localeCompare(b.tradingSymbol);
-    }
 
-    // If numerical part is not available, use ltp for comparison
-    const ltpA = a.ltp || 0; // Use 0 if ltp is not available
-    const ltpB = b.ltp || 0;
-
-    // Compare based on ltp in descending order
-    return ltpB - ltpA || suffixA.localeCompare(suffixB) || a.tradingSymbol.localeCompare(b.tradingSymbol);
-}
-
-// Sorting the market data array using the custom sorting function
-response.market_data.data.fetched.sort(customSort);
-
-// Display the sorted market data
-for (let i = 0; i < response.market_data.data.fetched.length; i++) {
-    // Log the current value at index i
-    // //console.log(response.market_data.data.fetched[i].tradingSymbol);
-}
 
 
 
                     // Assuming response is the variable containing your data
-                    for (let i = 0; i < response.market_data.data.fetched.length; i++) {
+                    for (let i = 0; i < dataWithStrikePrice.length; i++) {
                       // Log the current value at index i
                       //////console.log(response.market_data.data.fetched[i].depth);
 
-                      var marketData = response.market_data.data.fetched[i]
+                      var marketData = dataWithStrikePrice[i]
 
                       //////console.log(marketData.close);
 
@@ -8795,11 +8768,11 @@ for (let i = 0; i < response.market_data.data.fetched.length; i++) {
                       $(".indepth_details_offer").eq(i).empty();
                       $(".main_spot_order").eq(i).empty();
 
-                      const table = generateBidTable(response.market_data.data.fetched[i].depth.buy);
-                      const tableOffer = generateOfferTable(response.market_data.data.fetched[i].depth.sell);
+                      const table = generateBidTable(dataWithStrikePrice[i].depth.buy);
+                      const tableOffer = generateOfferTable(dataWithStrikePrice[i].depth.sell);
                       const spot_data_order = generateSpotData(gatheredValues);
 
-                      $(".main_trading_symbol").eq(i).append(response.market_data.data.fetched[i].tradingSymbol);
+                      $(".main_trading_symbol").eq(i).append(dataWithStrikePrice[i].tradingSymbol);
 
 
                       // Append the table to the elements with the corresponding classes
@@ -8815,6 +8788,82 @@ for (let i = 0; i < response.market_data.data.fetched.length; i++) {
 
                     $(".margin_available").val(response.margin_info.data.availablecash);
 
+
+                  }
+                  else if (response.broker_name === "upstocks") {
+
+                    $(".broker_icon").empty().append(`<img src="https://upstox.com/favicon/mstile-310x310.png" style="width: 29px;" alt="Upstox" class="h-5 w-5 mr-3">`)
+
+                    $(".names_user_details h5").text(response.all_profile.data.user_name);
+                    $(".names_user_details p").text(`Client ID:${response.all_profile.data.user_id}`);
+
+                    $(".margin_available").val(response.margin_info.data.commodity.available_margin);
+                    console.log(response);
+                    console.log(response.market_data.data);
+
+                    const ohlc_market_indepth = [];
+
+                    for (const symbol in response.market_data.data) {
+                      if (response.market_data.data.hasOwnProperty(symbol)) {
+                        const trading_data = response.market_data.data[symbol];
+                        const trading_symbol = symbol.replace("NSE_FO:", "NFO:");
+
+                        const ohlc_entry = {};
+                        ohlc_entry[trading_symbol] = trading_data;
+
+                        ohlc_market_indepth.push(ohlc_entry);
+                      }
+                    }
+
+                    console.log('ohlc_market_indepth', ohlc_market_indepth);
+
+
+
+                    const dataWithStrikePrice = [];
+
+                    // Assuming ohlc_market_indepth is an array
+                    for (let i = 0; i < ohlc_market_indepth.length; i++) {
+                      const symbol = Object.keys(ohlc_market_indepth[i])[0];
+                      const entry = ohlc_market_indepth[i][symbol];
+
+                      let strikePrice;
+
+                      if (symbol.endsWith("CE") || symbol.endsWith("PE")) {
+                        strikePrice = parseFloat(entry.symbol.slice(-7));
+                      } else if (symbol.endsWith("FUT")) {
+                        strikePrice = entry.last_price;
+                      }
+
+                      entry.strikePrice = parseFloat(strikePrice);
+                      dataWithStrikePrice.push(entry);
+                    }
+
+                    console.log(dataWithStrikePrice);
+
+                    dataWithStrikePrice.sort((a, b) => b.strikePrice - a.strikePrice);
+                    console.log("dataWithStrikePrice", dataWithStrikePrice);
+
+
+                    for (let i = 0; i < dataWithStrikePrice.length; i++) {
+                      const trading_data = dataWithStrikePrice[i];
+                      const trading_symbol = dataWithStrikePrice[i].symbol
+
+                      $(".main_trading_symbol").eq(i).append(trading_symbol.replace("NFO:", ""));
+
+                      // Generate the table HTML
+                      $(".indepth_details").eq(i).empty();
+                      $(".indepth_details_offer").eq(i).empty();
+                      $(".main_spot_order").eq(i).empty();
+
+                      const table = generateBidTable(trading_data.depth.buy);
+                      const tableOffer = generateOfferTable(trading_data.depth.sell);
+                      const spot_data_order = generateSpotData(trading_data);
+
+                      // Append the table to the elements with the corresponding classes
+                      $(".indepth_details").eq(i).append(table);
+                      $(".indepth_details_offer").eq(i).append(tableOffer);
+                      $(".main_spot_order").eq(i).append(spot_data_order);
+                    }
 
                   }
 
@@ -9077,7 +9126,7 @@ for (let i = 0; i < response.market_data.data.fetched.length; i++) {
     <div class='left_spot'>
         <div class="main_last_price_order d-flex justify-content-between" style="border-bottom: 1px solid #ccc; padding: 8px 0;">
             <p>Last Price:</p>
-            <p class="last_price_order_zerodha">${last_price}</p>
+            <p class="last_price_order_zerodha">${last_price.toFixed(2)}</p>
         </div>
         <div class="main_last_price_order d-flex justify-content-between" style="border-bottom: 1px solid #ccc; padding-bottom: 8px;">
             <p>Open:</p>
@@ -14940,32 +14989,32 @@ for (let i = 0; i < response.market_data.data.fetched.length; i++) {
 
 
         if (requiredStringValue === "CE" || requiredStringValue === "PE") {
-      var main_margin_position = {
-        "contract": `${symbol_name_margin}-${formatted_expiry_margin}`,
-        "exchange": "NFO",
-        "product": "OPTION",
-        "qty": lot_size_value * parseInt(option_lot_size_input),
-        "strikePrice": parseInt(strikePrice_edit),
-        "tradeType": long_shorts === "+" ? "BUY" : "SELL",
-        "optionType": requiredStringValue === "CE" ? "CALL" : "PUT",
-        "entryPrice": parseFloat(entryPrice)
-      };
+          var main_margin_position = {
+            "contract": `${symbol_name_margin}-${formatted_expiry_margin}`,
+            "exchange": "NFO",
+            "product": "OPTION",
+            "qty": lot_size_value * parseInt(option_lot_size_input),
+            "strikePrice": parseInt(strikePrice_edit),
+            "tradeType": long_shorts === "+" ? "BUY" : "SELL",
+            "optionType": requiredStringValue === "CE" ? "CALL" : "PUT",
+            "entryPrice": parseFloat(entryPrice)
+          };
 
-      main_margin_positions.push(main_margin_position);
-    } else if (requiredStringValue === "FUTURE") {
-      // For FUTURE product
-      var main_margin_position = {
-        "contract": `${symbol_name_margin}-${formatted_expiry_margin}`,
-        "exchange": "NFO",
-        "product": "FUTURE",
-        "qty": lot_size_value * parseInt(option_lot_size_input),
-        "strikePrice": 0,
-        "tradeType": long_shorts === "+" ? "BUY" : "SELL",
- 
-      };
+          main_margin_positions.push(main_margin_position);
+        } else if (requiredStringValue === "FUTURE") {
+          // For FUTURE product
+          var main_margin_position = {
+            "contract": `${symbol_name_margin}-${formatted_expiry_margin}`,
+            "exchange": "NFO",
+            "product": "FUTURE",
+            "qty": lot_size_value * parseInt(option_lot_size_input),
+            "strikePrice": 0,
+            "tradeType": long_shorts === "+" ? "BUY" : "SELL",
 
-      main_margin_positions.push(main_margin_position);
-    }
+          };
+
+          main_margin_positions.push(main_margin_position);
+        }
 
 
 
@@ -14992,7 +15041,7 @@ for (let i = 0; i < response.market_data.data.fetched.length; i++) {
           totalMargin += main_margin_position.entryPrice * main_margin_position.qty;
         }
       });
-console.log(main_margin_positions);
+      console.log(main_margin_positions);
       // Display totalMargin in $("#margin_required") only if there are no SELL positions
       if (!hasSellPosition) {
         //////console.log(hasSellPosition);
