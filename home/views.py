@@ -7236,11 +7236,12 @@ def add_upstox_broker(request ,data):
 
     def run_selenium():
         AUTH_URL = f'https://api-v2.upstox.com/login/authorization/dialog?response_type=code&client_id={API_KEY}&redirect_uri={RURL}'
-        chrome_options = Options()
-        chrome_options.add_argument('--no-sandbox')  # Add this line
+        chrome_options = webdriver.ChromeOptions()
+        # chrome_options.add_argument('--no-sandbox')  # Add this line
         # chrome_options.add_argument('--headless')
-        chrome_options.add_argument('--disable-dev-shm-usage')
-        browser = webdriver.Chrome(service=Service(ChromeDriverManager().install()),options=chrome_options)
+        # chrome_options.add_argument('--disable-dev-shm-usage')
+        chromedriver_path = '/path/to/chromedriver'
+        browser = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options, executable_path=chromedriver_path)
         browser.get(AUTH_URL)
         browser.implicitly_wait(10)
         mobile_num_input_xpath = browser.find_element("xpath", "/html/body/main/div/div[3]/div/div/div[2]/div[1]/div/div/div[2]/form/div/div/div/div/div/div/input")
