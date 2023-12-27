@@ -7234,43 +7234,55 @@ def add_upstox_broker(request ,data):
         # print(f"access_token:  {json_response['access_token']}")
         return json_response['access_token']
 
+
     def run_selenium():
         AUTH_URL = f'https://api-v2.upstox.com/login/authorization/dialog?response_type=code&client_id={API_KEY}&redirect_uri={RURL}'
-        chrome_options = webdriver.ChromeOptions()
-        chrome_options.add_argument('--no-sandbox')  # Add this line
-        # chrome_options.add_argument('--headless')
-        chrome_options.add_argument('--disable-dev-shm-usage')
-        # chromedriver_path = '/path/to/chromedriver'
-        browser = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
 
+        chrome_options = Options()  
+        chrome_options.add_argument("--disable-web-security") 
+        chrome_options.add_argument("--disable-gpu")
+        chrome_options.add_argument('--log-level=1')
+        chrome_options.add_argument('--headless')
+        chrome_options.add_argument('--no-sandbox')
+        chrome_options.add_argument('--disable-dev-shm-usage')
+        chrome_options.add_argument('--ignore-certificate-errors')
+        chrome_options.add_argument("--disable-blink-features=AutomationControlled")
+        chrome_options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36")
+        chrome_options.add_argument("--enable-logging")
+
+        browser = webdriver.Chrome(service=Service(ChromeDriverManager().install()),options=chrome_options)
         browser.get(AUTH_URL)
         browser.implicitly_wait(10)
         mobile_num_input_xpath = browser.find_element("xpath", "/html/body/main/div/div[3]/div/div/div[2]/div[1]/div/div/div[2]/form/div/div/div/div/div/div/input")
         mobile_num_input_xpath.send_keys(MOBILE_NO)
+        time.sleep(1)
 
         browser.find_element("xpath", "/html/body/main/div/div[3]/div/div/div[2]/div[1]/div/div/div[2]/form/div/button").click()
-        time.sleep(2)
+        time.sleep(1)
+        # browser.save_screenshot("screenshot1.png")
         otp_input_xpath = browser.find_element("xpath", "/html/body/main/div/div[3]/div/div/div[2]/div[1]/div/div/div[2]/form/div[1]/div/div[1]/div/div/div/input")
         totp = TOTP(TOTP_KEY)
         token = totp.now()
+        time.sleep(1)
+        # browser.save_screenshot("screenshot1-2.png")
 
         otp_input_xpath.send_keys(token)
 
         browser.find_element("xpath","/html/body/main/div/div[3]/div/div/div[2]/div[1]/div/div/div[2]/form/div[2]/button").click()
-        time.sleep(2)
+        time.sleep(1)
+        # browser.save_screenshot("screenshot2.png")
 
         twofa_input_xpath=browser.find_element("xpath","/html/body/main/div/div[3]/div/div[1]/div[2]/div[1]/div/div/div[2]/form/div/div/div/div/div/input")
         twofa_input_xpath.send_keys(PIN)
         browser.find_element("xpath","/html/body/main/div/div[3]/div/div[1]/div[2]/div[1]/div/div/div[2]/form/button").click()
-        time.sleep(2)
+        time.sleep(1)
+        # browser.save_screenshot("screenshot3.png")
 
-
-
-
-        WebDriverWait(browser, 10).until(EC.url_contains(RURL))
+        WebDriverWait(browser, 5).until(EC.url_contains(RURL))
         code = parse_qs(urlparse(browser.current_url).query)['code'][0]
 
-
+        # Save screenshot
+        # browser.save_screenshot("screenshot_final.png")
 
         return code
 
@@ -8060,36 +8072,58 @@ def get_access_token(code, API_KEY, SECRET_KEY, RURL):
 def run_selenium(API_KEY, MOBILE_NO, TOTP_KEY, PIN, RURL):
 
    
+
+
     AUTH_URL = f'https://api-v2.upstox.com/login/authorization/dialog?response_type=code&client_id={API_KEY}&redirect_uri={RURL}'
 
-    browser = webdriver.Chrome()
-    chrome_options = webdriver.ChromeOptions()
+    chrome_options = Options()  
+    chrome_options.add_argument("--disable-web-security") 
+    chrome_options.add_argument("--disable-gpu")
+    chrome_options.add_argument('--log-level=1')
     chrome_options.add_argument('--headless')
-    browser.get(AUTH_URL)
-    browser.implicitly_wait(0.2)
-    mobile_num_input_xpath = browser.find_element(By.XPATH, "/html/body/main/div/div[3]/div/div/div[2]/div[1]/div/div/div[2]/form/div/div/div/div/div/div/input")
-    mobile_num_input_xpath.send_keys(MOBILE_NO)
+    chrome_options.add_argument('--no-sandbox')
+    chrome_options.add_argument('--disable-dev-shm-usage')
+    chrome_options.add_argument('--ignore-certificate-errors')
+    chrome_options.add_argument("--disable-blink-features=AutomationControlled")
+    chrome_options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36")
+    chrome_options.add_argument("--enable-logging")
 
-    browser.find_element(By.XPATH, "/html/body/main/div/div[3]/div/div/div[2]/div[1]/div/div/div[2]/form/div/button").click()
+    browser = webdriver.Chrome(service=Service(ChromeDriverManager().install()),options=chrome_options)
+    browser.get(AUTH_URL)
+    browser.implicitly_wait(10)
+    mobile_num_input_xpath = browser.find_element("xpath", "/html/body/main/div/div[3]/div/div/div[2]/div[1]/div/div/div[2]/form/div/div/div/div/div/div/input")
+    mobile_num_input_xpath.send_keys(MOBILE_NO)
     time.sleep(1)
-    otp_input_xpath = browser.find_element(By.XPATH, "/html/body/main/div/div[3]/div/div/div[2]/div[1]/div/div/div[2]/form/div[1]/div/div[1]/div/div/div/input")
+
+    browser.find_element("xpath", "/html/body/main/div/div[3]/div/div/div[2]/div[1]/div/div/div[2]/form/div/button").click()
+    time.sleep(1)
+    # browser.save_screenshot("screenshot1.png")
+    otp_input_xpath = browser.find_element("xpath", "/html/body/main/div/div[3]/div/div/div[2]/div[1]/div/div/div[2]/form/div[1]/div/div[1]/div/div/div/input")
     totp = TOTP(TOTP_KEY)
     token = totp.now()
+    time.sleep(1)
+    # browser.save_screenshot("screenshot1-2.png")
 
     otp_input_xpath.send_keys(token)
 
-    browser.find_element(By.XPATH, "/html/body/main/div/div[3]/div/div/div[2]/div[1]/div/div/div[2]/form/div[2]/button").click()
+    browser.find_element("xpath","/html/body/main/div/div[3]/div/div/div[2]/div[1]/div/div/div[2]/form/div[2]/button").click()
     time.sleep(1)
+    # browser.save_screenshot("screenshot2.png")
 
-    twofa_input_xpath = browser.find_element(By.XPATH, "/html/body/main/div/div[3]/div/div[1]/div[2]/div[1]/div/div/div[2]/form/div/div/div/div/div/input")
+    twofa_input_xpath=browser.find_element("xpath","/html/body/main/div/div[3]/div/div[1]/div[2]/div[1]/div/div/div[2]/form/div/div/div/div/div/input")
     twofa_input_xpath.send_keys(PIN)
-    browser.find_element(By.XPATH, "/html/body/main/div/div[3]/div/div[1]/div[2]/div[1]/div/div/div[2]/form/button").click()
+    browser.find_element("xpath","/html/body/main/div/div[3]/div/div[1]/div[2]/div[1]/div/div/div[2]/form/button").click()
     time.sleep(1)
+    # browser.save_screenshot("screenshot3.png")
 
-    WebDriverWait(browser, 10).until(EC.url_contains(RURL))
+    WebDriverWait(browser, 5).until(EC.url_contains(RURL))
     code = parse_qs(urlparse(browser.current_url).query)['code'][0]
 
+    # Save screenshot
+    # browser.save_screenshot("screenshot_final.png")
+
     return code
+
 
 
 
