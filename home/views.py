@@ -7252,7 +7252,9 @@ def add_upstox_broker(request ,data):
         chrome_options = webdriver.ChromeOptions()
         chrome_options.binary_location = chromium_binary_path
 
-        chromedriver_path = "/root/.cache/selenium/chromedriver/linux64/120.0.6099.109/chromedriver"
+        chromedriver_path = "/usr/local/bin/chromedriver"  # Adjust the path accordingly
+
+
         browser = webdriver.Chrome(executable_path=chromedriver_path, options=chrome_options)
             # browser = webdriver.Chrome()
         browser.get(AUTH_URL)
