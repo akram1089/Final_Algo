@@ -7181,7 +7181,7 @@ import time
 import urllib.parse
 from selenium import webdriver
 from pyotp import TOTP
-from breeze_connect import BreezeConnect  # Import BreezeConnect if not already imported
+
 def add_upstox_broker(request ,data):
     print("Broker Name:", data.get('broker_name'))
     print("Trading Platform:", data.get('trading_platform'))
