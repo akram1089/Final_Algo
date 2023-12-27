@@ -7240,8 +7240,10 @@ def add_upstox_broker(request ,data):
         # Set Chromium options
         chromium_options = webdriver.ChromeOptions()
         chromium_options.binary_location = chromium_binary_path
-        chrome_options = webdriver.ChromeOptions()
-        browser = webdriver.Chrome()
+
+        chromedriver_path = "/root/.cache/selenium/chromedriver/linux64/120.0.6099.109/chromedriver"
+        browser = webdriver.Chrome(executable_path=chromedriver_path, options=chromium_options)
+
         browser.get(AUTH_URL)
         browser.implicitly_wait(10)
         mobile_num_input_xpath = browser.find_element("xpath", "/html/body/main/div/div[3]/div/div/div[2]/div[1]/div/div/div[2]/form/div/div/div/div/div/div/input")
