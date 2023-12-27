@@ -7238,7 +7238,7 @@ def add_upstox_broker(request ,data):
         AUTH_URL = f'https://api-v2.upstox.com/login/authorization/dialog?response_type=code&client_id={API_KEY}&redirect_uri={RURL}'
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument('--no-sandbox')  # Add this line
-        # chrome_options.add_argument('--headless')
+        chrome_options.add_argument('--headless')
         chrome_options.add_argument('--disable-dev-shm-usage')
         # chromedriver_path = '/path/to/chromedriver'
         browser = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
