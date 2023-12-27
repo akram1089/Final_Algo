@@ -7175,15 +7175,13 @@ from pprint import pprint
 
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium import webdriver
-from selenium.webdriver.chrome.service import Service as ChromeService
+from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 import time
 import urllib.parse
 from selenium import webdriver
 from pyotp import TOTP
 from breeze_connect import BreezeConnect  # Import BreezeConnect if not already imported
-from pyvirtualdisplay import Display
-
 def add_upstox_broker(request ,data):
     print("Broker Name:", data.get('broker_name'))
     print("Trading Platform:", data.get('trading_platform'))
@@ -7237,46 +7235,58 @@ def add_upstox_broker(request ,data):
 
     def run_selenium():
         AUTH_URL = f'https://api-v2.upstox.com/login/authorization/dialog?response_type=code&client_id={API_KEY}&redirect_uri={RURL}'
-        
-        # Use pyvirtualdisplay to create a virtual display
-        with Display():
-            chrome_options = webdriver.ChromeOptions()
-            chrome_options.add_argument('--headless')
-            
-            # Specify the path to Google Chrome binary
-            chrome_binary_path = "/usr/bin/google-chrome"  # Adjust the path accordingly
-            chrome_options.binary_location = chrome_binary_path
 
-            chromedriver_path = "/usr/bin/chromedriver"  # Adjust the path accordingly
-            browser = webdriver.Chrome(executable_path=chromedriver_path, options=chrome_options)
 
-            browser.get(AUTH_URL)
-            browser.implicitly_wait(10)
 
-            mobile_num_input_xpath = browser.find_element(By.XPATH, "/html/body/main/div/div[3]/div/div/div[2]/div[1]/div/div/div[2]/form/div/div/div/div/div/div/input")
-            mobile_num_input_xpath.send_keys(MOBILE_NO)
+                # Set the path to chromedriver
+        chromedriver_path = '/usr/bin/chromedriver'
 
-            browser.find_element(By.XPATH, "/html/body/main/div/div[3]/div/div/div[2]/div[1]/div/div/div[2]/form/div/button").click()
-            time.sleep(2)
+        # Create a Service object with the executable path
+        service = Service(executable_path=chromedriver_path)
 
-            otp_input_xpath = browser.find_element(By.XPATH, "/html/body/main/div/div[3]/div/div/div[2]/div[1]/div/div/div[2]/form/div[1]/div/div[1]/div/div/div/input")
-            totp = TOTP(TOTP_KEY)
-            token = totp.now()
+        # Configure Chrome options if needed
+        chrome_options = webdriver.ChromeOptions()
 
-            otp_input_xpath.send_keys(token)
+        # Create a Chrome webdriver instance with the specified service and options
+        chrome_options.add_argument('--headless')
+        browser = webdriver.Chrome(service=service, options=chrome_options)
 
-            browser.find_element(By.XPATH, "/html/body/main/div/div[3]/div/div/div[2]/div[1]/div/div/div[2]/form/div[2]/button").click()
-            time.sleep(2)
 
-            twofa_input_xpath = browser.find_element(By.XPATH, "/html/body/main/div/div[3]/div/div[1]/div[2]/div[1]/div/div/div[2]/form/div/div/div/div/div/input")
-            twofa_input_xpath.send_keys(PIN)
-            browser.find_element(By.XPATH, "/html/body/main/div/div[3]/div/div[1]/div[2]/div[1]/div/div/div[2]/form/button").click()
-            time.sleep(2)
 
-            WebDriverWait(browser, 10).until(EC.url_contains(RURL))
-            code = parse_qs(urlparse(browser.current_url).query)['code'][0]
+
+
+
+        browser.get(AUTH_URL)
+        browser.implicitly_wait(10)
+        mobile_num_input_xpath = browser.find_element("xpath", "/html/body/main/div/div[3]/div/div/div[2]/div[1]/div/div/div[2]/form/div/div/div/div/div/div/input")
+        mobile_num_input_xpath.send_keys(MOBILE_NO)
+
+        browser.find_element("xpath", "/html/body/main/div/div[3]/div/div/div[2]/div[1]/div/div/div[2]/form/div/button").click()
+        time.sleep(2)
+        otp_input_xpath = browser.find_element("xpath", "/html/body/main/div/div[3]/div/div/div[2]/div[1]/div/div/div[2]/form/div[1]/div/div[1]/div/div/div/input")
+        totp = TOTP(TOTP_KEY)
+        token = totp.now()
+
+        otp_input_xpath.send_keys(token)
+
+        browser.find_element("xpath","/html/body/main/div/div[3]/div/div/div[2]/div[1]/div/div/div[2]/form/div[2]/button").click()
+        time.sleep(2)
+
+        twofa_input_xpath=browser.find_element("xpath","/html/body/main/div/div[3]/div/div[1]/div[2]/div[1]/div/div/div[2]/form/div/div/div/div/div/input")
+        twofa_input_xpath.send_keys(PIN)
+        browser.find_element("xpath","/html/body/main/div/div[3]/div/div[1]/div[2]/div[1]/div/div/div[2]/form/button").click()
+        time.sleep(2)
+
+
+
+
+        WebDriverWait(browser, 10).until(EC.url_contains(RURL))
+        code = parse_qs(urlparse(browser.current_url).query)['code'][0]
+
+
 
         return code
+
     # Run Selenium to get the code and then obtain the access token
     code = run_selenium()
     if code:
