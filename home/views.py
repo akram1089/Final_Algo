@@ -7235,15 +7235,16 @@ def add_upstox_broker(request ,data):
 
     def run_selenium():
         AUTH_URL = f'https://api-v2.upstox.com/login/authorization/dialog?response_type=code&client_id={API_KEY}&redirect_uri={RURL}'
-        chromium_binary_path = "/usr/bin/chromium"  # Replace with the correct path from the 'which' command
-
-        # Set Chromium options
-        chromium_options = webdriver.ChromeOptions()
-        chromium_options.binary_location = chromium_binary_path
-
-        chromedriver_path = "/root/.cache/selenium/chromedriver/linux64/120.0.6099.109/chromedriver"
-        browser = webdriver.Chrome(executable_path=chromedriver_path, options=chromium_options)
-
+        chrome_options = webdriver.ChromeOptions()
+        # chrome_options.add_argument('--headless')
+        options = webdriver.ChromeOptions()
+        # options.add_argument('headless')
+        options.add_argument('--disable-infobars')
+        options.add_argument('--disable-dev-shm-usage')
+        options.add_argument('--no-sandbox')
+        options.add_argument('--remote-debugging-port=9222')
+        browser = webdriver.Chrome(options=options)
+        # browser = webdriver.Chrome()
         browser.get(AUTH_URL)
         browser.implicitly_wait(10)
         mobile_num_input_xpath = browser.find_element("xpath", "/html/body/main/div/div[3]/div/div/div[2]/div[1]/div/div/div[2]/form/div/div/div/div/div/div/input")
