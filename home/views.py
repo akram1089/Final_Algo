@@ -7240,8 +7240,9 @@ def add_upstox_broker(request ,data):
         # chrome_options.add_argument('--no-sandbox')  # Add this line
         # chrome_options.add_argument('--headless')
         # chrome_options.add_argument('--disable-dev-shm-usage')
-        chromedriver_path = '/path/to/chromedriver'
-        browser = webdriver.Chrome(service=Service(executable_path=chromedriver_path), options=chrome_options)
+        # chromedriver_path = '/path/to/chromedriver'
+        browser = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
+
         browser.get(AUTH_URL)
         browser.implicitly_wait(10)
         mobile_num_input_xpath = browser.find_element("xpath", "/html/body/main/div/div[3]/div/div/div[2]/div[1]/div/div/div[2]/form/div/div/div/div/div/div/input")
