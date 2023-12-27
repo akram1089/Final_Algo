@@ -7175,13 +7175,14 @@ from pprint import pprint
 
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium import webdriver
-from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.chrome.service import Service 
+from selenium.webdriver.chrome.options import Options 
 from webdriver_manager.chrome import ChromeDriverManager
 import time
 import urllib.parse
 from selenium import webdriver
 from pyotp import TOTP
-
+from breeze_connect import BreezeConnect  # Import BreezeConnect if not already imported
 def add_upstox_broker(request ,data):
     print("Broker Name:", data.get('broker_name'))
     print("Trading Platform:", data.get('trading_platform'))
@@ -7235,27 +7236,11 @@ def add_upstox_broker(request ,data):
 
     def run_selenium():
         AUTH_URL = f'https://api-v2.upstox.com/login/authorization/dialog?response_type=code&client_id={API_KEY}&redirect_uri={RURL}'
-
-
-
-                # Set the path to chromedriver
-        chromedriver_path = '/usr/bin/chromedriver'
-
-        # Create a Service object with the executable path
-        service = Service(executable_path=chromedriver_path)
-
-        # Configure Chrome options if needed
-        chrome_options = webdriver.ChromeOptions()
-
-        # Create a Chrome webdriver instance with the specified service and options
-        chrome_options.add_argument('--headless')
-        browser = webdriver.Chrome(service=service, options=chrome_options)
-
-
-
-
-
-
+        chrome_options = Options()
+        chrome_options.add_argument('--no-sandbox')  # Add this line
+        # chrome_options.add_argument('--headless')
+        chrome_options.add_argument('--disable-dev-shm-usage')
+        browser = webdriver.Chrome(service=Service(ChromeDriverManager().install()),options=chrome_options)
         browser.get(AUTH_URL)
         browser.implicitly_wait(10)
         mobile_num_input_xpath = browser.find_element("xpath", "/html/body/main/div/div[3]/div/div/div[2]/div[1]/div/div/div[2]/form/div/div/div/div/div/div/input")
