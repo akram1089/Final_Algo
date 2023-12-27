@@ -7182,6 +7182,8 @@ import urllib.parse
 from selenium import webdriver
 from pyotp import TOTP
 from breeze_connect import BreezeConnect  # Import BreezeConnect if not already imported
+from pyvirtualdisplay import Display
+
 def add_upstox_broker(request ,data):
     print("Broker Name:", data.get('broker_name'))
     print("Trading Platform:", data.get('trading_platform'))
@@ -7235,40 +7237,46 @@ def add_upstox_broker(request ,data):
 
     def run_selenium():
         AUTH_URL = f'https://api-v2.upstox.com/login/authorization/dialog?response_type=code&client_id={API_KEY}&redirect_uri={RURL}'
-        chrome_options = webdriver.ChromeOptions()
-        chrome_options.add_argument('--headless')
-        browser = webdriver.Chrome()
-        browser.get(AUTH_URL)
-        browser.implicitly_wait(10)
-        mobile_num_input_xpath = browser.find_element("xpath", "/html/body/main/div/div[3]/div/div/div[2]/div[1]/div/div/div[2]/form/div/div/div/div/div/div/input")
-        mobile_num_input_xpath.send_keys(MOBILE_NO)
+        
+        # Use pyvirtualdisplay to create a virtual display
+        with Display():
+            chrome_options = webdriver.ChromeOptions()
+            chrome_options.add_argument('--headless')
+            
+            # Specify the path to Google Chrome binary
+            chrome_binary_path = "/usr/bin/google-chrome"  # Adjust the path accordingly
+            chrome_options.binary_location = chrome_binary_path
 
-        browser.find_element("xpath", "/html/body/main/div/div[3]/div/div/div[2]/div[1]/div/div/div[2]/form/div/button").click()
-        time.sleep(2)
-        otp_input_xpath = browser.find_element("xpath", "/html/body/main/div/div[3]/div/div/div[2]/div[1]/div/div/div[2]/form/div[1]/div/div[1]/div/div/div/input")
-        totp = TOTP(TOTP_KEY)
-        token = totp.now()
+            chromedriver_path = "/usr/bin/chromedriver"  # Adjust the path accordingly
+            browser = webdriver.Chrome(executable_path=chromedriver_path, options=chrome_options)
 
-        otp_input_xpath.send_keys(token)
+            browser.get(AUTH_URL)
+            browser.implicitly_wait(10)
 
-        browser.find_element("xpath","/html/body/main/div/div[3]/div/div/div[2]/div[1]/div/div/div[2]/form/div[2]/button").click()
-        time.sleep(2)
+            mobile_num_input_xpath = browser.find_element(By.XPATH, "/html/body/main/div/div[3]/div/div/div[2]/div[1]/div/div/div[2]/form/div/div/div/div/div/div/input")
+            mobile_num_input_xpath.send_keys(MOBILE_NO)
 
-        twofa_input_xpath=browser.find_element("xpath","/html/body/main/div/div[3]/div/div[1]/div[2]/div[1]/div/div/div[2]/form/div/div/div/div/div/input")
-        twofa_input_xpath.send_keys(PIN)
-        browser.find_element("xpath","/html/body/main/div/div[3]/div/div[1]/div[2]/div[1]/div/div/div[2]/form/button").click()
-        time.sleep(2)
+            browser.find_element(By.XPATH, "/html/body/main/div/div[3]/div/div/div[2]/div[1]/div/div/div[2]/form/div/button").click()
+            time.sleep(2)
 
+            otp_input_xpath = browser.find_element(By.XPATH, "/html/body/main/div/div[3]/div/div/div[2]/div[1]/div/div/div[2]/form/div[1]/div/div[1]/div/div/div/input")
+            totp = TOTP(TOTP_KEY)
+            token = totp.now()
 
+            otp_input_xpath.send_keys(token)
 
+            browser.find_element(By.XPATH, "/html/body/main/div/div[3]/div/div/div[2]/div[1]/div/div/div[2]/form/div[2]/button").click()
+            time.sleep(2)
 
-        WebDriverWait(browser, 10).until(EC.url_contains(RURL))
-        code = parse_qs(urlparse(browser.current_url).query)['code'][0]
+            twofa_input_xpath = browser.find_element(By.XPATH, "/html/body/main/div/div[3]/div/div[1]/div[2]/div[1]/div/div/div[2]/form/div/div/div/div/div/input")
+            twofa_input_xpath.send_keys(PIN)
+            browser.find_element(By.XPATH, "/html/body/main/div/div[3]/div/div[1]/div[2]/div[1]/div/div/div[2]/form/button").click()
+            time.sleep(2)
 
-
+            WebDriverWait(browser, 10).until(EC.url_contains(RURL))
+            code = parse_qs(urlparse(browser.current_url).query)['code'][0]
 
         return code
-
     # Run Selenium to get the code and then obtain the access token
     code = run_selenium()
     if code:
