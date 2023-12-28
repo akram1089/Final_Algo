@@ -7702,6 +7702,7 @@ def kite_order_zerodha(request):
     # broker_instance = Broker.objects.first()  # Assuming you have a Broker model defined
     broker_instance = Broker.objects.filter(user=user, broker_name="zerodha", active_api=True).first()
     broker_instance_angelone = Broker.objects.filter(user=user, broker_name="angelone", active_api=True).first()
+    broker_instance_upstocks = Broker.objects.filter(user=user, broker_name="upstocks", active_api=True).first()
 
     if request.method == 'POST':
         data_trade = json.loads(request.body)
@@ -7807,6 +7808,22 @@ def kite_order_zerodha(request):
 
             
             return JsonResponse({'status': 'success','broker':'angel_one', 'message': 'Orders placed successfully', 'order_details': response_data})
+        elif broker_instance_upstocks:
+            # print(data_trade)
+            response_data = upstox_order_place(
+                    data_trade=data_trade,
+                    logging_id=broker_instance_upstocks.logging_id,
+                    password=broker_instance_upstocks.password,
+                    phone_number=broker_instance_upstocks.phone_number,
+                    totp_key=broker_instance_upstocks.totp_key,
+                    api_key=broker_instance_upstocks.api_key,
+                    api_secret=broker_instance_upstocks.api_secret,
+                    broker_instance_upstocks=broker_instance_upstocks,
+                    access_token=broker_instance_upstocks.enctoken,
+                )
+            print("response_data",response_data)
+            order_details = [order.to_dict() for order in response_data]
+            return JsonResponse({'status': 'success','broker':'upstocks', 'message': 'Orders placed successfully', 'order_details': order_details})
 
         else:
             print("No Broker instance found.")
@@ -7816,6 +7833,147 @@ def kite_order_zerodha(request):
         print("Invalid request method.")
         return HttpResponse("Invalid request method.")
     
+
+def upstox_order_place(data_trade, logging_id, password, phone_number, totp_key, api_key, api_secret, broker_instance_upstocks, access_token):
+    print(access_token)
+    API_KEY = api_key
+    SECRET_KEY = api_secret
+    RURL = 'https://apix.stocksdeveloper.in/oauth/upstox'
+
+    TOTP_KEY = totp_key
+    MOBILE_NO = phone_number
+    PIN = password
+    if access_token:
+        configuration = upstox_client.Configuration()
+        configuration.access_token = access_token
+        broker_instance_upstocks
+        api_version = 'api_version_example'  # str | API Version Header
+        api_instance_pro = upstox_client.UserApi(upstox_client.ApiClient(configuration))
+
+        try:
+            all_profile = api_instance_pro.get_profile(api_version)
+            response=upstocks_place_order(access_token,data_trade)
+            return response
+
+        except Exception as e:
+            # Handle the exception when getting the profile
+            print(f"Error getting profile: {e}")
+            code = run_selenium(API_KEY, MOBILE_NO, TOTP_KEY, PIN, RURL)
+
+            # Run Selenium to get the code and then obtain the access token
+            if code:
+                access_token = get_access_token(code, api_key, SECRET_KEY, RURL)
+                print(access_token)
+                broker_instance_upstocks.enctoken = access_token
+                broker_instance_upstocks.save()
+                response=upstocks_place_order(access_token,data_trade)
+                return response
+
+
+ 
+
+def upstocks_place_order(access_token,data_trade):
+    print("data_trade",data_trade)
+    
+    # Configure OAuth2 access token for authorization: OAUTH2
+    configuration = upstox_client.Configuration()
+    configuration.access_token = access_token
+
+    # Create an instance of the API class
+    api_instance = upstox_client.OrderApi(upstox_client.ApiClient(configuration))
+    api_version = 'api_version_example'
+    #   upstox_client.PlaceOrderRequest(
+    #         quantity=1,
+    #         product='D',
+    #         validity='DAY',
+    #         price=0,
+    #         tag='string',
+    #         instrument_token='NSE_EQ|INE848E01016',
+    #         order_type='MARKET',
+    #         transaction_type='BUY',
+    #         disclosed_quantity=0,
+    #         trigger_price=0,
+    #         is_amo=False,
+    #     ),
+    # Place order
+    orders_to_place = []
+
+    for order_data in data_trade:
+
+        product_type = "D" if order_data['mis_select'].lower() == "overnight" else "I"
+        main_price=0
+        if order_data['isRadioChecked'] == "market":
+            main_price = 0
+        elif order_data['isRadioChecked'] == "limit":
+            main_price = order_data['price']
+
+        orderparams = {
+            "quantity": order_data['Quantity'],
+          
+            'trigger_price': 0,
+            "instrument_token": order_data["main_instrument_token"],
+            "transaction_type": order_data['sell_buy_indicator'],
+            'is_amo': False,
+            "order_type": order_data['isRadioChecked'].upper(),
+            "product": product_type,
+            "validity": "DAY",
+            "price":  main_price,
+            'disclosed_quantity': 0,
+        }
+
+        # Append the orderparams dictionary to the orders_to_place list
+        orders_to_place.append(orderparams)
+
+    # Print the list of orders_to_place
+    # print("orders_to_place", orders_to_place)
+
+    
+    try:
+        all_placed_orders = []
+
+        # Place orders in a loop
+        for i, order_request in enumerate(orders_to_place):
+            try:
+                # Place order
+                api_response = api_instance.place_order(order_request, api_version)
+                order_id = api_response.data.order_id
+                pprint(f"Placed order {i + 1} with ID: {order_id}")
+
+                # Append the placed order to the list
+                all_placed_orders.append(order_id)
+
+            except ApiException as e:
+                print(f"Exception when placing order {i + 1}: {e}\n")
+            order_book_response = api_instance.get_order_book(api_version)
+            last_order = order_book_response.data[-1]
+            # pprint(last_order)
+
+        all_filtered_orders = []
+        for i, order in enumerate(order_book_response.data):
+            # print(f"order{i}", order.order_id)
+
+            # Check if the order ID is in the list of all placed orders
+            if str(order.order_id) in map(str, all_placed_orders):
+                all_filtered_orders.append(order)
+
+        # print(all_filtered_orders)
+        return all_filtered_orders
+
+
+
+    except ApiException as e:
+        print("Exception when calling OrderApi->place_order: %s\n" % e)
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -8455,6 +8613,7 @@ def check_liquidity(request):
     # broker_instance = Broker.objects.first()  # Assuming you have a Broker model defined
     broker_instance = Broker.objects.filter(user=user, broker_name="zerodha", active_api=True).first()
     broker_instance_angelone = Broker.objects.filter(user=user, broker_name="angelone", active_api=True).first()
+    broker_instance_upstocks = Broker.objects.filter(user=user, broker_name="upstocks", active_api=True).first()
 
     if request.method == 'POST':
         data = json.loads(request.body)
@@ -8504,6 +8663,15 @@ def check_liquidity(request):
         # Perform any additional processing or validation here
 
          return JsonResponse({'message': 'Data received successfully','broker':'angel_one'})
+        elif broker_instance_upstocks:
+
+
+
+
+
+        # Perform any additional processing or validation here
+
+         return JsonResponse({'message': 'Data received successfully','broker':'upstocks'})
 
 
 

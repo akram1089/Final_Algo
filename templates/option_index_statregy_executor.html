@@ -8385,6 +8385,7 @@
                 <div class="expiry_initial">${expiry_initial}</div> 
                 <div class="d-block strikePrice_order_window">${strikePrice}</div>
                 <div class="d-block main_trading_symbol"></div>
+                <div class="d-block main_instrument_token"></div>
                     
                     </div>
 
@@ -8847,8 +8848,12 @@
                     for (let i = 0; i < dataWithStrikePrice.length; i++) {
                       const trading_data = dataWithStrikePrice[i];
                       const trading_symbol = dataWithStrikePrice[i].symbol
+                      const instrument_token = dataWithStrikePrice[i].instrument_token
+
 
                       $(".main_trading_symbol").eq(i).append(trading_symbol.replace("NFO:", ""));
+                      $(".main_instrument_token").eq(i).append(instrument_token);
+                      // $(".main_trading_symbol").eq(i).append(trading_symbol.replace("NFO:", ""));
 
                       // Generate the table HTML
                       $(".indepth_details").eq(i).empty();
@@ -9256,11 +9261,11 @@
 
                       if (x && Object.keys(x).length > 0) {
                         $(".liquidity_status").eq(i).empty().append(`
-  <div class="liquidity_failed">
-    <div class="liquidity_text">Liquidity :</div>
-    <div class="badge text-bg-danger">Failed</div>
-  </div>
-`);
+                                      <div class="liquidity_failed">
+                                        <div class="liquidity_text">Liquidity :</div>
+                                        <div class="badge text-bg-danger">Failed</div>
+                                      </div>
+                                    `);
 
                         // Liquidity check failed for this iteration
                         isButtonDisabled.push(false)
@@ -9270,11 +9275,11 @@
                         })
                       } else {
                         $(".liquidity_status").eq(i).empty().append(`
-<div class="liquidity_passed">
-  <div class="liquidity_text">Liquidity :</div>
-  <div class="badge text-bg-success">Passed</div>
-  </div>
-  `);
+                                <div class="liquidity_passed">
+                                  <div class="liquidity_text">Liquidity :</div>
+                                  <div class="badge text-bg-success">Passed</div>
+                                  </div>
+                                  `);
                         isButtonDisabled.push(true)
 
 
@@ -9347,6 +9352,7 @@
         var sell_buy_indicator = order_level.find(".sell_buy_indicator").text();
         var tradingsymbol = order_level.find(".tradingsymbol").text();
         var main_trading_symbol = order_level.find(".main_trading_symbol").text();
+        var main_instrument_token= order_level.find(".main_instrument_token").text();
         var priceTrade = order_level.find(".priceTrade").val();
         var quantityTrade = order_level.find(".quantityTrade").val();
         var strikePrice_order_window = order_level.find(".strikePrice_order_window").text();
@@ -9369,7 +9375,8 @@
           Quantity: quantityTrade,
           price: priceTrade,
           isRadioChecked: isRadioChecked, // Add this property to the object
-          mis_select: mis_select
+          mis_select: mis_select,
+          main_instrument_token: main_instrument_token
         });
       });
 
@@ -9490,6 +9497,27 @@
                 // If it's an object, proceed with JSON parsing
                 inner_order_modal.eq(index).addClass("box_shadow_order_execution_success");
                 order_status.eq(index).text(`Order Placed Successfully : Order Id - ${order.orderid}`).addClass("order_success_text");
+              }
+            });
+          }else if (response.broker ==="upstocks") {
+
+            var order_status = $(".order_status p");
+            var inner_order_modal = $(".inner_order_modal");
+            console.log("Upstocks");
+
+
+            response.order_details.forEach((order, index) => {
+              //////console.log(order);
+
+              // Check if order_status_text is not an object
+              if (order.status === "rejected") {
+                // Run this code block if it's not an object
+                inner_order_modal.eq(index).addClass("box_shadow_order_execution_error");
+                order_status.eq(index).text(` Order Id - ${order.order_id} ${order.status_message_raw}`).addClass("order_error_text");
+              } else {
+                // If it's an object, proceed with JSON parsing
+                inner_order_modal.eq(index).addClass("box_shadow_order_execution_success");
+                order_status.eq(index).text(`Order Placed Successfully : Order Id - ${order.order_id}`).addClass("order_success_text");
               }
             });
           }
