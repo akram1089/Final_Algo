@@ -9305,15 +9305,14 @@ def book_details(request, book_id):
 
 
 
-
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+import requests
 
 @csrf_exempt
 def get_indices_data(request):
-
     if request.method == "POST":
-        if request.method == 'POST':
-        
-          selected_exchange = request.POST.get('exchange')
+        selected_exchange = request.POST.get('exchange')
 
         # Define the sets of symbols for NSE and BSE
         nse_symbols = ['NIFTY', 'BANKNIFTY', 'FINNIFTY', 'MIDCPNIFTY']
@@ -9328,30 +9327,56 @@ def get_indices_data(request):
         else:
             selected_symbols = []
 
+        result_data = []
+
         for symbol in selected_symbols:
             api_url = f"https://webapi.niftytrader.in/webapi/symbol/symbol-expiry-list?symbol={symbol}&exchange={selected_exchange}"
-
+            future_data_url = "https://webapi.niftytrader.in/webapi/Symbol/future-expiry-data"
+            
             try:
                 # Make the API call
+                payload_future = {"symbol": symbol}
                 response = requests.get(api_url)
-                api_data = response.json()
+                response_future = requests.post(future_data_url, json=payload_future)
                 
+                # Move the option data URL and request inside the loop
+                option_data_url = f"https://webapi.niftytrader.in/webapi/symbol/today-spot-data?symbol={symbol}&exchange=nse"
+                response_options = requests.get(option_data_url)
+                data_option = response_options.json()
+
+                api_data = response.json()
+                data_future = response_future.json()
+
                 # For demonstration, let's print the API response
                 print(f"API Response for {symbol}: {api_data}")
 
-                # Append the API response to the list
-                selected_symbols.append({symbol: api_data})
+                # Append the API response to the result_data list
+                result_data.append({symbol: {'symbol_exp_data': api_data, 'future_data': data_future, "data_option": data_option}})
             except Exception as e:
                 # Handle the exception if the API call fails
                 print(f"Error for {symbol}: {str(e)}")
 
         # If you want to send this information as a JSON response
-        return JsonResponse({'exchange': selected_exchange, 'symbols': selected_symbols})
+        return JsonResponse({'exchange': selected_exchange, 'data': result_data})
     else:
-        return JsonResponse({'error': 'Invalid request method'})
+        return JsonResponse({'error': 'Invalid request method'})
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
 
 def options_expiry_table(request):
     return render(request, "options_expiry_table.html")
+def option_expiry(request):
+    return render(request, "option_expiry/option_expiry.html")

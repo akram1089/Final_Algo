@@ -1,29 +1,258 @@
 {% extends "base_dashboard.html" %}
 {% load static %}
 {% block dashboard_body %}
-
 <style>
-    table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 20px;
+    .text-success {
+      color: rgb(0, 217, 0) !important;
     }
-
+  
+    .text-danger {
+      color: red !important;
+    }
+  
+    tr {
+      white-space: nowrap;
+    }
+  
+    .bi.bi-graph-up {
+      border: 1px solid #80808030;
+      border-radius: 7px;
+      padding: 6px 9px;
+      width: 33px;
+      display: block;
+      height: 29px;
+      color: gray;
+      transition: 0.3s;
+      display: inline;
+    }
+  
+    .bi.bi-graph-up:hover {
+      background-color: rgb(0, 132, 255);
+      border: none;
+      color: white;
+    }
+  
+    tbody tr:hover .symbol_name_watchlist {
+      color: #2196f3;
+    }
+  
+    /* Reset default margin and padding for the table */
+    table {
+      border-collapse: collapse;
+      width: 100%;
+    }
+  
+    /* Style for the table header */
+    thead {
+      background-color: #f2f2f2;
+    }
+  
+  
+    table.dataTable.display>tbody>tr.odd>.sorting_1, table.dataTable.order-column.stripe>tbody>tr.odd>.sorting_1 {
+      box-shadow: inset 0 0 0 9999px rgba(255, 255, 255, 0.054) !important;
+  }
+  
     th,
     td {
-        border: 1px solid #ddd;
-        padding: 8px;
-        /* text-align: left; */
-        text-align: center;
+      padding: 12px 8px;
+      text-align: left;
     }
+  
+    /* Add padding to tbody tr */
+  
+  
+    td>div,
+    th>div {
+      padding: 9px;
+    }
+  
+    .dataTables_length,
+    .dataTables_filter {
+      padding: 10px 0 !important;
+      display: flex;
+      justify-content: flex-start;
+  
+  
+  
+    }
+  
+    .main_bulk_table {
+      margin: 12px 0;
+      padding: 24px;
+      border-radius: 10px;
+      box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+    }
+  
+    th {
+      font-size: 16px;
+      font-weight: 500;
+    }
+  
+    td {
+      color: darkslategray !important;
+      font-size: 14px;
+      font-weight: 500;
+    }
+  </style>
+  <style>
+    .filter-btn {
+      border: 1px solid #4399eb !important;
+      background-color: #fff;
+      font-family: Roboto, sans-serif;
+      font-weight: 400;
+      font-size: 13px;
+      color: #4399eb;
+      line-height: 1.923;
+      padding: 4px 13.5px;
+      margin-right: 9px;
+      min-width: 100px;
+      max-width: 150px;
+      text-align: center;
+      border-radius: 10px;
+    }
+  
+    .active {
+      background: -webkit-gradient(linear, left top, left bottom, from(#4399eb), to(#5cadfb));
+      background: -moz-linear-gradient(top, #4399eb 0, #5cadfb 100%);
+      background: linear-gradient(180deg, #4399eb, #5cadfb);
+      color: #fff;
+    }
+  
+    thead {
+      padding: 12px 15px !important;
+      font-size: 12px !important;
+  
+      background: #4399eb !important;
+      color: #fff !important;
+      border-right: 1px solid var(--border-gray) !important;
+    }
+  
+    .table-striped-custom>tbody>tr:nth-child(2n)>td,
+    .table-striped-custom>tbody>tr:nth-child(2n)>th {
+      background-color: #f0f7fdff !important;
+    }
+    table.dataTable.display tbody tr:hover>.sorting_1{
+      box-shadow: white !important;
+    }
+    table.dataTable.display>tbody>tr.odd>* {
+      box-shadow: inset 0 0 0 9999px rgba(255, 255, 255);
+  }
+    /* Custom CSS to change the background color of placeholder-glow */
+    .placeholder-glow:focus::placeholder {
+      background-color: red !important;
+      /* Add any other custom styles you want for the placeholder */
+    }
+  
+    /* Optionally, change the color of the glowing effect */
+    .placeholder-glow:focus::placeholder:after {
+      background-color: blue !important;
+    }
+  
+    .placeholder {
+      height: 2rem !important;
+    }
+  
+    .long_buildup {
+      background: green;
+      color: white;
+      border-radius: 50px;
+      font-weight: 600;
+      padding: 5px 15px 7px 30px;
+      font-size: 14px;
+    }
+  
+    .short_buildup {
+      background: lightcoral;
+      color: white;
+      border-radius: 50px;
+      font-weight: 600;
+      padding: 5px 15px 7px 30px;
+      font-size: 14px;
+    }
+  
+    .short_covering {
+      background: #c9c900;
+      ;
+      color: white;
+      border-radius: 50px;
+      font-weight: 600;
+      padding: 5px 15px 7px 30px;
+      font-size: 14px;
+    }
+  
+    .long_unwinding {
+      background: #ff9900;
+      ;
+      color: rgb(255, 255, 255);
+      border-radius: 50px;
+      font-weight: 600;
+      padding: 5px 15px 7px 30px;
+      font-size: 14px;
+    }
+  
+    /* table.dataTable tbody tr {
+      background-color: transparent;
+      border-bottom: transparent;
+    } */
+  
+    table.dataTable thead th,
+    table.dataTable thead td {
+      padding: 10px;
+      border-bottom: 0px solid rgb(0 0 0 / 0%) !important;
+    }
+  
+    table.dataTable tbody td {
+      border: none !important;
+      border-top: 0 !important;
+    }
+  
+    /* #bulk_data_wrapper{
+    overflow: auto;
+  }
+  #bulk_data_length{
+    position: fixed;
+  }
+  .dataTables_filter{
+    margin-top: 2.5em !important;
+    position: fixed;
+  } */
+  /* Custom CSS for DataTable's search input and length dropdown */
+  .table-container {
+    position: relative;
+  }
+  
+  .odd,.even{
+    background-color: white !important;
+    background: white !important;
+  }
+  .parent_table{
+    overflow: auto;
+  }
+  #bulk_data_wrapper{
+    display: flex;
+      flex-direction: column;
+  }
+  .date_filter{
+    float: right;
+      align-items: center;
+      display:flex;
+      gap:0.2rem;
+      z-index: 99;
+      position:relative;
+  }
+  </style>
+<style>
+
+    th,
+
 
     td {
-        font-weight: 400 !important;
+        font-weight: 600 !important;
     }
 
-    th {
+    thead tr th {
 
-        background-color: #4399eb;
+        background-color: #4399eb !important;
         color: white;
     }
 
@@ -42,64 +271,291 @@
         color: white;
         background-color: #4399eb;
     }
+
+    .main_positve_val{
+        background-color: #32cd4c2e;
+    border-radius: 7px;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    }
+    .main_negative_val{
+        background-color: #cd32322e;
+    border-radius: 7px;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    }
+
+    .danger_val{
+        color: rgb(196 0 0);
+    display: flex;
+    width: 11rem;
+
+    }
+    .future_negative{
+        color: rgb(196 0 0) !important;
+
+    }
+
+    .success_val{
+        width: 11rem;
+        color: #167f18e0;
+    display: flex;
+    align-items: center;
+    }
+    .future_positive{
+        color: #167f18e0 !important;
+
+    }
 </style>
 
 <section>
     <div class="mt-4">
-        <h3>Tables for options expiry</h3>
+        <h3>Index Spot vs Index Future Table</h3>
 
-        <div class="d-flex justify-content-between mt-4">
-            <div class="stock_exchanges d-flex gap-3">
-                <div class="d-flex gap-2">
-                    <label for="">Exchanges :</label>
-                    <div class="symbol_dropdown">
-                        <select id="symbol-dropdown" class="form-select form-select-sm">
-
-                            <option value="NSE">NSE</option>
-                            <option value="BSE">BSE</option>
-                        </select>
-                    </div>
-                </div>
-                <!-- <div class="indexs">
-                    <select id="indices-dropdown" class="form-select form-select-sm">
-
-                    </select>
-                </div> -->
-            </div>
+        <div class="d-flex justify-content-end my-3">
+           
             <div class="stocks_indices d-flex gap-2 align-items-center">
-                <label for="">Days:</label>
+                <label for="">Month:</label>
                 <div>
-                    <select id="exp_month-dropdown" class="form-select form-select-sm">
-                        <option value="7">7 days</option>
-                        <option value="30">30 days</option>
-                        <option value="90">90 days</option>
-                        <!-- <option value="April">April</option>
-                        <option value="May">May</option>
-                        <option value="June">June</option>
-                        <option value="July">July</option>
-                        <option value="August">August</option>
-                        <option value="September">Sep</option>
-                        <option value="October">Oct</option>
-                        <option value="November">Nov</option>
-                        <option value="December">Dec</option> -->
+                    <select id="expiry_month" class="form-select form-select-sm">
+                        <p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                        </p>
                     </select>
                 </div>
             </div>
         </div>
 
-        <table border="1">
+        <table border="1" class="table main_expiryTable table-striped-custom">
             <thead>
-                <tr>
-                    <th>SNO</th>
-                    <th>Expiry Date</th>
-                    <th>Index</th>
-                    <th>Exchange</th>
-                    <th>Chart</th>
-                </tr>
+
             </thead>
             <tbody id="expiry_table">
                 <!-- Sample data, replace this with your dynamic data -->
-
+                <tr class="table-placeholder">
+                    <td>
+                        <p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                        </p>
+                    </td>
+                    <td>
+                        <p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                        </p>
+                    </td>
+                    <td>
+                        <p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                        </p>
+                    </td>
+                    <td>
+                        <p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                        </p>
+                    </td>
+                    <td>
+                        <p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                        </p>
+                    </td>
+                    <td>
+                        <p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                        </p>
+                    </td>
+                    <td>
+                        <p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                        </p>
+                    </td>
+                </tr>
+                <tr class="table-placeholder">
+                    <td>
+                        <p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                        </p>
+                    </td>
+                    <td>
+                        <p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                        </p>
+                    </td>
+                    <td>
+                        <p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                        </p>
+                    </td>
+                    <td>
+                        <p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                        </p>
+                    </td>
+                    <td>
+                        <p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                        </p>
+                    </td>
+                    <td>
+                        <p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                        </p>
+                    </td>
+                    <td>
+                        <p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                        </p>
+                    </td>
+                </tr>
+                <tr class="table-placeholder">
+                    <td>
+                        <p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                        </p>
+                    </td>
+                    <td>
+                        <p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                        </p>
+                    </td>
+                    <td>
+                        <p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                        </p>
+                    </td>
+                    <td>
+                        <p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                        </p>
+                    </td>
+                    <td>
+                        <p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                        </p>
+                    </td>
+                    <td>
+                        <p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                        </p>
+                    </td>
+                    <td>
+                        <p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                        </p>
+                    </td>
+                </tr>
+                <tr class="table-placeholder">
+                    <td>
+                        <p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                        </p>
+                    </td>
+                    <td>
+                        <p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                        </p>
+                    </td>
+                    <td>
+                        <p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                        </p>
+                    </td>
+                    <td>
+                        <p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                        </p>
+                    </td>
+                    <td>
+                        <p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                        </p>
+                    </td>
+                    <td>
+                        <p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                        </p>
+                    </td>
+                    <td>
+                        <p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                        </p>
+                    </td>
+                </tr>
+                <tr class="table-placeholder">
+                    <td>
+                        <p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                        </p>
+                    </td>
+                    <td>
+                        <p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                        </p>
+                    </td>
+                    <td>
+                        <p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                        </p>
+                    </td>
+                    <td>
+                        <p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                        </p>
+                    </td>
+                    <td>
+                        <p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                        </p>
+                    </td>
+                    <td>
+                        <p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                        </p>
+                    </td>
+                    <td>
+                        <p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                        </p>
+                    </td>
+                </tr>
+                <tr class="table-placeholder">
+                    <td>
+                        <p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                        </p>
+                    </td>
+                    <td>
+                        <p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                        </p>
+                    </td>
+                    <td>
+                        <p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                        </p>
+                    </td>
+                    <td>
+                        <p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                        </p>
+                    </td>
+                    <td>
+                        <p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                        </p>
+                    </td>
+                    <td>
+                        <p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                        </p>
+                    </td>
+                    <td>
+                        <p class="placeholder-glow">
+                            <span class="placeholder col-12"></span>
+                        </p>
+                    </td>
+                </tr>
                 <!-- Add more rows for additional data -->
 
             </tbody>
@@ -108,92 +564,349 @@
 
 <script>
 
+
+
+
+
     $(document).ready(function () {
 
+    
+    var thead = $('.main_expiryTable thead');
+
+
+
+    thead.empty().append('<tr>' +
+      
+        '<th>Expiry Date</th>' +
+        '<th>Index Name</th>' +
+        '<th>Exchange</th>' +
+        '<th>Spot Price</th>' +
+        '<th>Future Price</th>' +
+        '<th>Diffrence</th>' +
+        '<th>Chart</th>' +
+        '</tr>');
+
+        var filteredResults = []; // Declare filteredResults in the outer scope
+        var response; // Declare response in the outer scope
 
         var selectedExchange = "NSE";
-        var initialSelectedSymbol; // Declare the variable in a higher scope
 
         $('#symbol-dropdown').on('change', function () {
             selectedExchange = $(this).val();
-            // console.log(selectedExchange);
-            // get_indices(selectedExchange);
-
-            // get_expiry_lists(selectedExchange);
-            storeSymbols(selectedExchange)
+            storeSymbols(selectedExchange);
         });
 
-
         function storeSymbols(selectedExchange) {
-    $.ajax({
-        url: '/get_indices_data/',
-        type: 'POST',
-        data: {
-            exchange: selectedExchange
-        },
-        success: function (response) {
-            var tbody = $('#expiry_table');
-            tbody.empty();
+            $.ajax({
+                url: '/get_indices_data/',
+                type: 'POST',
+                data: {
+                    exchange: selectedExchange
+                },
+                success: function (ajaxResponse) {
 
-            var selectedDays = parseInt($('#exp_month-dropdown').val(), 10); // Convert selected value to an integer
 
-            for (let i = 0; i < response.symbols.length; i++) {
-                let symbol = response.symbols[i];
 
-                if (typeof symbol === 'object') {
-                    let nestedSymbol = Object.keys(symbol)[0];
-                    console.log("Processing nested symbol:", nestedSymbol);
 
-                    if (symbol[nestedSymbol] && symbol[nestedSymbol].resultData) {
-                        let resultData = symbol[nestedSymbol].resultData;
-                        console.log("Result Data for", nestedSymbol, ":", resultData);
 
-                        // Display the symbol in the table
-                        tbody.append('<tr>' +
-                            '<td colspan="5"><strong>' + nestedSymbol + '</strong></td>' +
-                            '</tr>');
 
-                        // Loop through resultData and display each date in the table
-                        for (let j = 0; j < resultData.length; j++) {
-                            let dateObject = new Date(resultData[j]);
 
-                            // Calculate the difference in days
-                            let currentDate = new Date();
-                            let differenceInDays = Math.floor((currentDate - dateObject) / (1000 * 60 * 60 * 24));
 
-                            // Check if the date is within the selected range of days
-                            if (differenceInDays <= selectedDays) {
-                                // Get date, month, and year components
-                                let day = dateObject.getDate();
-                                let month = dateObject.toLocaleString('default', { month: 'long' }); // Full month name
-                                let year = dateObject.getFullYear();
 
-                                tbody.append('<tr>' +
-                                    '<td>' + (j + 1) + '</td>' +
-                                    '<td>' + day + ' ' + month + ' ' + year + '</td>' +
-                                    '<td>' + nestedSymbol + '</td>' +
-                                    '<td>' + response.exchange + '</td>' +
-                                    '<td><a href="#"><i class="bx bx-stats"></i></a></td>' +
-                                    '</tr>');
-                            }
-                        }
-                    } else {
-                        console.log("No resultData found for", nestedSymbol);
+
+
+
+
+
+
+                    response = ajaxResponse; // Assign the response to the outer variable
+                    console.log(response);
+
+                    // Assuming 'response' is the variable containing the provided data
+
+                    // Function to filter future_data based on a specific month
+                    function filterFutureDataByMonth(futureData, month) {
+                        return futureData.filter(item => {
+                            const expiryDate = new Date(item.expiry);
+                            return expiryDate.getMonth() === month;
+                        });
                     }
-                }
-                // Add any other cases if needed
-            }
-        },
-        error: function (error) {
-            console.error('Error storing symbols:', error);
+
+                    // Function to organize data by month and filter only three months
+                    function organizeDataByMonth(data) {
+                        const organizedData = {};
+
+                        data.forEach(item => {
+                            const symbol = Object.keys(item)[0];
+                            const symbolData = item[symbol];
+
+                            const expDates = symbolData.symbol_exp_data.resultData.map(date => new Date(date));
+
+                            // Filter only three months (e.g., January, February, March)
+                            const filteredExpDates = expDates.filter(date => {
+                                const month = date.getMonth() + 1; // Adding 1 because getMonth() returns values from 0 to 11
+                                return [1, 2, 3].includes(month);
+                            });
+
+                            filteredExpDates.forEach(expDate => {
+                                const month = expDate.getMonth();
+                                const year = expDate.getFullYear();
+                                const key = `${year}-${month + 1 < 10 ? '0' : ''}${month + 1}`;
+
+                                if (!organizedData[key]) {
+                                    organizedData[key] = {};
+                                }
+
+                                organizedData[key][symbol] = {
+                                    symbol_exp_data: symbolData.symbol_exp_data.resultData.filter(date => new Date(date).getMonth() === month),
+                                    future_data: filterFutureDataByMonth(symbolData.future_data.resultData, month),
+                                    option_data : symbolData.data_option.resultData
+                                };
+                            });
+                        });
+
+                        return organizedData;
+                    }
+
+                    // Example usage
+                    const organizedData = organizeDataByMonth(response.data);
+
+                    // Output the result
+                    // console.log(JSON.stringify({ exchange: response.exchange, data: organizedData }, null, 2));
+
+                    var filtered_data_sorted = JSON.stringify({ exchange: response.exchange, data: organizedData }, null, 2)
+                    // console.log(filtered_data_sorted);
+
+                    // Parse the string back into an object
+                    var filtered_data_sorted = JSON.parse(filtered_data_sorted);
+
+                    // Access the 'data' property
+                    var exchangeData = filtered_data_sorted.data;
+
+                    // Rest of your code
+                    var expiryMonthSelect = $("#expiry_month");
+
+                    // Clear existing options
+                    expiryMonthSelect.empty();
+
+                    // Loop through the data and add options
+                    for (var year in exchangeData) {
+                        if (exchangeData.hasOwnProperty(year)) {
+                            var yearOption = $("<option>").text(year).val(year);
+                            expiryMonthSelect.append(yearOption);
+
+
+                        }
+                    }
+
+// Function to display data in the table
+function displayTable(selectedExpiry) {
+    // Clear previous results
+
+    $(".main_expiryTable tbody").empty();
+    // Get the data for the selected expiry
+    var selectedData = exchangeData[selectedExpiry];
+
+    // Loop through the data and add rows to the table
+    var tbody = $('.main_expiryTable tbody');
+    var count = 1;
+
+    for (var symbol in selectedData) {
+        if (selectedData.hasOwnProperty(symbol)) {
+            var symbolData = selectedData[symbol];
+
+            // Assuming there is only one future_data entry for each symbol
+            var futureData = symbolData.future_data[0];
+      
+            // main_positve_val,main_negative_val,danger_val,success_val
+            // Calculate the difference between Spot Price and Future Price
+            var priceDifference = symbolData.option_data.last_trade_price  - futureData.last_price;
+
+            var main_positive_negative = symbolData.option_data.change_per<0 ?"main_negative_val":"main_positve_val"
+            var main_positive_negative_val = symbolData.option_data.change_per<0 ?"danger_val":"success_val"
+            var future_val = futureData.last_price<0 ?"future_negative":"future_positive"
+            var priceDifference_val =priceDifference<0 ?"future_negative":"future_positive"
+
+            // Create a row and append it to the tbody
+// Create a row and append it to the tbody
+tbody.append(`
+    <tr>
+        <td><div>${futureData.expiry}</div></td>
+        <td><div>${symbol}</div></td>
+        <td><div>${response.exchange}</div></td>
+        <td>
+            <div class='table_one justify-content-between ${main_positive_negative_val}'>
+                ${symbolData.option_data.last_trade_price}
+                <div class='ms-4 ${main_positive_negative}'>
+                    <i class='bx bx-up-arrow-alt'></i>${symbolData.option_data.change_per.toFixed(2)}%
+                </div>
+            </div>
+        </td>
+        <td class="${future_val}"><div>${futureData.last_price}</div></td>
+        <td class="future_positive"><div>${Math.abs(priceDifference.toFixed(2))}</div></td>
+        <td>
+            <div>
+                <a href="https://www.tradingview.com/chart/mKWHqfku/?symbol=${symbol==="MIDCPNIFTY"?"NIFTY_MID_SELECT":""}&aff_id=113877" target="_blank">
+                    <i class="bx bx-stats"></i>
+                </a>
+            </div>
+        </td>
+    </tr>
+`);
+
+count++;
+
+count++;
+
         }
-    });
+    }
 }
 
-        storeSymbols(selectedExchange)
+// Call the displayTable function with the default selected expiry
+var defaultSelectedExpiry = $("#expiry_month").val();
+displayTable(defaultSelectedExpiry);
+
+// Function to handle the change event of the dropdown
+$("#expiry_month").change(function () {
+    var selectedExpiry = $(this).val();
+    displayTable(selectedExpiry);
+});
+
+// Function to show chart (replace this with your actual chart implementation)
+function showChart(symbol) {
+    console.log('Show chart for symbol: ' + symbol);
+    // Add your chart implementation here
+}
 
 
+
+
+                    // Call the function to filter and display dates
+
+                },
+                error: function (error) {
+                    console.error('Error storing symbols:', error);
+                }
+            });
+        }
+
+        // function filterDates() {
+        //     // Get today's date
+        //     var today = new Date();
+        //     today.setHours(0, 0, 0, 0);
+
+        //     // Calculate the end date based on selected value
+        //     var endDate = new Date();
+        //     endDate.setDate(today.getDate() + parseInt($('#exp_month-dropdown').val(), 10));
+
+        //     // Clear previous results
+        //     $(".main_expiryTable tbody").empty();
+        //     $(".main_expiryTable thead").empty();
+
+
+        //     var thead = $('.main_expiryTable thead');
+
+
+
+        //     thead.empty().append('<tr>' +
+        //         '<th>SNO</th>' +
+        //         '<th>Expiry Date</th>' +
+        //         '<th>Index</th>' +
+        //         '<th>Exchange</th>' +
+        //         '<th>Spot Price</th>' +
+        //         '<th>Future Price</th>' +
+        //         '<th>Diffrence</th>' +
+        //         '<th>Chart</th>' +
+        //         '</tr>');
+
+
+
+        //     // Extract and filter dates for each symbol
+        //     filteredResults = []; // Clear filteredResults array
+        //     response.data.forEach(function (symbolData) {
+        //         for (var symbolName in symbolData) {
+        //             if (symbolData.hasOwnProperty(symbolName)) {
+        //                 var symbol = symbolData[symbolName];
+
+        //                 if (symbol.symbol_exp_data && symbol.symbol_exp_data.resultData) {
+        //                     var expiryDates = symbol.symbol_exp_data.resultData.filter(function (date) {
+        //                         var expiryDate = new Date(date);
+        //                         return expiryDate >= today && expiryDate <= endDate;
+        //                     });
+
+        //                     // Push the data into filteredResults array
+        //                     filteredResults.push({
+        //                         symbol: symbolName,
+        //                         result: symbol.symbol_exp_data.result,
+        //                         resultMessage: symbol.symbol_exp_data.resultMessage,
+        //                         resultData: expiryDates,
+        //                         futureData: symbol.future_data.resultData,
+        //                         dataOption: symbol.data_option.resultData
+        //                     });
+        //                 }
+        //             }
+        //         }
+        //     });
+
+        //     // Log the new array
+        //     console.log(filteredResults);
+        //     // Display the filtered dates for the symbol
+        //     var tbody = $('.main_expiryTable tbody');
+        //     var selectedDays = parseInt($('#exp_month-dropdown').val(), 10);
+        //     filteredResults.forEach(function (symbol) {
+        //         if (symbol.resultData) {
+        //             // Display the symbol in the table
+        //             tbody.append('<tr>' +
+        //                 '<td colspan="5"><strong>' + symbol.symbol + '</strong></td>' +
+        //                 '</tr>');
+
+        //             // Loop through resultData and display each date in the table
+        //             symbol.resultData.forEach(function (date, index) {
+        //                 let dateObject = new Date(date);
+
+        //                 // Calculate the difference in days
+        //                 let currentDate = new Date();
+        //                 let differenceInDays = Math.floor((dateObject - currentDate) / (1000 * 60 * 60 * 24));
+
+        //                 // Check if the date is within the selected range of days
+        //                 // console.log("Date:", date);
+        //                 // console.log("Current Date:", currentDate);
+        //                 // console.log("Difference in Days:", differenceInDays);
+
+        //                 if (differenceInDays <= selectedDays) {
+        //                     console.log("Date is within the selected range.");
+
+        //                     // Get date, month, and year components
+        //                     let day = dateObject.getDate();
+        //                     let month = dateObject.toLocaleString('default', { month: 'short' }); // Full month name
+        //                     let year = dateObject.getFullYear();
+
+        //                     // Append row to the table
+        //                     tbody.append('<tr>' +
+        //                         '<td>' + (index + 1) + '</td>' +
+        //                         '<td>' + day + ' ' + month + ' ' + year + '</td>' +
+        //                         '<td>' + symbol.symbol + '</td>' +
+        //                         '<td>' + selectedExchange + '</td>' +
+        //                         '<td><a href="#"><i class="bx bx-stats"></i></a></td>' +
+        //                         '</tr>');
+        //                 } else {
+        //                     console.log("Date is NOT within the selected range.");
+        //                 }
+        //             });
+        //         }
+        //     });
+        // }
+
+        // // Event listener for dropdown change
+        // $("#exp_month-dropdown").change(function () {
+        //     filterDates();
+        // });
+
+        // Initial load with default selected value (7 days)
+        storeSymbols(selectedExchange);
+        filterDates();
     });
+
 
 </script>
 
