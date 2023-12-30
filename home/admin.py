@@ -27,6 +27,8 @@ from.models import AdminAPIIntegrations
 from.models import All_brokers_api_name
 from.models import Broker
 from.models import PopupContent
+from.models import Book
+from.models import BookCart
 
 # from.models import StockListing
 
@@ -59,6 +61,8 @@ admin.site.register(AdminAPIIntegrations)
 admin.site.register(All_brokers_api_name)
 admin.site.register(Broker)
 admin.site.register(PopupContent)
+admin.site.register(Book)
+admin.site.register(BookCart)
 
 # admin.site.register(StockListing)
 

@@ -1,0 +1,273 @@
+{% extends "base_dashboard.html" %}
+{% load static %}
+{% block dashboard_body %}
+
+<style>
+    /* #cartTable thead tr th{
+        text-align: center !important;
+    }
+    #cartTable tbody tr td{
+        text-align: center !important;
+    } */
+
+    #cartTable tbody tr td {
+        padding: 10px 0;
+        position: relative;
+    }
+    
+    .middle_align{
+        position: relative;
+    }
+
+    .middle_align div{
+        position: absolute;
+        top: 50%;
+    }
+
+    .cart_section {
+        padding: 4rem;
+    }
+
+    /* #applyCouponButton{
+     height: 34px;
+    width: 191px ;
+    border-radius: 8px;
+    border: 1px solid #2196f3;
+    color: white;
+    background: #2196f3;
+    
+    } */
+
+    #applyCouponButton {
+    height: 45px;
+    width: 213px;
+    border-radius: 28px;
+    border: 1px solid black;
+    background: transparent;
+}
+
+.check_out_btns{
+    text-align: right;
+}
+
+.check_out{
+    padding: 11px 20px;
+    border-radius: 8px;
+    border: 1px solid #2196f3;
+    color: white;
+    background: #2196f3;
+}
+.shopping_btn{
+color: #2196f3;
+border: 1px solid #2196f3 ;
+background-color: transparent;
+padding: 11px 20px;
+border-radius: 8px;
+}
+
+</style>
+
+<section class="cart_section">
+    <div id="cartDataContainer ">
+        <table id="cartTable" class="table mt-5">
+            <thead>
+                <tr>
+                    <th>ITEMS</th>
+                    <th>QUANTITY</th>
+                    <th>PRICE</th>
+                    <th>TOTAL</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Cart data will be dynamically added here -->
+            </tbody>
+        </table>
+
+        <div style="margin-top: 20px; display: flex; justify-content: space-between; align-items: center;">
+            <div>
+                <label for="couponCode">Have a Coupon Code?</label>
+                <div class="d-flex">
+                    <input type="text" class="form-control" id="couponCode" style="margin-right: 10px;">
+                    <button id="applyCouponButton">Apply Coupon</button>
+                </div>
+            </div>
+            <div>
+                <div class="d-flex gap-5">
+                    <span>Subtotal</span>
+                    <p id="subtotalAmount" style="font-weight: bold;">0</p>
+                </div>
+                <hr>
+                <div class="d-flex gap-5">
+                    <span>TOTAL</span>
+                    <p id="totalAmount">0</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="check_out_btns mt-4">
+          <button class="shopping_btn">CONTINUE SHOPPING</button>
+          <button class="check_out" id="checkoutButton">PROCESS CHECKOUT</button>
+        </div>
+    </div>
+</section>
+
+<script>
+    $(document).ready(function () {
+
+
+        $.ajax({
+            url: '/get_cart_data/',
+            method: 'GET',
+            dataType: "json",
+            success: function (data) {
+                const cartData = data.cart_data;
+                console.log(cartData);
+                $('#cartTable tbody').empty();
+                let subtotal = 0;
+                // Update table with new cart data
+                cartData.forEach(entry => {
+                    const row = `<tr>
+    <td>
+        <div style="display: flex; align-items: center;">
+            <img src="${entry.image_url}" alt="Product Image" style="max-width: 70px; margin-right: 10px;">
+            ${entry.product}
+        </div>
+    </td>
+    <td class="middle_align">
+        <div style="display: flex; align-items: center;">
+            <box-icon name='chevron-down' style="cursor: pointer;"></box-icon>
+            <span style="margin: 0 10px;"> ${entry.quantity} </span>
+            <box-icon name='chevron-up' style="cursor: pointer;"></box-icon>
+        </div>
+    </td>
+    <td class="middle_align"> <div>  ${entry.price}</div> </td>
+    <td class="middle_align"> <div>${((entry.quantity) * (entry.price)).toFixed(2)}</div> </td>
+    <td class="middle_align">
+        <div class="remove-from-cart" data-product-id="${entry.book_id}"><i class="bi bi-x-lg" style="cursor: pointer;"></i></div> 
+    </td>
+</tr>
+
+
+`;
+$('#cartTable tbody').append(row);
+subtotal += entry.quantity * entry.price;
+                });
+
+                $('#subtotalAmount').text(subtotal);
+                $('#totalAmount').text(subtotal);
+            },
+            error: function (error) {
+                console.error('Error:', error);
+            },
+        });
+
+
+
+
+        $(document).on('click', '.remove-from-cart', function () {
+        const productId = $(this).data('product-id');
+
+        // AJAX request to remove the product
+        $.ajax({
+            url: `/remove_from_cart/${productId}/`,
+            method: 'POST',
+            dataType: 'json',
+            success: function (data) {
+                alert(data.message);
+
+                // After removing, update the cart display
+                updateCartDisplay();
+                location.reload();
+            },
+            error: function (error) {
+                console.error('Error:', error);
+            },
+        });
+    });
+
+
+    function updateCartDisplay() {
+        // AJAX request to get updated cart data
+        $.ajax({
+            url: '/get_cart_data/',
+            method: 'GET',
+            dataType: 'json',
+            success: function (data) {
+                const cartData = data.cart_data;
+                $('#cartTable tbody').empty();
+
+                // Update table with new cart data
+                let subtotal = 0;
+                cartData.forEach(entry => {
+                    const row = `<tr>
+                        <td>
+                            <div style="display: flex; align-items: center;">
+                                <img src="${entry.image_url}" alt="Product Image" style="max-width: 70px; margin-right: 10px;">
+                                ${entry.product}
+                            </div>
+                        </td>
+                        <td class="middle_align">
+                            <div style="display: flex; align-items: center;">
+                                <box-icon name='chevron-down' style="cursor: pointer;"></box-icon>
+                                <span style="margin: 0 10px;"> ${entry.quantity} </span>
+                                <box-icon name='chevron-up'></box-icon>
+                            </div>
+                        </td>
+                        <td class="middle_align"> <div>  ${entry.price}</div> </td>
+                        <td class="middle_align"> <div>${((entry.quantity) * (entry.price)).toFixed(2)}</div> </td>
+                        <td class="middle_align">
+                            <div class="remove-from-cart" data-product-id="${entry.book_id}">
+                                <i class="bi bi-x-lg" style="cursor: pointer;"></i>
+                            </div>
+                        </td>
+                    </tr>`;
+                    $('#cartTable tbody').append(row);
+                    subtotal += entry.quantity * entry.price;
+                });
+
+                // Calculate and display subtotal
+                $('#subtotalAmount').text(subtotal.toFixed(2));
+                $('#totalAmount').text(subtotal.toFixed(2));
+
+               
+            },
+            error: function (error) {
+                console.error('Error:', error);
+            },
+        });
+    }
+
+    // Initial update of the cart display
+    updateCartDisplay();
+
+    $('#checkoutButton').click(function () {
+        $.ajax({
+            url: '/process_checkout/',
+            method: 'POST',
+            dataType: 'json',
+            success: function (data) {
+                alert(data.message);
+                if (data.order_id) {
+                    // Redirect to the order summary page with the order ID
+                    window.location.href = '/order_summary/' + data.order_id;
+                }
+            },
+            error: function (xhr) {
+                console.error('Error:', xhr.responseText);
+                if (xhr.status === 400) {
+                    alert('Your cart is empty.');
+                } else {
+                    alert('Error occurred during checkout.');
+                }
+            },
+        });
+    });
+
+    $(".shopping_btn").click(function(){
+        window.location.href = '/books'
+    })
+
+    });
+</script>
+{% endblock dashboard_body %}

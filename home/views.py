@@ -9380,3 +9380,116 @@ def options_expiry_table(request):
     return render(request, "options_expiry_table.html")
 def option_expiry(request):
     return render(request, "option_expiry/option_expiry.html")
+
+
+
+
+def bot_templates(request):
+    return render(request, "bot_templates.html")
+
+def bot_template_falcon(request):
+    return render(request, "bot_template_falcon.html")
+def monthly_iron_condor(request):
+    return render(request, "monthly_iron_condor.html")
+
+def trendy_short_put(request):
+    return render(request, "trendy_short_put.html")
+
+def twice_a_week(request):
+    return render(request, "twice_a_week.html")
+
+def the_honey_badger(request):
+    return render(request, "the_honey_badger.html")
+
+def high_iv_rank(request):
+    return render(request, "high_iv_rank.html")
+
+def rsi_swing(request):
+    return render(request, "rsi_swing.html")
+
+def rsi_spread(request):
+    return render(request, "rsi_spread.html")
+
+def cherry_picker(request):
+    return render(request, "cherry_picker.html")
+
+def kiss_n_slap(request):
+    return render(request, "kiss_n_slap.html")
+
+
+
+def book_cart(request):
+    return render(request,"book_cart.html")
+
+
+
+from .models import BookCart
+
+@csrf_exempt
+def add_to_cart(request, product_id):
+    # For simplicity, let's assume the user is authenticated
+    user = request.user
+
+    # Check if the user is authenticated
+    if not user.is_authenticated:
+        return JsonResponse({'message': 'User not authenticated.'}, status=401)
+
+    try:
+        # Get the book by its ID
+        book = Book.objects.get(id=product_id)
+    except Book.DoesNotExist:
+        return JsonResponse({'message': 'Product not found.'}, status=404)
+
+    # Get the quantity from the POST data
+    data = json.loads(request.body.decode('utf-8'))
+    book_quantity = data.get('quantity', 1)  # Default to 1 if quantity is not provided
+
+    # Check if the product is already in the user's cart
+    cart_entry, created = BookCart.objects.get_or_create(user=user, book=book)
+
+    if created:
+        # Set the price and quantity when adding a new product to the cart
+        cart_entry.price = book.discount_price
+        cart_entry.quantity = book_quantity
+        cart_entry.save()
+        response_data = {'message': 'Product added to cart successfully.'}
+    else:
+        response_data = {'message': 'Product is already in the cart.', 'error': True}
+
+    return JsonResponse(response_data)
+
+
+
+def get_cart_data(request):
+    user = request.user
+
+    if not user.is_authenticated:
+        return JsonResponse({'message': 'User not authenticated.'}, status=401)
+
+    cart_entries = BookCart.objects.filter(user=user)
+    cart_data = [
+        {
+            'product': entry.book.title,
+            'quantity': entry.quantity,
+            'price': entry.book.discount_price,
+            'image_url': entry.book.image.url,  # Assuming there is an 'image' field in your Book model
+            'book_id': entry.book.id,  # Assuming there is an 'image' field in your Book model
+        }
+        for entry in cart_entries
+    ]
+
+    return JsonResponse({'cart_data': cart_data})
+
+@csrf_exempt
+def remove_from_cart(request, product_id):
+    user = request.user
+
+    try:
+        cart_entry = BookCart.objects.get(user=user, book_id=product_id)
+        cart_entry.delete()
+        response_data = {'message': 'Product removed from cart successfully.'}
+    except BookCart.DoesNotExist:
+        response_data = {'message': 'Product not found in the cart.'}
+
+    return JsonResponse(response_data)
+

@@ -514,6 +514,26 @@ urlpatterns = [
      path('get_indices_data/', views.get_indices_data, name='get_indices_data'),
      path('option_expiry', views.option_expiry, name='option_expiry'),
 
+
+
+     path('bot_templates/', views.bot_templates, name='bot_templates'),
+     path('bot_template_falcon/', views.bot_template_falcon, name='bot_template_falcon'),
+     path('monthly_iron_condor/', views.monthly_iron_condor, name='monthly_iron_condor'),
+     path('trendy_short_put/', views.trendy_short_put, name='trendy_short_put'),
+     path('twice_a_week/', views.twice_a_week, name='twice_a_week'),
+     path('the_honey_badger/', views.the_honey_badger, name='the_honey_badger'),
+     path('high_iv_rank/', views.high_iv_rank, name='high_iv_rank'),
+     path('rsi_swing/', views.rsi_swing, name='rsi_swing'),
+     path('rsi_spread/', views.rsi_spread, name='rsi_spread'),
+     path('cherry_picker/', views.cherry_picker, name='cherry_picker'),
+     path('kiss_n_slap/', views.kiss_n_slap, name='kiss_n_slap'),
+
+     path('book_cart/', views.book_cart, name='book_cart'),
+     path('add_to_cart/<int:product_id>/', views.add_to_cart, name='add_to_cart'),
+     path('get_cart_data/', views.get_cart_data, name='get_cart_data'),
+     #  path('update_cart_quantity/<int:entry_id>/', views.update_cart_quantity, name='update_cart_quantity'),
+     path('remove_from_cart/<int:product_id>/', views.remove_from_cart, name='remove_from_cart'),
+
      
 
 

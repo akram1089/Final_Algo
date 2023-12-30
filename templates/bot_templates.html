@@ -1,0 +1,334 @@
+{% extends "base_dashboard.html" %}
+{% load static %}
+{% block dashboard_body %}
+
+<style>
+
+a{
+    text-decoration: none;
+    color: black;
+}
+    .bot_temp_section{
+     padding: 4rem;
+    }
+
+    .category-badge-menu.is-tabs-menu {
+        border-bottom: 1px solid #e9ecef;
+        margin-bottom: 2rem;
+        padding-bottom: 2rem;
+    }
+
+    .category-badge-menu {
+        grid-column-gap: 0.5rem;
+        grid-template-rows: auto;
+        grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+        grid-auto-columns: 1fr;
+        align-self: flex-start;
+        display: flex;
+        overflow: auto;
+    }
+
+    .category-badge.w--current {
+        background-color: #344054;
+        color: #f5f5f5;
+    }
+
+    .category-badge {
+        background-color: #f2f4f7;
+        color: #344054;
+        white-space: nowrap;
+        border-radius: 3rem;
+        align-items: center;
+        padding: 0.5rem 1rem;
+        font-size: .875rem;
+        display: flex;
+    }
+    .button-icon {
+    width: 1.25rem;
+    height: 1.25rem;
+    min-height: 1.25rem;
+    min-width: 1.25rem;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+}
+
+.icon-wrapper-margin-right-small {
+    flex: none;
+    justify-content: center;
+    align-items: center;
+    margin-right: 0.5rem;
+}
+
+.grid-templates {
+    grid-column-gap: 2rem;
+    grid-row-gap: 2rem;
+    grid-template-rows: auto;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-auto-columns: 1fr;
+    align-items: stretch;
+    display: grid;
+}
+
+
+/* cards css */
+.standard-card {
+    width: 100%;
+    height: 100%;
+    border: 1px solid #e9ecef;
+    background-color: #fff;
+    border-radius: 1rem;
+    padding: 1.5rem;
+    overflow: hidden;
+}
+
+.card_design{
+    max-width: 100%;
+    display: inline-block;
+}
+
+.card-top-elements-split {
+    width: 100%;
+    flex-flow: wrap;
+    justify-content: space-between;
+    align-items: center;
+    display: flex;
+}
+
+.inner-title-left {
+    cursor: pointer;
+    align-items: center;
+    display: flex;
+}
+
+.icon-wrapper-margin-right {
+    flex: none;
+    justify-content: center;
+    align-items: center;
+    margin-right: 1rem;
+}
+
+.icon-featured-square-large {
+    width: 3rem;
+    height: 3rem;
+    background-color: #adb5bd;
+    color: #fff;
+    border-radius: 0.625rem;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+}
+
+
+.bot-icon {
+    text-align: center;
+    background-color: transparent;
+    border-radius: 1rem;
+    order: 0;
+    justify-content: center;
+    align-self: center;
+    align-items: center;
+    font-family: Font Awesome Solid,sans-serif;
+    font-size: 1.5rem;
+    font-weight: 400;
+    line-height: 1;
+    display: flex;
+}
+
+.badge {
+    grid-column-gap: 0.375rem;
+    background-color: #f8f9fa;
+    color: #495057;
+    white-space: nowrap;
+    border-radius: 10rem;
+    align-items: center;
+    padding: 0.125rem 0.625rem;
+    font-size: .875rem;
+    font-weight: 500;
+    display: flex;
+}
+
+.text-weight-medium {
+    font-weight: 500;
+}
+.text-size-small {
+    letter-spacing: normal;
+    font-size: .875rem;
+}
+
+.text-weight-medium {
+    font-weight: 500;
+}
+.text-size-small {
+    letter-spacing: normal;
+    font-size: .875rem;
+}
+
+.heading-tiny.is-tiny-500 {
+    font-weight: 500;
+}
+.heading-tiny {
+    letter-spacing: 0;
+    font-size: 1.1rem;
+    font-weight: 400;
+    line-height: 1.5;
+}
+
+.card-meta-items-wrapper {
+    flex-wrap: wrap;
+    align-items: center;
+    display: flex;
+}
+.text-color-gray500 {
+    color: #adb5bd;
+}
+
+
+.margin-right {
+    margin-top: 0;
+    margin-bottom: 0;
+    margin-left: 0;
+}
+.margin-tiny {
+    margin: 0.25rem;
+}
+/* .text-size-small {
+    letter-spacing: normal;
+    font-size: .875rem;
+} */
+
+.text-size-small {
+    letter-spacing: normal;
+    font-size: 17px;
+    font-weight: 400 !important;
+}
+
+.text-size-small {
+    letter-spacing: normal;
+    font-size: .875rem;
+}
+
+
+.text-style-2lines {
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+.text-size-small {
+    letter-spacing: normal;
+    font-size: .875rem;
+}
+
+.explore_text p{
+ font-size: 18px;
+ font-weight: 300 !important;
+}
+
+/*  */
+</style>
+
+<section class="bot_temp_section">
+    <div class="mt-4">
+        <div>
+            <h1>Bot Templates</h1>
+        </div>
+
+        <div class="explore_text mt-3">
+            <p>Explore popular bot templates shared in the Community.</p>
+        </div>
+
+        <a href="" style="text-decoration: underline;">View risk disclosures</a>
+
+        <div class="bot_filters mt-4">
+         <div class="category-badge-menu is-tabs-menu w-tab-menu" role="tablist">
+                <a data-w-tab="Tab 1" class="category-badge w-inline-block w-tab-link w--current" id="w-tabs-0-data-w-tab-0" href="#w-tabs-0-data-w-pane-0" role="tab" aria-controls="w-tabs-0-data-w-pane-0" aria-selected="true">
+                    <div class="button-icon icon-wrapper-margin-right-small w-embed">
+                        <svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M11.9932 5.13581C9.9938 2.7984 6.65975 2.16964 4.15469 4.31001C1.64964 6.45038 1.29697 10.029 3.2642 12.5604C4.89982 14.6651 9.84977 19.1041 11.4721 20.5408C11.6536 20.7016 11.7444 20.7819 11.8502 20.8135C11.9426 20.8411 12.0437 20.8411 12.1361 20.8135C12.2419 20.7819 12.3327 20.7016 12.5142 20.5408C14.1365 19.1041 19.0865 14.6651 20.7221 12.5604C22.6893 10.029 22.3797 6.42787 19.8316 4.31001C17.2835 2.19216 13.9925 2.7984 11.9932 5.13581Z" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                </svg>
+            </div>
+            <div>Popular</div>
+        </a>
+        <a data-w-tab="Tab 2" class="category-badge w-inline-block w-tab-link" id="w-tabs-0-data-w-tab-1" href="#w-tabs-0-data-w-pane-1" role="tab" aria-controls="w-tabs-0-data-w-pane-1" aria-selected="false" tabindex="-1">
+            <div class="button-icon icon-wrapper-margin-right-small w-embed">
+                <svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M22 7L14.1314 14.8686C13.7354 15.2646 13.5373 15.4627 13.309 15.5368C13.1082 15.6021 12.8918 15.6021 12.691 15.5368C12.4627 15.4627 12.2646 15.2646 11.8686 14.8686L9.13137 12.1314C8.73535 11.7354 8.53735 11.5373 8.30902 11.4632C8.10817 11.3979 7.89183 11.3979 7.69098 11.4632C7.46265 11.5373 7.26465 11.7354 6.86863 12.1314L2 17M22 7H15M22 7V14" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                </svg>
+            </div>
+            <div>Bullish</div>
+        </a>
+        <a data-w-tab="Tab 3" class="category-badge w-inline-block w-tab-link" tabindex="-1" id="w-tabs-0-data-w-tab-2" href="#w-tabs-0-data-w-pane-2" role="tab" aria-controls="w-tabs-0-data-w-pane-2" aria-selected="false">
+            <div class="button-icon icon-wrapper-margin-right-small w-embed">
+                <svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M22 17L14.1314 9.13137C13.7354 8.73535 13.5373 8.53735 13.309 8.46316C13.1082 8.3979 12.8918 8.3979 12.691 8.46316C12.4627 8.53735 12.2646 8.73535 11.8686 9.13137L9.13137 11.8686C8.73535 12.2646 8.53735 12.4627 8.30902 12.5368C8.10817 12.6021 7.89183 12.6021 7.69098 12.5368C7.46265 12.4627 7.26465 12.2646 6.86863 11.8686L2 7M22 17H15M22 17V10" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                </svg>
+            </div>
+            <div>Bearish</div>
+        </a>
+        <a data-w-tab="Tab 4" class="category-badge w-inline-block w-tab-link" tabindex="-1" id="w-tabs-0-data-w-tab-3" href="#w-tabs-0-data-w-pane-3" role="tab" aria-controls="w-tabs-0-data-w-pane-3" aria-selected="false">
+            <div class="button-icon icon-wrapper-margin-right-small w-embed">
+                <svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M20 17H4M4 17L8 13M4 17L8 21M4 7H20M20 7L16 3M20 7L16 11" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                </svg>
+            </div>
+            <div>Neutral</div>
+        </a>
+        <a data-w-tab="Tab 5" class="category-badge w-inline-block w-tab-link" tabindex="-1" id="w-tabs-0-data-w-tab-4" href="#w-tabs-0-data-w-pane-4" role="tab" aria-controls="w-tabs-0-data-w-pane-4" aria-selected="false">
+            <div class="button-icon icon-wrapper-margin-right-small w-embed">
+                <svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M7 19.4C7 20.8359 8.11929 22 9.5 22C10.8807 22 12 20.8359 12 19.4V11M12 11C10.3898 11 8 12 8 12C8 12 6.61017 11 5 11C3.38983 11 2 12 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12C22 12 20.6102 11 19 11C17.3898 11 16 12 16 12C16 12 13.6102 11 12 11Z" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                </svg>
+            </div>
+            <div>Hedging</div>
+        </a>
+        <a data-w-tab="Tab 6" class="category-badge w-inline-block w-tab-link" tabindex="-1" id="w-tabs-0-data-w-tab-5" href="#w-tabs-0-data-w-pane-5" role="tab" aria-controls="w-tabs-0-data-w-pane-5" aria-selected="false">
+            <div class="button-icon icon-wrapper-margin-right-small w-embed">
+                <svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M20 20V13M12 20V10M4 20L4 16M13.4067 5.0275L18.5751 6.96567M10.7988 5.40092L5.20023 9.59983M21.0607 6.43934C21.6464 7.02513 21.6464 7.97487 21.0607 8.56066C20.4749 9.14645 19.5251 9.14645 18.9393 8.56066C18.3536 7.97487 18.3536 7.02513 18.9393 6.43934C19.5251 5.85355 20.4749 5.85355 21.0607 6.43934ZM5.06066 9.43934C5.64645 10.0251 5.64645 10.9749 5.06066 11.5607C4.47487 12.1464 3.52513 12.1464 2.93934 11.5607C2.35355 10.9749 2.35355 10.0251 2.93934 9.43934C3.52513 8.85355 4.47487 8.85355 5.06066 9.43934ZM13.0607 3.43934C13.6464 4.02513 13.6464 4.97487 13.0607 5.56066C12.4749 6.14645 11.5251 6.14645 10.9393 5.56066C10.3536 4.97487 10.3536 4.02513 10.9393 3.43934C11.5251 2.85355 12.4749 2.85355 13.0607 3.43934Z" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                </svg>
+            </div>
+            <div>Technical</div>
+        </a>
+         </div>
+        </div>
+
+      <div class="grid-templates w-dyn-items" >
+        <div role="listitem" class="w-dyn-item"><a href= "{% url "bot_template_falcon" %}" class="standard-card clickable-on card_design"><div class="margin-bottom margin-xsmall"><div class="card-top-elements-split"><div class="inner-title-left"><div class="icon-wrapper-margin-right"><div style="background-color:rgba(155, 89, 182, 0.1)" class="icon-featured-square-large"><div style="color:#9b59b6" class="bot-icon"><i class="bi bi-feather"></i></div></div></div></div><div class="inner-title-right"><div class="badge"><div class="text-size-small text-weight-medium">9,195</div><div class="text-size-small text-weight-medium">clones</div></div></div></div></div><div class="margin-bottom margin-xsmall"><h3 class="heading-tiny is-tiny-500">Falcon 10</h3><div class="card-meta-items-wrapper text-color-gray500"><div class="margin-right margin-tiny text-size-small">by</div><div class="text-size-small">@reuben</div></div></div><div class="text-size-small text-style-2lines">Sells Put Credit Spreads on up-trending tickers using the MACD indicator.</div></a></div>
+        <div role="listitem" class="w-dyn-item"><a href="{% url "monthly_iron_condor" %}" class="standard-card clickable-on card_design"><div class="margin-bottom margin-xsmall"><div class="card-top-elements-split"><div class="inner-title-left"><div class="icon-wrapper-margin-right"><div style="background-color:rgba(85, 187, 187, 0.1)" class="icon-featured-square-large"><div style="color:#5bb" class="bot-icon"><i class='bx bx-recycle' ></i></div></div></div></div><div class="inner-title-right"><div class="badge"><div class="text-size-small text-weight-medium">7,640</div><div class="text-size-small text-weight-medium">clones</div></div></div></div></div><div class="margin-bottom margin-xsmall"><h3 class="heading-tiny is-tiny-500">Monthly Iron Condors ($3k Portfolio)</h3><div class="card-meta-items-wrapper text-color-gray500"><div class="margin-right margin-tiny text-size-small">by</div><div class="text-size-small">@optionalpha</div></div></div><div class="text-size-small text-style-2lines">A fully automated iron condor strategy built specifically for small portfolios around $3k.</div></a></div>
+        <div role="listitem" class="w-dyn-item"><a href="{% url "trendy_short_put" %}" class="standard-card clickable-on card_design"><div class="margin-bottom margin-xsmall"><div class="card-top-elements-split"><div class="inner-title-left"><div class="icon-wrapper-margin-right"><div style="background-color:hsla(180, 42.86%, 53.33%, 0.10)" class="icon-featured-square-large"><div style="color:#5bb" class="bot-icon"><i class='bx bx-crown'></i></div></div></div></div><div class="inner-title-right"><div class="badge"><div class="text-size-small text-weight-medium">4,787</div><div class="text-size-small text-weight-medium">clones</div></div></div></div></div><div class="margin-bottom margin-xsmall"><h3 class="heading-tiny is-tiny-500">Trendy Short Put Spread</h3><div class="card-meta-items-wrapper text-color-gray500"><div class="margin-right margin-tiny text-size-small">by</div><div class="text-size-small">@kirk</div></div></div><div class="text-size-small text-style-2lines">Weekly short put spread bot modified from a top backtested strategy inside Option Alpha.</div></a></div>
+        <div role="listitem" class="w-dyn-item"><a href="{% url "twice_a_week" %}" class="standard-card clickable-on card_design"><div class="margin-bottom margin-xsmall"><div class="card-top-elements-split"><div class="inner-title-left"><div class="icon-wrapper-margin-right"><div style="background-color:rgba(41, 128, 185, 0.1)" class="icon-featured-square-large"><div style="color:#2980b9" class="bot-icon"><i class='bx bx-shape-triangle'></i></div></div></div></div><div class="inner-title-right"><div class="badge"><div class="text-size-small text-weight-medium">3,632</div><div class="text-size-small text-weight-medium">clones</div></div></div></div></div><div class="margin-bottom margin-xsmall"><h3 class="heading-tiny is-tiny-500">Twice-a-Week-80%-Chance</h3><div class="card-meta-items-wrapper text-color-gray500"><div class="margin-right margin-tiny text-size-small">by</div><div class="text-size-small">@matt</div></div></div><div class="text-size-small text-style-2lines">Automated trading BOT template that opens an Iron Condor in SPY twice a week with an 80% chance of profit.</div></a></div>
+        <div role="listitem" class="w-dyn-item"><a href="{% url "the_honey_badger" %}" class="standard-card clickable-on card_design"><div class="margin-bottom margin-xsmall"><div class="card-top-elements-split"><div class="inner-title-left"><div class="icon-wrapper-margin-right"><div style="background-color:rgba(243, 156, 18, 0.1)" class="icon-featured-square-large"><div style="color:#f39c12" class="bot-icon"><i class='bx bxs-dog'></i></div></div></div></div><div class="inner-title-right"><div class="badge"><div class="text-size-small text-weight-medium">3,543</div><div class="text-size-small text-weight-medium">clones</div></div></div></div></div><div class="margin-bottom margin-xsmall"><h3 class="heading-tiny is-tiny-500">The Honey Badger</h3><div class="card-meta-items-wrapper text-color-gray500"><div class="margin-right margin-tiny text-size-small">by</div><div class="text-size-small">@kirk</div></div></div><div class="text-size-small text-style-2lines">The Honey Badger scans technical indicators like CCI and RSI and enters a certain position type based on those levels.</div></a></div>
+        <div role="listitem" class="w-dyn-item"><a href="{% url "high_iv_rank" %}" class="standard-card clickable-on card_design"><div class="margin-bottom margin-xsmall"><div class="card-top-elements-split"><div class="inner-title-left"><div class="icon-wrapper-margin-right"><div style="background-color:rgba(243, 156, 18, 0.1)" class="icon-featured-square-large"><div style="color:#f39c12" class="bot-icon"><i class='bx bx-target-lock'></i></div></div></div></div><div class="inner-title-right"><div class="badge"><div class="text-size-small text-weight-medium">3,268</div><div class="text-size-small text-weight-medium">clones</div></div></div></div></div><div class="margin-bottom margin-xsmall"><h3 class="heading-tiny is-tiny-500">High IV Rank Iron Condors</h3><div class="card-meta-items-wrapper text-color-gray500"><div class="margin-right margin-tiny text-size-small">by</div><div class="text-size-small">@optionalpha</div></div></div><div class="text-size-small text-style-2lines">A classic bot strategy that scans for high IVR in a basket of tickers and sells wide iron condors.</div></a></div>
+        <div role="listitem" class="w-dyn-item"><a href="{% url "rsi_swing" %}" class="standard-card clickable-on card_design"><div class="margin-bottom margin-xsmall"><div class="card-top-elements-split"><div class="inner-title-left"><div class="icon-wrapper-margin-right"><div style="background-color:rgba(41, 128, 185, 0.1)" class="icon-featured-square-large"><div style="color:#2980b9" class="bot-icon"></div></div></div></div><div class="inner-title-right"><div class="badge"><div class="text-size-small text-weight-medium">2,432</div><div class="text-size-small text-weight-medium">clones</div></div></div></div></div><div class="margin-bottom margin-xsmall"><h3 class="heading-tiny is-tiny-500">RSI Swing Trading w/ Credit Spreads</h3><div class="card-meta-items-wrapper text-color-gray500"><div class="margin-right margin-tiny text-size-small">by</div><div class="text-size-small">@optionalpha</div></div></div><div class="text-size-small text-style-2lines">Sample template that outlines a swing trading strategy using RSI signals for trading credit spreads.</div></a></div>
+        <div role="listitem" class="w-dyn-item"><a href="{% url "rsi_spread" %}" class="standard-card clickable-on card_design"><div class="margin-bottom margin-xsmall"><div class="card-top-elements-split"><div class="inner-title-left"><div class="icon-wrapper-margin-right"><div style="background-color:hsla(145.44303797468353, 63.20%, 49.02%, 0.10)" class="icon-featured-square-large"><div style="color:#2ecc71" class="bot-icon"><i class="bi bi-piggy-bank"></i></div></div></div></div><div class="inner-title-right"><div class="badge"><div class="text-size-small text-weight-medium">2,254</div><div class="text-size-small text-weight-medium">clones</div></div></div></div></div><div class="margin-bottom margin-xsmall"><h3 class="heading-tiny is-tiny-500">RSI w/ Spreads (Small Account)</h3><div class="card-meta-items-wrapper text-color-gray500"><div class="margin-right margin-tiny text-size-small">by</div><div class="text-size-small">@kirk</div></div></div><div class="text-size-small text-style-2lines">Minimal RSI swing trading bot for small accounts with no overlapping positions.</div></a></div>
+        <div role="listitem" class="w-dyn-item"><a href="{% url "cherry_picker" %}" class="standard-card clickable-on card_design"><div class="margin-bottom margin-xsmall"><div class="card-top-elements-split"><div class="inner-title-left"><div class="icon-wrapper-margin-right"><div style="background-color:rgba(192, 57, 43, 0.1)" class="icon-featured-square-large"><div style="color:#c0392b" class="bot-icon"><i class='bx bx-leaf'></i></div></div></div></div><div class="inner-title-right"><div class="badge"><div class="text-size-small text-weight-medium">1,814</div><div class="text-size-small text-weight-medium">clones</div></div></div></div></div><div class="margin-bottom margin-xsmall"><h3 class="heading-tiny is-tiny-500">Cherry Picker</h3><div class="card-meta-items-wrapper text-color-gray500"><div class="margin-right margin-tiny text-size-small">by</div><div class="text-size-small">@optionalpha</div></div></div><div class="text-size-small text-style-2lines">An opportunistic bot that scans RSI, CCI, and Stochastics for short-term market tops.</div></a></div>
+        <div role="listitem" class="w-dyn-item"><a href="{% url "kiss_n_slap" %}" class="standard-card clickable-on card_design"><div class="margin-bottom margin-xsmall"><div class="card-top-elements-split"><div class="inner-title-left"><div class="icon-wrapper-margin-right"><div style="background-color:rgba(192, 57, 43, 0.1)" class="icon-featured-square-large"><div style="color:#c0392b" class="bot-icon"></div></div></div></div><div class="inner-title-right"><div class="badge"><div class="text-size-small text-weight-medium">1,814</div><div class="text-size-small text-weight-medium">clones</div></div></div></div></div><div class="margin-bottom margin-xsmall"><h3 class="heading-tiny is-tiny-500">Cherry Picker</h3><div class="card-meta-items-wrapper text-color-gray500"><div class="margin-right margin-tiny text-size-small">by</div><div class="text-size-small">@optionalpha</div></div></div><div class="text-size-small text-style-2lines">An opportunistic bot that scans RSI, CCI, and Stochastics for short-term market tops.</div></a></div>
+        <div role="listitem" class="w-dyn-item"><a href="" class="standard-card clickable-on card_design"><div class="margin-bottom margin-xsmall"><div class="card-top-elements-split"><div class="inner-title-left"><div class="icon-wrapper-margin-right"><div style="background-color:rgba(238, 238, 238, 0.5)" class="icon-featured-square-large"><div style="color:#999" class="bot-icon"></div></div></div></div><div class="inner-title-right"><div class="badge"><div class="text-size-small text-weight-medium">1,656</div><div class="text-size-small text-weight-medium">clones</div></div></div></div></div><div class="margin-bottom margin-xsmall"><h3 class="heading-tiny is-tiny-500">KISS n Sleep Iron Butterfly</h3><div class="card-meta-items-wrapper text-color-gray500"><div class="margin-right margin-tiny text-size-small">by</div><div class="text-size-small">@ryno</div></div></div><div class="text-size-small text-style-2lines">A simple and effective version of the popular #SmashNGrab bot trading 0-1DTE iron butterflies.</div></a></div>
+        <div role="listitem" class="w-dyn-item"><a href="" class="standard-card clickable-on card_design"><div class="margin-bottom margin-xsmall"><div class="card-top-elements-split"><div class="inner-title-left"><div class="icon-wrapper-margin-right"><div style="background-color:rgba(243, 156, 18, 0.1)" class="icon-featured-square-large"><div style="color:#f39c12" class="bot-icon"></div></div></div></div><div class="inner-title-right"><div class="badge"><div class="text-size-small text-weight-medium">1,212</div><div class="text-size-small text-weight-medium">clones</div></div></div></div></div><div class="margin-bottom margin-xsmall"><h3 class="heading-tiny is-tiny-500">CORE Put Credit Spread (Beginner)</h3><div class="card-meta-items-wrapper text-color-gray500"><div class="margin-right margin-tiny text-size-small">by</div><div class="text-size-small">@optionalpha</div></div></div><div class="text-size-small text-style-2lines">Start with this CORE short put spread sample bot template if you're new to options trading or the autotrading platform.</div></a></div>
+        <div role="listitem" class="w-dyn-item"><a href="" class="standard-card clickable-on card_design"><div class="margin-bottom margin-xsmall"><div class="card-top-elements-split"><div class="inner-title-left"><div class="icon-wrapper-margin-right"><div style="background-color:rgba(155, 89, 182, 0.1)" class="icon-featured-square-large"><div style="color:#9b59b6" class="bot-icon"></div></div></div></div><div class="inner-title-right"><div class="badge"><div class="text-size-small text-weight-medium">1,134</div><div class="text-size-small text-weight-medium">clones</div></div></div></div></div><div class="margin-bottom margin-xsmall"><h3 class="heading-tiny is-tiny-500">Reactive 2X EMA w/ Debit Spreads</h3><div class="card-meta-items-wrapper text-color-gray500"><div class="margin-right margin-tiny text-size-small">by</div><div class="text-size-small">@optionalpha</div></div></div><div class="text-size-small text-style-2lines">A sample bot that trades with the market’s short-term momentum using risk-defined debit spreads.</div></a></div>
+        <div role="listitem" class="w-dyn-item"><a href="" class="standard-card clickable-on card_design"><div class="margin-bottom margin-xsmall"><div class="card-top-elements-split"><div class="inner-title-left"><div class="icon-wrapper-margin-right"><div style="background-color:rgba(243, 156, 18, 0.1)" class="icon-featured-square-large"><div style="color:#f39c12" class="bot-icon"></div></div></div></div><div class="inner-title-right"><div class="badge"><div class="text-size-small text-weight-medium">884</div><div class="text-size-small text-weight-medium">clones</div></div></div></div></div><div class="margin-bottom margin-xsmall"><h3 class="heading-tiny is-tiny-500">CORE Iron Butterfly (Beginner)</h3><div class="card-meta-items-wrapper text-color-gray500"><div class="margin-right margin-tiny text-size-small">by</div><div class="text-size-small">@optionalpha</div></div></div><div class="text-size-small text-style-2lines">Start with this CORE iron butterfly sample bot template if you're new to options trading or the autotrading platform.</div></a></div>
+        <div role="listitem" class="w-dyn-item"><a href="" class="standard-card clickable-on card_design"><div class="margin-bottom margin-xsmall"><div class="card-top-elements-split"><div class="inner-title-left"><div class="icon-wrapper-margin-right"><div style="background-color:hsla(282.58064516129025, 38.91%, 53.14%, 0.10)" class="icon-featured-square-large"><div style="color:#9b59b6" class="bot-icon"></div></div></div></div><div class="inner-title-right"><div class="badge"><div class="text-size-small text-weight-medium">759</div><div class="text-size-small text-weight-medium">clones</div></div></div></div></div><div class="margin-bottom margin-xsmall"><h3 class="heading-tiny is-tiny-500">Iron Condors w/ No Ticker Overlap</h3><div class="card-meta-items-wrapper text-color-gray500"><div class="margin-right margin-tiny text-size-small">by</div><div class="text-size-small">@kirk</div></div></div><div class="text-size-small text-style-2lines">Consistently sells iron condors but prevents duplicate positions in overlapping ticker symbols.</div></a></div>
+        <div role="listitem" class="w-dyn-item"><a href="" class="standard-card clickable-on card_design"><div class="margin-bottom margin-xsmall"><div class="card-top-elements-split"><div class="inner-title-left"><div class="icon-wrapper-margin-right"><div style="background-color:rgba(41, 128, 185, 0.1)" class="icon-featured-square-large"><div style="color:#2980b9" class="bot-icon"></div></div></div></div><div class="inner-title-right"><div class="badge"><div class="text-size-small text-weight-medium">755</div><div class="text-size-small text-weight-medium">clones</div></div></div></div></div><div class="margin-bottom margin-xsmall"><h3 class="heading-tiny is-tiny-500">Debit Spread Scalper</h3><div class="card-meta-items-wrapper text-color-gray500"><div class="margin-right margin-tiny text-size-small">by</div><div class="text-size-small">@mgalal</div></div></div><div class="text-size-small text-style-2lines">Opens a Debit Spread ATM Long Call &amp; Nearest Short Call &amp; DTE for 20%+ profit same day or overnight.</div></a></div>
+        <div role="listitem" class="w-dyn-item"><a href="" class="standard-card clickable-on card_design"><div class="margin-bottom margin-xsmall"><div class="card-top-elements-split"><div class="inner-title-left"><div class="icon-wrapper-margin-right"><div style="background-color:hsla(282.58064516129025, 38.91%, 53.14%, 0.10)" class="icon-featured-square-large"><div style="color:#9b59b6" class="bot-icon"></div></div></div></div><div class="inner-title-right"><div class="badge"><div class="text-size-small text-weight-medium">639</div><div class="text-size-small text-weight-medium">clones</div></div></div></div></div><div class="margin-bottom margin-xsmall"><h3 class="heading-tiny is-tiny-500">Covered Call Synthetic</h3><div class="card-meta-items-wrapper text-color-gray500"><div class="margin-right margin-tiny text-size-small">by</div><div class="text-size-small">@kirk</div></div></div><div class="text-size-small text-style-2lines">The bot looks to purchase long stock in an uptrend and then sells a synthetic covered call.</div></a></div>
+        <div role="listitem" class="w-dyn-item"><a href="" class="standard-card clickable-on card_design"><div class="margin-bottom margin-xsmall"><div class="card-top-elements-split"><div class="inner-title-left"><div class="icon-wrapper-margin-right"><div style="background-color:rgba(192, 57, 43, 0.1)" class="icon-featured-square-large"><div style="color:#c0392b" class="bot-icon"></div></div></div></div><div class="inner-title-right"><div class="badge"><div class="text-size-small text-weight-medium">637</div><div class="text-size-small text-weight-medium">clones</div></div></div></div></div><div class="margin-bottom margin-xsmall"><h3 class="heading-tiny is-tiny-500">Bear Backup</h3><div class="card-meta-items-wrapper text-color-gray500"><div class="margin-right margin-tiny text-size-small">by</div><div class="text-size-small">@matt</div></div></div><div class="text-size-small text-style-2lines">Combines further dated Long Put Spread as protection for closer dated Short Put Spreads. </div></a></div>
+        <div role="listitem" class="w-dyn-item"><a href="" class="standard-card clickable-on card_design"><div class="margin-bottom margin-xsmall"><div class="card-top-elements-split"><div class="inner-title-left"><div class="icon-wrapper-margin-right"><div style="background-color:rgba(243, 156, 18, 0.1)" class="icon-featured-square-large"><div style="color:#f39c12" class="bot-icon"></div></div></div></div><div class="inner-title-right"><div class="badge"><div class="text-size-small text-weight-medium">625</div><div class="text-size-small text-weight-medium">clones</div></div></div></div></div><div class="margin-bottom margin-xsmall"><h3 class="heading-tiny is-tiny-500">CORE Put Credit Spread (Intermediate)</h3><div class="card-meta-items-wrapper text-color-gray500"><div class="margin-right margin-tiny text-size-small">by</div><div class="text-size-small">@optionalpha</div></div></div><div class="text-size-small text-style-2lines">This CORE intermediate short put spread sample bot template is designed for traders who have a basic understanding of options trading and the autotrading platform.</div></a></div>
+        <div role="listitem" class="w-dyn-item"><a href="" class="standard-card clickable-on card_design"><div class="margin-bottom margin-xsmall"><div class="card-top-elements-split"><div class="inner-title-left"><div class="icon-wrapper-margin-right"><div style="background-color:hsla(145.44303797468353, 63.20%, 49.02%, 0.10)" class="icon-featured-square-large"><div style="color:hsla(145.44303797468353, 63.20%, 49.02%, 1.00)" class="bot-icon"></div></div></div></div><div class="inner-title-right"><div class="badge"><div class="text-size-small text-weight-medium">617</div><div class="text-size-small text-weight-medium">clones</div></div></div></div></div><div class="margin-bottom margin-xsmall"><h3 class="heading-tiny is-tiny-500">Trend + Momentum w/ Credit Spreads</h3><div class="card-meta-items-wrapper text-color-gray500"><div class="margin-right margin-tiny text-size-small">by</div><div class="text-size-small">@kirk</div></div></div><div class="text-size-small text-style-2lines">Simple trend bot that looks to sell dynamic credit spreads using multiple trend/momentum decisions.</div></a></div>
+        <div role="listitem" class="w-dyn-item"><a href="" class="standard-card clickable-on card_design"><div class="margin-bottom margin-xsmall"><div class="card-top-elements-split"><div class="inner-title-left"><div class="icon-wrapper-margin-right"><div style="background-color:rgba(155, 89, 182, 0.1)" class="icon-featured-square-large"><div style="color:#9b59b6" class="bot-icon"></div></div></div></div><div class="inner-title-right"><div class="badge"><div class="text-size-small text-weight-medium">613</div><div class="text-size-small text-weight-medium">clones</div></div></div></div></div><div class="margin-bottom margin-xsmall"><h3 class="heading-tiny is-tiny-500">CCI Swing with Spreads</h3><div class="card-meta-items-wrapper text-color-gray500"><div class="margin-right margin-tiny text-size-small">by</div><div class="text-size-small">@kirk</div></div></div><div class="text-size-small text-style-2lines">Simple technical swing trading bot that uses CCI for entering short put or call credit spreads.</div></a></div>
+        <div role="listitem" class="w-dyn-item"><a href="" class="standard-card clickable-on card_design"><div class="margin-bottom margin-xsmall"><div class="card-top-elements-split"><div class="inner-title-left"><div class="icon-wrapper-margin-right"><div style="background-color:rgba(155, 89, 182, 0.1)" class="icon-featured-square-large"><div style="color:#9b59b6" class="bot-icon"></div></div></div></div><div class="inner-title-right"><div class="badge"><div class="text-size-small text-weight-medium">510</div><div class="text-size-small text-weight-medium">clones</div></div></div></div></div><div class="margin-bottom margin-xsmall"><h3 class="heading-tiny is-tiny-500">Lickety-Split-Condors</h3><div class="card-meta-items-wrapper text-color-gray500"><div class="margin-right margin-tiny text-size-small">by</div><div class="text-size-small">@reuben</div></div></div><div class="text-size-small text-style-2lines">Uses the MACD and EMA indicators to trade a short DTE split Iron Condor in a basket of tickers.</div></a></div>
+        <div role="listitem" class="w-dyn-item"><a href="" class="standard-card clickable-on card_design"><div class="margin-bottom margin-xsmall"><div class="card-top-elements-split"><div class="inner-title-left"><div class="icon-wrapper-margin-right"><div style="background-color:rgba(85, 187, 187, 0.1)" class="icon-featured-square-large"><div style="color:#5bb" class="bot-icon"></div></div></div></div><div class="inner-title-right"><div class="badge"><div class="text-size-small text-weight-medium">483</div><div class="text-size-small text-weight-medium">clones</div></div></div></div></div><div class="margin-bottom margin-xsmall"><h3 class="heading-tiny is-tiny-500">Wave Rider</h3><div class="card-meta-items-wrapper text-color-gray500"><div class="margin-right margin-tiny text-size-small">by</div><div class="text-size-small">@reuben</div></div></div><div class="text-size-small text-style-2lines">This bot sells In The Money spreads to pay for Out of The Money long options.</div></a></div>
+        <div role="listitem" class="w-dyn-item"><a href="" class="standard-card clickable-on card_design"><div class="margin-bottom margin-xsmall"><div class="card-top-elements-split"><div class="inner-title-left"><div class="icon-wrapper-margin-right"><div style="background-color:rgba(243, 156, 18, 0.1)" class="icon-featured-square-large"><div style="color:#f39c12" class="bot-icon"></div></div></div></div><div class="inner-title-right"><div class="badge"><div class="text-size-small text-weight-medium">448</div><div class="text-size-small text-weight-medium">clones</div></div></div></div></div><div class="margin-bottom margin-xsmall"><h3 class="heading-tiny is-tiny-500">MACD Indicator Bounce</h3><div class="card-meta-items-wrapper text-color-gray500"><div class="margin-right margin-tiny text-size-small">by</div><div class="text-size-small">@kirk</div></div></div><div class="text-size-small text-style-2lines">An example bot template from our workshop on trading credit spreads using the MACD indicator. </div></a></div>
+        <div role="listitem" class="w-dyn-item"><a href="" class="standard-card clickable-on card_design"><div class="margin-bottom margin-xsmall"><div class="card-top-elements-split"><div class="inner-title-left"><div class="icon-wrapper-margin-right"><div style="background-color:rgba(85, 187, 187, 0.1)" class="icon-featured-square-large"><div style="color:#5bb" class="bot-icon"></div></div></div></div><div class="inner-title-right"><div class="badge"><div class="text-size-small text-weight-medium">408</div><div class="text-size-small text-weight-medium">clones</div></div></div></div></div><div class="margin-bottom margin-xsmall"><h3 class="heading-tiny is-tiny-500">Bollinger Bands</h3><div class="card-meta-items-wrapper text-color-gray500"><div class="margin-right margin-tiny text-size-small">by</div><div class="text-size-small">@kirk</div></div></div><div class="text-size-small text-style-2lines">Bollinger band breakout indicator based trading strategy for credit spreads and/or debit spreads.</div></a></div>
+        <div role="listitem" class="w-dyn-item"><a href="" class="standard-card clickable-on card_design"><div class="margin-bottom margin-xsmall"><div class="card-top-elements-split"><div class="inner-title-left"><div class="icon-wrapper-margin-right"><div style="background-color:rgba(41, 128, 185, 0.1)" class="icon-featured-square-large"><div style="color:#2980b9" class="bot-icon"></div></div></div></div><div class="inner-title-right"><div class="badge"><div class="text-size-small text-weight-medium">402</div><div class="text-size-small text-weight-medium">clones</div></div></div></div></div><div class="margin-bottom margin-xsmall"><h3 class="heading-tiny is-tiny-500">Flexible 0-7DTE Debit Spreads</h3><div class="card-meta-items-wrapper text-color-gray500"><div class="margin-right margin-tiny text-size-small">by</div><div class="text-size-small">@harish</div></div></div><div class="text-size-small text-style-2lines">Flex-bot to trade 0-7DTE Call or Put Debit Spreads across multiple tickers.</div></a></div>
+        <div role="listitem" class="w-dyn-item"><a href="" class="standard-card clickable-on card_design"><div class="margin-bottom margin-xsmall"><div class="card-top-elements-split"><div class="inner-title-left"><div class="icon-wrapper-margin-right"><div style="background-color:rgba(243, 156, 18, 0.1)" class="icon-featured-square-large"><div style="color:#f39c12" class="bot-icon"></div></div></div></div><div class="inner-title-right"><div class="badge"><div class="text-size-small text-weight-medium">390</div><div class="text-size-small text-weight-medium">clones</div></div></div></div></div><div class="margin-bottom margin-xsmall"><h3 class="heading-tiny is-tiny-500">CORE Iron Butterfly (Intermediate)</h3><div class="card-meta-items-wrapper text-color-gray500"><div class="margin-right margin-tiny text-size-small">by</div><div class="text-size-small">@optionalpha</div></div></div><div class="text-size-small text-style-2lines">This CORE intermediate iron butterfly sample bot template is designed for traders who have a basic understanding of options trading and the autotrading platform.</div></a></div>
+        <div role="listitem" class="w-dyn-item"><a href="" class="standard-card clickable-on card_design"><div class="margin-bottom margin-xsmall"><div class="card-top-elements-split"><div class="inner-title-left"><div class="icon-wrapper-margin-right"><div style="background-color:rgba(85, 187, 187, 0.1)" class="icon-featured-square-large"><div style="color:#5bb" class="bot-icon"></div></div></div></div><div class="inner-title-right"><div class="badge"><div class="text-size-small text-weight-medium">355</div><div class="text-size-small text-weight-medium">clones</div></div></div></div></div><div class="margin-bottom margin-xsmall"><h3 class="heading-tiny is-tiny-500">Hybrid Trading</h3><div class="card-meta-items-wrapper text-color-gray500"><div class="margin-right margin-tiny text-size-small">by</div><div class="text-size-small">@kirk</div></div></div><div class="text-size-small text-style-2lines">A demo and example bot template from our workshop on Hybrid trading using Bot Buttons.</div></a></div>
+        <div role="listitem" class="w-dyn-item"><a href="" class="standard-card clickable-on card_design"><div class="margin-bottom margin-xsmall"><div class="card-top-elements-split"><div class="inner-title-left"><div class="icon-wrapper-margin-right"><div style="background-color:hsla(5.637583892617451, 63.40%, 46.08%, 0.10)" class="icon-featured-square-large"><div style="color:#c0392b" class="bot-icon"></div></div></div></div><div class="inner-title-right"><div class="badge"><div class="text-size-small text-weight-medium">351</div><div class="text-size-small text-weight-medium">clones</div></div></div></div></div><div class="margin-bottom margin-xsmall"><h3 class="heading-tiny is-tiny-500">Flash Crash Hedge</h3><div class="card-meta-items-wrapper text-color-gray500"><div class="margin-right margin-tiny text-size-small">by</div><div class="text-size-small">@kirk</div></div></div><div class="text-size-small text-style-2lines">Multi-strategy bot template for hedging and profiting from a large intraday move lower in the market.</div></a></div>
+        <div role="listitem" class="w-dyn-item"><a href="" class="standard-card clickable-on card_design"><div class="margin-bottom margin-xsmall"><div class="card-top-elements-split"><div class="inner-title-left"><div class="icon-wrapper-margin-right"><div style="background-color:rgba(41, 128, 185, 0.1)" class="icon-featured-square-large"><div style="color:#2980b9" class="bot-icon"></div></div></div></div><div class="inner-title-right"><div class="badge"><div class="text-size-small text-weight-medium">350</div><div class="text-size-small text-weight-medium">clones</div></div></div></div></div><div class="margin-bottom margin-xsmall"><h3 class="heading-tiny is-tiny-500">One Hour SPY</h3><div class="card-meta-items-wrapper text-color-gray500"><div class="margin-right margin-tiny text-size-small">by</div><div class="text-size-small">@frederick31989</div></div></div><div class="text-size-small text-style-2lines">Opens a 0-1 DTE position at 10 am EST dependent on the movement of SPY.</div></a></div>
+        {% comment %} <div role="listitem" class="w-dyn-item"><a href="" class="standard-card clickable-on card_design"><div class="margin-bottom margin-xsmall"><div class="card-top-elements-split"><div class="inner-title-left"><div class="icon-wrapper-margin-right"><div style="background-color:rgba(85, 187, 187, 0.1)" class="icon-featured-square-large"><div style="color:#5bb" class="bot-icon"></div></div></div></div><div class="inner-title-right"><div class="badge"><div class="text-size-small text-weight-medium">347</div><div class="text-size-small text-weight-medium">clones</div></div></div></div></div><div class="margin-bottom margin-xsmall"><h3 class="heading-tiny is-tiny-500">SPY Drops</h3><div class="card-meta-items-wrapper text-color-gray500"><div class="margin-right margin-tiny text-size-small">by</div><div class="text-size-small">@titu</div></div></div><div class="text-size-small text-style-2lines">Drops fill an ocean. Trying to get 1-3% on SPY 0DTE iron condors managing them by limiting the loss</div></a></div> {% endcomment %}
+      </div>
+        
+    </div>
+</section>
+
+{% endblock dashboard_body %}

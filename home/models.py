@@ -343,3 +343,17 @@ class Book(models.Model):
     
     def __str__(self):
         return self.title
+
+
+
+
+
+
+
+class BookCart(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    book = models.ForeignKey(Book, on_delete=models.CASCADE) # Adjust this based on your product ID field type
+    quantity = models.IntegerField(default=1)
+
+    def __str__(self):
+        return f'{self.user.username} - Product {self.book.id} - Quantity {self.quantity}'
