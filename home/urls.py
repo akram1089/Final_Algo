@@ -534,6 +534,8 @@ urlpatterns = [
      #  path('update_cart_quantity/<int:entry_id>/', views.update_cart_quantity, name='update_cart_quantity'),
      path('remove_from_cart/<int:product_id>/', views.remove_from_cart, name='remove_from_cart'),
 
+     path("websocket_test",views.websocket_test,name="websocket_test")
+
      
 
 

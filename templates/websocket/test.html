@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Websocket example</title>
+</head>
+
+<style>
+    body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background-color: #333;
+    }
+
+    #symbol {
+        font-size: 1.2rem;
+        color: white;
+    }
+
+    #last_trade_price {
+        font-size: 1.6rem;
+        color: white;
+    }
+</style>
+
+<body>
+  <p id="symbol"></p>
+    <p id="last_trade_price"></p> 
+
+    <script>
+      const socket = new WebSocket("ws://127.0.0.1:8000/ws/");
+
+        socket.onmessage = function (event) {
+            const data = JSON.parse(event.data);
+            console.log(data);
+
+            document.querySelector('#symbol').innerHTML = `Symbol: ${data.symbol_name}`;
+            document.querySelector('#last_trade_price').innerHTML = `Last Trade Price: ${data.last_trade_price}`;
+        } 
+
+    //   const zerodha_socker = new WebSocket("ws://localhost:8001/ws/zerodha/")
+    //     console.log(zerodha_socker)
+    //     zerodha_socker.onmessage = function (event) {
+    //         const data = JSON.parse(event.data);
+    //         console.log(data);
+
+
+    //     } 
+    </script>
+</body>
+</html>

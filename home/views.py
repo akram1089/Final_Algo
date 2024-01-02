@@ -642,7 +642,8 @@ def signUp(request):
 
 
 
-
+def websocket_test(requests):
+    return render(requests, "websocket/test.html")
 
 
 
