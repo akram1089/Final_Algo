@@ -233,19 +233,5 @@ EMAIL_HOST_PASSWORD = 'sxwwgptgifiljqsj'
 
 SITE_ID = 1
 
-# settings.py
-
-# Use channels layer as the default backend for Django.
-ASGI_APPLICATION = 'your_project.routing.application'
-
-# Channels Redis settings
-CHANNEL_LAYERS = {
-   'default': {
-       'BACKEND': 'channels_redis.core.RedisChannelLayer',
-       'CONFIG': {
-           "hosts": [('localhost', 6379)],
-       },
-   },
-}
 
 
