@@ -8703,11 +8703,30 @@
                         dataWithStrikePrice.push(entry);
                       }
                     }
+                    console.log(dataWithStrikePrice)
 
 
-                    dataWithStrikePrice.sort((a, b) => b.strikePrice - a.strikePrice);
-                    console.log("dataWithStrikePrice", dataWithStrikePrice);
-
+                    dataWithStrikePrice.sort((a, b) => {
+                      // First, sort by descending strikePrice
+                      const strikePriceComparison = b.strikePrice - a.strikePrice;
+                  
+                      // If strikePrice is equal, prioritize CE over PE
+                      if (strikePriceComparison === 0) {
+                          const aIsCE = a.tradingSymbol.endsWith("CE");
+                          const bIsCE = b.tradingSymbol.endsWith("CE");
+                  
+                          if (aIsCE && !bIsCE) {
+                              return -1; // a should come before b
+                          } else if (!aIsCE && bIsCE) {
+                              return 1; // b should come before a
+                          }
+                      }
+                  
+                      return strikePriceComparison;
+                  });
+                  
+                  console.log("dataWithStrikePrice", dataWithStrikePrice);
+                  
 
 
 
@@ -8841,8 +8860,25 @@
 
                     console.log(dataWithStrikePrice);
 
-                    dataWithStrikePrice.sort((a, b) => b.strikePrice - a.strikePrice);
-                    console.log("dataWithStrikePrice", dataWithStrikePrice);
+                    dataWithStrikePrice.sort((a, b) => {
+                      // First, sort by descending strikePrice
+                      const strikePriceComparison = b.strikePrice - a.strikePrice;
+                  
+                      // If strikePrice is equal, prioritize CE over PE
+                      if (strikePriceComparison === 0) {
+                          const aIsCE = a.symbol.endsWith("CE");
+                          const bIsCE = b.symbol.endsWith("CE");
+                  
+                          if (aIsCE && !bIsCE) {
+                              return -1; // a should come before b
+                          } else if (!aIsCE && bIsCE) {
+                              return 1; // b should come before a
+                          }
+                      }
+                  
+                      return strikePriceComparison;
+                  });
+                  
 
 
                     for (let i = 0; i < dataWithStrikePrice.length; i++) {
