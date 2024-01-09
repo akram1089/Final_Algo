@@ -1283,6 +1283,8 @@
   .savedStrategies {
     border-bottom: 1px solid rgba(128, 128, 128, 0.229);
     padding: 6px 10px;
+
+    cursor: pointer;
   }
 
   .savedStrategies:hover {
@@ -5666,7 +5668,7 @@
                 </div>
               </div>
             </div>
-
+<!-- 
             <script>
               $(document).ready(function () {
 
@@ -5759,6 +5761,9 @@
                   getStrategies_data()
                 })
                 function getStrategies_data() {
+
+
+
                   $.ajax({
                     type: "GET",
                     url: "/get_all_strategies",
@@ -5781,7 +5786,7 @@
                           strategyData.forEach((strategy) => {
 
                             var tradingPositions = `
-                                                      <div class="savedStrategies d-flex justify-content-between">
+                                                      <div class="savedStrategies d-flex justify-content-between" data-strategy="${strategy.id}">
                                                           <div class="left_strategy_name">
                                                               ${strategy.strategy_name}
                                                           </div>
@@ -5794,6 +5799,111 @@
                             $(".all_strategies").append(tradingPositions);
                           });
                         }
+
+                        var isTableEmpty = true;
+                        $(".savedStrategies").click(function () {
+                          console.log($(this).data("strategy"));
+
+                          var strategyID = $(this).data("strategy")
+
+                          $.ajax({
+                            type: "POST",
+                            url: "/GetStrategyUnique",
+                            data: {
+                              "strategyId": strategyID,
+                              'csrfmiddlewaretoken': '{{ csrf_token }}',
+                            },
+                            success: function (response) {
+                              console.log(response.trading_positions);
+
+
+                              var tradingPositionsArray = JSON.parse(response.trading_positions);
+
+                              tradingPositionsArray.forEach(function (trade_data) {
+                                var option_side, expiry_date, strike_price, opiton_lot_size, opiton_selected, action, ltpValue, lot_size_inner;
+
+                                if (trade_data.callPutEntrance === "CE" || trade_data.callPutEntrance === "PE") {
+                                  if (trade_data.callPutEntrance === "CE") {
+                                    option_side = "Call";
+                                  } else {
+                                    option_side = "Put";
+                                  }
+
+                                  expiry_date = trade_data.expiry_initial;
+                                  strike_price = trade_data.strikePrice;
+                                  opiton_lot_size = trade_data.option_lot_size_input;
+                                  opiton_selected = trade_data.symbol;
+                                  action = trade_data.long_short_inner;
+                                  ltpValue = trade_data.entryPrice;
+
+                                  lot_size_inner = 1;
+
+                                  populateInputTable(
+                                    option_side,
+                                    expiry_date,
+                                    strike_price,
+                                    action,
+                                    opiton_lot_size,
+                                    ltpValue,
+                                    opiton_selected,
+                                    lot_size_inner
+                                  );
+
+
+                                } else {
+                                  option_side = "FUTURE";
+                                  expiry_date = trade_data.expiry_initial;
+                                  strike_price = trade_data.strikePrice;
+                                  opiton_lot_size = trade_data.option_lot_size_input;
+                                  opiton_selected = trade_data.symbol;
+                                  action = trade_data.long_short_inner;
+                                  ltpValue = trade_data.entryPrice;
+
+                                  lot_size_inner = 1;
+
+                                  populateInputTable(
+                                    option_side,
+                                    expiry_date,
+                                    strike_price,
+                                    action,
+                                    opiton_lot_size,
+                                    ltpValue,
+                                    opiton_selected,
+                                    lot_size_inner
+                                  );
+
+
+                                }
+
+                                // Rest of your code...
+
+                                if (isTableEmpty) {
+                                  $(".data-display-table").empty();
+                                  isTableEmpty = false;
+                                }
+
+                                $(".inner_p_l_greeks").show();
+                                if ($(this).data("HI1") === undefined) {
+
+                                } else {
+                                  $(this).removeData("HI1");
+                                }
+
+                              });
+
+
+
+
+
+
+
+                            },
+                            error: function (response) {
+                              console.log('Error getting strategy:', response);
+                            }
+                          });
+
+                        })
 
 
 
@@ -5897,6 +6007,9 @@
                       //////console.log('Error fetching strategies:', response);
                     }
                   });
+
+
+
 
                 }
 
@@ -6006,10 +6119,14 @@
                   // Revert CSS properties to their defaults
                   $("#editInput").focus()
                 }
+
+
+
+
               });
 
 
-            </script>
+            </script> -->
 
 
           </div>
@@ -6708,19 +6825,20 @@
                 </tbody>
               </table>
 
-                <style>
-                  .main_atm_label{
-                    display: flex;
-                                            align-items: center;
-                                            gap: 0.2rem;
-                                            margin-top: 1rem;
-                  }
-                  .label_bg{
-                    width: 2rem;
-                                            background: green;
-                                            height: 0.3rem;
-                  }
-                </style>
+              <style>
+                .main_atm_label {
+                  display: flex;
+                  align-items: center;
+                  gap: 0.2rem;
+                  margin-top: 1rem;
+                }
+
+                .label_bg {
+                  width: 2rem;
+                  background: green;
+                  height: 0.3rem;
+                }
+              </style>
             </div>
             <div class="main_atm_label">
               <div class="label_bg">
@@ -14342,6 +14460,465 @@
 
           })
 
+
+          $(".saveStrategy").click(function () {
+            var tradingPositions = [];
+
+            $(".inner_position").each(function (index) {
+              // Get values from the current card
+              var card = $(this);
+              var symbol = card.find(".symbol").text();
+              var expiry = card.find(".expiry").text();
+              var expiry_initial = card.find(".expiry_initial").text();
+              var strikePrice = card.find(".strikePrice").text();
+              var callPutEntrance = card.find(".call_put_entrance").text();
+              var entryPrice = card.find(".entryPrice").text();
+              var long_short_inner = card.find(".long_short_inner").text();
+              var option_lot_size_input = card.find(".option_lot_size_input").text();
+
+              // Create an object with the gathered values
+              var position = {
+                symbol: symbol,
+                expiry: expiry,
+                expiry_initial: expiry_initial,
+                strikePrice: strikePrice,
+                callPutEntrance: callPutEntrance,
+                entryPrice: entryPrice,
+                long_short_inner: long_short_inner,
+                option_lot_size_input: option_lot_size_input
+              };
+
+              // Push the object into the array
+              tradingPositions.push(position);
+            });
+
+            //////console.log(tradingPositions);
+
+
+
+
+            var strategy_input = $("#strategy_input").val();
+            var main_strategy_notes = $("#main_strategy_notes").val();
+
+            if (strategy_input.trim() === '') {
+              toastr.error("Please enter the strategy name");
+              return; // Stop further execution
+            }
+
+
+
+            $.ajax({
+              type: "POST",
+              url: "/save_strategy",
+              data: {
+
+                'strategy_input': strategy_input,
+                'main_strategy_notes': main_strategy_notes,
+                'trading_positions': JSON.stringify(tradingPositions),  // Convert array to JSON string
+
+                'csrfmiddlewaretoken': '{{ csrf_token }}'
+              },
+              success: function (response) {
+                // handle success
+
+                if (response.user_not_logged_in) {
+                  $("#signinModal").modal("show");
+                } else {
+                  // alert(response.message);
+                  $("#save_startegyModal").modal("hide")
+                  toastr.success(response.message);
+                  getStrategies_data()
+                  $("#strategy_input").val('')
+                  $("#main_strategy_notes").val('');
+                }
+
+
+              },
+              error: function (response) {
+                // handle error
+                alert(response.message);
+              }
+            });
+
+          })
+
+
+          $("#saveStrategies").click(function () {
+
+            getStrategies_data()
+          })
+          function getStrategies_data() {
+
+
+
+            $.ajax({
+              type: "GET",
+              url: "/get_all_strategies",
+              success: function (response) {
+                if (response.user_not_logged_in) {
+                  // //////console.log("not logged");
+                  $("#signinModal").modal("show");
+                } else {
+                  // handle success
+                  $("#saved_startegyModal").modal("show");
+                  var strategyData = response.strategy_data;
+                  $(".all_strategies").empty()
+                  // Do something with the strategy data
+
+                  if (strategyData.length === 0) {
+                    $(".all_strategies").append(`
+                                              <div class="d-flex  justify-content-center p-2"> <p>No Strategies Found...</p></div>
+                                              `);
+                  } else {
+                    strategyData.forEach((strategy) => {
+
+                      var tradingPositions = `
+                                                      <div class="savedStrategies d-flex justify-content-between" data-strategy="${strategy.id}">
+                                                          <div class="left_strategy_name">
+                                                              ${strategy.strategy_name}
+                                                          </div>
+                                                          <div class="right_strategy_action" style="    z-index: 9999999999999999999;">
+                                                              <i class='bi bi-pencil-square fs-5 cursor-pointer edit_strategy'  data-bs-toggle="modal" data-bs-target="#editStrategyModal" data-edit="${strategy.id}"></i>
+                                                              <i class='bi bi-trash-fill fs-5 cursor-pointer delete_strategy' data-delete="${strategy.id}"></i>
+                                                          </div>
+                                                      </div>
+                                                  `;
+                      $(".all_strategies").append(tradingPositions);
+                    });
+                  }
+
+                  var isTableEmpty = true;
+                  $(".savedStrategies").click(function () {
+
+                    $("#saved_startegyModal").modal("hide")
+                    console.log($(this).data("strategy"));
+
+                    var strategyID = $(this).data("strategy")
+
+                    $.ajax({
+                      type: "POST",
+                      url: "/GetStrategyUnique",
+                      data: {
+                        "strategyId": strategyID,
+                        'csrfmiddlewaretoken': '{{ csrf_token }}',
+                      },
+                      success: function (response) {
+                        $("#table-PL").empty();
+                        $(".main_position").empty();
+                        $(".payoff_table_data").empty();
+                        $(".payoff_table_main_table").empty();
+                        $(".main_position").empty();
+                        $("#resultTable tbody").empty();
+                        console.log(response.trading_positions);
+
+
+                        var tradingPositionsArray = JSON.parse(response.trading_positions);
+
+                        tradingPositionsArray.forEach(function (trade_data) {
+                          var option_side, expiry_date, strike_price, opiton_lot_size, opiton_selected, action, ltpValue, lot_size_inner;
+
+                          if (trade_data.callPutEntrance === "CE" || trade_data.callPutEntrance === "PE") {
+                            if (trade_data.callPutEntrance === "CE") {
+                              option_side = "Call";
+
+                            } else {
+                              option_side = "Put";
+                            }
+
+                            expiry_date = trade_data.expiry_initial;
+                            strike_price = trade_data.strikePrice;
+                            opiton_lot_size = trade_data.option_lot_size_input;
+                            opiton_selected = trade_data.symbol;
+                            action = trade_data.long_short_inner;
+                            ltpValue = trade_data.entryPrice;
+
+                            lot_size_inner = 1;
+
+                            populateInputTable(
+                              option_side,
+                              expiry_date,
+                              strike_price,
+                              action,
+                              opiton_lot_size,
+                              ltpValue,
+                              opiton_selected,
+                              lot_size_inner
+                            );
+
+
+                          } else {
+                            option_side = "FUTURE";
+                            expiry_date = trade_data.expiry_initial;
+                            strike_price = trade_data.strikePrice;
+                            opiton_lot_size = trade_data.option_lot_size_input;
+                            opiton_selected = trade_data.symbol;
+                            action = trade_data.long_short_inner;
+                            ltpValue = trade_data.entryPrice;
+
+                            lot_size_inner = 1;
+
+                            populateInputTable(
+                              option_side,
+                              expiry_date,
+                              strike_price,
+                              action,
+                              opiton_lot_size,
+                              ltpValue,
+                              opiton_selected,
+                              lot_size_inner
+                            );
+
+
+                          }
+
+                          Table_chart_pyoff()
+                          margin_calculations()
+                          calculate_data()
+                          checkMainPositionContent()
+                          $(".main_position,.main_all_profit_loss,.main_bottom_strategy_positions").show()
+                          $(".main_build_custom_strategy_empty").css("display", "none")
+                          $("#customRange2").show()
+                          $('#taget_date_table').show()
+
+                          $("#resultTable tbody,#table-PL,.option_oi_charts,#chartdiv,.payoff_table_data").show()
+
+                          if (isTableEmpty) {
+                            $(".data-display-table").empty();
+                            isTableEmpty = false;
+                          }
+
+                          $(".inner_p_l_greeks").show();
+                          if ($(this).data("HI1") === undefined) {
+
+                          } else {
+                            $(this).removeData("HI1");
+                          }
+
+                        });
+
+
+
+
+
+
+                      },
+                      error: function (response) {
+                        console.log('Error getting strategy:', response);
+                      }
+                    });
+
+                  })
+
+
+
+                  // //////console.log(strategyData);
+
+                  $(".delete_strategy").click(function (event) {
+                    event.stopPropagation();
+                    var strategyId = $(this).data('delete');
+                    // //////console.log(strategyId);
+
+                    if (confirm("Are you sure you want to delete this strategy?")) {
+                      // Perform delete operation with strategyId
+                      $.ajax({
+                        type: "POST",
+                        url: "/delete_strategy",
+                        data: {
+                          'strategy_id': strategyId,
+                          'csrfmiddlewaretoken': '{{ csrf_token }}'
+                        }
+                      })
+                        .done(function (response) {
+                          // handle success
+                          // //////console.log(response.message);
+                          getStrategies_data();
+                          // Refresh the strategies list or remove the deleted strategy from the DOM
+                        })
+                        .fail(function (xhr, status, error) {
+                          // handle error
+                          console.error('Error deleting strategy:', error);
+                        });
+                    }
+                  });
+
+                  // Open the modal on clicking the edit icon
+                  $(".edit_strategy").click(function (event) {
+                    event.stopPropagation();
+                    var strategyId = $(this).data('edit');
+                    // //////console.log(strategyId);
+
+                    $.ajax({
+                      type: "POST",
+                      url: "/get_unique_strategy",
+                      data: {
+                        'strategy_id': strategyId,
+
+                      },
+                      success: function (response) {
+                        // handle success
+                        // //////console.log(response.strategy_data);
+
+                        $("#updateStrategyname").val(response.strategy_data.strategy_name).attr('data-id-update', strategyId);
+
+                      },
+                      error: function (response) {
+                        // handle error
+                        // //////console.log('Error updating strategy:', response);
+                      }
+                    });
+
+                  });
+
+
+
+                  // Update the strategy on clicking the update button
+                  $("#updateStrategy_btn").click(function () {
+                    var updatedStrategyName = $("#updateStrategyname").val();
+                    var strategyId = $("#updateStrategyname").attr('data-id-update');
+
+                    // Send AJAX request to update the strategy name
+                    $.ajax({
+                      type: "POST",
+                      url: "/update_strategy",
+                      data: {
+                        'strategy_id': strategyId,
+                        'updated_strategy_name': updatedStrategyName,
+                        'csrfmiddlewaretoken': '{{ csrf_token }}'
+                      },
+                      success: function (response) {
+                        // handle success
+                        $("#editStrategyModal").modal("hide")
+                        // //////console.log(response.message);
+                        getStrategies_data(); // Refresh the strategies list
+
+                      },
+                      error: function (response) {
+                        // handle error
+                        //////console.log('Error updating strategy:', response);
+                      }
+                    });
+                  });
+
+
+                }
+
+
+
+
+
+
+              },
+              error: function (response) {
+                // handle error
+                //////console.log('Error fetching strategies:', response);
+              }
+            });
+
+
+
+
+          }
+
+
+
+
+
+
+
+          toastr.options = {
+            "closeButton": true,
+            "debug": true,
+            "newestOnTop": true,
+            "progressBar": true,
+            "positionClass": "toast-bottom-right",
+            "preventDuplicates": true,
+            "showDuration": "300",
+            "hideDuration": "1000",
+            "timeOut": "5000",
+            "extendedTimeOut": "1000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut",
+            "toastClass": "toastr-custom", // Add a custom class
+          };
+
+          // Additional style for the custom class
+
+          $(".saveNotes").click(function () {
+            var noteText = tinymce.activeEditor.getContent({ format: 'text' });
+
+            // alert(noteText)
+            $.ajax({
+              type: "POST",
+              url: "/save_note",
+              data: {
+                'id': 1,
+                'text': noteText,
+                'csrfmiddlewaretoken': '{{ csrf_token }}'
+              },
+              success: function (response) {
+                // handle success
+                if (response.not_logged_in) {
+                  $("#signinModal").modal("show");
+                } else {
+                  // Use Toastr for success message
+                  $("#notesModal").modal('hide')
+                  toastr.success(response.message);
+
+                  // Other actions
+                  displayNotes();
+                  disableNote();
+                }
+              },
+              error: function (response) {
+                // handle error
+                if (response.status === 401) {
+                  // Handle 401 Unauthorized
+                } else {
+                  // Use Toastr for error message
+                  toastr.error(response.message);
+                }
+              }
+            });
+          });
+
+
+          function displayNotes() {
+            $.ajax({
+              type: 'GET',
+              url: '/get_notes',  // Replace with your URL to fetch notes
+              success: function (notes) {
+                if (notes.length > 0) {
+                  var latestNote = notes[notes.length - 1];
+                  $("#editInput").val(latestNote.text);
+                }
+              },
+              error: function (error) {
+                //////console.log('Error fetching notes:', error);
+              }
+            });
+          }
+          displayNotes();
+
+          $(".editNotes").click(function () {
+            editNote()
+          })
+
+          function disableNote() {
+            $("#editInput").prop('disabled', true); // Enable the textarea when editing
+            // Revert CSS properties to their defaults
+
+          }
+          function editNote() {
+            $("#editInput").prop('disabled', false); // Enable the textarea when editing
+            // Revert CSS properties to their defaults
+            $("#editInput").focus()
+          }
+
+
+
+
           $(".put_call_btns").click(function () {
 
             if ($(this).data("f&o") === "option") {
@@ -14597,6 +15174,8 @@
 
 
 
+
+
           function populateInputTable(
             option_side,
             expiry_date,
@@ -14608,14 +15187,14 @@
           ) {
 
 
-            // //////console.log("Option Side:", option_side);
-            // //////console.log("Expiry Date:", expiry_date);
-            // //////console.log("Strike Price:", strike_price);
-            // //////console.log("Action:", action);
+            console.log("Option Side:", option_side);
+            console.log("Expiry Date:", expiry_date);
+            console.log("Strike Price:", strike_price);
+            console.log("Action:", action);
 
-            // //////console.log("Option Lot Size:", option_lot_size);
-            // //////console.log("LTP Value:", ltpValue);
-            // //////console.log("opiton_selected:", opiton_selected);
+            console.log("Option Lot Size:", option_lot_size);
+            console.log("LTP Value:", ltpValue);
+            console.log("opiton_selected:", opiton_selected);
 
 
 
@@ -14980,6 +15559,9 @@
               $(this).attr("id", newId);
             });
           }
+
+
+
 
           // //////console.log(main_margin_calculations);
           // Add a click event handler to the delete-button
