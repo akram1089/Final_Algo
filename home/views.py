@@ -652,7 +652,6 @@ def websocket_test(requests):
 
 
 
-
 @csrf_exempt
 def login_user(request):
     if request.method == 'POST':
@@ -9494,3 +9493,44 @@ def remove_from_cart(request, product_id):
 
     return JsonResponse(response_data)
 
+
+from .tasks import add
+
+
+
+def test_celery(request):
+    # Replace these values with the actual values you want to add
+    x = 4
+    y = 4
+
+    result = add.delay(x, y)  # Use delay to execute the task asynchronously
+
+    # The rest of your view logic
+    # ...
+
+    return HttpResponse(f'Task {result.id} added: {x} + {y}')
+
+
+
+
+from django.http import JsonResponse
+from .models import my_strategies
+
+def GetStrategyUnique(request):
+    if request.method == 'POST':
+        strategy_id = request.POST.get('strategyId')
+        
+        try:
+            # Filter data based on strategy_id
+            strategy = my_strategies.objects.get(id=strategy_id, user=request.user)
+            # Customize the response based on your needs
+            response_data = {
+                'strategy_name': strategy.strategy_name,
+                'strategy_notes': strategy.strategy_notes,
+                'trading_positions': strategy.trading_positions,
+            }
+            return JsonResponse(response_data)
+        except my_strategies.DoesNotExist:
+            return JsonResponse({'error': 'Strategy not found'})
+    else:
+        return JsonResponse({'error': 'Invalid request method'})
