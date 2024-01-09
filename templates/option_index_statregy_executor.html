@@ -10460,6 +10460,11 @@
     });
 
     $(".payoff_table").click(function () {
+      
+
+
+
+
       $("#table-PL_main").hide();
       $("#resultTable").hide();
       $("#real_adjustment_table").hide();
@@ -16400,7 +16405,7 @@
                 var cell = $("<td>").addClass("cell-container border_collapsed"); // Create a td element and add a class for styling
 
                 // Add a div element inside the td
-                var div = $("<div>").text(values[i] ? values[i].toFixed(0) : "").addClass(values_con).css("font-size", "12px");
+                var div = $("<div>").text(values[i] ? values[i].toFixed(0) : "").addClass(values_con).css("font-ize", "12px");
 
                 cell.append(div); // Append the div to the td
                 row.append(cell); // Append the td to the row
@@ -16554,53 +16559,95 @@
 
 
 
-            var closestStrikePriceText = $("#closest_strike_price").text();
-            var closestStrikePrice = parseInt(closestStrikePriceText);
+            var isScrolling = false; // Flag to check if scrolling is in progress
 
-            $(".payoff_table_main_table tr").each(function () {
-              var $strikePrice = $(this).find("td:first");
-              var currentStrikePrice = parseInt($strikePrice.text()); // Assuming the text is numeric
+  if (!isScrolling) { // Check if scrolling is not in progress
+    isScrolling = true; // Set the flag to true
 
-              if (currentStrikePrice === closestStrikePrice) {
+    var closestStrikePriceText = $("#closest_strike_price").text();
+    var closestStrikePrice = parseInt(closestStrikePriceText);
 
-                $(this).addClass("background_opiton_closest_payoff_table");
+    $(".payoff_table_main_table tr").each(function () {
+      var $strikePrice = $(this).find("td:first");
+      var currentStrikePrice = parseInt($strikePrice.text());
 
+      if (currentStrikePrice === closestStrikePrice) {
+        $(this).addClass("background_opiton_closest_payoff_table");
 
-                //////console.log(currentStrikePrice);
+        var container = $("#payoff_table");
+        var scrollTo =
+          $(this).position().top -
+          container.height() / 2 +
+          $(this).height() / 2;
 
-                // $strikePrice.addClass("closestStrike_bg");
-                var container = $("#payoff_table");
-                var scrollTo =
-                  $(this).position().top -
-                  container.height() / 2 +
-                  $(this).height() / 2;
+        console.log("ScrollTo:", scrollTo);
 
-                //////console.log("  $(this).position().top", $(this).position().top);
-                //////console.log(" $(this).height() / 2", $(this).height() / 2);
-                //////console.log(container.height() / 2);
-                //////console.log(scrollTo);
+        container.animate(
+          {
+            scrollTop: scrollTo,
+          },
+          1000,
+          function () {
+            // Animation complete
+            console.log("Scroll animation complete");
+            isScrolling = false; // Reset the flag after scrolling is complete
+          }
+        );
 
-                // Reset the scroll position first
-                container.animate(
-                  {
-                    scrollTop: 0,
-                  },
-                  0,
-                  function () {
-                    // Scroll to the desired position after the reset
-                    container.animate(
-                      {
-                        scrollTop: scrollTo,
-                      },
-                      1000
-                    ); // You can adjust the scrolling speed here (in milliseconds)
-                  }
-                );
-              }
-            });
+        return false;
+      }
+    });
+  }
 
 
 
+
+
+
+
+
+
+  var isScrolling = false; // Flag to check if scrolling is in progress
+
+$(".payoff_table").click(function () {
+  if (!isScrolling) { // Check if scrolling is not in progress
+    isScrolling = true; // Set the flag to true
+
+    var closestStrikePriceText = $("#closest_strike_price").text();
+    var closestStrikePrice = parseInt(closestStrikePriceText);
+
+    $(".payoff_table_main_table tr").each(function () {
+      var $strikePrice = $(this).find("td:first");
+      var currentStrikePrice = parseInt($strikePrice.text());
+
+      if (currentStrikePrice === closestStrikePrice) {
+        $(this).addClass("background_opiton_closest_payoff_table");
+
+        var container = $("#payoff_table");
+        var scrollTo =
+          $(this).position().top -
+          container.height() / 2 +
+          $(this).height() / 2;
+
+        console.log("ScrollTo:", scrollTo);
+
+        container.animate(
+          {
+            scrollTop: scrollTo,
+          },
+          1000,
+          function () {
+            // Animation complete
+            console.log("Scroll animation complete");
+            isScrolling = false; // Reset the flag after scrolling is complete
+          }
+        );
+
+        return false;
+      }
+    });
+  }
+});
 
 
 
