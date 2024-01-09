@@ -5149,6 +5149,7 @@
       display: flex;
       gap: 1rem;
       margin-top: 6rem;
+      flex-direction: column;
     }
 
     .strategy_position_reset {
@@ -6173,8 +6174,21 @@
 
           </div>
         </div>
+
+ 
         <div class="main_bottom_strategy_positions" style="display: none;">
-          <button data-bs-toggle="modal" data-bs-target="#save_startegyModal" class="save_strategy">Save
+          <div class="strategy_notes_main">
+       
+          </div>
+<style>
+  .strategy_buttons_deploy_execute{
+
+    display: flex;
+    gap: 1rem;
+}
+</style>
+          <div class="strategy_buttons_deploy_execute">     
+                 <button data-bs-toggle="modal" data-bs-target="#save_startegyModal" class="save_strategy">Save
             Strategy</button>
           <button class="reset_button execute_all_strategies d-flex gap-1 align-items-center" disabled
             title="Please Activate your API for placing order">
@@ -6183,7 +6197,8 @@
             </p>
           </button>
 
-          <button class="deploy_btn">Deploy</button>
+          <button class="deploy_btn">Deploy</button></div>
+
 
         </div>
 
@@ -14461,6 +14476,18 @@
           })
 
 
+          $('#main_strategy_notes').on('input', function() {
+            var maxLength = 40;
+            var text = $(this).val();
+
+            if (text.length > maxLength) {
+                $(this).val(text.substring(0, maxLength));
+  
+                toastr.error("Maximum character limit reached. You can only enter up to 40 characters.");
+
+            }
+        });
+
           $(".saveStrategy").click(function () {
             var tradingPositions = [];
 
@@ -14493,8 +14520,6 @@
             });
 
             //////console.log(tradingPositions);
-
-
 
 
             var strategy_input = $("#strategy_input").val();
@@ -14561,6 +14586,7 @@
                 } else {
                   // handle success
                   $("#saved_startegyModal").modal("show");
+          
                   var strategyData = response.strategy_data;
                   $(".all_strategies").empty()
                   // Do something with the strategy data
@@ -14589,6 +14615,7 @@
 
                   var isTableEmpty = true;
                   $(".savedStrategies").click(function () {
+                    $('.straddle').removeClass('option_strategies_active');
 
                     $("#saved_startegyModal").modal("hide")
                     console.log($(this).data("strategy"));
@@ -14610,8 +14637,8 @@
                         $(".main_position").empty();
                         $("#resultTable tbody").empty();
                         console.log(response.trading_positions);
-
-
+console.log(response.strategy_notes);
+$(".strategy_notes_main").text(`Strategy Note: ${response.strategy_notes}`);
                         var tradingPositionsArray = JSON.parse(response.trading_positions);
 
                         tradingPositionsArray.forEach(function (trade_data) {
@@ -14920,6 +14947,7 @@
 
 
           $(".put_call_btns").click(function () {
+            $(".strategy_notes_main").empty()
 
             if ($(this).data("f&o") === "option") {
               var row = $(this).closest("tr"); // Find the closest table row
