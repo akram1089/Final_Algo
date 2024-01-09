@@ -9494,21 +9494,21 @@ def remove_from_cart(request, product_id):
     return JsonResponse(response_data)
 
 
-from .tasks import add
+# from .tasks import add
 
 
 
-def test_celery(request):
-    # Replace these values with the actual values you want to add
-    x = 4
-    y = 4
+# def test_celery(request):
+#     # Replace these values with the actual values you want to add
+#     x = 4
+#     y = 4
 
-    result = add.delay(x, y)  # Use delay to execute the task asynchronously
+#     result = add.delay(x, y)  # Use delay to execute the task asynchronously
 
-    # The rest of your view logic
-    # ...
+#     # The rest of your view logic
+#     # ...
 
-    return HttpResponse(f'Task {result.id} added: {x} + {y}')
+#     return HttpResponse(f'Task {result.id} added: {x} + {y}')
 
 
 
