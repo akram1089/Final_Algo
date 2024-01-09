@@ -7716,6 +7716,9 @@
 </style>
 
 <style>
+  .expired-text{
+    color: orange;
+  }
   .main_symbol_sell_buy {
     display: flex;
     gap: 0.2rem;
@@ -14596,25 +14599,59 @@
                                               <div class="d-flex  justify-content-center p-2"> <p>No Strategies Found...</p></div>
                                               `);
                   } else {
+
+
                     strategyData.forEach((strategy) => {
 
-                      var tradingPositions = `
-                                                      <div class="savedStrategies d-flex justify-content-between" data-strategy="${strategy.id}">
-                                                          <div class="left_strategy_name">
-                                                              ${strategy.strategy_name}
-                                                          </div>
-                                                          <div class="right_strategy_action" style="    z-index: 9999999999999999999;">
-                                                              <i class='bi bi-pencil-square fs-5 cursor-pointer edit_strategy'  data-bs-toggle="modal" data-bs-target="#editStrategyModal" data-edit="${strategy.id}"></i>
-                                                              <i class='bi bi-trash-fill fs-5 cursor-pointer delete_strategy' data-delete="${strategy.id}"></i>
-                                                          </div>
-                                                      </div>
-                                                  `;
-                      $(".all_strategies").append(tradingPositions);
-                    });
+    var isExpired = false;
+
+    // Check if any trading position's expiry is expired based on today's date
+    strategy.trading_positions.forEach((position) => {
+        const expiryDate = new Date(position.expiry_initial);
+        if (expiryDate < new Date()) {
+            isExpired = true;
+        }
+    });
+
+    console.log(isExpired);
+
+    var tradingPositions = `
+        <div class="savedStrategies d-flex justify-content-between ${isExpired ? 'expired' : ''}" data-strategy="${strategy.id}">
+            <div class="left_strategy_name">
+                ${strategy.strategy_name}
+            </div>
+            <div class="middle_strategy_status">
+                ${isExpired ? '<span class="expired-text">Expired</span>' : ''}
+            </div>
+            <div class="right_strategy_action" style="z-index: 9999999999999999999;">
+                <i class='bi bi-pencil-square fs-5 cursor-pointer edit_strategy' data-bs-toggle="modal" data-bs-target="#editStrategyModal" data-edit="${strategy.id}"></i>
+                <i class='bi bi-trash-fill fs-5 cursor-pointer delete_strategy' data-delete="${strategy.id}"></i>
+            </div>
+        </div>
+    `;
+    $(".all_strategies").append(tradingPositions);
+});
+
+
+
                   }
 
                   var isTableEmpty = true;
                   $(".savedStrategies").click(function () {
+                    const strategyId = $(this).data("strategy");
+    const isExpired = $(this).hasClass("expired");
+
+    if (isExpired) {
+        // Display a toast message for expired strategy
+
+        toastr.error("Strategy expired");
+        // Perform additional actions for expired strategy (if needed)
+
+        // Return a value or perform other actions
+        return false; // This prevents the default click behavior, adjust as needed
+    }else{
+      toastr.success(`${$(this).text()} : Deployed`);
+    }
                     $('.straddle').removeClass('option_strategies_active');
 
                     $("#saved_startegyModal").modal("hide")
