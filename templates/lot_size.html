@@ -23,10 +23,14 @@
           background-color: transparent;
           border-bottom:transparent;
       }
-      table.dataTable thead th, table.dataTable thead td {
+      /* table.dataTable thead th, table.dataTable thead td {
       padding: 10px;
       border-bottom: 0px solid rgb(0 0 0 / 0%);
-  }
+  } */
+
+  /* td{
+    border-right: 1px solid gray !important;
+  } */
     
   table.dataTable tbody td {
         border: none !important;
@@ -38,22 +42,49 @@
     align-content: center;
     justify-content: space-between;
       }
+
+      table.dataTable {
+    margin: 0 auto;
+    clear: both;
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+     
+      table.dataTable.display>tbody>tr.odd>.sorting_1, table.dataTable.order-column.stripe>tbody>tr.odd>.sorting_1 {
+    box-shadow: none !important;
+}
+
+table.dataTable.display>tbody tr>.sorting_1, table.dataTable.display>tbody tr>.sorting_2, table.dataTable.display>tbody tr>.sorting_3 {
+    box-shadow: none !important;
+}
+
+table.dataTable.display>tbody>tr.odd>* {
+    box-shadow: none !important;
+}
+
+table.dataTable.display>tbody>tr:hover>* {
+    box-shadow: none !important;
+}
+
+/* table.dataTable.display>tbody>tr.odd>* {
+    box-shadow: none !important;
+} */
+
+table.dataTable.display>tbody>tr.odd>* {
+    box-shadow: none !important;
+}
+
+tbody td {
+  font-weight: 200 !important;
+}
   </style>
 <div class="main_head_strategies border-bottom my-4">
     <div
-      class="strategies d-flex mt-4"
+      class="strategies_main d-flex mt-4"
       style="align-items: center; gap: 0.3rem"
     >
       <h4 class="">NSE F&O Lot Size </h4>
-      <span>
-        <i
-          class="bi bi-exclamation-circle"
-          data-bs-toggle="collapse"
-          data-bs-target="#collapseExample"
-          aria-expanded="false"
-          aria-controls="collapseExample"
-        ></i>
-      </span>
+     
     </div>
   </div>
   <div class="collapse" id="collapseExample" style="margin-bottom: 25px">
@@ -74,7 +105,7 @@
 
 
 
-<table id="lots" class="display py-3 table-striped-custom">
+<table id="lots" class="display py-3 table-striped-custom table table-bordered cell-border">
     <thead style='    background: #4399eb!important;
     color: white;'>
         <tr>
@@ -83,11 +114,11 @@
             {% endfor %}
         </tr>
     </thead>
-    <tbody>
+    <tbody >
         {% for row in table_data %}
-        <tr>
+        <tr style="border-bottom: 1px solid #80808036 !important;">
             {% for cell in row %}
-            <td>{{ cell }}</td>
+            <td style="border-right: 1px solid #80808036 !important;">{{ cell }}</td>
             {% endfor %}
         </tr>
         {% endfor %}

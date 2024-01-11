@@ -72,7 +72,7 @@
   }
 
   tbody tr {
-    border-bottom: 1px solid #00000000 !important;
+    /* border-bottom: 1px solid #00000000 !important; */
     font-size: 14px;
   
   }
@@ -102,8 +102,8 @@
   thead {
     padding: 10px 15px !important;
     font-size: 17px !important;
-    background: #eff9ff;
-    color: #081a76 !important;
+    background: #59aaf9;
+    color: white !important;
     font-weight: bold !important;
     /* border-right: 1px solid var(--border-gray) !important; */
   }
@@ -134,11 +134,11 @@
 
 
 
-  /* .table-striped-custom>tbody>tr:nth-child(2n)>td,
+  .table-striped-custom>tbody>tr:nth-child(2n)>td,
   .table-striped-custom>tbody>tr:nth-child(2n)>th {
     background-color: rgb(240, 247, 253) !important;
    
-  } */
+  }
   
 
   /* Custom CSS to change the background color of placeholder-glow */
@@ -195,7 +195,7 @@
   table.dataTable tbody tr {
     background-color: transparent;
     border-bottom: transparent;
-    border: 1px solid black;
+
   }
 
   table.dataTable thead th,
@@ -207,6 +207,7 @@
   table.dataTable tbody td {
     /* border: none !important; */
     border-top: 0 !important;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.15) !important;
   }
 
   /* #bulk_data_wrapper{
@@ -256,12 +257,13 @@
     color: gray;
     font-weight: 800 !important;
   }
-#breakout-table tr:hover{
-  background-color: rgba(199, 237, 250, 0.203);
-  
-}
+
 #volume_shocker_table_filter label input::placeholder {
     content: "Search stocks:";
+}
+
+thead tr td{
+  border-right: .2px solid white !important;
 }
 
 </style>
@@ -273,10 +275,10 @@
       <h4 class="my-3">Volume Shockers Intraday | NSE Stocks | NiftyTrader</h4>
       <!-- Button trigger modal -->
   
-      <button id="volume_shocker">Volume Shocker</button>
+      <!-- <button id="volume_shocker">Volume Shocker</button> -->
 
 <!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style="z-index: 9999999999999;">
+<!-- <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style="z-index: 9999999999999;">
   <div class="modal-dialog modal-xl">
     <div class="modal-content">
       <div class="modal-header">
@@ -284,42 +286,44 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <div class="row justify-content-center mt-2">
-          <div class="col-md-12" id="main_volume_socker">
-  
-            <table border="1" class="table mb-4 table-striped-custom" id="volume_shocker_table"
-              style="width:-webkit-fill-available;">
-              <thead>
-                <tr>
-                  <td>
-                    <div>Symbol</div>
-                  </td>
-                  <td>
-                    <div>Ltp</div>
-                  </td>
-                  <td>
-                    <div>High</div>
-                  </td>
-                  <td>
-                    <div>Low</div>
-                  </td>
-                  <td>
-                    <div>Avg Daily Volume(Lacs)</div>
-                  </td>
-                  <td>
-                    <div>(Today/Avg Volume)</div>
-                  </td>
-                </tr>
-  
-              </thead>
-  
-              <tbody id="breakout-table" style="display: none;"></tbody>
-            </table>
-  
-          </div>
-        </div>
+       
       </div>
     </div>
+  </div>
+</div> -->
+
+<div class="row justify-content-center mt-2">
+  <div class="col-md-12" id="main_volume_socker">
+
+    <table class="table mb-4 table-striped-custom  cell-border" id="volume_shocker_table"
+      style="width:-webkit-fill-available;">
+      <thead>
+        <tr>
+          <td>
+            <div>Symbol</div>
+          </td>
+          <td>
+            <div>Ltp</div>
+          </td>
+          <td>
+            <div>High</div>
+          </td>
+          <td>
+            <div>Low</div>
+          </td>
+          <td>
+            <div>Avg Daily Volume(Lacs)</div>
+          </td>
+          <td>
+            <div>(Today/Avg Volume)</div>
+          </td>
+        </tr>
+
+      </thead>
+
+      <tbody id="breakout-table"></tbody>
+    </table>
+
   </div>
 </div>
      
@@ -333,7 +337,7 @@
       function createTableRows(data) {
         let table = $("#breakout-table");
         for (let item of data) {
-          let row = $("<tr style='border-bottom:1px solid #515151c4 !important;'>");
+          let row = $("<tr>");
           $("<td>").append(
             $('<div style="display: flex; align-items: center; gap: 0.4rem;">').append(
               '<a href="https://www.tradingview.com/chart/MgiGDMYM/?symbol=' + item.symbol_name + '&aff_id=113877" target="_blank"><i class="bi bi-graph-up"></i></a>',
@@ -370,11 +374,11 @@
     $('#volume_shocker_table_filter label input').attr('placeholder', 'Search stocks:');
 
       }
-     
+      volume_shocker_data();
 
       $("#volume_shocker").click(function(){
         $("#exampleModal").modal("show")
-        volume_shocker_data();
+       
       })
       // Make an AJAX request to fetch the breakout data
       function volume_shocker_data() {
