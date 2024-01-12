@@ -3,209 +3,213 @@
 {% block dashboard_body %}
 <style>
     .text-success {
-      color: rgb(0, 217, 0) !important;
+        color: rgb(0, 217, 0) !important;
     }
-  
+
     .text-danger {
-      color: red !important;
+        color: red !important;
     }
-  
+
     tr {
-      white-space: nowrap;
+        white-space: nowrap;
     }
-  
+
     .bi.bi-graph-up {
-      border: 1px solid #80808030;
-      border-radius: 7px;
-      padding: 6px 9px;
-      width: 33px;
-      display: block;
-      height: 29px;
-      color: gray;
-      transition: 0.3s;
-      display: inline;
+        border: 1px solid #80808030;
+        border-radius: 7px;
+        padding: 6px 9px;
+        width: 33px;
+        display: block;
+        height: 29px;
+        color: gray;
+        transition: 0.3s;
+        display: inline;
     }
-  
+
     .bi.bi-graph-up:hover {
-      background-color: rgb(0, 132, 255);
-      border: none;
-      color: white;
+        background-color: rgb(0, 132, 255);
+        border: none;
+        color: white;
     }
-  
+
     tbody tr:hover .symbol_name_watchlist {
-      color: #2196f3;
+        color: #2196f3;
     }
-  
+
     /* Reset default margin and padding for the table */
     table {
-      border-collapse: collapse;
-      width: 100%;
+        border-collapse: collapse;
+        width: 100%;
     }
-  
+
     /* Style for the table header */
     thead {
-      background-color: #f2f2f2;
+        background-color: #f2f2f2;
     }
-  
-  
-    table.dataTable.display>tbody>tr.odd>.sorting_1, table.dataTable.order-column.stripe>tbody>tr.odd>.sorting_1 {
-      box-shadow: inset 0 0 0 9999px rgba(255, 255, 255, 0.054) !important;
-  }
-  
+
+
+    table.dataTable.display>tbody>tr.odd>.sorting_1,
+    table.dataTable.order-column.stripe>tbody>tr.odd>.sorting_1 {
+        box-shadow: inset 0 0 0 9999px rgba(255, 255, 255, 0.054) !important;
+    }
+
     th,
     td {
-      padding: 12px 8px;
-      text-align: left;
+        padding: 12px 8px;
+        text-align: left;
     }
-  
+
     /* Add padding to tbody tr */
-  
-  
+
+
     td>div,
     th>div {
-      padding: 9px;
+        padding: 9px;
     }
-  
+
     .dataTables_length,
     .dataTables_filter {
-      padding: 10px 0 !important;
-      display: flex;
-      justify-content: flex-start;
-  
-  
-  
+        padding: 10px 0 !important;
+        display: flex;
+        justify-content: flex-start;
+
+
+
     }
-  
+
     .main_bulk_table {
-      margin: 12px 0;
-      padding: 24px;
-      border-radius: 10px;
-      box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+        margin: 12px 0;
+        padding: 24px;
+        border-radius: 10px;
+        box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
     }
-  
+
     th {
-      font-size: 16px;
-      font-weight: 500;
+        font-size: 16px;
+        font-weight: 500;
     }
-  
+
     td {
-      color: darkslategray !important;
-      font-size: 14px;
-      font-weight: 500;
+        color: darkslategray !important;
+        font-size: 14px;
+        font-weight: 500;
     }
-  </style>
-  <style>
+</style>
+<style>
     .filter-btn {
-      border: 1px solid #4399eb !important;
-      background-color: #fff;
-      font-family: Roboto, sans-serif;
-      font-weight: 400;
-      font-size: 13px;
-      color: #4399eb;
-      line-height: 1.923;
-      padding: 4px 13.5px;
-      margin-right: 9px;
-      min-width: 100px;
-      max-width: 150px;
-      text-align: center;
-      border-radius: 10px;
+        border: 1px solid #4399eb !important;
+        background-color: #fff;
+        font-family: Roboto, sans-serif;
+        font-weight: 400;
+        font-size: 13px;
+        color: #4399eb;
+        line-height: 1.923;
+        padding: 4px 13.5px;
+        margin-right: 9px;
+        min-width: 100px;
+        max-width: 150px;
+        text-align: center;
+        border-radius: 10px;
     }
-  
+
     .active {
-      background: -webkit-gradient(linear, left top, left bottom, from(#4399eb), to(#5cadfb));
-      background: -moz-linear-gradient(top, #4399eb 0, #5cadfb 100%);
-      background: linear-gradient(180deg, #4399eb, #5cadfb);
-      color: #fff;
+        background: -webkit-gradient(linear, left top, left bottom, from(#4399eb), to(#5cadfb));
+        background: -moz-linear-gradient(top, #4399eb 0, #5cadfb 100%);
+        background: linear-gradient(180deg, #4399eb, #5cadfb);
+        color: #fff;
     }
-  
+
     thead {
-      padding: 12px 15px !important;
-      font-size: 12px !important;
-  
-      background: #4399eb !important;
-      color: #fff !important;
-      border-right: 1px solid var(--border-gray) !important;
+        padding: 12px 15px !important;
+        font-size: 12px !important;
+
+        background: #4399eb !important;
+        color: #fff !important;
+        border-right: 1px solid var(--border-gray) !important;
     }
-  
+
     .table-striped-custom>tbody>tr:nth-child(2n)>td,
     .table-striped-custom>tbody>tr:nth-child(2n)>th {
-      background-color: #f0f7fdff !important;
+        background-color: #f0f7fdff !important;
     }
-    table.dataTable.display tbody tr:hover>.sorting_1{
-      box-shadow: white !important;
+
+    table.dataTable.display tbody tr:hover>.sorting_1 {
+        box-shadow: white !important;
     }
+
     table.dataTable.display>tbody>tr.odd>* {
-      box-shadow: inset 0 0 0 9999px rgba(255, 255, 255);
-  }
+        box-shadow: inset 0 0 0 9999px rgba(255, 255, 255);
+    }
+
     /* Custom CSS to change the background color of placeholder-glow */
     .placeholder-glow:focus::placeholder {
-      background-color: red !important;
-      /* Add any other custom styles you want for the placeholder */
+        background-color: red !important;
+        /* Add any other custom styles you want for the placeholder */
     }
-  
+
     /* Optionally, change the color of the glowing effect */
     .placeholder-glow:focus::placeholder:after {
-      background-color: blue !important;
+        background-color: blue !important;
     }
-  
+
     .placeholder {
-      height: 2rem !important;
+        height: 2rem !important;
     }
-  
+
     .long_buildup {
-      background: green;
-      color: white;
-      border-radius: 50px;
-      font-weight: 600;
-      padding: 5px 15px 7px 30px;
-      font-size: 14px;
+        background: green;
+        color: white;
+        border-radius: 50px;
+        font-weight: 600;
+        padding: 5px 15px 7px 30px;
+        font-size: 14px;
     }
-  
+
     .short_buildup {
-      background: lightcoral;
-      color: white;
-      border-radius: 50px;
-      font-weight: 600;
-      padding: 5px 15px 7px 30px;
-      font-size: 14px;
+        background: lightcoral;
+        color: white;
+        border-radius: 50px;
+        font-weight: 600;
+        padding: 5px 15px 7px 30px;
+        font-size: 14px;
     }
-  
+
     .short_covering {
-      background: #c9c900;
-      ;
-      color: white;
-      border-radius: 50px;
-      font-weight: 600;
-      padding: 5px 15px 7px 30px;
-      font-size: 14px;
+        background: #c9c900;
+        ;
+        color: white;
+        border-radius: 50px;
+        font-weight: 600;
+        padding: 5px 15px 7px 30px;
+        font-size: 14px;
     }
-  
+
     .long_unwinding {
-      background: #ff9900;
-      ;
-      color: rgb(255, 255, 255);
-      border-radius: 50px;
-      font-weight: 600;
-      padding: 5px 15px 7px 30px;
-      font-size: 14px;
+        background: #ff9900;
+        ;
+        color: rgb(255, 255, 255);
+        border-radius: 50px;
+        font-weight: 600;
+        padding: 5px 15px 7px 30px;
+        font-size: 14px;
     }
-  
+
     /* table.dataTable tbody tr {
       background-color: transparent;
       border-bottom: transparent;
     } */
-  
+
     table.dataTable thead th,
     table.dataTable thead td {
-      padding: 10px;
-      border-bottom: 0px solid rgb(0 0 0 / 0%) !important;
+        padding: 10px;
+        border-bottom: 0px solid rgb(0 0 0 / 0%) !important;
     }
-  
+
     table.dataTable tbody td {
-      border: none !important;
-      border-top: 0 !important;
+        border: none !important;
+        border-top: 0 !important;
     }
-  
+
     /* #bulk_data_wrapper{
     overflow: auto;
   }
@@ -216,33 +220,36 @@
     margin-top: 2.5em !important;
     position: fixed;
   } */
-  /* Custom CSS for DataTable's search input and length dropdown */
-  .table-container {
-    position: relative;
-  }
-  
-  .odd,.even{
-    background-color: white !important;
-    background: white !important;
-  }
-  .parent_table{
-    overflow: auto;
-  }
-  #bulk_data_wrapper{
-    display: flex;
-      flex-direction: column;
-  }
-  .date_filter{
-    float: right;
-      align-items: center;
-      display:flex;
-      gap:0.2rem;
-      z-index: 99;
-      position:relative;
-  }
-  </style>
-<style>
+    /* Custom CSS for DataTable's search input and length dropdown */
+    .table-container {
+        position: relative;
+    }
 
+    .odd,
+    .even {
+        background-color: white !important;
+        background: white !important;
+    }
+
+    .parent_table {
+        overflow: auto;
+    }
+
+    #bulk_data_wrapper {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .date_filter {
+        float: right;
+        align-items: center;
+        display: flex;
+        gap: 0.2rem;
+        z-index: 99;
+        position: relative;
+    }
+</style>
+<style>
     th,
 
 
@@ -272,41 +279,53 @@
         background-color: #4399eb;
     }
 
-    .main_positve_val{
+    .main_positve_val {
         background-color: #32cd4c2e;
-    border-radius: 7px;
-    padding: 4px;
-    display: flex;
-    align-items: center;
+        border-radius: 7px;
+        padding: 4px;
+        display: flex;
+        align-items: center;
     }
-    .main_negative_val{
+
+    .main_negative_val {
         background-color: #cd32322e;
-    border-radius: 7px;
-    padding: 4px;
-    display: flex;
-    align-items: center;
+        border-radius: 7px;
+        padding: 4px;
+        display: flex;
+        align-items: center;
     }
 
-    .danger_val{
+    .danger_val {
         color: rgb(196 0 0);
-    display: flex;
-    width: 11rem;
+        display: flex;
+        width: 11rem;
 
     }
-    .future_negative{
+
+    .future_negative {
         color: rgb(196 0 0) !important;
 
     }
 
-    .success_val{
+    .success_val {
         width: 11rem;
         color: #167f18e0;
-    display: flex;
-    align-items: center;
+        display: flex;
+        align-items: center;
     }
-    .future_positive{
+
+    .future_positive {
         color: #167f18e0 !important;
 
+    }
+
+    .vertical_middle,
+    tbody tr td {
+        vertical-align: middle !important;
+    }
+
+    .table_one {
+        align-items: center;
     }
 </style>
 
@@ -315,7 +334,7 @@
         <h3>Index Spot vs Index Future Table</h3>
 
         <div class="d-flex justify-content-end my-3">
-           
+
             <div class="stocks_indices d-flex gap-2 align-items-center">
                 <label for="">Month:</label>
                 <div>
@@ -570,21 +589,21 @@
 
     $(document).ready(function () {
 
-    
-    var thead = $('.main_expiryTable thead');
+
+        var thead = $('.main_expiryTable thead');
 
 
 
-    thead.empty().append('<tr>' +
-      
-        '<th>Expiry Date</th>' +
-        '<th>Index Name</th>' +
-        '<th>Exchange</th>' +
-        '<th>Spot Price</th>' +
-        '<th>Future Price</th>' +
-        '<th>Diffrence</th>' +
-        '<th>Chart</th>' +
-        '</tr>');
+        thead.empty().append('<tr>' +
+
+            '<th>Expiry Date</th>' +
+            '<th>Index Name</th>' +
+            '<th>Exchange</th>' +
+            '<th>Spot Price</th>' +
+            '<th>Future Price</th>' +
+            '<th>Difference</th>' +
+            '<th>Chart</th>' +
+            '</tr>');
 
         var filteredResults = []; // Declare filteredResults in the outer scope
         var response; // Declare response in the outer scope
@@ -660,7 +679,7 @@
                                 organizedData[key][symbol] = {
                                     symbol_exp_data: symbolData.symbol_exp_data.resultData.filter(date => new Date(date).getMonth() === month),
                                     future_data: filterFutureDataByMonth(symbolData.future_data.resultData, month),
-                                    option_data : symbolData.data_option.resultData
+                                    option_data: symbolData.data_option.resultData
                                 };
                             });
                         });
@@ -692,91 +711,103 @@
                     // Loop through the data and add options
                     for (var year in exchangeData) {
                         if (exchangeData.hasOwnProperty(year)) {
-                            var yearOption = $("<option>").text(year).val(year);
+                            var formattedText = getFormattedMonthYear(year);
+                            var yearOption = $("<option>").text(formattedText).val(year);
                             expiryMonthSelect.append(yearOption);
-
-
                         }
                     }
 
-// Function to display data in the table
-function displayTable(selectedExpiry) {
-    // Clear previous results
+                    function getFormattedMonthYear(yearMonth) {
+                        var [year, month] = yearMonth.split('-');
+                        var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+                        return monthNames[parseInt(month, 10) - 1] + '-' + year;
+                    }
 
-    $(".main_expiryTable tbody").empty();
-    // Get the data for the selected expiry
-    var selectedData = exchangeData[selectedExpiry];
+                    // Function to display data in the table
+                    function displayTable(selectedExpiry) {
+                        // Clear previous results
 
-    // Loop through the data and add rows to the table
-    var tbody = $('.main_expiryTable tbody');
-    var count = 1;
+                        $(".main_expiryTable tbody").empty();
+                        // Get the data for the selected expiry
+                        var selectedData = exchangeData[selectedExpiry];
 
-    for (var symbol in selectedData) {
-        if (selectedData.hasOwnProperty(symbol)) {
-            var symbolData = selectedData[symbol];
+                        // Loop through the data and add rows to the table
+                        var tbody = $('.main_expiryTable tbody');
+                        var count = 1;
 
-            // Assuming there is only one future_data entry for each symbol
-            var futureData = symbolData.future_data[0];
-      
-            // main_positve_val,main_negative_val,danger_val,success_val
-            // Calculate the difference between Spot Price and Future Price
-            var priceDifference = symbolData.option_data.last_trade_price  - futureData.last_price;
+                        for (var symbol in selectedData) {
+                            if (selectedData.hasOwnProperty(symbol)) {
+                                var symbolData = selectedData[symbol];
 
-            var main_positive_negative = symbolData.option_data.change_per<0 ?"main_negative_val":"main_positve_val"
-            var main_positive_negative_val = symbolData.option_data.change_per<0 ?"danger_val":"success_val"
-            var future_val = futureData.last_price<0 ?"future_negative":"future_positive"
-            var priceDifference_val =priceDifference<0 ?"future_negative":"future_positive"
+                                // Assuming there is only one future_data entry for each symbol
+                                var futureData = symbolData.future_data[0];
+                                var formattedExpiry = getFormattedExpiry(futureData.expiry);
+                                // main_positve_val,main_negative_val,danger_val,success_val
+                                // Calculate the difference between Spot Price and Future Price
+                                var priceDifference = symbolData.option_data.last_trade_price - futureData.last_price;
 
-            // Create a row and append it to the tbody
-// Create a row and append it to the tbody
-tbody.append(`
-    <tr>
-        <td><div>${futureData.expiry}</div></td>
-        <td><div>${symbol}</div></td>
-        <td><div>${response.exchange}</div></td>
-        <td>
-            <div class='table_one justify-content-between ${main_positive_negative_val}'>
-                ${symbolData.option_data.last_trade_price}
-                <div class='ms-4 ${main_positive_negative}'>
-                    <i class='bx bx-up-arrow-alt'></i>${symbolData.option_data.change_per.toFixed(2)}%
-                </div>
-            </div>
-        </td>
-        <td class="${future_val}"><div>${futureData.last_price}</div></td>
-        <td class="future_positive"><div>${Math.abs(priceDifference.toFixed(2))}</div></td>
-        <td>
-            <div>
-                <a href="https://www.tradingview.com/chart/mKWHqfku/?symbol=${symbol==="MIDCPNIFTY"?"NIFTY_MID_SELECT":""}&aff_id=113877" target="_blank">
-                    <i class="bx bx-stats"></i>
-                </a>
-            </div>
-        </td>
-    </tr>
-`);
+                                var main_positive_negative = symbolData.option_data.change_per < 0 ? "main_negative_val" : "main_positve_val"
+                                var main_positive_negative_val = symbolData.option_data.change_per < 0 ? "danger_val" : "success_val"
+                                var future_val = futureData.last_price < 0 ? "future_negative" : "future_positive"
+                                var priceDifference_val = priceDifference < 0 ? "future_negative" : "future_positive"
 
-count++;
+                                // Create a row and append it to the tbody
 
-count++;
+                                tbody.append(`
+                                                <tr>
+                                                    <td class="vertical_middle"><div>${formattedExpiry}</div></td>
+                                                    <td class="vertical_middle"><div>${symbol}</div></td>
+                                                    <td class="vertical_middle"><div>${response.exchange}</div></td>
+                                                    <td class="vertical_middle">
+                                                        <div class='table_one justify-content-between ${main_positive_negative_val}'>
+                                                            ${symbolData.option_data.last_trade_price}
+                                                            <div class='ms-4 ${main_positive_negative}'>
+                                                                <i class='bx bx-up-arrow-alt'></i>${symbolData.option_data.change_per.toFixed(2)}%
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td class="${future_val} vertical_middle"><div>${futureData.last_price}</div></td>
+                                                    <td class="future_positive vertical_middle"><div>${Math.abs(priceDifference.toFixed(2))}</div></td>
+                                                    <td class="vertical_middle">
+                                                        <div>
+                                                            <a href="https://www.tradingview.com/chart/mKWHqfku/?symbol=${symbol === "MIDCPNIFTY" ? "NIFTY_MID_SELECT" : ""}&aff_id=113877" target="_blank">
+                                                                <i class="bx bx-stats"></i>
+                                                            </a>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            `);
 
-        }
-    }
-}
+                                count++;
 
-// Call the displayTable function with the default selected expiry
-var defaultSelectedExpiry = $("#expiry_month").val();
-displayTable(defaultSelectedExpiry);
+                                count++;
 
-// Function to handle the change event of the dropdown
-$("#expiry_month").change(function () {
-    var selectedExpiry = $(this).val();
-    displayTable(selectedExpiry);
-});
+                            }
+                        }
 
-// Function to show chart (replace this with your actual chart implementation)
-function showChart(symbol) {
-    console.log('Show chart for symbol: ' + symbol);
-    // Add your chart implementation here
-}
+
+                        function getFormattedExpiry(rawExpiry) {
+                            var [year, month, day] = rawExpiry.split('-');
+                            var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+                            return `${day}-${monthNames[parseInt(month, 10) - 1]}-${year}`;
+                        }
+                    }
+
+                    // Call the displayTable function with the default selected expiry
+                    var defaultSelectedExpiry = $("#expiry_month").val();
+                    displayTable(defaultSelectedExpiry);
+
+                    // Function to handle the change event of the dropdown
+                    $("#expiry_month").change(function () {
+                        var selectedExpiry = $(this).val();
+                        displayTable(selectedExpiry);
+                    });
+
+                    // Function to show chart (replace this with your actual chart implementation)
+                    function showChart(symbol) {
+                        console.log('Show chart for symbol: ' + symbol);
+                        // Add your chart implementation here
+                    }
 
 
 
@@ -815,7 +846,7 @@ function showChart(symbol) {
         //         '<th>Exchange</th>' +
         //         '<th>Spot Price</th>' +
         //         '<th>Future Price</th>' +
-        //         '<th>Diffrence</th>' +
+        //         '<th>Difference</th>' +
         //         '<th>Chart</th>' +
         //         '</tr>');
 
