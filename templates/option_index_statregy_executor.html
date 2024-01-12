@@ -808,8 +808,8 @@
     align-items: center;
   }
 
-  #future_decrement:hover,
-  #future_increment:hover,
+  {% comment %} #future_decrement:hover,
+  #future_increment:hover, {% endcomment %}
   #decrement:hover,
   #increment:hover,
   #decrement_strangle:hover,
@@ -1329,8 +1329,8 @@
     flex-wrap: wrap;
   }
 </style>
-<div class="title my-2 d-flex">
-  <h5>Option Strategy Tester</h5>
+<div class="title mb-2 ms-3 mt-3 d-flex">
+  <h5>Option Index Strategy Executor</h5>
 
 </div>
 <!-- <div class="main_all_indices d-flex" style="    justify-content: center;
@@ -5669,7 +5669,7 @@
                 </div>
               </div>
             </div>
-<!-- 
+            <!-- 
             <script>
               $(document).ready(function () {
 
@@ -6139,34 +6139,34 @@
               <p class="fs-14 fw-500 label-color-6">Max. Profit</p>
               <p class="fs-14 fw-500 text-green" id="max_profit">Null</p>
             </div>
-            <div class="d-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center justify-content-between mt-2">
               <p class="fs-14 fw-500 label-color-6">Max. Loss</p>
               <p class="fs-14 fw-500 text-danger" id="max_loss">Null</p>
             </div>
 
-            <div class="d-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center justify-content-between mt-2">
               <p class="fs-14 fw-500 label-color-6">Breakevens</p>
               <p class="fs-14 fw-500 label-color-6" id="break_evens">
                 Null
               </p>
             </div>
 
-            <div class="d-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center justify-content-between mt-2">
               <p class="fs-14 fw-500 label-color-6">Reward Risk:</p>
               <p class="fs-14 fw-500 label-color-6" id="ratio">No Defined</p>
             </div>
 
-            <div class="d-flex align-items-center justify-content-between" id="margin_needed">
+            <div class="d-flex align-items-center justify-content-between mt-2" id="margin_needed">
               <p class="fs-14 fw-500 label-color-6">Net Credit:</p>
               <p class="fs-14 fw-500 label-color-6" id="net_credit">null</p>
             </div>
 
 
-            <div class="d-flex align-items-center justify-content-between" id="brokrage_needed">
+            <div class="d-flex align-items-center justify-content-between mt-2" id="brokrage_needed">
               <p class="fs-14 fw-500 label-color-6">Approx Brokerage:</p>
               <p class="fs-14 fw-500 label-color-6" id="brokrage_fees">40</p>
             </div>
-            <div class="d-flex align-items-center justify-content-between" id="margin_needed">
+            <div class="d-flex align-items-center justify-content-between mt-2" id="margin_needed">
               <p class="fs-14 fw-500 label-color-6">Margin required:</p>
               <p class="fs-14 fw-500 label-color-6" id="margin_required">null</p>
             </div>
@@ -6175,29 +6175,30 @@
           </div>
         </div>
 
- 
+
         <div class="main_bottom_strategy_positions" style="display: none;">
           <div class="strategy_notes_main">
-       
+
           </div>
-<style>
-  .strategy_buttons_deploy_execute{
+          <style>
+            .strategy_buttons_deploy_execute {
 
-    display: flex;
-    gap: 1rem;
-}
-</style>
-          <div class="strategy_buttons_deploy_execute">     
-                 <button data-bs-toggle="modal" data-bs-target="#save_startegyModal" class="save_strategy">Save
-            Strategy</button>
-          <button class="reset_button execute_all_strategies d-flex gap-1 align-items-center" disabled
-            title="Please Activate your API for placing order">
-            <p style="margin-bottom: auto; margin-top: auto; font-size: 12px" class="">
-              Execute Order
-            </p>
-          </button>
+              display: flex;
+              gap: 1rem;
+            }
+          </style>
+          <div class="strategy_buttons_deploy_execute">
+            <button data-bs-toggle="modal" data-bs-target="#save_startegyModal" class="save_strategy">Save
+              Strategy</button>
+            <button class="reset_button execute_all_strategies d-flex gap-1 align-items-center" disabled
+              title="Please Activate your API for placing order">
+              <p style="margin-bottom: auto; margin-top: auto; font-size: 12px" class="">
+                Execute Order
+              </p>
+            </button>
 
-          <button class="deploy_btn">Deploy</button></div>
+            <button class="deploy_btn">Deploy</button>
+          </div>
 
 
         </div>
@@ -7716,9 +7717,10 @@
 </style>
 
 <style>
-  .expired-text{
+  .expired-text {
     color: orange;
   }
+
   .main_symbol_sell_buy {
     display: flex;
     gap: 0.2rem;
@@ -14479,17 +14481,17 @@
           })
 
 
-          $('#main_strategy_notes').on('input', function() {
+          $('#main_strategy_notes').on('input', function () {
             var maxLength = 40;
             var text = $(this).val();
 
             if (text.length > maxLength) {
-                $(this).val(text.substring(0, maxLength));
-  
-                toastr.error("Maximum character limit reached. You can only enter up to 40 characters.");
+              $(this).val(text.substring(0, maxLength));
+
+              toastr.error("Maximum character limit reached. You can only enter up to 40 characters.");
 
             }
-        });
+          });
 
           $(".saveStrategy").click(function () {
             var tradingPositions = [];
@@ -14589,7 +14591,7 @@
                 } else {
                   // handle success
                   $("#saved_startegyModal").modal("show");
-          
+
                   var strategyData = response.strategy_data;
                   $(".all_strategies").empty()
                   // Do something with the strategy data
@@ -14599,39 +14601,46 @@
                                               <div class="d-flex  justify-content-center p-2"> <p>No Strategies Found...</p></div>
                                               `);
                   } else {
-
-
                     strategyData.forEach((strategy) => {
+                      var isExpired = false;
 
-    var isExpired = false;
+                      // Check if any trading position's expiry is expired based on today's date and time
+                      strategy.trading_positions.forEach((position) => {
+                        // Assuming position.expiry_initial is in the format "YYYY-MM-DD"
+                        const expiryDate = new Date(position.expiry_initial + "T15:30:00.000Z");
+                        const currentDate = new Date();
 
-    // Check if any trading position's expiry is expired based on today's date
-    strategy.trading_positions.forEach((position) => {
-        const expiryDate = new Date(position.expiry_initial);
-        if (expiryDate < new Date()) {
-            isExpired = true;
-        }
-    });
+                        // Set time to 15:30 for today's date
+                        const todayClosingTime = new Date(currentDate);
+                        todayClosingTime.setHours(15, 30, 0, 0);
 
-    console.log(isExpired);
+                        // Check if the expiry date is less than or equal to 15:30 today
+                        if (expiryDate <= todayClosingTime) {
+                          isExpired = true;
+                        }
+                      });
 
-    var tradingPositions = `
-        <div class="savedStrategies d-flex justify-content-between ${isExpired ? 'expired' : ''}" data-strategy="${strategy.id}">
-            <div class="left_strategy_name">
-                ${strategy.strategy_name}
-            </div>
-            <div class="middle_strategy_status">
-                ${isExpired ? '<span class="expired-text">Expired</span>' : ''}
-            </div>
-            <div class="right_strategy_action" style="z-index: 9999999999999999999;">
-                <i class='bi bi-pencil-square fs-5 cursor-pointer edit_strategy' data-bs-toggle="modal" data-bs-target="#editStrategyModal" data-edit="${strategy.id}"></i>
-                <i class='bi bi-trash-fill fs-5 cursor-pointer delete_strategy' data-delete="${strategy.id}"></i>
-            </div>
-        </div>
-    `;
-    $(".all_strategies").append(tradingPositions);
-});
+                      console.log(isExpired);
 
+                      var tradingPositions = `
+                                  <div class="savedStrategies d-flex justify-content-between ${isExpired ? 'expired' : ''}" data-strategy="${strategy.id}">
+                                    <div class="left_strategy_name">
+                                      ${strategy.strategy_name}
+                                    </div>
+                                    <div class="right_strategy_action" style="z-index: 9999999999999999999;">
+                                      <div class="middle_strategy_status">
+                                        ${isExpired ? '<span class="expired-text">Expired</span>' : ''}
+                                      </div>
+                                      <div class="strategy_edit_delete">
+                                        <i class='bi bi-pencil-square fs-5 cursor-pointer edit_strategy' data-bs-toggle="modal" data-bs-target="#editStrategyModal" data-edit="${strategy.id}"></i>
+                                        <i class='bi bi-trash-fill fs-5 cursor-pointer delete_strategy' data-delete="${strategy.id}"></i>
+                                      </div>
+                                    </div>
+                                  </div>
+                                `;
+
+                      $(".all_strategies").append(tradingPositions);
+                    });
 
 
                   }
@@ -14639,19 +14648,19 @@
                   var isTableEmpty = true;
                   $(".savedStrategies").click(function () {
                     const strategyId = $(this).data("strategy");
-    const isExpired = $(this).hasClass("expired");
+                    const isExpired = $(this).hasClass("expired");
 
-    if (isExpired) {
-        // Display a toast message for expired strategy
+                    if (isExpired) {
+                      // Display a toast message for expired strategy
 
-        toastr.error("Strategy expired");
-        // Perform additional actions for expired strategy (if needed)
+                      toastr.error("Strategy expired");
+                      // Perform additional actions for expired strategy (if needed)
 
-        // Return a value or perform other actions
-        return false; // This prevents the default click behavior, adjust as needed
-    }else{
-      toastr.success(`${$(this).text()} : Deployed`);
-    }
+                      // Return a value or perform other actions
+                      return false; // This prevents the default click behavior, adjust as needed
+                    } else {
+                      toastr.success(`${$(this).text()} : Deployed`);
+                    }
                     $('.straddle').removeClass('option_strategies_active');
 
                     $("#saved_startegyModal").modal("hide")
@@ -14674,8 +14683,8 @@
                         $(".main_position").empty();
                         $("#resultTable tbody").empty();
                         console.log(response.trading_positions);
-console.log(response.strategy_notes);
-$(".strategy_notes_main").text(`Strategy Note: ${response.strategy_notes}`);
+                        console.log(response.strategy_notes);
+                        $(".strategy_notes_main").text(`Strategy Note: ${response.strategy_notes}`);
                         var tradingPositionsArray = JSON.parse(response.trading_positions);
 
                         tradingPositionsArray.forEach(function (trade_data) {

@@ -92,24 +92,24 @@ $("#dropdownMenuFutures").click(function () {
 
 
 
-$(window).scroll(function () {
+// $(window).scroll(function () {
 
    
         
 
-        if ($(this).scrollTop() > 45) {
+//         if ($(this).scrollTop() > 30) {
            
-            $('.header').addClass('bg-light shadow')
-            $('.header').css({'top': 0,'height':77});
-            $('.header__wrapper').addClass('nav_scroll')
+//             $('.header').addClass('bg-light shadow_header sticky-top')
+//             $('.header').css({'top':0,'height':77});
+//             $('.header__wrapper').addClass('nav_scroll')
           
-        } else {
-            $('.header').removeClass('bg-light shadow')
-            $('.header').css({'top': 0,'height':100});
-            $('.header__wrapper').removeClass('nav_scroll')
-        }
+//         } else {
+//             $('.header').removeClass('bg-light shadow_header')
+//             $('.header').css({'top':0,'height':77});
+//             $('.header__wrapper').removeClass('nav_scroll')
+//         }
 
-});
+// });
 
 
 // Swiper

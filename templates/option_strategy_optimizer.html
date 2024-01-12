@@ -1760,7 +1760,7 @@ $("#option_strategy_reset").click(function () {
 
         expiryDateStraddle.on("change", function () {
             var selectedValue_straddle = $(this).val();
-            // console.log(selectedValue_straddle);
+            // //console.log(selectedValue_straddle);
 
             // Set the value of optionExpiryDropdown to match the selected value
             optionExpiryDropdown.val(selectedValue_straddle).change();
@@ -1802,7 +1802,7 @@ $("#option_strategy_reset").click(function () {
             })
 
             var latestStrikePrice = $("#strikeSelect_straddle").val(); // Parse as a float
-            // console.log(latestStrikePrice);
+            // //console.log(latestStrikePrice);
         })
 
 
@@ -2076,7 +2076,7 @@ $("#decrement_jaze_lizard").click(function () {
         $("#calculate").click(function () {
             $("#spinner").show()
             var selectedOption = $("#stockDropdown").val();
-            // console.log("ca=" + selectedOption);
+            // //console.log("ca=" + selectedOption);
             loadExpiryData(selectedOption)
             $("#table-PL").empty();
             $("#resultTable tbody").empty();
@@ -2136,8 +2136,8 @@ $("#decrement_jaze_lizard").click(function () {
                         data: JSON.stringify(allData),
                         contentType: "application/json",
                         success: function (response) {
-                            // console.log("Data sent to Django:", response);
-                            // console.log(response.stock_data.resultData);
+                            // //console.log("Data sent to Django:", response);
+                            // //console.log(response.stock_data.resultData);
 
                             // Clear previous table data
                             $("#resultTable tbody").empty();
@@ -2224,7 +2224,7 @@ $("#decrement_jaze_lizard").click(function () {
                                     return { ...item, ltpValue: parseFloat(ltpValue) };
                                 }
                             );
-                            // console.log(updatedResultData);
+                            // //console.log(updatedResultData);
                             function createTable(data) {
                                 let tableHTML = "";
 
@@ -2296,10 +2296,10 @@ $("#decrement_jaze_lizard").click(function () {
                                     premiumPain += parseFloat(item.unitPrice)
 
                                 }
-                                // console.log(totalStrikePrice);
+                                // //console.log(totalStrikePrice);
                                 const averageStrikePrice = totalStrikePrice / itemCount;
-                                // console.log("Average of the :" + averageStrikePrice);
-                                // console.log(positionLabel);
+                                // //console.log("Average of the :" + averageStrikePrice);
+                                // //console.log(positionLabel);
                                 var min_breakPoints = averageStrikePrice - premiumPain
                                 var max_breakPoints = averageStrikePrice + premiumPain
 
@@ -2369,7 +2369,7 @@ $("#decrement_jaze_lizard").click(function () {
 
             // If all data is valid, log all the data at once
             if (allData.length === dataRows.length) {
-                // console.log("All Data:", allData);
+                // //console.log("All Data:", allData);
             }
 
         });
@@ -2464,7 +2464,7 @@ $("#decrement_jaze_lizard").click(function () {
 
         // Function to load spot data
         function loadSpotData(selectedOption) {
-            // console.log(selectedOption);
+            // //console.log(selectedOption);
 
             $.ajax({
                 url:
@@ -2473,7 +2473,7 @@ $("#decrement_jaze_lizard").click(function () {
                 type: "GET",
                 success: function (response) {
                     // Handle the response as needed
-                    // console.log(response.spot_data.resultData);
+                    // //console.log(response.spot_data.resultData);
                     $("#max_pain_value").text(response.spot_data.resultData.max_pain);
                     $("#lot_size_value").text(response.spot_data.resultData.lot_size);
                     $("#open_value").text(response.spot_data.resultData.open);
@@ -2519,7 +2519,7 @@ $("#decrement_jaze_lizard").click(function () {
                     selectedExpiry,
                 type: "GET",
                 success: function (response) {
-                    // console.log(response.option_data.resultData.opExpiryDates);
+                    // //console.log(response.option_data.resultData.opExpiryDates);
                     var optionExpiryDropdown = $("#optionExpiryDropdown");
                     optionExpiryDropdown.empty();
                     $.each(response.option_data.resultData.opExpiryDates, function (index, expiryDate) {
@@ -2538,14 +2538,14 @@ $("#decrement_jaze_lizard").click(function () {
                         $("#optionExpiryDropdown").val(selectedExpiry);
                     }
                     var option_chain_data = response.option_data.resultData.opDatas;
-                    // console.log(option_chain_data[0]);
-                    // console.log($("#optionExpiryDropdown").val());
+                    // //console.log(option_chain_data[0]);
+                    // //console.log($("#optionExpiryDropdown").val());
                     var option_expiry_date = $("#optionExpiryDropdown").val();
                     var lot_size_value_option = $("#lot_size_value").text();
-                    // console.log(lot_size_value_option);
-                    // console.log(selectedOption);
+                    // //console.log(lot_size_value_option);
+                    // //console.log(selectedOption);
 
-                    console.log(selectedExpiry)
+                    //console.log(selectedExpiry)
 
                     var optionChainTable = $(".strategy_option_chain");
                     optionChainTable.empty();
@@ -2611,7 +2611,7 @@ $("#decrement_jaze_lizard").click(function () {
 
                         }
                     );
-                    // console.log("Nearest Strike Price:", closestStrikePrice);
+                    // //console.log("Nearest Strike Price:", closestStrikePrice);
 
 
                     var strikeSelect_straddle_val = $("#strikeSelect_straddle");
@@ -2633,7 +2633,7 @@ $("#decrement_jaze_lizard").click(function () {
 
                         if (filter_arg_strategy === "straddle") {
                             var latestStrikePrice = $("#strikeSelect_straddle").val(); // Parse as a float
-                            // console.log(latestStrikePrice);
+                            // //console.log(latestStrikePrice);
                             $("#closest_strike_price").text(latestStrikePrice)
                             var expirySelect = $(".expiry_date_input");
                             var strikeSelect = $(".strike_price_input");
@@ -2642,7 +2642,7 @@ $("#decrement_jaze_lizard").click(function () {
                             var closest_strike_price = $("#closest_strike_price");
                             strikeSelect.find("option").each(function () {
                                 // Log the value of the current option
-                                // console.log($(this).val());
+                                // //console.log($(this).val());
                             });
 
                             $("#straddle").addClass("option_strategies_active")
@@ -2728,7 +2728,7 @@ $("#decrement_jaze_lizard").click(function () {
                                 var lastPrevValue = parseFloat(prev5[prev5.length - 1]);
 
                                 if (optionValue === lastPrevValue) {
-                                    // console.log(optionValue, lastPrevValue);
+                                    // //console.log(optionValue, lastPrevValue);
                                     $(this).prop("selected", true);
                                 }
                             });
@@ -2748,7 +2748,7 @@ $("#decrement_jaze_lizard").click(function () {
                                 var lastPrevValue_call = parseFloat(forw5[forw5.length - 1]);
 
                                 if (optionValue_call === lastPrevValue_call) {
-                                    // console.log(optionValue_call, lastPrevValue_call);
+                                    // //console.log(optionValue_call, lastPrevValue_call);
                                     $(this).prop("selected", true);
                                 }
                             });
@@ -2758,7 +2758,7 @@ $("#decrement_jaze_lizard").click(function () {
 
                             expiryDate_strangle.on("change", function () {
                                 var selectedValue_straddle = $(this).val();
-                                // console.log(selectedValue_straddle);
+                                // //console.log(selectedValue_straddle);
 
                                 // Set the value of optionExpiryDropdown to match the selected value
                                 optionExpiryDropdown.val(selectedValue_straddle).change();
@@ -2767,8 +2767,8 @@ $("#decrement_jaze_lizard").click(function () {
 
                             });
 
-                            // console.log("Previous 5 Strike Prices:", prev5);
-                            // console.log("Next 5 Strike Prices:", forw5);
+                            // //console.log("Previous 5 Strike Prices:", prev5);
+                            // //console.log("Next 5 Strike Prices:", forw5);
 
 
                             $("#shortStrangle").click(function () {
@@ -2835,7 +2835,7 @@ $("#decrement_jaze_lizard").click(function () {
 
 
                                 if (optionValue === parseFloat(closest_strike_price)) {
-                                    // console.log(optionValue, closest_strike_price);
+                                    // //console.log(optionValue, closest_strike_price);
                                     $(this).prop("selected", true);
                                 }
                             });
@@ -2864,7 +2864,7 @@ $("#decrement_jaze_lizard").click(function () {
 
 
                                 if (optionValue === parseFloat(forw3[forw3.length - 1])) {
-                                    // console.log(optionValue, closest_strike_price);
+                                    // //console.log(optionValue, closest_strike_price);
                                     $(this).prop("selected", true);
                                 }
                             });
@@ -2877,7 +2877,7 @@ $("#decrement_jaze_lizard").click(function () {
 
                             expiryDate_spread.on("change", function () {
                                 var selectedValue_straddle = $(this).val();
-                                // console.log(selectedValue_straddle);
+                                // //console.log(selectedValue_straddle);
 
                                 // Set the value of optionExpiryDropdown to match the selected value
                                 optionExpiryDropdown.val(selectedValue_straddle).change();
@@ -2908,7 +2908,7 @@ $("#decrement_jaze_lizard").click(function () {
 
                                 strikePrices.forEach(function (rowStrikePrice) {
                                     if (rowStrikePrice === put_strikeSelect_spread) {
-                                        // console.log(rowStrikePrice, put_strikeSelect_spread);
+                                        // //console.log(rowStrikePrice, put_strikeSelect_spread);
 
                                         // Find the closest row and click on Auto_calls_short_click
                                         var closestRow = optionChainTable.find(".strike_price:contains(" + rowStrikePrice + ")").closest(".call_put_tr");
@@ -2999,7 +2999,7 @@ $("#decrement_jaze_lizard").click(function () {
 
 
                                 if (optionValue === parseFloat(prev4[prev4.length - 1])) {
-                                    // console.log(optionValue, closest_strike_price);
+                                    // //console.log(optionValue, closest_strike_price);
                                     $(this).prop("selected", true);
                                 }
                             });
@@ -3009,7 +3009,7 @@ $("#decrement_jaze_lizard").click(function () {
 
 
                                 if (optionValue === parseFloat(closest_strike_price)) {
-                                    // console.log(optionValue, closest_strike_price);
+                                    // //console.log(optionValue, closest_strike_price);
                                     $(this).prop("selected", true);
                                 }
                             });
@@ -3030,7 +3030,7 @@ $("#decrement_jaze_lizard").click(function () {
 
 
                                 if (optionValue === parseFloat(forw4[forw4.length - 1])) {
-                                    // console.log(optionValue, closest_strike_price);
+                                    // //console.log(optionValue, closest_strike_price);
                                     $(this).prop("selected", true);
                                 }
                             });
@@ -3042,7 +3042,7 @@ $("#decrement_jaze_lizard").click(function () {
 
                             expiryDate_ironFly.on("change", function () {
                                 var selectedValue_straddle = $(this).val();
-                                // console.log(selectedValue_straddle);
+                                // //console.log(selectedValue_straddle);
 
                                 // Set the value of optionExpiryDropdown to match the selected value
                                 optionExpiryDropdown.val(selectedValue_straddle).change();
@@ -3055,8 +3055,8 @@ $("#decrement_jaze_lizard").click(function () {
 
 
 
-                            // console.log("Previous 4 Strike Prices:", prev4);
-                            // console.log("Next 4 Strike Prices:", forw4);
+                            // //console.log("Previous 4 Strike Prices:", prev4);
+                            // //console.log("Next 4 Strike Prices:", forw4);
 
                             // Keep the existing logic for closestStrikePrice
                             $("#shortironFly").click(function () {
@@ -3177,7 +3177,7 @@ $("#decrement_jaze_lizard").click(function () {
 
 
                                 if (optionValue === parseFloat(prev4[prev4.length - 1])) {
-                                    // console.log(optionValue, closest_strike_price);
+                                    // //console.log(optionValue, closest_strike_price);
                                     $(this).prop("selected", true);
                                 }
                             });
@@ -3186,7 +3186,7 @@ $("#decrement_jaze_lizard").click(function () {
 
 
                                 if (optionValue === parseFloat(prev3[prev3.length - 1])) {
-                                    // console.log(optionValue, closest_strike_price);
+                                    // //console.log(optionValue, closest_strike_price);
                                     $(this).prop("selected", true);
                                 }
                             });
@@ -3208,7 +3208,7 @@ $("#decrement_jaze_lizard").click(function () {
 
 
                                 if (optionValue === parseFloat(forw3[forw3.length - 1])) {
-                                    // console.log(optionValue, closest_strike_price);
+                                    // //console.log(optionValue, closest_strike_price);
                                     $(this).prop("selected", true);
                                 }
                             });
@@ -3217,7 +3217,7 @@ $("#decrement_jaze_lizard").click(function () {
 
 
                                 if (optionValue === parseFloat(forw4[forw4.length - 1])) {
-                                    // console.log(optionValue, closest_strike_price);
+                                    // //console.log(optionValue, closest_strike_price);
                                     $(this).prop("selected", true);
                                 }
                             });
@@ -3227,7 +3227,7 @@ $("#decrement_jaze_lizard").click(function () {
 
                             expiryDate_ironCondor.on("change", function () {
                                 var selectedValue_ironCondor = $(this).val();
-                                // console.log(selectedValue_ironCondor);
+                                // //console.log(selectedValue_ironCondor);
 
                                 // Set the value of optionExpiryDropdown to match the selected value
                                 optionExpiryDropdown.val(selectedValue_ironCondor).change();
@@ -3238,10 +3238,10 @@ $("#decrement_jaze_lizard").click(function () {
 
 
 
-                            // console.log("Previous 3 Strike Prices:", prev3);
-                            // console.log("Previous 4 Strike Prices:", prev4);
-                            // console.log("Next 4 Strike Prices:", forw4);
-                            // console.log("Next 3 Strike Prices:", forw3);
+                            // //console.log("Previous 3 Strike Prices:", prev3);
+                            // //console.log("Previous 4 Strike Prices:", prev4);
+                            // //console.log("Next 4 Strike Prices:", forw4);
+                            // //console.log("Next 3 Strike Prices:", forw3);
 
                             // Get the values of lastIndexPrev and lastIndexForw
                             var lastIndexPrev = $("#put_strikeSelect_ironCondor").val();
@@ -3359,7 +3359,7 @@ $("#decrement_jaze_lizard").click(function () {
 
 
                                 if (optionValue === parseFloat(forw4[forw4.length - 1])) {
-                                    // console.log(optionValue, closest_strike_price);
+                                    // //console.log(optionValue, closest_strike_price);
                                     $(this).prop("selected", true);
                                 }
                             });
@@ -3368,7 +3368,7 @@ $("#decrement_jaze_lizard").click(function () {
 
 
                                 if (optionValue === parseFloat(forw2[forw2.length - 1])) {
-                                    // console.log(optionValue, closest_strike_price);
+                                    // //console.log(optionValue, closest_strike_price);
                                     $(this).prop("selected", true);
                                 }
                             });
@@ -3389,17 +3389,17 @@ $("#decrement_jaze_lizard").click(function () {
 
 
                                 if (optionValue === parseFloat(prev4[prev4.length - 1])) {
-                                    // console.log(optionValue, closest_strike_price);
+                                    // //console.log(optionValue, closest_strike_price);
                                     $(this).prop("selected", true);
                                 }
                             });
 
 
 
-                            // console.log("Next 4 Strike Prices:", forw4);
-                            // console.log("Next 2 Strike Prices:", forw2);
+                            // //console.log("Next 4 Strike Prices:", forw4);
+                            // //console.log("Next 2 Strike Prices:", forw2);
 
-                            // console.log("Previous 4 Strike Prices:", prev4);
+                            // //console.log("Previous 4 Strike Prices:", prev4);
                             // Get the values of lastIndexPrev and lastIndexForw
 
                             
@@ -3408,7 +3408,7 @@ $("#decrement_jaze_lizard").click(function () {
 
                             expiryDate_jaze_lizard.on("change", function () {
                                 var selectedValue_jaze_lizard = $(this).val();
-                                // console.log(selectedValue_jaze_lizard);
+                                // //console.log(selectedValue_jaze_lizard);
 
                                 // Set the value of optionExpiryDropdown to match the selected value
                                 optionExpiryDropdown.val(selectedValue_jaze_lizard).change();
@@ -3531,14 +3531,14 @@ $("#decrement_jaze_lizard").click(function () {
                             var opiton_selected = row.find(".opiton_selected").text();
                             var option_side = "Call";
 
-                            console.log(option_side);
-                            console.log("Call Side - Action:", action);
-                            console.log("Call Side - calls_iv:", calls_iv);
-                            console.log("Call Side - calls_oi:", calls_oi);
-                            console.log("Call Side - calls_ltp:", ltpValue);
-                            console.log("Call Side - strike_price:", strike_price);
-                            console.log(expiry_date);
-                            console.log(opiton_lot_size);
+                            //console.log(option_side);
+                            //console.log("Call Side - Action:", action);
+                            //console.log("Call Side - calls_iv:", calls_iv);
+                            //console.log("Call Side - calls_oi:", calls_oi);
+                            //console.log("Call Side - calls_ltp:", ltpValue);
+                            //console.log("Call Side - strike_price:", strike_price);
+                            //console.log(expiry_date);
+                            //console.log(opiton_lot_size);
                             populateInputTable(
                                 option_side,
                                 expiry_date,
@@ -3556,14 +3556,14 @@ $("#decrement_jaze_lizard").click(function () {
                             var strike_price = row.find(".strike_price").text();
                             var opiton_lot_size = row.find(".opiton_lot_size").text();
                             var opiton_selected = row.find(".opiton_selected").text();
-                            console.log(option_side);
-                            console.log("Put Side - Action:", action);
-                            console.log("Put Side - puts_ltp:", ltpValue);
-                            console.log("Put Side - puts_oi:", puts_oi);
-                            console.log("Put Side - puts_iv:", puts_iv);
-                            console.log(expiry_date);
-                            console.log(opiton_lot_size);
-                            console.log(strike_price);
+                            //console.log(option_side);
+                            //console.log("Put Side - Action:", action);
+                            //console.log("Put Side - puts_ltp:", ltpValue);
+                            //console.log("Put Side - puts_oi:", puts_oi);
+                            //console.log("Put Side - puts_iv:", puts_iv);
+                            //console.log(expiry_date);
+                            //console.log(opiton_lot_size);
+                            //console.log(strike_price);
                             populateInputTable(
                                 option_side,
                                 expiry_date,
@@ -3674,14 +3674,14 @@ $("#decrement_jaze_lizard").click(function () {
                         ltpValue,
                         opiton_selected
                     ) {
-                        // console.log("Option Side:", option_side);
-                        // console.log("Expiry Date:", expiry_date);
-                        // console.log("Strike Price:", strike_price);
-                        // console.log("Action:", action);
+                        // //console.log("Option Side:", option_side);
+                        // //console.log("Expiry Date:", expiry_date);
+                        // //console.log("Strike Price:", strike_price);
+                        // //console.log("Action:", action);
 
-                        // console.log("Option Lot Size:", option_lot_size);
-                        // console.log("LTP Value:", ltpValue);
-                        // console.log("opiton_selected:", opiton_selected);
+                        // //console.log("Option Lot Size:", option_lot_size);
+                        // //console.log("LTP Value:", ltpValue);
+                        // //console.log("opiton_selected:", opiton_selected);
                         var parsedDate = new Date(expiry_date);
                         var day = parsedDate.getDate().toString().padStart(2, "0");
                         var month = (parsedDate.getMonth() + 1).toString().padStart(2, "0");
@@ -3768,7 +3768,7 @@ $("#decrement_jaze_lizard").click(function () {
         }
         loadOptionData(selectedOption, selectedExpiry)
         function loadExpiryData(selectedOption) {
-            // console.log("Hi there" + selectedOption);
+            // //console.log("Hi there" + selectedOption);
             $.ajax({
                 url: "/option_strategies_expiry",
                 method: "GET",
@@ -3792,7 +3792,7 @@ $("#decrement_jaze_lizard").click(function () {
      
         function populateExpiry_Strike(expiryDates, expiryStrikes) {
             // Get the existing selected values before appending new options
-            // console.log('Log Expiry');
+            // //console.log('Log Expiry');
       
             // Populate the select element with expiry dates
             var expirySelect = $(".expiry_date_input");

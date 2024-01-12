@@ -536,7 +536,8 @@ urlpatterns = [
 
      path("websocket_test",views.websocket_test,name="websocket_test"),
      # path("test_celery",views.test_celery,name="test_celery"),
-     path("GetStrategyUnique",views.GetStrategyUnique,name="GetStrategyUnique")
+     path("GetStrategyUnique",views.GetStrategyUnique,name="GetStrategyUnique"),
+     path("test_base_dashboard",views.test_base_dashboard,name="test_base_dashboard")
 
      
 

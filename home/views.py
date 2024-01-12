@@ -9534,3 +9534,8 @@ def GetStrategyUnique(request):
             return JsonResponse({'error': 'Strategy not found'})
     else:
         return JsonResponse({'error': 'Invalid request method'})
+
+
+
+def test_base_dashboard(request):
+    return render(request,"test_templates/base_dashboard.html")

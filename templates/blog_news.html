@@ -68,7 +68,7 @@
     }
 
     .grid_icon {
-        font-size: 24px;
+        {% comment %} font-size: 24px; {% endcomment %}
         border: 1px solid;
         width: 29px;
         height: 28px;
@@ -265,7 +265,7 @@
 
 
         function getNewsData(url) {
-            console.log(url);
+            //console.log(url);
   
             
             $.ajax({
@@ -361,14 +361,14 @@
                     updateNewsData(data);
                 },
                 error: function (error) {
-                    console.log(error);
+                    //console.log(error);
                 }
             });
         }
 
         function updateNewsData(data) {
             var NewsData = localStorage.getItem('NewsData');
-            console.log(NewsData);
+            //console.log(NewsData);
             
 
             if (NewsData ==="world_news" || NewsData==="indian_news") {
@@ -462,7 +462,7 @@
     newsContainer.empty();
 
     var main_ipo = data.data;
-    console.log(main_ipo);
+    //console.log(main_ipo);
     var column1 = $('<div class="news-column"></div>');
     var column2 = $('<div class="news-column"></div>');
     var column3 = $('<div class="news-column"></div>');
@@ -482,7 +482,7 @@ if (index1 !== -1 || index2 !== -1) {
     truncatedText = words.slice(0, 50).join(' ') + ' ' + words.slice(50).join(' ');
 }
 
-console.log(truncatedText);
+//console.log(truncatedText);
 
 
 
@@ -568,7 +568,7 @@ if (savedFilter && savedLanguage) {
         getNewsData(url);
     }
 } else {
-    console.log('Hii ther false');
+    //console.log('Hii ther false');
     saveSettings('IndianNews', 'English', 'grid',"indian_news");
     getNewsData('/get-news-data/?filter=IndianNews&language=English');
 }
