@@ -206,7 +206,7 @@
 
         const isWeekday = dayOfWeek >= 1 && dayOfWeek <= 5;
         const isMarketOpen = isWeekday && hour === 9 && minute >= 15 && hour < 16;
-        console.log(isMarketOpen);
+        //console.log(isMarketOpen);
         if (isMarketOpen) {
             $(".market_status").empty().append("<span class='open_dot'></span> <span class='market_open fw-bold'>Today Market Open</span>")
         } else {
@@ -482,7 +482,7 @@
             top: 71px;
             left: 0;
             width: 100%;
-            z-index: 9999;
+            z-index: 999;
             background-color: white;
             margin-top: 0% !important;
         }
@@ -565,7 +565,7 @@
                 success: function (data) {
 
                     generate_Option_Table(data.All_option_data, data.india_spot_data.last_trade_price)
-                    console.log(data)
+                    //console.log(data)
                     var pcr_value = data.put_call_ratio
                     $(".pcr_value").text(pcr_value.toFixed(4))
 
@@ -574,7 +574,7 @@
 
                     $(".spot_price").text(data.india_spot_data.last_trade_price + "(" + data.india_spot_data.change_per + "%)").removeClass("text-success text-danger").addClass(spot_change)
                     $('.chart_tracking_view').empty()
-                    $('.chart_tracking_view').append("<a href='https://www.tradingview.com/chart/MgiGDMYM/?symbol=" + data.india_spot_data.symbol_name + "&aff_id=113877' target='_blank'><i class='bx bx-line-chart' id='trading_view_chart'></i></a>");
+                    $('.chart_tracking_view').append("<a href='https://www.tradingview.com/chart/mKWHqfku/?symbol=" + data.india_spot_data.symbol_name + "&aff_id=113877' target='_blank'><i class='bx bx-line-chart' id='trading_view_chart'></i></a>");
                     var oi_pcr = data.oi_pcr
                     $(".oi_value").text(oi_pcr.toFixed(4))
                     var lot_size_value = data.india_spot_data.lot_size
@@ -588,13 +588,13 @@
                     $(".max_pain_value").text(max_pain_value)
                     var high_round = data.india_spot_data.high
                     var low_round = data.india_spot_data.low
-                    console.log(high_round, low_round);
+                    //console.log(high_round, low_round);
                     var expected_values = data
                     $(".expected_values").text(expected_values)
 
 
                     function generate_Option_Table(simu_args, spotPrice) {
-                        console.log(spotPrice);
+                        //console.log(spotPrice);
                         var table_simu = $("#table_simu")
                         table_simu.empty();
                         for (var i = 0; i < simu_args.length; i++) {
@@ -702,7 +702,7 @@
                     url: '/fetch_option_data_with_spot_price',
                     dataType: 'json',
                     success: function (data) {
-                       console.log(data.All_symbols);
+                       //console.log(data.All_symbols);
 
                         var symbolDropdown = $('#symbol-dropdown');
                         symbolDropdown.empty();
@@ -714,7 +714,7 @@
 
 
                         for (var i = 0; i < data.All_symbols.length; i++) {
-                            console.log(data.All_symbols[i]);
+                            //console.log(data.All_symbols[i]);
                             symbolDropdown.append($('<option>', {
                                 value: data.All_symbols[i],
                                 text: data.All_symbols[i]
