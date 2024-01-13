@@ -3,7 +3,7 @@
 {% block dashboard_body %}
 
 <style>
-  .bi-graph-up {
+  .bx-stats {
     color: #80808094;
     outline: 1px solid;
     padding: 6px 6px;
@@ -13,7 +13,7 @@
     transition: 0.3s;
   }
 
-  .bi-graph-up:hover {
+  .bx-stats:hover {
     color: white;
     outline: 1px solid;
     background-color: cornflowerblue;
@@ -241,7 +241,7 @@
     display: flex;
     flex-direction: column;
   }
-  .dataTables_filter input{
+  /* .dataTables_filter input{
     all:unset !important;
     text-align: left !important;
     border-bottom: 1px solid rgba(0, 0, 0, 0.504) !important;
@@ -256,14 +256,15 @@
     top: 5px;
     color: gray;
     font-weight: 800 !important;
-  }
+  } */
 
-#volume_shocker_table_filter label input::placeholder {
+/* #volume_shocker_table_filter label input::placeholder {
     content: "Search stocks:";
-}
+} */
 
 thead tr td{
   border-right: .2px solid white !important;
+  
 }
 
 .parent_table{
@@ -290,7 +291,7 @@ table.dataTable thead>tr>td.sorting_desc:before, table.dataTable thead>tr>td.sor
     opacity: 1 !important;
     right: 10px;
     line-height: 10px;
-    font-size: .8em;
+    font-size: .7em;
 }
 
 
@@ -312,7 +313,7 @@ table.dataTable thead>tr>td.sorting_desc:before, table.dataTable thead>tr>td.sor
     display: inline-block;
     min-width: 1.5em;
     padding: 0.5em 1em;
-    margin-left: 2px;
+    margin-left: 7px;
     text-align: center;
     text-decoration: none !important;
     cursor: pointer;
@@ -346,6 +347,48 @@ table.dataTable thead>tr>td.sorting_desc:before, table.dataTable thead>tr>td.sor
     background: linear-gradient(to bottom, #585858 0%, #111 100%);
     background: #59aaf9 !important;
 }
+
+.paginate_button.previous::before {
+    content: "<"; /* Unicode left arrow character */
+    font-size: 16px !important;
+  }
+
+  /* Next page button icon */
+  .paginate_button.next::before {
+    content: ">"; /* Unicode right arrow character */
+    font-size: 16px !important;
+  }
+
+  /* Hide text for Previous and Next buttons */
+  #volume_shocker_table_previous {
+    font-size: 0 !important;
+    background-color: white; 
+    color: black;
+    padding: 7px 18px; 
+    border-radius: 4px; 
+    cursor: pointer; 
+    transition: background-color 0.3s ease; 
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  }
+  #volume_shocker_table_previous:hover {
+    color: white !important;
+    
+  }
+  #volume_shocker_table_next {
+    font-size: 0 !important;
+    background-color: white; /* Button background color */
+    color: black; /* Button text color */
+     /* Button border */
+    padding: 7px 18px; /* Button padding */
+    border-radius: 4px; /* Button border-radius */
+    cursor: pointer; /* Add pointer cursor on hover */
+    transition: background-color 0.3s ease; 
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  }
+
+  .paginate_button {
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px; /* Adjust the values as needed */
+  }
 
 </style>
 <div>
@@ -398,6 +441,9 @@ table.dataTable thead>tr>td.sorting_desc:before, table.dataTable thead>tr>td.sor
           <td>
             <div>(Today/Avg Volume)</div>
           </td>
+          <td>
+            <div>Chart</div>
+          </td>
         </tr>
 
       </thead>
@@ -421,7 +467,7 @@ table.dataTable thead>tr>td.sorting_desc:before, table.dataTable thead>tr>td.sor
           let row = $("<tr>");
           $("<td>").append(
             $('<div style="display: flex; align-items: center; gap: 0.4rem;">').append(
-              '<a href="https://www.tradingview.com/chart/MgiGDMYM/?symbol=' + item.symbol_name + '&aff_id=113877" target="_blank"><i class="bi bi-graph-up"></i></a>',
+              
               '<div style="margin-top: 0rem; margin-bottom: 0rem;" class="symbol_name">' + item.symbol_name + '</div>'
             )
           ).appendTo(row);
@@ -430,6 +476,7 @@ table.dataTable thead>tr>td.sorting_desc:before, table.dataTable thead>tr>td.sor
           $("<td>").append($('<div>').text(item.low)).appendTo(row);
           $("<td>").append($('<div>').text(item.avg_daily_volume).addClass('text-center')).appendTo(row);
           $("<td>").append($('<div>').text(item.ratio).addClass('text-center')).appendTo(row);
+          $("<td>").append($('<a href="https://www.tradingview.com/chart/MgiGDMYM/?symbol=' + item.symbol_name + '&aff_id=113877" target="_blank"><i class="bx bx-stats"></i></a>').addClass('text-center')).appendTo(row);
           table.append(row);
         }
 
@@ -446,13 +493,13 @@ table.dataTable thead>tr>td.sorting_desc:before, table.dataTable thead>tr>td.sor
         $('#volume_shocker_table').wrap('<div class="parent_table"></div>');
         $('#volume_shocker_table_length,#volume_shocker_table_filter').wrapAll('<div class="parent_search_length"></div>');
         
-        var icon = $("<i>").addClass("bx bx-search").attr('id',"magnifying_glass");
-         $(".dataTables_filter label").append(icon);
+        // var icon = $("<i>").addClass("bx bx-search").attr('id',"magnifying_glass");
+        //  $(".dataTables_filter label").append(icon);
        
          $('#volume_shocker_table_filter label').contents().filter(function() {
         return this.nodeType === 3; // Filter out text nodes
     }).remove();
-    $('#volume_shocker_table_filter label input').attr('placeholder', 'Search stocks:');
+   
 
       }
       volume_shocker_data();

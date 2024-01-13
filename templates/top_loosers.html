@@ -256,8 +256,8 @@
     }
 
     .top_loosers {
-        padding: 4px 10px;
-        border-radius: 10px;
+        padding: 7px 10px;
+        border-radius: 6px;
         border: 1px solid #4399eb;
         -webkit-box-shadow: none;
         box-shadow: none;
@@ -442,6 +442,7 @@
 
     thead tr th{
         border-right: .2px solid white !important;
+        padding: 18px !important;
       }
 
       tbody td{
@@ -454,6 +455,10 @@
       .parent_table{
         border-radius: 10px !important;
       }
+
+      tr:hover .symbol_name {
+        color: #2196f3;
+    }
 
       .dataTables_wrapper table.dataTable thead .sorting:before,
 .dataTables_wrapper table.dataTable thead .sorting_asc:before,
@@ -486,8 +491,8 @@ table.dataTable thead>tr>td.sorting_desc:before, table.dataTable thead>tr>td.sor
     display: block;
     opacity: 1 !important;
     right: 10px;
-    line-height: 10px;
-    font-size: .8em;
+    line-height: 8px;
+    font-size: .6em;
 }
 
 .dataTables_wrapper .dataTables_paginate .paginate_button.current, .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
@@ -542,6 +547,49 @@ table.dataTable thead>tr>td.sorting_desc:before, table.dataTable thead>tr>td.sor
     background: #59aaf9 !important;
 }
 
+.paginate_button.previous::before {
+    content: "<"; /* Unicode left arrow character */
+    font-size: 16px !important;
+  }
+
+  /* Next page button icon */
+  .paginate_button.next::before {
+    content: ">"; /* Unicode right arrow character */
+    font-size: 16px !important;
+  }
+
+  /* Hide text for Previous and Next buttons */
+  #stock-table_previous {
+    font-size: 0 !important;
+    background-color: white; /* Button background color */
+    color: black; /* Button text color */
+     /* Button border */
+    padding: 7px 18px; /* Button padding */
+    border-radius: 4px; /* Button border-radius */
+    cursor: pointer; /* Add pointer cursor on hover */
+    transition: background-color 0.3s ease; 
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  }
+  #bulk_data_previous:hover {
+    color: white !important;
+    
+  }
+  #stock-table_next {
+    font-size: 0 !important;
+    background-color: white; /* Button background color */
+    color: black; /* Button text color */
+     /* Button border */
+    padding: 7px 18px; /* Button padding */
+    border-radius: 4px; /* Button border-radius */
+    cursor: pointer; /* Add pointer cursor on hover */
+    transition: background-color 0.3s ease; 
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  }
+
+  .paginate_button {
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px; /* Adjust the values as needed */
+  }
+
 </style>
 
 <script>
@@ -583,7 +631,7 @@ table.dataTable thead>tr>td.sorting_desc:before, table.dataTable thead>tr>td.sor
                         $("<td>").text(stock.prev_close).appendTo(row);
                             $("<td>").text(stock.change_percent+"%"+"("+stock.change_value+")").appendTo(row).addClass("text-danger");
                             $("<td>").text(stock.today_volume).appendTo(row);
-                            $("<td>").append('<a class="top_gainer_redirect" href="https://www.tradingview.com/chart/MgiGDMYM/?symbol=' + stock.symbol_name + '&aff_id=113877" target="_blank"><i class="bi bi-graph-up" id="top_gainers_chart"></i></a>').appendTo(row);
+                            $("<td>").append('<a class="top_gainer_redirect" href="https://www.tradingview.com/chart/MgiGDMYM/?symbol=' + stock.symbol_name + '&aff_id=113877" target="_blank"><i class="bx bx-stats" id="top_gainers_chart"></i></a>').appendTo(row);
                                 // $("<td>").text(stock.change_percent).appendTo(row);
                                     
                         table.row.add(row).draw(false);
@@ -618,7 +666,7 @@ table.dataTable thead>tr>td.sorting_desc:before, table.dataTable thead>tr>td.sor
 
 
 <div>
-    <div class="top_gainer_header d-flex justify-content-between">
+    <div class="top_gainer_header mt-5 d-flex justify-content-between">
         <h5>Top Loosers Stock </h5>
 
         <a class="top_loosers" href="{% url 'top_gainers' %}">
@@ -637,7 +685,7 @@ table.dataTable thead>tr>td.sorting_desc:before, table.dataTable thead>tr>td.sor
     </div>
     <div class="upper_main_top_gainers_table">
         <div class="main_table">
-        <table id="stock-table" class="table table-hover table-striped-custom cell-border">
+        <table id="stock-table" class="table table-striped-custom cell-border">
             <thead>
                 <tr>
                  
