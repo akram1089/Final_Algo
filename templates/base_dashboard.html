@@ -299,7 +299,7 @@ z-index: 9;
   nav {
     display: flex;
     align-items: center;
-
+    column-gap: 0.5rem;
 
   }
 
@@ -315,9 +315,9 @@ z-index: 9;
 
  
 
-  .news_nav:hover,.shop_nav:hover {
-    border-bottom: 3px solid #59aaf9 !important;
-  }
+  .news_nav:hover, .shop_nav:hover {
+  box-shadow: 0px 3px 0px 0px #59aaf9 !important;
+}
 
   /* { position: absolute;
     flex-direction: column;
@@ -589,7 +589,7 @@ z-index: 9;
   }
 
   /* Responsive css */
-  @media (max-width: 991.98px) {
+  @media (max-width: 1035px) {
     nav {
       display: none;
     }
@@ -604,7 +604,9 @@ z-index: 9;
     }
   }
   .active_navigations{
-   color: #4399eb !important
+    transition: 0.2s;
+    background: rgb(237 163 157 / 10%);
+    border-radius: 5px;
   }
 </style>
 
@@ -612,6 +614,15 @@ z-index: 9;
   $(document).ready(function () {
     // Handle click event on the dropdown button
     $('.resources_btn,.services_dropdown,.quick_glances_dropdown,.futures_dropdown,.option_dropdown,#dashboard_nav_dropdown_user,#notification_bell').on('click', function () {
+
+
+      // Add your custom CSS properties
+      $("#resources_dropdown,#resources_dropdown_dashboard_markets,#future_dropdown,#options_dropdown,#service_dropdown,#dashboard_nav_dropdown_user,user_dropdown,#notification_dropdown,#stats_dropdown").css({
+        'inset': 'auto',
+
+      });
+    });
+    $('.resources_btn,.services_dropdown,.quick_glances_dropdown,.futures_dropdown,.option_dropdown,#dashboard_nav_dropdown_user,#notification_bell').on('hover', function () {
 
 
       // Add your custom CSS properties
@@ -649,11 +660,18 @@ z-index: 9;
     top: 0;">
 
     <div class="header shadow_header" style="transition: all 0.2s ease-in-out 0s; box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;">
+<a href="{% url 'dashboard1' %}">
 
-      <img src="https://optionperks.com/static/img/header_logo_perk.png" alt="OptionPerks Logo" width="180px">
+  <img src="https://optionperks.com/static/img/header_logo_perk.png" alt="OptionPerks Logo" width="180px">
 
+</a>
+<style>
+  .other_services_nav_main{
+    padding: 1rem 1rem;
+  }
+</style>
       <nav>
-        <div class="dropdown menu-large nav-item">
+        <div class="dropdown menu-large nav-item" style="inset: auto !important;">
           <a href="#" role="button" class="services_dropdown" data-bs-toggle="dropdown" aria-expanded="false"
             id="dashboard_nav_dropdown">Services <span><i class='bx bx-chevron-down'></i></span>
           </a>
@@ -665,11 +683,13 @@ z-index: 9;
               <div class="main_stock_stats_other_services">
                 <h5 class="main_title_stock_stats">OTHER SERVICES</h5>
         
-                <div class="main_stock_stats_content" style="row-gap: 0;">
+                <div class="main_stock_stats_content" style="row-gap: 0; column-gap: 1rem;">
         
-                  <div class="top_main_stats" id="quick_galnces_main_nav" style="border-bottom: 1px solid #80808038;
-                  padding-bottom: 2rem;">
-                    <a class="main_volume_socker {% if request.path == "/port_folio_management"  %} active_navigations {% endif %}" href="{% url 'port_folio_management' %}">
+                  <div class="top_main_stats" id="quick_galnces_main_nav" style="
+                  padding-bottom: 1rem; column-gap: 1rem !important;">
+
+
+                    <a class="main_volume_socker other_services_nav_main {% if request.path == "/port_folio_management"  %} active_navigations {% endif %}" href="{% url 'port_folio_management' %}">
                       <div class="volume_socker_icon"><img src="{% static "/img/demo_images/chart-up.png" %}"
                           width="25px" alt=""></div>
         
@@ -681,7 +701,7 @@ z-index: 9;
                   </a>
 <!--         
         
-                    <a class="main_volume_socker {% if request.path == "/port_folio_management"  %} active_navigations {% endif %}" href="{% url 'port_folio_management' %}">
+                  <a class="main_volume_socker {% if request.path == "/port_folio_management"  %} active_navigations {% endif %}" href="{% url 'port_folio_management' %}">
                       <div class="volume_socker_icon"><img src="{% static "/img/demo_images/chart-up.png" %}"
                           width="25px" alt=""></div>
         
@@ -694,7 +714,7 @@ z-index: 9;
                     </a> -->
 
 
-                    <a class="main_volume_socker {% if request.path == "/market_wide_position"  %} active_navigations {% endif %} " href="{% url 'market_wide_position' %}"                    >
+                    <a class="main_volume_socker other_services_nav_main {% if request.path == "/market_wide_position"  %} active_navigations {% endif %} " href="{% url 'market_wide_position' %}"                    >
                       <div class="volume_socker_icon"><img src="{% static "/img/demo_images/chart-up.png" %}"
                           width="25px" alt=""></div>
         
@@ -711,8 +731,8 @@ z-index: 9;
                     </a>
         
              
-
-                    <a class="main_volume_socker {% if request.path == "/stock_scanner"  %} active_navigations {% endif %} " href="{% url 'stock_scanner' %}"                    >
+<!-- 
+                    <a class="main_volume_socker other_services_nav_main {% if request.path == "/stock_scanner"  %} active_navigations {% endif %} " href="{% url 'stock_scanner' %}"                    >
                       <div class="volume_socker_icon"><img src="{% static "/img/demo_images/chart-up.png" %}"
                           width="25px" alt=""></div>
         
@@ -730,7 +750,7 @@ z-index: 9;
         
         
         
-                        <a class="main_volume_socker {% if request.path == "/rocket_call"  %} active_navigations {% endif %} " href="{% url 'rocket_call' %}"                    >
+                        <a class="main_volume_socker other_services_nav_main {% if request.path == "/rocket_call"  %} active_navigations {% endif %} " href="{% url 'rocket_call' %}"                    >
                           <div class="volume_socker_icon"><img src="{% static "/img/demo_images/chart-up.png" %}"
                               width="25px" alt=""></div>
         
@@ -741,7 +761,7 @@ z-index: 9;
                         <p>Info of best stocks <br> as per media for day
                         </p>
                       </div>
-                    </a>
+                    </a> -->
         
                     <!-- <a class="main_volume_socker {% if request.path == "/broking_details"  %} active_navigations {% endif %} " href="{% url 'broking_details' %}"                    >
                       <div class="volume_socker_icon"><img src="{% static "/img/demo_images/chart-up.png" %}"
@@ -770,7 +790,7 @@ z-index: 9;
                     </a> -->
 
                
-                    <a class="main_volume_socker {% if request.path == "/Algo_market_place"  %} active_navigations {% endif %} " href="{% url 'Algo_market_place' %}"                    >
+                    <a class="main_volume_socker other_services_nav_main {% if request.path == "/Algo_market_place"  %} active_navigations {% endif %} " href="{% url 'Algo_market_place' %}"                    >
                       <div class="volume_socker_icon"><img src="{% static "/img/demo_images/chart-up.png" %}"
                           width="25px" alt=""></div>
         
@@ -782,25 +802,35 @@ z-index: 9;
                         </p>
                       </div>
                     </a>
+                    <a class="main_volume_socker other_services_nav_main" href="https://www.screener.in/" target="_blank">
+                      <div class="volume_socker_icon"><img src="{% static "/img/demo_images/chart-up.png" %}"
+                          width="25px" alt=""></div>
+
+                      <div class="main_title_desc_volume_socker">
+                        <h6>Financial Result
+                        </h6>
+
+                        <p>Company's financial <br> performance reports</p>
+                      </div>
+                    </a>
         
-        
-   
+                    <a class="main_volume_socker other_services_nav_main {% if request.path == "/bot_templates/"  %} active_navigations {% endif %}" href="{% url 'bot_templates' %}"
+                    >
+                    <div class="volume_socker_icon"><img src="{% static "/img/demo_images/chart-up.png" %}"
+                        width="25px" alt=""></div>
+      
+                    <div class="main_title_desc_volume_socker">
+      
+                      <h6>Trading Strategies</h6>
+                      <p>Pre-created Options <br> trading strategies</p>
+                    </div>
+                  </a>
         
                   </div>
-<div class="bottom_main_stats" style="
-padding: 2rem 0; ">
-  <a class="main_volume_socker" href="https://www.screener.in/" target="_blank">
-    <div class="volume_socker_icon"><img src="{% static "/img/demo_images/chart-up.png" %}"
-        width="25px" alt=""></div>
-
-    <div class="main_title_desc_volume_socker">
-      <h6>Financial Result
-      </h6>
-
-      <p>Company's financial <br> performance reports</p>
-    </div>
-  </a>
-</div>
+                          <!-- <div class="bottom_main_stats" style="
+                          padding: 2rem 0; ">
+               
+                          </div> -->
                 </div> </div>
 
           </ul>
@@ -809,7 +839,7 @@ padding: 2rem 0; ">
         <style>
           #quick_galnces_main_nav{
             display: flex !important;
-            column-gap: 6rem !important;
+            /* column-gap: 6rem !important; */
             row-gap: 3rem !important;
             flex-wrap: wrap !important;
                   }
@@ -824,14 +854,14 @@ padding: 2rem 0; ">
           </a>
           <ul class="dropdown-menu animate slideIn megamenu" id="resources_dropdown_dashboard_markets">
 
-            <div class="d-flex m-0" style="  justify-content: center;   gap: 2rem;   padding: 19px;">
+            <div class="d-flex m-0" style="gap: 2rem; justify-content: center;   padding: 19px;">
               <div class="main_stock_stats_dashboard">
                <h5 class="main_title_stock_stats">  DASHBOARD & MARKETS</h5>
        
-               <div class="main_stock_stats_content" style="row-gap: 0;">
+               <div class="main_stock_stats_content" style="row-gap: 0; column-gap: 1rem;">
        
-                 <div class="top_main_stats" id="quick_galnces_main_nav" style="padding-bottom: 2rem; border-bottom: 1px solid #80808038;">
-                   <a class="main_volume_socker {% if request.path == "/dashboard1"  %} active_navigations {% endif %}" href="{% url 'dashboard1' %}"
+                 <div class="top_main_stats_market" id="quick_galnces_main_nav" style="padding-bottom: 2rem; column-gap: 1rem; ">
+                   <a class="main_volume_socker other_services_nav_main {% if request.path == "/dashboard1"  %} active_navigations {% endif %}" href="{% url 'dashboard1' %}"
                    >
 
 
@@ -847,7 +877,7 @@ padding: 2rem 0; ">
                       </a>
        
        
-                      <a class="main_volume_socker {% if request.path == "/stock_analysis"  %} active_navigations {% endif %}" href="{% url 'stock_analysis' %}"
+                      <a class="main_volume_socker other_services_nav_main {% if request.path == "/stock_analysis"  %} active_navigations {% endif %}" href="{% url 'stock_analysis' %}"
                       >
                      <div class="volume_socker_icon"><img src="{% static "/img/demo_images/chart-up.png" %}"
                          width="25px" alt=""></div>
@@ -862,7 +892,7 @@ padding: 2rem 0; ">
                      </div>
                     </a>
        
-                    <a class="main_volume_socker {% if request.path == "/nifty_tracker"  %} active_navigations {% endif %}" href="{% url 'nifty_tracker' %}"
+                    <a class="main_volume_socker other_services_nav_main {% if request.path == "/nifty_tracker"  %} active_navigations {% endif %}" href="{% url 'nifty_tracker' %}"
                     >
                      <div class="volume_socker_icon"><img src="{% static "/img/demo_images/chart-up.png" %}"
                          width="25px" alt=""></div>
@@ -877,21 +907,11 @@ padding: 2rem 0; ">
                      </div>
                     </a>
        
-                    <a class="main_volume_socker {% if request.path == "/bot_templates/"  %} active_navigations {% endif %}" href="{% url 'bot_templates' %}"
-                    >
-                    <div class="volume_socker_icon"><img src="{% static "/img/demo_images/chart-up.png" %}"
-                        width="25px" alt=""></div>
-      
-                    <div class="main_title_desc_volume_socker">
-      
-                      <h6>Bot Templates</h6>
-                      <p>Pre-created Options <br> trading strategies</p>
-                    </div>
-                  </a>
+                
 
 
                   
-                  <a class="main_volume_socker {% if request.path == "/market_glance"  %} active_navigations {% endif %}" href="{% url 'market_glance' %}"
+                  <a class="main_volume_socker other_services_nav_main {% if request.path == "/market_glance"  %} active_navigations {% endif %}" href="{% url 'market_glance' %}"
                   >
                     <div class="volume_socker_icon"><img src="{% static "/img/demo_images/chart-up.png" %}"
                         width="25px" alt=""></div>
@@ -905,14 +925,7 @@ padding: 2rem 0; ">
                     </div>
                   </a>
       
-      
-      
-      
-        
-       
-               </div>
-                <div class="bottom_main_stats" style="padding: 2rem 0; ">
-                  <a class="main_volume_socker {% if request.path == "/market_heavy"  %} active_navigations {% endif %}" href="{% url 'market_heavy' %}"
+                  <a class="main_volume_socker other_services_nav_main {% if request.path == "/market_heavy"  %} active_navigations {% endif %}" href="{% url 'market_heavy' %}"
                   >
                     <div class="volume_socker_icon"><img src="{% static "/img/demo_images/chart-up.png" %}"
                         width="25px" alt=""></div>
@@ -925,8 +938,12 @@ padding: 2rem 0; ">
                       </p>
                     </div>
                   </a>
+      
+      
+        
+       
+               </div>
 
-                </div>
                </div>
        
        
@@ -948,12 +965,12 @@ padding: 2rem 0; ">
        <div class="main_stock_stats_future_analysis">
         <h5 class="main_title_stock_stats"> FUTURES ANALYSIS</h5>
 
-        <div class="main_stock_stats_content" style="row-gap: 0;">
+        <div class="main_stock_stats_content"  style="row-gap: 0; column-gap: 1rem;">
 
-          <div class="top_main_stats" style="border-bottom: 1px solid #80808038;
+          <div class="top_main_stats" style="row-gap: 0; column-gap: 1rem;
           padding-bottom: 2rem;">
             
-            <a class="main_volume_socker {% if request.path == "/dashboard"  %} active_navigations {% endif %}" href="{% url 'dashboard' %}"
+            <a class="main_volume_socker other_services_nav_main {% if request.path == "/dashboard"  %} active_navigations {% endif %}" href="{% url 'dashboard' %}"
             >
        
               <div class="volume_socker_icon"><img src="{% static "/img/demo_images/chart-up.png" %}"
@@ -967,7 +984,7 @@ padding: 2rem 0; ">
             </a>
 
 
-            <a class="main_volume_socker {% if request.path == "/Futures_Buildup"  %} active_navigations {% endif %}" href="{% url 'Futures_Buildup' %}"
+            <a class="main_volume_socker other_services_nav_main {% if request.path == "/Futures_Buildup"  %} active_navigations {% endif %}" href="{% url 'Futures_Buildup' %}"
             >
 
               <div class="volume_socker_icon"><img src="{% static "/img/demo_images/chart-up.png" %}"
@@ -981,7 +998,7 @@ padding: 2rem 0; ">
               </div>
             </a>
                             
-            <a class="main_volume_socker {% if request.path == "/dii_fii"  %} active_navigations {% endif %}" href="{% url 'dii_fii' %}"
+            <a class="main_volume_socker other_services_nav_main {% if request.path == "/dii_fii"  %} active_navigations {% endif %}" href="{% url 'dii_fii' %}"
             >
    
               <div class="volume_socker_icon"><img src="{% static "/img/Futures-icons/FII-DII-Activity.png" %}"
@@ -996,7 +1013,7 @@ padding: 2rem 0; ">
               </div>
 
           </a>
-          <a class="main_volume_socker {% if request.path == "/stock_future"  %} active_navigations {% endif %}" href="{% url 'stock_future' %}"
+          <a class="main_volume_socker other_services_nav_main {% if request.path == "/stock_future"  %} active_navigations {% endif %}" href="{% url 'stock_future' %}"
           >
             <div class="volume_socker_icon"><img src="{% static "/img/Market-icons/stock-featues.png" %}"
                 width="25px" alt=""></div>
@@ -1008,7 +1025,7 @@ padding: 2rem 0; ">
             </div>
           </a>
             
-          <a class="main_volume_socker {% if request.path == "/derivative_summary"  %} active_navigations {% endif %}" href="{% url 'derivative_summary' %}"
+          <a class="main_volume_socker other_services_nav_main {% if request.path == "/derivative_summary"  %} active_navigations {% endif %}" href="{% url 'derivative_summary' %}"
           >
             <div class="volume_socker_icon"><img src="{% static "/img/Market-icons/derivative-summary.png" %}"
                 width="25px" alt=""></div>
@@ -1025,8 +1042,8 @@ padding: 2rem 0; ">
 
 
         </div>
-<div class="bottom_main_stats" style="padding: 2rem 0; ">
-  <div class="main_volume_socker">
+<!-- <div class="bottom_main_stats" style="padding: 2rem 0; ">
+  <div class="main_volume_socker other_services_nav_main">
     <div class="volume_socker_icon"><img src="{% static "/img/Futures-icons/FII-activity-F&O-cash.png" %}"
       width="25px" alt=""></div>
      
@@ -1037,7 +1054,7 @@ padding: 2rem 0; ">
        </p>
      </div>
    </div>
-</div>
+</div> -->
 
 
 
@@ -1067,10 +1084,11 @@ padding: 2rem 0; ">
         <div class="main_stock_stats">
           <h5 class="main_title_stock_stats">OPTION STRATEGY</h5>
 
-          <div class="main_stock_stats_content">
+          <div class="main_stock_stats_content"  style="row-gap: 0; column-gap: 1rem;">
 
-            <div class="top_main_stats">
-              <a class="main_volume_socker {% if request.path == "/stock_option_chart"  %} active_navigations {% endif %}" href="{% url 'stock_option_chart' %}"
+            <div class="top_main_stats"  style="row-gap: 0; column-gap: 1rem;     border-bottom: 1px solid #80808038;
+            padding-bottom: 1rem;">
+              <a class="main_volume_socker other_services_nav_main {% if request.path == "/stock_option_chart"  %} active_navigations {% endif %}" href="{% url 'stock_option_chart' %}"
               >
     
                 <div class="volume_socker_icon"><img src="{% static "/img/demo_images/chart-up.png" %}"
@@ -1083,25 +1101,19 @@ padding: 2rem 0; ">
                   </a>
     
     
-                  <a class="main_volume_socker {% if request.path == "/stock_option_chain"  %} active_navigations {% endif %}" href="{% url 'stock_option_chain' %}"
+                  <a class="main_volume_socker other_services_nav_main {% if request.path == "/stock_option_chain"  %} active_navigations {% endif %}" href="{% url 'stock_option_chain' %}"
                   >
               
                 <div class="volume_socker_icon"><img src="{% static "/img/demo_images/chart-up.png" %}"
                     width="25px" alt=""></div>
     
                 <div class="main_title_desc_volume_socker">
-                  <h6>Stock Option Chain</h6>
+                  <h6>Stock Option <br> Chain <span class="badge badge-arrow text-bg-success blue-tag ms-1 font-size-11 font-weight-400" style="font-size: 12px;">Updated</span></h6>
     
                   <p>Displays available <br> option contracts</p>
                 </div>
               </a>
-    
-
-
-            </div>
-            <div class="bottom_main_stats">
-              
-              <a class="main_volume_socker {% if request.path == "/option_strategy_optimizer"  %} active_navigations {% endif %}" href="{% url 'option_strategy_optimizer' %}"
+              <!-- <a class="main_volume_socker other_services_nav_main {% if request.path == "/option_strategy_optimizer"  %} active_navigations {% endif %}" href="{% url 'option_strategy_optimizer' %}"
               >
       
                 <div class="volume_socker_icon"><img src="{% static "/img/demo_images/chart-up.png" %}"
@@ -1112,8 +1124,15 @@ padding: 2rem 0; ">
                   <h6>Option Strategy Builder</h6>
                   <p>Creating trading <br> strategies</p>
                 </div>
-              </a>
-              <a class="main_volume_socker {% if request.path == "/option_index_statregy_executor"  %} active_navigations {% endif %}" href="{% url 'option_index_statregy_executor' %}"
+              </a> -->
+
+
+            </div>
+            <div class="bottom_main_stats"  style="row-gap: 0; column-gap: 1rem;     border-bottom: 1px solid #80808038;
+            padding: 1rem 0;">
+              
+      
+              <a class="main_volume_socker other_services_nav_main {% if request.path == "/option_index_statregy_executor"  %} active_navigations {% endif %}" href="{% url 'option_index_statregy_executor' %}"
               >
      
                 <div class="volume_socker_icon"><img src="{% static "/img/demo_images/chart-up.png" %}"
@@ -1121,16 +1140,11 @@ padding: 2rem 0; ">
     
                 <div class="main_title_desc_volume_socker">
     
-                  <h6>Option Index Strategy Executor</h6>
+                  <h6>Option Index Strategy Executor <span class="badge badge-arrow text-bg-success blue-tag ms-1 font-size-11 font-weight-400" style="font-size: 12px;">Updated</span></h6>
                   <p>Automate & execute <br> predefined strategies</p>
                 </div>
               </a>
-    
-  
-
-            </div>
-            <div class="utra_bottom_main_stats">
-              <a class="main_volume_socker {% if request.path == "/option_strategy_tester"  %} active_navigations {% endif %}" href="{% url 'option_strategy_tester' %}"
+              <!-- <a class="main_volume_socker other_services_nav_main {% if request.path == "/option_strategy_tester"  %} active_navigations {% endif %}" href="{% url 'option_strategy_tester' %}"
               >
     
                 <div class="volume_socker_icon"><img src="{% static "/img/demo_images/chart-up.png" %}"
@@ -1141,8 +1155,9 @@ padding: 2rem 0; ">
     
                   <p>Simulates & evaluate <br> trading strategies</p>
                 </div>
-              </a>
-              <a class="main_volume_socker {% if request.path == "/options_simulator"  %} active_navigations {% endif %}" href="{% url 'options_simulator' %}"
+              </a> -->
+  
+              <a class="main_volume_socker other_services_nav_main {% if request.path == "/options_simulator"  %} active_navigations {% endif %}" href="{% url 'options_simulator' %}"
               >
             
                 <div class="volume_socker_icon"><img src="{% static "/img/demo_images/chart-up.png" %}"
@@ -1154,38 +1169,41 @@ padding: 2rem 0; ">
                   <p>Perform virtual trades <br> in live Market</p>
                 </div>
               </a>
+            </div>
+            <div class="utra_bottom_main_stats"  style="row-gap: 0; column-gap: 1rem;
+            padding: 1rem 0;">
+       
+
+       <!-- <a class="main_volume_socker other_services_nav_main {% if request.path == "/option_dashboard"  %} active_navigations {% endif %}" href="{% url 'option_dashboard' %}"
+       >
   
+         <div class="volume_socker_icon"><img src="{% static "/img/demo_images/chart-up.png" %}"
+             width="25px" alt=""></div>
+
+         <div class="main_title_desc_volume_socker">
+           <h6>Option Dashboard</h6>
+
+           <p>Central display for <br> options information</p>
+         </div>
+       </a> -->
+
+
+     <a class="main_volume_socker other_services_nav_main {% if request.path == "/bse_option_chain"  %} active_navigations {% endif %}" href="{% url 'bse_option_chain' %}"
+         >
+         <div class="volume_socker_icon"><img src="{% static "/img/demo_images/chart-up.png" %}"
+             width="25px" alt=""></div>
+
+         <div class="main_title_desc_volume_socker">
+
+           <h6>BSE Option Chain</h6>
+           <p>BSE-specific stock <br> option contracts</p>
+         </div>
+     </a>
     
             </div>
 
-            <div class="bottom_main_stats_last">
-              <a class="main_volume_socker {% if request.path == "/option_dashboard"  %} active_navigations {% endif %}" href="{% url 'option_dashboard' %}"
-              >
-         
-                <div class="volume_socker_icon"><img src="{% static "/img/demo_images/chart-up.png" %}"
-                    width="25px" alt=""></div>
-    
-                <div class="main_title_desc_volume_socker">
-                  <h6>Option Dashboard</h6>
-    
-                  <p>Central display for <br> options information</p>
-                </div>
-              </a>
-    
-    
-              <a class="main_volume_socker {% if request.path == "/bse_option_chain"  %} active_navigations {% endif %}" href="{% url 'bse_option_chain' %}"
-              >
-                <div class="volume_socker_icon"><img src="{% static "/img/demo_images/chart-up.png" %}"
-                    width="25px" alt=""></div>
-    
-                <div class="main_title_desc_volume_socker">
-    
-                  <h6>BSE Option Chain</h6>
-                  <p>BSE-specific stock <br> option contracts</p>
-                </div>
-              </a>
+
             </div>
-          </div>
 
 
 
@@ -1194,10 +1212,11 @@ padding: 2rem 0; ">
               <div class="main_educations">
                 <h5 class="main_title_daily_stats">NIFTY / BANK NIFTY / FIN NIFTY</h5>
 
-                <div class="main_stock_stats_content">
+                <div class="main_stock_stats_content" style="row-gap: 0; column-gap: 1rem;">
         
-                  <div class="top_main_stats">
-                    <a class="main_volume_socker {% if request.path == "/put_call_ratio"  %} active_navigations {% endif %}" href="{% url 'put_call_ratio' %}"
+                  <div class="top_main_stats"  style="row-gap: 0; column-gap: 1rem;   border-bottom: 1px solid #80808038;
+                  padding-bottom: 1rem;">
+                    <a class="main_volume_socker other_services_nav_main {% if request.path == "/put_call_ratio"  %} active_navigations {% endif %}" href="{% url 'put_call_ratio' %}"
                     >
                       <div class="volume_socker_icon"><img src="{% static "/img/demo_images/chart-up.png" %}"
                           width="25px" alt=""></div>
@@ -1213,7 +1232,7 @@ padding: 2rem 0; ">
                     </a>
         
         
-                    <a class="main_volume_socker {% if request.path == "/put_call_ratio"  %} active_navigations {% endif %}" href="{% url 'put_call_ratio' %}"
+                    <a class="main_volume_socker other_services_nav_main {% if request.path == "/put_call_ratio"  %} active_navigations {% endif %}" href="{% url 'put_call_ratio' %}"
                     >
                       <div class="volume_socker_icon"><img src="{% static "/img/demo_images/chart-up.png" %}"
                           width="25px" alt=""></div>
@@ -1232,10 +1251,11 @@ padding: 2rem 0; ">
         
         
                   </div>
-                  <div class="bottom_main_stats">
+                  <div class="bottom_main_stats" style="row-gap: 0; column-gap: 1rem;
+                  padding: 1rem 0;   border-bottom: 1px solid #80808038;">
         
         
-                    <a class="main_volume_socker {% if request.path == "/put_call_ratio"  %} active_navigations {% endif %}" href="{% url 'put_call_ratio' %}"
+                    <a class="main_volume_socker other_services_nav_main {% if request.path == "/put_call_ratio"  %} active_navigations {% endif %}" href="{% url 'put_call_ratio' %}"
                     >
         
                       <div class="volume_socker_icon"><img src="{% static "/img/demo_images/chart-up.png" %}"
@@ -1252,7 +1272,7 @@ padding: 2rem 0; ">
                     </a>
         
         
-                    <a class="main_volume_socker {% if request.path == "/put_call_ratio"  %} active_navigations {% endif %}" href="{% url 'put_call_ratio' %}"
+                    <a class="main_volume_socker other_services_nav_main {% if request.path == "/put_call_ratio"  %} active_navigations {% endif %}" href="{% url 'put_call_ratio' %}"
                     >
                       <div class="volume_socker_icon"><img src="{% static "/img/demo_images/chart-up.png" %}"
                           width="25px" alt=""></div>
@@ -1266,8 +1286,9 @@ padding: 2rem 0; ">
                       </div>
                     </a>
                   </div>
-                  <div class="utra_bottom_main_stats">
-                    <a class="main_volume_socker {% if request.path == "/options_expiry_table"  %} active_navigations {% endif %}" href="{% url 'options_expiry_table' %}"
+                  <div class="utra_bottom_main_stats" style="row-gap: 0; column-gap: 1rem;
+                  padding: 1rem 0;">
+                    <a class="main_volume_socker other_services_nav_main {% if request.path == "/options_expiry_table"  %} active_navigations {% endif %}" href="{% url 'options_expiry_table' %}"
                     >
                       <div class="volume_socker_icon"><img src="{% static "/img/demo_images/chart-up.png" %}"
                           width="25px" alt=""></div>
@@ -1313,12 +1334,13 @@ padding: 2rem 0; ">
         <div class="main_stock_stats">
           <h5 class="main_title_stock_stats">STOCK STATS</h5>
 
-          <div class="main_stock_stats_content">
+          <div class="main_stock_stats_content" style="row-gap: 0;">
 
-            <div class="top_main_stats">
+            <div class="top_main_stats" style="row-gap: 0; column-gap: 1rem;
+            padding-bottom: 1rem; border-bottom: 1px solid #80808038;">
 
 
-              <a class="main_volume_socker {% if request.path == "/volume_socker"  %} active_navigations {% endif %}" href="{% url 'volume_socker' %}"
+              <a class="main_volume_socker other_services_nav_main {% if request.path == "/volume_socker"  %} active_navigations {% endif %}" href="{% url 'volume_socker' %}"
               >
          
                 <div class="volume_socker_icon"><img src="{% static "/img/Market-icons/Valume-shockers.png" %}"
@@ -1331,7 +1353,7 @@ padding: 2rem 0; ">
               </a>
 
 
-              <a class="main_volume_socker {% if request.path == "/intraday_breakouts"  %} active_navigations {% endif %}" href="{% url 'intraday_breakouts' %}"
+              <a class="main_volume_socker other_services_nav_main {% if request.path == "/intraday_breakouts"  %} active_navigations {% endif %}" href="{% url 'intraday_breakouts' %}"
               >
                 <div class="volume_socker_icon"><img src="{% static "/img/Market-icons/intraday-breakout.png" %}"
                     width="25px" alt=""></div>
@@ -1343,47 +1365,7 @@ padding: 2rem 0; ">
                 </div>
               </a>
 
-
-
-
-
-            </div>
-            <div class="bottom_main_stats">
-              
-              <a class="main_volume_socker {% if request.path == "/gap_up_gap_down"  %} active_navigations {% endif %}" href="{% url 'gap_up_gap_down' %}"
-              >
-       
-                <div class="volume_socker_icon"><img src="{% static "/img/Market-icons/Gap-up-Gap-down-Stocks.png" %}"
-                    width="25px" alt=""></div>
-
-                <div class="main_title_desc_volume_socker">
-                  <h6>Gap Up, Gap Down Stock</h6>
-
-                  <p>Open higher/lower <br> than previous day.
-                  </p>
-                </div>
-              </a>
-
-              <a class="main_volume_socker {% if request.path == "/top_loosers"  %} active_navigations {% endif %}" href="{% url 'top_loosers' %}"
-              >
-            
-                <div class="volume_socker_icon"><img src="{% static "/img/Market-icons/top-loser-stock.png" %}"
-                    width="25px" alt=""></div>
-
-                <div class="main_title_desc_volume_socker">
-
-                  <h6>Top Loser Stocks</h6>
-                  <p>Early market sentiment <br> from initial price.
-                  </p>
-                </div>
-              </a>
-
-
-            </div>
-
-            <div class="utra_bottom_main_stats">
-
-              <a class="main_volume_socker {% if request.path == "/top_gainers"  %} active_navigations {% endif %}" href="{% url 'top_gainers' %}"
+              <a class="main_volume_socker other_services_nav_main {% if request.path == "/top_gainers"  %} active_navigations {% endif %}" href="{% url 'top_gainers' %}"
               >
     
                 <div class="volume_socker_icon"><img src="{% static "/img/Market-icons/Top-gainer-stcok.png" %}"
@@ -1398,7 +1380,39 @@ padding: 2rem 0; ">
               </a>
 
 
-              <a class="main_volume_socker {% if request.path == "/opening_price_clues"  %} active_navigations {% endif %}" href="{% url 'opening_price_clues' %}"
+
+            </div>
+            <div class="bottom_main_stats" style="row-gap: 0; column-gap: 1rem;
+            padding: 1rem 0;">
+              
+              <a class="main_volume_socker other_services_nav_main {% if request.path == "/gap_up_gap_down"  %} active_navigations {% endif %}" href="{% url 'gap_up_gap_down' %}"
+              >
+       
+                <div class="volume_socker_icon"><img src="{% static "/img/Market-icons/Gap-up-Gap-down-Stocks.png" %}"
+                    width="25px" alt=""></div>
+
+                <div class="main_title_desc_volume_socker">
+                  <h6>Gap Up, Gap Down Stock</h6>
+
+                  <p>Open higher/lower <br> than previous day.
+                  </p>
+                </div>
+              </a>
+
+              <a class="main_volume_socker other_services_nav_main {% if request.path == "/top_loosers"  %} active_navigations {% endif %}" href="{% url 'top_loosers' %}"
+              >
+            
+                <div class="volume_socker_icon"><img src="{% static "/img/Market-icons/top-loser-stock.png" %}"
+                    width="25px" alt=""></div>
+
+                <div class="main_title_desc_volume_socker">
+
+                  <h6>Top Loser Stocks</h6>
+                  <p>Early market sentiment <br> from initial price.
+                  </p>
+                </div>
+              </a>
+              <a class="main_volume_socker other_services_nav_main {% if request.path == "/opening_price_clues"  %} active_navigations {% endif %}" href="{% url 'opening_price_clues' %}"
               >
                 <div class="volume_socker_icon"><img src="{% static "/img/demo_images/chart-up.png" %}"
                     width="25px" alt=""></div>
@@ -1409,7 +1423,10 @@ padding: 2rem 0; ">
                   <p>Highest daily <br>price decrease.</p>
                 </div>
               </a>
+
             </div>
+
+
           </div>
 
 
@@ -1418,10 +1435,11 @@ padding: 2rem 0; ">
         <div class="main_stats">
           <h5 class="main_title_daily_stats">STATS</h5>
 
-          <div class="main_stock_stats_content">
+          <div class="main_stock_stats_content" style="row-gap: 0;">
 
-            <div class="top_main_stats">
-              <a class="main_volume_socker {% if request.path == "/bulk_deal_data_page"  %} active_navigations {% endif %}" href="{% url 'bulk_deal_data_page' %}"
+            <div class="top_main_stats" style="row-gap: 0; column-gap: 1rem;
+            padding-bottom: 1rem;  border-bottom: 1px solid #80808038;">
+              <a class="main_volume_socker other_services_nav_main {% if request.path == "/bulk_deal_data_page"  %} active_navigations {% endif %}" href="{% url 'bulk_deal_data_page' %}"
               >
            
                 <div class="volume_socker_icon"><img src="{% static "/img/Market-icons/NSE-Bulk-deals-data.png" %}"
@@ -1436,7 +1454,7 @@ padding: 2rem 0; ">
               </a>
   
   
-              <a class="main_volume_socker {% if request.path == "/market_wide_position"  %} active_navigations {% endif %}" href="{% url 'market_wide_position' %}"
+              <a class="main_volume_socker other_services_nav_main {% if request.path == "/market_wide_position"  %} active_navigations {% endif %}" href="{% url 'market_wide_position' %}"
               >
                 <div class="volume_socker_icon"><img src="{% static "/img/Market-icons/ban-list.png" %}"
                     width="25px" alt=""></div>
@@ -1455,8 +1473,11 @@ padding: 2rem 0; ">
            
 
             </div>
-            <div class="bottom_main_stats">
-              <div class="main_volume_socker">
+            <div class="bottom_main_stats" style="row-gap: 0; column-gap: 1rem;
+            padding: 1rem 0;">
+
+<!--             
+              <div class="main_volume_socker other_services_nav_main">
                 <div class="volume_socker_icon"><img src="{% static "/img/Futures-icons/participants-wish-oi.png" %}"
                     width="25px" alt=""></div>
 
@@ -1465,9 +1486,9 @@ padding: 2rem 0; ">
 
                   <p>Total contracts held <br> by participants.</p>
                 </div>
-              </div>
+              </div> -->
 
-              <a class="main_volume_socker {% if request.path == "/holiday"  %} active_navigations {% endif %}" href="{% url 'holiday' %}"
+              <a class="main_volume_socker other_services_nav_main {% if request.path == "/holiday"  %} active_navigations {% endif %}" href="{% url 'holiday' %}"
               >
                 <div class="volume_socker_icon"><img src="{% static "/img/Futures-icons/BSE-NSE-Holiday-List.png" %}"
                     width="25px" alt=""></div>
@@ -1480,12 +1501,7 @@ padding: 2rem 0; ">
                 </div>
               </a>
   
-
-         
-            </div>
-            <div class="utra_bottom_main_stats">
-         
-              <a class="main_volume_socker {% if request.path == "/lot_size"  %} active_navigations {% endif %}" href="{% url 'lot_size' %}"
+              <a class="main_volume_socker other_services_nav_main {% if request.path == "/lot_size"  %} active_navigations {% endif %}" href="{% url 'lot_size' %}"
               >
          
                 <div class="volume_socker_icon"><img src="{% static "/img/Futures-icons/NSE-F&O-Lot-size.png" %}"
@@ -1498,9 +1514,9 @@ padding: 2rem 0; ">
                   </p>
                 </div>
               </a>
-
+         
             </div>
-    
+      
 
  
 
@@ -1617,11 +1633,12 @@ padding: 2rem 0; ">
                 <div class="main_stock_stats">
                   <h5 class="main_title_stock_stats">CONTRIBUTORS</h5>
 
-                  <div class="main_stock_stats_content">
+                  <div class="main_stock_stats_content" style="row-gap: 0;">
 
-                    <div class="top_main_stats">
+                    <div class="top_main_stats" style="row-gap: 0; column-gap: 1rem;
+                    padding-bottom: 1rem;  border-bottom: 1px solid #80808038;">
                       
-                      <a class="main_volume_socker {% if request.path == "/main_contributor/nifty/"  %} active_navigations {% endif %}" href="/main_contributor/nifty/">
+                      <a class="main_volume_socker other_services_nav_main {% if request.path == "/main_contributor/nifty/"  %} active_navigations {% endif %}" href="/main_contributor/nifty/">
                         <div class="volume_socker_icon"><img src="{% static "/img/demo_images/chart-up.png" %}"
                             width="25px" alt=""></div>
 
@@ -1633,7 +1650,7 @@ padding: 2rem 0; ">
                       </a>
 
 
-                      <a class="main_volume_socker {% if request.path == "/main_contributor/niftynext50/"  %} active_navigations {% endif %}"  href="/main_contributor/niftynext50/">
+                      <a class="main_volume_socker other_services_nav_main {% if request.path == "/main_contributor/niftynext50/"  %} active_navigations {% endif %}"  href="/main_contributor/niftynext50/">
                         <div class="volume_socker_icon"><img src="{% static "/img/demo_images/chart-up.png" %}"
                             width="25px" alt=""></div>
 
@@ -1645,14 +1662,24 @@ padding: 2rem 0; ">
                         </div>
                       </a>
 
-      
-  
+           
 
                     </div>
-                    <div class="bottom_main_stats">
-                      
+                    <div class="bottom_main_stats" style="row-gap: 0; column-gap: 1rem; border-bottom: 1px solid #80808038;
+                    padding: 1rem 0; ">
+                                 <a class="main_volume_socker other_services_nav_main {% if request.path == "/main_contributor/midcpnifty/"  %} active_navigations {% endif %}" href="/main_contributor/midcpnifty/">
+                                  <div class="volume_socker_icon"><img src="{% static "/img/demo_images/chart-up.png" %}"
+                                      width="25px" alt=""></div>
+          
+                                  <div class="main_title_desc_volume_socker">
+                                    <h6> Mid Cap Nifty Contributors</h6>
+          
+                                    <p>Prominent  mid-sized <br>firms.</p>
+                                  </div>
+                                </a>
+            
               
-                      <a class="main_volume_socker {% if request.path == "/main_contributor/banknifty/"  %} active_navigations {% endif %}" href="/main_contributor/banknifty/">
+                      <a class="main_volume_socker other_services_nav_main {% if request.path == "/main_contributor/banknifty/"  %} active_navigations {% endif %}" href="/main_contributor/banknifty/">
                         <div class="volume_socker_icon"><img src="{% static "/img/demo_images/chart-up.png" %}"
                             width="25px" alt=""></div>
 
@@ -1663,51 +1690,38 @@ padding: 2rem 0; ">
                         </div>
                       </a>
 
-                      <a class="main_volume_socker {% if request.path == "/main_contributor/finnifty/"  %} active_navigations {% endif %}" href="/main_contributor/finnifty/" >
-                        <div class="volume_socker_icon"><img src="{% static "/img/demo_images/chart-up.png" %}"
-                            width="25px" alt=""></div>
-
-                        <div class="main_title_desc_volume_socker">
-
-                          <h6>Fin Nifty Contributors</h6>
-                          <p>The key <br> financial companies
-                          </p>
-                        </div>
-                      </a>
-
           
         
                     </div>
-                    <div class="utra_bottom_main_stats">
+                    <div class="utra_bottom_main_stats" style="row-gap: 0; column-gap: 1rem;
+                    padding: 1rem 0; ">
 
-           
-                      <a class="main_volume_socker {% if request.path == "/main_contributor/midcpnifty/"  %} active_navigations {% endif %}" href="/main_contributor/midcpnifty/">
-                        <div class="volume_socker_icon"><img src="{% static "/img/demo_images/chart-up.png" %}"
-                            width="25px" alt=""></div>
+<a class="main_volume_socker other_services_nav_main {% if request.path == "/main_contributor/finnifty/"  %} active_navigations {% endif %}" href="/main_contributor/finnifty/" >
+  <div class="volume_socker_icon"><img src="{% static "/img/demo_images/chart-up.png" %}"
+      width="25px" alt=""></div>
 
-                        <div class="main_title_desc_volume_socker">
-                          <h6> Mid Cap Nifty Contributors</h6>
+  <div class="main_title_desc_volume_socker">
 
-                          <p>Prominent  mid-sized <br>firms.</p>
-                        </div>
-                      </a>
-                         <a class="main_volume_socker {% if request.path == "/main_contributor/midcapselect/"  %} active_navigations {% endif %}" href="/main_contributor/midcapselect/">
-                        <div class="volume_socker_icon"><img src="{% static "/img/demo_images/chart-up.png" %}"
-                            width="25px" alt=""></div>
+    <h6>Fin Nifty Contributors</h6>
+    <p>The key <br> financial companies
+    </p>
+  </div>
+</a>
 
-                        <div class="main_title_desc_volume_socker">
-                          <h6>Mid Cap Select Contributors
-                          </h6>
+<a class="main_volume_socker other_services_nav_main {% if request.path == "/main_contributor/midcapselect/"  %} active_navigations {% endif %}" href="/main_contributor/midcapselect/">
+  <div class="volume_socker_icon"><img src="{% static "/img/demo_images/chart-up.png" %}"
+      width="25px" alt=""></div>
 
-                          <p>Significant  mid-sized <br>firms.
-                          </p>
-                        </div>
-                      </a>
-          
-          
-            
-                    </div>
+  <div class="main_title_desc_volume_socker">
+    <h6>Mid Cap Select Contributors
+    </h6>
 
+    <p>Significant  mid-sized <br>firms.
+    </p>
+  </div>
+</a>
+
+                  </div>
                   </div>
 
 
@@ -1717,12 +1731,12 @@ padding: 2rem 0; ">
                 <div class="main_educations">
                   <h5 class="main_title_stock_stats">EDUCATION</h5>
 
-                  <div class="main_stock_stats_content">
+                  <div class="main_stock_stats_content" style="row-gap: 0;">
 
-                    <div class="top_main_stats">
+                    <div class="top_main_stats" style="row-gap: 0; column-gap: 1rem;padding-bottom: 1rem;  border-bottom: 1px solid #80808038;">
 
 
-                      <a class="main_volume_socker {% if request.path == "/learning_center"  %} active_navigations {% endif %}" href="{% url 'learning_center' %}"
+                      <a class="main_volume_socker other_services_nav_main {% if request.path == "/learning_center"  %} active_navigations {% endif %}" href="{% url 'learning_center' %}"
                       >
                         <div class="volume_socker_icon"><img src="{% static "/img/Education-icons/learning-centre-png.png" %}"
                             width="25px" alt=""></div>
@@ -1734,7 +1748,7 @@ padding: 2rem 0; ">
                                       </div>
                       </a>
 
-                      <a class="main_volume_socker {% if request.path == "/traders_handbook"  %} active_navigations {% endif %}" href="{% url 'traders_handbook' %}"
+                      <a class="main_volume_socker other_services_nav_main {% if request.path == "/traders_handbook"  %} active_navigations {% endif %}" href="{% url 'traders_handbook' %}"
                       >
                         <div class="volume_socker_icon"><img src="{% static "/img/Education-icons/Handbook-png.png" %}"
                             width="25px" alt=""></div>
@@ -1751,9 +1765,10 @@ padding: 2rem 0; ">
 
 
                     </div>
-                    <div class="bottom_main_stats">
+                    <div class="bottom_main_stats" style="row-gap: 0; column-gap: 1rem;   border-bottom: 1px solid #80808038;
+                    padding: 1rem 0; ">
                
-                      <a class="main_volume_socker {% if request.path == "/researchreports"  %} active_navigations {% endif %}" href="{% url 'researchreports' %}"
+                      <a class="main_volume_socker other_services_nav_main {% if request.path == "/researchreports"  %} active_navigations {% endif %}" href="{% url 'researchreports' %}"
                       >
                      
                         <div class="volume_socker_icon"><img src="{% static "/img/Education-icons/Research-reports.png" %}"
@@ -1766,7 +1781,7 @@ padding: 2rem 0; ">
                         </div>
                       </a>
 
-                    <a class="main_volume_socker {% if request.path == "/learning_Books"  %} active_navigations {% endif %}" href="{% url 'learning_Books' %}"
+                    <a class="main_volume_socker other_services_nav_main {% if request.path == "/learning_Books"  %} active_navigations {% endif %}" href="{% url 'learning_Books' %}"
                       >
                         <div class="volume_socker_icon"><img src="{% static "/img/Education-icons/E-books.png" %}"
                             width="25px" alt=""></div>
@@ -1782,8 +1797,9 @@ padding: 2rem 0; ">
 
         
                     </div>
-                    <div class="utra_bottom_main_stats">
-                      <a class="main_volume_socker {% if request.path == "/option_strategies"  %} active_navigations {% endif %}" href="{% url 'option_strategies' %}"
+                    <div class="utra_bottom_main_stats" style="row-gap: 0; column-gap: 1rem;
+                    padding: 1rem 0; ">
+                      <a class="main_volume_socker other_services_nav_main {% if request.path == "/option_strategies"  %} active_navigations {% endif %}" href="{% url 'option_strategies' %}"
                       >
                         <div class="volume_socker_icon"><img src="{% static "/img/Education-icons/Options-strategy.png" %}"
                             width="25px" alt=""></div>
@@ -1794,7 +1810,7 @@ padding: 2rem 0; ">
                           <p>Prominent  mid-sized <br>firms.</p>
                         </div>
                       </a>
-                       <a class="main_volume_socker {% if request.path == "/blog"  %} active_navigations {% endif %}" href="{% url 'blog' %}"
+                       <a class="main_volume_socker other_services_nav_main {% if request.path == "/blog"  %} active_navigations {% endif %}" href="{% url 'blog' %}"
                       >
                         <div class="volume_socker_icon"><img src="{% static "/img/Education-icons/News.png" %}"
                             width="25px" alt=""></div>
@@ -1840,7 +1856,7 @@ padding: 2rem 0; ">
           .main_volume_socker {
             display: flex;
             gap: 0.5rem;
-
+width: 16rem !important;
           }
 
           .main_title_desc_volume_socker h6 {
@@ -1931,9 +1947,9 @@ padding: 2rem 0; ">
 
           <div class="main_stock_stats_content" style="row-gap: 0;">
 
-            <div class="top_main_stats" style="border-bottom: 1px solid #80808038; padding-bottom: 2rem; ">
+            <div class="top_main_stats" style=" border-bottom: 1px solid #80808038; padding-bottom: 1rem; column-gap: 1rem;"> 
               
-              <a class="main_volume_socker {% if request.path == "/dashboard1"  %} active_navigations {% endif %}" href="{% url 'dashboard1' %}"
+              <a class="main_volume_socker other_services_nav_main {% if request.path == "/dashboard1"  %} active_navigations {% endif %}" href="{% url 'dashboard1' %}"
               >
        
        
@@ -1959,7 +1975,7 @@ padding: 2rem 0; ">
                </a>
        
        
-             <a class="main_volume_socker"   href="https://www.screener.in/" target="_blank"
+             <a class="main_volume_socker other_services_nav_main"   href="https://www.screener.in/" target="_blank"
                  >
                 <div class="volume_socker_icon">
                  <i class='bx bx-history'  style="   
@@ -1984,7 +2000,7 @@ padding: 2rem 0; ">
                 </div>
                </a>
        
-               <a class="main_volume_socker {% if request.path == "/nifty_tracker"  %} active_navigations {% endif %}" href="{% url 'nifty_tracker' %}"
+               <a class="main_volume_socker other_services_nav_main {% if request.path == "/nifty_tracker"  %} active_navigations {% endif %}" href="{% url 'nifty_tracker' %}"
                >
                 <div class="volume_socker_icon">
                  
@@ -2010,7 +2026,7 @@ padding: 2rem 0; ">
                 </div>
                </a>
        
-               <a class="main_volume_socker {% if request.path == "/watch_list"  %} active_navigations {% endif %}" href="{% url 'watch_list' %}"
+               <a class="main_volume_socker other_services_nav_main {% if request.path == "/watch_list"  %} active_navigations {% endif %}" href="{% url 'watch_list' %}"
                >
                <div class="volume_socker_icon">
                  
@@ -2096,7 +2112,7 @@ padding: 2rem 0; ">
        
        
              
-             <a class="main_volume_socker {% if request.path == "/stock_option_chain"  %} active_navigations {% endif %}" href="{% url 'stock_option_chain' %}"
+             <a class="main_volume_socker other_services_nav_main {% if request.path == "/stock_option_chain"  %} active_navigations {% endif %}" href="{% url 'stock_option_chain' %}"
              >
                <div class="volume_socker_icon">
                  
@@ -2211,10 +2227,10 @@ padding: 2rem 0; ">
 
 
             </div>
-            <div class="bottom_main_stats" style="border-bottom: 1px solid #80808038;     padding: 2rem 0; ">
+            <div class="bottom_main_stats" style="border-bottom: 1px solid #80808038;     padding: 1rem 0; column-gap: 1rem;">
               
       
-              <a class="main_volume_socker {% if request.path == "/stock_analysis"  %} active_navigations {% endif %}" href="{% url 'stock_analysis' %}"
+              <a class="main_volume_socker other_services_nav_main {% if request.path == "/stock_analysis"  %} active_navigations {% endif %}" href="{% url 'stock_analysis' %}"
               >
                 <div class="volume_socker_icon">
                   
@@ -2316,7 +2332,7 @@ padding: 2rem 0; ">
               </a>
         
         
-              <a class="main_volume_socker {% if request.path == "/contributor"  %} active_navigations {% endif %}" href="{% url 'contributor' %}"
+              <a class="main_volume_socker other_services_nav_main {% if request.path == "/contributor"  %} active_navigations {% endif %}" href="{% url 'contributor' %}"
               >
                 <div class="volume_socker_icon">
                   
@@ -2340,7 +2356,7 @@ padding: 2rem 0; ">
                   </p>
                 </div>
               </a>
-              <a class="main_volume_socker {% if request.path == "/blog_news"  %} active_navigations {% endif %}" href="{% url 'blog_news' %}"
+              <a class="main_volume_socker other_services_nav_main {% if request.path == "/blog_news"  %} active_navigations {% endif %}" href="{% url 'blog_news' %}"
               >
                 <div class="volume_socker_icon">
                   
@@ -2363,7 +2379,7 @@ padding: 2rem 0; ">
               </a>
         
         
-              <a class="main_volume_socker {% if request.path == "/option_strategy_optimizer"  %} active_navigations {% endif %}" href="{% url 'option_strategy_optimizer' %}"
+              <a class="main_volume_socker other_services_nav_main {% if request.path == "/option_strategy_optimizer"  %} active_navigations {% endif %}" href="{% url 'option_strategy_optimizer' %}"
               >
                 <div class="volume_socker_icon">
                   
@@ -2451,7 +2467,7 @@ padding: 2rem 0; ">
         
         
         
-              <a class="main_volume_socker {% if request.path == "/options_simulator"  %} active_navigations {% endif %}" href="{% url 'options_simulator' %}"
+              <a class="main_volume_socker other_services_nav_main {% if request.path == "/options_simulator"  %} active_navigations {% endif %}" href="{% url 'options_simulator' %}"
               >
                 <div class="volume_socker_icon">
                   
@@ -2537,10 +2553,10 @@ padding: 2rem 0; ">
   
 
             </div>
-            <div class="utra_bottom_main_stats" style="border-bottom: 1px solid #80808038;     padding: 2rem 0;">
+            <div class="utra_bottom_main_stats" style="border-bottom: 1px solid #80808038;     padding: 1rem 0; column-gap: 1rem;">
 
               
-              <a class="main_volume_socker {% if request.path == "/event_tracker"  %} active_navigations {% endif %}" href="{% url 'event_tracker' %}"
+              <a class="main_volume_socker other_services_nav_main {% if request.path == "/event_tracker"  %} active_navigations {% endif %}" href="{% url 'event_tracker' %}"
               >
               <div class="volume_socker_icon">
                                  
@@ -2565,7 +2581,7 @@ padding: 2rem 0; ">
             </a>
       
       
-            <a class="main_volume_socker {% if request.path == "/ipo_dashboard"  %} active_navigations {% endif %}" href="{% url 'ipo_dashboard' %}"
+            <a class="main_volume_socker other_services_nav_main {% if request.path == "/ipo_dashboard"  %} active_navigations {% endif %}" href="{% url 'ipo_dashboard' %}"
             >
               <div class="volume_socker_icon">
                 
@@ -2588,7 +2604,7 @@ padding: 2rem 0; ">
 
               </div>
             </a>
-            <a class="main_volume_socker {% if request.path == "/mutual_funds"  %} active_navigations {% endif %}" href="{% url 'mutual_funds' %}"
+            <a class="main_volume_socker other_services_nav_main {% if request.path == "/mutual_funds"  %} active_navigations {% endif %}" href="{% url 'mutual_funds' %}"
             >
               <div class="volume_socker_icon">
                 
@@ -2612,7 +2628,7 @@ padding: 2rem 0; ">
                 </p>
               </div>
             </a>
-            <a class="main_volume_socker {% if request.path == "/option_index_statregy_executor"  %} active_navigations {% endif %}" href="{% url 'option_index_statregy_executor' %}"
+            <a class="main_volume_socker other_services_nav_main {% if request.path == "/option_index_statregy_executor"  %} active_navigations {% endif %}" href="{% url 'option_index_statregy_executor' %}"
             >
               <div class="volume_socker_icon">
                 
@@ -2721,7 +2737,7 @@ padding: 2rem 0; ">
          {
  
               transition: 0.2s;
-              border-bottom: 3px solid #4399eb !important;
+              box-shadow: 0px 3px 0px 0px #59aaf9 !important;
           }
 
           .menu-large:hover .quick_glances_dropdown,
@@ -2734,9 +2750,9 @@ padding: 2rem 0; ">
           }
 
           .menu-large a:hover {
-    color: #4399eb !important;  /* Change this to your desired color */
-    transition: 0.2s;
-
+            transition: 0.2s;
+    background: rgb(237 163 157 / 10%);
+    border-radius: 5px;
 }
           .fs-14,
     .heading-title {
@@ -3090,18 +3106,26 @@ padding: 2rem 0; ">
 
   </div>
   {% endblock dashboard_body %}
+<style>
+  .footer_main_head{
+    font-size: 14px;
+  }
+  .bottom_footer_copy_right li{
+font-size: 15px;
+  }
 
+</style>
 
   <footer class="footer">
     <div class="container footer_content">
         <div class="d-flex justify-content-between mb-3">
-            <div>Free training & 24-hours support</div>
-            <div>Serious about security & privacy</div>
-            <div>Highest level of offers the last 12 months</div>
+            <div class="footer_main_head">Free training & 24-hours support</div>
+            <div class="footer_main_head">Serious about security & privacy</div>
+            <div class="footer_main_head">Highest level of offers the last 12 months</div>
         </div>
         <div class="row footer_text">
             <div class="col-lg-3">
-             <h5>Top 5 Brokers</h5>
+             <h6>Top 5 Brokers</h>
              <div class="brokers mt-4">
                   <div class="row">
                     <div class="col-lg-6"><button>5paisa</button></div>
@@ -3114,7 +3138,7 @@ padding: 2rem 0; ">
              </div>
             </div>
             <div class="col-lg-2">
-                <h5>Comapny</h5>
+                <h6>Comapny</h>
                 <div>
                     <ul class="list-unstyled">
                         <li><a href=" "> About us</a></li>
@@ -3129,7 +3153,7 @@ padding: 2rem 0; ">
                 </div>
             </div>
             <div class="col-lg-2">
-                <h5>Others link</h5>
+                <h6>Top Features</h6>
                 <div>
                     <ul class="list-unstyled">
                         <li><a href="">Broke Directory</a></li>
@@ -3140,7 +3164,7 @@ padding: 2rem 0; ">
                 </div>
             </div>
             <div class="col-lg-2">
-                <h5>Others Link</h5>
+                <h6>Market </h6>
                 <div>
                     <ul class="list-unstyled">
                         <li><a href="">Broke Directory</a></li>
@@ -3151,8 +3175,8 @@ padding: 2rem 0; ">
                 </div>
             </div>
             <div class="col-lg-3">
-                <h5>Subscribe to Newsletter</h5>
-                <span class="fw-light">Sign up and receive the latest tips via email.</span>
+                <h6>Subscribe to Newsletter</h6>
+                <span class="fw-light" style="    font-size: 14px;">Sign up and receive the latest tips via email.</span>
                 <div action="" class="mt-3">
                     <div class="input-group mb-3" id="subscribe_main">
                       
@@ -3162,11 +3186,15 @@ padding: 2rem 0; ">
                    </div>
             </div>
         </div>
-        <div class="footer_icons d-flex justify-content-between mt-5">
+        <div class="footer_icons d-flex justify-content-between mt-3">
             <div class="footer_logo">
-              <img src="{% static "/img/footer_logo_perks_now.png" %}" alt="footer-logo" width="200px">
+              <a href="{% url 'dashboard1' %}">
+
+                <img src="{% static "/img/footer_logo_perks_now.png" %}" alt="footer-logo" width="200px">
+
+              </a>
                 <div>
-                    <ul class="list-unstyled d-flex gap-3" style="flex-wrap: wrap;">
+                    <ul class="list-unstyled d-flex gap-3 bottom_footer_copy_right" style="flex-wrap: wrap;">
                         <li>&copy; 2023 OptionPerks</li>
                         <li>Security</li>
                         <li>Your Privacy</li>
@@ -3242,6 +3270,8 @@ padding: 2rem 0; ">
         .footer_text a{
             text-decoration: none;
             color: white;
+            font-weight: 200 !important;
+    font-size: 14px;
         }
         .footer_text  ul li{
             margin:  8px 0;
