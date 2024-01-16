@@ -1,5 +1,8 @@
 {% extends "base_dashboard.html" %}
 {% load static %}
+{% block title %}
+Dashboard | Optionperks
+{% endblock title %}
 {% block dashboard_body %}
 <style>
   .traded_icons {
@@ -285,7 +288,7 @@
         url: '/base_dashboard1',
         type: 'GET',
         success: function (data) {
-          console.log("HII");
+          //console.log("HII");
 
           $('#nifty_50_symbol').text(data.nifty50_data.symbol_name);
           $('#nifty_50_high').text(data.nifty50_data.high);
@@ -357,7 +360,7 @@ $("#spinner").show()
         success: function (data) {
             $("#tables-container").empty(countryTable);
           for (var i = 0; i < data.tables.length; i++) {
-            console.log(data.tables[i].country)
+            //console.log(data.tables[i].country)
             var countryTable = "";
             countryTable += "<child_global>";
             countryTable += `<div class="country_indices_refresh d-flex  justify-content-between" style="">
@@ -480,19 +483,19 @@ $("#spinner").show()
       url: "/market_actions",
       method: "GET",
       success: function (response) {
-        console.log(response.tables);
+        //console.log(response.tables);
 
         // top_start
         topgainers = response.tables.filter((x) => {
           return x.category == "topGainers";
         });
-        console.log(topgainers);
+        //console.log(topgainers);
         var top_gainers = "";
         final_top = topgainers.map((y) => {
           y.data.forEach((z) => {
             var progress_market_color = z.change_value > 0 ? "text-success" : "text-danger";
             var progress_market = z.change_value > 0 ? "up" : "down";
-            console.log(z.symbol_name);
+            //console.log(z.symbol_name);
             $("#top_gainers_table").append(
               `<tr>
                       <td><i class="bi bi-graph-up"></i></td>
@@ -536,13 +539,13 @@ $("#spinner").show()
         topLosers = response.tables.filter((loser_1) => {
           return loser_1.category == "topLosers";
         });
-        console.log(topLosers);
+        //console.log(topLosers);
         var top_gainers = "";
         final_top = topLosers.map((loser_2) => {
           loser_2.data.forEach((loser_3) => {
             var progress_market_color = loser_3.change_value > 0 ? "text-success" : "text-danger";
             var progress_market = loser_3.change_value > 0 ? "up" : "down";
-            console.log(loser_3.symbol_name);
+            //console.log(loser_3.symbol_name);
             $("#top_losers_table").append(
               `<tr>
                       <td><i class="bi bi-graph-up"></i></td>
@@ -581,13 +584,13 @@ $("#spinner").show()
         sameOpenAndLow = response.tables.filter((sameOpenAndLow_1) => {
           return sameOpenAndLow_1.category == "sameOpenAndLow";
         });
-        console.log(sameOpenAndLow);
+        //console.log(sameOpenAndLow);
         var top_gainers = "";
         final_top = sameOpenAndLow.map((sameOpenAndLow_2) => {
           sameOpenAndLow_2.data.forEach((sameOpenAndLow_3) => {
             var progress_market_color = sameOpenAndLow_3.change_value > 0 ? "text-success" : "text-danger";
             var progress_market = sameOpenAndLow_3.change_value > 0 ? "up" : "down";
-            console.log(sameOpenAndLow_3.symbol_name);
+            //console.log(sameOpenAndLow_3.symbol_name);
             $("#same_open_and_low").append(
               `<tr>
                       <td><i class="bi bi-graph-up"></i></td>
@@ -626,13 +629,13 @@ $("#spinner").show()
         sameOpenAndHigh = response.tables.filter((sameOpenAndHigh_1) => {
           return sameOpenAndHigh_1.category == "sameOpenAndHigh";
         });
-        console.log(sameOpenAndHigh);
+        //console.log(sameOpenAndHigh);
         var top_gainers = "";
         final_top = sameOpenAndHigh.map((sameOpenAndHigh_2) => {
           sameOpenAndHigh_2.data.forEach((sameOpenAndHigh_3) => {
             var progress_market_color = sameOpenAndHigh_3.change_value > 0 ? "text-success" : "text-danger";
             var progress_market = sameOpenAndHigh_3.change_value > 0 ? "up" : "down";
-            console.log(sameOpenAndHigh_3.symbol_name);
+            //console.log(sameOpenAndHigh_3.symbol_name);
             $("#same_Open_And_High").append(
               `<tr>
                       <td><i class="bi bi-graph-up"></i></td>
@@ -671,13 +674,13 @@ $("#spinner").show()
         gapUp = response.tables.filter((gapUp_1) => {
           return gapUp_1.category == "gapUp";
         });
-        console.log(gapUp);
+        //console.log(gapUp);
         var top_gainers = "";
         final_top = gapUp.map((gapUp_2) => {
           gapUp_2.data.forEach((gapUp_3) => {
             var progress_market_color = gapUp_3.change_value > 0 ? "text-success" : "text-danger";
             var progress_market = gapUp_3.change_value > 0 ? "up" : "down";
-            console.log(gapUp_3.symbol_name);
+            //console.log(gapUp_3.symbol_name);
             $("#gap_Up").append(
               `<tr>
                       <td><i class="bi bi-graph-up"></i></td>
@@ -716,13 +719,13 @@ $("#spinner").show()
         gapDown = response.tables.filter((gapDown_1) => {
           return gapDown_1.category == "gapDown";
         });
-        console.log(gapDown);
+        //console.log(gapDown);
         var top_gainers = "";
         final_top = gapDown.map((gapDown_2) => {
           gapDown_2.data.forEach((gapDown_3) => {
             var progress_market_color = gapDown_3.change_value > 0 ? "text-success" : "text-danger";
             var progress_market = gapDown_3.change_value > 0 ? "up" : "down";
-            console.log(gapDown_3.symbol_name);
+            //console.log(gapDown_3.symbol_name);
             $("#gap_Down").append(
               `<tr>
                       <td><i class="bi bi-graph-up"></i></td>
@@ -760,7 +763,7 @@ $("#spinner").show()
 
       },
       error: function () {
-        console.log("Error occurred while fetching data for category: " + category.name);
+        //console.log("Error occurred while fetching data for category: " + category.name);
       },
       complete: function () {
         // Schedule the next update after 5 seconds
@@ -785,13 +788,13 @@ $("#spinner").show()
       url: "{% url 'ban_list_dashboard' %}",
       method: "GET",
       success: function (response) {
-        console.log(response)
+        //console.log(response)
         populateTable(response.securities_ban_result, "#securities_ban_table");
         populateTable(response.possible_entrants_result, "#possible_entrants_table");
         populateTable(response.possible_exits_result, "#possible_exits_table");
       },
       error: function () {
-        console.log("Error occurred while fetching data.");
+        //console.log("Error occurred while fetching data.");
       }
     });
 
@@ -800,7 +803,7 @@ $("#spinner").show()
       tableBody.empty();
 
       data.forEach(function (item) {
-        console.log(item)
+        //console.log(item)
         var row = $("<tr></tr>");
         row.append($("<td></td>").text(item.symbol_name));
         row.append($("<td></td>").text(item.previous_percent));
@@ -867,7 +870,7 @@ $("#spinner").show()
                         data: rowData,
                         dataType: "json",
                         success: function (response) {
-                            console.log(response);
+                            //console.log(response);
                             if (response.message1) {
                                 $("#alert-watchlist").text(response.message1).addClass('alert alert-danger show').removeClass('alert-success').fadeIn();
                             } else if (response.message2) {
@@ -882,7 +885,7 @@ $("#spinner").show()
 
                         },
                         error: function (xhr, textStatus, errorThrown) {
-                            console.log("Error occurred while saving data:", errorThrown);
+                            //console.log("Error occurred while saving data:", errorThrown);
                             // Handle any error or show error message here
                         },
                     });
@@ -945,15 +948,20 @@ right: 0;">
       <hr>
 
       <div class="bottom_card">
-        <a href="{% url 'put_call_ratio' %}" id="market_top" >Analytics</a>
-        <a href="{% url 'put_call_ratio' %}" id="market_top" class="nifty_oi">Options</a>
-        <a href="{% url 'put_call_ratio' %}" id="market_top">PCR</a>
+        <a id="market_top"  href="/put_call_ratio/open_interest/" onclick="handleClick('open_interest')" >Analytics</a>
+        <a href="/put_call_ratio/change_OI/" onclick="handleClick('change_OI')" id="market_top" class="nifty_oi">Options</a>
+        <a href="/put_call_ratio/put_call_ratio_main/" onclick="handleClick('put_call_ratio_main')" id="market_top">PCR</a>
         <a href="stock_option_chain" id="market_top"  class="nifty_option_chain">Chain</a>
-        <a href="{% url 'put_call_ratio' %}" id="market_top">Max pain</a>
-        <a href="{% url 'contributor' %}" id="market_top" class="nifty_50_contributor">Contributors</a>
+        <a href="/put_call_ratio/live_max_pain/" onclick="handleClick('live_max_pain')" id="market_top">Max pain</a>
+        <a href="main_contributor/nifty/" id="market_top" class="nifty_50_contributor">Contributors</a>
       </div>
     </div>
-
+    <script>
+      function handleClick(activeSection) {
+          var fullUrl = "{% url 'put_call_ratio' active_section='dummy' %}".replace('dummy', activeSection);
+          window.location.href = fullUrl;
+      }
+  </script>
     <script>
 $(document).ready(function () {
   $(".nifty_50_contributor").click(function () {
@@ -1038,12 +1046,12 @@ $(document).ready(function () {
       <hr>
 
       <div class="bottom_card">
-        <a href="{% url 'put_call_ratio' %}" id="market_top">Analytics</a>
-        <a href="{% url 'put_call_ratio' %}" id="market_top" class="banknifty_oi">Options</a>
-        <a href="{% url 'put_call_ratio' %}" id="market_top">PCR</a>
-        <a href="stock_option_chain" id="market_top" class="banknifty_option_chain">Chain</a>
-        <a href="{% url 'put_call_ratio' %}" id="market_top">Max pain</a>
-        <a href="{% url 'contributor' %}" id="market_top" class="niftybank_contributor">Contributors</a>
+        <a id="market_top"  href="/put_call_ratio/open_interest/" onclick="handleClick('open_interest')" >Analytics</a>
+        <a href="/put_call_ratio/change_OI/" onclick="handleClick('change_OI')" id="market_top" class="nifty_oi">Options</a>
+        <a href="/put_call_ratio/put_call_ratio_main/" onclick="handleClick('put_call_ratio_main')" id="market_top">PCR</a>
+        <a href="stock_option_chain" id="market_top"  class="nifty_option_chain">Chain</a>
+        <a href="/put_call_ratio/live_max_pain/" onclick="handleClick('live_max_pain')" id="market_top">Max pain</a>
+        <a href="main_contributor/banknifty/" id="market_top" class="nifty_50_contributor">Contributors</a>
       </div>
     </div>
     <div class="nifty_main shadow"
@@ -1082,7 +1090,7 @@ $(document).ready(function () {
         <a href="{% url 'put_call_ratio' %}" id="market_top">PCR</a>
         <a href="stock_option_chain" id="market_top" class="finnifty_option_chain">Chain</a>
         <a href="{% url 'put_call_ratio' %}" id="market_top">Max pain</a>
-        <a href="{% url 'contributor' %}" id="market_top" class="finnifty_contributor">Contributors</a>
+        <a href="main_contributor/finnifty/" id="market_top" class="finnifty_contributor">Contributors</a>
       </div>
     </div>
 
@@ -2171,7 +2179,7 @@ white-space: nowrap;">
               });
             },
             error: function () {
-              console.log("Error occurred while fetching data.");
+              //console.log("Error occurred while fetching data.");
             }
           });
         }
@@ -2245,7 +2253,7 @@ white-space: nowrap;">
               });
             },
             error: function () {
-              console.log("Error occurred while fetching data.");
+              //console.log("Error occurred while fetching data.");
             }
           });
         }
@@ -2287,7 +2295,7 @@ white-space: nowrap;">
             data: { option: selectedOption_Upper }, // Pass the selected option as a parameter
             dataType: "json",
             success: function (data) {
-              // console.log(data["upper"][selectedOption_Upper]["data"]);
+              // //console.log(data["upper"][selectedOption_Upper]["data"]);
               // Hide the spinner
               $("#spinner").hide();
               if (dataTable_upper !== null) {
@@ -2322,7 +2330,7 @@ white-space: nowrap;">
               });
             },
             error: function () {
-              console.log("Error occurred while fetching data.");
+              //console.log("Error occurred while fetching data.");
             }
           });
         }
@@ -2361,7 +2369,7 @@ white-space: nowrap;">
             data: { option: selectedOption_lower }, // Pass the selected option as a parameter
             dataType: "json",
             success: function (data) {
-              console.log(data["lower"][selectedOption_lower]["data"]);
+              //console.log(data["lower"][selectedOption_lower]["data"]);
               // Hide the spinner
               $("#spinner").hide();
 
@@ -2391,7 +2399,7 @@ white-space: nowrap;">
               }
             },
             error: function () {
-              console.log("Error occurred while fetching data.");
+              //console.log("Error occurred while fetching data.");
             }
           });
         }
@@ -2919,12 +2927,12 @@ padding: 25px;">
         createTable(data);
       },
       error: function (error) {
-        console.log(error);
+        //console.log(error);
       }
     });
 
     function createTable(data) {
-      console.log(data);
+      //console.log(data);
       const tableBody = $('#volumeShockerTable tbody');
 
       // Clear any existing rows in the table body
@@ -2964,7 +2972,7 @@ padding: 25px;">
         createTable(data);
       },
       error: function (error) {
-        console.log(error);
+        //console.log(error);
       }
     });
 
@@ -3019,7 +3027,7 @@ padding: 25px;">
         createTable(data);
       },
       error: function (error) {
-        console.log(error);
+        //console.log(error);
       }
     });
 
