@@ -1,9 +1,6 @@
 <!DOCTYPE html>
 {% load static %}
 <html lang="en">
-
-
-
   <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -13,7 +10,12 @@
     <meta name="description" content="">
     <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
     <meta name="generator" content="Hugo 0.112.5">
-    <title>Dashboard | Algo Trading</title>
+    <title>
+
+      {% block title %}
+        
+      {% endblock title %}
+    </title>
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
     <script src="https://code.jquery.com/jquery-3.5.1.js" crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
@@ -350,7 +352,7 @@ z-index: 9;
 
   .btns_two {
     background-color: transparent;
-    color: black;
+    color: #59aaf9;
     border: 2px solid #59aaf9;
     padding: 5px 18px;
     border-radius: 5px;
@@ -1155,7 +1157,7 @@ z-index: 9;
           
                       <div class="main_title_desc_volume_socker">
           
-                        <h6>Option Index Strategy Executor <span class="badge badge-arrow text-bg-success blue-tag ms-1 font-size-11 font-weight-400" style="font-size: 12px;">Updated</span></h6>
+                        <h6>Option Index Strategy Executor <span class="badge badge-arrow text-bg-primary blue-tag ms-1 font-size-11 font-weight-400" style="font-size: 12px;">Popular</span></h6>
                         <p>Automate & execute <br> predefined strategies</p>
                       </div>
                     </a>
@@ -2826,7 +2828,7 @@ width: 16rem !important;
       <div>
         <button class="btns" id="headermainSignup" title="signup" data-bs-toggle="modal" data-bs-target="#signupModal">
           Sign Up</button>
-        <button class="btns_two" id="headermainSignin" title="signin" data-bs-toggle="modal"
+        <button class="btns_two" id="headermainSignin_header" title="signin" data-bs-toggle="modal"
           data-bs-target="#signinModal"> Sign In</button>
       </div>
       {% endif %}
@@ -4208,74 +4210,251 @@ font-weight: 100;
   </div>
   <!-- Modal to show -->
 
-  <div class="modal modal--signin fade" style="z-index: 9999999999999999999;" id="signinModal" tabindex="-1"
-    role="dialog" aria-labelledby="SignIn" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-      <div class="modal-content py-5">
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
-          style="position: relative; display: flex; top: -2rem; left: 92%;"></button>
-        <div class="modal-header justify-content-center pb-3">
-          <h5 class="modal-title" id="SignIn">Sign in</h5>
-        </div>
-        <div class="modal-body">
-          <div class="modal-body-cover">
-            <form id="modalSignInForm" method='post' action="{% url 'login_user' %}" class="d-flex flex-column">
-              {% csrf_token %}
-              <span class="text-danger show-error-text" id="error_login_error_login"></span>
-              <div class="form-group">
-                <label for="modalEmailSignIn">Email</label>
-                <input class="form-control" id="modalEmailSignIn" name="email" type="email" required
-                  aria-describedby="emailHelp">
-                <span class="text-danger show-error-text" id="error_login_email"></span>
-              </div>
-              <div class="form-group">
-                <label for="modalPasswordSignIn">Password</label>
-                <input class="form-control" id="modalPasswordSignIn" type="password" name="password" required
-                  aria-describedby="passwordHelp">
-                <span class="text-danger show-error-text" id="error_login_password"></span>
-                <a class="form-text text-muted" id="passwordHelp" href="{% url 'reset_password' %}">Forgot
-                  password?</a>
-              </div>
-              <div class="form-group form-group--error position-relative">
-                <div class="form-helper position-absolute d-flex align-items-start">
-                  <span>Wrong email/password</span>
+  <div class="modal fade" id="signinModal" tabindex="-1" role="dialog" aria-labelledby="SignIn"
+  aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+      <div class="modal-content">
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="
+       position: relative;
+    display: flex;
+    top: 1rem;
+    left: 96%;
+    z-index: 99;
+ 
+ 
+ "
+ 
+ 
+ ></button>
+          
+          <div class="modal-body">
+           <div class="row">
+             <!-- First column - Login Form -->
+             <div class="col-md-6" style="border-right: 1px solid rgba(0, 0, 0, 0.27);">
+               <div class="benefits" style="padding: 1.5rem !important;">
+                 <h2 class="text-center">Benefits</h2>
+                 <ul>
+                     <li class="mt-4"><b> Customized Option Chain</b><br> <span>Craft your perfect strategy, brick by brick, with customized options chains.</span> </li>
+                     <li class="mt-4"><b>Save Screener Filters</b><br><span>Skip the repetitive searching - keep your favorite market scans ready to go.</span> </li>
+                     <li class="mt-4"><b>Set Custom Stock Filters</b><br><span>Elevate your stock selection skills! Choose the stars with personalized filters.</span> </li>
+                     <li class="mt-4"><b>GPT Watchlist</b><br><span>Let your smart market assistant, powered by GPT, discover opportunities while you relax.</span> </li>
+                 </ul>
+               </div>
+             </div>
+             
+    
+             <!-- Second column - Information about Website -->
+             <div class="col-md-6" style="padding: 0 33px !important;" >
+               
+               <img src="https://optionperks.com/static/img/header_logo_perk.png" style="height: 70px;" alt="Logo" class="img-fluid mb-3">
+               <form id="modalSignInForm" method='post' action="{% url 'login_user' %}">
+                 {% csrf_token %}
+                 <div class="mb-3">
+                   <label for="modalEmailSignIn" class="form-label">Email</label>
+                   <input type="email" class="form-control" name="email" id="modalEmailSignIn" placeholder="example@email.com">
+                 </div>
+                 <div class="mb-3" style="position: relative;">
+                   <label for="modalPasswordSignIn" class="form-label">Password</label>
+                   <input type="password" class="form-control" id="modalPasswordSignIn" name="password" placeholder="Enter your password" aria-describedby="eyeIcon">
+                   <span class="eye-icon" id="eyeIcon" style="cursor: pointer;">
+                       <i class="bi bi-eye" aria-hidden="true"></i>
+                   </span>
                 </div>
-              </div>
-              <div class="position-relative mb-3">
-                <div data-sitekey="6LcLyMwZAAAAAMYfPLgiFvrprPgc8zdkifiais0p" class="g-recaptcha"></div>
-                <span class="text-danger show-error-text" id="error_login_g-recaptcha-response"></span>
-              </div>
-              <button class="btns" id="headermainSignin" type="submit">Sign in</button>
-              <p class="modal__link d-flex align-items-center justify-content-center">Don’t have an
-                account?&nbsp;
-                <a href='#' id="sign_up_link" data-bs-dismiss='modal' data-bs-toggle='modal'
-                  data-bs-target='#signupModal'> Sign up</a>
-              </p>
-            </form>
-            <div class="modal__or">
-              <p><span>or</span></p>
-            </div>
-            <div class="modal__btn-wrapper d-flex flex-column">
-              <a class="btn modal__btn c-btn c-btn--bg modal__btn--facebook d-flex align-items-center justify-content-start"
-                href="https://tradetron.tech/auth/redirect/facebook" title="">
-                <div class="d-flex align-items-center justify-content-center">
-                  <i class="bi bi-facebook"></i>
-                </div>
-                <span>Sign in with Facebook</span>
-              </a>
-              <a class="btn modal__btn c-btn c-btn--bg modal__btn--google d-flex align-items-center justify-content-start"
-                href="https://tradetron.tech/auth/redirect/google" title="">
-                <div class="d-flex align-items-center justify-content-center">
-                  <i class="bi bi-google"></i>
-                </div>
-                <span>Sign in with Google</span>
-              </a>
-            </div>
-          </div>
-        </div>
+                   <div class="d-flex justify-content-between align-items-center mt-2">
+                     <div class="form-check">
+                         <input type="checkbox" class="form-check-input remind_me" id="rememberMe">
+                         <label class="form-check-label" for="rememberMe">Remind Me</label>
+                     </div>
+                     <a href="{% url 'reset_password' %}" class="forgot-password-link text-success">Forgot Password?</a>
+                  </div>
+                 <button type="submit" class="btn btn-success w-100 mt-3" id="headermainSignin">Login</button>
+   
+                 
+   
+           <!-- "Or" option -->
+           <div class="dotted-line-text">
+             OR
+         </div>
+   
+           <!-- "Sign in with Google" button using Bootstrap's button styles -->
+           <button type="button" class="btn btn-outline-success w-100" id="google_btn"><img src="{% static "img/google _png'.png" %} " style="height: 20px;" alt=""> Sign in with Google</button>
+           <p class="text-center mt-2" id="signup_text">Oops, don't have an account? <a data-bs-dismiss='modal' data-bs-toggle='modal' style="cursor: pointer;"
+            data-bs-target='#signupModal' class="text-success" >Sign up now</a></p>
+               </form>
+             </div>
+           </div>
+         </div>
       </div>
-    </div>
   </div>
+ </div>
+ </div>
+ 
+ 
+ <style>
+   .modal-header {
+     border: none !important;
+ }
+ 
+ /* Remove border from modal footer */
+ .modal-footer {
+     border: none !important;
+ }
+ 
+ .remind_me:checked {
+   background-color: #28a745 !important; /* Set the color to green */
+ }
+   
+ .password-toggle-btn {
+   cursor: pointer;
+   position: absolute;
+   right: 10px;
+   top: 50%;
+   transform: translateY(-50%);
+   background: none;
+   border: none;
+ }
+ 
+ .password-toggle-btn i {
+   font-size: 1.5rem;
+ }
+ 
+ #modalPasswordSignIn,#modalEmailSignIn {
+   background-color: #f2f2f2; /* Light grey color */
+ }
+ 
+ #modalEmailSignIn::placeholder,
+ #modalPasswordSignIn::placeholder {
+     font-size: 0.9rem; /* Adjust the size as needed */
+ }
+ 
+ .eye-icon {
+   position: absolute;
+   right: 16px; /* Adjust the right distance as needed */
+   top: 76%;
+   transform: translateY(-50%);
+   cursor: pointer;
+ }
+ 
+ .eye-icon i {
+   font-size: 1.2rem; /* Adjust the icon size as needed */
+ }
+ 
+ a, #signup_text{
+   text-decoration: none;
+   padding-bottom: 5px;
+     font-size: 12px;
+     font-weight: 500;
+     letter-spacing: .1px;
+ }
+ 
+ #google_btn{
+   color: black !important;
+   font-size: 12px;
+   font-weight: 500;
+   letter-spacing: .1px;
+   height: 45px;
+ }
+ 
+ #google_btn:hover{
+   color: white !important;
+   background: #01a652 !important;
+ }
+ 
+ #headermainSignin{
+   display: revert !important;
+   font-size: 12px;
+   font-weight: 500;
+   letter-spacing: .1px;
+   background: #01a652 !important;
+   height: 45px;
+ }
+ 
+ #headermainSignin:hover{
+   outline: none !important;
+   border: 1px solid green !important;
+   color: green !important;
+   background-color: transparent !important;
+   
+ }
+ 
+ 
+ 
+ .benefits h2 {
+   font-size: 1.5rem;
+   color: #007bff; /* Blue color, you can adjust as needed */
+ }
+ 
+ .benefits ul {
+   list-style: none;
+   padding: 0;
+ }
+ 
+ .benefits li {
+   margin-bottom: 10px;
+ }
+ 
+ .benefits li b {
+   font-size: 1rem;
+   color: black; /* Green color, you can adjust as needed */
+ }
+ 
+ .benefits li::before {
+   content: '\2713'; /* Checkmark icon */
+   display: inline-block;
+   margin-right: 5px;
+   color: white; /* Green color, you can adjust as needed */
+   background-color: #007bff; /* Blue color, you can adjust as needed */
+   border-radius: 50%; /* Make it round */
+   padding: 2px; /* Optional: Add padding for better appearance */
+   height: 20px;
+   width: 20px;
+   font-size: 11px;
+   text-align: center;
+ }
+ .benefits ul li span{
+ font-size: 14px !important;
+ 
+ }
+ 
+ .dotted-line-text {
+   position: relative;
+   font-size: 10px;
+   margin: 20px 0;
+ }
+ 
+ .dotted-line-text::before,
+ .dotted-line-text::after {
+   content: "";
+   display: inline-block;
+   width: 119px; /* Adjust the width of the dotted lines as needed */
+   height: 1px;
+   background: repeating-linear-gradient(to right, #00FF00, #00FF00 5px, transparent 5px, transparent 10px);
+   margin: 0 10px; /* Adjust the margin between the text and dotted lines as needed */
+ }
+ 
+ #modalEmailSignIn,#modalPasswordSignIn{
+   height: 45px !important;
+ }
+ </style>
+ 
+ 
+ <script>
+   $(document).ready(function() {
+     $('#eyeIcon').click(function() {
+       var passwordInput = $('#modalPasswordSignIn');
+       var eyeIcon = $('#eyeIcon i');
+ 
+       if (passwordInput.prop('type') === 'password') {
+           passwordInput.prop('type', 'text');
+           eyeIcon.removeClass('bi-eye').addClass('bi-eye-slash');
+       } else {
+           passwordInput.prop('type', 'password');
+           eyeIcon.removeClass('bi-eye-slash').addClass('bi-eye');
+       }
+   });
+ });
+ 
+ </script>
   <!-- MODAL sign in :: END-->
 
   <!-- MODAL sign in :: START-->
