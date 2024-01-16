@@ -1190,7 +1190,7 @@ def market_glance(request):
 
 
 def holiday(request):
-    url = "https://webapi.niftytrader.in/webapi/Resource/bse-nse-holiday"
+    url = "https://webapi.niftytrader.in/webapi/Resource/holidays-list"
 
     headers = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
@@ -1204,12 +1204,12 @@ def holiday(request):
 
     filtered_data_holiday = []
 
-    for d in data["resultData"]["holiday1"]:
+    for d in data["resultData"]["bse_nse"]:
         filtered_data_holiday.append({
-            "srno": d["srno"],
-            "date": d["date"],
-            "day": d["day"],
-            "description": d["description"]
+            "srno": d["id"],
+            "date": d["holiday_date"],
+            "day": d["holiday_day"],
+            "description": d["holiday_desc"]
         })
 
     df = pd.DataFrame(filtered_data_holiday)
@@ -1731,10 +1731,17 @@ def put_call_ratio_chart(request):
     }
 
     return JsonResponse(context)
+# views.py
 
+from django.shortcuts import render
 
-def put_call_ratio(request):
-    return render(request, "put_call_ratio.html")
+# views.py
+
+from django.shortcuts import render
+
+def put_call_ratio(request, active_section):
+    return render(request, "put_call_ratio.html", {'active_section': active_section})
+
 
 
 def Edit_user_data(request, id):

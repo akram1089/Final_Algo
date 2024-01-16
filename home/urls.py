@@ -84,6 +84,8 @@ urlpatterns = [
     path('volume-shocker/', views.volume_shocker, name='volume_shocker'),
     path('admin_panel', views.admin_panel, name='admin_panel'),
     path('put_call_ratio', views.put_call_ratio, name='put_call_ratio'),
+    path('put_call_ratio/<str:active_section>/', views.put_call_ratio, name='put_call_ratio'),
+
     path('feedback_management', views.feedback_management,
          name='feedback_management'),
     path('payments_details', views.payments_details, name='payments_details'),
