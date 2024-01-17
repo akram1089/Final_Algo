@@ -807,9 +807,9 @@
     justify-content: center;
     align-items: center;
   }
-
-  {% comment %} #future_decrement:hover,
-  #future_increment:hover, {% endcomment %}
+/* 
+ #future_decrement:hover,
+  #future_increment:hover, */
   #decrement:hover,
   #increment:hover,
   #decrement_strangle:hover,
@@ -1283,7 +1283,7 @@
 
   .savedStrategies {
     border-bottom: 1px solid rgba(128, 128, 128, 0.229);
-    padding: 6px 10px;
+    padding: 7px 23px;
 
     cursor: pointer;
   }
@@ -1748,14 +1748,17 @@
       <div class="modal fade" id="saved_startegyModal" tabindex="-1" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h1 class="modal-title fs-5" id="exampleModalLabel">Saved Strategies</h1>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          <div class="modal-content" style="border: none !important;">
+            <div class="modal-header" style="padding: 11px 23px;
+            background: #f3f3f3;
+            border: none !important;
+            outline: none !important;">
+              <h1 class="modal-title" id="exampleModalLabel" style="font-size: 1rem!important;">Saved Strategies</h1>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="font-size: 0.8rem !important;"></button>
             </div>
             <div class="modal-body p-0">
 
-              <div class="all_strategies">
+              <div class="all_strategies" style="    padding: 6px 0px 11px 0px;">
 
               </div>
 
@@ -3384,6 +3387,14 @@
               // Example: $('.loader').show();
             },
             success: function (response) {
+              if (response.status==="error") {
+                Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: response.message,
+              });
+              return
+              }
               //////console.log('Success:', response);
 
               // Reset form fields
@@ -3760,18 +3771,23 @@
     .right_strategy_action {
 
       display: flex;
-      gap: 0.6rem;
+      gap: 2.5rem;
     }
 
-    .edit-button:hover,
+
+    .delete_strategy,
+    .edit_strategy {
+      filter: invert(48%) sepia(13%) saturate(80%) hue-rotate(0deg) brightness(95%) contrast(80%);
+
+
+      transition: filter 0.3s; /* Add a smooth transition effect */
+    }
+    .delete_strategy:hover,
     .edit_strategy:hover {
-      color: #4399eb !important;
+      filter: grayscale(0%);
     }
 
-    .delete-button:hover,
-    .delete_strategy:hover {
-      color: #c70000 !important;
-    }
+
 
     .action_option_strategy {
       font-size: 19px !important;
@@ -6441,7 +6457,7 @@
 
 
 
-            <div class="main_option_inner d-flex justify-content-between align-items-center" style="overflow: auto;">
+            <div class="main_option_inner d-flex justify-content-between align-items-center" style="overflow: auto; padding: 4px 4px;">
 
               <div class="main_indices_fut_opt_filter">
                 <select class="form-select w-auto stockDropdown">
@@ -7736,9 +7752,11 @@
 
 <style>
   .expired-text {
-    color: orange;
+    color: #ff857b;
   }
-
+.active-text{
+  color: #45a54b;
+}
   .main_symbol_sell_buy {
     display: flex;
     gap: 0.2rem;
@@ -14642,16 +14660,16 @@
 
                       var tradingPositions = `
                                   <div class="savedStrategies d-flex justify-content-between ${isExpired ? 'expired' : ''}" data-strategy="${strategy.id}">
-                                    <div class="left_strategy_name">
+                                    <div class="left_strategy_name" style="font-size: 14px;" >
                                       ${strategy.strategy_name}
                                     </div>
                                     <div class="right_strategy_action" style="z-index: 9999999999999999999;">
                                       <div class="middle_strategy_status">
-                                        ${isExpired ? '<span class="expired-text">Expired</span>' : ''}
+                                        ${isExpired ? '<span class="expired-text"  style="font-size: 14px;">Expired</span>' : '<span class="active-text"  style="font-size: 14px;">Active</span>'}
                                       </div>
                                       <div class="strategy_edit_delete">
-                                        <i class='bi bi-pencil-square fs-5 cursor-pointer edit_strategy' data-bs-toggle="modal" data-bs-target="#editStrategyModal" data-edit="${strategy.id}"></i>
-                                        <i class='bi bi-trash-fill fs-5 cursor-pointer delete_strategy' data-delete="${strategy.id}"></i>
+                                        <img class='cursor-pointer edit_strategy' width="19px" src="{% static "img/delete_edit_btns/edit.png" %}"  data-bs-toggle="modal" data-bs-target="#editStrategyModal" data-edit="${strategy.id}"></i>
+                                        <img src="{% static "img/delete_edit_btns/delete.png" %}" width="19px" class='cursor-pointer delete_strategy' data-delete="${strategy.id}"></i>
                                       </div>
                                     </div>
                                   </div>
