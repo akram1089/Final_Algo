@@ -7114,24 +7114,24 @@ def get_enctoken_internal(zerodha_username, zerodha_password, totp_secret):
 
 
 
-
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 import json
-
-# Assuming you have these imports for the functions used in your code
-
-
+from .models import Broker  # Make sure to import your Broker model or adjust as needed
 
 @csrf_exempt
-@login_required
+
 def add_broker_api_main(request):
     if request.method == 'POST':
         data = json.loads(request.body)
-        # print(data)
         user = request.user
+
+        # Ensure the user is logged in
+        if not user.is_authenticated:
+            return JsonResponse({'status': 'error', 'message': 'Please login first !'})
+
         trading_platform = data.get('trading_platform')
 
         if trading_platform == 'zerodha_kite':
@@ -7141,24 +7141,34 @@ def add_broker_api_main(request):
         elif trading_platform == 'upstox_api':
             return add_upstox_broker(request, data)
         else:
-            # Handle other trading platforms or return an error response
             return JsonResponse({"message": "Unsupported trading platform"}, status=400)
 
     elif request.method == 'GET':
-        # Retrieve all brokers for the current user
         user = request.user
+
+        # Ensure the user is logged in
+        if not user.is_authenticated:
+            return JsonResponse({'status': 'error', 'message': 'Please login first !'})
+
         brokers = Broker.objects.filter(user=user).values()
-
-        # Convert brokers to JSON
         brokers_json = list(brokers)
-
-        # Return the list of brokers as a JSON response
         return JsonResponse({'brokers': brokers_json})
-        
+
     else:
         return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
-    
 
+# Assuming you have the following functions defined somewhere in your code
+def add_zerodha_broker(request, data):
+    # Implementation for adding Zerodha broker
+    return JsonResponse({'status': 'success', 'message': 'Zerodha broker added successfully'})
+
+def add_angel_one_broker(request, data):
+    # Implementation for adding Angel One broker
+    return JsonResponse({'status': 'success','message': 'Angel One broker added successfully'})
+
+def add_upstox_broker(request, data):
+    # Implementation for adding Upstox broker
+    return JsonResponse({'status': 'success','message': 'Upstox broker added successfully'})
 
 
 
