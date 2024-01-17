@@ -3823,7 +3823,7 @@ font-weight: 100;
 
   /* Reorder columns for medium and small devices */
   .col-lg-6:first-child {
-    order: 2;
+display: none !important;
   }
 
   .col-lg-6:last-child {
@@ -3845,22 +3845,46 @@ font-weight: 100;
            <div class="row">
              <!-- First column - Login Form -->
              <div class="col-lg-6" style="border-right: 1px solid rgba(0, 0, 0, 0.27);">
-               <div class="benefits" style="padding: 1.5rem !important;">
-                 <h2 class="text-center">Benefits</h2>
-                 <ul>
-                     <li class="mt-4"><b> Customized Option Chain</b><br> <span>Craft your perfect strategy, brick by brick, with customized options chains.</span> </li>
-                     <li class="mt-4"><b>Save Screener Filters</b><br><span>Skip the repetitive searching - keep your favorite market scans ready to go.</span> </li>
-                     <li class="mt-4"><b>Set Custom Stock Filters</b><br><span>Elevate your stock selection skills! Choose the stars with personalized filters.</span> </li>
-                     <li class="mt-4"><b>GPT Watchlist</b><br><span>Let your smart market assistant, powered by GPT, discover opportunities while you relax.</span> </li>
-                 </ul>
-               </div>
-             </div>
-             
+              <div class="left-login h-100" style="padding: 0 25px 25px 25px;">
+                <h2 class="text-center" style="    font-size: 24px;
+                margin-top: 15px;">Benefits</h2>
+                <ul class="list-unstyled">
+                  <li class="label-color-4 fs-14 fw-500">
+                    <img src="{% static "img/login_icons/login_benefits.svg" %}" alt="benefits" width="20" height="20" class="me-2">
+                    Customized Option Chain
+                  </li>
+                  <li class="label-color-4 fs-13 ms-4 ps-2 pb-4">Craft your perfect strategy, brick by brick, with customized options chains.</li>
+                  <li class="label-color-4 fs-14 fw-500">
+                    <img src="{% static "img/login_icons/login_benefits.svg" %}" alt="benefits" width="20" height="20" class="me-2">
+                    Save Screener Filters
+                  </li>
+                  <li class="label-color-4 fs-13 ms-4 ps-2 pb-4">Skip the repetitive searching - keep your favorite market scans ready to go.</li>
+                  <li class="label-color-4 fs-14 fw-500">
+                      <img src="{% static "img/login_icons/login_benefits.svg" %}" alt="benefits" width="20" height="20" class="me-2">
+                      Set Custom Stock Filters
+                  </li>
+                  <li class="label-color-4 fs-13 ms-4 ps-2 pb-4">Elevate your stock selection skills! Choose the stars with personalized filters.</li>
+
+                  <li class="label-color-4 fs-14 fw-500">
+                    <img src="{% static "img/login_icons/login_benefits.svg" %}" alt="benefits" width="20" height="20" class="me-2">GPT Watchlist
+                  </li>
+                  <li class="label-color-4 fs-13 ms-4 ps-2 pb-4">Let your smart market assistant, powered by GPT, discover opportunities while you relax.</li>
+                  
+              
+
+                </ul>
+                      <div class="text-grey fs-14 d-lg-none d-block text-center">Want to Login? <span class="text-forgot text-decoration-underline">Click here</span></div></div>
+            </div>
+            
     
              <!-- Second column - Information about Website -->
              <div class="col-lg-6" style="padding: 0 33px !important;" >
+              <div class="main_login_logo" style="display: flex; justify-content: center;">
+
+                <img src="https://optionperks.com/static/img/header_logo_perk.png" style="height: 55px; justify-content: center;" alt="Logo" class="img-fluid">
+              </div>
                
-               <img src="https://optionperks.com/static/img/header_logo_perk.png" style="height: 70px;" alt="Logo" class="img-fluid mb-3">
+         
                <form id="modalSignInForm" method='post' action="{% url 'login_user' %}">
                  {% csrf_token %}
                  <div class="mb-3">
@@ -3892,7 +3916,8 @@ font-weight: 100;
    
            <!-- "Sign in with Google" button using Bootstrap's button styles -->
            <button type="button" class="btn btn-outline-success w-100" id="google_btn"><img src="{% static "img/google _png'.png" %} " style="height: 20px;" alt=""> Sign in with Google</button>
-           <p class="text-center mt-2" id="signup_text">Oops, don't have an account? <a data-bs-dismiss='modal' data-bs-toggle='modal' style="cursor: pointer;"
+           <p class="text-center mt-2" id="signup_text">Oops, don't have an account? 
+            <a data-bs-dismiss='modal' data-bs-toggle='modal' style="cursor: pointer;"
             data-bs-target='#signupModal' class="text-success" >Sign up now</a></p>
                </form>
              </div>
@@ -3937,7 +3962,9 @@ font-weight: 100;
  }
  
  #modalEmailSignIn::placeholder,
- #modalPasswordSignIn::placeholder {
+ #modalPasswordSignIn::placeholder ,
+ #signupModal .form-control::placeholder{
+
      font-size: 0.9rem; /* Adjust the size as needed */
 
      color: rgba(0, 0, 0, 0.537);
@@ -3995,10 +4022,7 @@ font-weight: 100;
  
  
  
- .benefits h2 {
-   font-size: 1.5rem;
-   color: #007bff; /* Blue color, you can adjust as needed */
- }
+
  
  .benefits ul {
    list-style: none;
@@ -4082,7 +4106,221 @@ font-weight: 100;
   <!-- MODAL sign in :: END-->
 
   <!-- MODAL sign in :: START-->
-  <div class=" modal modal--signup fade" style="z-index: 999999;" id="signupModal" tabindex="-1" role="dialog" aria-labelledby="SignUp"
+
+  <div class="modal fade" id="signupModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <!-- Remove border from modal header -->
+        <div class="modal-header">
+
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <!-- First column - Login Form -->
+            <div class="col-lg-6" style="border-right: 1px solid rgba(0, 0, 0, 0.27);">
+              <div class="left-login h-100" style="padding: 0 25px 25px 25px;">
+                <h2 class="text-center" style="    font-size: 24px;
+                margin-top: 15px;">Benefits</h2>
+                <ul class="list-unstyled">
+                  <li class="label-color-4 fs-14 fw-500">
+                    <img src="{% static "img/login_icons/login_benefits.svg" %}" alt="benefits" width="20" height="20" class="me-2">
+                    Customized Option Chain
+                  </li>
+                  <li class="label-color-4 fs-13 ms-4 ps-2 pb-4">Craft your perfect strategy, brick by brick, with customized options chains.</li>
+                  <li class="label-color-4 fs-14 fw-500">
+                    <img src="{% static "img/login_icons/login_benefits.svg" %}" alt="benefits" width="20" height="20" class="me-2">
+                    Save Screener Filters
+                  </li>
+                  <li class="label-color-4 fs-13 ms-4 ps-2 pb-4">Skip the repetitive searching - keep your favorite market scans ready to go.</li>
+                  <li class="label-color-4 fs-14 fw-500">
+                      <img src="{% static "img/login_icons/login_benefits.svg" %}" alt="benefits" width="20" height="20" class="me-2">
+                      Set Custom Stock Filters
+                  </li>
+                  <li class="label-color-4 fs-13 ms-4 ps-2 pb-4">Elevate your stock selection skills! Choose the stars with personalized filters.</li>
+
+                  <li class="label-color-4 fs-14 fw-500">
+                    <img src="{% static "img/login_icons/login_benefits.svg" %}" alt="benefits" width="20" height="20" class="me-2">GPT Watchlist
+                  </li>
+                  <li class="label-color-4 fs-13 ms-4 ps-2 pb-4">Let your smart market assistant, powered by GPT, discover opportunities while you relax.</li>
+                  <li class="label-color-4 fs-14 fw-500">
+                    <img src="{% static "img/login_icons/login_benefits.svg" %}" alt="benefits" width="20" height="20" class="me-2">Option Trading
+                  </li>
+                  <li class="label-color-4 fs-13 ms-4 ps-2 pb-4">Let your intelligent market assistant, powered by GPT, uncover opportunities in the world of Option Trading while you relax.</li>
+
+
+                </ul>
+                      <div class="text-grey fs-14 d-lg-none d-block text-center">Want to Login? <span class="text-forgot text-decoration-underline">Click here</span></div></div>
+            </div>
+            
+   
+            <!-- Second column - Information about Website -->
+            <div class="col-lg-6" style="padding: 0 25px 25px 25px;">
+              <div class="main_signup_img d-flex" style="justify-content: center;">
+
+                <img src="https://optionperks.com/static/img/header_logo_perk.png" style="height: 55px; justify-content: center;" alt="Logo" class="img-fluid">
+              </div>
+              <form id="modalSignUpForm" action="{% url 'signUp' %}" method="post">
+                {% csrf_token %}
+                <div class="mb-2">
+                  <label for="modalFullNameSignUp" class="form-label">Full Name</label>
+                  <input type="text" class="form-control" name="name" id="modalFullNameSignUp" placeholder="Enter Name">
+                </div>
+                <div class="mb-2">
+                  <label for="modalEmailSignUp" class="form-label">Email</label>
+                  <input type="email" class="form-control" name="email" id="modalEmailSignUp" placeholder="example@email.com">
+                </div>
+                <div class="form-group">
+                  <label for="modalPhoneSignUp">Phone</label>
+                  <div class="row">
+                      <div class="col-4 pr-0">
+                          <select name="phone_code" class="form-select"
+                              id="modalCountryCodeSignUp" required>
+                              
+                              <option value="+91">+91</option>
+                          </select>
+                      </div>
+
+                      <div class="col-8">
+                          <input class="form-control" name="mobile" placeholder="xxxxxxxxx"
+                              id="modalPhoneSignUp" type="text" required>
+                      </div>
+                  </div>
+                  <span class="text-danger show-error-text"
+                      id="error_mobile"></span> <span
+                      class="text-danger show-error-text"
+                      id="error_phone_code"></span>
+              </div>
+                <div class="mb-2" style="position: relative;">
+                  <label for="modalPasswordSignUp" class="form-label">Password</label>
+                  <input type="password" class="form-control" id="modalPasswordSignUp" name="password" placeholder="Enter your password" aria-describedby="eyeIcon">
+                  <span class="eye-icon" id="eyeicon" style="cursor: pointer;">
+                      <i class="bi-eye-slash" aria-hidden="true"></i>
+                  </span>
+               </div>
+                <div class="mb-2" style="position: relative;">
+                  <label for="modalPasswordSignUp" class="form-label">Password</label>
+                  <input type="password" class="form-control" id="modalCPasswordSignUp" name="Cofirm_password" placeholder="Enter your password" aria-describedby="eyeIcon">
+                  <span class="eye-icon" id="confirmEyeIcon" style="cursor: pointer;">
+                      <i class="bi-eye-slash" aria-hidden="true"></i>
+                  </span>
+               </div>
+
+               <div class="form-group form-check">
+                <input class="form-check-input" id="modalAgreeSignUp"
+                    name="terms_of_service" required type="checkbox">
+                <label class="form-check-label w-100"
+                    for="modalAgreeSignUp">
+                    I agree to the <a href='/' target="_blank">terms of
+                        service</a>
+                </label>
+                <span class="text-danger show-error-text"
+                    id="error_terms_of_service"></span>
+            </div>
+                 
+                <button type="submit" class="btn btn-success w-100 mt-3" id="headermainSignin">Signup</button>
+  
+                
+  
+          <!-- "Or" option -->
+          <div class="dotted-line-text">
+            OR
+        </div>
+  
+          <!-- "Sign in with Google" button using Bootstrap's button styles -->
+          <button type="button" class="btn btn-outline-success w-100" id="google_btn"><img src="{% static "img/google _png'.png" %} " style="height: 20px;" alt=""> Sign in with Google</button>
+          <p class="text-center mt-2" id="signup_text">Already have an account?   <a data-bs-dismiss='modal' data-bs-toggle='modal' style="cursor: pointer;"
+            data-bs-target='#signinModal' class="text-success" >Sign in now</a></p>
+              </form>
+            </div>
+          </div>
+        </div>
+  
+      </div>
+    </div>
+  </div>
+  <style>
+    .label-color-4{
+    font-size: 13px;
+    line-height: 25px;
+    }
+    /* #signupModal .form-control::placeholder{
+      font-size: 10px !important;
+    } */
+    #signupModal .form-control{
+      background-color: #f2f2f2;
+    }
+    #headermainSignin:hover {
+  color: green !important;
+  }
+
+  #google_btn{
+    outline: none !important;
+    border: 1px solid green !important;
+  }
+
+  .fs-14:hover {
+    color:unset !important;
+}
+
+    @media (max-width: 991px) {
+  .col-lg-6 {
+    border-right: none !important; /* Hide border for medium and small devices */
+  }
+
+  /* Reorder columns for medium and small devices */
+  .col-lg-6:first-child {
+    order: 2 !important;
+    display: none !important;
+  }
+
+  .col-lg-6:last-child {
+    order: 1 !important;
+    
+  }
+
+  .dotted-line-text {
+    text-align: center !important;
+  }
+
+ 
+}
+  </style>
+
+
+<script>
+$(document).ready(function () {
+  
+  $('#eyeicon').on('click', function() {
+   
+       togglePasswordVisibility('#modalPasswordSignUp', '#eyeicon');
+   });
+  
+   $('#confirmEyeIcon').on('click', function() {
+    
+       togglePasswordVisibility('#modalCPasswordSignUp', '#confirmEyeIcon');
+   });
+  
+   function togglePasswordVisibility(passwordFieldId, eyeIconId) {
+        var passwordInput = $(passwordFieldId);
+        var eyeIcon = $(eyeIconId + ' i');
+
+        console.log("Current type: " + passwordInput.prop('type'));
+        if (passwordInput.prop('type') === 'password') {
+            passwordInput.prop('type', 'text');
+            eyeIcon.removeClass('bi-eye-slash').addClass('bi-eye');
+        } else {
+            passwordInput.prop('type', 'password');
+            eyeIcon.removeClass('bi-eye').addClass('bi-eye-slash');
+        }
+
+        console.log("New type: " + passwordInput.prop('type'));
+    }
+});
+
+  </script>
+
+  <!-- <div class=" modal modal--signup fade" style="z-index: 999999;" id="signupModal" tabindex="-1" role="dialog" aria-labelledby="SignUp"
     aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
       <div class="modal-content py-5">
@@ -4204,7 +4442,7 @@ font-weight: 100;
 
 
     </div>
-  </div>
+  </div> -->
 
   <!-- prevent the browser inspection -->
   <!-- <script>
