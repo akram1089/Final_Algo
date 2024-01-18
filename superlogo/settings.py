@@ -32,17 +32,7 @@ SECRET_KEY = 'django-insecure-bni-q+a&4eggvue+&l%__^n#q%-hlti_=sc-u1ff0joram2yb@
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = [
-    'www.algotrde.com',
-    '127.0.0.1',
-    'localhost',
-    'algotrde.com',
-    '34.100.183.27',
-    'optionperks.com',
-    'www.optionperks.com',
-    '34.100.184.223',
-    '0.0.0.0',
-]
+ALLOWED_HOSTS = ['www.algotrde.com', '127.0.0.1', 'localhost','algotrde.com','https://algotrde.com','http://algotrde.com','34.100.183.27','optionperks.com','0.0.0.0','34.100.184.223']
 
 TIME_ZONE = 'Asia/Kolkata'
 USE_TZ = True
@@ -55,7 +45,7 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    # 'daphne',
+    'daphne',
     'django.contrib.staticfiles',
     'home',
     'rest_framework',
@@ -66,6 +56,9 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.google',
     'channels',
     'corsheaders',
+    'django_celery_results',
+    'django_celery_beat',
+    'celery',
 
     
 ]
@@ -243,5 +236,38 @@ EMAIL_HOST_PASSWORD = 'sxwwgptgifiljqsj'
 
 SITE_ID = 1
 
+# settings.py
 
 
+
+# Channels Redis settings
+CHANNEL_LAYERS = {
+   'default': {
+       'BACKEND': 'channels_redis.core.RedisChannelLayer',
+       'CONFIG': {
+           "hosts": [('localhost', 6379)],
+       },
+   },
+}
+
+
+
+
+# settings.py
+
+# Celery Configuration
+CELERY_BROKER_URL = 'redis://localhost:6379/0'
+CELERY_RESULT_BACKEND = 'django-db'
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'Asia/Kolkata'
+
+
+
+#celery-beat
+
+CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
+CELERY_IMPORTS = [
+    'home.tasks',
+]
