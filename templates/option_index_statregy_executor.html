@@ -7991,8 +7991,9 @@ display: flex;
 text-decoration: none;
     background-color: white;
     color: black;
-    padding: 2px 0;
-    width: 30px;
+    padding: 1px 0;
+    width: 20px;
+    font-size: 12px;
     text-align: center;
     border-radius: 4px;
     cursor: pointer;
@@ -8224,6 +8225,11 @@ text-decoration: none;
     border: 1px solid;
     border-radius: 6px;
     padding: 9px;
+  }
+  .left_strategy_name{
+    font-size: 14px;
+    display: flex;
+    gap: 0.5rem;
   }
 </style>
 
@@ -14743,7 +14749,9 @@ toastr.error(errorMessage);
                                <div class="d-flex  justify-content-center p-2"> <p>No Strategies Found...</p></div>
                                `);
    } else {
-     strategyData.forEach((strategy) => {
+
+    
+     strategyData.forEach((strategy,Index_strategy) => {
        var isExpired = false;
 
        // Check if any trading position's expiry is expired based on today's date and time
@@ -14765,8 +14773,11 @@ toastr.error(errorMessage);
        console.log(isExpired);
 
        var tradingPositions = `
+
                    <div class="savedStrategies justify-content-between ${isExpired ? 'expired' : ''}" data-strategy="${strategy.id}">
+
                      <div class="left_strategy_name" style="font-size: 14px;" >
+                      <div>${Index_strategy+1}.</div>
                       ${strategy.strategy_name.charAt(0).toUpperCase() + strategy.strategy_name.slice(1)}
 
                      </div>
