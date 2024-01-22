@@ -96,7 +96,7 @@
     }
 
     .card_section {
-        padding: 0px 20px 16px 20px;
+        padding: 0px 60px 16px 40px;
         overflow: hidden;
         position: relative;
     }
@@ -124,7 +124,7 @@
         flex-direction: column;
         flex: 0 auto;
         justify-content: space-between;
-        padding: 24px 36px;
+        padding: 24px 30px;
         display: flex;
     }
 
@@ -239,6 +239,26 @@
         padding-bottom: 0 !important;
     }
 
+    .btn:hover {
+        color: black !important;
+        background-color: #dee2e6 !important;
+        border-color: #dee2e6 !important;
+    }
+
+    #book_category_dropdown a:active {
+    color: black !important;
+    text-decoration: none;
+    background-color: rgb(237 163 157 / 10%) !important;
+}
+
+#book_category_dropdown a:focus{
+    background-color: rgb(237 163 157 / 10%) !important;
+}
+ #book_category_dropdown a:hover {
+    
+    background: rgb(237 163 157 / 10%) !important;
+}
+
 
 
     @media (min-width: 1250px) {
@@ -254,7 +274,7 @@
     }
 
     #title_books{
-        padding: 6px 1.5rem;
+        padding: 6px 2.7rem;
 
     }
 
@@ -270,15 +290,16 @@
 <section class="tracks mt-3">
 
 
-    <div class="search_book_sort d-flex align-items-center justify-content-end">
+    <div class="search_book_sort d-flex align-items-center justify-content-between">
+       
         <div class="d-flex align-items-center gap-4">
-            <input type="text" id="search_book" class="form-control" style="width: fit-content;" placeholder="Search">
+  
             <div class="dropdown">
-                <button class="btn btn-light dropdown-toggle" type="button" id="sortDropdown" data-bs-toggle="dropdown"
+                <button class="btn btn-light btn-sm dropdown-toggle" type="button" id="sortDropdown" data-bs-toggle="dropdown"
                     aria-haspopup="true" aria-expanded="false">
                     Category
                 </button>
-                <div class="dropdown-menu" aria-labelledby="sortDropdown">
+                <div class="dropdown-menu" aria-labelledby="sortDropdown" id="book_category_dropdown">
                     <a class="dropdown-item sort-btn" href="#" data-sort="">All</a>
                     <a class="dropdown-item sort-btn" href="#" data-sort="Trading">Trading</a>
                     <a class="dropdown-item sort-btn" href="#" data-sort="Option Trading">Option trading</a>
@@ -288,19 +309,17 @@
 
             </div>
             <div class="language_filter">
-                <select id="language-select" class="form-select ">
+                <select id="language-select" class="form-select form-select-sm">
                     <option value="English">English</option>
                     <option value="Hindi">Hindi</option>
                 </select>
             </div>
         </div>
+        <input type="text" id="search_book" class="form-control form-control-sm" style="width: fit-content;" placeholder="Search">
 
-        <div>
-           
-        </div>
     </div>
 
-    <div class="content-grid-3 w-dyn-items mt-5 ">
+    <div class="content-grid-3 w-dyn-items mt-4 ">
 
     </div>
 </section>
@@ -346,7 +365,7 @@
             <div class="card_section">
 
                 <div class="card-meta-items-wrapper text-color-gray500 card-meta">
-                    <div class="text-size-small d-flex justify-content-between"><span> ${book.page} pages</span> <span><i class="bi bi-currency-rupee"></i>  ${book.discount_price} <del> ${book.price} </del> </span></div>
+                    <div class="text-size-small d-flex justify-content-between"><span> ${book.page} pages</span> <span> Rs. ${book.discount_price} <del style="color: gray; margin-left: 8px;">Rs.${book.price} </del> </span></div>
                     <div class="text-size-small text-style-2lines">${book.description}</div>
                     <a href="#" class="read-more d-flex justify-content-between" data-bs-toggle="modal"
                         data-bs-target="#bookDetailsModal_${book.id}">Read
