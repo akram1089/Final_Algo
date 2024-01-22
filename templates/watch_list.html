@@ -66,10 +66,10 @@
     }
 
     .bi-trash-fill {
-        width: 36px;
-        padding: 7px;
+        width: 34px;
+        padding: 4px 5px;
         border-radius: 8px;
-        height: 36px;
+        height: 34px;
         border: 2px solid #81899254;
         color: #818992;
         font-size: 21px;
@@ -662,7 +662,7 @@ right: 0;">
                     watchlistData.forEach(function (item) {
 
                         var watchlist_chart_data = item.chart_data[0].chart_data
-                        //   console.log(watchlist_chart_data);
+                        //   //console.log(watchlist_chart_data);
 
 
 
@@ -672,7 +672,7 @@ right: 0;">
                         for (var i = 0; i < Chart1Values.length; i++) {
                             Chart1PriceData.push(parseFloat(Chart1Values[i].replace(/'/g, "")));
                         }
-                        //   console.log(Chart1PriceData);
+                        //   //console.log(Chart1PriceData);
                         var canvasId = `chart-${item.watch_list.symbol_name}`;
                         var change_value_color = item.watch_list.change_value < 0 ? "text-danger" : "text-success"
                         var change_per_color = item.watch_list.change_per < 0 ? "text-danger" : "text-success"
@@ -683,7 +683,7 @@ right: 0;">
                         $("#watchlist-table-body").append(
                             `<tr>
                         <td >
-                            <span><a href="https://www.tradingview.com/chart/MgiGDMYM/?symbol=${item.watch_list.symbol_name}'&aff_id=113877" target='_blank'><i class="bi bi-graph-up"></i></a></span>
+                            <span><a href="https://www.tradingview.com/chart/mKWHqfku/?symbol=${item.watch_list.symbol_name}'&aff_id=113877" target='_blank'><i class="bi bi-graph-up"></i></a></span>
                             <span class="symbol_name_watchlist"> ${item.watch_list.symbol_name}</span>
                            </td>
                         <td>${item.watch_list.open}</td>
@@ -780,7 +780,9 @@ right: 0;">
                             dataType: "json",
                             success: function (response) {
                                 if (response.message) {
-                    $("#alert-watchlist").text(response.message).addClass('alert alert-danger show').removeClass('alert-success').fadeIn()
+
+
+                    toastr.warning(response.message)
                   }
                              
 
@@ -793,13 +795,13 @@ right: 0;">
                                 fetchWatchlistData();
                             },
                             error: function (xhr, textStatus, errorThrown) {
-                                console.log("Error occurred while deleting item:", errorThrown);
+                                //console.log("Error occurred while deleting item:", errorThrown);
                             },
                         });
                     });
                 },
                 error: function (xhr, textStatus, errorThrown) {
-                    console.log("Error occurred while fetching watchlist data:", errorThrown);
+                    //console.log("Error occurred while fetching watchlist data:", errorThrown);
                 },
             });
         }
