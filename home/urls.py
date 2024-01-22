@@ -540,7 +540,7 @@ urlpatterns = [
      # path("test_celery",views.test_celery,name="test_celery"),
      path("GetStrategyUnique",views.GetStrategyUnique,name="GetStrategyUnique"),
      path("test_base_dashboard",views.test_base_dashboard,name="test_base_dashboard"),
-     path("add_numbers_temp",views.add_numbers_temp,name="add_numbers_temp"),
+     # path("add_numbers_temp",views.add_numbers_temp,name="add_numbers_temp"),
      # path('ajax_add_numbers/', views.ajax_add_numbers, name='ajax_add_numbers'),
 
 

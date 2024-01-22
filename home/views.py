@@ -9585,16 +9585,16 @@ def test_schedule_task(request):
 
 
 
-# views.py
-from django.shortcuts import render, redirect
-from django.http import HttpResponse, JsonResponse
-from django.contrib.auth.decorators import login_required
-from superlogo.tasks import perform_addition
-from .models import AdditionTask_main_time
-from django.utils import timezone
+# # views.py
+# from django.shortcuts import render, redirect
+# from django.http import HttpResponse, JsonResponse
+# from django.contrib.auth.decorators import login_required
+# from superlogo.tasks import perform_addition
+# from .models import AdditionTask_main_time
+# from django.utils import timezone
 
-def add_numbers_temp(request):
-    return render(request, 'test_templates/test_schedule_task.html')
+# def add_numbers_temp(request):
+#     return render(request, 'test_templates/test_schedule_task.html')
 
 
 
