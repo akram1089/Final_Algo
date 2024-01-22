@@ -1,7 +1,7 @@
 {% extends "base_dashboard.html" %} {% load static %} {% block dashboard_body %}
 
-
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/simplePagination.js/1.6/jquery.simplePagination.min.js" integrity="sha512-9Dh726RTZVE1k5R1RNEzk1ex4AoRjxNMFKtZdcWaG2KUgjEmFYN3n17YLUrbHm47CRQB1mvVBHDFXrcnx/deDA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/simplePagination.js/1.6/jquery.simplePagination.js" integrity="sha512-6Hh5t357FBmgv+xCBoaF9Gbk6sEF00WCH5wC8R1uieSL1R4pN2HFZx/cyE/TdfW+dxtOBWcHF1ZYdV8XLbpprA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <style>
   .day_1 {
     border-radius: 4px;
@@ -1284,7 +1284,7 @@
   .savedStrategies {
     border-bottom: 1px solid rgba(128, 128, 128, 0.229);
     padding: 7px 23px;
-
+display: flex;
     cursor: pointer;
   }
 
@@ -1740,6 +1740,48 @@
         .main_futures_buy_sell.form-check label {
           margin-bottom: 0 !important;
         }
+        
+.simple-pagination ul {
+	margin: 0 0 20px;
+	padding: 0;
+	list-style: none;
+	text-align: center;
+}
+
+.simple-pagination li {
+	display: inline-block;
+	margin-right: 5px;
+}
+
+.simple-pagination li a,
+.simple-pagination li span {
+	color: #666;
+	padding: 5px 10px;
+	text-decoration: none;
+	border: 1px solid #EEE;
+	background-color: #FFF;
+	box-shadow: 0px 0px 10px 0px #EEE;
+}
+
+.simple-pagination .current {
+	color: #FFF;
+	background-color: #FF7182;
+	border-color: #FF7182;
+}
+
+.simple-pagination .prev.current,
+.simple-pagination .next.current {
+	background: #e04e60;
+}
+
+.pagination-link[disabled="disabled"] {
+    color: grey !important;
+    cursor: not-allowed !important;
+  }
+  .pagination-link[disabled="disabled"]:hover {
+    background-color: white !important;
+    color: grey Im !important;
+  }
       </style>
 
 
@@ -1761,6 +1803,7 @@
               <div class="all_strategies" style="    padding: 6px 0px 11px 0px;">
 
               </div>
+              <div id="pagination-container"></div>
 
             </div>
 
@@ -1772,9 +1815,10 @@
 
 
 
+
     <div class="main_all_spot_futures_val">
       <div class="spot_strategies">
-        <p class="spot_title">Spot :</p>
+        <p class="spot_title">Spot:</p>
 
         <div id="last_traded_price"></div>
         <div id="closest_strike_price" style="display: none"></div>
@@ -1782,46 +1826,46 @@
       </div>
 
       <div class="main_futures_price_as_per_expiries">
-        <p class="futures_title">Futures :</p>
+        <p class="futures_title">Futures: </p>
 
         <div class="futures_ltp"></div>
       </div>
 
       <div class="main_max_pain_strategies">
         <div class="max_pain_strategies d-flex align-items-center gap-1">
-          <p>Max Pain : </p>
+          <p>Max Pain: </p>
 
         </div>
         <div id="max_pain_value" style="font-size: 16px;"></div>
       </div>
       <div class="lot_size_strategies">
-        <p>Lot Size :</p>
+        <p>Lot Size:</p>
         <div id="lot_size_value"></div>
       </div>
       <div class="low52_strategies">
-        <p>Low 52 Wk : </p>
+        <p>Low 52 Wk: </p>
 
         <div id="low52_value"></div>
       </div>
 
       <div class="high52_strategies">
-        <p>High 52 Wk :</p>
+        <p>High 52 Wk: </p>
 
         <div id="high52_value"></div>
       </div>
       <div class="open_strategies">
-        <p>Open :</p>
+        <p>Open: </p>
 
         <div id="open_value"></div>
       </div>
 
       <div class="low_strategies">
-        <p>Low : </p>
+        <p>Low: </p>
 
         <div id="low_value"></div>
       </div>
       <div class="high_strategies">
-        <p>High : </p>
+        <p>High: </p>
 
         <div id="high_value"></div>
       </div>
@@ -3837,7 +3881,7 @@
 
   <div class="All_option_startegies_builder">
     <div class="pre_built_simu">
-      <p style="margin-bottom: auto">Pre Built :</p>
+      <p style="margin-bottom: auto">Pre-built :</p>
       <div class="strategy_simu">
         <div class="main_straddle">
           <p class="straddle" id="straddle">STRADDLE</p>
@@ -7505,6 +7549,7 @@
     var payoffTable = document.getElementById('payoff_table'); // Add this line to select the element by its ID
     var oi_charts = document.getElementById('oi_charts'); // Add this line to select the element by its ID
     var maximizeIcon = document.querySelector('.maximize');
+    var table_container = document.querySelector('.table_container');
 
     if (!document.fullscreenElement) {
       if (elem.requestFullscreen) {
@@ -7513,6 +7558,7 @@
         chartDiv.style.height = '90vh';
         payoffTable.style.height = '90vh'; // Set the height of the payoff_table to 90vh
         oi_charts.style.height = '90vh'; // Set the height of the payoff_table to 90vh
+        table_container.style.height = '90vh'; // Set the height of the payoff_table to 90vh
         maximizeIcon.classList.remove('bx-fullscreen');
         maximizeIcon.classList.add('bx-exit-fullscreen');
       } else if (elem.webkitRequestFullscreen) { /* Safari */
@@ -7521,14 +7567,16 @@
         chartDiv.style.height = '90vh';
         payoffTable.style.height = '90vh';
         oi_charts.style.height = '90vh'; // Set the height of the payoff_table to 90vh
+        table_container.style.height = '90vh'; // Set the height of the payoff_table to 90vh
         maximizeIcon.classList.remove('bx-fullscreen');
-        maximizeIcon.classList.add('bx-exit-fullscreen');
+        table_container.classList.add('bx-exit-fullscreen');
       } else if (elem.msRequestFullscreen) { /* IE11 */
         elem.msRequestFullscreen();
         $('.right_p_l_greeks').css('background-color', 'white');
         chartDiv.style.height = '90vh';
         payoffTable.style.height = '90vh';
         oi_charts.style.height = '90vh'; // Set the height of the payoff_table to 90vh
+        table_container.style.height = '90vh'; // Set the height of the payoff_table to 90vh
         maximizeIcon.classList.remove('bx-fullscreen');
         maximizeIcon.classList.add('bx-exit-fullscreen');
       }
@@ -7536,26 +7584,29 @@
       if (document.exitFullscreen) {
         document.exitFullscreen();
         $('.right_p_l_greeks').css('background-color', 'white');
-        chartDiv.style.height = '400px'; // Change back to initial height
+        chartDiv.style.height = '500px'; // Change back to initial height
         payoffTable.style.height = '400px'; // Revert to default height
         oi_charts.style.height = '400px'; // Set the height of the payoff_table to 90vh
+        table_container.style.height = '400px'; // Set the height of the payoff_table to 90vh
         maximizeIcon.classList.remove('bx-exit-fullscreen');
         maximizeIcon.classList.add('bx-fullscreen');
       } else if (document.webkitExitFullscreen) { /* Safari */
         document.webkitExitFullscreen();
         $('.right_p_l_greeks').css('background-color', 'white');
-        chartDiv.style.height = '400px'; // Change back to initial height
+        chartDiv.style.height = '500px'; // Change back to initial height
         payoffTable.style.height = '400px';
         oi_charts.style.height = '400px'; // Set the height of the payoff_table to 90vh
+        table_container.style.height = '400px'; // Set the height of the payoff_table to 90vh
         maximizeIcon.classList.remove('bx-exit-fullscreen');
         maximizeIcon.classList.add('bx-fullscreen');
 
       } else if (document.msExitFullscreen) { /* IE11 */
         document.msExitFullscreen();
         $('.right_p_l_greeks').css('background-color', 'white');
-        chartDiv.style.height = '400px'; // Change back to initial height
+        chartDiv.style.height = '500px'; // Change back to initial height
         payoffTable.style.height = '400px';
         oi_charts.style.height = '400px'; // Set the height of the payoff_table to 90vh
+        table_container.style.height = '400px'; // Set the height of the payoff_table to 90vh
         maximizeIcon.classList.remove('bx-exit-fullscreen');
         maximizeIcon.classList.add('bx-fullscreen');
 
@@ -7920,6 +7971,33 @@
     background: #F9E3E3;
     padding: 4px;
     border-radius: 9px;
+  }
+  #pagination-container{
+    display: flex;
+    gap: 0.2rem;
+    padding: 12px 27px;
+    justify-content: flex-end;
+  }
+  #pagination-container a:hover{
+    background-color: #59aaf9;
+    color: white;
+  }
+  .active_strategy_page{
+    background-color: #59aaf9 !important;
+    color: white !important;
+  
+  }
+  #pagination-container a{
+text-decoration: none;
+    background-color: white;
+    color: black;
+    padding: 2px 0;
+    width: 30px;
+    text-align: center;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
   }
 </style>
 </div>
@@ -14585,6 +14663,8 @@
                 'csrfmiddlewaretoken': '{{ csrf_token }}'
               },
               success: function (response) {
+
+                console.log(response.message);
                 // handle success
 
                 if (response.user_not_logged_in) {
@@ -14601,8 +14681,19 @@
 
               },
               error: function (response) {
+
+                var errorMessage = 'Unknown error';
+
+if (response && response.responseJSON && response.responseJSON.message) {
+    errorMessage = response.responseJSON.message;
+} else if (response && response.statusText) {
+    errorMessage = response.statusText;
+}
+
+// alert(errorMessage);
+toastr.error(errorMessage);
                 // handle error
-                alert(response.message);
+           
               }
             });
 
@@ -14637,49 +14728,119 @@
                                               <div class="d-flex  justify-content-center p-2"> <p>No Strategies Found...</p></div>
                                               `);
                   } else {
-                    strategyData.forEach((strategy) => {
-                      var isExpired = false;
 
-                      // Check if any trading position's expiry is expired based on today's date and time
-                      strategy.trading_positions.forEach((position) => {
-                        // Assuming position.expiry_initial is in the format "YYYY-MM-DD"
-                        const expiryDate = new Date(position.expiry_initial + "T15:30:00.000Z");
-                        const currentDate = new Date();
+   // handle success
+   $("#saved_startegyModal").modal("show");
 
-                        // Set time to 15:30 for today's date
-                        const todayClosingTime = new Date(currentDate);
-                        todayClosingTime.setHours(15, 30, 0, 0);
+   var strategyData = response.strategy_data;
+   $(".all_strategies").empty()
+   $("#pagination-container").empty()
+   // Do something with the strategy data
+   var strategiesContainer = $(".all_strategies");
+   var perPage = 5;
+   if (strategyData.length === 0) {
+     $(".all_strategies").append(`
+                               <div class="d-flex  justify-content-center p-2"> <p>No Strategies Found...</p></div>
+                               `);
+   } else {
+     strategyData.forEach((strategy) => {
+       var isExpired = false;
 
-                        // Check if the expiry date is less than or equal to 15:30 today
-                        if (expiryDate <= todayClosingTime) {
-                          isExpired = true;
-                        }
-                      });
+       // Check if any trading position's expiry is expired based on today's date and time
+       strategy.trading_positions.forEach((position) => {
+         // Assuming position.expiry_initial is in the format "YYYY-MM-DD"
+         const expiryDate = new Date(position.expiry_initial + "T15:30:00.000Z");
+         const currentDate = new Date();
 
-                      console.log(isExpired);
+         // Set time to 15:30 for today's date
+         const todayClosingTime = new Date(currentDate);
+         todayClosingTime.setHours(15, 30, 0, 0);
 
-                      var tradingPositions = `
-                                  <div class="savedStrategies d-flex justify-content-between ${isExpired ? 'expired' : ''}" data-strategy="${strategy.id}">
-                                    <div class="left_strategy_name" style="font-size: 14px;" >
-                                      ${strategy.strategy_name}
-                                    </div>
-                                    <div class="right_strategy_action" style="z-index: 9999999999999999999;">
-                                      <div class="middle_strategy_status">
-                                        ${isExpired ? '<span class="expired-text"  style="font-size: 14px;">Expired</span>' : '<span class="active-text"  style="font-size: 14px;">Active</span>'}
-                                      </div>
-                                      <div class="strategy_edit_delete">
-                                        <img class='cursor-pointer edit_strategy' width="19px" src="{% static "img/delete_edit_btns/edit.png" %}"  data-bs-toggle="modal" data-bs-target="#editStrategyModal" data-edit="${strategy.id}"></i>
-                                        <img src="{% static "img/delete_edit_btns/delete.png" %}" width="19px" class='cursor-pointer delete_strategy' data-delete="${strategy.id}"></i>
-                                      </div>
-                                    </div>
-                                  </div>
-                                `;
+         // Check if the expiry date is less than or equal to 15:30 today
+         if (expiryDate <= todayClosingTime) {
+           isExpired = true;
+         }
+       });
 
-                      $(".all_strategies").append(tradingPositions);
-                    });
+       console.log(isExpired);
+
+       var tradingPositions = `
+                   <div class="savedStrategies justify-content-between ${isExpired ? 'expired' : ''}" data-strategy="${strategy.id}">
+                     <div class="left_strategy_name" style="font-size: 14px;" >
+                      ${strategy.strategy_name.charAt(0).toUpperCase() + strategy.strategy_name.slice(1)}
+
+                     </div>
+                     <div class="right_strategy_action" style="z-index: 9999999999999999999;">
+                       <div class="middle_strategy_status">
+                         ${isExpired ? '<span class="expired-text"  style="font-size: 14px;">Expired</span>' : '<span class="active-text"  style="font-size: 14px;">Active</span>'}
+                       </div>
+                       <div class="strategy_edit_delete">
+                         <img class='cursor-pointer edit_strategy' width="19px" src="{% static "img/delete_edit_btns/edit.png" %}"  data-bs-toggle="modal" data-bs-target="#editStrategyModal" data-edit="${strategy.id}"></i>
+                         <img src="{% static "img/delete_edit_btns/delete.png" %}" width="19px" class='cursor-pointer delete_strategy' data-delete="${strategy.id}"></i>
+                       </div>
+                     </div>
+                   </div>
+                 `;
+
+       $(".all_strategies").append(tradingPositions);
+     });
+    }
 
 
-                  }
+
+      // Manually implement pagination
+      var numPages = Math.ceil(strategyData.length / perPage);
+    var currentPage = 1;
+
+    // Add pagination links
+    $('#pagination-container').append(`
+      <a href="#" class="pagination-link prev" data-page="prev" disabled>&lt;</a>
+    `);
+    for (var i = 1; i <= numPages; i++) {
+      $('#pagination-container').append(`<a href="#" class="pagination-link" data-page="${i}">${i}</a>`);
+    }
+    $('#pagination-container').append(`
+      <a href="#" class="pagination-link next" data-page="next">&gt;</a>
+    `);
+
+    // Show the first page and mark it as active
+    showPage(currentPage);
+    $('#pagination-container .pagination-link[data-page="1"]').addClass('active_strategy_page');
+    $('.pagination-link.prev').attr('disabled', true); // Disable prev initially
+
+    // Handle pagination link click
+    $('.pagination-link').on('click', function (e) {
+      e.preventDefault();
+
+      var clickedPage = $(this).data('page');
+
+      if (clickedPage === 'prev' && currentPage > 1) {
+        currentPage--;
+      } else if (clickedPage === 'next' && currentPage < numPages) {
+        currentPage++;
+      } else if (typeof clickedPage === 'number') {
+        currentPage = clickedPage;
+      }
+
+      showPage(currentPage);
+
+      // Mark the clicked link as active_strategy_page and remove active_strategy_page class from others
+      $('.pagination-link').removeClass('active_strategy_page');
+      $('#pagination-container .pagination-link[data-page="' + currentPage + '"]').addClass('active_strategy_page');
+
+      // Disable/enable prev and next based on current page
+      $('.pagination-link.prev').attr('disabled', currentPage === 1);
+      $('.pagination-link.next').attr('disabled', currentPage === numPages);
+    });
+
+    // Function to show specific page
+    function showPage(page) {
+      strategiesContainer.find('.savedStrategies').hide();
+      var startIndex = (page - 1) * perPage;
+      var endIndex = startIndex + perPage;
+      strategiesContainer.find('.savedStrategies').slice(startIndex, endIndex).show();
+    }
+             }
 
                   var isTableEmpty = true;
                   $(".savedStrategies").click(function () {

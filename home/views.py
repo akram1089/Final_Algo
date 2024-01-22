@@ -103,7 +103,7 @@ def contact_us(request):
 #     return render(request, 'features.html', {'symbols': symbols})
 
 def home(request):
-    return render(request, 'home.html')
+    return render(request, 'dashboard1.html')
 
 
 def features(request):
@@ -5765,32 +5765,52 @@ def get_notes(request):
 
 
 
-# views.py
-
+import logging
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from .models import my_strategies
 
+logger = logging.getLogger(__name__)
+
 @csrf_exempt
 
 def save_strategy(request):
+    max_strategies_limit = 15
+
     if request.method == 'POST':
+        user = request.user
+
+        # Check if the user has already reached the maximum strategy limit
+        if my_strategies.objects.filter(user=user).count() >= max_strategies_limit:
+            return JsonResponse({'message': 'Max strategy saving exceeded. Please remove some strategies to add a new one. Thank you!'}, status=400)
+
         strategy_input = request.POST.get('strategy_input', None)
-        trading_positions = request.POST.get('trading_positions', None)  # Get trading positions
-        strategy_notes = request.POST.get('main_strategy_notes', None)  # Get trading positions
-        user = request.user  # Assuming you have a way to retrieve the current user
-        if user.is_authenticated:
-            if strategy_input and trading_positions:
-                strategy = my_strategies.objects.create(user=user, strategy_name=strategy_input, trading_positions=trading_positions,strategy_notes=strategy_notes)
+        trading_positions = request.POST.get('trading_positions', None)
+        strategy_notes = request.POST.get('main_strategy_notes', None)
+
+        logger.debug(f'Strategy Input: {strategy_input}')
+        logger.debug(f'Trading Positions: {trading_positions}')
+        logger.debug(f'Strategy Notes: {strategy_notes}')
+
+        if strategy_input and trading_positions:
+            try:
+                strategy = my_strategies.objects.create(
+                    user=user,
+                    strategy_name=strategy_input,
+                    trading_positions=trading_positions,
+                    strategy_notes=strategy_notes
+                )
                 strategy.save()
                 return JsonResponse({'message': 'Strategy saved successfully.'})
-            else:
-                return JsonResponse({'message': 'Error saving strategy. Invalid data provided.'}, status=400)
+            except Exception as e:
+                logger.error(f'Error saving strategy: {e}')
+                return JsonResponse({'message': 'Error saving strategy.'}, status=500)
         else:
-            return JsonResponse({'user_not_logged_in': 'User not logged in.'})
+            return JsonResponse({'message': 'Error saving strategy. Invalid data provided.'}, status=400)
     else:
         return JsonResponse({'message': 'Invalid request method.'}, status=405)
+
 
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
@@ -9556,3 +9576,72 @@ def GetStrategyUnique(request):
 
 def test_base_dashboard(request):
     return render(request,"test_templates/base_dashboard.html")
+
+def test_schedule_task(request):
+    return render(request,"test_templates/test_schedule_task.html")
+
+
+
+
+
+
+# views.py
+from django.shortcuts import render, redirect
+from django.http import HttpResponse, JsonResponse
+from django.contrib.auth.decorators import login_required
+from superlogo.tasks import perform_addition
+from .models import AdditionTask_main_time
+from django.utils import timezone
+
+def add_numbers_temp(request):
+    return render(request, 'test_templates/test_schedule_task.html')
+
+
+
+# views.py
+from django.shortcuts import render
+from django.http import JsonResponse
+from superlogo.tasks import perform_addition
+from .models import AdditionTask_main_time
+from django.utils import timezone
+from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.decorators import login_required
+
+
+
+@login_required
+@csrf_exempt
+def ajax_add_numbers(request):
+    if request.method == 'POST':
+        try:
+            number1 = int(request.POST.get('number1'))
+            number2 = int(request.POST.get('number2'))
+            schedule_timestamp = int(request.POST.get('schedule_time'))
+
+            print('Received data:')
+            print('number1:', number1)
+            print('number2:', number2)
+            print('schedule_timestamp:', schedule_timestamp)
+
+            # Convert schedule_time back to datetime
+            schedule_time = timezone.datetime.fromtimestamp(schedule_timestamp / 1000)
+            print(schedule_time)
+
+            # Create a new AdditionTask_main_time instance associated with the current user
+            new_task = AdditionTask_main_time.objects.create(
+                user=request.user,
+                number1=number1,
+                number2=number2,
+                schedule_time=schedule_time  # Set the schedule time
+            )
+
+            # Schedule the addition task using Celery if the task is active
+            if new_task.status == 'active' and new_task.schedule_time <= timezone.now():
+                perform_addition.apply_async(args=[new_task.id], eta=new_task.schedule_time)
+
+            return JsonResponse({'result': f"Addition task scheduled with ID: {new_task.id}"})
+
+        except Exception as e:
+            return JsonResponse({'error': f"Error processing the request: {str(e)}"})
+
+    return JsonResponse({'error': 'Invalid request method'})
