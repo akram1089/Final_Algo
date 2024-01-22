@@ -14885,7 +14885,8 @@ toastr.error(errorMessage);
                         var tradingPositionsArray = JSON.parse(response.trading_positions);
 
                         tradingPositionsArray.forEach(function (trade_data) {
-                          var option_side, expiry_date, strike_price, opiton_lot_size, opiton_selected, action, ltpValue, lot_size_inner;
+                          var option_side, expiry_date, strike_price, opiton_lot_size, opiton_selected, action, ltpValue, lot_size_inner,action_side;
+console.log(trade_data.callPutEntrance);
 
                           if (trade_data.callPutEntrance === "CE" || trade_data.callPutEntrance === "PE") {
                             if (trade_data.callPutEntrance === "CE") {
@@ -14893,6 +14894,12 @@ toastr.error(errorMessage);
 
                             } else {
                               option_side = "Put";
+                            }
+                            if (trade_data.long_short_inner === "+") {
+                              action_side = "Long";
+
+                            } else {
+                              action_side = "Short";
                             }
 
                             expiry_date = trade_data.expiry_initial;
@@ -14908,7 +14915,7 @@ toastr.error(errorMessage);
                               option_side,
                               expiry_date,
                               strike_price,
-                              action,
+                              action_side,
                               opiton_lot_size,
                               ltpValue,
                               opiton_selected,
@@ -14924,6 +14931,13 @@ toastr.error(errorMessage);
                             opiton_selected = trade_data.symbol;
                             action = trade_data.long_short_inner;
                             ltpValue = trade_data.entryPrice;
+                            var action_side
+                            if (trade_data.long_short_inner === "+") {
+                              action_side = "Long";
+
+                            } else {
+                              action_side = "Short";
+                            }
 
                             lot_size_inner = 1;
 
@@ -14931,7 +14945,7 @@ toastr.error(errorMessage);
                               option_side,
                               expiry_date,
                               strike_price,
-                              action,
+                              action_side,
                               opiton_lot_size,
                               ltpValue,
                               opiton_selected,
@@ -15458,7 +15472,7 @@ toastr.error(errorMessage);
           ) {
 
 
-            console.log("Option Side:", option_side);
+            console.log("Option Side1:", option_side);
             console.log("Expiry Date:", expiry_date);
             console.log("Strike Price:", strike_price);
             console.log("Action:", action);
