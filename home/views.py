@@ -9598,50 +9598,50 @@ def add_numbers_temp(request):
 
 
 
-# views.py
-from django.shortcuts import render
-from django.http import JsonResponse
-from superlogo.tasks import perform_addition
-from .models import AdditionTask_main_time
-from django.utils import timezone
-from django.views.decorators.csrf import csrf_exempt
-from django.contrib.auth.decorators import login_required
+# # views.py
+# from django.shortcuts import render
+# from django.http import JsonResponse
+# from superlogo.tasks import perform_addition
+# from .models import AdditionTask_main_time
+# from django.utils import timezone
+# from django.views.decorators.csrf import csrf_exempt
+# from django.contrib.auth.decorators import login_required
 
 
 
-@login_required
-@csrf_exempt
-def ajax_add_numbers(request):
-    if request.method == 'POST':
-        try:
-            number1 = int(request.POST.get('number1'))
-            number2 = int(request.POST.get('number2'))
-            schedule_timestamp = int(request.POST.get('schedule_time'))
+# @login_required
+# @csrf_exempt
+# def ajax_add_numbers(request):
+#     if request.method == 'POST':
+#         try:
+#             number1 = int(request.POST.get('number1'))
+#             number2 = int(request.POST.get('number2'))
+#             schedule_timestamp = int(request.POST.get('schedule_time'))
 
-            print('Received data:')
-            print('number1:', number1)
-            print('number2:', number2)
-            print('schedule_timestamp:', schedule_timestamp)
+#             print('Received data:')
+#             print('number1:', number1)
+#             print('number2:', number2)
+#             print('schedule_timestamp:', schedule_timestamp)
 
-            # Convert schedule_time back to datetime
-            schedule_time = timezone.datetime.fromtimestamp(schedule_timestamp / 1000)
-            print(schedule_time)
+#             # Convert schedule_time back to datetime
+#             schedule_time = timezone.datetime.fromtimestamp(schedule_timestamp / 1000)
+#             print(schedule_time)
 
-            # Create a new AdditionTask_main_time instance associated with the current user
-            new_task = AdditionTask_main_time.objects.create(
-                user=request.user,
-                number1=number1,
-                number2=number2,
-                schedule_time=schedule_time  # Set the schedule time
-            )
+#             # Create a new AdditionTask_main_time instance associated with the current user
+#             new_task = AdditionTask_main_time.objects.create(
+#                 user=request.user,
+#                 number1=number1,
+#                 number2=number2,
+#                 schedule_time=schedule_time  # Set the schedule time
+#             )
 
-            # Schedule the addition task using Celery if the task is active
-            if new_task.status == 'active' and new_task.schedule_time <= timezone.now():
-                perform_addition.apply_async(args=[new_task.id], eta=new_task.schedule_time)
+#             # Schedule the addition task using Celery if the task is active
+#             if new_task.status == 'active' and new_task.schedule_time <= timezone.now():
+#                 perform_addition.apply_async(args=[new_task.id], eta=new_task.schedule_time)
 
-            return JsonResponse({'result': f"Addition task scheduled with ID: {new_task.id}"})
+#             return JsonResponse({'result': f"Addition task scheduled with ID: {new_task.id}"})
 
-        except Exception as e:
-            return JsonResponse({'error': f"Error processing the request: {str(e)}"})
+#         except Exception as e:
+#             return JsonResponse({'error': f"Error processing the request: {str(e)}"})
 
-    return JsonResponse({'error': 'Invalid request method'})
+#     return JsonResponse({'error': 'Invalid request method'})

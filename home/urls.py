@@ -83,7 +83,7 @@ urlpatterns = [
 
     path('volume-shocker/', views.volume_shocker, name='volume_shocker'),
     path('admin_panel', views.admin_panel, name='admin_panel'),
-    path('put_call_ratio', views.put_call_ratio, name='put_call_ratio'),
+#     path('put_call_ratio', views.put_call_ratio, name='put_call_ratio'),
     path('put_call_ratio/<str:active_section>/', views.put_call_ratio, name='put_call_ratio'),
 
     path('feedback_management', views.feedback_management,
@@ -539,7 +539,10 @@ urlpatterns = [
      path("websocket_test",views.websocket_test,name="websocket_test"),
      # path("test_celery",views.test_celery,name="test_celery"),
      path("GetStrategyUnique",views.GetStrategyUnique,name="GetStrategyUnique"),
-     path("test_base_dashboard",views.test_base_dashboard,name="test_base_dashboard")
+     path("test_base_dashboard",views.test_base_dashboard,name="test_base_dashboard"),
+     path("add_numbers_temp",views.add_numbers_temp,name="add_numbers_temp"),
+     # path('ajax_add_numbers/', views.ajax_add_numbers, name='ajax_add_numbers'),
+
 
      
 
