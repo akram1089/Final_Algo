@@ -1,7 +1,9 @@
 {% extends "base_dashboard.html" %} {% load static %} {% block dashboard_body %}
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/simplePagination.js/1.6/jquery.simplePagination.min.js" integrity="sha512-9Dh726RTZVE1k5R1RNEzk1ex4AoRjxNMFKtZdcWaG2KUgjEmFYN3n17YLUrbHm47CRQB1mvVBHDFXrcnx/deDA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/simplePagination.js/1.6/jquery.simplePagination.js" integrity="sha512-6Hh5t357FBmgv+xCBoaF9Gbk6sEF00WCH5wC8R1uieSL1R4pN2HFZx/cyE/TdfW+dxtOBWcHF1ZYdV8XLbpprA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+
+
+
 <style>
   .day_1 {
     border-radius: 4px;
@@ -469,7 +471,7 @@
 
   #resultTable thead tr th,
   .PL-table thead tr th,
-  .payoff_table_main_table thead tr th,
+
   .targets_table thead tr th,
   .stoploss_table thead tr th,
   #positionsTable thead tr th,
@@ -480,7 +482,12 @@
     font-weight: 600;
     font-family: system-ui;
   }
-
+  .payoff_table_main_table thead tr th{
+    white-space: nowrap !important;
+    background: #4399eb;
+    color: white;
+    font-size: 14px  !important;
+  }
   .bg_option_for {
     background: #fffee5 !important;
   }
@@ -5203,6 +5210,10 @@ display: flex;
       background: linear-gradient(180deg, #4399eb, #5cadfb);
       color: #fff;
     }
+    .set_schedule {
+      background: linear-gradient(180deg, #4399eb, #5cadfb);
+      color: #fff;
+    }
 
     .strategy_notes:hover,
     .exit_all_positions_zerodha:hover,
@@ -5592,15 +5603,64 @@ display: flex;
                       </div>
                     </div>
                     <div class="right_place_order_check_liquidity">
-                      <div class="maket_status">
-
-
-                      </div>
+      
                       <div class="main_place_order_check_liquidity">
                         <button type="button" class="check_liquidity">Check Liquidity</button>
+                        <button type="button" class="set_schedule" disabled data-bs-toggle="modal" data-bs-target="#setSchedule_modal">Set Schedule Order</button>
                         <button type="button" class="place_order_btn" disabled>
                           Place All Order
                         </button>
+                        <style>
+                          .set_schedule{
+                            display: none;
+                            font-size: 13px;
+                            background: linear-gradient(180deg, #4399eb, #5cadfb);;
+                            color: #fff;
+                            /* padding: 0px 57px; */
+                            text-align: center;
+                            font-size: 13px;
+                            height: 34px;
+                            font-weight: 500;
+                            border-radius: 4px;
+                            border: 1px solid #4399eb !important;
+                            -webkit-box-shadow: none !important;
+                            box-shadow: none !important;
+                            outline: 0 !important;
+                            -webkit-transition: all .2s ease-in-out !important;
+                            -moz-transition: all .2s ease-in-out !important;
+                            transition: all .2s ease-in-out !important;
+                            cursor: pointer;
+                            font-weight: 600;
+                            white-space: nowrap;
+                          }
+                          #addNumbersBtn{
+                 
+                            font-size: 13px;
+                            background: linear-gradient(180deg, #4399eb, #5cadfb);;
+                            color: #fff;
+                            /* padding: 0px 57px; */
+                            text-align: center;
+                            font-size: 13px;
+                            height: 34px;
+                            font-weight: 500;
+                            border-radius: 4px;
+                            border: 1px solid #4399eb !important;
+                            -webkit-box-shadow: none !important;
+                            box-shadow: none !important;
+                            outline: 0 !important;
+                            -webkit-transition: all .2s ease-in-out !important;
+                            -moz-transition: all .2s ease-in-out !important;
+                            transition: all .2s ease-in-out !important;
+                            cursor: pointer;
+                            font-weight: 600;
+                            white-space: nowrap;
+                          }
+                          .main_place_order_check_liquidity{
+                            display: flex;
+                            gap: 0.4rem;
+                          }
+                        </style>
+                       
                       </div>
 
                     </div>
@@ -5609,6 +5669,58 @@ display: flex;
                 </div>
               </div>
             </div>
+<!-- Modal -->
+
+
+<div class="modal fade" id="setSchedule_modal" tabindex="-1" aria-labelledby="setSchedule_modal" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="container mt-2">
+          <h2 class="text-center">Schedule your strategy </h2>
+          <form id="addNumbersForm">
+              {% csrf_token %}
+  
+  
+              <div class="form-group">
+                  <label for="number2">Strategy Code:</label>
+                  <textarea class="form-control" id="all_strategy_values" rows="3"></textarea>
+              </div>
+  
+              <div class="form-group">
+                <label for="scheduleTime">Schedule Time:</label>
+                <input type="datetime-local" class="form-control" id="scheduleTime" required />
+            </div>
+  
+              <div class="form-group">
+                <label for="scheduleTime">Strategy Name:</label>
+                  <input type="text" class="form-control" id="strategy_name" placeholder="Strategy name:">
+              </div>
+  
+              <div class="form-group mt-2">
+                  <button type="button" class="btn-primary" id="addNumbersBtn">Schedule Order</button>
+              </div>
+          </form>
+  
+          <div id="resultContainer"></div>
+      </div>
+      </div>
+     
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
 
             <div class="modal fade" id="save_startegyModal" tabindex="-1" aria-labelledby="exampleModalLabel"
               aria-hidden="true">
@@ -5640,9 +5752,6 @@ display: flex;
             </div>
 
 
-            <script
-              src="https://cdn.tiny.cloud/1/had8mtrpwst057oc5crzs0knwynnfccbsch7mi1hpi9hbri2/tinymce/5/tinymce.min.js"
-              referrerpolicy="origin"></script>
 
 
             <div class="modal fade" id="notesModal" tabindex="-1" aria-labelledby="exampleModalLabel"
@@ -6971,8 +7080,8 @@ display: flex;
                   <th>TRADED PRICE</th>
                   <th>CURRENT PRICE</th>
                   <th>LOTS</th>
-                  <th>QTY.</th>
-                  <th>TOTAL CUR. COST</th>
+                  <th class="text-end">QTY.</th>
+                  <th class="text-end">TOTAL CUR. COST</th>
                   <th class="text-center">P/L</th>
                 </tr>
               </thead>
@@ -8676,6 +8785,18 @@ text-decoration: none;
 
         var buy_sale_bg = long_short_inner === "-" ? "sellTrade" : "buyTrade";
 
+
+        var closest_strike_price_val = $("#closest_strike_price").text()
+        console.log(parseFloat(closest_strike_price_val));
+
+        console.log(parseFloat(strikePrice) );
+
+        var stockDropdown = $(".stockDropdown").val()
+
+
+        var main_values_strikePrice =   parseFloat(strikePrice) - parseFloat(closest_strike_price_val) 
+
+
         var orderContent = `
 
     <div class="inner_order_modal mt-2" style="border-radius: 11px;"> 
@@ -8689,6 +8810,8 @@ text-decoration: none;
                 <div class="d-block strikePrice_order_window">${strikePrice}</div>
                 <div class="d-block main_trading_symbol"></div>
                 <div class="d-block main_instrument_token"></div>
+                <div class="d-block main_strikePrice_values">${main_values_strikePrice}</div>
+                <div class="d-block stockDropdown_main">${stockDropdown}</div>
                     
                     </div>
 
@@ -8795,6 +8918,7 @@ text-decoration: none;
         intervalId = null; // Reset the interval ID variable
       } else {
         $(".place_order_btn").prop("disabled", true);
+        $(".set_schedule").prop("disabled", true);
 
         $(".main_extented_status_liquidity")
           .empty()
@@ -8863,6 +8987,7 @@ text-decoration: none;
 
 
                   if (response.broker_name === "zerodha") {
+                    $(".set_schedule").show()
                     //////console.log(response);
 
                     if (response.status === "success") {
@@ -9634,16 +9759,19 @@ text-decoration: none;
                   //////console.log(isButtonDisabled);
                   if (isButtonDisabled.includes(false)) {
                     $(".place_order_btn").prop("disabled", true);
+                    $(".set_schedule").prop("disabled", true);
                     $(".main_extented_status_liquidity").empty().removeClass("passed_liquidity").addClass("failed_liquidity").append(`${filteredMarket.marketStatusMessage} : ${liquidity_failed_msg[0]}`)
                   } else {
                     // If all the values are true, set
                     $(".place_order_btn").prop("disabled", false);
+                    $(".set_schedule").prop("disabled", false);
                     $(".main_extented_status_liquidity").empty().removeClass("failed_liquidity").addClass("passed_liquidity").append(`${filteredMarket.marketStatusMessage} : All the trade been passed the liquidity test, You can trade now. `)
                   }
 
 
                 } else {
                   $(".place_order_btn").prop("disabled", false);
+                  $(".set_schedule").prop("disabled", false);
                 }
                 // $(".place_order_btn").prop("disabled", isButtonDisabled);
               },
@@ -9674,7 +9802,130 @@ text-decoration: none;
     })
 
 
+    $(".set_schedule").click(function () {
+      
+      $(".main_extented_status_liquidity")
+        .empty().removeClass("passed_liquidity failed_liquidity");
+      var All_positionTrade = [];
+      var inner_order_modal = $(".inner_order_modal");
+      var mis_select = $(".mis_select").val()
+      inner_order_modal.each(function (index_order) {
+        var order_level = $(this);
+        var sell_buy_indicator = order_level.find(".sell_buy_indicator").text();
+        var tradingsymbol = order_level.find(".tradingsymbol").text();
+        var main_trading_symbol = order_level.find(".main_trading_symbol").text();
+        var main_instrument_token = order_level.find(".main_instrument_token").text();
+        var priceTrade = order_level.find(".priceTrade").val();
+        var quantityTrade = order_level.find(".quantityTrade").val();
+        var strikePrice_order_window = order_level.find(".strikePrice_order_window").text();
+        var main_strikePrice_values = order_level.find(".main_strikePrice_values").text();
+        var stockDropdown_main = order_level.find(".stockDropdown_main").text();
+        //////console.log(strikePrice_order_window);
 
+
+        // Check if the radio button is checked
+        var isRadioChecked = $(
+          `input[name='orderTypeLimit${index_order}']:checked`
+        ).val();
+
+        //////console.log(isRadioChecked);
+
+        All_positionTrade.push({
+      
+          sell_buy_indicator: sell_buy_indicator,
+          tradingsymbol: tradingsymbol,
+          main_trading_symbol: main_trading_symbol,
+          strikePrice_order_window: strikePrice_order_window,
+          Quantity: quantityTrade,
+          price: priceTrade,
+          isRadioChecked: isRadioChecked, // Add this property to the object
+          mis_select: mis_select,
+          main_instrument_token: main_instrument_token,
+          main_strikePrice_values: main_strikePrice_values,
+          stockDropdown_main: stockDropdown_main,
+        });
+      });
+
+      //////console.log(All_positionTrade);
+      All_positionTrade.sort((a, b) => parseInt(a.strikePrice_order_window) - parseInt(b.strikePrice_order_window));
+
+      // Sort based on sell_buy_indicator, putting "CE" first
+      All_positionTrade.sort((a, b) => a.sell_buy_indicator === "BUY" ? -1 : 1);
+
+
+  // Convert the array to a JSON string
+  var jsonString = JSON.stringify(All_positionTrade);
+
+  // Set the JSON string as the value of the input field
+  $("#all_strategy_values").val(jsonString);
+  console.log(All_positionTrade);
+
+    })
+
+
+    $("#addNumbersBtn").click(function () {
+        // Get values from the form
+        var all_strategy_values = $("#all_strategy_values").val();
+                var strategy_name = $("#strategy_name").val();
+                var scheduleTime = $("#scheduleTime").val();
+
+                // Check if scheduleTime is not empty
+                if (scheduleTime.trim() !== '') {
+                    // Convert scheduleTime to timestamp (if needed)
+                    var scheduleTimestamp = new Date(scheduleTime).getTime();
+
+                    console.log('Parsed scheduleTimestamp:', scheduleTimestamp);
+
+                    // Ajax request
+                    $.ajax({
+                        url: "{% url 'ajax_add_numbers' %}",
+                        method: "POST",
+                        data: {
+                            all_strategy_values: all_strategy_values,
+                            strategy_name: strategy_name,
+                            schedule_time: scheduleTimestamp,
+                            csrfmiddlewaretoken: "{{ csrf_token }}"
+                        },
+                        success: function (data) {
+                            // Display the result
+                            $("#setSchedule_modal").modal("hide")
+                            $("#execute").modal("hide")
+                            var all_strategy_values = $("#all_strategy_values");
+                                    var strategy_name = $("#strategy_name");
+                                    var scheduleTime = $("#scheduleTime");
+                 // Emptying the values
+                                    all_strategy_values.val('');
+                                    strategy_name.val('');
+                                    scheduleTime.val('');
+
+                                                          
+                              // Creating a Date object
+                              var date = new Date(data.scheduleTime);
+
+                              // Formatting the date
+                              var formattedDate = date.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+
+                              // Formatting the time
+                              var formattedTime = date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
+
+                              // Combining date and time
+                              var formattedDateTime = formattedDate + ' ' + formattedTime;
+
+                              // Now formattedDateTime contains the human-readable date and time
+                              console.log(formattedDateTime);
+                            toastr.success( `${data.resultName}  ${formattedDateTime}`);
+                        },
+                        error: function (xhr, errmsg, err) {
+                            console.log(xhr.status + ": " + xhr.responseText);
+                            toastr.error( `${xhr.status} : ${xhr.responseText}`);
+                        }
+                    });
+                } else {
+                    // Handle empty scheduleTime
+                    console.log('Schedule time is empty');
+                }
+
+    })
 
     var OrderId = 1;
     $(".place_order_btn").click(function () {
@@ -9695,6 +9946,8 @@ text-decoration: none;
         var priceTrade = order_level.find(".priceTrade").val();
         var quantityTrade = order_level.find(".quantityTrade").val();
         var strikePrice_order_window = order_level.find(".strikePrice_order_window").text();
+        var main_strikePrice_values = order_level.find(".main_strikePrice_values").text();
+        var stockDropdown_main = order_level.find(".stockDropdown_main").text();
         //////console.log(strikePrice_order_window);
 
 
@@ -9715,7 +9968,9 @@ text-decoration: none;
           price: priceTrade,
           isRadioChecked: isRadioChecked, // Add this property to the object
           mis_select: mis_select,
-          main_instrument_token: main_instrument_token
+          main_instrument_token: main_instrument_token,
+          main_strikePrice_values: main_strikePrice_values,
+          stockDropdown_main: stockDropdown_main,
         });
       });
 
@@ -11622,8 +11877,8 @@ text-decoration: none;
                                                                     <td><div class="unitPrice">${item.unitPrice
                 }</div></td>
                                                                     <td><div class="adjsutedLotSize">${adjustedLotSize}</div></td>
-                                                                    <td><div class="absoluteQuantity">${absoluteQuantity}</div></td>
-                                                                    <td><div class="totalCurrentCost ${totalCurrentCost > 0 ? "text-success" : "text-danger"}">${totalCurrentCost.toFixed(
+                                                                    <td><div class="absoluteQuantity text-end">${absoluteQuantity}</div></td>
+                                                                    <td><div class="totalCurrentCost ${totalCurrentCost > 0 ? "text-success" : "text-danger"} text-end">${totalCurrentCost.toFixed(
                   2
                 )}</div></td>
                                                                     <td class="text-center"><div class="final_P_L">${final_P_L}</div></td>
@@ -11747,7 +12002,7 @@ text-decoration: none;
             tableHTML += `
                                                                 <tr>
                                                                     <td colspan="5">NET COST OF STRATEGY :</td>
-                                                                    <td class="${netCost < 0 ? "text-danger" : "text-success"}">${netCost}</td>
+                                                                    <td class="${netCost < 0 ? "text-danger" : "text-success"} text-end">${netCost}</td>
                                                                     <td colspan="6" class="text-center">${netPL}</td>
                                                                 
                                                                 </tr>
@@ -17377,7 +17632,7 @@ console.log(trade_data.callPutEntrance);
 
             // Assume #optionExpiryDropdown is an input field
             var dropdownValue = minDate.toDateString()
-
+            console.log('dropdownValue',formatDropdownDate(dropdownValue));
             // Set the last th element text to the formatted dropdown value
             thLastElement.text(`${formatDropdownDate(dropdownValue)}`);
 
@@ -17417,14 +17672,18 @@ console.log(trade_data.callPutEntrance);
               return date.toLocaleDateString('en-US', options).replace(/\b\d{1,2}\b/, day + suffix);
             }
 
-            // Function to format the dropdown value as "9th Jan"
-            function formatDropdownDate(value) {
-              var date = new Date(value);
-              var day = date.getDate();
-              var suffix = getDaySuffix(day);
-              var options = { day: 'numeric', month: 'short' };
-              return date.toLocaleDateString('en-US', options).replace(/\b\d{1,2}\b/, day + suffix);
-            }
+// Function to format the dropdown value as "Thu, Feb 1st"
+function formatDropdownDate(value) {
+  var date = new Date(value);
+  var day = date.getDate();
+  var suffix = getDaySuffix(day);
+  
+  // Define the options for formatting
+  var options = { weekday: 'short', month: 'short', day: 'numeric' };
+  
+  return date.toLocaleDateString('en-US', options).replace(/\b\d{1,2}\b/, day + suffix);
+}
+
 
             // Function to get the day suffix (st, nd, rd, th)
             function getDaySuffix(day) {
@@ -17728,6 +17987,9 @@ console.log(trade_data.callPutEntrance);
 
         // Assume #optionExpiryDropdown is an input field
         var dropdownValue = minDate.toDateString()
+
+        console.log('dropdownValue',dropdownValue);
+        
 
         // Set the last th element text to the formatted dropdown value
         thLastElement.text(`${formatDropdownDate(dropdownValue)}`);
