@@ -29,6 +29,7 @@ from.models import Broker
 from.models import PopupContent
 from.models import Book
 from.models import BookCart
+from.models import AdditionTask_main_time
 
 # from.models import StockListing
 
@@ -63,9 +64,46 @@ admin.site.register(Broker)
 admin.site.register(PopupContent)
 admin.site.register(Book)
 admin.site.register(BookCart)
+admin.site.register(AdditionTask_main_time)
 
 # admin.site.register(StockListing)
 
 
 
 
+
+# admin.py
+
+from django.contrib import admin
+from .models import CustomPeriodicTask
+
+@admin.register(CustomPeriodicTask)
+class CustomPeriodicTaskAdmin(admin.ModelAdmin):
+    list_display = ('name', 'custom_field', 'user', 'enabled', 'last_run_at')
+
+    # Customize other admin options as needed
+
+
+
+from django.contrib import admin
+from .models import StrategyScheduleTaskResult
+
+@admin.register(StrategyScheduleTaskResult)
+class StrategyScheduleTaskResultAdmin(admin.ModelAdmin):
+    list_display = ('strategy_name', 'broker_name', 'user', 'id')  # Customize the fields you want to display in the admin list
+    search_fields = ('strategy_name', 'broker_name', 'user__username')  # Add fields for searching in the admin
+
+    # You can customize the admin further if needed
+    # For example, adding list_filter, readonly_fields, etc.
+
+
+
+from django.contrib import admin
+from .models import Blog
+
+@admin.register(Blog)
+class BlogAdmin(admin.ModelAdmin):
+    list_display = ('title', 'author', 'created_at', 'blog_category')
+    list_filter = ('blog_category',)
+    search_fields = ('title', 'author')
+    prepopulated_fields = {'description': ('short_description',)}
