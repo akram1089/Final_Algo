@@ -1,0 +1,155 @@
+{% extends "base_dashboard.html" %}
+{% load static %}
+
+{% block dashboard_body %}
+
+<style>
+    .blog_descriptions{
+        padding: 0 40px;
+    }
+    #blogDescriptionContainer p{
+        margin-bottom: 20px !important;
+        font-weight: 500 !important;
+        line-height: 1.5 !important;
+        font-size: 19px !important;
+    }
+
+    .sidebar-element {
+        width: 100%;
+        flex-direction: column;
+        align-items: flex-start;
+        display: flex;
+    }
+    .sidebar-card.is-highlights {
+        background-color: #fffced;
+        border-color: #fffced;
+    }
+    .sidebar-card {
+        width: 100%;
+        height: 100%;
+        border: 1px solid var(--gray200);
+        background-color: var(--white);
+        border-radius: 1rem;
+        padding: 1.75rem;
+        overflow: hidden;
+    }
+
+    .icon-1x1-xsmall.is-highlight {
+        color: #f1c40f;
+    }
+
+    .icon-1x1-xsmall {
+        width: 1.5rem;
+        height: 1.5rem;
+    }
+
+    .heading-xsmall {
+        letter-spacing: 0;
+        font-size: 1.5rem;
+        font-weight: 600;
+        line-height: 1.4;
+    }
+
+    .w-richtext>:last-child, .w-richtext ol li:last-child, .w-richtext ul li:last-child {
+        margin-bottom: 0;
+    }
+
+    .text-rich-text-highlights ul {
+        margin-top: 0.5rem;
+        margin-bottom: 0.5rem;
+        padding-left: 1rem;
+        font-size: 1.05rem;
+    }
+
+    .horizontal-div.align-content-center, .horizontal-div.plan-pricing-toggle-description {
+        align-items: center;
+    }
+    .horizontal-div {
+        flex-wrap: wrap;
+        display: flex;
+        gap: 8px;
+    }
+    .text-rich-text-highlights ul li{
+        list-style: disc !important;
+        margin: 14px 0 !important;
+    }
+    .heading-large {
+        font-size: 2.5rem;
+        font-weight: 600 !important;
+        line-height: 1.2;
+        color: #101828 !important;
+    letter-spacing: -.02em;
+    margin-top: 0;
+    margin-bottom: 0;
+    }
+
+    .divider {
+        width: 100%;
+        height: 1px;
+        background-color: #eaecf0;
+        margin-top: 3rem;
+        margin-bottom: 3rem;
+    }
+</style>
+<div >
+    <div class="blog_descriptions mt-5">
+        <div>
+            <div class="row">
+                <div class="col-lg-8">
+                    <h2 class="heading-large">{{ blog.title }}</h2>
+                    <p style="margin-top: 20px; font-weight: 500 !important; font-size: 1.25rem !important;">{{blog.short_description}}</p>
+        
+                    <div class="mt-4">
+                        <p>Author: {{ blog.author}}</p>
+                        <p>Published on: {{ blog.created_at }}</p>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+
+                </div>
+            </div>
+            
+        </div>
+        <div class="divider"></div>
+        <div class="row">
+            <div class="col-lg-8" style="padding-right: 5rem !important;">
+                
+        
+                <div id="blogDescriptionContainer">{{ blog.description | safe }}</div>
+            </div>
+            <div class="col-lg-4">
+                <div class="sidebar-element"><div class="sidebar-card is-highlights">
+                    <div class="margin-bottom margin-xsmall">
+                        <div class="horizontal-div align-content-center">
+                            <div class="icon-wrapper-margin-right-small">
+                                <div class="icon-1x1-xsmall is-highlight w-embed">
+                                    <svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M4.5 22V17M4.5 7V2M2 4.5H7M2 19.5H7M13 3L11.2658 7.50886C10.9838 8.24209 10.8428 8.60871 10.6235 8.91709C10.4292 9.1904 10.1904 9.42919 9.91709 9.62353C9.60871 9.8428 9.24209 9.98381 8.50886 10.2658L4 12L8.50886 13.7342C9.24209 14.0162 9.60871 14.1572 9.91709 14.3765C10.1904 14.5708 10.4292 14.8096 10.6235 15.0829C10.8428 15.3913 10.9838 15.7579 11.2658 16.4911L13 21L14.7342 16.4911C15.0162 15.7579 15.1572 15.3913 15.3765 15.0829C15.5708 14.8096 15.8096 14.5708 16.0829 14.3765C16.3913 14.1572 16.7579 14.0162 17.4911 13.7342L22 12L17.4911 10.2658C16.7579 9.98381 16.3913 9.8428 16.0829 9.62353C15.8096 9.42919 15.5708 9.1904 15.3765 8.91709C15.1572 8.60871 15.0162 8.24209 14.7342 7.50886L13 3Z" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                                   </svg>
+                                </div>
+                            </div>
+                            <div class="heading-xsmall text-color-gray900">Highlights</div>
+                        </div>
+                    </div>
+                    <div class="text-rich-text-highlights w-richtext">
+                        <ul role="list">
+                            <li>Supercharge your bots for faster scans, more positions, and more symbols.</li>
+                            <li>Automatically check your options position's moneyness with brand new decisions.</li>
+                            <li>Reset tags and toggle switches directly from your bot's dashboard and settings.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            </div>
+        </div>
+       
+    </div>
+  </div>
+
+  <script>
+    $(document).ready(function() {
+      
+    });
+</script>
+
+{% endblock dashboard_body %}

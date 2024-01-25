@@ -356,4 +356,100 @@ class BookCart(models.Model):
     quantity = models.IntegerField(default=1)
 
     def __str__(self):
-        return f'{self.user.username} - Product {self.book.id} - Quantity {self.quantity}'
+        return f'{self.user} - Product {self.book.id} - Quantity {self.quantity}'
+
+
+
+# models.py
+from django.db import models
+
+
+class AdditionTask_main_time(models.Model):
+    STATUS_CHOICES = [
+        ('active', 'Active'),
+        ('inactive', 'Inactive'),
+    ]
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    number1 = models.IntegerField()
+    number2 = models.IntegerField()
+    result = models.IntegerField(blank=True, null=True)
+    status = models.CharField(choices=STATUS_CHOICES, default='active', max_length=10)
+    created_at = models.DateTimeField(auto_now_add=True)
+    schedule_time = models.DateTimeField()  # New field for schedule time
+
+    def __str__(self):
+        return f"{self.user}: {self.number1} + {self.number2} = {self.result} ({self.status})"
+
+
+
+
+# models.py
+
+from django.db import models
+
+from django_celery_beat.models import PeriodicTask
+
+class CustomPeriodicTask(PeriodicTask):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    
+    # Add your custom fields here
+    custom_field = models.CharField(max_length=255)
+    
+    # Override any methods if needed
+
+    def save(self, *args, **kwargs):
+        # Add custom logic before saving
+        super().save(*args, **kwargs)
+        # Add custom logic after saving
+
+    def __str__(self):
+        return f"{self.name} - {self.custom_field} - User: {self.user.username}"
+
+
+
+
+from django.db import models
+
+
+class StrategyScheduleTaskResult(models.Model):
+    strategy_name = models.CharField(max_length=255)
+    broker_name = models.CharField(max_length=255)
+    broker_profile = models.JSONField()
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    order_data = models.JSONField()
+    result_data = models.JSONField()
+
+    def __str__(self):
+        return f"{self.strategy_name} - {self.broker_name} - {self.user}"
+
+
+
+
+
+
+class Blog(models.Model):
+    FEATURED = 'featured'
+    NEWEST = 'newest'
+    PLATFORM_UPDATES = 'platform_updates'
+    RESEARCH_INSIGHTS = 'research_insights'
+    COMPANY_NEWS = 'company_news'
+
+    CATEGORY_CHOICES = [
+        (FEATURED, 'Featured'),
+        (NEWEST, 'Newest'),
+        (PLATFORM_UPDATES, 'Platform Updates'),
+        (RESEARCH_INSIGHTS, 'Research Insights'),
+        (COMPANY_NEWS, 'Company News'),
+    ]
+
+    title = models.CharField(max_length=255)
+    image = models.ImageField(upload_to='images/')
+    short_description = models.TextField()
+    description = models.TextField()
+    author = models.CharField(max_length=255)
+    created_at = models.DateTimeField(auto_now_add=True)
+    blog_category = models.CharField(max_length=20, choices=CATEGORY_CHOICES)
+
+    def __str__(self):
+        return self.title

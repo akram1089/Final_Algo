@@ -3,14 +3,337 @@
 
 {% block dashboard_body %}
 
-<h1 class="text-center text-secondary mt-4">Welcome Blog Page</h1>
+<style>
+
+  .w-inline-block {
+    max-width: 100%;
+    display: inline-block;
+}
+  .posts-horizontal.list-item {
+    color: #62636b;
+    align-items: flex-start;
+    margin-bottom: 24px;
+}
+  .posts-horizontal {
+    display: flex;
+}
+
+.posts-horizontal-image {
+  width: 175px;
+  border-radius: 5px;
+  flex: none;
+  margin-right: 24px;
+}
+
+.description{
+  padding-bottom: 0 !important;
+}
+.recent_blog a{
+  text-decoration: none;
+  color: black !important;
+}
+ .blog_list a{
+  text-decoration: none;
+  color: black !important;
+}
+
+
+.category-badge-menu.is-tabs-menu-no-underline {
+  margin-bottom: 2rem;
+}
+
+.category-badge-menu {
+  grid-column-gap: 0.5rem;
+  grid-template-rows: auto;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  grid-auto-columns: 1fr;
+  align-self: flex-start;
+  display: flex;
+  overflow: auto;
+}
+
+.category-badge.w--current {
+  background-color: #344054 !important;
+  color: #f5f5f5 !important;
+}
+.w-tab-link.w--current {
+  background-color: #c8c8c8;
+}
+a, .w-tab-link, .w-nav-link, .w-dropdown-btn, .w-dropdown-toggle, .w-dropdown-link {
+  color: inherit;
+}
+.category-badge {
+  background-color: #f2f4f7 !important;
+  color: #344054;
+  white-space: nowrap;
+  border-radius: 3rem;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  font-size: .875rem;
+  display: flex;
+}
+.w-tab-link {
+  vertical-align: top;
+  text-align: left;
+  cursor: pointer;
+  color: #222;
+  background-color: #ddd;
+  padding: 10px 30px;
+  text-decoration: none;
+  
+  position: relative;
+}
+
+.icon-wrapper-margin-right-small {
+  flex: none;
+  justify-content: center;
+  align-items: center;
+  margin-right: 0.5rem;
+}
+.button-icon {
+  width: 1.25rem;
+  height: 1.25rem;
+  min-height: 1.25rem;
+  min-width: 1.25rem;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+}
+
+
+.content-image-link {
+  width: 100%;
+  border-radius: 0.5rem;
+  transition: all .3s;
+  display: block;
+  overflow: hidden;
+}
+
+.image-wrapper-16-9 {
+  width: 100%;
+  padding-top: 56.25%;
+  position: relative;
+}
+
+.content-feature-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 0.5rem;
+  position: absolute;
+  top: 0%;
+  bottom: 0%;
+  left: 0%;
+  right: 0%;
+  overflow: hidden;
+  border: 1px solid #80808029;
+}
+
+.category-link {
+  color: #28b463;
+  margin-bottom: 0.5rem;
+  margin-right: 1rem;
+  font-size: .875rem;
+  font-weight: 600 !important;
+  text-decoration: none;
+  transition: opacity .3s;
+}
+
+.text-style-2lines {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+.heading-xxsmall {
+  letter-spacing: 0;
+  font-size: 1.25rem;
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+.text-style-3lines {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  font-weight: 500 !important;
+}
+
+.blog-author-wrapper {
+  align-items: center;
+  margin-top: 1.5rem;
+  display: flex;
+}
+
+.blog-author-image-wrapper {
+  margin-right: 0.75rem;
+}
+
+.blog-small-author-image {
+  width: 2.5rem;
+  height: 2.5rem;
+  min-height: 2.5rem;
+  min-width: 2.5rem;
+  object-fit: cover;
+  border-radius: 100%;
+}
+
+.card-meta-items-wrapper {
+  flex-wrap: wrap;
+  align-items: center;
+  display: flex;
+}
+
+.text-size-small {
+  letter-spacing: normal;
+  font-size: .875rem;
+}
+
+.margin-bottom, .margin-bottom.margin-xxsmall, .margin-bottom.margin-small, .margin-bottom.margin-medium, .margin-bottom.margin-xsmall, .margin-bottom.margin-xxlarge, .margin-bottom.margin-large, .margin-bottom.margin-xlarge, .margin-bottom.margin-tiny, .margin-bottom.margin-xxlarge, .margin-bottom.margin-xsmall, .margin-bottom.margin-small, .margin-bottom.margin-xsmall, .margin-bottom.margin-xxsmall, .margin-bottom.margin-small, .margin-bottom.margin-large {
+    margin-top: 0;
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.margin-small {
+    margin: 1.5rem;
+}
+
+.text-divider {
+  margin-left: 0.25rem;
+  margin-right: 0.25rem;
+}
+
+.text-size-small {
+  letter-spacing: normal;
+  font-size: .875rem;
+}
+
+.blogs_card a{
+  text-decoration: none !important;
+  color: black !important;
+}
+
+.rounded {
+    width: 100%;
+    border: 1px solid var(--gray-4);
+    border-radius: 0.5rem;
+    overflow: hidden;
+}
+
+.new-card-heading-large {
+    margin-bottom: 12px;
+    font-size: 32px;
+    font-weight: 400 !important;
+    line-height: 1.3;
+}
+
+.recent_blog {
+    width: 100%;
+    max-width: 783px;
+   
+    flex: 0 auto;
+    margin-right: 36px;
+}
+
+.card-heading-small {
+    font-size: 16px;
+    font-weight: 400 !important;
+    line-height: 1.4;
+}
+
+.text-gray-2 {
+    color: #62636b;
+}
+
+.text-muted{
+  font-size: 13px !important;
+  margin-top: 10px !important;
+}
+
+/* Lower cards css */
+.content-grid-3 {
+    grid-column-gap: 2rem;
+    grid-row-gap: 2rem;
+    grid-template-rows: auto;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-auto-columns: 1fr;
+    display: grid;
+}
+
+</style>
 
 <div class="container">
+  <h1 class="mt-5">Stay Informed: Discover the Latest Market Trends</h1>
+  <p style="margin-top: 20px; font-weight: 500 !important; font-size: 1.25rem !important;">A blog about options trading, strategy research, and autotrading best practices.</p>
 
+<hr class="mt-5">
 
+<div style="margin-top: 50px;">
+  <div class="row">
+    <div class="col-lg-8">
+      <div class="recent_blog">
+        
+      </div>
+    </div>
+    <div class="col-lg-4">
+      <div class="blog_list">
+        <!-- <div role="list" class="w-dyn-items">
+          <div role="listitem" class="w-dyn-item">
+            <a href="#" class="posts-horizontal list-item w-inline-block">
+              <img alt="Debit Spreads Added to Trade Ideas" src="https://assets-global.website-files.com/5fba23eb8789c3c7fcfb5f31/6580abdc772292e755fc050f_Option-Alpha-Debit-Spreads-Added-to-Trade-Ideas-main.png" sizes="(max-width: 479px) 92vw, 175px" srcset="https://assets-global.website-files.com/5fba23eb8789c3c7fcfb5f31/6580abdc772292e755fc050f_Option-Alpha-Debit-Spreads-Added-to-Trade-Ideas-main-p-500.png 500w, https://assets-global.website-files.com/5fba23eb8789c3c7fcfb5f31/6580abdc772292e755fc050f_Option-Alpha-Debit-Spreads-Added-to-Trade-Ideas-main-p-800.png 800w, https://assets-global.website-files.com/5fba23eb8789c3c7fcfb5f31/6580abdc772292e755fc050f_Option-Alpha-Debit-Spreads-Added-to-Trade-Ideas-main-p-1080.png 1080w, https://assets-global.website-files.com/5fba23eb8789c3c7fcfb5f31/6580abdc772292e755fc050f_Option-Alpha-Debit-Spreads-Added-to-Trade-Ideas-main.png 1200w" class="posts-horizontal-image">
+              <div class="description no-margin-left">
+                <h6 class="card-heading-small">Debit Spreads Added to Trade Ideas</h6>
+                <div class="text-small text-gray-1 text-muted">3 min video</div>
+              </div>
+            </a>
+          </div>
+          
+        </div> -->
+      </div>
 
+    </div>
+  </div>
+</div>
 
-    <div aria-label="Page navigation example " style="    margin-top: 1rem;">
+<hr>
+
+<div class="mt-5">
+  <div class="category-badge-menu is-tabs-menu-no-underline w-tab-menu" role="tablist">
+    <a data-w-tab="Tab 1" class="category-badge w-inline-block w-tab-link w--current filter-button" data-category="featured" id="w-tabs-0-data-w-tab-0" href="#" role="tab" aria-controls="w-tabs-0-data-w-pane-0" aria-selected="true">
+      <div class="button-icon icon-wrapper-margin-right-small w-embed">
+        <svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+         <path fill-rule="evenodd" clip-rule="evenodd" d="M11.9932 5.13581C9.9938 2.7984 6.65975 2.16964 4.15469 4.31001C1.64964 6.45038 1.29697 10.029 3.2642 12.5604C4.89982 14.6651 9.84977 19.1041 11.4721 20.5408C11.6536 20.7016 11.7444 20.7819 11.8502 20.8135C11.9426 20.8411 12.0437 20.8411 12.1361 20.8135C12.2419 20.7819 12.3327 20.7016 12.5142 20.5408C14.1365 19.1041 19.0865 14.6651 20.7221 12.5604C22.6893 10.029 22.3797 6.42787 19.8316 4.31001C17.2835 2.19216 13.9925 2.7984 11.9932 5.13581Z" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+       </svg>
+      </div>
+      <div>Featured</div>
+    </a>
+    <a data-w-tab="Tab 2" class="category-badge  w-inline-block w-tab-link filter-button" data-category="newest" id="w-tabs-0-data-w-tab-1" href="#" role="tab" aria-controls="w-tabs-0-data-w-pane-1" aria-selected="false" tabindex="-1">
+      <div>Newest</div>
+    </a>
+    <a data-w-tab="Tab 3" class="category-badge w-inline-block w-tab-link filter-button" data-category="platform_updates" id="w-tabs-0-data-w-tab-2" href="#" role="tab" aria-controls="w-tabs-0-data-w-pane-2" aria-selected="false" tabindex="-1">
+      <div>Platform Updates</div>
+    </a>
+    <a data-w-tab="Tab 4" class="category-badge w-inline-block w-tab-link filter-button" data-category="research_insights" id="w-tabs-0-data-w-tab-3" href="#" role="tab" aria-controls="w-tabs-0-data-w-pane-3" aria-selected="false" tabindex="-1">
+      <div>Research Insights</div>
+    </a>
+    <a data-w-tab="Tab 5" class="category-badge w-inline-block w-tab-link filter-button" data-category="company_news" id="w-tabs-0-data-w-tab-4" href="#" role="tab" aria-controls="w-tabs-0-data-w-pane-4" aria-selected="false" tabindex="-1">
+      <div>Company News</div>
+    </a>
+  </div>
+</div>
+
+<div class="blogs_card">
+  <div class="content-grid-3 w-dyn-items" id="all_blogs_container">
+
+  
+  </div>
+ 
+</div>
+
+    <!-- <div aria-label="Page navigation example " style="    margin-top: 1rem;">
         <ul class="pagination">
           <li class="page-item"><a class="page-link" href="#">Previous</a></li>
           <li class="page-item"><a class="page-link" href="#">1</a></li>
@@ -18,8 +341,204 @@
           <li class="page-item"><a class="page-link" href="#">3</a></li>
           <li class="page-item"><a class="page-link" href="#">Next</a></li>
         </ul>
+      </div> -->
+</div>
+</div>
+
+<script>
+  $(document).ready(function () {
+    function fetchAndRenderBlog(init_blog_category) {
+
+     console.log(init_blog_category);
+      $.ajax({
+          url: 'get_blog',  // Replace with your actual backend endpoint
+          method: 'GET',
+          success: function (response) {
+              var blogData = response.data;
+              console.log(blogData);
+              blogData.sort(function (a, b) {
+              return b - a; // Sort based on array index
+             });
+
+             console.log(blogData);
+
+              $(".recent_blog").empty()
+             if(blogData.length > 0){
+              var latestBlog = blogData[0]
+              console.log('Latest Blog:', latestBlog);
+              var latestBloghtml = `<div role="list" class="grid-rows w-dyn-items">
+          <div role="listitem" class="w-dyn-item">
+            <a href="#" class="link-card-block w-inline-block blog_detail_page" data-id = ${latestBlog.id}>
+              <img alt="Probability Theory: How Many Trades Does it Take to be Successful?" src="${latestBlog.image_url}" width="100%" class="rounded">
+              <h4 class="new-card-heading-large margin-top-medium mt-4">${latestBlog.title}</h4>
+              <div class="text-gray-2">${latestBlog.short_description}</div>
+              <div class="horizontal-div text-small text-muted margin-top-small">
+                <div>6 min read</div>
+              </div>
+            </a>
+          </div>
+        </div>`
+
+        $(".recent_blog").append(latestBloghtml)
+
+             }
+
+              $(".blog_list").empty()
+              for (var i = 0; i < Math.min(5, blogData.length); i++) {
+                var element = blogData[i];
+                var createdAt = new Date(element.created_at);
+                var options = { year: 'numeric', month: 'long', day: 'numeric' };
+                var formattedDate = createdAt.toLocaleDateString('en-US', options).toUpperCase();
+                console.log(`Blog at index ${i}:`, element.id);
+                var blogHtml = `<div role="list" class="w-dyn-items">
+                    <div role="listitem" class="w-dyn-item">
+                        <a href="#" class="posts-horizontal  list-item w-inline-block blog_detail_page" data-id = ${element.id}>
+                            <img alt="${element.title}" src="${element.image_url}" sizes="(max-width: 479px) 92vw, 175px" srcset="${element.image_url}" class="posts-horizontal-image">
+                            <div class="description no-margin-left">
+                                <h6 class="card-heading-small">${element.title}</h6>
+                                <div class="text-small text-gray-1 text-muted">${formattedDate}</div>
+                            </div>
+                        </a>
+                    </div>
+                </div>`;
+
+                $(".blog_list").append(blogHtml);
+
+            }
+
+
+            $("#all_blogs_container").empty();
+            var filteredBlogs = blogData.filter(function (blog) {
+             return blog.blog_category === init_blog_category; // Adjust 'category' field based on your data
+            });
+            renderBlogs(filteredBlogs)
+//                 for (var i = 0; i < blogData.length; i++) {
+//                   var element = blogData[i];
+//                   console.log(`Blog at index ${i}:`, element);
+//                   var blogHtml = `<div class="col-lg-4">
+//  <div role="listitem" class="w-dyn-item">
+  
+//   <a href="#" class="content-clickable w-inline-block blog_detail_page" data-id = ${element.id}>
+    
+//     <div class="margin-bottom margin-small">
+//       <div class="content-image-link">
+//         <div class="image-wrapper-16-9">
+//           <img src="${element.image_url}" loading="lazy" alt="" sizes="(max-width: 479px) 93vw, (max-width: 767px) 47vw, (max-width: 991px) 46vw, (max-width: 1439px) 30vw, 405.3359375px" srcset="${element.image_url}" class="content-feature-image">
+//         </div>
+//       </div>
+//     </div>
+//     <div class="category-link">
+//       <div>Platform Updates</div>
+//     </div>
+//     <div class="margin-bottom margin-xxsmall">
+//       <h3 class="heading-xxsmall text-style-2lines">${element.title}</h3>
+//     </div>
+//     <div class="margin-bottom margin-xsmall">
+//       <div class="text-style-3lines">${element.description}</div>
+//     </div>
+//     <div class="blog-author-wrapper hide-mobile-landscape">
+//       <div class="blog-author-image-wrapper">
+//         <img loading="lazy" alt="" src="https://assets-global.website-files.com/5fba23eb8789c3c7fcfb5f31/622fa2005a5fabed64659616_607d8ea5221240c8618ea3d1_Kirk-Du-Plessis-Avatar%20(1).png" sizes="(max-width: 767px) 100vw, (max-width: 1279px) 40px, (max-width: 1439px) 3vw, 40px" srcset="https://assets-global.website-files.com/5fba23eb8789c3c7fcfb5f31/622fa2005a5fabed64659616_607d8ea5221240c8618ea3d1_Kirk-Du-Plessis-Avatar%20(1)-p-500.png 500w, https://assets-global.website-files.com/5fba23eb8789c3c7fcfb5f31/622fa2005a5fabed64659616_607d8ea5221240c8618ea3d1_Kirk-Du-Plessis-Avatar%20(1).png 1153w" class="blog-small-author-image">
+//       </div>
+//       <div class="blog-author-text">
+//         <div class="text-size-small text-weight-medium text-color-gray900">Kirk Du Plessis</div>
+//         <div class="card-meta-items-wrapper text-color-gray500">
+//           <div class="text-size-small">Nov 14, 2023</div>
+//           <div class="text-divider text-size-small">•</div>
+//           <div class="text-size-small">2 min read</div>
+//         </div></div>
+//       </div>
+//     </a>
+//   </div>
+//     </div>`
+//     $("#all_blogs_container").append(blogHtml)
+//                 }
+
+                
+                $(".blog_detail_page").click(function () {
+                  
+        // Retrieve the data-id attribute value
+        var blogId = $(this).data('id');
+        console.log('Clicked blog id:', blogId);
+        // Redirect to the blog details page
+        window.location.href = '/blog_details/' + blogId;
+      });
+              
+          },
+          error: function (error) {
+              // Handle error response from the backend
+              console.error(error);
+          }
+      });
+  }
+
+  var init_blog_category = "featured"
+  $(".filter-button").click(function (event) {
+    event.preventDefault();
+    $(".filter-button").removeClass("w--current");
+    $(this).addClass("w--current");
+    init_blog_category = $(this).data('category');
+    console.log(init_blog_category);
+    fetchAndRenderBlog(init_blog_category);
+  });
+
+
+  function toCamelCase(input) {
+  return input.toLowerCase().replace(/_/g, ' ').replace(/(^|\s)([a-z])/g, function(match, group1, group2) {
+    return group1 + group2.toUpperCase();
+  });
+}
+
+  function renderBlogs(blogs) {
+    blogs.forEach(function (element, i) {
+      var createdAt = new Date(element.created_at);
+      var options = { year: 'numeric', month: 'long', day: 'numeric' };
+      var formattedDate = createdAt.toLocaleDateString('en-US', options).toUpperCase();
+
+      var camelCaseCategory = toCamelCase(element.blog_category);
+      var blogHtml = `<div role="list" class="">
+  <div role="listitem" class="w-dyn-item">
+  
+   <a href="#" class="content-clickable w-inline-block blog_detail_page" data-id = ${element.id}>
+    
+     <div class="margin-bottom margin-small">
+      <div class="content-image-link">
+         <div class="image-wrapper-16-9">
+           <img src="${element.image_url}" loading="lazy" alt="" sizes="(max-width: 479px) 93vw, (max-width: 767px) 47vw, (max-width: 991px) 46vw, (max-width: 1439px) 30vw, 405.3359375px" srcset="${element.image_url}" class="content-feature-image">
+         </div>
+       </div>
+     </div>
+     <div class="category-link">
+       <div>${camelCaseCategory}</div>
       </div>
-</div>
-</div>
+     <div class="margin-bottom margin-xxsmall">
+       <h3 class="heading-xxsmall text-style-2lines">${element.title}</h3>
+     </div>
+     <div class="margin-bottom margin-xsmall">
+       <div class="text-style-3lines">${element.short_description}</div>
+     </div>
+     <div class="blog-author-wrapper hide-mobile-landscape">
+       <div class="blog-author-image-wrapper">
+         <img loading="lazy" alt="" src="https://assets-global.website-files.com/5fba23eb8789c3c7fcfb5f31/622fa2005a5fabed64659616_607d8ea5221240c8618ea3d1_Kirk-Du-Plessis-Avatar%20(1).png" sizes="(max-width: 767px) 100vw, (max-width: 1279px) 40px, (max-width: 1439px) 3vw, 40px" srcset="https://assets-global.website-files.com/5fba23eb8789c3c7fcfb5f31/622fa2005a5fabed64659616_607d8ea5221240c8618ea3d1_Kirk-Du-Plessis-Avatar%20(1)-p-500.png 500w, https://assets-global.website-files.com/5fba23eb8789c3c7fcfb5f31/622fa2005a5fabed64659616_607d8ea5221240c8618ea3d1_Kirk-Du-Plessis-Avatar%20(1).png 1153w" class="blog-small-author-image">
+       </div>
+      <div class="blog-author-text">
+        <div class="text-size-small text-weight-medium text-color-gray900">${element.author}</div>
+        <div class="card-meta-items-wrapper text-color-gray500">
+          <div class="text-size-small">${formattedDate}</div>
+          <div class="text-divider text-size-small">•</div>
+          <div class="text-size-small">2 min read</div>
+        </div></div>
+      </div>
+    </a>
+  </div>
+    `;
+
+      $("#all_blogs_container").append(blogHtml);
+    });
+  }
+
+  fetchAndRenderBlog(init_blog_category) 
+  });
+</script>
 
 {% endblock dashboard_body %}

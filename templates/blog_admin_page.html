@@ -1,0 +1,254 @@
+{% extends "base_admin_panel.html" %}
+{% load static %}
+{% block dashboard_admin_body %}
+<script src="https://cdn.tiny.cloud/1/p2b3uuq2cklymm1i2sii1qbmxby2wlunm769n3573tdjw7t3/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+<style>
+    .blog_box{
+    background: white;
+    padding: 35px 21px;
+    border-radius: 8px;
+    }
+    main .form-group {
+    width: 100%;
+    display: revert !important;
+    grid-gap: 10px;
+}
+#blog_btn{
+    background-color: #2397f3 !important;
+    border: 1px solid #2397f3 !important;
+}
+</style>
+<section>
+    <div class="mt-3">
+        <div class="row blog_box">
+            <div class="col-lg-6">
+              <div class="form" id="blogForm">
+                <div class="mb-3">
+                    <label for="title" class="form-label">Title</label>
+                    <input type="text" class="form-control" name="title" id="title" placeholder="Enter your title" required>
+                    <div class="invalid-feedback">Please enter a title.</div>
+                </div>
+                <div class="mb-3">
+                    <label for="title" class="form-label">Writer Name</label>
+                    <input type="text" class="form-control" name="name" id="writer_name" placeholder="Enter Name" required>
+                    <div class="invalid-feedback">Please enter your name.</div>
+                </div>
+                <div class="mb-3">
+                    <label for="img_field" class="form-label">Upload Img</label>
+                    <input type="file" class="form-control" name="img" id="img_field" placeholder="" required>
+                    <div class="invalid-feedback">Please select an image.</div>
+                </div>
+    
+                <div class="form-group mb-3">
+                    <label for="id_blog_category">Blog Category:</label>
+                    <select class="form-control" id="id_blog_category" name="blog_category" required>
+                      <option value="featured">Featured</option>
+                      <option value="newest">Newest</option>
+                      <option value="platform_updates">Platform Updates</option>
+                      <option value="research_insights">Research Insights</option>
+                      <option value="company_news">Company News</option>
+                    </select>
+                    <div class="invalid-feedback">Please select a category.</div>
+                  </div>
+    
+                  <div class="mb-3">
+                    <label for="short_description" class="form-label">Short Descriptions</label>
+                    <textarea name="" id="short_description" cols="30" rows="4" class="form-control" required></textarea>
+                    <div class="invalid-feedback">Please enter a short description.</div>
+                 </div>
+    
+                <div class="mb-3">
+                    <label for="img_field" class="form-label">Descriptions</label>
+                    <textarea name="" id="mytextarea" cols="30" rows="8" class="form-control" required></textarea>
+                    <div class="invalid-feedback">Please enter a description.</div>
+                </div>
+    
+               
+                <button id="blog_btn" class="btn btn-success">POST BLOG</button>
+                <!-- <button id="blog_preview" class="btn btn-success">Preview</button> -->
+              </div>
+
+             
+            </div>
+            <div class="col-lg-6">
+             <div class="blog_preview">
+                <div id="blogInfo">
+                    <div id="previewSection">
+                        
+                        <div id="previewTitle"></div>
+                        <!-- <div id="previewWriterName"></div> -->
+                        <div id="previewImg"></div>
+                        <div id="previewCategory"></div>
+                        <div id="previewShortDescription"></div>
+                        <div id="previewDescription"></div>
+                    </div>
+                </div>
+             </div>
+            </div>
+        </div>
+        
+    </div>
+</section>
+
+<script>
+   
+
+
+   
+
+$(document).ready(function () {
+
+    
+
+tinymce.init({
+    selector: '#mytextarea',
+    plugins: [
+        'a11ychecker', 'advlist', 'advcode', 'advtable', 'autolink', 'checklist', 'export',
+        'lists', 'link', 'image', 'charmap', 'preview', 'anchor', 'searchreplace', 'visualblocks',
+        'powerpaste', 'fullscreen', 'formatpainter', 'insertdatetime', 'media', 'table', 'help', 'wordcount'
+    ],
+    toolbar: 'undo redo | formatpainter casechange blocks | bold italic backcolor | ' +
+        'alignleft aligncenter alignright alignjustify | ' +
+        'bullist numlist checklist outdent indent | removeformat | a11ycheck code table help'
+});
+
+// Function to handle the button click
+$("#blog_btn").click(function () {
+    console.log('Button clicked');
+
+    if (validateForm()) {
+        console.log('Form validated successfully');
+
+        var title = $("#title").val();
+        var writer_name = $("#writer_name").val();
+        var blog_category = $("#id_blog_category").val()
+        var short_description = $("#short_description").val();
+        var description = tinymce.get('mytextarea').getContent();
+    
+        var formData = new FormData();
+        formData.append('title', title);
+        formData.append('description', description);
+        formData.append('writer_name', writer_name);
+        formData.append('blog_category', blog_category);
+        formData.append('short_description', short_description);
+    
+        var imageField = $("#img_field")[0].files[0];
+        formData.append('image', imageField);
+
+        console.log('Before AJAX call');
+        $.ajax({
+            url: '/blogs_save',
+            method: 'POST',
+            processData: false,
+            contentType: false,
+            data: formData,
+            success: function (response) {
+                console.log('AJAX request successful');
+                var blogData = response.data;
+    
+                $("#title").val('');
+                $("#writer_name").val('');
+                tinymce.get('mytextarea').setContent('');
+                $("#img_field").val('');
+                $("#short_description").val('');
+                console.log('Blog submitted successfully!');
+                toastr.success('Blog submitted successfully!');
+            },
+            error: function (error) {
+                console.error('AJAX request error:', error);
+            }
+        });
+    } else {
+        console.log('Form validation failed');
+    }
+});
+
+
+$('#blogForm input, #blogForm textarea, #blogForm select').on('input change', function () {
+            updatePreview();
+        });
+
+        // Event handler for preview button click
+        $('#blog_preview').click(function () {
+            updatePreview();
+        });
+
+        function updatePreview() {
+            // Update preview content with form values
+            $('#previewTitle').html('<h2>Title: ' + $('#title').val()+ '</h2>');
+            $('#previewWriterName').text('Writer Name: ' + $('#writer_name').val());
+            // You can update other preview elements similarly
+
+            // Update image preview
+            var imgField = $('#img_field')[0];
+            if (imgField.files && imgField.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $('#previewImg').html('<img src="' + e.target.result + '" alt="Preview Image" width="100%">');
+                };
+                reader.readAsDataURL(imgField.files[0]);
+            }
+
+            // Update category preview
+            $('#previewCategory').html('<h5>Category: ' + $('#id_blog_category option:selected').text() + '</h5>');
+
+            $('#previewShortDescription').html('<p>Short Descriptions: ' + $('#short_description').val() + '</p>');
+            $('#previewDescription').text('Descriptions: ' + $('#mytextarea').val());
+        }
+
+        $('#blogForm input, #blogForm textarea, #blogForm select').on('input change', function () {
+            $(this).removeClass('is-invalid');
+        });
+
+        function validateForm() {
+            console.log('Validation started');
+        
+            var title = $('#title').val();
+            var writerName = $('#writer_name').val();
+            var imgField = $('#img_field').val();
+            var blogCategory = $('#id_blog_category').val();
+            var shortDescription = $('#short_description').val();
+            var description = tinymce.get('mytextarea').getContent();
+        
+            if (title === '') {
+                $('#title').addClass('is-invalid');
+            }
+    
+            if (writerName === '') {
+                $('#writer_name').addClass('is-invalid');
+            }
+    
+            if (imgField === '') {
+                $('#img_field').addClass('is-invalid');
+            }
+    
+            if (blogCategory === '') {
+                $('#id_blog_category').addClass('is-invalid');
+            }
+    
+            if (shortDescription === '') {
+                $('#short_description').addClass('is-invalid');
+            }
+    
+            if (description === '') {
+                $('#mytextarea').addClass('is-invalid');
+            }
+    
+            // Add more specific validation as needed
+    
+            // Return true if all validations pass
+            return !(title === '' || writerName === '' || imgField === '' || blogCategory === '' || shortDescription === '' || description === '');
+            return true;
+        }
+        
+       
+
+
+});
+
+
+
+    
+</script>
+
+{% endblock dashboard_admin_body %}

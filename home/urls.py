@@ -540,8 +540,15 @@ urlpatterns = [
      # path("test_celery",views.test_celery,name="test_celery"),
      path("GetStrategyUnique",views.GetStrategyUnique,name="GetStrategyUnique"),
      path("test_base_dashboard",views.test_base_dashboard,name="test_base_dashboard"),
-     # path("add_numbers_temp",views.add_numbers_temp,name="add_numbers_temp"),
-     # path('ajax_add_numbers/', views.ajax_add_numbers, name='ajax_add_numbers'),
+
+     path('ajax_add_numbers/', views.ajax_add_numbers, name='ajax_add_numbers'),
+     path('test_schedule_task', views.test_schedule_task, name='test_schedule_task'),
+     path('dynamic_user_tasks', views.dynamic_user_tasks, name='dynamic_user_tasks'),
+     
+     path("blog_admin_page",views.blog_admin_page,name="blog_admin_page"),
+     path("blogs_save",views.blogs_save,name="blogs_save"),
+     path("get_blog",views.get_blog,name="get_blog"),
+     path('blog_details/<int:blog_id>/', views.blog_details, name='blog_details'),
 
 
      

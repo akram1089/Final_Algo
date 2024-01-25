@@ -48,18 +48,23 @@
     }
 
     .ipos {
-        background-color: transparent;
-        color: rgb(8, 139, 247);
-        border: 1px solid rgb(8, 139, 247);
-        padding: 4px 8px;
-        border-radius: 3px;
+    background-color: transparent;
+    color: #4399eb;
+    border: 1px solid #4399eb;
+    padding: 6px 10px;
+    border-radius: 3px;
+    }
+
+    .ipos:hover{
+        color: white !important;
+        background: linear-gradient(180deg, #4399eb, #5cadfb) !important;
     }
 
     .active {
         color: whitesmoke;
-        background-color: rgb(8, 139, 247);
-        border: 1px solid rgb(8, 139, 247);
-        padding: 4px;
+        background: linear-gradient(180deg, #4399eb, #5cadfb) !important;
+        border: 1px solid #4399eb;
+        padding: 6px;
         border-radius: 3px;
     }
 
@@ -85,16 +90,20 @@
 
     .ipos_list {
         background-color: transparent;
-        border: 1px solid rgb(8, 139, 247);
-        color: rgb(8, 139, 247);
+        border: 1px solid #4399eb;
+        color: #4399eb;
         padding: 5px 8px;
         border-radius: 6px;
     }
+    .ipos_list:hover{
+        background: linear-gradient(180deg, #4399eb, #5cadfb) !important;
+        color: white !important;
+    }
 
     .btn_active {
-        border: 1px solid rgb(8, 139, 247);
+        border: 1px solid #2196f3;
         border-radius: 6px;
-        background-color: rgb(8, 139, 247);
+        background: linear-gradient(180deg, #4399eb, #5cadfb) !important;
         padding: 5px 8px;
         color: white;
     }
@@ -206,12 +215,21 @@
 .paginate_button.previous::before {
   content: "<"; /* Unicode left arrow character */
   font-size: 16px !important;
+  color: black !important;
+}
+
+.paginate_button.previous:hover::before {
+    color: white !important;
 }
 
 /* Next page button icon */
 .paginate_button.next::before {
   content: ">"; /* Unicode right arrow character */
   font-size: 16px !important;
+}
+
+.paginate_button.next:hover::before{
+    color: white !important;
 }
 
 /* Hide text for Previous and Next buttons */
@@ -222,7 +240,7 @@
 #draft-prospectus-table_previous {
   font-size: 0 !important;
   background-color: white; 
-  color: black;
+  color: black !important;
   padding: 7px 18px; 
   border-radius: 4px; 
   cursor: pointer; 
@@ -251,6 +269,40 @@
 
 .paginate_button {
   box-shadow: 0 3px 16px 0 rgba(35,47,62,.15)!important; /* Adjust the values as needed */
+}
+
+.dataTables_wrapper .dataTables_length, .dataTables_wrapper .dataTables_filter, .dataTables_wrapper .dataTables_info, .dataTables_wrapper .dataTables_processing, .dataTables_wrapper .dataTables_paginate {
+    color: inherit;
+    padding: 20px !important;
+}
+
+.box_title {
+    
+    font-size: 2.5rem;
+    text-align: center;
+    font-family: BoldText;
+    display: block;
+    color: #4399eb;
+}
+
+h5 span{
+    position: relative;
+}
+
+ h5 span:after {
+    position: absolute;
+    content: "";
+    background: url(/static/event.png);
+    background-repeat: no-repeat;
+    width: 0.9rem;
+    height: 0.9rem;
+    bottom: 39px;
+    right: -13px;
+}
+
+.ipo_watch_btns button{
+    margin: 0 5px;
+    border-radius: 6px !important;
 }
 
 </style>
@@ -312,10 +364,11 @@
                     <div class="modal-dialog modal-xl">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h1 class="modal-title fs-5" id="exampleModalLabel">IPO Return</h1>
+                                
                                 <button type="button" class="btn-close" data-bs-dismiss="modal"
                                     aria-label="Close"></button>
                             </div>
+                            <h5 class="modal-title box_title" id="exampleModalLabel"><span>IPO Return</span> </h5>
                             <div class="modal-body">
                                 <div class="modal_inner_ipo_return">
 
@@ -374,16 +427,17 @@
                     <div class="modal-dialog modal-xl modal-dialog-centered">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title">IPO Watch</h5>
+                            
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
+                            <h5 class="modal-title box_title"><span>IPO Watch</span> </h5>
                             <div class="modal-body">
                                 <div class="ipo_watch_btns">
                                     <button class="ipos active" data-value="1">Upcoming IPO</button>
                                     <button class="ipos " data-value="2">Open IPO</button>
                                     <button class="ipos " data-value="3">Closed IPO</button>
                                 </div>
-                                <div class="ipo_watch_table mt-5">
+                                <div class="ipo_watch_table">
                                     <table class="table" id="ipo-watch">
                                         <thead>
                                             <tr class="ipo_table_head">
@@ -415,9 +469,10 @@
                     <div class="modal-dialog modal-xl modal-dialog-centered">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title">New Listing</h5>
+                               
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
+                            <h5 class="modal-title box_title"><span>New Listing</span> </h5>
                             <div class="modal-body">
                                 <div class="ipo_list_btns">
                                     <button class="ipos_list btn_active" data-value="BSE/main">BSE</button>
@@ -425,7 +480,7 @@
                                     <button class="ipos_list" data-value="bse/sme">BSE SME</button>
                                     <button class="ipos_list" data-value="nse/sme">NSE EMERGE</button>
                                 </div>
-                                <div class="ipo_watch_table mt-5">
+                                <div class="ipo_watch_table">
                                     <table class="table" id="new-lists">
                                         <thead>
                                             <tr class="ipo_table_head">
@@ -468,10 +523,11 @@
                     <div class="modal-dialog modal-xl">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h1 class="modal-title fs-5" id="exampleModalLabel">Best Performer</h1>
+                               
                                 <button type="button" class="btn-close" data-bs-dismiss="modal"
                                     aria-label="Close"></button>
                             </div>
+                            <h5 class="modal-title box_title" id="exampleModalLabel"><span>Best Performer</span> </h5>
                             <div class="modal-body">
                                 <div class="modal_best_performer">
 
@@ -523,9 +579,10 @@
                     <div class="modal-dialog modal-xl modal-dialog-centered">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title">Basis Allotment</h5>
+                                
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
+                            <h5 class="modal-title box_title"><span>Basis Allotment</span> </h5>
                             <div class="modal-body">
         
                                 <div class="ipo_watch_table mt-5">
@@ -568,10 +625,11 @@
                     <div class="modal-dialog modal-xl">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h1 class="modal-title fs-5" id="exampleModalLabel">Draft Prospectus</h1>
+                                
                                 <button type="button" class="btn-close" data-bs-dismiss="modal"
                                     aria-label="Close"></button>
                             </div>
+                            <h5 class="modal-title box_title" id="exampleModalLabel"><span>Draft Prospectus</span> </h5>
                             <div class="modal-body">
                                 <div class="modal_drafy_prospectus">
 
@@ -607,9 +665,10 @@
                     <div class="modal-dialog modal-xl modal-dialog-centered">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title">IPO News</h5>
+                                
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
+                            <h5 class="modal-title box_title"><span>IPO News</span> </h5>
                             <div class="modal-body">
         
                                 <div class="table-box d-flex flex-wrap" id="news-boxs">

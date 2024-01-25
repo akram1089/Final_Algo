@@ -9645,3 +9645,188 @@ def test_schedule_task(request):
 #             return JsonResponse({'error': f"Error processing the request: {str(e)}"})
 
 #     return JsonResponse({'error': 'Invalid request method'})
+
+
+
+
+
+from django.http.response import HttpResponse
+from django.shortcuts import render
+
+from django_celery_beat.models import PeriodicTask, CrontabSchedule
+
+import datetime
+
+@csrf_exempt
+def ajax_add_numbers(request):
+    if request.method == 'POST':
+        try:
+            all_strategy_values = request.POST.get('all_strategy_values')
+            strategy_name = request.POST.get('strategy_name')
+      
+            schedule_timestamp = int(request.POST.get('schedule_time'))
+            user = request.user
+
+            print('Received data:')
+            print('all_strategy_values:', all_strategy_values)
+            # Parse the JSON string into a Python dictionary
+
+
+
+
+   
+            print('schedule_timestamp:', schedule_timestamp)
+
+            # Convert schedule_time back to datetime
+            schedule_time = timezone.datetime.fromtimestamp(schedule_timestamp / 1000)
+            print('Complete datetime:', schedule_time)
+
+            # Extract year, month, and day
+        
+            schedule_month = schedule_time.month
+            schedule_day = schedule_time.day
+
+            print('Month:', schedule_month)
+            print('Day:', schedule_day)
+
+            # Extract hour and minute
+            schedule_hour = schedule_time.hour
+            schedule_minute = schedule_time.minute
+            print('Hour:', schedule_hour)
+            print('Minute:', schedule_minute)
+
+            print(user.pk)
+            schedule_addition_task(user.pk, all_strategy_values,strategy_name, schedule_month, schedule_day, schedule_hour, schedule_minute)
+
+            return JsonResponse({"resultName": f"{strategy_name} has been scheduled on", "scheduleTime": schedule_timestamp})
+
+
+        except Exception as e:
+            return JsonResponse({'error': f"Error processing the schedulor: {str(e)}"})
+
+    return JsonResponse({'error': 'Invalid request method'})
+
+
+def schedule_addition_task(user_id, all_strategy_values,strategy_name,  schedule_month, schedule_day, schedule_hour, schedule_minute):
+    zerodha_username = 'TWB026'
+    zerodha_password = 'Grow@7879'
+    totp_secret = 'CUSYEXAYVMKJ6X332W7FT2F2VKUVAH4R'
+    # Generate a unique timestamp
+    timestamp = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
+
+    # Create or get the CrontabSchedule
+    schedule, created = CrontabSchedule.objects.get_or_create(
+        minute=schedule_minute,
+        hour=schedule_hour,
+        day_of_week='*',
+        day_of_month=schedule_day,
+        month_of_year=schedule_month,
+
+    )
+
+    # Create a unique task name using the timestamp
+    task_name = f"addition_task_{user_id}_{timestamp}"
+
+    # Create the PeriodicTask
+    custom_field_value =strategy_name
+    user = User.objects.get(id=user_id)
+    custom_task = CustomPeriodicTask.objects.create(
+        user=user,
+        crontab=schedule,
+        name=task_name,
+        task='home.tasks.perform_addition_task',  # Update with your app name
+        args=json.dumps([user_id, all_strategy_values,custom_field_value,zerodha_username,zerodha_password,totp_secret]),
+        custom_field=custom_field_value,
+    )
+    return custom_task.id
+
+
+
+import json
+from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
+from .models import CustomPeriodicTask
+
+@login_required
+def dynamic_user_tasks(request):
+    # Get the currently logged-in user
+    user = request.user
+    
+    # Fetch CustomPeriodicTask instances related to the user
+    user_tasks = CustomPeriodicTask.objects.filter(user=user)
+    
+    # Get the fields for each instance (both CustomPeriodicTask and PeriodicTask)
+    fields = []
+    for task in user_tasks:
+        # Exclude non-serializable attributes
+        custom_fields = {
+            key: value
+            for key, value in task.__dict__.items()
+            if not key.startswith('_') and key != 'periodictask_ptr'
+        }
+        fields.append(custom_fields)
+    print(fields)
+    # Return the data as JSON response
+    return JsonResponse({'tasks': fields}, safe=False)
+
+
+
+
+
+from.models import Blog
+
+@csrf_exempt
+def blogs_save(request):
+ if request.method == 'POST':
+    title = request.POST.get('title', '')
+    description = request.POST.get('description', '')
+    author = request.POST.get('writer_name', '')
+    blog_category = request.POST.get('blog_category', '')
+    short_description = request.POST.get('short_description', '')
+    image = request.FILES.get('image', None)
+
+    new_blog = Blog(title=title, description=description, image=image, author=author,short_description=short_description,blog_category=blog_category )
+    new_blog.save()
+
+    return JsonResponse({'status': 'success', 'data': {
+            
+            'title': new_blog.title,
+            'description': new_blog.description,
+            'author': new_blog.author,
+            'image_url': new_blog.image.url if new_blog.image else '',
+        }})
+
+ return JsonResponse({'status': 'error', 'data': 'Invalid request method'})
+
+def get_blog(request):
+
+    blogs = Blog.objects.all()
+
+    blogs_data = []
+
+    for blog in blogs:
+        blog_data = {
+            'id':blog.id,
+            'title': blog.title,
+            'description': blog.description,
+            'short_description': blog.short_description,
+            'blog_category':blog.blog_category,
+            'created_at':blog.created_at,
+            'author':blog.author,
+            'blog_category':blog.blog_category,
+            'image_url': blog.image.url if blog.image else '',
+        }
+        blogs_data.append(blog_data)
+
+    # Return the list of blog data in the response
+    return JsonResponse({'data': blogs_data})
+
+def blog_details(request, blog_id):
+    print(f"Attempting to retrieve blog with ID: {blog_id}")
+    blog = get_object_or_404(Blog, id=blog_id)
+    return render(request, 'blog_details.html', {'blog': blog})
+
+
+
+def blog_admin_page(request):
+    return render(request, "blog_admin_page.html")
