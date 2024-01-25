@@ -9711,9 +9711,17 @@ def ajax_add_numbers(request):
 
 
 def schedule_addition_task(user_id, all_strategy_values,strategy_name,  schedule_month, schedule_day, schedule_hour, schedule_minute):
-    zerodha_username = 'TWB026'
-    zerodha_password = 'Grow@7879'
-    totp_secret = 'CUSYEXAYVMKJ6X332W7FT2F2VKUVAH4R'
+    user = User.objects.get(id=user_id)
+    broker_instance = Broker.objects.filter(user=user, broker_name="zerodha", active_api=True).first()
+  
+
+    logging_id = broker_instance.logging_id
+    password = broker_instance.password
+    totp_key = broker_instance.totp_key
+
+    zerodha_username =logging_id
+    zerodha_password =password
+    totp_secret = totp_key
     # Generate a unique timestamp
     timestamp = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
 
@@ -9732,7 +9740,7 @@ def schedule_addition_task(user_id, all_strategy_values,strategy_name,  schedule
 
     # Create the PeriodicTask
     custom_field_value =strategy_name
-    user = User.objects.get(id=user_id)
+
     custom_task = CustomPeriodicTask.objects.create(
         user=user,
         crontab=schedule,
