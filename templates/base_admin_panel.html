@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 {% load static %}
 <html lang="en" data-bs-theme="light">
 
@@ -28,6 +29,7 @@
     integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4"></script>
+    
   <!-- Favicons -->
   <link rel="apple-touch-icon" href="/docs/5.3/assets/img/favicons/apple-touch-icon.png" sizes="180x180">
   <link rel="icon" href="/docs/5.3/assets/img/favicons/favicon-32x32.png" sizes="32x32" type="image/png">
@@ -46,6 +48,10 @@
   <link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href=" {% static 'css/v1/admin_dashboard.css' %} ">
+
+  <script src="https://cdn.tiny.cloud/1/p2b3uuq2cklymm1i2sii1qbmxby2wlunm769n3573tdjw7t3/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+
+  
   {% comment %} <link rel="stylesheet" href=" {% static 'css/v1/admin_dashboard_index.css' %} "> {% endcomment %}
   <meta name="theme-color" content="#712cf9">
   <style>
@@ -284,8 +290,10 @@
         </li>
   
   
-        <li><a href="{% url "content_management" %}" class="{% if request.path == "/content_management"  %} active_outer_admin {% endif %}" ><i class='bx bxs-grid-alt icon'></i>Content Management</a></li>
+        <li><a href="{% url 'content_management' %}" class="{% if request.path == "/content_management"  %} active_outer_admin {% endif %}" ><i class='bx bxs-grid-alt icon'></i>Content Management</a></li>
         <li><a href="{% url 'book_management' %}" class="{% if request.path == "/book_management"  %} active_outer_admin {% endif %}"><i class='bx bxs-message-square-dots icon'></i>Books Management</a></li>
+        <li><a href="{% url 'blog_admin_page' %}" class="{% if request.path == "/blog_admin_page"  %} active_outer_admin {% endif %}"><i class='bx bxs-message-square-dots icon'></i>Blogs</a></li>
+
         <li><a href="{% url 'feedback_management' %}" class="{% if request.path == "/feedback_management"  %} active_outer_admin {% endif %}"><i class='bx bxs-message-square-dots icon'></i>Feedback Management</a></li>
         <li><a href="{% url 'subscribers_management' %}" class="{% if request.path == "/subscribers_management"  %} active_outer_admin {% endif %}"><i class='bx bxs-message-square-dots icon'></i>Subscriber Management</a></li>
 
@@ -479,7 +487,7 @@
       $('input[name="daterange"]').daterangepicker({
         opens: 'left'
       }, function (start, end, label) {
-        //console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
+        console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
       });
     });
 

@@ -9650,14 +9650,17 @@ def test_schedule_task(request):
 
 
 
-from django.http.response import HttpResponse
-from django.shortcuts import render
-
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.decorators import login_required
 from django_celery_beat.models import PeriodicTask, CrontabSchedule
+from django.utils import timezone
 
 import datetime
+import pytz
 
 @csrf_exempt
+@login_required
 def ajax_add_numbers(request):
     if request.method == 'POST':
         try:
@@ -9669,36 +9672,36 @@ def ajax_add_numbers(request):
 
             print('Received data:')
             print('all_strategy_values:', all_strategy_values)
-            # Parse the JSON string into a Python dictionary
-
-
-
-
-   
             print('schedule_timestamp:', schedule_timestamp)
 
-            # Convert schedule_time back to datetime
-            schedule_time = timezone.datetime.fromtimestamp(schedule_timestamp / 1000)
-            print('Complete datetime:', schedule_time)
+            # Convert timestamp to UTC datetime
+            schedule_time_utc = datetime.datetime.utcfromtimestamp(schedule_timestamp / 1000).replace(tzinfo=pytz.utc)
+
+            # Convert to Asia/Kolkata time zone
+            asia_kolkata_timezone = pytz.timezone('Asia/Kolkata')
+            schedule_time_kolkata = schedule_time_utc.astimezone(asia_kolkata_timezone)
 
             # Extract year, month, and day
-        
-            schedule_month = schedule_time.month
-            schedule_day = schedule_time.day
+            schedule_month = schedule_time_kolkata.month
+            schedule_day = schedule_time_kolkata.day
 
             print('Month:', schedule_month)
             print('Day:', schedule_day)
 
             # Extract hour and minute
-            schedule_hour = schedule_time.hour
-            schedule_minute = schedule_time.minute
+            schedule_hour = schedule_time_kolkata.hour
+            schedule_minute = schedule_time_kolkata.minute
             print('Hour:', schedule_hour)
             print('Minute:', schedule_minute)
 
             print(user.pk)
-            schedule_addition_task(user.pk, all_strategy_values,strategy_name, schedule_month, schedule_day, schedule_hour, schedule_minute)
+            schedule_addition_task(user.pk, all_strategy_values, strategy_name, schedule_month, schedule_day, schedule_hour, schedule_minute)
 
             return JsonResponse({"resultName": f"{strategy_name} has been scheduled on", "scheduleTime": schedule_timestamp})
+
+        except Exception as e:
+            print(f"Error: {e}")
+            return JsonResponse({"error": "An error occurred while processing the request."})
 
 
         except Exception as e:
