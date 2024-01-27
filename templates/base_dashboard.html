@@ -156,6 +156,7 @@ z-index: 9;
   }
   
   </style>
+
   <div class="antd-pro-layouts-basic-layout-floatingSocialContainer" style=" 
   z-index: 9999999999;
   display: flex;
@@ -4044,11 +4045,11 @@ display: none !important;
                 {% csrf_token %}
                 <div class="mb-2">
                   <label for="modalFullNameSignUp" class="form-label">Full Name</label>
-                  <input type="text" class="form-control" name="name" id="modalFullNameSignUp" placeholder="Enter Name">
+                  <input type="text" class="form-control" name="name" id="modalFullNameSignUp" required placeholder="Enter Name">
                 </div>
                 <div class="mb-2">
                   <label for="modalEmailSignUp" class="form-label">Email</label>
-                  <input type="email" class="form-control" name="email" id="modalEmailSignUp" placeholder="example@email.com">
+                  <input type="email" class="form-control" name="email" id="modalEmailSignUp" required placeholder="example@email.com">
                 </div>
                 <div class="form-group">
                   <label for="modalPhoneSignUp">Phone</label>
@@ -4073,14 +4074,14 @@ display: none !important;
               </div>
                 <div class="mb-2" style="position: relative;">
                   <label for="modalPasswordSignUp" class="form-label">Password</label>
-                  <input type="password" class="form-control" id="modalPasswordSignUp" name="password" placeholder="Enter your password" aria-describedby="eyeIcon">
+                  <input type="password" class="form-control" id="modalPasswordSignUp" name="password" placeholder="Enter your password" aria-describedby="eyeIcon" required>
                   <span class="eye-icon" id="eyeicon" style="cursor: pointer;">
                       <i class="bi-eye-slash" aria-hidden="true"></i>
                   </span>
                </div>
                 <div class="mb-2" style="position: relative;">
-                  <label for="modalPasswordSignUp" class="form-label">Password</label>
-                  <input type="password" class="form-control" id="modalCPasswordSignUp" name="Cofirm_password" placeholder="Enter your password" aria-describedby="eyeIcon">
+                  <label for="modalPasswordSignUp" class="form-label">Confirm Password</label>
+                  <input type="password" class="form-control" id="modalCPasswordSignUp" name="Cofirm_password" placeholder="Enter your password" aria-describedby="eyeIcon" required onblur="checkPassword()">
                   <span class="eye-icon" id="confirmEyeIcon" style="cursor: pointer;">
                       <i class="bi-eye-slash" aria-hidden="true"></i>
                   </span>
@@ -4170,7 +4171,20 @@ display: none !important;
 
 <script>
 $(document).ready(function () {
-  
+  $("#modalCPasswordSignUp").on("blur", function () {
+            checkPassword();
+        });
+  function checkPassword() {
+        var password = $("#modalPasswordSignUp").val();
+        var confirmPassword = $("#modalCPasswordSignUp").val();
+
+        if (password !== confirmPassword) {
+            toastr.error('Passwords do not match!');
+
+            console.log("error");
+        }
+    }
+
   $('#eyeicon').on('click', function() {
    
        togglePasswordVisibility('#modalPasswordSignUp', '#eyeicon');
@@ -4353,6 +4367,8 @@ font-size: 15px;
   }
 
 </style>
+
+
 
   <footer class="footer" style="z-index: 9;">
     <div class="container footer_content">
@@ -4800,6 +4816,7 @@ top: 10vh !important;
 
 
 ">
+
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 <script src="/docs/5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
@@ -5010,4 +5027,28 @@ document.querySelectorAll('[data-bs-theme-value]')
 
 
 </script>
+{% for message in messages %}
+    <script>
+    
+
+
+var msg = '{{message}}'
+var msg_tag = '{{message.tags}}'
+
+
+
+if (msg_tag==="danger") {
+  console.log(msg);
+  toastr.error(msg);
+console.log(msg_tag);
+} else {
+  
+  toastr.success(msg);
+  console.log(msg);
+console.log(msg_tag);
+}
+
+
+    </script>
+{% endfor %}
 </html>
