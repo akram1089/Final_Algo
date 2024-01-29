@@ -199,6 +199,7 @@
     }
 </style>
 <style>
+    
     table {
         border-collapse: collapse;
         width: 100%;
@@ -227,6 +228,7 @@ td{
 
     }
 </style>
+
 <script>
 
     function updateMarketStatus() {
@@ -270,7 +272,7 @@ td{
             <div class="main_table_top_content  mt-3  ">
                 <div class="top_symbol_data d-flex justify-content-between"
                     style="     flex-wrap: wrap;   padding: 24px 16px;">
-                    <div class="left_data_option_top d-flex" style=" align-items: center;   gap: 1rem;">
+                    <div class="left_data_option_top d-flex" style=" align-items: center; flex-wrap: wrap;   gap: 1rem;">
 
 
                         <div class="chart_tracking_view">
@@ -360,6 +362,7 @@ td{
     .table_opiton_data{
         overflow: auto !important;
         height: 65vh;
+        
     }
 
     thead th{
@@ -381,12 +384,12 @@ td{
             color: darkslategray !important;
     }
 </style>
-<div class="calls_puts_data px-0">
-    <div class="row">
-        <div class="col-6">Calls</div>
-        <div class="col-6">Puts</div>
-    </div>
-</div>
+                        <div class="calls_puts_data px-0">
+                            <div class="row">
+                                <div class="col-6">Calls</div>
+                                <div class="col-6">Puts</div>
+                            </div>
+                        </div>
 
             <div class="table_opiton_data pb-3">
 
@@ -726,36 +729,46 @@ $(".strikePrice_main_val").each(function () {
 
    
 });
+
+// Assuming closestStrikePrice is defined somewhere before this code block
+// Assuming closestStrikePrice is defined somewhere before this code block
+
 $(".strikePrice_main_val").each(function () {
     var currentStrikePrice = parseFloat($(this).text());
 
-
     if (closestStrikePrice === currentStrikePrice) {
-
         var container = $(".table_opiton_data");
-                  var scrollTo =
-                    $(this).position().top -
-                    container.height() / 2 +
-                    $(this).height() / 2;
+        var containerWidth = container.width();
+        var containerHeight = container.height();
 
-                  console.log("ScrollTo:", scrollTo);
+        var scrollToHorizontal =
+            $(this).position().left -
+            containerWidth / 2 +
+            $(this).width() / 2;
 
-                  container.animate(
-                    {
-                      scrollTop: scrollTo,
-                    },
-                    1000,
-                    function () {
-                      // Animation complete
-                      console.log("Scroll animation complete");
-                      isScrolling = false; // Reset the flag after scrolling is complete
-                    }
-                  );
-                
+        var scrollToVertical =
+            $(this).position().top -
+            containerHeight / 2 +
+            $(this).height() / 2;
+
+        console.log("ScrollTo Horizontal:", scrollToHorizontal);
+        console.log("ScrollTo Vertical:", scrollToVertical);
+
+        container.animate(
+            {
+                scrollLeft: scrollToHorizontal,
+                scrollTop: scrollToVertical,
+            },
+            1000,
+            function () {
+                // Animation complete
+                console.log("Scroll animation complete");
+            }
+        );
+
+        // Center the table horizontally
+        container.css("margin", "0 auto");
     }
-
-
-   
 });
 
 console.log("Closest Strike Price:", closestStrikePrice);

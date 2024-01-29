@@ -347,6 +347,9 @@
             </div>
         </div>
 
+        <div class="main_option_expiry_table table-responsive">
+
+
         <table border="1" class="table main_expiryTable table-striped-custom">
             <thead>
 
@@ -579,6 +582,8 @@
 
             </tbody>
         </table>
+
+    </div>
 </section>
 
 <script>
@@ -639,7 +644,7 @@
 
 
                     response = ajaxResponse; // Assign the response to the outer variable
-                    console.log(response);
+                    // console.log(response);
 
                     // Assuming 'response' is the variable containing the provided data
 
@@ -650,43 +655,58 @@
                             return expiryDate.getMonth() === month;
                         });
                     }
+      // Function to organize data by month and filter only three months
+      function organizeDataByMonth(data) {
+        const organizedData = {};
 
-                    // Function to organize data by month and filter only three months
-                    function organizeDataByMonth(data) {
-                        const organizedData = {};
+        data.forEach(item => {
+            const symbol = Object.keys(item)[0];
+            const symbolData = item[symbol];
 
-                        data.forEach(item => {
-                            const symbol = Object.keys(item)[0];
-                            const symbolData = item[symbol];
+            // console.log(symbolData.symbol_exp_data.resultData);
+            const currentDate = new Date(); // Get the current date
 
-                            const expDates = symbolData.symbol_exp_data.resultData.map(date => new Date(date));
+            const expDates = symbolData.symbol_exp_data.resultData.map(date => new Date(date));
+        console.log(expDates);
 
-                            // Filter only three months (e.g., January, February, March)
-                            const filteredExpDates = expDates.filter(date => {
-                                const month = date.getMonth() + 1; // Adding 1 because getMonth() returns values from 0 to 11
-                                return [1, 2, 3].includes(month);
-                            });
 
-                            filteredExpDates.forEach(expDate => {
-                                const month = expDate.getMonth();
-                                const year = expDate.getFullYear();
-                                const key = `${year}-${month + 1 < 10 ? '0' : ''}${month + 1}`;
 
-                                if (!organizedData[key]) {
-                                    organizedData[key] = {};
-                                }
+    // Sort dates in ascending order
+    expDates.sort((a, b) => a - b);
 
-                                organizedData[key][symbol] = {
-                                    symbol_exp_data: symbolData.symbol_exp_data.resultData.filter(date => new Date(date).getMonth() === month),
-                                    future_data: filterFutureDataByMonth(symbolData.future_data.resultData, month),
-                                    option_data: symbolData.data_option.resultData
-                                };
-                            });
-                        });
+    // Find the closest three months from the current date
+    const closestThreeMonths = [];
+    for (let i = 0; i < expDates.length && closestThreeMonths.length < 3; i++) {
+        const month = expDates[i].getMonth() + 1; // Adding 1 because getMonth() returns values from 0 to 11
+        if (!closestThreeMonths.includes(month)) {
+            closestThreeMonths.push(month);
+        }
+    }
+console.log(closestThreeMonths);
+    // Filter only dates for the closest three months
+    const filteredExpDates = expDates.filter(date => {
+        const month = date.getMonth() + 1; // Adding 1 because getMonth() returns values from 0 to 11
+        return closestThreeMonths.includes(month);
+    });
+            filteredExpDates.forEach(expDate => {
+                const month = expDate.getMonth();
+                const year = expDate.getFullYear();
+                const key = `${year}-${month + 1 < 10 ? '0' : ''}${month + 1}`;
 
-                        return organizedData;
-                    }
+                if (!organizedData[key]) {
+                    organizedData[key] = {};
+                }
 
+                organizedData[key][symbol] = {
+                    symbol_exp_data: symbolData.symbol_exp_data.resultData.filter(date => new Date(date).getMonth() === month),
+                    future_data: filterFutureDataByMonth(symbolData.future_data.resultData, month),
+                    option_data: symbolData.data_option.resultData
+                };
+            });
+        });
+
+        return organizedData;
+    }
                     // Example usage
                     const organizedData = organizeDataByMonth(response.data);
 
@@ -702,6 +722,9 @@
                     // Access the 'data' property
                     var exchangeData = filtered_data_sorted.data;
 
+
+                    // console.log("exchangeData",exchangeData);
+
                     // Rest of your code
                     var expiryMonthSelect = $("#expiry_month");
 
@@ -710,6 +733,7 @@
 
                     // Loop through the data and add options
                     for (var year in exchangeData) {
+                        // console.log(year);
                         if (exchangeData.hasOwnProperty(year)) {
                             var formattedText = getFormattedMonthYear(year);
                             var yearOption = $("<option>").text(formattedText).val(year);
@@ -728,8 +752,11 @@
                         // Clear previous results
 
                         $(".main_expiryTable tbody").empty();
+                        // console.log(selectedExpiry);
                         // Get the data for the selected expiry
                         var selectedData = exchangeData[selectedExpiry];
+
+                        // console.log(selectedData);
 
                         // Loop through the data and add rows to the table
                         var tbody = $('.main_expiryTable tbody');
@@ -738,8 +765,10 @@
                         for (var symbol in selectedData) {
                             if (selectedData.hasOwnProperty(symbol)) {
                                 var symbolData = selectedData[symbol];
+                                // console.log(symbolData);
 
                                 // Assuming there is only one future_data entry for each symbol
+                                // console.log(symbolData.future_data[0]);
                                 var futureData = symbolData.future_data[0];
                                 var formattedExpiry = getFormattedExpiry(futureData.expiry);
                                 // main_positve_val,main_negative_val,danger_val,success_val
@@ -780,7 +809,7 @@
 
                                 count++;
 
-                                count++;
+                      
 
                             }
                         }
@@ -805,7 +834,7 @@
 
                     // Function to show chart (replace this with your actual chart implementation)
                     function showChart(symbol) {
-                        console.log('Show chart for symbol: ' + symbol);
+                        // console.log('Show chart for symbol: ' + symbol);
                         // Add your chart implementation here
                     }
 
@@ -816,7 +845,7 @@
 
                 },
                 error: function (error) {
-                    console.error('Error storing symbols:', error);
+                    // console.error('Error storing symbols:', error);
                 }
             });
         }
@@ -880,7 +909,7 @@
         //     });
 
         //     // Log the new array
-        //     console.log(filteredResults);
+            // console.log(filteredResults);
         //     // Display the filtered dates for the symbol
         //     var tbody = $('.main_expiryTable tbody');
         //     var selectedDays = parseInt($('#exp_month-dropdown').val(), 10);
@@ -900,12 +929,12 @@
         //                 let differenceInDays = Math.floor((dateObject - currentDate) / (1000 * 60 * 60 * 24));
 
         //                 // Check if the date is within the selected range of days
-        //                 // console.log("Date:", date);
-        //                 // console.log("Current Date:", currentDate);
-        //                 // console.log("Difference in Days:", differenceInDays);
+                        // console.log("Date:", date);
+                        // console.log("Current Date:", currentDate);
+                        // console.log("Difference in Days:", differenceInDays);
 
         //                 if (differenceInDays <= selectedDays) {
-        //                     console.log("Date is within the selected range.");
+                            // console.log("Date is within the selected range.");
 
         //                     // Get date, month, and year components
         //                     let day = dateObject.getDate();
@@ -921,7 +950,7 @@
         //                         '<td><a href="#"><i class="bx bx-stats"></i></a></td>' +
         //                         '</tr>');
         //                 } else {
-        //                     console.log("Date is NOT within the selected range.");
+                            console.log("Date is NOT within the selected range.");
         //                 }
         //             });
         //         }

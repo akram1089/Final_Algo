@@ -619,9 +619,9 @@ def signUp(request):
             email_template = get_template('custom_email_template.html')
             context = {'username': fname}
             email_content = email_template.render(context)
-            subject = 'Welcome to Algo Trade'
+            subject = 'Welcome to Option Perks'
             message = 'Thank you for signing up on Your Website. We are glad to have you as part of our community.'
-            from_email = 'your_email@gmail.com'  # Use the same email as configured in settings.py
+            from_email = 'optionperks@gmail.com'  # Use the same email as configured in settings.py
             recipient_list = [email]  
 
             send_mail(subject, message, from_email, recipient_list, html_message=email_content, fail_silently=False)
@@ -629,7 +629,7 @@ def signUp(request):
             # Picture.save()
             messages.success(
                 request, 'You have successfully signed up , please login with correct credential')
-            redirect('/')
+            return redirect('/')
     return render(request,'home.html')
 
 
@@ -4431,7 +4431,7 @@ def subscribe_to_newsletter(request):
                 
                 subject = 'Subscription Confirmation'
                 message = 'Thank you for subscribing to our newsletter!'
-                from_email = 'tufailakram8190@gmail.com'
+                from_email = 'optionperks@gmail.com'
                 recipient_list = [email]
                 send_mail(subject, message, from_email, recipient_list)
                 

@@ -5395,7 +5395,10 @@ display: flex;
                   --bs-modal-width: 806px !important;
                 }
               }
-
+                  .text-bg-secondary{
+                    padding: 4px 6px !important;
+                      background-color: #aaaaaa !important;
+                  }
 
               .left_positions_reset_notes button,
 
@@ -5606,7 +5609,7 @@ display: flex;
       
                       <div class="main_place_order_check_liquidity">
                         <button type="button" class="check_liquidity">Check Liquidity</button>
-                        <button type="button" class="set_schedule" disabled data-bs-toggle="modal" data-bs-target="#setSchedule_modal">Set Schedule Order</button>
+                        <button type="button" class="set_schedule" data-bs-toggle="modal" data-bs-target="#setSchedule_modal">Set Schedule Order</button>
                         <button type="button" class="place_order_btn" disabled>
                           Place All Order
                         </button>
@@ -8109,6 +8112,9 @@ text-decoration: none;
     transition: background-color 0.3s ease;
     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
   }
+  .liquidity_text{
+    font-size:13px !important;
+  }
 </style>
 </div>
 <div class="modal fade" id="editPositionModal">
@@ -8807,15 +8813,24 @@ text-decoration: none;
                     <div class='sell_buy_indicator ${buy_sale_bg}'>${sell_buy_indicator}</div>
                 <div class="tradingsymbol">${combinedString}</div> 
                 <div class="expiry_initial">${expiry_initial}</div> 
-                <div class="d-block strikePrice_order_window">${strikePrice}</div>
-                <div class="d-block main_trading_symbol"></div>
+                <div class="d-none strikePrice_order_window">${strikePrice}</div>
+                <div class="d-none main_trading_symbol"></div>
                 <div class="d-block main_instrument_token"></div>
-                <div class="d-block main_strikePrice_values">${main_values_strikePrice}</div>
-                <div class="d-block stockDropdown_main">${stockDropdown}</div>
+                <div class="d-none main_strikePrice_values">${main_values_strikePrice}</div>
+                <div class="d-none stockDropdown_main">${stockDropdown}</div>
                     
                     </div>
 
-                    <div class="liquidity_status"></div>
+                    <div class="liquidity_status">
+                      <div class="liquidity_failed">
+                        <div class="liquidity_text"><span>Liquidity : </span>
+                          <span class="badge text-bg-secondary">Pass/Fail</span>
+                        
+                        </div>
+                     
+                      </div>
+
+                    </div>
                   </div>
                   
                          <div class="gap-1 main_indepth">
@@ -8859,7 +8874,7 @@ text-decoration: none;
             </div>
             </div>
             <div class='right_bottom_card_order'>
-            <button class="btn btn-outline-secondary">Cancel</button>
+         
             <button class="btn btn-primary">Place order</button> 
                 
                 </div>
@@ -8918,7 +8933,7 @@ text-decoration: none;
         intervalId = null; // Reset the interval ID variable
       } else {
         $(".place_order_btn").prop("disabled", true);
-        $(".set_schedule").prop("disabled", true);
+
 
         $(".main_extented_status_liquidity")
           .empty()
@@ -9759,19 +9774,19 @@ text-decoration: none;
                   //////console.log(isButtonDisabled);
                   if (isButtonDisabled.includes(false)) {
                     $(".place_order_btn").prop("disabled", true);
-                    $(".set_schedule").prop("disabled", true);
+           
                     $(".main_extented_status_liquidity").empty().removeClass("passed_liquidity").addClass("failed_liquidity").append(`${filteredMarket.marketStatusMessage} : ${liquidity_failed_msg[0]}`)
                   } else {
                     // If all the values are true, set
                     $(".place_order_btn").prop("disabled", false);
-                    $(".set_schedule").prop("disabled", false);
+    
                     $(".main_extented_status_liquidity").empty().removeClass("failed_liquidity").addClass("passed_liquidity").append(`${filteredMarket.marketStatusMessage} : All the trade been passed the liquidity test, You can trade now. `)
                   }
 
 
                 } else {
                   $(".place_order_btn").prop("disabled", false);
-                  $(".set_schedule").prop("disabled", false);
+      
                 }
                 // $(".place_order_btn").prop("disabled", isButtonDisabled);
               },
