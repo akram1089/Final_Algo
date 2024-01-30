@@ -634,6 +634,168 @@ def signUp(request):
 
 
 
+# views.py
+
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+import json
+from django.shortcuts import render, redirect
+from django.contrib.auth import authenticate, login
+
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.response import Response
+from rest_framework.permissions import AllowAny
+import pyotp
+import datetime
+
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+@csrf_exempt  # Only use this decorator for testing purposes. In production, implement proper CSRF protection.
+def user_signUp(request):
+    if request.method == 'POST':
+        try:
+            # Deserialize the JSON data received from the AJAX request
+            data = json.loads(request.body)
+            print(data)
+
+            # Extract form fields from the data
+            name = data.get('name')
+            email = data.get('email')
+            phone_code = data.get('phone_code')
+            mobile = data.get('mobile')
+            password = data.get('password')
+            confirm_password = data.get('Cofirm_password')
+            terms_of_service = data.get('terms_of_service')
+
+            # Perform your signup logic here
+
+            # Example: Dummy response
+
+
+            if User.objects.filter(Mobile_number=mobile).exists():
+                return Response({'error': 'Phone number already in use'}, status=400)
+
+            user = User.objects.create_user(full_name=name, password=password,Phone_code=phone_code, Mobile_number=mobile,confirm_password=confirm_password,terms_of_service=terms_of_service)
+            user.secret_key = pyotp.random_base32()
+            user.save()
+
+            totp = pyotp.TOTP(user.secret_key)
+            otp_value = totp.now()
+            print(otp_value)
+            print(user.id)
+            print(user.Mobile_number)
+            user_ip = get_client_ip(request)
+            print(user_ip)
+            # Replace the placeholder values with your actual credentials and recipient number
+            api_url = "https://login5.spearuc.com/MOBILE_APPS_API/sms_api.php"
+            user_name = "kozytran"
+            password = "987654"
+            sender = "KOZYKR"
+            to_mobileno = user.Mobile_number  # Replace XXX with the actual recipient number
+            name= user.full_name
+            otp_num = otp_value
+            sms_text = f"Dear {name} , OTP {otp_num} for registration please use it one time. Valid for only 10 minutes KOZY KREATIVE CONCEPTS PRIVATE LIMITED"
+            t_id="1707170635727341007"
+
+            # Call the function to send the SMS
+            send_sms(api_url, user_name, password, sender, to_mobileno, sms_text,t_id)
+
+        # Send OTP via SMS using your local SMS provider here
+            response_data = {'status': 'success', 'message': 'User signed up successfully!','userID':user.id}
+            return JsonResponse(response_data)
+
+
+        except json.JSONDecodeError as e:
+            return JsonResponse({'error': 'Invalid JSON data'}, status=400)
+
+    else:
+        return JsonResponse({'error': 'Invalid request method'}, status=400)
+def get_client_ip(request):
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    if x_forwarded_for:
+        ip = x_forwarded_for.split(',')[0]
+    else:
+        ip = request.META.get('REMOTE_ADDR')
+    return ip
+
+
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+@csrf_exempt
+def verify_otp(request):
+    if request.method == 'POST':
+        # Parse JSON data from the request body
+        data = request.data
+
+        # Access the 'UserID' from the parsed data
+        user_id = data.get('UserID')
+        print("user_id", user_id)
+
+        try:
+            user = User.objects.get(id=user_id)
+        except User.DoesNotExist:
+            return JsonResponse({'success': False, 'message': 'User not found'})
+
+        otp_value = data.get('modalOTPSignUp')
+        print(otp_value)
+
+        totp = pyotp.TOTP(user.secret_key)  # Assuming you have a UserProfile model with a 'secret_key' field
+        print(totp)
+
+        if totp.verify(otp_value):
+            # Assuming you have the 'login' function properly imported and configured
+
+            return JsonResponse({'success': True, 'message': 'OTP verified successfully'})
+        else:
+            return JsonResponse({'success': False, 'message': 'Invalid OTP'})
+    else:
+        return JsonResponse({'success': False, 'message': 'Invalid request method'})
+
+def all_users(request):
+    users = User.objects.all()
+    user_list = [{'id': user.id, 'username': user.username, 'first_name': user.first_name, 'last_name': user.last_name, 'email': user.email, 'date_joined': user.date_joined, 'last_login': user.last_login} for user in users]
+    
+    return JsonResponse({'users': user_list})
+
+def send_sms(api_url, user_name, password, sender, to_mobileno, sms_text,t_id):
+    print(sms_text)
+    # Construct the URL with the provided parameters
+    url = f"{api_url}?type=smsquicksend&user={user_name}&pass={password}&sender={sender}&to_mobileno={to_mobileno}&sms_text={sms_text}&t_id={t_id}"
+    print(url)
+    try:
+        # Make the GET request to the API
+        response = requests.get(url)
+        
+        # Check if the request was successful (status code 200)
+        if response.status_code == 200:
+            print("SMS sent successfully.")
+        else:
+            print(f"Failed to send SMS. Status code: {response.status_code}")
+            
+    except requests.exceptions.RequestException as e:
+        print(f"Error: {e}")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -648,17 +810,21 @@ def websocket_test(requests):
 
 
 
+def sms_template(request):
+    return render(request, "sms_template.html")
 
+def email_template(request):
+    return render(request, "email_template.html")
 
 
 
 @csrf_exempt
 def login_user(request):
     if request.method == 'POST':
-        Email = request.POST['email']
+        Mobile_number = request.POST['phone_number']
         password = request.POST['password']
-        print(Email, password)
-        user = authenticate(email=Email, password=password)
+        print(Mobile_number, password)
+        user = authenticate(Mobile_number=Mobile_number, password=password)
         if user is not None:
             login(request, user)
             if request.user.is_superuser:

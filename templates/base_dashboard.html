@@ -139,6 +139,25 @@
   spinner();
 </script>
 <style>
+  
+  .bi-graph-up {
+        border: 1px solid #2397f3 !important;
+        border-radius: 7px !important;
+        padding: 6px 8px 3px 8px !important;
+        width: 33px !important;
+    
+        height: 29px !important;
+        color: #2397f3 !important;
+        transition: 0.3s !important;
+        display: inline !important;
+        vertical-align: sub !important;
+    }
+
+    .bi-graph-up:hover {
+        background-color: rgb(0, 132, 255) !important;
+        border: none !important;
+        color: white !important;
+    }
   #spinner{
       display: flex;
       width: 100vw;
@@ -1763,7 +1782,8 @@ z-index: 9;
                         <div class="main_title_desc_volume_socker">
                           <h6>Learning Center</h6>
 
-                              <p>Top 50 <br> NSE companies.</p>        
+                              <p>Platform for stock <br> market education content</p>    
+
                                       </div>
                       </a>
 
@@ -1775,7 +1795,8 @@ z-index: 9;
                         <div class="main_title_desc_volume_socker">
                           <h6>Handbook</h6>
 
-                          <p>50 companies <br> following Nifty 50
+                          <p>Handbooks for <br> Traders
+
                           </p>
                         </div>
                       </a>
@@ -1784,9 +1805,9 @@ z-index: 9;
 
 
                     </div>
-                    <div class="bottom_main_stats" style="row-gap: 0; column-gap: 1rem;   border-bottom: 1px solid #80808038;
+                    <!-- <div class="bottom_main_stats" style="row-gap: 0; column-gap: 1rem;   border-bottom: 1px solid #80808038;
                     padding: 1rem 0; ">
-               
+       
                       <a class="main_volume_socker other_services_nav_main {% if request.path == "/researchreports"  %} active_navigations {% endif %}" href="{% url 'researchreports' %}"
                       >
                      
@@ -1798,9 +1819,9 @@ z-index: 9;
 
                           <p>Major banking and <br> financial institutions</p>
                         </div>
-                      </a>
+                      </a> -->
 
-                    <a class="main_volume_socker other_services_nav_main {% if request.path == "/learning_Books"  %} active_navigations {% endif %}" href="{% url 'learning_Books' %}"
+                    <!-- <a class="main_volume_socker other_services_nav_main {% if request.path == "/learning_Books"  %} active_navigations {% endif %}" href="{% url 'learning_Books' %}"
                       >
                         <div class="volume_socker_icon"><img src="{% static "/img/Education-icons/E-books.png" %}"
                             width="25px" alt=""></div>
@@ -1812,10 +1833,10 @@ z-index: 9;
                           </p>
                         </div>
                       </a>
-        
+     
 
         
-                    </div>
+                    </div> -->
                     <div class="utra_bottom_main_stats" style="row-gap: 0; column-gap: 1rem;
                     padding: 1rem 0; ">
                       <a class="main_volume_socker other_services_nav_main {% if request.path == "/option_strategies"  %} active_navigations {% endif %}" href="{% url 'option_strategies' %}"
@@ -1826,7 +1847,8 @@ z-index: 9;
                         <div class="main_title_desc_volume_socker">
                           <h6>Option Strategies</h6>
 
-                          <p>Prominent  mid-sized <br>firms.</p>
+                          <p>Strategies with detailed <br> explanation
+                          </p>
                         </div>
                       </a>
                        <a class="main_volume_socker other_services_nav_main {% if request.path == "/blog"  %} active_navigations {% endif %}" href="{% url 'blog' %}"
@@ -1838,7 +1860,7 @@ z-index: 9;
                           <h6>News
                           </h6>
 
-                          <p>Significant  mid-sized <br>firms.
+                          <p>Regular updates on <br> current affairs
                           </p>
                         </div>
                       </a>
@@ -3237,18 +3259,18 @@ color: #2470dc;
         <img src="{% static "/img/Education-icons/News.png" %} " alt="" width="20px">
         News
       </a>
-      <a style="margin-bottom: auto;" class="drop_down_navigations" href="{% url 'learning_Books' %}">
+      <!-- <a style="margin-bottom: auto;" class="drop_down_navigations" href="{% url 'learning_Books' %}">
         <img src="{% static "/img/Education-icons/E-books.png" %} " alt="" width="20px">
         E-books
-      </a>
+      </a> -->
       <a style="margin-bottom: auto;" class="drop_down_navigations" href="{% url 'traders_handbook' %}">
         <img src="{% static "/img/Education-icons/Handbook-png.png" %} " alt="" width="20px">
         Handbooks
       </a>
-      <a style="margin-bottom: auto;" class="drop_down_navigations" href="{% url 'researchreports' %}">
+      <!-- <a style="margin-bottom: auto;" class="drop_down_navigations" href="{% url 'researchreports' %}">
         <img src="{% static "/img/Education-icons/Research-reports.png" %} " alt="" width="20px">
         Research Reports
-      </a>
+      </a> -->
 
     </div>
 
@@ -3769,8 +3791,8 @@ display: none !important;
                <form id="modalSignInForm" method='post' action="{% url 'login_user' %}">
                  {% csrf_token %}
                  <div class="mb-3">
-                   <label for="modalEmailSignIn" class="form-label">Email</label>
-                   <input type="email" class="form-control" name="email" id="modalEmailSignIn" placeholder="example@email.com">
+                   <label for="modalEmailSignIn" class="form-label">Phone Number</label>
+                   <input type="text" class="form-control" name="phone_number" id="modalEmailSignIn" placeholder="9100000000">
                  </div>
                  <div class="mb-3" style="position: relative;">
                    <label for="modalPasswordSignIn" class="form-label">Password</label>
@@ -4041,18 +4063,15 @@ display: none !important;
 
                 <img src="https://optionperks.com/static/img/header_logo_perk.png" style="height: 55px; justify-content: center;" alt="Logo" class="img-fluid">
               </div>
-              <form id="modalSignUpForm" action="{% url 'signUp' %}" method="post">
-                {% csrf_token %}
+      
+
                 <div class="mb-2">
                   <label for="modalFullNameSignUp" class="form-label">Full Name</label>
                   <input type="text" class="form-control" name="name" id="modalFullNameSignUp" required placeholder="Enter Name">
                 </div>
-                <div class="mb-2">
-                  <label for="modalEmailSignUp" class="form-label">Email</label>
-                  <input type="email" class="form-control" name="email" id="modalEmailSignUp" required placeholder="example@email.com">
-                </div>
+
                 <div class="form-group">
-                  <label for="modalPhoneSignUp">Phone</label>
+                  <label for="modalPhoneSignUp">Phone Number</label>
                   <div class="row">
                       <div class="col-4 pr-0">
                           <select name="phone_code" class="form-select"
@@ -4063,7 +4082,7 @@ display: none !important;
                       </div>
 
                       <div class="col-8">
-                          <input class="form-control" name="mobile" placeholder="xxxxxxxxx"
+                          <input class="form-control" name="mobile" placeholder="xxxxxxxxx" min="10" max="10"
                               id="modalPhoneSignUp" type="text" required>
                       </div>
                   </div>
@@ -4071,21 +4090,32 @@ display: none !important;
                       id="error_mobile"></span> <span
                       class="text-danger show-error-text"
                       id="error_phone_code"></span>
+                      <style>
+                        #otpsignup,#validate_otp{
+                          display: none;
+                        }
+                      </style>
               </div>
-                <div class="mb-2" style="position: relative;">
+                <div class="mb-2" style="position: relative;" id="password_main">
                   <label for="modalPasswordSignUp" class="form-label">Password</label>
                   <input type="password" class="form-control" id="modalPasswordSignUp" name="password" placeholder="Enter your password" aria-describedby="eyeIcon" required>
                   <span class="eye-icon" id="eyeicon" style="cursor: pointer;">
                       <i class="bi-eye-slash" aria-hidden="true"></i>
                   </span>
                </div>
-                <div class="mb-2" style="position: relative;">
+                <div class="mb-2" style="position: relative;" id="cpassword_main">
                   <label for="modalPasswordSignUp" class="form-label">Confirm Password</label>
                   <input type="password" class="form-control" id="modalCPasswordSignUp" name="Cofirm_password" placeholder="Enter your password" aria-describedby="eyeIcon" required onblur="checkPassword()">
                   <span class="eye-icon" id="confirmEyeIcon" style="cursor: pointer;">
                       <i class="bi-eye-slash" aria-hidden="true"></i>
                   </span>
                </div>
+               <div class="mb-2" style="position: relative;" id="otpsignup">
+                <label for="modalOTPSignUp" class="form-label">Enter OTP</label>
+                <input type="password" class="form-control modalOTPSignUp" id="modalOTPSignUp" placeholder="Enter your OTP">
+
+            </div>
+            
 
                <div class="form-group form-check">
                 <input class="form-check-input" id="modalAgreeSignUp"
@@ -4098,8 +4128,17 @@ display: none !important;
                 <span class="text-danger show-error-text"
                     id="error_terms_of_service"></span>
             </div>
+
+            <input type="text"  style="display: none;" id="UserID">
+
+            <div class="headersignIN">
+
+
+              <button type="button" class="btn btn-success w-100 mt-3 get_otp_signup" id="headermainSignin">Get OTP</button>
+
+            </div>
                  
-                <button type="submit" class="btn btn-success w-100 mt-3" id="headermainSignin">Signup</button>
+                <button type="button" class="btn btn-success w-100 mt-3 validate_otp" id="validate_otp">Validate OTP</button>
   
                 
   
@@ -4112,11 +4151,122 @@ display: none !important;
           <button type="button" class="btn btn-outline-success w-100" id="google_btn"><img src="{% static "img/google _png'.png" %} " style="height: 20px;" alt=""> Sign in with Google</button>
           <p class="text-center mt-2" id="signup_text">Already have an account?   <a data-bs-dismiss='modal' data-bs-toggle='modal' style="cursor: pointer;"
             data-bs-target='#signinModal' class="text-success" >Sign in now</a></p>
-              </form>
+
             </div>
           </div>
         </div>
+        <script>
+          $(document).ready(function () {
+            $('.get_otp_signup').click(function () {
+
+
+                // Collect form data using IDs and classes
+                var formData = {
+                  name: $('#modalFullNameSignUp').val(),
+             
+                  phone_code: $('#modalCountryCodeSignUp').val(),
+                  mobile: $('#modalPhoneSignUp').val(),
+                  password: $('#modalPasswordSignUp').val(),
+                  confirm_password: $('#modalCPasswordSignUp').val(),
+                  terms_of_service: $('#modalAgreeSignUp').is(':checked')
+                };
+// Check if any of the required fields is empty
+var hasEmptyField = Object.values(formData).some(function (value) {
+        return !value;
+    });
+
+    if (hasEmptyField) {
+        // Display toastr error message for empty fields
+        toastr.error('Please fill in all required fields');
+        return; // Stop execution if any field is empty
+    }
+
+                // Get CSRF token from cookie
+                var csrfToken =  "{{ csrf_token }}";
+
+
+                // Send AJAX request with CSRF token
+                $.ajax({
+                  type: 'POST',
+                  url: "user_signUp",
+                  contentType: "application/x-www-form-urlencoded",
+                  data: JSON.stringify(formData),
+                  headers: {
+                    'X-CSRFToken': csrfToken
+                  },
+                  success: function (response) {
+                    // Handle success response from the server
+                    console.log(response);
+
+                    if (response.status==="success") {
+
+                      $("#password_main").hide()
+                      $("#cpassword_main").hide()
+                      $("#otpsignup").show()
+                      $("#validate_otp").show()
+                      $(".headersignIN").empty()
+                  // Add the 'required' attribute dynamically
+              $("#modalOTPSignUp").prop("required", true);
+
+              $("#UserID").val(response.userID)
+
+
+                      
+                    }
+                    // You can redirect or perform other actions here
+                  },
+                  error: function (error) {
+                    // Handle error response from the server
+                    console.error('Error:', error);
+                    // You can display an error message to the user
+                  }
+                });
+              });
+              $(".validate_otp").click(function () {
+  // Get CSRF token from cookie
+  var csrfToken =  "{{ csrf_token }}";
+
+  // Collect form data using IDs and classes
+  var formData = {
+    UserID: $('#UserID').val(),
+    modalOTPSignUp: $('.modalOTPSignUp').val(),
+    // Add other form fields as needed
+  };
+
+  // Send AJAX request with CSRF token
+  $.ajax({
+    type: 'POST',
+    url: "verify_otp",
+    contentType: "application/json", // Correct content type for JSON data
+    data: JSON.stringify(formData),
+    headers: {
+      'X-CSRFToken': csrfToken
+    },
+    success: function (response) {
+      // Handle success response from the server
+      console.log(response);
+      if (response.success) {
+
+        $("#signupModal").modal("hide")
+        $("#signinModal").modal("show")
+
+        
+      }
+
+      // You can redirect or perform other actions here
+    },
+    error: function (error) {
+      // Handle error response from the server
+      console.error('Error:', error);
+      // You can display an error message to the user
+    }
+  });
+});
   
+
+});
+        </script>
+        
       </div>
     </div>
   </div>

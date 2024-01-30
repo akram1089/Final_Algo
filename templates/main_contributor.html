@@ -116,11 +116,10 @@
         background-color: lightseagreen !important;
     }
 
-    .badge_contributor {
+    .badge {
         background-color: #3ab07c;
-    padding: 2px 12px 2px 12px !important;
-    color: white;
-    border-radius: 14px !important;
+        padding: 8px 14px 8px 15px !important;
+        border-radius: 14px !important;
     }
 
     .table_one {
@@ -179,6 +178,24 @@
     color: #4399eb;
     padding: 2px 8px;
     border-radius: 10px;
+    }
+
+    .bi-graph-up {
+        border: 1px solid #2397f3;
+        border-radius: 7px;
+        padding: 6px 9px;
+        width: 33px;
+        display: block;
+        height: 29px;
+        color: #2397f3;
+        transition: 0.3s;
+        display: inline;
+    }
+
+    .bi-graph-up:hover {
+        background-color: rgb(0, 132, 255);
+        border: none;
+        color: white;
     }
 </style>
 
@@ -248,7 +265,7 @@
                 <p class="positive_contribution fs-5 fw-semibold" style="margin-bottom: auto;"></p>
 
             </div>
-            <span class="badge_contributor"></span>
+            <span class="badge"></span>
         </div>
         <div class="main_left_positive_contribution"style="overflow: auto; border-radius: 10px !important;">
         <table id="table_1_contrib" class="table table-bordered">
@@ -681,7 +698,7 @@
                 <p class="negative_contribution fs-5 fw-semibold" style="margin-bottom: auto;"></p>
 
             </div>
-            <span class="badge_contributor text-bg-danger"></span>
+            <span class="badge text-bg-danger"></span>
         </div>
 
         <div class="main_left_positive_contribution"style="overflow: auto; border-radius: 10px !important;">
@@ -1210,7 +1227,7 @@
     // Display positive_price_difference data
 function displayPositiveData(data) {
     var positiveTableBody = $("#table_1_contrib tbody");
-    var poistive_badge = $(".main_positive_contrib_value .badge_contributor");
+    var poistive_badge = $(".main_positive_contrib_value .badge");
     var poistive_points = 0;
 
     // Sort the data array by points in descending order
@@ -1234,7 +1251,7 @@ function displayPositiveData(data) {
                 "<td>" + "<div class='table_one'>" + data[i].low + "</div>" + "</td>" +
                 "<td>" + "<div class='table_one justify-content-between' style='color:#167f18e0; display:flex; align-items:center;'>" + data[i].change_value.toFixed(2) + "<div class='ms-4' style='background-color:#32cd4c2e; border-radius:7px; padding:4px; display: flex;align-items: center;'> <i class='bx bx-up-arrow-alt'></i>" + data[i].change_per.toFixed(2) + "%" + "</div>" + "</div>" + "</td>" +
                 "<td>" + "<div class='table_one'>" + data[i].points + "</div>" + "</td>" +
-                "<td class='text-center'><div class='table_one'> <a target='_blank' href='https://www.tradingview.com/chart/?symbol=" + data[i].symbol_name + "&aff_id=113877'><i class='bx bx-stats'></i></a> </div></td>" +
+                "<td class='text-center'><div class='table_one'> <a target='_blank' href='https://www.tradingview.com/chart/?symbol=" + data[i].symbol_name + "&aff_id=113877'><i class='bi bi-graph-up'></i></a> </div></td>" +
                 "</tr>";
             poistive_points += data[i].points;
             positiveTableBody.append(row);
@@ -1248,7 +1265,7 @@ function displayPositiveData(data) {
 // Display negative_price_difference data
 function displayNegativeData(data) {
     var negativeTableBody = $("#table_2_contrib tbody");
-    var negative_badge = $(".main_negative_contrib_value .badge_contributor");
+    var negative_badge = $(".main_negative_contrib_value .badge");
     var negative_points = 0;
 
     data.sort(function (a, b) {
@@ -1270,7 +1287,7 @@ function displayNegativeData(data) {
                 "<td> <div class='table_two'>" + data[j].low + "</div></td>" +
                 "<td class='text-danger'> <div class='table_two  justify-content-between' style='color:rgb(196 0 0); display:flex; align-items:center;'>" + data[j].change_value.toFixed(2) + "<div class='ms-4' style='background-color:#cd32322e; border-radius:7px; padding:4px; display: flex;align-items: center;'> <i class='bx bx-down-arrow-alt'></i>" + data[j].change_per.toFixed(2) + "%" + "</div>" + "</div></td>" +
                 "<td>" + data[j].points + "</td>" +
-                "<td> <div class='table_two'><a target='_blank' href='https://www.tradingview.com/chart/?symbol=" + data[j].symbol_name + "&aff_id=113877'><i class='bx bx-stats'></i></a></div></td>" +
+                "<td> <div class='table_two'><a target='_blank' href='https://www.tradingview.com/chart/?symbol=" + data[j].symbol_name + "&aff_id=113877'><i class='bi bi-graph-up'></i></a></div></td>" +
                 "</tr>";
             negative_points += data[j].points;
             negativeTableBody.append(row);
@@ -1287,10 +1304,10 @@ function displayNegativeData(data) {
 
             // Set active filter on page load
             function net_contribution() {
-                var negative_badge = parseFloat($(".main_negative_contrib_value .badge_contributor").text());
+                var negative_badge = parseFloat($(".main_negative_contrib_value .badge").text());
                 console.log(negative_badge);
 
-                var poistive_badge = parseFloat($(".main_positive_contrib_value .badge_contributor").text());
+                var poistive_badge = parseFloat($(".main_positive_contrib_value .badge").text());
                 console.log(poistive_badge);
 
                 // Convert values to positive numbers using Math.abs()

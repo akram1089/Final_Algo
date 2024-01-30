@@ -85,7 +85,27 @@
                 </div>
              </div>
             </div>
+
+            <!-- <div class="mt-4">
+                <table class="table table-striped table-bordered">
+                    <thead>
+                        <tr>
+                          <th scope="col">SL No.</th>
+                          <th scope="col">Image</th>
+                          <th scope="col">Title</th>
+                          <th scope="col">Writer</th>
+                          <th scope="col">Category</th>
+                          <th scope="col">Description</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        
+                        
+                      </tbody>
+                </table>
+            </div> -->
         </div>
+
         
     </div>
 </section>
@@ -175,8 +195,8 @@ $('#blogForm input, #blogForm textarea, #blogForm select').on('input change', fu
 
         function updatePreview() {
             // Update preview content with form values
-            $('#previewTitle').html('<h2>Title: ' + $('#title').val()+ '</h2>');
-            $('#previewWriterName').text('Writer Name: ' + $('#writer_name').val());
+            // $('#previewTitle').html('<h2>Title: ' + $('#title').val()+ '</h2>');
+            // $('#previewWriterName').text('Writer Name: ' + $('#writer_name').val());
             // You can update other preview elements similarly
 
             // Update image preview
@@ -190,10 +210,10 @@ $('#blogForm input, #blogForm textarea, #blogForm select').on('input change', fu
             }
 
             // Update category preview
-            $('#previewCategory').html('<h5>Category: ' + $('#id_blog_category option:selected').text() + '</h5>');
+            // $('#previewCategory').html('<h5>Category: ' + $('#id_blog_category option:selected').text() + '</h5>');
 
-            $('#previewShortDescription').html('<p>Short Descriptions: ' + $('#short_description').val() + '</p>');
-            $('#previewDescription').text('Descriptions: ' + $('#mytextarea').val());
+            // $('#previewShortDescription').html('<p>Short Descriptions: ' + $('#short_description').val() + '</p>');
+            // $('#previewDescription').text('Descriptions: ' + $('#mytextarea').val());
         }
 
         $('#blogForm input, #blogForm textarea, #blogForm select').on('input change', function () {
@@ -240,7 +260,25 @@ $('#blogForm input, #blogForm textarea, #blogForm select').on('input change', fu
             return !(title === '' || writerName === '' || imgField === '' || blogCategory === '' || shortDescription === '' || description === '');
             return true;
         }
+
+
+        function get_blog_data() {
+            
+            $.ajax({
+            url: 'get_blog',  // Replace with your actual backend endpoint
+            method: 'GET',
+            success:function(response){
+             var blogs = response.data
+             console.log(blogs);
+             blogs.forEach(element => {
+                
+             });
+            },
+
+            })
+        }
         
+        get_blog_data()
        
 
 
