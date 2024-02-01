@@ -697,8 +697,8 @@ def user_signUp(request):
             to_mobileno = mobile  # Replace XXX with the actual recipient number
             name= name
             otp_num = otp_value
-            sms_text = f"Dear {name} , OTP {otp_num} for registration please use it one time. Valid for only 10 minutes KOZY KREATIVE CONCEPTS PRIVATE LIMITED"
-            t_id="1707170635727341007"
+            sms_text = f"{otp_value } is the OTP to verify your mobile number with Kozy. OTP is valid for 10 mins. Do not share with anyone - By Kozy Kreative"
+            t_id="1707170678076165075"
 
             # Call the function to send the SMS
             send_sms(api_url, user_name, password, sender, to_mobileno, sms_text,t_id)
@@ -757,9 +757,9 @@ def resend_user_signup(request):
         sender = "KOZYKR"
         to_mobileno = mobile  # Replace XXX with the actual recipient number
         name = name
-        sms_text = f"Dear {name}, OTP {otp_value} for registration. Valid for 10 minutes. KOZY KREATIVE CONCEPTS PRIVATE LIMITED"
-        t_id = "1707170635727341007"
-
+        sms_text = f"{otp_value } is the OTP to verify your mobile number with Kozy. OTP is valid for 10 mins. Do not share with anyone - By Kozy Kreative"
+        t_id = "1707170678076165075"
+      #var#} is the OTP to verify your mobile number with Kozy. OTP is valid for 10 mins. Do not share with anyone - By Kozy Kreative
         # Call the function to send the SMS
         send_sms(api_url, user_name, password, sender, to_mobileno, sms_text, t_id)
 
@@ -873,6 +873,20 @@ def reset_pass_otp(request):
         totp = pyotp.TOTP(secret_key, interval=600)
         otp_value = totp.now()
         print(otp_value)
+                
+        # Replace the placeholder values with your actual credentials and recipient number
+        api_url = "https://login5.spearuc.com/MOBILE_APPS_API/sms_api.php"
+        user_name = "kozytran"
+        password = "987654"
+        sender = "KOZYKR"
+        to_mobileno = phone_number  # Replace XXX with the actual recipient number
+     
+        sms_text = f"{otp_value } is the OTP to verify your mobile number with Kozy. OTP is valid for 10 mins. Do not share with anyone - By Kozy Kreative"
+        t_id = "1707170678076165075"
+      #var#} is the OTP to verify your mobile number with Kozy. OTP is valid for 10 mins. Do not share with anyone - By Kozy Kreative
+        # Call the function to send the SMS
+        send_sms(api_url, user_name, password, sender, to_mobileno, sms_text, t_id)
+
  
         return JsonResponse({'status': 'success','message':'OTP has been sent you Phone Number','secret':secret_key})
     else:
@@ -970,6 +984,19 @@ def resend_reset_otp(request):
 
         # Print for testing purposes (consider removing in production)
         print(f"Generated OTP for User : {otp_value}")
+        
+        # Replace the placeholder values with your actual credentials and recipient number
+        api_url = "https://login5.spearuc.com/MOBILE_APPS_API/sms_api.php"
+        user_name = "kozytran"
+        password = "987654"
+        sender = "KOZYKR"
+        to_mobileno = phone_number  # Replace XXX with the actual recipient number
+  
+        sms_text = f"{otp_value } is the OTP to verify your mobile number with Kozy. OTP is valid for 10 mins. Do not share with anyone - By Kozy Kreative"
+        t_id = "1707170678076165075"
+      #var#} is the OTP to verify your mobile number with Kozy. OTP is valid for 10 mins. Do not share with anyone - By Kozy Kreative
+        # Call the function to send the SMS
+        send_sms(api_url, user_name, password, sender, to_mobileno, sms_text, t_id)
 
 
         return JsonResponse({"status": True, "message": "OTP has been resent to your number!"})
