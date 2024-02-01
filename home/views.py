@@ -661,7 +661,7 @@ def user_signUp(request):
 
             # Extract form fields from the data
             name = data.get('name')
-            email = data.get('email')
+  
             phone_code = data.get('phone_code')
             mobile = data.get('mobile')
             password = data.get('password')
@@ -673,18 +673,20 @@ def user_signUp(request):
             # Example: Dummy response
 
 
-            if User.objects.filter(Mobile_number=mobile).exists():
-                return Response({'error': 'Phone number already in use'}, status=400)
+            # if User.objects.filter(Mobile_number=mobile, is_active=True).exists():
+            #     return JsonResponse({'error': 'Phone number already registered'}, status=400)
 
-            user = User.objects.create_user(full_name=name, password=password,Phone_code=phone_code, Mobile_number=mobile,confirm_password=confirm_password,terms_of_service=terms_of_service)
-            user.secret_key = pyotp.random_base32()
-            user.save()
+            # user = User.objects.create_user(full_name=name, password=password,Phone_code=phone_code, Mobile_number=mobile,confirm_password=confirm_password,terms_of_service=terms_of_service,is_active=False)
+            # user.save()
+            secret_key = pyotp.random_base32()
 
-            totp = pyotp.TOTP(user.secret_key)
+            print(secret_key)
+     
+
+            totp = pyotp.TOTP(secret_key, interval=600)
             otp_value = totp.now()
             print(otp_value)
-            print(user.id)
-            print(user.Mobile_number)
+           
             user_ip = get_client_ip(request)
             print(user_ip)
             # Replace the placeholder values with your actual credentials and recipient number
@@ -692,8 +694,8 @@ def user_signUp(request):
             user_name = "kozytran"
             password = "987654"
             sender = "KOZYKR"
-            to_mobileno = user.Mobile_number  # Replace XXX with the actual recipient number
-            name= user.full_name
+            to_mobileno = mobile  # Replace XXX with the actual recipient number
+            name= name
             otp_num = otp_value
             sms_text = f"Dear {name} , OTP {otp_num} for registration please use it one time. Valid for only 10 minutes KOZY KREATIVE CONCEPTS PRIVATE LIMITED"
             t_id="1707170635727341007"
@@ -702,7 +704,7 @@ def user_signUp(request):
             send_sms(api_url, user_name, password, sender, to_mobileno, sms_text,t_id)
 
         # Send OTP via SMS using your local SMS provider here
-            response_data = {'status': 'success', 'message': 'User signed up successfully!','userID':user.id}
+            response_data = {'status': 'success', 'message': 'OTP has been sent you mobile number !','secret_key':secret_key}
             return JsonResponse(response_data)
 
 
@@ -721,6 +723,51 @@ def get_client_ip(request):
 
 
 
+@csrf_exempt
+def resend_user_signup(request):
+    if request.method == 'POST':
+        try:
+            # Parse JSON data from the request body
+            data = json.loads(request.body)
+            print(data)
+
+            secret_key = data.get('UserID')
+            print(secret_key)
+            name = data.get('name')
+            mobile = data.get('mobile')
+            
+
+            # Check if the user with the given ID exists
+            
+        except User.DoesNotExist:
+            return JsonResponse({'status': False, 'message': 'User not found'})
+
+
+        # Generate OTP using the user's secret key
+        totp = pyotp.TOTP(secret_key, interval=600)
+        otp_value = totp.now()
+
+        # Print for testing purposes (consider removing in production)
+        print(f"Generated OTP for User : {otp_value}")
+
+        # Replace the placeholder values with your actual credentials and recipient number
+        api_url = "https://login5.spearuc.com/MOBILE_APPS_API/sms_api.php"
+        user_name = "kozytran"
+        password = "987654"
+        sender = "KOZYKR"
+        to_mobileno = mobile  # Replace XXX with the actual recipient number
+        name = name
+        sms_text = f"Dear {name}, OTP {otp_value} for registration. Valid for 10 minutes. KOZY KREATIVE CONCEPTS PRIVATE LIMITED"
+        t_id = "1707170635727341007"
+
+        # Call the function to send the SMS
+        send_sms(api_url, user_name, password, sender, to_mobileno, sms_text, t_id)
+
+        return JsonResponse({"status": True, "message": "OTP has been resent to your number!"})
+    else:
+        return JsonResponse({'status': False, 'message': 'Invalid request method'})
+
+
 @api_view(['POST'])
 @permission_classes([AllowAny])
 @csrf_exempt
@@ -728,30 +775,55 @@ def verify_otp(request):
     if request.method == 'POST':
         # Parse JSON data from the request body
         data = request.data
+        print(data)
 
         # Access the 'UserID' from the parsed data
-        user_id = data.get('UserID')
-        print("user_id", user_id)
+        secret_key = data.get('UserID')
+                # Extract form fields from the data
+        name = data.get('name')
 
-        try:
-            user = User.objects.get(id=user_id)
-        except User.DoesNotExist:
-            return JsonResponse({'success': False, 'message': 'User not found'})
+        phone_code = data.get('phone_code')
+        mobile = data.get('mobile')
+        password = data.get('password')
+        confirm_password = data.get('confirm_password')
+        terms_of_service = data.get('terms_of_service')
+
+        # try:
+        #     user = User.objects.get(id=user_id)
+        # except User.DoesNotExist:
+        #     return JsonResponse({'success': False, 'message': 'User not found'})
 
         otp_value = data.get('modalOTPSignUp')
-        print(otp_value)
+        
+        if User.objects.filter(Mobile_number=mobile, is_active=True).exists():
+            return JsonResponse({'error': 'Phone number already registered'}, status=400)
 
-        totp = pyotp.TOTP(user.secret_key)  # Assuming you have a UserProfile model with a 'secret_key' field
-        print(totp)
 
-        if totp.verify(otp_value):
-            # Assuming you have the 'login' function properly imported and configured
 
-            return JsonResponse({'success': True, 'message': 'OTP verified successfully'})
+
+        # Assuming otp_value is the entered OTP
+        # pyotp.TOTP(user.secret,interval=30).verify(otp_value)
+
+        veri_otp =pyotp.TOTP(secret_key,interval=600)
+        print(secret_key)
+        print(verify_otp)
+        print(veri_otp.now())
+
+
+        if veri_otp.verify(otp_value):
+            user = User.objects.create_user(full_name=name, password=password,Phone_code=phone_code, Mobile_number=mobile,confirm_password=confirm_password,terms_of_service=terms_of_service,secret_key=secret_key)
+            user.save()
+            print(user.is_active)
+    
+
+            return JsonResponse({'success': True, 'message': 'You are successfully signup !'})
         else:
             return JsonResponse({'success': False, 'message': 'Invalid OTP'})
     else:
         return JsonResponse({'success': False, 'message': 'Invalid request method'})
+
+
+
 
 def all_users(request):
     users = User.objects.all()
@@ -782,19 +854,127 @@ def send_sms(api_url, user_name, password, sender, to_mobileno, sms_text,t_id):
 
 
 
+from django.http import JsonResponse
+
+def reset_pass_otp(request):
+    if request.method == 'POST':
+        phone_number = request.POST.get('phone_number')
+        user_exists = User.objects.filter(Mobile_number=phone_number).exists()
+
+        if not user_exists:
+            return JsonResponse({'status': 'error', 'message': 'User does not exist'})
+
+        # Get the user with the provided phone_number
+        user = User.objects.get(Mobile_number=phone_number)
+        
+        # Obtain the secret_key from the user (modify this based on your user model)
+        secret_key = user.secret_key  # Change 'profile' to the actual related model
+        print(secret_key)
+        totp = pyotp.TOTP(secret_key, interval=600)
+        otp_value = totp.now()
+        print(otp_value)
+ 
+        return JsonResponse({'status': 'success','message':'OTP has been sent you Phone Number','secret':secret_key})
+    else:
+        return JsonResponse({'status': 'error'})
 
 
 
 
 
+# import pyotp
+
+# # Create a secret key (keep it secret!)̥
+# secret_key = pyotp.random_base32()
+
+# otp = pyotp.TOTP("LRVOWYNQK2E5RM2HUE65XZ3ITPRRDMSG", interval=60)
+# # Generate an OTP using TOTP after every 30 seconds
+# print("Your TOTP is: ", otp.now())
+
+# user_otp = input("Enter the OTP: ")
+# if (otp.verify(user_otp)):
+#     print("Access granted!")
+# else:
+#     print("Incorrect OTP")
 
 
 
+def otp_update_pass(request):
+    if request.method == 'POST':
+        # Get values from the AJAX request
+        secret_key = request.POST.get('secret_key')
+        phone_number = request.POST.get('phone_number')
+        otp = request.POST.get('otp')
+        new_password = request.POST.get('password')
+        c_password = request.POST.get('c_password')
+
+        # Validate the form data (add your validation logic here)
+        if not (secret_key and phone_number and otp and new_password and c_password):
+            return JsonResponse({'status': 'error', 'message': 'Incomplete data'})
+
+        # Verify OTP
+        veri_otp =pyotp.TOTP(secret_key, interval=600)
+        print(secret_key)
+        print(verify_otp)
+        print(veri_otp.now())
+        if not veri_otp.verify(otp):
+            return JsonResponse({'status': 'error', 'message': 'Invalid OTP'})
+
+        # Check if passwords match
+        if new_password != c_password:
+            return JsonResponse({'status': 'error', 'message': 'Passwords do not match'})
+
+        # Find the user by Mobile_number
+        User = get_user_model()
+        try:
+            user = User.objects.get(Mobile_number=phone_number)
+        except User.DoesNotExist:
+            return JsonResponse({'status': 'error', 'message': 'User not found'})
+
+        # Update the user's password
+        user.set_password(new_password)
+        user.confirm_password = c_password
+        user.save()
+
+        # Return a JsonResponse to the client
+        return JsonResponse({'status': 'success', 'message': 'Password updated successfully'})
+
+    # Handle GET requests or other methods if needed
+    return JsonResponse({'status': 'error', 'message': 'Invalid request'})
+
+@csrf_exempt
+def resend_reset_otp(request):
+    if request.method == 'POST':
+        try:
+            # Parse JSON data from the request body
+        #          secret_key: $(".secret_key").val(),
+        # phone_number: $('#resetPhoneNumber').val(),
+
+            data = json.loads(request.body)
+            print(data)
+
+            secret_key = data.get('secret_key')
+            phone_number = data.get('phone_number')
+       
+            
+
+            # Check if the user with the given ID exists
+            
+        except User.DoesNotExist:
+            return JsonResponse({'status': False, 'message': 'User not found'})
 
 
+        # Generate OTP using the user's secret key
+        totp = pyotp.TOTP(secret_key, interval=600)
+        otp_value = totp.now()
+
+        # Print for testing purposes (consider removing in production)
+        print(f"Generated OTP for User : {otp_value}")
 
 
-
+        return JsonResponse({"status": True, "message": "OTP has been resent to your number!"})
+    else:
+        return JsonResponse({'status': False, 'message': 'Invalid request method'})
 
 
 
@@ -862,9 +1042,11 @@ def reset_password(request):
         else:
             messages.success(request, 'Sorry your email is not registered')
             return redirect('/')
+    # Redirect to home page if the user is already logged in
+    if request.user.is_authenticated:
+        return redirect('/')
 
     return render(request, 'reset_password.html')
-
 
 def change_pass(request, token):
 
@@ -7385,7 +7567,7 @@ import time
 import urllib.parse
 from selenium import webdriver
 from pyotp import TOTP
-from breeze_connect import BreezeConnect  # Import BreezeConnect if not already imported
+
 def add_upstox_broker(request ,data):
     print("Broker Name:", data.get('broker_name'))
     print("Trading Platform:", data.get('trading_platform'))

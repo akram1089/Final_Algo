@@ -9,18 +9,20 @@ class User(AbstractUser):
     username=None
 
     full_name=models.CharField( max_length=50,null=True,blank=True)
-    email=models.EmailField( max_length=254,unique=True)
-    Mobile_number=models.CharField( max_length=50,null=True,blank=True)
+    email=models.EmailField( max_length=254,blank=True)
+    Mobile_number=models.CharField( max_length=50,unique=True)
     Phone_code=models.CharField( max_length=50,null=True,blank=True)
     password=models.CharField( max_length=500,null=True,blank=True)
     confirm_password=models.CharField( max_length=50,null=True,blank=True)
     Country=models.CharField( max_length=50,null=True,blank=True)
     State=models.CharField( max_length=50,null=True,blank=True)
     forget_password_token = models.CharField(max_length=100,null=True)
-    objects=UserManager()
-    USERNAME_FIELD='email'
-    REQUIRED_FIELDS=[]
+    terms_of_service = models.BooleanField(default=False)
+    secret_key = models.CharField(max_length=50, blank=True, null=True)
 
+    objects=UserManager()
+    USERNAME_FIELD='Mobile_number'
+    REQUIRED_FIELDS=[]
 
 
 

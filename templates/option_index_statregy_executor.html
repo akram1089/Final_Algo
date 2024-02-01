@@ -3337,7 +3337,8 @@ display: flex;
         padding: 11px;
       }
 
-      .main_symbol_liqiuidity {
+      .main_symbol_liqiuidity ,
+      .schedule_main_symbol_liqiuidity {
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -5576,7 +5577,7 @@ display: flex;
                           </button>
                           <div class="dropdown-menu" style="width: 200px !important">
                             <div class="form-check settings_modal">
-                              <input class="form-check-input" type="checkbox" id="in_depth_check_box" checked />
+                              <input class="form-check-input in_depth_check_box" type="checkbox" id="in_depth_check_box" checked  />
                               <label class="form-check-label" for="in_depth_check_box">
                                 Show Depth & Info
                               </label>
@@ -5615,7 +5616,7 @@ display: flex;
                         </button>
                         <style>
                           .set_schedule{
-                            display: none;
+             
                             font-size: 13px;
                             background: linear-gradient(180deg, #4399eb, #5cadfb);;
                             color: #fff;
@@ -6367,18 +6368,183 @@ display: flex;
             }
           </style>
           <div class="strategy_buttons_deploy_execute">
-            <button data-bs-toggle="modal" data-bs-target="#save_startegyModal" class="save_strategy">Save
-              Strategy</button>
-            <button class="reset_button execute_all_strategies d-flex gap-1 align-items-center" disabled
-              title="Please Activate your API for placing order">
-              <p style="margin-bottom: auto; margin-top: auto; font-size: 12px" class="">
-                Execute Order
-              </p>
-            </button>
-
-            <button class="deploy_btn">Deploy</button>
+            <div class="d-flex flex-wrap justify-content-between gap-2">
+              <button data-bs-toggle="modal" data-bs-target="#save_startegyModal" class="save_strategy mb-2 mb-md-0">Save Strategy</button>
+          
+              <button class="reset_button execute_all_strategies d-flex gap-1 align-items-center" disabled
+                  title="Please Activate your API for placing order">
+                  <p style="margin-bottom: auto; margin-top: auto; font-size: 12px" class="">
+                      Execute Order
+                  </p>
+              </button>
+          
+              <button class="deploy_btn mt-2 mt-md-0">Deploy</button>
+          </div>
+    
           </div>
 
+            <!-- Deploy Modal -->
+            <div class="modal fade" id="deployModal_schedule" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"
+            style="z-index: 99999999999999 !important">
+            <div class="modal-dialog modal-dialog-centered modal-lg">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <div class="user_details">
+                    <div class="broker_icon">
+
+                    </div>
+                    <div class="names_user_details">
+                      <h5></h5>
+                      <p></p>
+                    </div>
+                  </div>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  <div class="main_header_order">
+                    <div class="main_left_order_header">
+                      <div class="strike_symbols_per_main_order">
+                        <div class="symbol_name_order">
+                          <p></p>
+                        </div>
+                        <div class="strike_price_order">
+                          <p></p>
+                        </div>
+                        <div class="change_per_order">
+                          <p></p>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="main_right_order_header">
+                      <div class="main_mis_select d-flex gap-1">
+                        <select name="mis_select" id="mis_select" class="form-select mis_select_schedule">
+                          <option value="overnight">Overnight</option>
+                          <option value="intraday">Intraday</option>
+                        </select>
+                        <i class="bx bx-info-circle"></i>
+                      </div>
+                      <div class="main_limit_select">
+                        <select name="limit_select" id="limit_select" class="form-select limit_select">
+                          <option value="market">Market</option>
+                          <option value="limit">Limit</option>
+                        </select>
+                        <i class="bx bx-info-circle"></i>
+                      </div>
+                      <div class="schedule_main_updates_price_btn">
+                        <button class="btn btn-outline-primary">
+                          <i class="bx bx-sync"></i>Updates Price
+                        </button>
+                        <i class="bx bx-info-circle"></i>
+                      </div>
+                      <style>
+                        .settings_modal {
+                          display: flex;
+                          gap: 0.5rem;
+                          justify-content: center;
+                        }
+                      </style>
+                      <div class="main_settings_order dropdown">
+                        <button class="btn btn-outline-primary dropdown-toggle" data-bs-toggle="dropdown"
+                          aria-expanded="false">
+                          <i class="bx bx-cog"></i>Settings
+                        </button>
+                        <div class="dropdown-menu" style="width: 200px !important">
+                          <div class="form-check settings_modal">
+                            <input class="form-check-input in_depth_check_box" type="checkbox" id="in_depth_check_box" checked />
+                            <label class="form-check-label" for="in_depth_check_box">
+                              Show Depth & Info
+                            </label>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="order_modal_schedule"></div>
+
+                </div>
+                <div class="modal-footer justify-content-between align-items-end">
+                  <div class="margin_footer">
+
+                      
+
+  
+
+                    <div class="form-group order_place_input">
+                      <label for="expiryEdit">Schedule Time:</label>
+                      <input type="datetime-local" class="form-control" id="scheduleTime" required />
+                    </div>
+                    <div class="form-group order_place_input">
+                      <label for="expiryEdit">Strategy Name:</label>
+                      <input type="datetime-local" class="form-control" id="scheduleTime" required />
+                    </div>
+                  </div>
+                  <div class="right_place_order_check_liquidity">
+    
+                    <div class="main_place_order_check_liquidity">
+          
+                      <button type="button" class="set_schedule" data-bs-toggle="modal" data-bs-target="#setSchedule_modal">Set Schedule Order</button>
+         
+
+                      <style>
+                        .set_schedule{
+             
+                          font-size: 13px;
+                          background: linear-gradient(180deg, #4399eb, #5cadfb);;
+                          color: #fff;
+                          /* padding: 0px 57px; */
+                          text-align: center;
+                          font-size: 13px;
+                          height: 34px;
+                          font-weight: 500;
+                          border-radius: 4px;
+                          border: 1px solid #4399eb !important;
+                          -webkit-box-shadow: none !important;
+                          box-shadow: none !important;
+                          outline: 0 !important;
+                          -webkit-transition: all .2s ease-in-out !important;
+                          -moz-transition: all .2s ease-in-out !important;
+                          transition: all .2s ease-in-out !important;
+                          cursor: pointer;
+                          font-weight: 600;
+                          white-space: nowrap;
+                        }
+                        #addNumbersBtn{
+               
+                          font-size: 13px;
+                          background: linear-gradient(180deg, #4399eb, #5cadfb);;
+                          color: #fff;
+                          /* padding: 0px 57px; */
+                          text-align: center;
+                          font-size: 13px;
+                          height: 34px;
+                          font-weight: 500;
+                          border-radius: 4px;
+                          border: 1px solid #4399eb !important;
+                          -webkit-box-shadow: none !important;
+                          box-shadow: none !important;
+                          outline: 0 !important;
+                          -webkit-transition: all .2s ease-in-out !important;
+                          -moz-transition: all .2s ease-in-out !important;
+                          transition: all .2s ease-in-out !important;
+                          cursor: pointer;
+                          font-weight: 600;
+                          white-space: nowrap;
+                        }
+                        .main_place_order_check_liquidity{
+                          display: flex;
+                          gap: 0.4rem;
+                        }
+                      </style>
+                     
+                    </div>
+
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </div>
 
         </div>
 
@@ -7920,7 +8086,8 @@ display: flex;
 .active-text{
   color: #45a54b;
 }
-  .main_symbol_sell_buy {
+  .main_symbol_sell_buy ,
+  .schedule_main_symbol_sell_buy {
     display: flex;
     gap: 0.2rem;
   }
@@ -7941,7 +8108,8 @@ display: flex;
     border-radius: 4px;
   }
 
-  .inner_order_modal {
+  .inner_order_modal ,
+  .schedule_inner_order {
     padding: 11px;
   }
 
@@ -7952,19 +8120,22 @@ display: flex;
     border-radius: 8px;
   }
 
-  .main_bottom_card_order {
+  .main_bottom_card_order ,
+  .schedule_main_bottom_card_order {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
   }
 
-  .left_bottom_card_order {
+  .left_bottom_card_order ,
+  .schedule_left_bottom_card_order {
     display: flex;
     gap: 1rem;
     align-items: center;
   }
 
-  .main_price_qty {
+  .main_price_qty ,
+  .schedule_main_price_qty {
     display: flex;
     gap: 0.3rem;
     align-items: center;
@@ -8246,7 +8417,8 @@ text-decoration: none;
     align-items: center;
   }
 
-  .spot_main_table {
+  .spot_main_table ,
+  .schedule_main_spot_order {
     display: flex;
     gap: 0.7rem;
   }
@@ -8266,7 +8438,8 @@ text-decoration: none;
     width: 12rem;
   }
 
-  .main_indepth {
+  .main_indepth ,
+  .schedule_main_indepth {
     display: flex;
     justify-content: center;
     gap: 3rem !important;
@@ -8277,6 +8450,10 @@ text-decoration: none;
   .indepth_details_offer table {
     font-size: 10px;
   }
+  .schedule_indepth_details table,
+  .schedule_indepth_details_offer table {
+    font-size: 10px;
+  }
 
   .indepth_details table thead tr th,
   .indepth_details table tbody tr td,
@@ -8284,7 +8461,14 @@ text-decoration: none;
   .indepth_details_offer table tbody tr td {
     border-style: none !important;
   }
+  .schedule_indepth_details table thead tr th,
+  .schedule_indepth_details table tbody tr td,
+  .schedule_indepth_details_offer table thead tr th,
+  .schedule_indepth_details_offer table tbody tr td {
+    border-style: none !important;
+  }
 
+  .schedule_main_spot_order ,
   .main_spot_order {
     font-size: 12px;
   }
@@ -8409,12 +8593,14 @@ text-decoration: none;
       $("#active_broker_modal").slideUp();
     });
 
-    $("#in_depth_check_box").change(function () {
+    $(".in_depth_check_box").change(function () {
       if (this.checked) {
         // If the checkbox is checked, hide the .main_indepth element
+        $(".schedule_main_indepth").show();
         $(".main_indepth").show();
       } else {
         // If the checkbox is unchecked, show the .ultra_main_indepth element
+        $(".schedule_main_indepth").hide();
         $(".main_indepth").hide();
       }
     });
@@ -8686,6 +8872,8 @@ text-decoration: none;
     //PLACE ZERODHA ORDER
 
     var intervalId = null; // Initialize the interval ID variable
+
+    
     $(".execute_all_strategies").click(function () {
       $(".order_modal").empty();
 
@@ -8914,8 +9102,225 @@ text-decoration: none;
       trading_quote.sort(function (a, b) {
         return b.strikePrice - a.strikePrice;
       });
+      var modal_open_dynamic= "modal_order"
+      send_quote_data(trading_quote, zerodha_trading_symbol[0], zerodha_lotSize,modal_open_dynamic);
+      // if (intervalId === null) { // Start the interval only if it's not already running
+      //     //////console.log('Show');
 
-      send_quote_data(trading_quote, zerodha_trading_symbol[0], zerodha_lotSize);
+      //     // Run the function every 1000 milliseconds (1 second)
+      //     intervalId = setInterval(function () {
+      //         send_quote_data(trading_quote,zerodha_trading_symbol[0],zerodha_lotSize);
+      //     }, 1000);
+      // }
+    });
+    
+    $(".deploy_btn").click(function () {
+      $(".order_modal_schedule").empty();
+
+      var trading_quote = [];
+      var zerodha_trading_symbol = [];
+      var zerodha_lotSize = []
+      var sortedOrderContent = []; // Array to store sorted order content
+
+
+
+      $(".inner_position").each(function (index) {
+        // Get values from the current card
+        var card = $(this);
+        var symbol = card.find(".symbol").text();
+        var expiry = card.find(".expiry").text();
+        var expiry_initial = card.find(".expiry_initial").text();
+        var strikePrice = card.find(".strikePrice").text();
+        var callPutEntrance = card.find(".call_put_entrance").text();
+        var entryPrice = card.find(".entryPrice").text();
+        var long_short_inner = card.find(".long_short_inner").text();
+        var option_lot_size_input = card.find(".option_lot_size_input").text();
+        var lot_size_value = $("#lot_size_value").text();
+
+        var final_lot_size_along_with_qty = parseFloat(option_lot_size_input) * parseFloat(lot_size_value);
+
+        if (symbol === "NIFTY") {
+          zerodha_trading_symbol.push({
+            tradingsymbol: "NSE:NIFTY 50",
+          });
+        } else if (symbol === "BANKNIFTY") {
+          zerodha_trading_symbol.push({
+            tradingsymbol: "NSE:NIFTY BANK",
+          });
+        } else if (symbol === "FINNIFTY") {
+          zerodha_trading_symbol.push({
+            tradingsymbol: "NSE:NIFTY FIN SERVICE",
+          });
+        } else {
+          zerodha_trading_symbol.push({
+            tradingsymbol: `NSE:${symbol}`,
+          });
+        }
+
+        const dayPart = expiry.slice(0, 2);
+        const monthPart = expiry.slice(2, 5).charAt(0);
+        const yearPart = expiry.slice(7);
+
+
+        //////console.log("expiry", expiry);
+
+        function isLastThursday(expiryDate) {
+          // Extract day, month, and year from the expiry date string
+          const day = parseInt(expiryDate.substr(0, 2));
+          const monthAbbreviation = expiryDate.substr(2, 3);
+          const year = parseInt(expiryDate.substr(5, 4));
+
+          // Map month abbreviation to month index
+          const monthNames = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
+          const month = monthNames.indexOf(monthAbbreviation);
+
+          // Calculate the last day of the month
+          const lastDayOfMonth = new Date(year, month + 1, 0);
+
+          // Check if the expiry date is the last Thursday
+          const expiry = new Date(year, month, day);
+          const currentDay = expiry.getDay(); // 0 (Sunday) to 6 (Saturday)
+
+          // Check if the expiry date is the last Thursday
+          if (currentDay === 4 && day === lastDayOfMonth.getDate()) {
+            //////console.log("Yes, the expiry date is the last Thursday of the month.");
+          } else {
+            //////console.log("No, the expiry date is not the last Thursday of the month.");
+          }
+        }
+
+        // Call the function with the given expiry date
+
+        isLastThursday(expiry);
+
+
+
+        const combinedString = `${symbol}${yearPart}${monthPart}${dayPart}${strikePrice}${callPutEntrance}`;
+
+
+
+
+        trading_quote.push({
+          combinedString: combinedString,
+          symbol: symbol,
+          expiry: expiry,
+          strikePrice: parseFloat(strikePrice), // Parse strikePrice to float
+          callPutEntrance: callPutEntrance,
+          expiry_initial: expiry_initial
+        });
+        var sell_buy_indicator = long_short_inner === "-" ? "SELL" : "BUY";
+
+        zerodha_lotSize.push({
+          combinedString,
+          final_lot_size_along_with_qty,
+          sell_buy_indicator,
+          entryPrice
+        });
+
+        var buy_sale_bg = long_short_inner === "-" ? "sellTrade" : "buyTrade";
+
+
+        var closest_strike_price_val = $("#closest_strike_price").text()
+        console.log(parseFloat(closest_strike_price_val));
+
+        console.log(parseFloat(strikePrice) );
+
+        var stockDropdown = $(".stockDropdown").val()
+
+
+        var main_values_strikePrice =   parseFloat(strikePrice) - parseFloat(closest_strike_price_val) 
+
+
+        var orderContent = `
+        <div class="schedule_inner_order mt-2" style="border-radius: 11px;"> 
+    <div class="schedule_order_status mb-2"> 
+        <p style="text-wrap: pretty; text-align: center;"></p>
+    </div>
+    <div class="schedule_main_symbol_liqiuidity">
+        <div class="schedule_main_symbol_sell_buy">
+            <div class='schedule_sell_buy_indicator ${buy_sale_bg}'>${sell_buy_indicator}</div>
+            <div class="schedule_tradingsymbol">${combinedString}</div> 
+            <div class="schedule_expiry_initial">${expiry_initial}</div> 
+
+            <div class="d-none schedule_strikePrice_order_window">${strikePrice}</div>
+            <div class="d-none schedule_main_trading_symbol"></div>
+            <div class="d-block schedule_main_instrument_token"></div>
+            <div class="d-none schedule_main_strikePrice_values">${main_values_strikePrice}</div>
+            <div class="d-none schedule_stockDropdown_main">${stockDropdown}</div>
+        </div>
+
+        <div class="schedule_liquidity_status">
+           
+        </div>
+    </div>
+
+    <div class="gap-1 schedule_main_indepth">
+        <div class="schedule_indepth_details"></div>
+        <div class="schedule_indepth_details_offer"></div>
+        <div class="schedule_main_spot_order"> </div>
+    </div>
+    <hr>
+
+    <div class="schedule_main_bottom_card_order">
+        <div class="schedule_left_bottom_card_order">
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="schedule_orderTypeLimit${index}" id="schedule_limitOrder${index}" value="limit">
+                <label class="form-check-label" for="schedule_limitOrder${index}">Limit</label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="schedule_orderTypeLimit${index}" id="schedule_marketOrder${index}" checked value="market">
+                <label class="form-check-label" for="schedule_marketOrder${index}">Market</label>
+            </div>
+    
+
+        <div class="schedule_main_price_qty">
+            <div class="form-group order_place_input">
+                <label for="schedule_expiryEdit">Price</label>
+                <input type="number" value=${entryPrice}  class="schedule_priceTrade form-control">
+            </div>
+            <div class="form-group order_place_input">
+                <label for="schedule_expiryEdit">Quantity</label>
+                <input type="number" class="schedule_quantityTrade form-control" value=${parseInt(option_lot_size_input) * parseInt(lot_size_value)}>
+            </div>
+        </div>
+      </div>
+        <div class='schedule_right_bottom_card_order'>
+   
+        </div>
+    </div>
+</div>
+
+    `;
+
+        // Add the orderContent to the sortedOrderContent array
+        sortedOrderContent.push({ strikePrice: parseFloat(strikePrice), combinedString: combinedString, content: orderContent });
+      });
+
+      // Sort the sortedOrderContent array based on strikePrice in descending order
+
+      // //console.log(sortedOrderContent);
+      sortedOrderContent.sort(function (a, b) {
+        return b.strikePrice - a.strikePrice;
+      });
+
+
+
+
+      // Iterate over the sortedOrderContent array and append the content to the ".order_modal" element
+      sortedOrderContent.forEach(function (sortedContent) {
+        $(".order_modal_schedule").append(sortedContent.content);
+      });
+
+
+
+      //////console.log(trading_quote);
+      //////console.log(zerodha_trading_symbol);
+      //////console.log(zerodha_lotSize);
+      trading_quote.sort(function (a, b) {
+        return b.strikePrice - a.strikePrice;
+      });
+var modal_open_dynamic= "schedule"
+      send_quote_data(trading_quote, zerodha_trading_symbol[0], zerodha_lotSize,modal_open_dynamic);
       // if (intervalId === null) { // Start the interval only if it's not already running
       //     //////console.log('Show');
 
@@ -8942,7 +9347,7 @@ text-decoration: none;
       }
     });
 
-    function send_quote_data(trading_quote, zerodha_trading_symbol, zerodha_lotSize) {
+    function send_quote_data(trading_quote, zerodha_trading_symbol, zerodha_lotSize,modal_open_dynamic) {
 
 
       $.ajax({
@@ -8973,8 +9378,11 @@ text-decoration: none;
             } else {
               // If not checked, show an alert
 
-
-              $("#execute").modal("show")
+if (modal_open_dynamic==="schedule") {
+  
+  $("#deployModal_schedule").modal("show")
+}else{
+              $("#execute").modal("show")}
 
 
 
@@ -9002,7 +9410,7 @@ text-decoration: none;
 
 
                   if (response.broker_name === "zerodha") {
-                    $(".set_schedule").show()
+    
                     //////console.log(response);
 
                     if (response.status === "success") {
@@ -9096,6 +9504,7 @@ text-decoration: none;
                         //////console.log(trading_data);
 
                         $(".main_trading_symbol").eq(i).append(trading_symbol.replace("NFO:", ""));
+                        $(".schedule_main_trading_symbol").eq(i).append(trading_symbol.replace("NFO:", ""));
 
 
 
@@ -9104,6 +9513,16 @@ text-decoration: none;
                         $(".indepth_details").eq(i).empty();
                         $(".indepth_details_offer").eq(i).empty();
                         $(".main_spot_order").eq(i).empty();
+                        // Generate the table HTML
+                        $(".schedule_indepth_details").eq(i).empty();
+                        $(".schedule_indepth_details_offer").eq(i).empty();
+                        $(".schedule_main_spot_order").eq(i).empty();
+
+                      //   <div class="gap-1 schedule_main_indepth">
+                      //     <div class="schedule_indepth_details"></div>
+                      //     <div class="schedule_indepth_details_offer"></div>
+                      //     <div class="schedule_main_spot_order"> </div>
+                      // </div>
 
                         const table = generateBidTable(trading_data.depth.buy);
                         const tableOffer = generateOfferTable(trading_data.depth.sell);
@@ -9114,6 +9533,10 @@ text-decoration: none;
                         $(".indepth_details").eq(i).append(table);
                         $(".indepth_details_offer").eq(i).append(tableOffer);
                         $(".main_spot_order").eq(i).append(spot_data_order);
+
+                        $(".schedule_indepth_details").eq(i).append(table);
+                        $(".schedule_indepth_details_offer").eq(i).append(tableOffer);
+                        $(".schedule_main_spot_order").eq(i).append(spot_data_order);
                       }
 
 
@@ -9497,6 +9920,7 @@ text-decoration: none;
       // Select all .priceTrade inputs
       var priceTradeInputs = $(".priceTrade");
 
+
       // Loop through the .last_price_order_zerodha elements
       priceElements.each(function (index) {
         // Get the text of the current .last_price_order_zerodha element
@@ -9505,9 +9929,31 @@ text-decoration: none;
         // Set the value of the corresponding .priceTrade input
         priceTradeInputs.eq(index).val(priceText);
       });
+
+
+    });
+    $(".schedule_main_updates_price_btn button").click(function () {
+      // Select the second <p> tag inside .main_last_price_order
+
+      var priceElements = $(".last_price_order_zerodha");
+
+
+      var schedule_priceTrade = $(".schedule_priceTrade");
+
+
+      // Loop through the .last_price_order_zerodha elements
+      priceElements.each(function (index) {
+        // Get the text of the current .last_price_order_zerodha element
+        var priceText = $(this).text();
+
+        // Set the value of the corresponding .priceTrade input
+        schedule_priceTrade.eq(index).val(priceText);
+      });
+
+
     });
 
-    $("#limit_select").change(function () {
+    $(".limit_select").change(function () {
       var selectedOption = $(this).val(); // Get the selected option value
       //////console.log(selectedOption);
       // Loop through each .inner_position element
@@ -9517,6 +9963,24 @@ text-decoration: none;
         // Find the radio buttons inside this .inner_position
         var limitRadio = card.find(`#limitOrder${index}`);
         var marketRadio = card.find(`#marketOrder${index}`);
+        //////console.log(limitRadio);
+        //////console.log(marketRadio);
+
+        // Depending on the selected option, check/uncheck the radio buttons
+        if (selectedOption === "limit") {
+          limitRadio.prop("checked", true);
+          marketRadio.prop("checked", false);
+        } else if (selectedOption === "market") {
+          limitRadio.prop("checked", false);
+          marketRadio.prop("checked", true);
+        }
+      });
+      $(".schedule_left_bottom_card_order").each(function (index) {
+        var card = $(this);
+
+        // Find the radio buttons inside this .inner_position
+        var limitRadio = card.find(`#schedule_limitOrder${index}`);
+        var marketRadio = card.find(`#schedule_marketOrder${index}`);
         //////console.log(limitRadio);
         //////console.log(marketRadio);
 
@@ -9665,6 +10129,7 @@ text-decoration: none;
       var inner_order_modal = $(".inner_order_modal");
       var mis_select = $(".mis_select").val()
       inner_order_modal.each(function (index_order) {
+        console.log(index_order);
         var order_level = $(this);
         var sell_buy_indicator = order_level.find(".sell_buy_indicator").text();
         var expiry_initial = order_level.find(".expiry_initial").text();
@@ -9681,7 +10146,7 @@ text-decoration: none;
           `input[name='orderTypeLimit${index_order}']:checked`
         ).val();
 
-        //////console.log(isRadioChecked);
+        console.log(isRadioChecked);
 
         All_positionTrade.push({
           expiry_initial: expiry_initial,
@@ -9696,7 +10161,7 @@ text-decoration: none;
           mis_select: mis_select
         });
       });
-      //////console.log(All_positionTrade);
+      console.log(All_positionTrade);
 
 
 
@@ -9819,22 +10284,23 @@ text-decoration: none;
 
     $(".set_schedule").click(function () {
       
-      $(".main_extented_status_liquidity")
-        .empty().removeClass("passed_liquidity failed_liquidity");
+
       var All_positionTrade = [];
-      var inner_order_modal = $(".inner_order_modal");
+      var inner_order_modal = $(".schedule_inner_order");
       var mis_select = $(".mis_select").val()
+
+
       inner_order_modal.each(function (index_order) {
         var order_level = $(this);
-        var sell_buy_indicator = order_level.find(".sell_buy_indicator").text();
-        var tradingsymbol = order_level.find(".tradingsymbol").text();
-        var main_trading_symbol = order_level.find(".main_trading_symbol").text();
-        var main_instrument_token = order_level.find(".main_instrument_token").text();
-        var priceTrade = order_level.find(".priceTrade").val();
-        var quantityTrade = order_level.find(".quantityTrade").val();
-        var strikePrice_order_window = order_level.find(".strikePrice_order_window").text();
-        var main_strikePrice_values = order_level.find(".main_strikePrice_values").text();
-        var stockDropdown_main = order_level.find(".stockDropdown_main").text();
+        var sell_buy_indicator = order_level.find(".schedule_sell_buy_indicator").text();
+        var tradingsymbol = order_level.find(".schedule_tradingsymbol").text();
+        var main_trading_symbol = order_level.find(".schedule_main_trading_symbol").text();
+        var main_instrument_token = order_level.find(".schedule_main_instrument_token").text();
+        var priceTrade = order_level.find(".schedule_priceTrade").val();
+        var quantityTrade = order_level.find(".schedule_quantityTrade").val();
+        var strikePrice_order_window = order_level.find(".schedule_strikePrice_order_window").text();
+        var main_strikePrice_values = order_level.find(".schedule_main_strikePrice_values").text();
+        var stockDropdown_main = order_level.find(".schedule_stockDropdown_main").text();
         //////console.log(strikePrice_order_window);
 
 
@@ -9861,7 +10327,7 @@ text-decoration: none;
         });
       });
 
-      //////console.log(All_positionTrade);
+      console.log(All_positionTrade);
       All_positionTrade.sort((a, b) => parseInt(a.strikePrice_order_window) - parseInt(b.strikePrice_order_window));
 
       // Sort based on sell_buy_indicator, putting "CE" first
@@ -17687,17 +18153,17 @@ console.log(trade_data.callPutEntrance);
               return date.toLocaleDateString('en-US', options).replace(/\b\d{1,2}\b/, day + suffix);
             }
 
-// Function to format the dropdown value as "Thu, Feb 1st"
-function formatDropdownDate(value) {
-  var date = new Date(value);
-  var day = date.getDate();
-  var suffix = getDaySuffix(day);
-  
-  // Define the options for formatting
-  var options = { weekday: 'short', month: 'short', day: 'numeric' };
-  
-  return date.toLocaleDateString('en-US', options).replace(/\b\d{1,2}\b/, day + suffix);
-}
+              // Function to format the dropdown value as "Thu, Feb 1st"
+              function formatDropdownDate(value) {
+                var date = new Date(value);
+                var day = date.getDate();
+                var suffix = getDaySuffix(day);
+                
+                // Define the options for formatting
+                var options = { weekday: 'short', month: 'short', day: 'numeric' };
+                
+                return date.toLocaleDateString('en-US', options).replace(/\b\d{1,2}\b/, day + suffix);
+              }
 
 
             // Function to get the day suffix (st, nd, rd, th)
@@ -17811,6 +18277,8 @@ function formatDropdownDate(value) {
             var isScrolling = false; // Flag to check if scrolling is in progress
 
             $(".payoff_table").click(function () {
+
+              console.log("Hii ");
               if (!isScrolling) { // Check if scrolling is not in progress
                 isScrolling = true; // Set the flag to true
 
@@ -17820,8 +18288,13 @@ function formatDropdownDate(value) {
                 $(".payoff_table_main_table tr").each(function () {
                   var $strikePrice = $(this).find("td:first");
                   var currentStrikePrice = parseInt($strikePrice.text());
+                  console.log(currentStrikePrice);
+                  console.log(closestStrikePrice);
 
                   if (currentStrikePrice === closestStrikePrice) {
+
+                    console.log('Print');
+                    
                     $(this).addClass("background_opiton_closest_payoff_table");
 
                     var container = $(".table_container");
@@ -18065,6 +18538,101 @@ function formatDropdownDate(value) {
             default: return 'th';
           }
         }
+        var isScrolling = false; // Flag to check if scrolling is in progress
+
+
+  console.log("Hii ");
+  if (!isScrolling) { // Check if scrolling is not in progress
+    isScrolling = true; // Set the flag to true
+
+    var closestStrikePriceText = $("#closest_strike_price").text();
+    var closestStrikePrice = parseInt(closestStrikePriceText);
+
+    $(".payoff_table_main_table tr").each(function () {
+      var $strikePrice = $(this).find("td:first");
+      var currentStrikePrice = parseInt($strikePrice.text());
+      console.log(currentStrikePrice);
+      console.log(closestStrikePrice);
+
+      if (currentStrikePrice === closestStrikePrice) {
+
+        console.log('Print');
+        
+        $(this).addClass("background_opiton_closest_payoff_table");
+
+        var container = $(".table_container");
+        var scrollTo =
+          $(this).position().top -
+          container.height() / 2 +
+          $(this).height() / 2;
+
+        console.log("ScrollTo:", scrollTo);
+
+        container.animate(
+          {
+            scrollTop: scrollTo,
+          },
+          1000,
+          function () {
+            // Animation complete
+            console.log("Scroll animation complete");
+            isScrolling = false; // Reset the flag after scrolling is complete
+          }
+        );
+
+        return false;
+      }
+    });
+  }
+
+        var isScrolling = false; // Flag to check if scrolling is in progress
+
+$(".payoff_table").click(function () {
+
+  console.log("Hii ");
+  if (!isScrolling) { // Check if scrolling is not in progress
+    isScrolling = true; // Set the flag to true
+
+    var closestStrikePriceText = $("#closest_strike_price").text();
+    var closestStrikePrice = parseInt(closestStrikePriceText);
+
+    $(".payoff_table_main_table tr").each(function () {
+      var $strikePrice = $(this).find("td:first");
+      var currentStrikePrice = parseInt($strikePrice.text());
+      console.log(currentStrikePrice);
+      console.log(closestStrikePrice);
+
+      if (currentStrikePrice === closestStrikePrice) {
+
+        console.log('Print');
+        
+        $(this).addClass("background_opiton_closest_payoff_table");
+
+        var container = $(".table_container");
+        var scrollTo =
+          $(this).position().top -
+          container.height() / 2 +
+          $(this).height() / 2;
+
+        console.log("ScrollTo:", scrollTo);
+
+        container.animate(
+          {
+            scrollTop: scrollTo,
+          },
+          1000,
+          function () {
+            // Animation complete
+            console.log("Scroll animation complete");
+            isScrolling = false; // Reset the flag after scrolling is complete
+          }
+        );
+
+        return false;
+      }
+    });
+  }
+});
 
 
       }
