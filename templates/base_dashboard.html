@@ -1493,7 +1493,7 @@ height: 126px !important;
             <div class="top_main_stats_stats row" style="row-gap: 0; 
             padding-bottom: 1rem; ">
 
-<div class="stats_nav col-6">
+              <div class="stats_nav col-6">
               <a class="main_volume_socker other_services_nav_main {% if request.path == "/bulk_deal_data_page"  %} active_navigations {% endif %}" href="{% url 'bulk_deal_data_page' %}"
               >
            
@@ -2469,9 +2469,17 @@ width: 16rem !important;
     <a class="btn-secondary-user" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"
       id="dashboard_nav_dropdown_user" style="display: flex; gap: 0.5rem; align-items: center; padding: 17px 0;">
       <h5>
+        {% if user.full_name %}
         {% with first_letter=user.full_name|slice:":1"|upper %}
-        {{ first_letter }}
+          {{ first_letter }}
         {% endwith %}
+      {% else %}
+        {% with first_letter='N' %}
+          {{ first_letter }}
+        {% endwith %}
+      {% endif %}
+      
+        
       </h5>
       <!-- <div class="text-black">{{user.full_name}}</div> -->
     </a>
@@ -4301,7 +4309,7 @@ display: none !important;
                           // Add the 'required' attribute dynamically
                       $("#modalOTPSignUp").prop("required", true);
 
-                      $("#UserID").val(response.userID)
+                      $("#UserID").val(response.secret_key)
                       startCountdown()
                       toastr.success(response.message);
                       
@@ -4343,6 +4351,10 @@ $('.main_retry_otp').click(function () {
     // Collect form data
     var formData = {
         UserID: $('#UserID').val(),
+        name: $('#modalFullNameSignUp').val(),
+             
+             phone_code: $('#modalCountryCodeSignUp').val(),
+             mobile: $('#modalPhoneSignUp').val(),
         // Add other form fields as needed
     };
 
@@ -4400,6 +4412,13 @@ $('.main_retry_otp').click(function () {
                     var formData = {
                       UserID: $('#UserID').val(),
                       modalOTPSignUp: $('.modalOTPSignUp').val(),
+                      name: $('#modalFullNameSignUp').val(),
+             
+             phone_code: $('#modalCountryCodeSignUp').val(),
+             mobile: $('#modalPhoneSignUp').val(),
+             password: $('#modalPasswordSignUp').val(),
+             confirm_password: $('#modalCPasswordSignUp').val(),
+             terms_of_service: $('#modalAgreeSignUp').is(':checked')
                       // Add other form fields as needed
                     };
                       // Custom error messages
