@@ -2454,16 +2454,53 @@ width: 16rem !important;
 
 
     <ul class="dropdown-menu user-mega-menu mt-1 notification-icon overflow-auto" id="notification_dropdown" aria-labelledby="navbarDropdown"
-      style="max-height: 473px;">
-      <li><a class="dropdown-item py-2 cursor-pointer">
-          <div class="d-flex justify-content-between"><span class="pe-5 label-color-4 fw-600"
-              style="font-size: 16px; font-weight: 600;">Advanced Stock Screener</span><span
-              class="ps-3 label-color-5" style="font-size: 15px;">18-07-2023 07:12 PM</span></div><span
-            class="label-color-4 text-wrap" style="font-size: 14px;">Stocks alerts processed data updated on
-            Advanced stock screener</span>
-        </a></li>
+    style="max-height: 473px;">
+  <!-- Result data will be dynamically added here -->
+</ul>
 
-    </ul>
+<script>
+  $(document).ready(function() {
+    // Flag to track if the AJAX request has been made
+    var ajaxRequested = false;
+  
+    // Hover event using one() to ensure it triggers only once
+    $('#notification_bell').one('mouseenter', function() {
+      if (!ajaxRequested) {
+        // Make AJAX request to get user_results data
+        $.ajax({
+          url: '/get_user_strategy_results',  // Replace with your actual API endpoint
+          method: 'GET',
+          dataType: 'json',
+          success: function(response) {
+            // Iterate through user_results and display each result_data.message
+            var resultsContainer = $('#notification_dropdown');
+            $.each(response.user_results, function(index, result) {
+              $.each(result.result_data, function(_, message) {
+                // Remove content after [Read more.](...) including the link
+                var cleanedMessage = JSON.parse(message).message.replace(/\[Read more\..*?\]\([^)]+\)/g, '');
+  
+                // Create and append HTML for each result_data.message
+                var listItem = $('<li>').addClass('dropdown-item py-2 cursor-pointer');
+                listItem.append('<div class="d-flex justify-content-between"><span class="pe-5 label-color-4 fw-600" style="font-size: 16px; font-weight: 600;">' +
+                  result.strategy_name + '</span><span class="ps-3 label-color-5" style="font-size: 15px;">' +
+                  result.scheduled_time + '</span></div><span class="label-color-4 text-wrap" style="font-size: 14px;">' +
+                  cleanedMessage.trim() + '</span>');
+                resultsContainer.append(listItem);
+              });
+            });
+          },
+          error: function(error) {
+            console.error('Error fetching data:', error);
+          },
+          complete: function() {
+            // Set the flag to true after the AJAX request is complete
+            ajaxRequested = true;
+          }
+        });
+      }
+    });
+  });
+  </script>
   </div>
   <div class="dropdown">
     <a class="btn-secondary-user" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"

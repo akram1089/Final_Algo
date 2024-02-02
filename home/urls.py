@@ -550,7 +550,7 @@ urlpatterns = [
      path("GetStrategyUnique",views.GetStrategyUnique,name="GetStrategyUnique"),
      path("test_base_dashboard",views.test_base_dashboard,name="test_base_dashboard"),
 
-     path('ajax_add_numbers/', views.ajax_add_numbers, name='ajax_add_numbers'),
+     path('set_schedule_order/', views.set_schedule_order, name='set_schedule_order'),
      path('test_schedule_task', views.test_schedule_task, name='test_schedule_task'),
      path('dynamic_user_tasks', views.dynamic_user_tasks, name='dynamic_user_tasks'),
      
@@ -558,6 +558,9 @@ urlpatterns = [
      path("blogs_save",views.blogs_save,name="blogs_save"),
      path("get_blog",views.get_blog,name="get_blog"),
      path('blog_details/<int:blog_id>/', views.blog_details, name='blog_details'),
+     path("update_scheduler_status",views.update_scheduler_status,name="update_scheduler_status"),
+     path("delete_scheduler",views.delete_scheduler,name="delete_scheduler"),
+     path("get_user_strategy_results",views.get_user_strategy_results,name="get_user_strategy_results"),
 
 
      

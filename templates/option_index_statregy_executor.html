@@ -482,12 +482,14 @@
     font-weight: 600;
     font-family: system-ui;
   }
-  .payoff_table_main_table thead tr th{
+
+  .payoff_table_main_table thead tr th {
     white-space: nowrap !important;
     background: #4399eb;
     color: white;
-    font-size: 14px  !important;
+    font-size: 14px !important;
   }
+
   .bg_option_for {
     background: #fffee5 !important;
   }
@@ -579,7 +581,17 @@
     margin-bottom: 0.5rem;
   }
 
+  .schedule_order_inputs {
+    position: relative;
+    width: 250;
+    display: flex;
+    gap: 0.5rem;
+    height: 2.5rem !important;
+    margin-bottom: 0.5rem;
+  }
+
   .futures_segements_main label,
+  .schedule_order_inputs label,
   .futures_segements_main_expiry label,
   .strategy_inputs label,
   .add_broker_api_fields label,
@@ -814,7 +826,8 @@
     justify-content: center;
     align-items: center;
   }
-/* 
+
+  /* 
  #future_decrement:hover,
   #future_increment:hover, */
   #decrement:hover,
@@ -863,6 +876,7 @@
 
   .option_simulator_strategy,
   .saveChanges,
+  #all_scheduled_order,
   #saveStrategies {
 
     /* height: 34px; */
@@ -891,6 +905,7 @@
 
   .option_simulator_strategy:hover,
   .saveChanges:hover,
+  #all_scheduled_order:hover,
   #saveStrategies:hover {
     color: #4399eb;
     border: 1px solid #4399eb;
@@ -1288,18 +1303,21 @@
     color: #353535;
   }
 
-  .savedStrategies {
+  .savedStrategies ,
+  .all_schedule_order  {
     border-bottom: 1px solid rgba(128, 128, 128, 0.229);
     padding: 7px 23px;
-display: flex;
+    display: flex;
     cursor: pointer;
   }
 
-  .savedStrategies:hover {
+  .savedStrategies:hover ,
+  .all_schedule_order:hover {
     background-color: rgba(128, 128, 128, 0.103);
 
   }
 
+  .all_schedule_order :hover .left_strategy_name ,
   .savedStrategies:hover .left_strategy_name {
     color: #4399EB;
   }
@@ -1675,10 +1693,10 @@ display: flex;
 
         .main_futures_inputs {
           display: flex;
-    row-gap: 0.5rem;
-    column-gap: 1.5rem;
-    align-items: center;
-    flex-wrap: wrap;
+          row-gap: 0.5rem;
+          column-gap: 1.5rem;
+          align-items: center;
+          flex-wrap: wrap;
         }
 
         .main_futures_inputs#future_add_positions {
@@ -1747,52 +1765,204 @@ display: flex;
         .main_futures_buy_sell.form-check label {
           margin-bottom: 0 !important;
         }
-        
-.simple-pagination ul {
-	margin: 0 0 20px;
-	padding: 0;
-	list-style: none;
-	text-align: center;
-}
 
-.simple-pagination li {
-	display: inline-block;
-	margin-right: 5px;
-}
+        .simple-pagination ul {
+          margin: 0 0 20px;
+          padding: 0;
+          list-style: none;
+          text-align: center;
+        }
 
-.simple-pagination li a,
-.simple-pagination li span {
-	color: #666;
-	padding: 5px 10px;
-	text-decoration: none;
-	border: 1px solid #EEE;
-	background-color: #FFF;
-	box-shadow: 0px 0px 10px 0px #EEE;
-}
+        .simple-pagination li {
+          display: inline-block;
+          margin-right: 5px;
+        }
 
-.simple-pagination .current {
-	color: #FFF;
-	background-color: #FF7182;
-	border-color: #FF7182;
-}
+        .simple-pagination li a,
+        .simple-pagination li span {
+          color: #666;
+          padding: 5px 10px;
+          text-decoration: none;
+          border: 1px solid #EEE;
+          background-color: #FFF;
+          box-shadow: 0px 0px 10px 0px #EEE;
+        }
 
-.simple-pagination .prev.current,
-.simple-pagination .next.current {
-	background: #e04e60;
-}
+        .simple-pagination .current {
+          color: #FFF;
+          background-color: #FF7182;
+          border-color: #FF7182;
+        }
 
-.pagination-link[disabled="disabled"] {
-    color: grey !important;
-    cursor: not-allowed !important;
-  }
-  .pagination-link[disabled="disabled"]:hover {
-    background-color: white !important;
-    color: grey Im !important;
-  }
+        .simple-pagination .prev.current,
+        .simple-pagination .next.current {
+          background: #e04e60;
+        }
+
+        .pagination-link[disabled="disabled"] {
+          color: grey !important;
+          cursor: not-allowed !important;
+        }
+
+        .pagination-link[disabled="disabled"]:hover {
+          background-color: white !important;
+          color: grey Im !important;
+        }
       </style>
 
 
+<style>
+  @supports (-webkit-appearance: none) or (-moz-appearance: none) {
+    .checkbox-wrapper-15 input[type=checkbox] {
+      --active: #275EFE;
+      --active-inner: #fff;
+      --focus: 2px rgba(39, 94, 254, .3);
+      --border: #BBC1E1;
+      --border-hover: #275EFE;
+      --background: #fff;
+      --disabled: #F6F8FF;
+      --disabled-inner: #E1E6F9;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      height: 21px;
+      outline: none;
+      display: inline-block;
+      vertical-align: top;
+      position: relative;
+      margin: 0;
+      cursor: pointer;
+      border: 1px solid var(--bc, var(--border));
+      background: var(--b, var(--background));
+      transition: background 0.3s, border-color 0.3s, box-shadow 0.2s;
+    }
+    .checkbox-wrapper-15 input[type=checkbox]:after {
+      content: "";
+      display: block;
+      left: 0;
+      top: 0;
+      position: absolute;
+      transition: transform var(--d-t, 0.3s) var(--d-t-e, ease), opacity var(--d-o, 0.2s);
+    }
+    .checkbox-wrapper-15 input[type=checkbox]:checked {
+      --b: var(--active);
+      --bc: var(--active);
+      --d-o: .3s;
+      --d-t: .6s;
+      --d-t-e: cubic-bezier(.2, .85, .32, 1.2);
+    }
+    .checkbox-wrapper-15 input[type=checkbox]:disabled {
+      --b: var(--disabled);
+      cursor: not-allowed;
+      opacity: 0.9;
+    }
+    .checkbox-wrapper-15 input[type=checkbox]:disabled:checked {
+      --b: var(--disabled-inner);
+      --bc: var(--border);
+    }
+    .checkbox-wrapper-15 input[type=checkbox]:disabled + label {
+      cursor: not-allowed;
+    }
+    .checkbox-wrapper-15 input[type=checkbox]:hover:not(:checked):not(:disabled) {
+      --bc: var(--border-hover);
+    }
+    .checkbox-wrapper-15 input[type=checkbox]:focus {
+      box-shadow: 0 0 0 var(--focus);
+    }
+    .checkbox-wrapper-15 input[type=checkbox]:not(.switch) {
+      width: 21px;
+    }
+    .checkbox-wrapper-15 input[type=checkbox]:not(.switch):after {
+      opacity: var(--o, 0);
+    }
+    .checkbox-wrapper-15 input[type=checkbox]:not(.switch):checked {
+      --o: 1;
+    }
+    .checkbox-wrapper-15 input[type=checkbox] + label {
+      display: inline-block;
+      vertical-align: middle;
+      cursor: pointer;
+      margin-left: 4px;
+    }
 
+    .checkbox-wrapper-15 input[type=checkbox]:not(.switch) {
+      border-radius: 7px;
+    }
+    .checkbox-wrapper-15 input[type=checkbox]:not(.switch):after {
+      width: 5px;
+      height: 9px;
+      border: 2px solid var(--active-inner);
+      border-top: 0;
+      border-left: 0;
+      left: 7px;
+      top: 4px;
+      transform: rotate(var(--r, 20deg));
+    }
+    .checkbox-wrapper-15 input[type=checkbox]:not(.switch):checked {
+      --r: 43deg;
+    }
+    .checkbox-wrapper-15 input[type=checkbox].switch {
+      width: 38px;
+      border-radius: 11px;
+    }
+    .checkbox-wrapper-15 input[type=checkbox].switch:after {
+      left: 2px;
+      top: 2px;
+      border-radius: 50%;
+      width: 17px;
+      height: 17px;
+      background: var(--ab, var(--border));
+      transform: translateX(var(--x, 0));
+    }
+    .checkbox-wrapper-15 input[type=checkbox].switch:checked {
+      --ab: var(--active-inner);
+      --x: 17px;
+    }
+    .checkbox-wrapper-15 input[type=checkbox].switch:disabled:not(:checked):after {
+      opacity: 0.6;
+    }
+  }
+
+  .checkbox-wrapper-15 * {
+    box-sizing: inherit;
+  }
+  .checkbox-wrapper-15 *:before,
+  .checkbox-wrapper-15 *:after {
+    box-sizing: inherit;
+  }
+  .middle_date_switch{
+    display: flex;
+    gap: 1.2rem;
+    align-items: center;
+  }
+</style>
+
+
+
+
+      <div class="modal fade" id="all_schedulerModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+          <div class="modal-content" style="border: none !important;">
+            <div class="modal-header" style="padding: 11px 23px;
+            background: #f3f3f3;
+            border: none !important;
+            outline: none !important;">
+              <h1 class="modal-title" id="exampleModalLabel" style="font-size: 1rem!important;">Scheduled Orders</h1>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                style="font-size: 0.8rem !important;"></button>
+            </div>
+            <div class="modal-body p-0">
+
+              <div class="all_schedulers" style="    padding: 6px 0px 11px 0px;">
+
+              </div>
+              <div id="pagination_container_schedule"></div>
+
+            </div>
+
+          </div>
+        </div>
+      </div>
 
       <div class="modal fade" id="saved_startegyModal" tabindex="-1" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
@@ -1803,7 +1973,8 @@ display: flex;
             border: none !important;
             outline: none !important;">
               <h1 class="modal-title" id="exampleModalLabel" style="font-size: 1rem!important;">Saved Strategies</h1>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="font-size: 0.8rem !important;"></button>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                style="font-size: 0.8rem !important;"></button>
             </div>
             <div class="modal-body p-0">
 
@@ -1829,7 +2000,7 @@ display: flex;
 
         <div id="last_traded_price"></div>
         <div id="closest_strike_price" style="display: none"></div>
-        <div id="closen_expiry_date"></div>
+        <div id="closen_expiry_date" style="display: none;"></div>
       </div>
 
       <div class="main_futures_price_as_per_expiries">
@@ -1880,8 +2051,261 @@ display: flex;
     </div>
     <div class="right_side_top_strategies">
 
+      <button class="d-flex align-items-center" id="all_scheduled_order"><i class='bx bxs-bookmark'></i>
+        <p style="margin-bottom: 0;">Scheduled Order</p>
+      </button>
+      <script>
+
+$("#all_scheduled_order").click(function () {
+    $.ajax({
+        type: "GET",
+        url: "/dynamic_user_tasks", // Replace with the actual URL
+        success: function (response) {
+            // Log the response
+            console.log(response);
+
+            if (response.user_not_logged_in) {
+                $("#signinModal").modal("show");
+            } else {
+                $("#all_schedulerModal").modal("show");
+                var all_scheduled_order = response.tasks
+
+                console.log(all_scheduled_order);
+
+                var $allSchedulers = $(".all_schedulers").empty();
+
+                if (all_scheduled_order.length === 0) {
+                    $allSchedulers.append(`<div class="d-flex  justify-content-center p-2"> <p>No Strategies Found...</p></div>`);
+                } else {
+                    all_scheduled_order.forEach(function (schedule, index_schedulor) {
+
+                        function formatMonth(month) {
+                            const monthNames = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
+                            return monthNames[month - 1] || 'Invalid Month';
+                        }
+
+                        function formatDay(day) {
+                            const dayNames = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
+                            return dayNames[day] || 'Invalid Day';
+                        }
+
+                        console.log(schedule.id);
+
+                        function calculateTimeMedian(...timeValues) {
+                            const timeToMinutes = (time) => {
+                                const [hour, minute] = time.split(':');
+                                return parseInt(hour) * 60 + parseInt(minute);
+                            };
+
+                            const timeInMinutes = timeValues.map(timeToMinutes);
+
+                            const calculateMedian = (arr) => {
+                                const sortedArr = arr.sort((a, b) => a - b);
+                                const mid = Math.floor(sortedArr.length / 2);
+
+                                if (sortedArr.length % 2 === 0) {
+                                    return (sortedArr[mid - 1] + sortedArr[mid]) / 2;
+                                } else {
+                                    return sortedArr[mid];
+                                }
+                            };
+
+                            const medianValue = calculateMedian(timeInMinutes);
+
+                            const medianHours = Math.floor(medianValue / 60);
+                            const medianMinutes = medianValue % 60;
+
+                            const meridiem = medianHours >= 12 ? 'PM' : 'AM';
+
+                            const displayHours = medianHours % 12 || 12;
+                            const displayMinutes = medianMinutes < 10 ? `0${medianMinutes}` : medianMinutes;
+
+                            return `${displayHours}:${displayMinutes} ${meridiem}`;
+                        }
+
+                        const monthName = formatMonth(schedule.crontab_info.month_of_year);
+                        const dayName = formatDay(schedule.crontab_info.day_of_month);
+
+                        const displayYear = schedule.crontab_info.year || '*';
+
+                        var schedulesPosition = `
+                            <div class="all_schedule_order justify-content-between" data-strategy="${schedule.id}">
+                                <div class="left_strategy_name" style="font-size: 14px;" >
+                                    <div>${index_schedulor + 1}.</div>
+                                    ${schedule.custom_field.charAt(0).toUpperCase() + schedule.custom_field.slice(1)}
+                                </div>
+                                <div class="main_middle_content">
+                                    <div class="middle_date_switch">
+                                        <p style="font-size: 14px">Schedule date: ${dayName}-${monthName}-${displayYear} , ${calculateTimeMedian(`${schedule.crontab_info.hour}:${schedule.crontab_info.minute}`)}</p>
+                                        <div class="checkbox-wrapper-15">
+                                            <input id="s1-14" type="checkbox" class="switch schedule_switch" ${schedule.enabled ? 'checked' : ''}   data-active="${schedule.id}">
+                                            <label for="s1-14" class="${schedule.enabled ? 'active-label' : 'inactive-label'}">${schedule.enabled ? 'ON' : 'OFF'}</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="right_strategy_action" style="z-index: 9999999999999999999;">
+                                    <div class="middle_strategy_status"></div>
+                                    <div class="strategy_edit_delete">
+                                        <img src="{% static "img/delete_edit_btns/delete.png" %}" width="19px" class='cursor-pointer delete_shchedule_order' data-delete="${schedule.id}"  data-scheduler_name="${schedule.custom_field}"></i>
+                                    </div>
+                                </div>
+                            </div>`;
+
+                        $allSchedulers.append(schedulesPosition);
+                    })
+
+                    var perPage = 5;
+                    $("#pagination_container_schedule").empty()
+
+
+                    // Manually implement pagination
+                    var numPages = Math.ceil(all_scheduled_order.length / perPage);
+                    var currentPage = 1;
+
+                    // Add pagination links
+                    $('#pagination_container_schedule').append(`
+                            <a href="#" class="schedule_pagination-link prev" data-page="prev" disabled>&lt;</a>
+                          `);
+                    for (var i = 1; i <= numPages; i++) {
+                      $('#pagination_container_schedule').append(`<a href="#" class="schedule_pagination-link" data-page="${i}">${i}</a>`);
+                    }
+                    $('#pagination_container_schedule').append(`
+                          <a href="#" class="schedule_pagination-link next" data-page="next">&gt;</a>
+                        `);
+
+                    // Show the first page and mark it as active
+                    showPage(currentPage);
+                    $('#pagination_container_schedule .schedule_pagination-link[data-page="1"]').addClass('active_strategy_page');
+                    $('.schedule_pagination-link.prev').attr('disabled', true); // Disable prev initially
+
+                    // Handle schedule_pagination link click
+                    $('.schedule_pagination-link').on('click', function (e) {
+                      e.preventDefault();
+
+                      var clickedPage = $(this).data('page');
+
+                      if (clickedPage === 'prev' && currentPage > 1) {
+                        currentPage--;
+                      } else if (clickedPage === 'next' && currentPage < numPages) {
+                        currentPage++;
+                      } else if (typeof clickedPage === 'number') {
+                        currentPage = clickedPage;
+                      }
+
+                      showPage(currentPage);
+
+                      // Mark the clicked link as active_strategy_page and remove active_strategy_page class from others
+                      $('.schedule_pagination-link').removeClass('active_strategy_page');
+                      $('#pagination_container_schedule .schedule_pagination-link[data-page="' + currentPage + '"]').addClass('active_strategy_page');
+
+                      // Disable/enable prev and next based on current page
+                      $('.schedule_pagination-link.prev').attr('disabled', currentPage === 1);
+                      $('.schedule_pagination-link.next').attr('disabled', currentPage === numPages);
+                    })
+                    
+
+                   
+
+
+
+
+
+
+
+
+
+
+
+
+                    $('.schedule_switch').on('click', function () {
+                        var active = $(this).data("active");
+
+                        // Toggle the checked state of the checkbox
+                        $(this).prop('checked', !$(this).prop('checked'));
+
+                        // Toggle the label text and class based on the new checked state
+                        var main_status;
+                        if (!$(this).prop('checked')) {
+                            $(this).next('label').text('ON').removeClass('inactive-label').addClass('active-label');
+                            main_status = true;
+                            $(this).prop('checked', true);
+                        } else {
+                            $(this).next('label').text('OFF').removeClass('active-label').addClass('inactive-label');
+                            main_status = false;
+                            $(this).prop('checked', false);
+                        }
+
+                        // Update the status in the UI immediately
+                        updateSchedulerStatus(active, main_status);
+                    });
+
+                    $(".delete_shchedule_order").click(function () {
+                        var deleteId = $(this).data("delete");
+                        var scheduler_name = $(this).data("scheduler_name");
+
+                        // Remove the item from the UI immediately
+                        $(`[data-strategy="${deleteId}"]`).remove();
+
+                        // Call the server to delete the item
+                        deleteScheduler(deleteId,scheduler_name);
+                    })
+                }
+            }
+        },
+        error: function (xhr, status, error) {
+            // Log and handle the error
+            console.error("AJAX request failed:", status, error);
+        }
+    });
+});
+function showPage(page) {
+                        console.log("page",page);
+                       $(".all_schedulers").find('.all_schedule_order').hide();
+                                          var startIndex = (page - 1) * 5;
+                                          var endIndex = startIndex + 5;
+                                       $(".all_schedulers").find('.all_schedule_order').slice(startIndex, endIndex).show();
+                                        }
+                                        
+function updateSchedulerStatus(active, main_status) {
+    $.ajax({
+        type: "POST",
+        url: "/update_scheduler_status", // Replace with the actual URL
+        data: { active: active, main_status: main_status },
+        success: function (response) {
+            // Log the response
+            console.log(response);
+        },
+        error: function (error) {
+            // Handle the error
+            console.log("Error:", error);
+        }
+    });
+}
+
+function deleteScheduler(deleteId,scheduler_name) {
+    $.ajax({
+        type: "POST",
+        url: "/delete_scheduler", // Replace with the actual URL
+        data: { delete_id: deleteId },
+        success: function (response) {
+            // Log the response
+            console.log(response);
+            if (response.status=="success") {
+
+              toastr.success(` ${scheduler_name} has been deleted  !! `)
+              
+            }
+        },
+        error: function (error) {
+            // Handle the error
+            console.log("Error:", error);
+        }
+    });
+}
+
+      </script>
       <button class="d-flex align-items-center" id="saveStrategies"><i class='bx bxs-bookmark'></i>
-        <p style="margin-bottom: 0;">Strategies saved</p>
+        <p style="margin-bottom: 0;">Strategies Saved</p>
       </button>
       <button style="padding: 0px 14px;" class="btn_outline_primary" type="button" data-bs-toggle="offcanvas"
         data-bs-target="#optionChain_canvas" aria-controls="optionChain_canvasLabel" id="buid_custom_strategy_btn">
@@ -2494,11 +2918,14 @@ display: flex;
 
           </div>
 
-<style>
-  #zerodhaFields label,#angeloneFields label , #upstocksFields label,.select_broker label{
-    color: #c50000 !important;
-  }
-</style>
+          <style>
+            #zerodhaFields label,
+            #angeloneFields label,
+            #upstocksFields label,
+            .select_broker label {
+              color: #c50000 !important;
+            }
+          </style>
 
           <div id="zerodhaFields">
 
@@ -2512,20 +2939,21 @@ display: flex;
 
             <div class="">
               <label for="zerodha_login_id">Login Id</label>
-              <input type="text" class="form-control" id="zerodha_login_id"
-                placeholder="Enter Zerodha Login ID" required />
+              <input type="text" class="form-control" id="zerodha_login_id" placeholder="Enter Zerodha Login ID"
+                required />
             </div>
             <div class="">
               <label for="zerodha_password">Password</label>
 
-              <input type="password" class="form-control" id="zerodha_password"
-                placeholder="Enter Zerodha Password" required />
+              <input type="password" class="form-control" id="zerodha_password" placeholder="Enter Zerodha Password"
+                required />
             </div>
             <div class="">
               <label for="zerodha_totp_key">TOTP Secret key </label>
 
 
-              <input type="text" class="form-control" id="zerodha_totp_key" placeholder="Enter Zerodha TOTP Key" required />
+              <input type="text" class="form-control" id="zerodha_totp_key" placeholder="Enter Zerodha TOTP Key"
+                required />
             </div>
 
 
@@ -3337,7 +3765,7 @@ display: flex;
         padding: 11px;
       }
 
-      .main_symbol_liqiuidity ,
+      .main_symbol_liqiuidity,
       .schedule_main_symbol_liqiuidity {
         display: flex;
         justify-content: space-between;
@@ -3439,13 +3867,13 @@ display: flex;
               // Example: $('.loader').show();
             },
             success: function (response) {
-              if (response.status==="error") {
+              if (response.status === "error") {
                 Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: response.message,
-              });
-              return
+                  icon: 'error',
+                  title: 'Error',
+                  text: response.message,
+                });
+                return
               }
               //////console.log('Success:', response);
 
@@ -3828,12 +4256,18 @@ display: flex;
 
 
     .delete_strategy,
+    .edit_shchedule_order,
+    .delete_shchedule_order,
     .edit_strategy {
       filter: invert(48%) sepia(13%) saturate(80%) hue-rotate(0deg) brightness(95%) contrast(80%);
 
 
-      transition: filter 0.3s; /* Add a smooth transition effect */
+      transition: filter 0.3s;
+      /* Add a smooth transition effect */
     }
+
+    .delete_shchedule_order:hover,
+    .edit_shchedule_order:hover ,
     .delete_strategy:hover,
     .edit_strategy:hover {
       filter: grayscale(0%);
@@ -5211,6 +5645,7 @@ display: flex;
       background: linear-gradient(180deg, #4399eb, #5cadfb);
       color: #fff;
     }
+
     .set_schedule {
       background: linear-gradient(180deg, #4399eb, #5cadfb);
       color: #fff;
@@ -5396,10 +5831,11 @@ display: flex;
                   --bs-modal-width: 806px !important;
                 }
               }
-                  .text-bg-secondary{
-                    padding: 4px 6px !important;
-                      background-color: #aaaaaa !important;
-                  }
+
+              .text-bg-secondary {
+                padding: 4px 6px !important;
+                background-color: #aaaaaa !important;
+              }
 
               .left_positions_reset_notes button,
 
@@ -5577,7 +6013,8 @@ display: flex;
                           </button>
                           <div class="dropdown-menu" style="width: 200px !important">
                             <div class="form-check settings_modal">
-                              <input class="form-check-input in_depth_check_box" type="checkbox" id="in_depth_check_box" checked  />
+                              <input class="form-check-input in_depth_check_box" type="checkbox" id="in_depth_check_box"
+                                checked />
                               <label class="form-check-label" for="in_depth_check_box">
                                 Show Depth & Info
                               </label>
@@ -5607,18 +6044,19 @@ display: flex;
                       </div>
                     </div>
                     <div class="right_place_order_check_liquidity">
-      
+
                       <div class="main_place_order_check_liquidity">
                         <button type="button" class="check_liquidity">Check Liquidity</button>
-                        <button type="button" class="set_schedule" data-bs-toggle="modal" data-bs-target="#setSchedule_modal">Set Schedule Order</button>
+                        <button type="button" class="set_schedule">Set Schedule Order</button>
                         <button type="button" class="place_order_btn" disabled>
                           Place All Order
                         </button>
                         <style>
-                          .set_schedule{
-             
+                          .set_schedule {
+
                             font-size: 13px;
-                            background: linear-gradient(180deg, #4399eb, #5cadfb);;
+                            background: linear-gradient(180deg, #4399eb, #5cadfb);
+                            ;
                             color: #fff;
                             /* padding: 0px 57px; */
                             text-align: center;
@@ -5637,10 +6075,12 @@ display: flex;
                             font-weight: 600;
                             white-space: nowrap;
                           }
-                          #addNumbersBtn{
-                 
+
+                          #addNumbersBtn {
+
                             font-size: 13px;
-                            background: linear-gradient(180deg, #4399eb, #5cadfb);;
+                            background: linear-gradient(180deg, #4399eb, #5cadfb);
+                            ;
                             color: #fff;
                             /* padding: 0px 57px; */
                             text-align: center;
@@ -5659,12 +6099,13 @@ display: flex;
                             font-weight: 600;
                             white-space: nowrap;
                           }
-                          .main_place_order_check_liquidity{
+
+                          .main_place_order_check_liquidity {
                             display: flex;
                             gap: 0.4rem;
                           }
                         </style>
-                       
+
                       </div>
 
                     </div>
@@ -5673,50 +6114,7 @@ display: flex;
                 </div>
               </div>
             </div>
-<!-- Modal -->
 
-
-<div class="modal fade" id="setSchedule_modal" tabindex="-1" aria-labelledby="setSchedule_modal" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <div class="container mt-2">
-          <h2 class="text-center">Schedule your strategy </h2>
-          <form id="addNumbersForm">
-              {% csrf_token %}
-  
-  
-              <div class="form-group">
-                  <label for="number2">Strategy Code:</label>
-                  <textarea class="form-control" id="all_strategy_values" rows="3"></textarea>
-              </div>
-  
-              <div class="form-group">
-                <label for="scheduleTime">Schedule Time:</label>
-                <input type="datetime-local" class="form-control" id="scheduleTime" required />
-            </div>
-  
-              <div class="form-group">
-                <label for="scheduleTime">Strategy Name:</label>
-                  <input type="text" class="form-control" id="strategy_name" placeholder="Strategy name:">
-              </div>
-  
-              <div class="form-group mt-2">
-                  <button type="button" class="btn-primary" id="addNumbersBtn">Schedule Order</button>
-              </div>
-          </form>
-  
-          <div id="resultContainer"></div>
-      </div>
-      </div>
-     
-    </div>
-  </div>
-</div>
 
 
 
@@ -5849,465 +6247,7 @@ display: flex;
                 </div>
               </div>
             </div>
-            <!-- 
-            <script>
-              $(document).ready(function () {
 
-
-
-                $(".saveStrategy").click(function () {
-                  var tradingPositions = [];
-
-                  $(".inner_position").each(function (index) {
-                    // Get values from the current card
-                    var card = $(this);
-                    var symbol = card.find(".symbol").text();
-                    var expiry = card.find(".expiry").text();
-                    var expiry_initial = card.find(".expiry_initial").text();
-                    var strikePrice = card.find(".strikePrice").text();
-                    var callPutEntrance = card.find(".call_put_entrance").text();
-                    var entryPrice = card.find(".entryPrice").text();
-                    var long_short_inner = card.find(".long_short_inner").text();
-                    var option_lot_size_input = card.find(".option_lot_size_input").text();
-
-                    // Create an object with the gathered values
-                    var position = {
-                      symbol: symbol,
-                      expiry: expiry,
-                      expiry_initial: expiry_initial,
-                      strikePrice: strikePrice,
-                      callPutEntrance: callPutEntrance,
-                      entryPrice: entryPrice,
-                      long_short_inner: long_short_inner,
-                      option_lot_size_input: option_lot_size_input
-                    };
-
-                    // Push the object into the array
-                    tradingPositions.push(position);
-                  });
-
-                  //////console.log(tradingPositions);
-
-
-
-
-                  var strategy_input = $("#strategy_input").val();
-                  var main_strategy_notes = $("#main_strategy_notes").val();
-
-                  if (strategy_input.trim() === '') {
-                    toastr.error("Please enter the strategy name");
-                    return; // Stop further execution
-                  }
-
-
-
-                  $.ajax({
-                    type: "POST",
-                    url: "/save_strategy",
-                    data: {
-
-                      'strategy_input': strategy_input,
-                      'main_strategy_notes': main_strategy_notes,
-                      'trading_positions': JSON.stringify(tradingPositions),  // Convert array to JSON string
-
-                      'csrfmiddlewaretoken': '{{ csrf_token }}'
-                    },
-                    success: function (response) {
-                      // handle success
-
-                      if (response.user_not_logged_in) {
-                        $("#signinModal").modal("show");
-                      } else {
-                        // alert(response.message);
-                        $("#save_startegyModal").modal("hide")
-                        toastr.success(response.message);
-                        getStrategies_data()
-                        $("#strategy_input").val('')
-                        $("#main_strategy_notes").val('');
-                      }
-
-
-                    },
-                    error: function (response) {
-                      // handle error
-                      alert(response.message);
-                    }
-                  });
-
-                })
-
-
-                $("#saveStrategies").click(function () {
-
-                  getStrategies_data()
-                })
-                function getStrategies_data() {
-
-
-
-                  $.ajax({
-                    type: "GET",
-                    url: "/get_all_strategies",
-                    success: function (response) {
-                      if (response.user_not_logged_in) {
-                        // //////console.log("not logged");
-                        $("#signinModal").modal("show");
-                      } else {
-                        // handle success
-                        $("#saved_startegyModal").modal("show");
-                        var strategyData = response.strategy_data;
-                        $(".all_strategies").empty()
-                        // Do something with the strategy data
-
-                        if (strategyData.length === 0) {
-                          $(".all_strategies").append(`
-                                              <div class="d-flex  justify-content-center p-2"> <p>No Strategies Found...</p></div>
-                                              `);
-                        } else {
-                          strategyData.forEach((strategy) => {
-
-                            var tradingPositions = `
-                                                      <div class="savedStrategies d-flex justify-content-between" data-strategy="${strategy.id}">
-                                                          <div class="left_strategy_name">
-                                                              ${strategy.strategy_name}
-                                                          </div>
-                                                          <div class="right_strategy_action">
-                                                              <i class='bi bi-pencil-square fs-5 cursor-pointer edit_strategy'  data-bs-toggle="modal" data-bs-target="#editStrategyModal" data-edit="${strategy.id}"></i>
-                                                              <i class='bi bi-trash-fill fs-5 cursor-pointer delete_strategy' data-delete="${strategy.id}"></i>
-                                                          </div>
-                                                      </div>
-                                                  `;
-                            $(".all_strategies").append(tradingPositions);
-                          });
-                        }
-
-                        var isTableEmpty = true;
-                        $(".savedStrategies").click(function () {
-                          console.log($(this).data("strategy"));
-
-                          var strategyID = $(this).data("strategy")
-
-                          $.ajax({
-                            type: "POST",
-                            url: "/GetStrategyUnique",
-                            data: {
-                              "strategyId": strategyID,
-                              'csrfmiddlewaretoken': '{{ csrf_token }}',
-                            },
-                            success: function (response) {
-                              console.log(response.trading_positions);
-
-
-                              var tradingPositionsArray = JSON.parse(response.trading_positions);
-
-                              tradingPositionsArray.forEach(function (trade_data) {
-                                var option_side, expiry_date, strike_price, opiton_lot_size, opiton_selected, action, ltpValue, lot_size_inner;
-
-                                if (trade_data.callPutEntrance === "CE" || trade_data.callPutEntrance === "PE") {
-                                  if (trade_data.callPutEntrance === "CE") {
-                                    option_side = "Call";
-                                  } else {
-                                    option_side = "Put";
-                                  }
-
-                                  expiry_date = trade_data.expiry_initial;
-                                  strike_price = trade_data.strikePrice;
-                                  opiton_lot_size = trade_data.option_lot_size_input;
-                                  opiton_selected = trade_data.symbol;
-                                  action = trade_data.long_short_inner;
-                                  ltpValue = trade_data.entryPrice;
-
-                                  lot_size_inner = 1;
-
-                                  populateInputTable(
-                                    option_side,
-                                    expiry_date,
-                                    strike_price,
-                                    action,
-                                    opiton_lot_size,
-                                    ltpValue,
-                                    opiton_selected,
-                                    lot_size_inner
-                                  );
-
-
-                                } else {
-                                  option_side = "FUTURE";
-                                  expiry_date = trade_data.expiry_initial;
-                                  strike_price = trade_data.strikePrice;
-                                  opiton_lot_size = trade_data.option_lot_size_input;
-                                  opiton_selected = trade_data.symbol;
-                                  action = trade_data.long_short_inner;
-                                  ltpValue = trade_data.entryPrice;
-
-                                  lot_size_inner = 1;
-
-                                  populateInputTable(
-                                    option_side,
-                                    expiry_date,
-                                    strike_price,
-                                    action,
-                                    opiton_lot_size,
-                                    ltpValue,
-                                    opiton_selected,
-                                    lot_size_inner
-                                  );
-
-
-                                }
-
-                                // Rest of your code...
-
-                                if (isTableEmpty) {
-                                  $(".data-display-table").empty();
-                                  isTableEmpty = false;
-                                }
-
-                                $(".inner_p_l_greeks").show();
-                                if ($(this).data("HI1") === undefined) {
-
-                                } else {
-                                  $(this).removeData("HI1");
-                                }
-
-                              });
-
-
-
-
-
-
-
-                            },
-                            error: function (response) {
-                              console.log('Error getting strategy:', response);
-                            }
-                          });
-
-                        })
-
-
-
-                        // //////console.log(strategyData);
-
-                        $(".delete_strategy").click(function () {
-                          var strategyId = $(this).data('delete');
-                          // //////console.log(strategyId);
-
-                          if (confirm("Are you sure you want to delete this strategy?")) {
-                            // Perform delete operation with strategyId
-                            $.ajax({
-                              type: "POST",
-                              url: "/delete_strategy",
-                              data: {
-                                'strategy_id': strategyId,
-                                'csrfmiddlewaretoken': '{{ csrf_token }}'
-                              }
-                            })
-                              .done(function (response) {
-                                // handle success
-                                // //////console.log(response.message);
-                                getStrategies_data();
-                                // Refresh the strategies list or remove the deleted strategy from the DOM
-                              })
-                              .fail(function (xhr, status, error) {
-                                // handle error
-                                console.error('Error deleting strategy:', error);
-                              });
-                          }
-                        });
-
-                        // Open the modal on clicking the edit icon
-                        $(".edit_strategy").click(function () {
-                          var strategyId = $(this).data('edit');
-                          // //////console.log(strategyId);
-
-                          $.ajax({
-                            type: "POST",
-                            url: "/get_unique_strategy",
-                            data: {
-                              'strategy_id': strategyId,
-
-                            },
-                            success: function (response) {
-                              // handle success
-                              // //////console.log(response.strategy_data);
-
-                              $("#updateStrategyname").val(response.strategy_data.strategy_name).attr('data-id-update', strategyId);
-
-                            },
-                            error: function (response) {
-                              // handle error
-                              // //////console.log('Error updating strategy:', response);
-                            }
-                          });
-
-                        });
-
-
-
-                        // Update the strategy on clicking the update button
-                        $("#updateStrategy_btn").click(function () {
-                          var updatedStrategyName = $("#updateStrategyname").val();
-                          var strategyId = $("#updateStrategyname").attr('data-id-update');
-
-                          // Send AJAX request to update the strategy name
-                          $.ajax({
-                            type: "POST",
-                            url: "/update_strategy",
-                            data: {
-                              'strategy_id': strategyId,
-                              'updated_strategy_name': updatedStrategyName,
-                              'csrfmiddlewaretoken': '{{ csrf_token }}'
-                            },
-                            success: function (response) {
-                              // handle success
-                              $("#editStrategyModal").modal("hide")
-                              // //////console.log(response.message);
-                              getStrategies_data(); // Refresh the strategies list
-
-                            },
-                            error: function (response) {
-                              // handle error
-                              //////console.log('Error updating strategy:', response);
-                            }
-                          });
-                        });
-
-
-                      }
-
-
-
-
-
-
-                    },
-                    error: function (response) {
-                      // handle error
-                      //////console.log('Error fetching strategies:', response);
-                    }
-                  });
-
-
-
-
-                }
-
-
-
-
-
-
-
-                toastr.options = {
-                  "closeButton": true,
-                  "debug": true,
-                  "newestOnTop": true,
-                  "progressBar": true,
-                  "positionClass": "toast-bottom-right",
-                  "preventDuplicates": true,
-                  "showDuration": "300",
-                  "hideDuration": "1000",
-                  "timeOut": "5000",
-                  "extendedTimeOut": "1000",
-                  "showEasing": "swing",
-                  "hideEasing": "linear",
-                  "showMethod": "fadeIn",
-                  "hideMethod": "fadeOut",
-                  "toastClass": "toastr-custom", // Add a custom class
-                };
-
-                // Additional style for the custom class
-
-                $(".saveNotes").click(function () {
-                  var noteText = tinymce.activeEditor.getContent({ format: 'text' });
-
-                  // alert(noteText)
-                  $.ajax({
-                    type: "POST",
-                    url: "/save_note",
-                    data: {
-                      'id': 1,
-                      'text': noteText,
-                      'csrfmiddlewaretoken': '{{ csrf_token }}'
-                    },
-                    success: function (response) {
-                      // handle success
-                      if (response.not_logged_in) {
-                        $("#signinModal").modal("show");
-                      } else {
-                        // Use Toastr for success message
-                        $("#notesModal").modal('hide')
-                        toastr.success(response.message);
-
-                        // Other actions
-                        displayNotes();
-                        disableNote();
-                      }
-                    },
-                    error: function (response) {
-                      // handle error
-                      if (response.status === 401) {
-                        // Handle 401 Unauthorized
-                      } else {
-                        // Use Toastr for error message
-                        toastr.error(response.message);
-                      }
-                    }
-                  });
-                });
-
-
-                // Add code to open the sign-in modal here
-                // You can use Bootstrap modal or any other modal library for this purpose
-                // Example code for opening Bootstrap modal:
-
-
-
-
-
-
-
-                function displayNotes() {
-                  $.ajax({
-                    type: 'GET',
-                    url: '/get_notes',  // Replace with your URL to fetch notes
-                    success: function (notes) {
-                      if (notes.length > 0) {
-                        var latestNote = notes[notes.length - 1];
-                        $("#editInput").val(latestNote.text);
-                      }
-                    },
-                    error: function (error) {
-                      //////console.log('Error fetching notes:', error);
-                    }
-                  });
-                }
-                displayNotes();
-
-                $(".editNotes").click(function () {
-                  editNote()
-                })
-
-                function disableNote() {
-                  $("#editInput").prop('disabled', true); // Enable the textarea when editing
-                  // Revert CSS properties to their defaults
-
-                }
-                function editNote() {
-                  $("#editInput").prop('disabled', false); // Enable the textarea when editing
-                  // Revert CSS properties to their defaults
-                  $("#editInput").focus()
-                }
-
-
-
-
-              });
-
-
-            </script> -->
 
 
           </div>
@@ -6369,23 +6309,24 @@ display: flex;
           </style>
           <div class="strategy_buttons_deploy_execute">
             <div class="d-flex flex-wrap justify-content-between gap-2">
-              <button data-bs-toggle="modal" data-bs-target="#save_startegyModal" class="save_strategy mb-2 mb-md-0">Save Strategy</button>
-          
+              <button data-bs-toggle="modal" data-bs-target="#save_startegyModal"
+                class="save_strategy mb-2 mb-md-0">Save Strategy</button>
+
               <button class="reset_button execute_all_strategies d-flex gap-1 align-items-center" disabled
-                  title="Please Activate your API for placing order">
-                  <p style="margin-bottom: auto; margin-top: auto; font-size: 12px" class="">
-                      Execute Order
-                  </p>
+                title="Please Activate your API for placing order">
+                <p style="margin-bottom: auto; margin-top: auto; font-size: 12px" class="">
+                  Execute Order
+                </p>
               </button>
-          
+
               <button class="deploy_btn mt-2 mt-md-0">Deploy</button>
-          </div>
-    
+            </div>
+
           </div>
 
-            <!-- Deploy Modal -->
-            <div class="modal fade" id="deployModal_schedule" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"
-            style="z-index: 99999999999999 !important">
+          <!-- Deploy Modal -->
+          <div class="modal fade" id="deployModal_schedule" tabindex="-1" aria-labelledby="exampleModalLabel"
+            aria-hidden="true" style="z-index: 99999999999999 !important">
             <div class="modal-dialog modal-dialog-centered modal-lg">
               <div class="modal-content">
                 <div class="modal-header">
@@ -6450,7 +6391,8 @@ display: flex;
                         </button>
                         <div class="dropdown-menu" style="width: 200px !important">
                           <div class="form-check settings_modal">
-                            <input class="form-check-input in_depth_check_box" type="checkbox" id="in_depth_check_box" checked />
+                            <input class="form-check-input in_depth_check_box" type="checkbox" id="in_depth_check_box"
+                              checked />
                             <label class="form-check-label" for="in_depth_check_box">
                               Show Depth & Info
                             </label>
@@ -6463,34 +6405,35 @@ display: flex;
                   <div class="order_modal_schedule"></div>
 
                 </div>
-                <div class="modal-footer justify-content-between align-items-end">
+                <div class="modal-footer justify-content-between align-items-center">
                   <div class="margin_footer">
 
-                      
 
-  
 
-                    <div class="form-group order_place_input">
+
+
+                    <div class="form-group schedule_order_inputs">
                       <label for="expiryEdit">Schedule Time:</label>
                       <input type="datetime-local" class="form-control" id="scheduleTime" required />
                     </div>
-                    <div class="form-group order_place_input">
-                      <label for="expiryEdit">Strategy Name:</label>
-                      <input type="datetime-local" class="form-control" id="scheduleTime" required />
+                    <div class="form-group schedule_order_inputs">
+                      <label for="scheduleTime">Strategy Name:</label>
+                      <input type="text" class="form-control" id="strategy_name" placeholder="Strategy name:">
                     </div>
                   </div>
                   <div class="right_place_order_check_liquidity">
-    
+
                     <div class="main_place_order_check_liquidity">
-          
-                      <button type="button" class="set_schedule" data-bs-toggle="modal" data-bs-target="#setSchedule_modal">Set Schedule Order</button>
-         
+
+                      <button type="button" class="set_schedule">Set Schedule Order</button>
+
 
                       <style>
-                        .set_schedule{
-             
+                        .set_schedule {
+
                           font-size: 13px;
-                          background: linear-gradient(180deg, #4399eb, #5cadfb);;
+                          background: linear-gradient(180deg, #4399eb, #5cadfb);
+                          ;
                           color: #fff;
                           /* padding: 0px 57px; */
                           text-align: center;
@@ -6509,10 +6452,12 @@ display: flex;
                           font-weight: 600;
                           white-space: nowrap;
                         }
-                        #addNumbersBtn{
-               
+
+                        #addNumbersBtn {
+
                           font-size: 13px;
-                          background: linear-gradient(180deg, #4399eb, #5cadfb);;
+                          background: linear-gradient(180deg, #4399eb, #5cadfb);
+                          ;
                           color: #fff;
                           /* padding: 0px 57px; */
                           text-align: center;
@@ -6531,12 +6476,13 @@ display: flex;
                           font-weight: 600;
                           white-space: nowrap;
                         }
-                        .main_place_order_check_liquidity{
+
+                        .main_place_order_check_liquidity {
                           display: flex;
                           gap: 0.4rem;
                         }
                       </style>
-                     
+
                     </div>
 
                   </div>
@@ -6753,18 +6699,19 @@ display: flex;
 
 
 
-<style>
-  @media (max-width: 767.98px) {
-      #optionChain_canvas {
-          width: 100%;
-      }
-  }
-  @media (min-width: 768px) {
-      #optionChain_canvas {
-          width: 50%;
-      }
-  }
-</style>
+          <style>
+            @media (max-width: 767.98px) {
+              #optionChain_canvas {
+                width: 100%;
+              }
+            }
+
+            @media (min-width: 768px) {
+              #optionChain_canvas {
+                width: 50%;
+              }
+            }
+          </style>
         </div>
       </div>
       <div class="offcanvas offcanvas-start" tabindex="-1" id="optionChain_canvas"
@@ -6779,7 +6726,8 @@ display: flex;
 
 
 
-            <div class="main_option_inner d-flex justify-content-between align-items-center" style="overflow: auto; padding: 4px 4px;">
+            <div class="main_option_inner d-flex justify-content-between align-items-center"
+              style="overflow: auto; padding: 4px 4px;">
 
               <div class="main_indices_fut_opt_filter">
                 <select class="form-select w-auto stockDropdown">
@@ -8083,10 +8031,12 @@ display: flex;
   .expired-text {
     color: #ff857b;
   }
-.active-text{
-  color: #45a54b;
-}
-  .main_symbol_sell_buy ,
+
+  .active-text {
+    color: #45a54b;
+  }
+
+  .main_symbol_sell_buy,
   .schedule_main_symbol_sell_buy {
     display: flex;
     gap: 0.2rem;
@@ -8108,7 +8058,7 @@ display: flex;
     border-radius: 4px;
   }
 
-  .inner_order_modal ,
+  .inner_order_modal,
   .schedule_inner_order {
     padding: 11px;
   }
@@ -8120,21 +8070,21 @@ display: flex;
     border-radius: 8px;
   }
 
-  .main_bottom_card_order ,
+  .main_bottom_card_order,
   .schedule_main_bottom_card_order {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
   }
 
-  .left_bottom_card_order ,
+  .left_bottom_card_order,
   .schedule_left_bottom_card_order {
     display: flex;
     gap: 1rem;
     align-items: center;
   }
 
-  .main_price_qty ,
+  .main_price_qty,
   .schedule_main_price_qty {
     display: flex;
     gap: 0.3rem;
@@ -8255,23 +8205,30 @@ display: flex;
     padding: 4px;
     border-radius: 9px;
   }
-  #pagination-container{
+
+  #pagination-container ,
+  #pagination_container_schedule {
     display: flex;
     gap: 0.2rem;
     padding: 12px 27px;
     justify-content: flex-end;
   }
-  #pagination-container a:hover{
+
+  #pagination_container_schedule a:hover ,
+  #pagination-container a:hover {
     background-color: #59aaf9;
     color: white;
   }
-  .active_strategy_page{
+
+  .active_strategy_page {
     background-color: #59aaf9 !important;
     color: white !important;
-  
+
   }
-  #pagination-container a{
-text-decoration: none;
+
+  #pagination-container a ,
+  #pagination_container_schedule a {
+    text-decoration: none;
     background-color: white;
     color: black;
     padding: 1px 0;
@@ -8283,8 +8240,9 @@ text-decoration: none;
     transition: background-color 0.3s ease;
     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
   }
-  .liquidity_text{
-    font-size:13px !important;
+
+  .liquidity_text {
+    font-size: 13px !important;
   }
 </style>
 </div>
@@ -8417,7 +8375,7 @@ text-decoration: none;
     align-items: center;
   }
 
-  .spot_main_table ,
+  .spot_main_table,
   .schedule_main_spot_order {
     display: flex;
     gap: 0.7rem;
@@ -8438,7 +8396,7 @@ text-decoration: none;
     width: 12rem;
   }
 
-  .main_indepth ,
+  .main_indepth,
   .schedule_main_indepth {
     display: flex;
     justify-content: center;
@@ -8450,6 +8408,7 @@ text-decoration: none;
   .indepth_details_offer table {
     font-size: 10px;
   }
+
   .schedule_indepth_details table,
   .schedule_indepth_details_offer table {
     font-size: 10px;
@@ -8461,6 +8420,7 @@ text-decoration: none;
   .indepth_details_offer table tbody tr td {
     border-style: none !important;
   }
+
   .schedule_indepth_details table thead tr th,
   .schedule_indepth_details table tbody tr td,
   .schedule_indepth_details_offer table thead tr th,
@@ -8468,7 +8428,7 @@ text-decoration: none;
     border-style: none !important;
   }
 
-  .schedule_main_spot_order ,
+  .schedule_main_spot_order,
   .main_spot_order {
     font-size: 12px;
   }
@@ -8525,7 +8485,8 @@ text-decoration: none;
     border-radius: 6px;
     padding: 9px;
   }
-  .left_strategy_name{
+
+  .left_strategy_name {
     font-size: 14px;
     display: flex;
     gap: 0.5rem;
@@ -8873,7 +8834,7 @@ text-decoration: none;
 
     var intervalId = null; // Initialize the interval ID variable
 
-    
+
     $(".execute_all_strategies").click(function () {
       $(".order_modal").empty();
 
@@ -8983,12 +8944,12 @@ text-decoration: none;
         var closest_strike_price_val = $("#closest_strike_price").text()
         console.log(parseFloat(closest_strike_price_val));
 
-        console.log(parseFloat(strikePrice) );
+        console.log(parseFloat(strikePrice));
 
         var stockDropdown = $(".stockDropdown").val()
 
 
-        var main_values_strikePrice =   parseFloat(strikePrice) - parseFloat(closest_strike_price_val) 
+        var main_values_strikePrice = parseFloat(strikePrice) - parseFloat(closest_strike_price_val)
 
 
         var orderContent = `
@@ -9102,8 +9063,8 @@ text-decoration: none;
       trading_quote.sort(function (a, b) {
         return b.strikePrice - a.strikePrice;
       });
-      var modal_open_dynamic= "modal_order"
-      send_quote_data(trading_quote, zerodha_trading_symbol[0], zerodha_lotSize,modal_open_dynamic);
+      var modal_open_dynamic = "modal_order"
+      send_quote_data(trading_quote, zerodha_trading_symbol[0], zerodha_lotSize, modal_open_dynamic);
       // if (intervalId === null) { // Start the interval only if it's not already running
       //     //////console.log('Show');
 
@@ -9113,7 +9074,7 @@ text-decoration: none;
       //     }, 1000);
       // }
     });
-    
+
     $(".deploy_btn").click(function () {
       $(".order_modal_schedule").empty();
 
@@ -9223,12 +9184,12 @@ text-decoration: none;
         var closest_strike_price_val = $("#closest_strike_price").text()
         console.log(parseFloat(closest_strike_price_val));
 
-        console.log(parseFloat(strikePrice) );
+        console.log(parseFloat(strikePrice));
 
         var stockDropdown = $(".stockDropdown").val()
 
 
-        var main_values_strikePrice =   parseFloat(strikePrice) - parseFloat(closest_strike_price_val) 
+        var main_values_strikePrice = parseFloat(strikePrice) - parseFloat(closest_strike_price_val)
 
 
         var orderContent = `
@@ -9319,8 +9280,8 @@ text-decoration: none;
       trading_quote.sort(function (a, b) {
         return b.strikePrice - a.strikePrice;
       });
-var modal_open_dynamic= "schedule"
-      send_quote_data(trading_quote, zerodha_trading_symbol[0], zerodha_lotSize,modal_open_dynamic);
+      var modal_open_dynamic = "schedule"
+      send_quote_data(trading_quote, zerodha_trading_symbol[0], zerodha_lotSize, modal_open_dynamic);
       // if (intervalId === null) { // Start the interval only if it's not already running
       //     //////console.log('Show');
 
@@ -9347,7 +9308,7 @@ var modal_open_dynamic= "schedule"
       }
     });
 
-    function send_quote_data(trading_quote, zerodha_trading_symbol, zerodha_lotSize,modal_open_dynamic) {
+    function send_quote_data(trading_quote, zerodha_trading_symbol, zerodha_lotSize, modal_open_dynamic) {
 
 
       $.ajax({
@@ -9378,11 +9339,12 @@ var modal_open_dynamic= "schedule"
             } else {
               // If not checked, show an alert
 
-if (modal_open_dynamic==="schedule") {
-  
-  $("#deployModal_schedule").modal("show")
-}else{
-              $("#execute").modal("show")}
+              if (modal_open_dynamic === "schedule") {
+
+                $("#deployModal_schedule").modal("show")
+              } else {
+                $("#execute").modal("show")
+              }
 
 
 
@@ -9410,7 +9372,7 @@ if (modal_open_dynamic==="schedule") {
 
 
                   if (response.broker_name === "zerodha") {
-    
+
                     //////console.log(response);
 
                     if (response.status === "success") {
@@ -9518,11 +9480,11 @@ if (modal_open_dynamic==="schedule") {
                         $(".schedule_indepth_details_offer").eq(i).empty();
                         $(".schedule_main_spot_order").eq(i).empty();
 
-                      //   <div class="gap-1 schedule_main_indepth">
-                      //     <div class="schedule_indepth_details"></div>
-                      //     <div class="schedule_indepth_details_offer"></div>
-                      //     <div class="schedule_main_spot_order"> </div>
-                      // </div>
+                        //   <div class="gap-1 schedule_main_indepth">
+                        //     <div class="schedule_indepth_details"></div>
+                        //     <div class="schedule_indepth_details_offer"></div>
+                        //     <div class="schedule_main_spot_order"> </div>
+                        // </div>
 
                         const table = generateBidTable(trading_data.depth.buy);
                         const tableOffer = generateOfferTable(trading_data.depth.sell);
@@ -10239,19 +10201,19 @@ if (modal_open_dynamic==="schedule") {
                   //////console.log(isButtonDisabled);
                   if (isButtonDisabled.includes(false)) {
                     $(".place_order_btn").prop("disabled", true);
-           
+
                     $(".main_extented_status_liquidity").empty().removeClass("passed_liquidity").addClass("failed_liquidity").append(`${filteredMarket.marketStatusMessage} : ${liquidity_failed_msg[0]}`)
                   } else {
                     // If all the values are true, set
                     $(".place_order_btn").prop("disabled", false);
-    
+
                     $(".main_extented_status_liquidity").empty().removeClass("failed_liquidity").addClass("passed_liquidity").append(`${filteredMarket.marketStatusMessage} : All the trade been passed the liquidity test, You can trade now. `)
                   }
 
 
                 } else {
                   $(".place_order_btn").prop("disabled", false);
-      
+
                 }
                 // $(".place_order_btn").prop("disabled", isButtonDisabled);
               },
@@ -10283,8 +10245,27 @@ if (modal_open_dynamic==="schedule") {
 
 
     $(".set_schedule").click(function () {
-      
 
+      var scheduleTime = $("#scheduleTime").val();
+      var strategyName = $("#strategy_name").val();
+
+      if (!scheduleTime) {
+        // Display toastr error message for empty scheduleTime
+        toastr.error('Schedule Time needs to be filled !!');
+        return;
+      }
+
+      if (!strategyName) {
+        // Display toastr error message for empty strategyName
+        toastr.error('Strategy Name needs to be filled !!');
+        return;
+      }
+
+      if (strategyName.length > 10) {
+    // Display toastr error message for strategyName exceeding 10 characters
+    toastr.error('Strategy Name should be max 10 alphabets !!');
+    return;
+}
       var All_positionTrade = [];
       var inner_order_modal = $(".schedule_inner_order");
       var mis_select = $(".mis_select").val()
@@ -10312,7 +10293,7 @@ if (modal_open_dynamic==="schedule") {
         //////console.log(isRadioChecked);
 
         All_positionTrade.push({
-      
+
           sell_buy_indicator: sell_buy_indicator,
           tradingsymbol: tradingsymbol,
           main_trading_symbol: main_trading_symbol,
@@ -10334,79 +10315,74 @@ if (modal_open_dynamic==="schedule") {
       All_positionTrade.sort((a, b) => a.sell_buy_indicator === "BUY" ? -1 : 1);
 
 
-  // Convert the array to a JSON string
-  var jsonString = JSON.stringify(All_positionTrade);
+      // Convert the array to a JSON string
+      var jsonString = JSON.stringify(All_positionTrade);
 
-  // Set the JSON string as the value of the input field
-  $("#all_strategy_values").val(jsonString);
-  console.log(All_positionTrade);
+      // Set the JSON string as the value of the input field
 
-    })
+      console.log(All_positionTrade);
+      // Get values from the form
+      var all_strategy_values = jsonString
+      var strategy_name = $("#strategy_name").val();
+      var scheduleTime = $("#scheduleTime").val();
+
+      // Check if scheduleTime is not empty
+      if (scheduleTime.trim() !== '') {
+        // Convert scheduleTime to timestamp (if needed)
+        var scheduleTimestamp = new Date(scheduleTime).getTime();
+
+        console.log('Parsed scheduleTimestamp:', scheduleTimestamp);
+
+        // Ajax request
+        $.ajax({
+          url: "{% url 'set_schedule_order' %}",
+          method: "POST",
+          data: {
+            all_strategy_values: all_strategy_values,
+            strategy_name: strategy_name,
+            schedule_time: scheduleTimestamp,
+            csrfmiddlewaretoken: "{{ csrf_token }}"
+          },
+          success: function (data) {
+
+            $("#deployModal_schedule").modal("hide")
+            var all_strategy_values = $("#all_strategy_values");
+            var strategy_name = $("#strategy_name");
+            var scheduleTime = $("#scheduleTime");
+            // Emptying the values
+            all_strategy_values.val('');
+            strategy_name.val('');
+            scheduleTime.val('');
 
 
-    $("#addNumbersBtn").click(function () {
-        // Get values from the form
-        var all_strategy_values = $("#all_strategy_values").val();
-                var strategy_name = $("#strategy_name").val();
-                var scheduleTime = $("#scheduleTime").val();
+            // Creating a Date object
+            var date = new Date(data.scheduleTime);
 
-                // Check if scheduleTime is not empty
-                if (scheduleTime.trim() !== '') {
-                    // Convert scheduleTime to timestamp (if needed)
-                    var scheduleTimestamp = new Date(scheduleTime).getTime();
+            // Formatting the date
+            var formattedDate = date.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
 
-                    console.log('Parsed scheduleTimestamp:', scheduleTimestamp);
+            // Formatting the time
+            var formattedTime = date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
 
-                    // Ajax request
-                    $.ajax({
-                        url: "{% url 'ajax_add_numbers' %}",
-                        method: "POST",
-                        data: {
-                            all_strategy_values: all_strategy_values,
-                            strategy_name: strategy_name,
-                            schedule_time: scheduleTimestamp,
-                            csrfmiddlewaretoken: "{{ csrf_token }}"
-                        },
-                        success: function (data) {
-                            // Display the result
-                            $("#setSchedule_modal").modal("hide")
-                            $("#execute").modal("hide")
-                            var all_strategy_values = $("#all_strategy_values");
-                                    var strategy_name = $("#strategy_name");
-                                    var scheduleTime = $("#scheduleTime");
-                 // Emptying the values
-                                    all_strategy_values.val('');
-                                    strategy_name.val('');
-                                    scheduleTime.val('');
+            // Combining date and time
+            var formattedDateTime = formattedDate + ' ' + formattedTime;
 
-                                                          
-                              // Creating a Date object
-                              var date = new Date(data.scheduleTime);
-
-                              // Formatting the date
-                              var formattedDate = date.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
-
-                              // Formatting the time
-                              var formattedTime = date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
-
-                              // Combining date and time
-                              var formattedDateTime = formattedDate + ' ' + formattedTime;
-
-                              // Now formattedDateTime contains the human-readable date and time
-                              console.log(formattedDateTime);
-                            toastr.success( `${data.resultName}  ${formattedDateTime}`);
-                        },
-                        error: function (xhr, errmsg, err) {
-                            console.log(xhr.status + ": " + xhr.responseText);
-                            toastr.error( `${xhr.status} : ${xhr.responseText}`);
-                        }
-                    });
-                } else {
-                    // Handle empty scheduleTime
-                    console.log('Schedule time is empty');
-                }
+            // Now formattedDateTime contains the human-readable date and time
+            console.log(formattedDateTime);
+            toastr.success(`${data.resultName}  ${formattedDateTime}`);
+          },
+          error: function (xhr, errmsg, err) {
+            console.log(xhr.status + ": " + xhr.responseText);
+            toastr.error(`${xhr.status} : ${xhr.responseText}`);
+          }
+        });
+      } else {
+        // Handle empty scheduleTime
+        console.log('Schedule time is empty');
+      }
 
     })
+
 
     var OrderId = 1;
     $(".place_order_btn").click(function () {
@@ -15426,16 +15402,16 @@ if (modal_open_dynamic==="schedule") {
 
                 var errorMessage = 'Unknown error';
 
-if (response && response.responseJSON && response.responseJSON.message) {
-    errorMessage = response.responseJSON.message;
-} else if (response && response.statusText) {
-    errorMessage = response.statusText;
-}
+                if (response && response.responseJSON && response.responseJSON.message) {
+                  errorMessage = response.responseJSON.message;
+                } else if (response && response.statusText) {
+                  errorMessage = response.statusText;
+                }
 
-// alert(errorMessage);
-toastr.error(errorMessage);
+                // alert(errorMessage);
+                toastr.error(errorMessage);
                 // handle error
-           
+
               }
             });
 
@@ -15471,49 +15447,49 @@ toastr.error(errorMessage);
                                               `);
                   } else {
 
-   // handle success
-   $("#saved_startegyModal").modal("show");
+                    // handle success
+                    $("#saved_startegyModal").modal("show");
 
-   var strategyData = response.strategy_data;
-   $(".all_strategies").empty()
-   $("#pagination-container").empty()
-   // Do something with the strategy data
-   var strategiesContainer = $(".all_strategies");
-   var perPage = 5;
-   if (strategyData.length === 0) {
-     $(".all_strategies").append(`
+                    var strategyData = response.strategy_data;
+                    $(".all_strategies").empty()
+                    $("#pagination-container").empty()
+                    // Do something with the strategy data
+                    var strategiesContainer = $(".all_strategies");
+                    var perPage = 5;
+                    if (strategyData.length === 0) {
+                      $(".all_strategies").append(`
                                <div class="d-flex  justify-content-center p-2"> <p>No Strategies Found...</p></div>
                                `);
-   } else {
+                    } else {
 
-    
-     strategyData.forEach((strategy,Index_strategy) => {
-       var isExpired = false;
 
-       // Check if any trading position's expiry is expired based on today's date and time
-       strategy.trading_positions.forEach((position) => {
-         // Assuming position.expiry_initial is in the format "YYYY-MM-DD"
-         const expiryDate = new Date(position.expiry_initial + "T15:30:00.000Z");
-         const currentDate = new Date();
+                      strategyData.forEach((strategy, Index_strategy) => {
+                        var isExpired = false;
 
-         // Set time to 15:30 for today's date
-         const todayClosingTime = new Date(currentDate);
-         todayClosingTime.setHours(15, 30, 0, 0);
+                        // Check if any trading position's expiry is expired based on today's date and time
+                        strategy.trading_positions.forEach((position) => {
+                          // Assuming position.expiry_initial is in the format "YYYY-MM-DD"
+                          const expiryDate = new Date(position.expiry_initial + "T15:30:00.000Z");
+                          const currentDate = new Date();
 
-         // Check if the expiry date is less than or equal to 15:30 today
-         if (expiryDate <= todayClosingTime) {
-           isExpired = true;
-         }
-       });
+                          // Set time to 15:30 for today's date
+                          const todayClosingTime = new Date(currentDate);
+                          todayClosingTime.setHours(15, 30, 0, 0);
 
-       console.log(isExpired);
+                          // Check if the expiry date is less than or equal to 15:30 today
+                          if (expiryDate <= todayClosingTime) {
+                            isExpired = true;
+                          }
+                        });
 
-       var tradingPositions = `
+                        console.log(isExpired);
+
+                        var tradingPositions = `
 
                    <div class="savedStrategies justify-content-between ${isExpired ? 'expired' : ''}" data-strategy="${strategy.id}">
 
                      <div class="left_strategy_name" style="font-size: 14px;" >
-                      <div>${Index_strategy+1}.</div>
+                      <div>${Index_strategy + 1}.</div>
                       ${strategy.strategy_name.charAt(0).toUpperCase() + strategy.strategy_name.slice(1)}
 
                      </div>
@@ -15529,65 +15505,65 @@ toastr.error(errorMessage);
                    </div>
                  `;
 
-       $(".all_strategies").append(tradingPositions);
-     });
-    }
+                        $(".all_strategies").append(tradingPositions);
+                      });
+                    }
 
 
 
-      // Manually implement pagination
-      var numPages = Math.ceil(strategyData.length / perPage);
-    var currentPage = 1;
+                    // Manually implement pagination
+                    var numPages = Math.ceil(strategyData.length / perPage);
+                    var currentPage = 1;
 
-    // Add pagination links
-    $('#pagination-container').append(`
-      <a href="#" class="pagination-link prev" data-page="prev" disabled>&lt;</a>
-    `);
-    for (var i = 1; i <= numPages; i++) {
-      $('#pagination-container').append(`<a href="#" class="pagination-link" data-page="${i}">${i}</a>`);
-    }
-    $('#pagination-container').append(`
-      <a href="#" class="pagination-link next" data-page="next">&gt;</a>
-    `);
+                    // Add pagination links
+                    $('#pagination-container').append(`
+                          <a href="#" class="pagination-link prev" data-page="prev" disabled>&lt;</a>
+                        `);
+                                        for (var i = 1; i <= numPages; i++) {
+                                          $('#pagination-container').append(`<a href="#" class="pagination-link" data-page="${i}">${i}</a>`);
+                                        }
+                                        $('#pagination-container').append(`
+                          <a href="#" class="pagination-link next" data-page="next">&gt;</a>
+                        `);
 
-    // Show the first page and mark it as active
-    showPage(currentPage);
-    $('#pagination-container .pagination-link[data-page="1"]').addClass('active_strategy_page');
-    $('.pagination-link.prev').attr('disabled', true); // Disable prev initially
+                    // Show the first page and mark it as active
+                    showPage(currentPage);
+                    $('#pagination-container .pagination-link[data-page="1"]').addClass('active_strategy_page');
+                    $('.pagination-link.prev').attr('disabled', true); // Disable prev initially
 
-    // Handle pagination link click
-    $('.pagination-link').on('click', function (e) {
-      e.preventDefault();
+                    // Handle pagination link click
+                    $('.pagination-link').on('click', function (e) {
+                      e.preventDefault();
 
-      var clickedPage = $(this).data('page');
+                      var clickedPage = $(this).data('page');
 
-      if (clickedPage === 'prev' && currentPage > 1) {
-        currentPage--;
-      } else if (clickedPage === 'next' && currentPage < numPages) {
-        currentPage++;
-      } else if (typeof clickedPage === 'number') {
-        currentPage = clickedPage;
-      }
+                      if (clickedPage === 'prev' && currentPage > 1) {
+                        currentPage--;
+                      } else if (clickedPage === 'next' && currentPage < numPages) {
+                        currentPage++;
+                      } else if (typeof clickedPage === 'number') {
+                        currentPage = clickedPage;
+                      }
 
-      showPage(currentPage);
+                      showPage(currentPage);
 
-      // Mark the clicked link as active_strategy_page and remove active_strategy_page class from others
-      $('.pagination-link').removeClass('active_strategy_page');
-      $('#pagination-container .pagination-link[data-page="' + currentPage + '"]').addClass('active_strategy_page');
+                      // Mark the clicked link as active_strategy_page and remove active_strategy_page class from others
+                      $('.pagination-link').removeClass('active_strategy_page');
+                      $('#pagination-container .pagination-link[data-page="' + currentPage + '"]').addClass('active_strategy_page');
 
-      // Disable/enable prev and next based on current page
-      $('.pagination-link.prev').attr('disabled', currentPage === 1);
-      $('.pagination-link.next').attr('disabled', currentPage === numPages);
-    });
+                      // Disable/enable prev and next based on current page
+                      $('.pagination-link.prev').attr('disabled', currentPage === 1);
+                      $('.pagination-link.next').attr('disabled', currentPage === numPages);
+                    });
 
-    // Function to show specific page
-    function showPage(page) {
-      strategiesContainer.find('.savedStrategies').hide();
-      var startIndex = (page - 1) * perPage;
-      var endIndex = startIndex + perPage;
-      strategiesContainer.find('.savedStrategies').slice(startIndex, endIndex).show();
-    }
-             }
+                    // Function to show specific page
+                    function showPage(page) {
+                      strategiesContainer.find('.savedStrategies').hide();
+                      var startIndex = (page - 1) * perPage;
+                      var endIndex = startIndex + perPage;
+                      strategiesContainer.find('.savedStrategies').slice(startIndex, endIndex).show();
+                    }
+                  }
 
                   var isTableEmpty = true;
                   $(".savedStrategies").click(function () {
@@ -15632,8 +15608,8 @@ toastr.error(errorMessage);
                         var tradingPositionsArray = JSON.parse(response.trading_positions);
 
                         tradingPositionsArray.forEach(function (trade_data) {
-                          var option_side, expiry_date, strike_price, opiton_lot_size, opiton_selected, action, ltpValue, lot_size_inner,action_side;
-console.log(trade_data.callPutEntrance);
+                          var option_side, expiry_date, strike_price, opiton_lot_size, opiton_selected, action, ltpValue, lot_size_inner, action_side;
+                          console.log(trade_data.callPutEntrance);
 
                           if (trade_data.callPutEntrance === "CE" || trade_data.callPutEntrance === "PE") {
                             if (trade_data.callPutEntrance === "CE") {
@@ -18113,7 +18089,7 @@ console.log(trade_data.callPutEntrance);
 
             // Assume #optionExpiryDropdown is an input field
             var dropdownValue = minDate.toDateString()
-            console.log('dropdownValue',formatDropdownDate(dropdownValue));
+            console.log('dropdownValue', formatDropdownDate(dropdownValue));
             // Set the last th element text to the formatted dropdown value
             thLastElement.text(`${formatDropdownDate(dropdownValue)}`);
 
@@ -18153,17 +18129,17 @@ console.log(trade_data.callPutEntrance);
               return date.toLocaleDateString('en-US', options).replace(/\b\d{1,2}\b/, day + suffix);
             }
 
-              // Function to format the dropdown value as "Thu, Feb 1st"
-              function formatDropdownDate(value) {
-                var date = new Date(value);
-                var day = date.getDate();
-                var suffix = getDaySuffix(day);
-                
-                // Define the options for formatting
-                var options = { weekday: 'short', month: 'short', day: 'numeric' };
-                
-                return date.toLocaleDateString('en-US', options).replace(/\b\d{1,2}\b/, day + suffix);
-              }
+            // Function to format the dropdown value as "Thu, Feb 1st"
+            function formatDropdownDate(value) {
+              var date = new Date(value);
+              var day = date.getDate();
+              var suffix = getDaySuffix(day);
+
+              // Define the options for formatting
+              var options = { weekday: 'short', month: 'short', day: 'numeric' };
+
+              return date.toLocaleDateString('en-US', options).replace(/\b\d{1,2}\b/, day + suffix);
+            }
 
 
             // Function to get the day suffix (st, nd, rd, th)
@@ -18294,7 +18270,7 @@ console.log(trade_data.callPutEntrance);
                   if (currentStrikePrice === closestStrikePrice) {
 
                     console.log('Print');
-                    
+
                     $(this).addClass("background_opiton_closest_payoff_table");
 
                     var container = $(".table_container");
@@ -18476,8 +18452,8 @@ console.log(trade_data.callPutEntrance);
         // Assume #optionExpiryDropdown is an input field
         var dropdownValue = minDate.toDateString()
 
-        console.log('dropdownValue',dropdownValue);
-        
+        console.log('dropdownValue', dropdownValue);
+
 
         // Set the last th element text to the formatted dropdown value
         thLastElement.text(`${formatDropdownDate(dropdownValue)}`);
@@ -18541,98 +18517,98 @@ console.log(trade_data.callPutEntrance);
         var isScrolling = false; // Flag to check if scrolling is in progress
 
 
-  console.log("Hii ");
-  if (!isScrolling) { // Check if scrolling is not in progress
-    isScrolling = true; // Set the flag to true
+        console.log("Hii ");
+        if (!isScrolling) { // Check if scrolling is not in progress
+          isScrolling = true; // Set the flag to true
 
-    var closestStrikePriceText = $("#closest_strike_price").text();
-    var closestStrikePrice = parseInt(closestStrikePriceText);
+          var closestStrikePriceText = $("#closest_strike_price").text();
+          var closestStrikePrice = parseInt(closestStrikePriceText);
 
-    $(".payoff_table_main_table tr").each(function () {
-      var $strikePrice = $(this).find("td:first");
-      var currentStrikePrice = parseInt($strikePrice.text());
-      console.log(currentStrikePrice);
-      console.log(closestStrikePrice);
+          $(".payoff_table_main_table tr").each(function () {
+            var $strikePrice = $(this).find("td:first");
+            var currentStrikePrice = parseInt($strikePrice.text());
+            console.log(currentStrikePrice);
+            console.log(closestStrikePrice);
 
-      if (currentStrikePrice === closestStrikePrice) {
+            if (currentStrikePrice === closestStrikePrice) {
 
-        console.log('Print');
-        
-        $(this).addClass("background_opiton_closest_payoff_table");
+              console.log('Print');
 
-        var container = $(".table_container");
-        var scrollTo =
-          $(this).position().top -
-          container.height() / 2 +
-          $(this).height() / 2;
+              $(this).addClass("background_opiton_closest_payoff_table");
 
-        console.log("ScrollTo:", scrollTo);
+              var container = $(".table_container");
+              var scrollTo =
+                $(this).position().top -
+                container.height() / 2 +
+                $(this).height() / 2;
 
-        container.animate(
-          {
-            scrollTop: scrollTo,
-          },
-          1000,
-          function () {
-            // Animation complete
-            console.log("Scroll animation complete");
-            isScrolling = false; // Reset the flag after scrolling is complete
-          }
-        );
+              console.log("ScrollTo:", scrollTo);
 
-        return false;
-      }
-    });
-  }
+              container.animate(
+                {
+                  scrollTop: scrollTo,
+                },
+                1000,
+                function () {
+                  // Animation complete
+                  console.log("Scroll animation complete");
+                  isScrolling = false; // Reset the flag after scrolling is complete
+                }
+              );
+
+              return false;
+            }
+          });
+        }
 
         var isScrolling = false; // Flag to check if scrolling is in progress
 
-$(".payoff_table").click(function () {
+        $(".payoff_table").click(function () {
 
-  console.log("Hii ");
-  if (!isScrolling) { // Check if scrolling is not in progress
-    isScrolling = true; // Set the flag to true
+          console.log("Hii ");
+          if (!isScrolling) { // Check if scrolling is not in progress
+            isScrolling = true; // Set the flag to true
 
-    var closestStrikePriceText = $("#closest_strike_price").text();
-    var closestStrikePrice = parseInt(closestStrikePriceText);
+            var closestStrikePriceText = $("#closest_strike_price").text();
+            var closestStrikePrice = parseInt(closestStrikePriceText);
 
-    $(".payoff_table_main_table tr").each(function () {
-      var $strikePrice = $(this).find("td:first");
-      var currentStrikePrice = parseInt($strikePrice.text());
-      console.log(currentStrikePrice);
-      console.log(closestStrikePrice);
+            $(".payoff_table_main_table tr").each(function () {
+              var $strikePrice = $(this).find("td:first");
+              var currentStrikePrice = parseInt($strikePrice.text());
+              console.log(currentStrikePrice);
+              console.log(closestStrikePrice);
 
-      if (currentStrikePrice === closestStrikePrice) {
+              if (currentStrikePrice === closestStrikePrice) {
 
-        console.log('Print');
-        
-        $(this).addClass("background_opiton_closest_payoff_table");
+                console.log('Print');
 
-        var container = $(".table_container");
-        var scrollTo =
-          $(this).position().top -
-          container.height() / 2 +
-          $(this).height() / 2;
+                $(this).addClass("background_opiton_closest_payoff_table");
 
-        console.log("ScrollTo:", scrollTo);
+                var container = $(".table_container");
+                var scrollTo =
+                  $(this).position().top -
+                  container.height() / 2 +
+                  $(this).height() / 2;
 
-        container.animate(
-          {
-            scrollTop: scrollTo,
-          },
-          1000,
-          function () {
-            // Animation complete
-            console.log("Scroll animation complete");
-            isScrolling = false; // Reset the flag after scrolling is complete
+                console.log("ScrollTo:", scrollTo);
+
+                container.animate(
+                  {
+                    scrollTop: scrollTo,
+                  },
+                  1000,
+                  function () {
+                    // Animation complete
+                    console.log("Scroll animation complete");
+                    isScrolling = false; // Reset the flag after scrolling is complete
+                  }
+                );
+
+                return false;
+              }
+            });
           }
-        );
-
-        return false;
-      }
-    });
-  }
-});
+        });
 
 
       }

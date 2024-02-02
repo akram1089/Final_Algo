@@ -314,13 +314,15 @@ def perform_addition_task(self, user_id, all_strategy_values,custom_field_value,
 
             # Create a sample StrategyScheduleTaskResult instance with example values
             sample_result = StrategyScheduleTaskResult.objects.create(
-                strategy_name=custom_field_value,
-                broker_name="Zerodha",
-                broker_profile=user_profile,
-                user=current_user,
-                order_data=orders_data,
-                result_data=all_orders
-            )
+                                strategy_name=custom_field_value,
+                                broker_name="Zerodha",
+                                broker_profile=user_profile,
+                                user=current_user,
+                                order_data=orders_data,
+                                result_data=all_orders,
+                                scheduled_time=timezone.now()  # Set scheduled_time to current date and time
+                            )
+
 
 
             return all_orders
@@ -397,7 +399,8 @@ def perform_addition_task(self, user_id, all_strategy_values,custom_field_value,
                     broker_profile=user_profile,
                     user=current_user,
                     order_data=orders_data,
-                    result_data=all_orders
+                    result_data=all_orders,
+                    scheduled_time=timezone.now()  # Set scheduled_time to current date and time
                 )
 
     
