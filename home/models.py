@@ -419,7 +419,8 @@ class StrategyScheduleTaskResult(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     order_data = models.JSONField()
     result_data = models.JSONField()
-    scheduled_time = models.DateTimeField()
+    scheduled_time = models.DateTimeField(default=timezone.now)  # Set default value to current time
+
 
     def __str__(self):
         return f"{self.strategy_name} - {self.broker_name} - {self.user}"
