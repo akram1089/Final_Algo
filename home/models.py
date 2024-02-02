@@ -411,8 +411,6 @@ class CustomPeriodicTask(PeriodicTask):
 
 
 
-from django.db import models
-
 
 class StrategyScheduleTaskResult(models.Model):
     strategy_name = models.CharField(max_length=255)
@@ -421,10 +419,10 @@ class StrategyScheduleTaskResult(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     order_data = models.JSONField()
     result_data = models.JSONField()
+    scheduled_time = models.DateTimeField()
 
     def __str__(self):
         return f"{self.strategy_name} - {self.broker_name} - {self.user}"
-
 
 
 
