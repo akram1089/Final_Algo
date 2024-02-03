@@ -10538,6 +10538,52 @@ function deleteScheduler(deleteId,scheduler_name) {
 
       var scheduleTime = $("#scheduleTime").val();
       var strategyName = $("#strategy_name").val();
+       // Parse the selected datetime string into a Date object
+      var selectedDate = new Date(scheduleTime);
+
+      // Check if the day is from Monday to Friday (0 to 4, where 0 is Sunday and 6 is Saturday)
+      if (selectedDate.getDay() >= 1 && selectedDate.getDay() <= 5) {
+        // Check if the time is between 9:00 AM and 3:28 PM
+        var startTime = new Date(selectedDate);
+        startTime.setHours(9, 0, 0, 0);
+
+        var endTime = new Date(selectedDate);
+        endTime.setHours(15, 28, 0, 0);
+
+        if (selectedDate >= startTime && selectedDate <= endTime) {
+
+          console.log('true');
+          
+
+        } else {
+          // console.log("Datetime should be between 9:00 AM and 3:28 PM");
+          toastr.error("Please set schedulebetween 9:00 AM and 3:28 PM !!")
+          return
+    
+        }
+      } else {
+        // console.log("Datetime should be from Monday to Friday");
+
+        toastr.error("Please set schedule from Monday to Friday !!")
+        return
+
+      
+      }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
       if (!scheduleTime) {
         // Display toastr error message for empty scheduleTime
@@ -10552,10 +10598,10 @@ function deleteScheduler(deleteId,scheduler_name) {
       }
 
       if (strategyName.length > 10) {
-    // Display toastr error message for strategyName exceeding 10 characters
-    toastr.error('Strategy Name should be max 10 alphabets !!');
-    return;
-}
+            // Display toastr error message for strategyName exceeding 10 characters
+            toastr.error('Strategy Name should be max 10 alphabets !!');
+            return;
+        }
       var All_positionTrade = [];
       var inner_order_modal = $(".schedule_inner_order");
       var mis_select = $(".mis_select").val()
