@@ -561,6 +561,8 @@ urlpatterns = [
      path("update_scheduler_status",views.update_scheduler_status,name="update_scheduler_status"),
      path("delete_scheduler",views.delete_scheduler,name="delete_scheduler"),
      path("get_user_strategy_results",views.get_user_strategy_results,name="get_user_strategy_results"),
+     path("get_broker",views.get_broker,name="get_broker"),
+     path("update_broker_api_main",views.update_broker_api_main,name="update_broker_api_main"),
 
 
      
