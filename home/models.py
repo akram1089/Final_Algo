@@ -272,6 +272,8 @@ class Broker(models.Model):
     app_name = models.CharField(max_length=255)
     enctoken=models.TextField()
     active_api = models.BooleanField(default=False)
+    advance_totp_security = models.BooleanField(default=False)  # New field
+
     added_at = models.DateTimeField()
     updated_at = models.DateTimeField()
 

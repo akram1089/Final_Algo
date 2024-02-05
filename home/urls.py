@@ -563,6 +563,8 @@ urlpatterns = [
      path("get_user_strategy_results",views.get_user_strategy_results,name="get_user_strategy_results"),
      path("get_broker",views.get_broker,name="get_broker"),
      path("update_broker_api_main",views.update_broker_api_main,name="update_broker_api_main"),
+     path("verify_active_api",views.verify_active_api,name="verify_active_api"),
+     path("verify_otp_api_activation",views.verify_otp_api_activation,name="verify_otp_api_activation"),
 
 
      

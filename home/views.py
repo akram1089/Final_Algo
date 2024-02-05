@@ -7537,158 +7537,6 @@ import urllib.parse
 from selenium import webdriver
 from pyotp import TOTP
 
-def add_upstox_broker(request ,data):
-    print("Broker Name:", data.get('broker_name'))
-    print("Trading Platform:", data.get('trading_platform'))
-    print("Logging ID:", data.get('logging_id'))
-    print("Password:", data.get('password'))
-    print("TOTP Key:", data.get('totp_key'))
-    print("API Key:", data.get('api_key'))
-    print("App Name:", data.get('app_name'))
-
-    api_key= data.get("api_key")
-    app_name= data.get("app_name")
-    broker_name= data.get("broker_name")
-    password= data.get("password")
-    phone_number_val= data.get("phone_number_val")
-    secret_key= data.get("secret_key")
-    totp_key= data.get("totp_key")
-    trading_plateform= data.get("trading_platform")
-    logging_id= data.get("logging_id")
-    fa_pin = data.get('fa_pin', '')
-
-                         
-    USER_ID=logging_id
-    API_KEY = api_key
-    SECRET_KEY = secret_key
-    RURL = 'https://apix.stocksdeveloper.in/oauth/upstox'
-
-    TOTP_KEY =totp_key
-    MOBILE_NO = phone_number_val
-    PIN =password
-
-
-    def get_access_token(code):
-        url = 'https://api-v2.upstox.com/login/authorization/token'
-        headers = {
-            'accept': 'application/json',
-            'Api-Version': '2.0',
-            'Content-Type': 'application/x-www-form-urlencoded'
-        }
-        data = {
-            'code': code,
-            'client_id': API_KEY,
-            'client_secret': SECRET_KEY,
-            'redirect_uri': RURL,
-            'grant_type': 'authorization_code'
-        }
-        response = requests.post(url, headers=headers, data=data)
-        json_response = response.json()
-        # Access the response data
-        # print(f"access_token:  {json_response['access_token']}")
-        return json_response['access_token']
-
-
-    def run_selenium():
-        AUTH_URL = f'https://api-v2.upstox.com/login/authorization/dialog?response_type=code&client_id={API_KEY}&redirect_uri={RURL}'
-
-        chrome_options = Options()  
-        chrome_options.add_argument("--disable-web-security") 
-        chrome_options.add_argument("--disable-gpu")
-        chrome_options.add_argument('--log-level=1')
-        chrome_options.add_argument('--headless')
-        chrome_options.add_argument('--no-sandbox')
-        chrome_options.add_argument('--disable-dev-shm-usage')
-        chrome_options.add_argument('--ignore-certificate-errors')
-        chrome_options.add_argument("--disable-blink-features=AutomationControlled")
-        chrome_options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36")
-        chrome_options.add_argument("--enable-logging")
-
-        browser = webdriver.Chrome(service=Service(ChromeDriverManager().install()),options=chrome_options)
-        browser.get(AUTH_URL)
-        browser.implicitly_wait(10)
-        mobile_num_input_xpath = browser.find_element("xpath", "/html/body/main/div/div[3]/div/div/div[2]/div[1]/div/div/div[2]/form/div/div/div/div/div/div/input")
-        mobile_num_input_xpath.send_keys(MOBILE_NO)
-        time.sleep(1)
-
-        browser.find_element("xpath", "/html/body/main/div/div[3]/div/div/div[2]/div[1]/div/div/div[2]/form/div/button").click()
-        time.sleep(1)
-        # browser.save_screenshot("screenshot1.png")
-        otp_input_xpath = browser.find_element("xpath", "/html/body/main/div/div[3]/div/div/div[2]/div[1]/div/div/div[2]/form/div[1]/div/div[1]/div/div/div/input")
-        totp = TOTP(TOTP_KEY)
-        token = totp.now()
-        time.sleep(1)
-        # browser.save_screenshot("screenshot1-2.png")
-
-        otp_input_xpath.send_keys(token)
-
-        browser.find_element("xpath","/html/body/main/div/div[3]/div/div/div[2]/div[1]/div/div/div[2]/form/div[2]/button").click()
-        time.sleep(1)
-        # browser.save_screenshot("screenshot2.png")
-
-        twofa_input_xpath=browser.find_element("xpath","/html/body/main/div/div[3]/div/div[1]/div[2]/div[1]/div/div/div[2]/form/div/div/div/div/div/input")
-        twofa_input_xpath.send_keys(PIN)
-        browser.find_element("xpath","/html/body/main/div/div[3]/div/div[1]/div[2]/div[1]/div/div/div[2]/form/button").click()
-        time.sleep(1)
-        # browser.save_screenshot("screenshot3.png")
-
-        WebDriverWait(browser, 5).until(EC.url_contains(RURL))
-        code = parse_qs(urlparse(browser.current_url).query)['code'][0]
-
-        # Save screenshot
-        # browser.save_screenshot("screenshot_final.png")
-
-        return code
-
-    # Run Selenium to get the code and then obtain the access token
-    code = run_selenium()
-    if code:
-        access_token = get_access_token(code)
-        print(access_token)
-        
-    # Configure OAuth2 access token for authorization: OAUTH2
-        configuration = upstox_client.Configuration()
-        configuration.access_token = access_token
-
-        # create an instance of the API class
-        api_instance = upstox_client.UserApi(upstox_client.ApiClient(configuration))
-        api_version = 'api_version_example' # str | API Version Header
-
-        try:
-            # Get profile
-            api_response = api_instance.get_profile(api_version)
-            pprint(api_response)
-
-            
-            if Broker.objects.filter(user=request.user, logging_id=USER_ID).exists():
-              return JsonResponse({"message": "You have already logged in with this login ID !!"}, status=400)
-
-            # Save the data to the Broker model
-            broker = Broker.objects.create(
-                user=request.user,
-                broker_name=broker_name,
-                trading_platform=trading_plateform,
-                logging_id=USER_ID,
-                password=password,
-                totp_key=TOTP_KEY,
-                fa_pin=fa_pin,
-                phone_number=MOBILE_NO,
-                api_key=API_KEY,
-                api_secret=SECRET_KEY,
-                app_name=app_name,
-                enctoken=access_token,  # You may need to generate enctoken or adjust this field based on your requirements
-                added_at=timezone.now(),
-                updated_at=timezone.now()
-            )
-
-
-
-
-            return JsonResponse({"message": "'Upstox' broker added successfully"})
-        except ApiException as e:
-            print("Exception when calling UserApi->get_profile: %s\n" % e)
-    else:
-        print("Error retrieving code.")
 
 
 
@@ -7701,140 +7549,6 @@ def add_upstox_broker(request ,data):
 
 
 
-
-from SmartApi import SmartConnect #or from SmartApi.smartConnect import SmartConnect
-import pyotp
-
-
-
-
-
-def add_angel_one_broker(request, data):
-    # Handle the logic for 'smart_api' trading platform
-    print("Handling 'smart_api' broker addition:")
-    
-    # Print each data individually
-    print("Broker Name:", data.get('broker_name'))
-    print("Trading Platform:", data.get('trading_platform'))
-    print("Logging ID:", data.get('logging_id'))
-    print("Password:", data.get('password'))
-    print("TOTP Key:", data.get('totp_key'))
-    print("API Key:", data.get('api_key'))
-    print("App Name:", data.get('app_name'))
-
-    try:
-        trading_plateform =data.get('trading_platform')
-        broker_name = data.get('broker_name')
-  
-    
-        fa_pin = data.get('fa_pin', '')
-        phone_number = data.get('phone_number', '')
-
-        api_secret = data.get('api_secret', '')
-        app_name = data.get('app_name')
-        api_key = data.get('api_key')
-        clientId = data.get('logging_id')
-        pwd = data.get('password')
-        smartApi = SmartConnect(api_key)
-        token = data.get('totp_key')
-        totp = pyotp.TOTP(token).now()
-        
-        data = smartApi.generateSession(clientId, pwd, totp)
-        authToken = data['data']['jwtToken']
-        refreshToken = data['data']['refreshToken']
-
-        # fetch the feedtoken
-        feedToken = smartApi.getfeedToken()
-
-        print("Feed Token:", feedToken)
-
-        # Check if getting the profile is successful
-        profile_data = smartApi.getProfile(feedToken)
-
-        if profile_data :
-            # Extract relevant data from the profile_data
-            print(profile_data)
-            
-
-
-
-            if Broker.objects.filter(user=request.user, logging_id=clientId).exists():
-              return JsonResponse({"message": "You have already logged in with this login ID !!"}, status=400)
-
-            # Save the data to the Broker model
-            broker = Broker.objects.create(
-                user=request.user,
-                broker_name=broker_name,
-                trading_platform=trading_plateform,
-                logging_id=clientId,
-                password=pwd,
-                totp_key=token,
-                fa_pin=fa_pin,
-                phone_number=phone_number,
-                api_key=api_key,
-                api_secret=api_secret,
-                app_name=app_name,
-                enctoken=feedToken,  # You may need to generate enctoken or adjust this field based on your requirements
-                added_at=timezone.now(),
-                updated_at=timezone.now()
-            )
-
-            return JsonResponse({"message": "'smart_api' broker added successfully"})
-    except Exception as e:
-        print("Error adding 'smart_api' broker:", str(e))
-        return JsonResponse({"message": "Your API details are incorrect or an error occurred"}, status=400)
-
-
-
-def add_zerodha_broker(request, data):
-    user = request.user
-    logging_id = data.get('logging_id')
-
-    # Check if logging_id already exists
-    if Broker.objects.filter(user=user, logging_id=logging_id).exists():
-        return JsonResponse({"message": "You have already logged in with this login ID !!"}, status=400)
-
-    broker_name = data.get('broker_name')
-    password = data.get('password')
-    totp_key = data.get('totp_key')
-    fa_pin = data.get('fa_pin', '')
-    phone_number = data.get('phone_number', '')
-    api_key = data.get('api_key', '')
-    api_secret = data.get('api_secret', '')
-    app_name = data.get('app_name')
-
-    enctoken = get_enctoken_internal(logging_id, password, totp_key)
-    
-    if enctoken:
-        zerodha_api = GetEncToken(enctoken)
-        user_profile = zerodha_api.get_user_profile()
-        
-        if user_profile:
-            print(f"User Profile: {user_profile}")
-
-            # Save enctoken to the Broker model
-            broker = Broker.objects.create(
-                user=user,
-                broker_name=broker_name,
-                trading_platform='zerodha_kite',
-                logging_id=logging_id,
-                password=password,
-                totp_key=totp_key,
-                fa_pin=fa_pin,
-                phone_number=phone_number,
-                api_key=api_key,
-                api_secret=api_secret,
-                app_name=app_name,
-                enctoken=enctoken,
-                added_at=timezone.now(),
-                updated_at=timezone.now()
-            )
-
-            return JsonResponse({"message": "Broker added successfully"})
-        else:
-            return JsonResponse({"message": "Invalid API credentials"}, status=400)
-    else:
-        return JsonResponse({"message": "Failed to generate enctoken"}, status=400)
 
 
 class GetEncToken:
@@ -9183,6 +8897,65 @@ def update_active_api(request):
     broker.save()
 
     return JsonResponse({'message': 'API activation status updated successfully'})
+
+@csrf_exempt
+@require_POST
+def verify_active_api(request):
+    broker_id = request.POST.get('broker_id')
+
+    print(broker_id)
+ 
+
+    # Get the user associated with the broker
+    user = request.user
+
+    # Set is_active to False for all brokers of this user
+
+
+    # Set is_active to True for the specified broker
+    broker = get_object_or_404(Broker, pk=broker_id, user=user)
+    print("broker.advance_totp_security",broker.advance_totp_security)
+    if broker.advance_totp_security :
+
+        
+        return JsonResponse({"advance_activation":"active"})
+    else:
+        return JsonResponse({"advance_activation":"inactive"})
+
+
+@csrf_exempt
+def verify_otp_api_activation(request):
+    broker_id = request.POST.get('broker_id')
+    api_activation_otp = request.POST.get('api_activation_otp')
+
+    print(broker_id)
+ 
+
+    # Get the user associated with the broker
+    user = request.user
+
+    # Set is_active to False for all brokers of this user
+
+
+    # Set is_active to True for the specified broker
+    broker = get_object_or_404(Broker, pk=broker_id, user=user)
+    print("broker.advance_totp_security",broker.advance_totp_security)
+    secret_key = broker.totp_key
+    otp = TOTP(secret_key)
+# Generate an OTP using TOTP after every 60 seconds
+
+    print(otp.now())
+    now_totp = otp.now()
+
+
+
+
+    if now_totp==api_activation_otp:
+        return JsonResponse({'otp_verify':"success"})
+       
+        
+    else:
+        return JsonResponse({'otp_verify':"failed"})
 
 
 
@@ -17748,6 +17521,7 @@ from .models import Broker  # Make sure to import your Broker model or adjust as
 def add_broker_api_main(request):
     if request.method == 'POST':
         data = json.loads(request.body)
+        print(data)
         user = request.user
 
         # Ensure the user is logged in
@@ -18023,6 +17797,8 @@ def add_upstox_broker(request ,data):
     trading_plateform= data.get("trading_platform")
     logging_id= data.get("logging_id")
     fa_pin = data.get('fa_pin', '')
+    advanceTotpSecurity = data.get('advanceTotpSecurity')
+
 
                          
     USER_ID=logging_id
@@ -18144,6 +17920,7 @@ def add_upstox_broker(request ,data):
                 api_secret=SECRET_KEY,
                 app_name=app_name,
                 enctoken=access_token,  # You may need to generate enctoken or adjust this field based on your requirements
+                advance_totp_security=advanceTotpSecurity.lower() == 'yes',
                 added_at=timezone.now(),
                 updated_at=timezone.now()
             )
@@ -18263,6 +18040,7 @@ def add_angel_one_broker(request, data):
         pwd = data.get('password')
         smartApi = SmartConnect(api_key)
         token = data.get('totp_key')
+        advanceTotpSecurity = data.get('advanceTotpSecurity')
         totp = pyotp.TOTP(token).now()
         
         data = smartApi.generateSession(clientId, pwd, totp)
@@ -18300,6 +18078,7 @@ def add_angel_one_broker(request, data):
                 api_key=api_key,
                 api_secret=api_secret,
                 app_name=app_name,
+                advance_totp_security=advanceTotpSecurity.lower() == 'yes',
                 enctoken=feedToken,  # You may need to generate enctoken or adjust this field based on your requirements
                 added_at=timezone.now(),
                 updated_at=timezone.now()
@@ -18374,6 +18153,7 @@ def add_zerodha_broker(request, data):
     api_key = data.get('api_key', '')
     api_secret = data.get('api_secret', '')
     app_name = data.get('app_name')
+    advanceTotpSecurity = data.get('advanceTotpSecurity')
 
     enctoken = get_enctoken_internal(logging_id, password, totp_key)
     
@@ -18398,6 +18178,7 @@ def add_zerodha_broker(request, data):
                 api_secret=api_secret,
                 app_name=app_name,
                 enctoken=enctoken,
+                advance_totp_security=advanceTotpSecurity.lower() == 'yes',
                 added_at=timezone.now(),
                 updated_at=timezone.now()
             )
