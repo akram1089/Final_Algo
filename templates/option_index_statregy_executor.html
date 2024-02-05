@@ -45,9 +45,9 @@
   }
 
   .straddle {
-    color: #4399eb;
-    border: 1px solid #4399eb;
-    background-color: #fff;
+
+    border: 0.5px solid rgb(105 105 105 / 16%);
+    background-color: transparent;
     -webkit-box-shadow: none;
     box-shadow: none;
     -webkit-transition: 0.3s;
@@ -59,16 +59,22 @@
     font-weight: 600;
     cursor: pointer;
     border-radius: 5px;
+
+
+    position: relative;
+
+
   }
 
   .straddle:hover {
-    background: linear-gradient(180deg, #4399eb, #5cadfb) !important;
-    color: #fff !important;
+    border: 1px solid #4399eb;
+
+
   }
 
   .option_strategies_active {
-    background: linear-gradient(180deg, #4399eb, #5cadfb) !important;
-    color: #fff !important;
+border: 1px solid #4399eb !important;
+
   }
 
   .success_cvr {
@@ -357,7 +363,7 @@
     -moz-osx-font-smoothing: grayscale;
   }
 
-  .btn_outline_primary,
+
   .bi-arrow-clockwise {
     background: linear-gradient(180deg, #4399eb, #5cadfb);
     color: #fff;
@@ -369,7 +375,7 @@
     font-weight: 500;
   }
 
-  .btn_outline_primary:hover,
+
   i.bi.bi-arrow-clockwise:hover {
     color: #4399eb !important;
     background: white !important;
@@ -876,7 +882,7 @@
 
   .option_simulator_strategy,
   .saveChanges,
-  #all_scheduled_order,
+
   #saveStrategies {
 
     /* height: 34px; */
@@ -903,14 +909,49 @@
     cursor: pointer;
   }
 
-  .option_simulator_strategy:hover,
-  .saveChanges:hover,
-  #all_scheduled_order:hover,
-  #saveStrategies:hover {
+
+  #saveStrategies,#all_scheduled_order,#buid_custom_strategy_btn,.btn_outline_primary,#order_btn{
     color: #4399eb;
     border: 1px solid #4399eb;
     background: #fff;
+    display: flex;
+    align-items: center;    text-align: center;
+    padding: 6px 10px;
+    font-size: 14px;
+    border-radius: 5px;
+    font-weight: 500;
+    white-space: nowrap;
+    cursor: pointer;
+
   }
+
+  #all_scheduled_order:hover,
+  #buid_custom_strategy_btn:hover,
+  #order_btn:hover,
+  .btn_outline_primary:hover,
+  #saveStrategies:hover {
+background: #439aeb1d !important;
+  }
+
+  .btn_add_broker {
+    background-color: white;
+          color: red;
+          border: 1px solid red;
+          border-radius: 5px;
+          transition: 0.3s;
+        }
+
+        .btn_add_broker:hover {
+
+
+          background-color: rgba(255, 0, 0, 0.075);
+   
+ 
+        }
+
+
+  .option_simulator_strategy:hover,
+  .saveChanges:hover,
 
   #strangle_modal {
     width: 22rem;
@@ -1005,7 +1046,7 @@
     box-shadow: 0px 0px 1px 2px #4399eb3b;
     position: absolute;
     z-index: 99;
-    margin: 15px 0px 1px 0;
+    margin: 15px 0 0px -47px;
     display: none;
     left: -61px;
     border-radius: 8px;
@@ -1023,7 +1064,7 @@
 
     inset: 0px auto auto 0px;
     margin: 0px;
-    transform: translate3d(0px, 48px, 0px);
+    transform: translate3d(0px, 100px, 0px);
     left: -61px;
     border-radius: 8px;
     background-color: white;
@@ -1166,7 +1207,7 @@
     width: 0;
     height: 0;
     top: -2px;
-    margin-left: -0.5em;
+    margin-left: 2.5em;
     box-sizing: border-box;
     border: 11px solid #ffecec00;
     border-color: transparent transparent #ffffff #ffffff;
@@ -1543,19 +1584,7 @@
           flex-direction: column;
         }
 
-        .btn_add_broker {
-          background-color: red;
-          color: white;
-          transition: 0.3s;
-          border: 1px solid red;
-          border-radius: 5px;
-        }
 
-        .btn_add_broker:hover {
-          background-color: white;
-          color: red;
-          border: 1px solid red;
-        }
       </style>
 
       <style>
@@ -1619,7 +1648,7 @@
       </style>
 
       <style>
-        #order_btn,.update_zerodha_btn {
+        .update_zerodha_btn {
           text-decoration: none;
           padding: 5px;
           background: linear-gradient(180deg, #4399eb, #5cadfb);
@@ -1631,7 +1660,7 @@
           font-size: 14px;
         }
 
-        #order_btn:hover ,
+
         .update_zerodha_btn:hover {
           background: none;
           color: #4399eb;
@@ -2052,8 +2081,9 @@
     </div>
     <div class="right_side_top_strategies">
 
-      <button class="d-flex align-items-center" id="all_scheduled_order"><i class='bx bxs-bookmark'></i>
-        <p style="margin-bottom: 0;">Scheduled Order</p>
+      <button class="d-flex align-items-center" id="all_scheduled_order">
+        <i class='bx bxs-bookmarks'></i>
+        <p style="margin-bottom: 0;">Scheduled order</p>
       </button>
       <script>
 
@@ -2293,7 +2323,7 @@ function deleteScheduler(deleteId,scheduler_name) {
             console.log(response);
             if (response.status=="success") {
 
-              toastr.success(` ${scheduler_name} has been deleted  !! `)
+              toastr.error(` ${scheduler_name} has been deleted  !! `)
               
             }
         },
@@ -2305,7 +2335,7 @@ function deleteScheduler(deleteId,scheduler_name) {
 }
 
       </script>
-      <button class="d-flex align-items-center" id="saveStrategies"><i class='bx bxs-bookmark'></i>
+      <button class="d-flex align-items-center" id="saveStrategies">
         <p style="margin-bottom: 0;">Strategies Saved</p>
       </button>
       <button style="padding: 0px 14px;" class="btn_outline_primary" type="button" data-bs-toggle="offcanvas"
@@ -2966,6 +2996,29 @@ function deleteScheduler(deleteId,scheduler_name) {
               <input type="text" class="form-control" id="zerodha_app_name" placeholder="Enter App Name" required />
             </div>
 
+            <div class="class">
+              <label for="zerodha_advance_security_radios d-block">TOTP Advance Security</label>
+
+              <div class="main_advance_security d-flex gap-2 align-items-center" id="zerodha_advance_security_radios">
+              
+
+                <div class="form-check" >
+                  <input class="form-check-input" type="radio" name="zerodha_advance_security" id="zerodha_advance_security_yes" value="yes">
+                  <label class="form-check-label" for="zerodha_advance_security_yes">
+                  Yes
+                  </label>
+                </div>
+
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="zerodha_advance_security" id="zerodha_advance_security_no" checked value="no">
+                  <label class="form-check-label" for="zerodha_advance_security_no">
+                    No
+                  </label>
+              </div>
+            </div>
+
+          </div>
+
           </div>
 
           <div id="angeloneFields" class="trading-platform-fields" style="display: none;">
@@ -2994,7 +3047,36 @@ function deleteScheduler(deleteId,scheduler_name) {
             <label for="angelone_app_name">App name</label>
             <input type="text" class="form-control" id="angelone_app_name" name="angelone_app_name"
               placeholder="Enter App Name" required />
+
+              <div class="main_angelone_totp_section">
+
+                <label for="angelone_advance_security_radios d-block">TOTP Advance Security</label>
+  
+                <div class="main_advance_security d-flex gap-2 align-items-center" id="angelone_advance_security_radios">
+                
+  
+                  <div class="form-check" >
+                    <input class="form-check-input" type="radio" name="angelone_advance_security" id="angelone_advance_security_yes" value="yes">
+                    <label class="form-check-label" for="angelone_advance_security_yes">
+                    Yes
+                    </label>
+                  </div>
+  
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="angelone_advance_security" id="angelone_advance_security_no" checked value="no">
+                    <label class="form-check-label" for="angelone_advance_security_no">
+                      No
+                    </label>
+                </div>
+
+              </div>
+
+              </div>
+
+
           </div>
+
+          
           <div id="upstocksFields" style="display: none;">
 
             <label for="upstocks_platform">Select Api</label>
@@ -3030,6 +3112,34 @@ function deleteScheduler(deleteId,scheduler_name) {
             <label for="upstocks_app_name">App name</label>
             <input type="text" class="form-control" id="upstocks_app_name" name="upstocks_app_name"
               placeholder="Enter App Name" required />
+
+
+  <div class="main_upstocks_totp_section">
+
+                <label for="upstocks_advance_security_radios d-block">TOTP Advance Security</label>
+  
+                <div class="main_advance_security d-flex gap-2 align-items-center" id="upstocks_advance_security_radios">
+                
+  
+                  <div class="form-check" >
+                    <input class="form-check-input" type="radio" name="upstocks_advance_security" id="upstocks_advance_security_yes" value="yes">
+                    <label class="form-check-label" for="upstocks_advance_security_yes">
+                    Yes
+                    </label>
+                  </div>
+  
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="upstocks_advance_security" id="upstocks_advance_security_no" checked value="no">
+                    <label class="form-check-label" for="upstocks_advance_security_no">
+                      No
+                    </label>
+                </div>
+
+              </div>
+              
+              </div>
+
+
           </div>
 
           <div class="validating_space"></div>
@@ -3116,8 +3226,8 @@ function deleteScheduler(deleteId,scheduler_name) {
           color: dimgray;
         }
 
-        .main_broker_password {
-          margin-bottom: 10px;
+        .main_broker_password,.enter_totp_verify_input {
+ 
           color: dimgray;
         }
 
@@ -3205,6 +3315,16 @@ function deleteScheduler(deleteId,scheduler_name) {
           box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
           margin: 13px;
           padding: 11px;
+        }
+
+        .api_activation_otp{
+          width: 126px;
+    margin: 8px 0;
+        }
+        .api_activation_otp:focus{
+         
+          border :1px solid #A50E0E ;
+
         }
       </style>
 
@@ -3553,7 +3673,7 @@ function deleteScheduler(deleteId,scheduler_name) {
       </div>
       <div class="offcanvas-body">
         <form>
-          <div class="add_broker_api_fields">
+          <div class="add_broker_api_fields" style="display: none;">
             <label for="expirydate">Select Broker</label>
             <select name="All_brokers" id="all_brokers" class="form-select mb-3">
               <option value="zerodha">Zerodha</option>
@@ -3564,11 +3684,17 @@ function deleteScheduler(deleteId,scheduler_name) {
             </select>
           </div>
 
-
+<style>
+  #update_upstocksFields label,
+  #update_zerodhaFields label,
+  #update_angeloneFields label{
+color: #c50000 !important;
+  }
+</style>
 
           <div id="update_zerodhaFields">
 
-            <div class="">
+            <div class="" style="display: none;">
               <label for="expirydate">Select Api</label>
               <select class="form-select mb-2" id="zerodha_platform" required>
                 <option value="zerodha_kite">zerodha_kite</option>
@@ -3607,8 +3733,8 @@ function deleteScheduler(deleteId,scheduler_name) {
           </div>
 
           <div id="update_angeloneFields" class="trading-platform-fields" style="display: none;">
-            <label for="update_angelone_platform">Select Api</label>
-            <select class="form-select mb-2" id="update_angelone_platform" name="update_angelone_platform" required>
+            <label for="update_angelone_platform" style="display: none;">Select Api</label>
+            <select class="form-select mb-2" id="update_angelone_platform" name="update_angelone_platform" required style="display: none;">
               <option value="smart_api">smart_api</option>
               <!-- Add more options if needed -->
             </select>
@@ -3635,8 +3761,8 @@ function deleteScheduler(deleteId,scheduler_name) {
           </div>
           <div id="update_upstocksFields" style="display: none;">
 
-            <label for="update_upstocks_platform">Select Api</label>
-            <select class="form-select mb-2" id="update_upstocks_platform" name="update_upstocks_platform" required>
+            <label for="update_upstocks_platform" style="display: none;">Select Api</label>
+            <select class="form-select mb-2" id="update_upstocks_platform" name="update_upstocks_platform" required style="display: none;">
               <option value="upstox_api">upstox_api</option>
               <!-- Add more options if needed -->
             </select>
@@ -3700,7 +3826,7 @@ function deleteScheduler(deleteId,scheduler_name) {
       .top_head_broker_card {
         display: flex;
         justify-content: space-between;
-        align-items: flex-end;
+        align-items: center;
       }
 
       .left_app_name_broker {
@@ -3725,7 +3851,7 @@ function deleteScheduler(deleteId,scheduler_name) {
       }
 
       .main_broker_password {
-        margin-bottom: 10px;
+
         color: dimgray;
       }
 
@@ -3844,6 +3970,9 @@ function deleteScheduler(deleteId,scheduler_name) {
         $(".save_zerodha_btn").click(function (event) {
           event.preventDefault(); // Prevent the default form submission
 
+
+          
+          
           // Get values based on the selected broker
           var selectedBroker = $("#all_brokers").val();
           var platform = $("#" + selectedBroker + "_platform").val();
@@ -3856,8 +3985,9 @@ function deleteScheduler(deleteId,scheduler_name) {
           //upstocks_secret_key
           var secret_key = $("#" + selectedBroker + "_secret_key").val();
           // Remove undefined values
-
+          
           var phone_number_val = $("#" + selectedBroker + "_phone_number").val();
+          var advanceTotpSecurity = $("input[name='"+selectedBroker+"_advance_security']:checked").val();
           console.log(phone_number_val);
           //upstocks_phone_number
           const definedValues = [platform, loginId, password, totpKey, appName, apiKey, secret_key, phone_number_val].filter(val => val !== undefined);
@@ -3896,8 +4026,10 @@ function deleteScheduler(deleteId,scheduler_name) {
             'app_name': appName,
             'secret_key': secret_key,
             'phone_number_val': phone_number_val,
+            'advanceTotpSecurity': advanceTotpSecurity,
             // Add other fields as needed
           };
+          console.log("advanceTotpSecurity",advanceTotpSecurity);
           data = Object.fromEntries(Object.entries(data).filter(([_, v]) => v !== undefined));
 
           console.log(data);
@@ -4023,6 +4155,7 @@ function deleteScheduler(deleteId,scheduler_name) {
                                   <div class="main_broker_password">
                                   <h6 >Password :  <span class="${broker_activation_status_text}">  <i class="bi bi-asterisk"></i> <i class="bi bi-asterisk"></i> <i class="bi bi-asterisk"></i> <i class="bi bi-asterisk"></i> <i class="bi bi-asterisk"></i></span></h6>
                                   </div>
+                                  <div class="broker_active_totp"></div>
 
                                   <div  class="main_broker_action_btn">
                                   <div class="checkbox-wrapper-14">
@@ -4210,48 +4343,148 @@ function deleteScheduler(deleteId,scheduler_name) {
 
 
 
+              $('.activate_api').on('change', async function () {
+              var brokerId = $(this).data('id');
+              var isActive = $(this).prop('checked');
+
+              var main_switch= $(this)
 
 
-              // Add event listener for checkbox change
-              $('.activate_api').on('change', function () {
 
-                //         ('.activate_api').prop('checked', false);
-                // // Check the current checkbox
-                // $(this).prop('checked', true);
+              var api_activation_otp=$(this).closest('.main_broker_card').find('.api_activation_otp').val()
+
+                        // console.log(api_activation_otp);
+
+                        if (api_activation_otp) {
+
+                          if (!api_activation_otp || api_activation_otp.length < 6 || !/^\d+$/.test(api_activation_otp)) {
+    toastr.error("Invalid OTP format. Please enter a valid OTP.");
+    $(main_switch).prop('checked', false);
+    return;
+}else{
+
+                          $.ajax({
+                                    type: 'POST',
+                                    url: '/verify_otp_api_activation',
+                                    data: {
+                                        'broker_id': brokerId,
+                                        'api_activation_otp': api_activation_otp
+                                    },
+                                    success: function (response) {
+                                      // console.log(response);
+
+                                      // {otp_verify: 'success'
+                                      if (response.otp_verify=="success") {
+
+                                        toastr.success("TOTP verified !!")
+
+                                        updateActiveApi(brokerId, isActive);
+                                      }else{
+                                        $(main_switch).prop('checked', false);
+                                        toastr.error("OTP Invalid !!")
+
+                                        return
 
 
-                var brokerId = $(this).data('id');
-                var isActive = $(this).prop('checked');
+                                      }
+                                        //console.log('API activation status updated successfully.');
 
-                // Make an AJAX POST request to update the active_api value
-                $.ajax({
-                  type: 'POST',
-                  url: '/update_active_api',
-                  data: {
-                    'broker_id': brokerId,
-                    'is_active': isActive
-                  },
-                  success: function (response) {
-                    //////console.log('API activation status updated successfully.');
+                                    },
+                                    error: function (error) {
+                                        console.error('Error updating API activation status:', error);
+                                    }
+                                });
+                                            
+                        return
 
-                    getAllBrokers()
-                  },
-                  error: function (error) {
-                    console.error('Error updating API activation status:', error);
+                              }
+                        }
+                              
+
+              if ($(this).prop('checked')) {
+                  var advance_indicator = await verify_broker_totp(brokerId);
+                  // console.log('advance_indicator', advance_indicator);
+
+                  if (advance_indicator) {
+                  // Append the input field to the parent with class "broker_active_totp"
+                
+                  var inputField = $('<div class="d-flex gap-3 align-items-baseline enter_totp_verify_input"><label>Enter TOTP : </label><input type="text" placeholder="Enter TOTP" class="form-control api_activation_otp"></div>');
+                  $(this).closest('.main_broker_card').find('.broker_active_totp').empty().append(inputField);
+                  $(this).prop('checked', false);
+
+     
+                  return
+
                   }
-                });
-              });
 
+    
+              }
+
+    // Use the new function to update the active_api value
+    await updateActiveApi(brokerId, isActive);
+});
+
+
+
+
+async function updateActiveApi(brokerId, isActive) {
+    try {
+        await $.ajax({
+            type: 'POST',
+            url: '/update_active_api',
+            data: {
+                'broker_id': brokerId,
+                'is_active': isActive
+            },
+            success: function (response) {
+                //console.log('API activation status updated successfully.');
+                getAllBrokers();
             },
             error: function (error) {
-              // Log the error to the console
-              console.error(error);
-
-              // Handle the error as needed
-              // For example, you can show an error message to the user
+                console.error('Error updating API activation status:', error);
             }
-          });
-        }
+        });
+    } catch (error) {
+        console.error('Error updating API activation status:', error);
+    }
+}
+
+
+
+            }
+
+            });
+
+
+            
+          }
+
+        function verify_broker_totp(brokerId) {
+    return new Promise(function (resolve, reject) {
+        $.ajax({
+            type: 'POST',
+            url: '/verify_active_api',
+            data: {
+                'broker_id': brokerId,
+            },
+            success: function (response) {
+                // console.log(response);
+
+                // console.log(response.advance_activation);
+                if (response.advance_activation === "active") {
+           
+                    resolve(true);
+                } else {
+                    resolve(false);
+                }
+            },
+            error: function (error) {
+                console.error('Error updating API activation status:', error);
+                reject(error);
+            }
+        });
+    });
+}
 
 
         // Call the function to get and display brokers
@@ -4260,7 +4493,7 @@ function deleteScheduler(deleteId,scheduler_name) {
         $(".update_zerodha_btn").click(function (e) {
                 e.preventDefault()
 
-                console.log($("#update_ID").val());
+                // console.log($("#update_ID").val());
                 
           // Get values based on the selected broker
           var selectedBroker = $("#all_brokers").val();
@@ -4609,14 +4842,163 @@ function deleteScheduler(deleteId,scheduler_name) {
     .strategy_inputs.mb-3:not(:first-of-type) {
       margin-left: 22px;
     }
+
+
+    .main_strategy_img_title{
+      display: flex;
+    flex-direction: column;
+    align-items: center;
+    row-gap: 0.2rem;
+    font-size: 11px;
+    position: relative; 
+    z-index: -9;
+    }
+
+    .main_strategy_img_title.title{
+font-weight: 100 !important;
+    }
+
+:root {
+  --dividerColor: #808080; /* Default gray color */
+}
+
+:root {
+  --profitColor: #039855;
+}
+:root {
+  --lossColor: #C22E00;
+}
+
+.jss619{
+  z-index: -9;
+  width: 75px;
+  height: 54px;
+}
+.main_bullish_inner_svg{
+  display: flex;
+    gap: 0.2rem;
+    align-items: center;
+
+    justify-content: center;
+}
+.main_bullish_inner_svg svg{
+  width: 1.25rem;
+    height: 1.25rem;
+    min-height: 1.25rem;
+    min-width: 1.25rem;
+}
+.main_filter_strategies_btns button{
+  color: #344054;
+  border: 0;
+  background: #E5EFFB;
+  border-radius: 12px;
+  width: 101px;
+    text-align: center;
+    height: 32px;
+    font-size: 14px;
+}
+.main_filter_strategies_btns button:hover{
+  color: #FFFFFF;
+  border: 0;
+  background: #006CE6;
+  border-radius: 12px;
+  width: 101px;
+    text-align: center;
+    height: 32px;
+    font-size: 14px;
+}
+.main_filter_strategies_btns button:active {
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+}
   </style>
+
+  <div class="main_filter_strategies_btns d-none gap-2 pb-2">
+    <button>
+      <div class="main_bullish_inner_svg">
+      <svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path fill-rule="evenodd" clip-rule="evenodd" d="M11.9932 5.13581C9.9938 2.7984 6.65975 2.16964 4.15469 4.31001C1.64964 6.45038 1.29697 10.029 3.2642 12.5604C4.89982 14.6651 9.84977 19.1041 11.4721 20.5408C11.6536 20.7016 11.7444 20.7819 11.8502 20.8135C11.9426 20.8411 12.0437 20.8411 12.1361 20.8135C12.2419 20.7819 12.3327 20.7016 12.5142 20.5408C14.1365 19.1041 19.0865 14.6651 20.7221 12.5604C22.6893 10.029 22.3797 6.42787 19.8316 4.31001C17.2835 2.19216 13.9925 2.7984 11.9932 5.13581Z" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+        </svg>
+ 
+      <p>Popular</p>      </div>
+    
+    </button>
+    <button class="">
+<div class="main_bullish_inner_svg">
+  <svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M22 7L14.1314 14.8686C13.7354 15.2646 13.5373 15.4627 13.309 15.5368C13.1082 15.6021 12.8918 15.6021 12.691 15.5368C12.4627 15.4627 12.2646 15.2646 11.8686 14.8686L9.13137 12.1314C8.73535 11.7354 8.53735 11.5373 8.30902 11.4632C8.10817 11.3979 7.89183 11.3979 7.69098 11.4632C7.46265 11.5373 7.26465 11.7354 6.86863 12.1314L2 17M22 7H15M22 7V14" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+    </svg>
+
+<p>  Bullish</p>
+</div>
+      </button>
+      
+      <button>
+        <div class="main_bullish_inner_svg">
+          <svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M22 17L14.1314 9.13137C13.7354 8.73535 13.5373 8.53735 13.309 8.46316C13.1082 8.3979 12.8918 8.3979 12.691 8.46316C12.4627 8.53735 12.2646 8.73535 11.8686 9.13137L9.13137 11.8686C8.73535 12.2646 8.53735 12.4627 8.30902 12.5368C8.10817 12.6021 7.89183 12.6021 7.69098 12.5368C7.46265 12.4627 7.26465 12.2646 6.86863 11.8686L2 7M22 17H15M22 17V10" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+            </svg>
+
+          <p>Bearish</p>
+        </div>
+        
+        </button>
+      
+      
+      
+      
+      <button>
+
+<div class="main_bullish_inner_svg">
+  <svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M20 17H4M4 17L8 13M4 17L8 21M4 7H20M20 7L16 3M20 7L16 11" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+    </svg>
+  <p>Neutral</p>
+</div>
+
+
+      </button>
+      
+
+      
+      
+      <button>      
+        <div class="main_bullish_inner_svg">
+          <svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M7 19.4C7 20.8359 8.11929 22 9.5 22C10.8807 22 12 20.8359 12 19.4V11M12 11C10.3898 11 8 12 8 12C8 12 6.61017 11 5 11C3.38983 11 2 12 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12C22 12 20.6102 11 19 11C17.3898 11 16 12 16 12C16 12 13.6102 11 12 11Z" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+            </svg>
+          <p>Hedging</p>
+        </div></button>
+  </div>
 
   <div class="All_option_startegies_builder">
     <div class="pre_built_simu">
-      <p style="margin-bottom: auto">Pre-built :</p>
+      <div class="pre_build_title">
+        <p style="margin-bottom: auto">Pre-built :</p>
+      </div>
+     
       <div class="strategy_simu">
         <div class="main_straddle">
-          <p class="straddle" id="straddle">STRADDLE</p>
+          
+          <button class="straddle" id="straddle" >
+
+            <div class="main_strategy_img_title">
+              <div class="style__PresetStrategyCard-sc-1f57s5d-6 jyZMZN">
+                <svg xmlns="http://www.w3.org/2000/svg" width="62" height="45" viewBox="0 0 62 45" class="SVGLoader__StyledComp-sc-1ak2cuz-1 jss619">
+                <g fill="none" fill-rule="evenodd"><path stroke="var(--dividerColor)" stroke-linecap="square" d="M0.5 0L0.5 43.237" transform="translate(1 1)"></path><path stroke="var(--dividerColor)" stroke-dasharray="5 5" stroke-linecap="round" d="M0.462 23L60 23" transform="translate(1 1)"></path>
+                  <g stroke-width="2"><path stroke="var(--lossColor)" d="M0 33L7.936 23.988 13.985 16.988" transform="translate(1 1) translate(0 6)"></path><path stroke="var(--profitColor)" d="M13.985 16.988L29 0" transform="translate(1 1) translate(0 6)"></path>
+                    <g><path stroke="var(--lossColor)" d="M0 33L7.936 23.988 13.985 16.988" transform="translate(1 1) translate(0 6) matrix(-1 0 0 1 57 0)"></path>
+                      <path stroke="var(--profitColor)" d="M13.985 16.988L29 0" transform="translate(1 1) translate(0 6) matrix(-1 0 0 1 57 0)"></path></g></g>
+                    </g></svg>
+                    <div class="title">Short Straddle</div>
+                  
+                  </div>
+ 
+
+                </button>
+
+        
+          
+          </b>
 
           <div class="" id="straddle_modal">
             <div class="dismiss">
@@ -4668,7 +5050,19 @@ function deleteScheduler(deleteId,scheduler_name) {
         </div>
 
         <div class="main-stranggle">
-          <p class="straddle" id="strangle">STRANGLE</p>
+          <div class="straddle" id="strangle">
+            
+            <div class="main_strategy_img_title">
+              <div class="style__PresetStrategyCard-sc-1f57s5d-6 jyZMZN">
+                <svg xmlns="http://www.w3.org/2000/svg" width="62" height="45" viewBox="0 0 62 45" class="SVGLoader__StyledComp-sc-1ak2cuz-1 jss619"><g fill="none" fill-rule="evenodd"><path stroke="var(--dividerColor)" stroke-linecap="square" d="M0.5 0L0.5 43.237" transform="translate(1 1)"></path><path stroke="var(--dividerColor)" stroke-dasharray="5 5" stroke-linecap="round" d="M0.462 23L60 23" transform="translate(1 1)"></path><path stroke="var(--lossColor)" stroke-width="2" d="M1.918 38.5L7.668 23" transform="translate(1 1)"></path><path stroke="var(--lossColor)" stroke-width="2" d="M49.44 38.5L54.452 23" transform="translate(1 1) matrix(-1 0 0 1 103.892 0)"></path><path stroke="var(--profitColor)" stroke-width="2" d="M7.668 23L12.244 10 45.528 10 49.44 23" transform="translate(1 1)"></path></g></svg>
+                    <div class="title">Short Strangle</div>
+                  
+                  </div>
+ 
+
+            </div>
+
+          </div>
           <div class="" id="strangle_modal">
             <div class="dismiss">
               <i class="bx bx-plus dismiss_icon"></i>
@@ -4738,7 +5132,22 @@ function deleteScheduler(deleteId,scheduler_name) {
         </div>
 
         <div class="main-spread">
-          <p class="straddle" id="spread">SPREAD</p>
+          <div class="straddle" id="spread">   
+                       
+            <div class="main_strategy_img_title">
+              <div class="style__PresetStrategyCard-sc-1f57s5d-6 jyZMZN">
+<svg xmlns="http://www.w3.org/2000/svg" width="62" height="45" viewBox="0 0 62 45" class="SVGLoader__StyledComp-sc-1ak2cuz-1 jss619"><g fill="none" fill-rule="evenodd"><path stroke="var(--dividerColor)" stroke-linecap="square" d="M0.5 0L0.5 43.237" transform="translate(1 1)"></path><path stroke="var(--dividerColor)" stroke-dasharray="5 5" stroke-linecap="round" d="M0.462 23L60 23" transform="translate(1 1)"></path><g stroke-width="2"><path stroke="var(--profitColor)" d="M0 22.988L12.009 22.988 30 7" transform="translate(1 1) matrix(1 0 0 -1 1 30)"></path><path stroke="var(--lossColor)" d="M30 7L37.618 0 54.967 0" transform="translate(1 1) matrix(1 0 0 -1 1 30)"></path></g></g></svg>                 
+   <div class="title">Bear Put Spread</div>
+                  
+                  </div>
+ 
+
+            </div>
+          </div>
+
+
+
+
           <div class="" id="spread_modal">
             <div class="dismiss">
               <i class="bx bx-plus dismiss_icon"></i>
@@ -4803,7 +5212,22 @@ function deleteScheduler(deleteId,scheduler_name) {
           </div>
         </div>
         <div class="main-ironfly">
-          <p class="straddle" id="iron_fly">IRON FLY</p>
+          <div class="straddle" id="iron_fly"> 
+
+            <div class="main_strategy_img_title">
+              <div class="style__PresetStrategyCard-sc-1f57s5d-6 jyZMZN">
+                <svg xmlns="http://www.w3.org/2000/svg" width="62" height="45" viewBox="0 0 62 45" class="SVGLoader__StyledComp-sc-1ak2cuz-1 jss619"><g fill="none" fill-rule="evenodd"><path stroke="var(--dividerColor)" stroke-linecap="square" d="M0.5 0L0.5 43.237" transform="translate(1 1)"></path><path stroke="var(--dividerColor)" stroke-dasharray="5 5" stroke-linecap="round" d="M0.462 23L60 23" transform="translate(1 1)"></path><path stroke="var(--lossColor)" stroke-width="2" d="M0.5 32.5L17.918 32.5 21.5 23" transform="translate(1 1)"></path><path stroke="var(--lossColor)" stroke-width="2" d="M35.5 32.5L52.918 32.5 56.5 23" transform="translate(1 1) matrix(-1 0 0 1 92 0)"></path><path stroke="var(--profitColor)" stroke-width="2" d="M21.5 23L28.244 4 35.5 23" transform="translate(1 1)"></path></g></svg>
+                    <div class="title">Iron Butterfly</div>
+                  
+                  </div>
+ 
+
+            </div>
+            
+            
+            
+            
+          </div>
           <div class="" id="ironFly_modal">
             <div class="dismiss">
               <i class="bx bx-plus dismiss_icon"></i>
@@ -4904,7 +5328,20 @@ function deleteScheduler(deleteId,scheduler_name) {
         </style>
 
         <div class="main-ironCondor">
-          <p class="straddle" id="iron_condor">IRON CONDOR</p>
+          <div class="straddle" id="iron_condor">  
+            
+            <div class="main_strategy_img_title">
+              <div class="style__PresetStrategyCard-sc-1f57s5d-6 jyZMZN">
+                <svg xmlns="http://www.w3.org/2000/svg" width="62" height="45" viewBox="0 0 62 45" class="SVGLoader__StyledComp-sc-1ak2cuz-1 jss619"><g fill="none" fill-rule="evenodd"><path stroke="var(--dividerColor)" stroke-linecap="square" d="M0.5 0L0.5 43.237" transform="translate(1 1)"></path><path stroke="var(--dividerColor)" stroke-dasharray="5 5" stroke-linecap="round" d="M0.462 23L60 23" transform="translate(1 1)"></path><path stroke="var(--lossColor)" stroke-width="2" d="M0.5 32.5L12.918 32.5 16.5 23" transform="translate(1 1)"></path><path stroke="var(--lossColor)" stroke-width="2" d="M40.5 32.5L52.918 32.5 56.5 23" transform="translate(1 1) matrix(-1 0 0 1 97 0)"></path><path stroke="var(--profitColor)" stroke-width="2" d="M16.5 23L23.244 4 34.528 4 40.5 23" transform="translate(1 1)"></path></g></svg>
+                    <div class="title">Short Iron Condor</div>
+                  
+                  </div>
+ 
+
+            </div>
+          
+          
+          </div>
           <div class="" id="ironCondor_modal">
             <div class="dismiss">
               <i class="bx bx-plus dismiss_icon"></i>
@@ -4994,7 +5431,20 @@ function deleteScheduler(deleteId,scheduler_name) {
           </div>
         </div>
         <div class="main-jaze_lizard">
-          <p class="straddle" id="jaze_lizard">JAZE LIZARD</p>
+          <div class="straddle" id="jaze_lizard">   
+            
+            <div class="main_strategy_img_title">
+              <div class="style__PresetStrategyCard-sc-1f57s5d-6 jyZMZN">
+                <svg width="62" height="45" viewBox="0 0 62 45" fill="none" xmlns="http://www.w3.org/2000/svg" class="SVGLoader__StyledComp-sc-1ak2cuz-1 jss619"><path d="M1.5 1V44.2366" stroke="var(--dividerColor)" stroke-linecap="square"></path><path d="M1.46154 24H61" stroke="var(--dividerColor)" stroke-linecap="round" stroke-dasharray="5 5"></path><path d="M61.0268 20.5881H47.3778L41.5606 18.4995H29.9108L22.4351 23.9932" stroke="var(--profitColor)" stroke-width="2"></path><path d="M1.94971 38.9844L22.4351 23.9932" stroke="var(--lossColor)" stroke-width="2"></path></svg>
+                    <div class="title">Jade Lizard</div>
+                  
+                  </div>
+ 
+
+            </div>
+          
+          
+          </div>
           <div class="" id="jaze_lizard_modal">
             <div class="dismiss">
               <i class="bx bx-plus dismiss_icon"></i>
@@ -5076,7 +5526,23 @@ function deleteScheduler(deleteId,scheduler_name) {
         </div>
 
         <div class="main-double-iron-fly">
-          <p class="straddle" id="double_iron_fly">DOUBLE IRON FLY</p>
+          <div class="straddle" id="double_iron_fly">  
+            
+            <div class="main_strategy_img_title">
+              <div class="style__PresetStrategyCard-sc-1f57s5d-6 jyZMZN">
+
+                <svg width="62" height="45" viewBox="0 0 62 45" fill="none" xmlns="http://www.w3.org/2000/svg" class="SVGLoader__StyledComp-sc-1ak2cuz-1 jss619"><path d="M1.5 1V44.2366" stroke="var(--dividerColor)" stroke-linecap="square"></path><path d="M1.46154 24H61" stroke="var(--dividerColor)" stroke-linecap="round" stroke-dasharray="5 5"></path><path d="M9.4668 24L16.0001 17L22.1766 24M40.3237 24L46.5001 17L53.0335 24" stroke="var(--profitColor)" stroke-width="2"></path><path d="M2 32L9.46667 24M60.5 32L53.0333 24M22.1765 24L23.5 25.5H39L40.3235 24" stroke="var(--lossColor)" stroke-width="2"></path></svg>
+
+                <div class="title">Double Fly</div>
+                  
+                  </div>
+ 
+
+            </div>
+          
+          
+          
+          </div>
 
 
 
@@ -5235,7 +5701,23 @@ function deleteScheduler(deleteId,scheduler_name) {
 
         </div>
         <div class="main-double-candor">
-          <p class="straddle" id="double_iron_condor">DOUBLE CONDOR</p>
+          <div class="straddle" id="double_iron_condor">   
+            
+            
+            <div class="main_strategy_img_title">
+              <div class="style__PresetStrategyCard-sc-1f57s5d-6 jyZMZN">
+
+                <svg width="62" height="45" viewBox="0 0 62 45" fill="none" xmlns="http://www.w3.org/2000/svg" class="SVGLoader__StyledComp-sc-1ak2cuz-1 jss619"><path d="M1.5 1V44.2366" stroke="var(--dividerColor)" stroke-linecap="square"></path><path d="M1.46154 24H61" stroke="var(--dividerColor)" stroke-linecap="round" stroke-dasharray="5 5"></path><path d="M23.0152 24L17.5 11H11L5.48486 24M39.8788 24L45 11H52L57.5152 24" stroke="var(--profitColor)" stroke-width="2"></path><path d="M2 27.5H4L5.48485 24M61 27.5H59L57.5152 24M23.0152 24L24.5 27.5H38.5L39.8788 24" stroke="var(--lossColor)" stroke-width="2"></path></svg>
+                <div class="title">Double Condor</div>
+                  
+                  </div>
+ 
+
+            </div>
+          
+          
+          
+          </div>
 
           <div class="" id="double_iron_condor_modal">
             <div class="dismiss">
@@ -5417,7 +5899,27 @@ function deleteScheduler(deleteId,scheduler_name) {
         </div>
 
         <div class="main-put-butterfly">
-          <p class="straddle" id="put_butter_fly">BEAR BUTTERFLY</p>
+          <div class="straddle" id="put_butter_fly">  
+            
+         
+            <div class="main_strategy_img_title">
+              <div class="style__PresetStrategyCard-sc-1f57s5d-6 jyZMZN">
+
+                <svg width="62" height="45" viewBox="0 0 62 45" fill="none" xmlns="http://www.w3.org/2000/svg" class="SVGLoader__StyledComp-sc-1ak2cuz-1 jss619"><path d="M1.5 1V44.2366" stroke="var(--dividerColor)" stroke-linecap="square"></path><path d="M1.46154 24H61" stroke="var(--dividerColor)" stroke-linecap="round" stroke-dasharray="5 5"></path><path d="M2 31.5H12.5L14.2857 24M59 31.5H26L24.5714 24" stroke="var(--lossColor)" stroke-width="2"></path><path d="M24.5714 24L19.9999 1.5L14.2856 24" stroke="var(--profitColor)" stroke-width="2"></path></svg>
+                
+                
+                
+                <div class="title">Bear Butterfly                </div>
+                  
+                  </div>
+ 
+
+            </div>
+          
+          
+          
+          
+        </div>
 
           <div class="" id="put_butterfly_modal">
             <div class="dismiss">
@@ -5528,7 +6030,26 @@ function deleteScheduler(deleteId,scheduler_name) {
         </div>
 
         <div class="main-call-butterfly">
-          <p class="straddle" id="call_butter_fly">BULL BUTTERFLY</p>
+          <div class="straddle" id="call_butter_fly">  
+            
+            <div class="main_strategy_img_title">
+              <div class="style__PresetStrategyCard-sc-1f57s5d-6 jyZMZN">
+
+       <svg width="62" height="45" viewBox="0 0 62 45" fill="none" xmlns="http://www.w3.org/2000/svg" class="SVGLoader__StyledComp-sc-1ak2cuz-1 jss619"><path d="M1.5 1V44.2366" stroke="var(--dividerColor)" stroke-linecap="square"></path><path d="M1.46154 24H61" stroke="var(--dividerColor)" stroke-linecap="round" stroke-dasharray="5 5"></path><path d="M59 31.5H52L50.2143 24M2 31.5H38.5L39.9286 24" stroke="var(--lossColor)" stroke-width="2"></path><path d="M39.9286 24L44.5001 1.5L50.2144 24" stroke="var(--profitColor)" stroke-width="2"></path></svg>
+                  
+            
+                
+                
+                <div class="title">Bull Butterfly                </div>
+                  
+                  </div>
+ 
+
+            </div>
+          
+          
+          
+          </div>
 
 
           <div class="" id="call_butter_fly_modal">
@@ -5639,7 +6160,28 @@ function deleteScheduler(deleteId,scheduler_name) {
         </div>
 
         <div class="custom-strategy" style="position: relative;">
-          <p class="straddle" id="custom_strategy">CUSTOM STRATEGY</p>
+          <div class="straddle" id="custom_strategy">  
+            
+            
+            
+            <div class="main_strategy_img_title">
+              <div class="style__PresetStrategyCard-sc-1f57s5d-6 jyZMZN">
+
+                <svg xmlns="http://www.w3.org/2000/svg" width="62" height="45" viewBox="0 0 62 45" class="SVGLoader__StyledComp-sc-1ak2cuz-1 jss619"><g fill="none" fill-rule="evenodd"><path stroke="var(--dividerColor)" stroke-linecap="square" d="M0.5 0L0.5 43.237" transform="translate(1 1)"></path><path stroke="var(--dividerColor)" stroke-dasharray="5 5" stroke-linecap="round" d="M0.462 23L60 23" transform="translate(1 1)"></path><path stroke="var(--lossColor)" stroke-width="2" d="M0.5 32.5L17.918 32.5 21.5 23" transform="translate(1 1)"></path><path stroke="var(--lossColor)" stroke-width="2" d="M35.5 32.5L52.918 32.5 56.5 23" transform="translate(1 1) matrix(-1 0 0 1 92 0)"></path><path stroke="var(--profitColor)" stroke-width="2" d="M21.5 23L28.244 4 35.5 23" transform="translate(1 1)"></path></g></svg>
+                  
+            
+                
+                
+                <div class="title">Custom Strategy </div>
+                  
+                  </div>
+ 
+
+            </div>
+          
+          
+          
+          </div>
 
           <div class="dropdown-menu" id="custom_strategy_modal">
             <div class="dismiss">
@@ -5813,28 +6355,6 @@ function deleteScheduler(deleteId,scheduler_name) {
       font-weight: 600;
     }
 
-    #buid_custom_strategy_btn {
-      display: flex !important;
-      align-items: center !important;
-      background: linear-gradient(180deg, #4399eb, #5cadfb);
-      color: #fff;
-      padding: 0px 52px;
-      text-align: center;
-      font-size: 14px;
-      height: 37px;
-      font-weight: 500;
-      border-radius: 4px;
-      border: 1px solid #4399eb !important;
-      -webkit-box-shadow: none !important;
-      box-shadow: none !important;
-      outline: 0 !important;
-      -webkit-transition: all .2s ease-in-out !important;
-      -moz-transition: all .2s ease-in-out !important;
-      transition: all .2s ease-in-out !important;
-      cursor: pointer;
-
-      font-weight: 600;
-    }
 
     .deploy_btn,
     .reset_button {
@@ -5942,8 +6462,8 @@ function deleteScheduler(deleteId,scheduler_name) {
     }
 
     .strategy_notes:hover,
-    .exit_all_positions_zerodha:hover,
-    #buid_custom_strategy_btn:hover {
+    .exit_all_positions_zerodha:hover
+{
       background: #fff !important;
       color: #4399eb !important;
     }
