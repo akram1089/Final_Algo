@@ -1,7 +1,27 @@
 {% extends "base_dashboard.html" %} {% load static %} {% block dashboard_body %}
 
 
+<style>
+  .main_straddle,
+  .main-stranggle,
+  .main-ironCondor,
+  .main-spread ,
+  .main-ironfly
+ {
+    display: block;
+  }
 
+
+  .main-double-candor ,
+
+  .main-jaze_lizard,
+  .main-double-iron-fly,
+  .main-put-butterfly,
+  .main-call-butterfly,
+  .custom-strategy {
+    display: block;
+  }
+</style>
 
 
 <style>
@@ -229,7 +249,7 @@ border: 1px solid #4399eb !important;
   .low52_strategies,
   .spot_strategies {
     font-size: 16px;
-    font-weight: 700;
+    font-weight: 600;
     color: #00000099;
   }
 
@@ -247,6 +267,7 @@ border: 1px solid #4399eb !important;
     background: #E8F7E4;
     font-size: 16px;
     padding: 6px 5px;
+    font-weight: 600;
   }
 
   .main_max_pain_strategies {
@@ -345,7 +366,7 @@ border: 1px solid #4399eb !important;
     display: flex;
     flex-wrap: wrap;
     row-gap: 0.5rem;
-    justify-content: flex-end;
+    justify-content: center;
     column-gap: 0.5rem;
   }
 
@@ -870,7 +891,7 @@ border: 1px solid #4399eb !important;
   }
 
   #straddle_modal {
-    width: 22rem;
+    width: 23.4rem;
     box-shadow: 0px 0px 1px 2px #4399eb3b;
     position: absolute;
     z-index: 99;
@@ -1339,7 +1360,7 @@ background: #439aeb1d !important;
   .low_strategies p,
   .high_strategies p,
   .option_chain_strategies p {
-    font-weight: 700 !important;
+    font-weight: 600 !important;
     font-size: 16px;
     color: #353535;
   }
@@ -1394,6 +1415,13 @@ background: #439aeb1d !important;
     gap: 1rem;
     margin-bottom: 1rem;
     flex-wrap: wrap;
+  }
+  .futures_segements_main select,
+  .futures_expiry,
+  .strike_price_input,
+  .expiry_date_input,
+  .stockDropdown{
+    font-weight: 500;
   }
 </style>
 <div class="title mb-2 ms-3 mt-3 d-flex">
@@ -1627,7 +1655,8 @@ background: #439aeb1d !important;
           width: max-content;
           box-shadow: 0px 0px 1px 2px #4399eb3b;
           position: absolute;
-          right: 153px;
+          transform: translateX(-802px);
+
           z-index: 99;
           border-radius: 8px;
           background-color: white;
@@ -4909,13 +4938,25 @@ font-weight: 100 !important;
     height: 32px;
     font-size: 14px;
 }
+.main_all_strategy_active{
+  color: #FFFFFF !important;
+  border: 0;
+  background: #006CE6  !important;
+  border-radius: 12px;
+  width: 101px;
+    text-align: center;
+    height: 32px;
+    font-size: 14px;
+
+    transition: 0.3s;
+}
 .main_filter_strategies_btns button:active {
   box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
 }
   </style>
 
-  <div class="main_filter_strategies_btns d-none gap-2 pb-2">
-    <button>
+  <div class="main_filter_strategies_btns d-flex gap-2 pb-2 justify-content-center">
+    <button class="popular_strategies_filter all_strategy_filter main_all_strategy_active" data-filter_val="popular">
       <div class="main_bullish_inner_svg">
       <svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path fill-rule="evenodd" clip-rule="evenodd" d="M11.9932 5.13581C9.9938 2.7984 6.65975 2.16964 4.15469 4.31001C1.64964 6.45038 1.29697 10.029 3.2642 12.5604C4.89982 14.6651 9.84977 19.1041 11.4721 20.5408C11.6536 20.7016 11.7444 20.7819 11.8502 20.8135C11.9426 20.8411 12.0437 20.8411 12.1361 20.8135C12.2419 20.7819 12.3327 20.7016 12.5142 20.5408C14.1365 19.1041 19.0865 14.6651 20.7221 12.5604C22.6893 10.029 22.3797 6.42787 19.8316 4.31001C17.2835 2.19216 13.9925 2.7984 11.9932 5.13581Z" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
@@ -4924,7 +4965,7 @@ font-weight: 100 !important;
       <p>Popular</p>      </div>
     
     </button>
-    <button class="">
+    <button class="bullish_strategies_filter all_strategy_filter" data-filter_val="bull">
 <div class="main_bullish_inner_svg">
   <svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path d="M22 7L14.1314 14.8686C13.7354 15.2646 13.5373 15.4627 13.309 15.5368C13.1082 15.6021 12.8918 15.6021 12.691 15.5368C12.4627 15.4627 12.2646 15.2646 11.8686 14.8686L9.13137 12.1314C8.73535 11.7354 8.53735 11.5373 8.30902 11.4632C8.10817 11.3979 7.89183 11.3979 7.69098 11.4632C7.46265 11.5373 7.26465 11.7354 6.86863 12.1314L2 17M22 7H15M22 7V14" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
@@ -4934,7 +4975,7 @@ font-weight: 100 !important;
 </div>
       </button>
       
-      <button>
+      <button class="bearish_strategies_filter all_strategy_filter" data-filter_val="bear">
         <div class="main_bullish_inner_svg">
           <svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M22 17L14.1314 9.13137C13.7354 8.73535 13.5373 8.53735 13.309 8.46316C13.1082 8.3979 12.8918 8.3979 12.691 8.46316C12.4627 8.53735 12.2646 8.73535 11.8686 9.13137L9.13137 11.8686C8.73535 12.2646 8.53735 12.4627 8.30902 12.5368C8.10817 12.6021 7.89183 12.6021 7.69098 12.5368C7.46265 12.4627 7.26465 12.2646 6.86863 11.8686L2 7M22 17H15M22 17V10" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
@@ -4948,7 +4989,7 @@ font-weight: 100 !important;
       
       
       
-      <button>
+      <button class="neutral_strategies_filter all_strategy_filter" data-filter_val="neutral">
 
 <div class="main_bullish_inner_svg">
   <svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -4963,7 +5004,7 @@ font-weight: 100 !important;
 
       
       
-      <button>      
+      <button class="hedging_strategies_filter all_strategy_filter" data-filter_val="hedge">      
         <div class="main_bullish_inner_svg">
           <svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M7 19.4C7 20.8359 8.11929 22 9.5 22C10.8807 22 12 20.8359 12 19.4V11M12 11C10.3898 11 8 12 8 12C8 12 6.61017 11 5 11C3.38983 11 2 12 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12C22 12 20.6102 11 19 11C17.3898 11 16 12 16 12C16 12 13.6102 11 12 11Z" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
@@ -4971,11 +5012,110 @@ font-weight: 100 !important;
           <p>Hedging</p>
         </div></button>
   </div>
+<script>
+$(document).ready(function () {
 
+  $(".main_straddle").show()
+  $(".main-stranggle").show()
+  $(".main-ironfly").show()
+  $(".main-ironCondor").show()
+  $(".main-spread").show()
+  $(".main-jaze_lizard").show()
+  $(".main-double-iron-fly").show()
+  $(".main-double-candor").show()
+
+  $(".main-put-butterfly").show()
+  $(".main-call-butterfly").show()
+  $(".custom-strategy").show()
+
+  $(".all_strategy_filter").click(function () {
+$(".all_strategy_filter").removeClass("main_all_strategy_active")
+    $(this).addClass("main_all_strategy_active")
+    var filter_uni = $(this).data("filter_val")
+
+    if (filter_uni==="popular") {
+      $(".main_straddle").show()
+  $(".main-stranggle").show()
+  $(".main-ironfly").show()
+  $(".main-ironCondor").show()
+  $(".main-spread").show()
+  $(".main-jaze_lizard").show()
+  $(".main-double-iron-fly").show()
+  $(".main-double-candor").show()
+
+  $(".main-put-butterfly").show()
+  $(".main-call-butterfly").show()
+  $(".custom-strategy").show()
+
+    }else if (filter_uni==="bull") {
+      $(".main_straddle").hide()
+  $(".main-stranggle").hide()
+  $(".main-ironfly").hide()
+  $(".main-ironCondor").hide()
+  $(".main-spread").hide()
+  $(".main-jaze_lizard").show()
+  $(".main-double-iron-fly").hide()
+  $(".main-double-candor").hide()
+
+  $(".main-put-butterfly").hide()
+  $(".main-call-butterfly").show()
+  $(".custom-strategy").hide()
+
+
+    }
+    else if (filter_uni==="bear") {
+      $(".main_straddle").hide()
+  $(".main-stranggle").hide()
+  $(".main-ironfly").hide()
+  $(".main-ironCondor").hide()
+  $(".main-spread").show()
+  $(".main-jaze_lizard").hide()
+  $(".main-double-iron-fly").hide()
+  $(".main-double-candor").hide()
+
+  $(".main-put-butterfly").show()
+  $(".main-call-butterfly").hide()
+  $(".custom-strategy").hide()
+    }
+    
+    else if (filter_uni==="neutral") {
+      $(".main_straddle").show()
+  $(".main-stranggle").show()
+  $(".main-ironfly").show()
+  $(".main-ironCondor").show()
+  $(".main-spread").show()
+  $(".main-jaze_lizard").hide()
+  $(".main-double-iron-fly").show()
+  $(".main-double-candor").show()
+
+  $(".main-put-butterfly").hide()
+  $(".main-call-butterfly").hide()
+  $(".custom-strategy").show()
+    }
+    
+    else if (filter_uni==="hedge") {
+      $(".main_straddle").hide()
+  $(".main-stranggle").hide()
+  $(".main-ironfly").hide()
+  $(".main-ironCondor").hide()
+  $(".main-spread").hide()
+  $(".main-jaze_lizard").show()
+  $(".main-double-iron-fly").hide()
+  $(".main-double-candor").hide()
+
+  $(".main-put-butterfly").hide()
+  $(".main-call-butterfly").hide()
+  $(".custom-strategy").hide()
+    }
+    
+  })
+  
+})
+</script>
   <div class="All_option_startegies_builder">
     <div class="pre_built_simu">
       <div class="pre_build_title">
-        <p style="margin-bottom: auto">Pre-built :</p>
+
       </div>
      
       <div class="strategy_simu">
@@ -5010,11 +5150,12 @@ font-weight: 100 !important;
             <div class="modal_dialog">
               <div class="modal_content">
                 <div class="modal_body" id="modal_body">
-                  <div class="main_straddle">
+                  <div class="main_straddle_inner">
                     <h5 class="text-center">Straddle</h5>
 
                     <div class="main_body_fields_straddle">
                       <div class="main_strikePrice mb-3">
+                        <p>1x</p>
                         <div class="strategy_inputs">
                           <label for="strikePrice">Strike Price</label>
                           <select class="strike_price_input form-select" id="strikeSelect_straddle"></select>
@@ -5138,9 +5279,9 @@ font-weight: 100 !important;
                        
             <div class="main_strategy_img_title">
               <div class="style__PresetStrategyCard-sc-1f57s5d-6 jyZMZN">
-<svg xmlns="http://www.w3.org/2000/svg" width="62" height="45" viewBox="0 0 62 45" class="SVGLoader__StyledComp-sc-1ak2cuz-1 jss619"><g fill="none" fill-rule="evenodd"><path stroke="var(--dividerColor)" stroke-linecap="square" d="M0.5 0L0.5 43.237" transform="translate(1 1)"></path><path stroke="var(--dividerColor)" stroke-dasharray="5 5" stroke-linecap="round" d="M0.462 23L60 23" transform="translate(1 1)"></path><g stroke-width="2"><path stroke="var(--profitColor)" d="M0 22.988L12.009 22.988 30 7" transform="translate(1 1) matrix(1 0 0 -1 1 30)"></path><path stroke="var(--lossColor)" d="M30 7L37.618 0 54.967 0" transform="translate(1 1) matrix(1 0 0 -1 1 30)"></path></g></g></svg>                 
-   <div class="title">Bear Put Spread</div>
-                  
+                      <svg xmlns="http://www.w3.org/2000/svg" width="62" height="45" viewBox="0 0 62 45" class="SVGLoader__StyledComp-sc-1ak2cuz-1 jss619"><g fill="none" fill-rule="evenodd"><path stroke="var(--dividerColor)" stroke-linecap="square" d="M0.5 0L0.5 43.237" transform="translate(1 1)"></path><path stroke="var(--dividerColor)" stroke-dasharray="5 5" stroke-linecap="round" d="M0.462 23L60 23" transform="translate(1 1)"></path><g stroke-width="2"><path stroke="var(--profitColor)" d="M0 22.988L12.009 22.988 30 7" transform="translate(1 1) matrix(1 0 0 -1 1 30)"></path><path stroke="var(--lossColor)" d="M30 7L37.618 0 54.967 0" transform="translate(1 1) matrix(1 0 0 -1 1 30)"></path></g></g></svg>                 
+                        <div class="title">Bear Put Spread</div>
+                                        
                   </div>
  
 
@@ -6332,6 +6473,12 @@ font-weight: 100 !important;
       </div>
     </div>
   </div>
+
+
+
+
+
+
   <style>
     .strategy_notes,
     .exit_all_positions_zerodha {
@@ -8852,6 +8999,7 @@ font-weight: 100 !important;
   .schedule_main_symbol_sell_buy {
     display: flex;
     gap: 0.2rem;
+    font-weight: 600;
   }
 
   .sellTrade {
