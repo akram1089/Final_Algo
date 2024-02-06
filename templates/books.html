@@ -295,6 +295,11 @@
     padding: 0 8px !important;
     height: 32px !important;
     }
+
+    .modal_close_btn:hover{
+        /* background-color: #f2f2f2 !important; */
+        background-color: #f1eded !important;
+        }
     
 </style>
 
@@ -312,18 +317,27 @@
                     <option value="Hindi">Hindi</option>
                 </select>
             </div>
-            <div class="category_dropdown dropdown">
-                <button class="btn btn-outline-light btn-sm dropdown-toggle book_category_filter_btn" type="button" id="sortDropdown" data-bs-toggle="dropdown"
+            <div class="category_filter">
+                <!-- <button class="btn btn-outline-light btn-sm dropdown-toggle book_category_filter_btn" type="button"  data-bs-toggle="dropdown"
                     aria-haspopup="true" aria-expanded="false">
                     Category
-                </button>
-                <div class="dropdown-menu" aria-labelledby="sortDropdown" id="book_category_dropdown">
-                    <a class="dropdown-item sort-btn" href="#" data-sort="">All</a>
-                    <a class="dropdown-item sort-btn" href="#" data-sort="Trading">Trading</a>
-                    <a class="dropdown-item sort-btn" href="#" data-sort="Option Trading">Option trading</a>
-                    <a class="dropdown-item sort-btn" href="#" data-sort="Investment">Investment</a>
-                    <a class="dropdown-item sort-btn" href="#" data-sort="Technical Analysis">Technical Analysis</a>
-                </div>
+                </button>  -->
+                
+                <select id="sortDropdown" class="form-select form-select-sm">
+                    <option class="dropdown-item sort-btn" value="">All</option>
+                    <option class="dropdown-item sort-btn" value="Trading">Trading</option>
+                    <option class="dropdown-item sort-btn" value="Option Trading">Option Trading</option>
+                    <option class="dropdown-item sort-btn" value="Investment">Investment</option>
+                    <option class="dropdown-item sort-btn" value="Technical Analysis">Technical Analysis</option>
+                </select>
+
+                 <!-- <div class="dropdown-menu" aria-labelledby="sortDropdown" id="book_category_dropdown">
+                    <a  href="#" data-sort="">All</a>
+                    <a  href="#" data-sort="Trading">Trading</a>
+                    <a  href="#" data-sort="Option Trading">Option trading</a>
+                    <a  href="#" data-sort="Investment">Investment</a>
+                    <a  href="#" data-sort="Technical Analysis">Technical Analysis</a>
+                </div>  -->
 
             </div>
             
@@ -400,7 +414,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <button type="button" class="btn-close modal_close_btn" data-bs-dismiss="modal" aria-label="Close" style="border-radius: 50%; display: flex; align-items: center; justify-content: center; padding: 12px;"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-4 h-4 modal_cut"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
                     </div>
                     <div class="modal-body">
                         <div class="row">
@@ -451,7 +465,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title text-center" id="readSampleModalLabel_${book.id}">${book.title}</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close modal_close_btn" data-bs-dismiss="modal" aria-label="Close" style="border-radius: 50%; display: flex; align-items: center; justify-content: center; padding: 12px;"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-4 h-4 modal_cut"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
             </div>
             <div class="modal-body">
                 ${book.read_sample ?
@@ -496,7 +510,8 @@
                         console.log($(this).val())
                         filterCards();
                     })
-                    $('.sort-btn').on('click', function () {
+                    $('.category_filter').change(function() {
+                        console.log($(this).val())
                         // Remove 'active' class from all buttons
                         $('.sort-btn').removeClass('active');
 
@@ -520,9 +535,9 @@
             var searchQuery = $('#search_book').val().toLowerCase();
             var language_filter = $("#language-select").val()
             // Explicitly get the data attribute value
-            var category = $('.sort-btn.active').data('sort');
+            var category = $('#sortDropdown').val();
             category = category ? category.toLowerCase() : '';
-            console.log(category);
+            // console.log(category);
 
             $('.w-dyn-item').each(function () {
                 var title = $(this).data('title');
