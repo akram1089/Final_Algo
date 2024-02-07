@@ -285,3 +285,8 @@ CELERY_IMPORTS = [
 
 
 ACCOUNT_DEFAULT_HTTP_PROTOCOL='http'
+
+# settings.py
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '929504800861-oqbeonla23fuovi1scmm4hp9opo7lemg.apps.googleusercontent.com'
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = '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'
+SOCIAL_AUTH_GOOGLE_OAUTH2_REDIRECT_URI = 'http://optionperks.com/accounts/google/login/callback/'
