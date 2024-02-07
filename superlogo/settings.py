@@ -282,3 +282,6 @@ CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
 CELERY_IMPORTS = [
     'home.tasks',
 ]
+
+
+ACCOUNT_DEFAULT_HTTP_PROTOCOL='https'
