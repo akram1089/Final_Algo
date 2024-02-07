@@ -380,7 +380,7 @@ border: 1px solid #4399eb !important;
     display: flex;
 overflow: auto;
     row-gap: 0.5rem;
-    background-color: #ffeeeead;
+    justify-content: flex-end;
     margin-bottom: 0.5rem;
   
   }
@@ -799,7 +799,7 @@ overflow: auto;
     font-size: 10px;
   }
 
-  #futures_counter_input,
+
   #counter_input,
   .counter_input_edit,
   #counter_input_strangle,
@@ -830,8 +830,7 @@ overflow: auto;
     align-items: center;
   }
 
-  #future_decrement,
-  #future_increment,
+ 
   #decrement,
   #increment,
   .decrement_edit,
@@ -1282,13 +1281,11 @@ background: #ffb7b71d !important;
   }
 
   .left_main_strategy_position {
-    box-shadow: #4399eb29 0px 1px 4px;
-    padding: 18px 18px;
+box-shadow: 0 3px 16px 0 rgba(35,47,62,.15);    padding: 18px 18px;
   }
 
   .right_p_l_greeks {
-    box-shadow: #4399eb29 0px 1px 4px;
-    padding: 0 18px 18px 18px;
+box-shadow: 0 3px 16px 0 rgba(35,47,62,.15);    padding: 0 18px 18px 18px;
   }
 
   .inner_p_l_greeks {
@@ -1427,7 +1424,17 @@ background: #ffb7b71d !important;
   .main_all_spot_futures_val {
     display: flex;
     gap: 1rem;
-    background: #edfff3;
+
+    flex-wrap: wrap;
+
+
+    padding: 3px 19px 3px 11px;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+    margin: 11px 0 0 0;
+  }
+  .main_inner_spot_future{
+    display: flex;
+    gap: 1.2rem;
     flex-wrap: wrap;
   }
   .futures_segements_main select,
@@ -1437,8 +1444,17 @@ background: #ffb7b71d !important;
   .stockDropdown{
     font-weight: 500 !important;
   }
+  .top_title_executor{
+    background: #4399eb;
+    margin: 0 !important;
+    display: flex;
+    justify-content: center;
+    color: white;
+    align-items: center;
+    padding: 9px 0 0 0px;
+  }
 </style>
-<div class="title mb-2 ms-3 mt-3 d-flex">
+<div class="title top_title_executor">
   <h5>Option Index Strategy Executor</h5>
 
 </div>
@@ -1507,62 +1523,8 @@ background: #ffb7b71d !important;
 
 
 <div class="main_option_strategy_optimizer">
-  <div class="main_all_spot_futures_val">
-    <div class="spot_strategies">
-      <p class="spot_title">Spot:</p>
 
-      <div id="last_traded_price"></div>
-      <div id="closest_strike_price" style="display: none"></div>
-      <div id="closen_expiry_date" style="display: none;"></div>
-    </div>
-
-    <div class="main_futures_price_as_per_expiries">
-      <p class="futures_title">Futures: </p>
-
-      <div class="futures_ltp"></div>
-    </div>
-
-    <div class="main_max_pain_strategies">
-      <div class="max_pain_strategies d-flex align-items-center gap-1">
-        <p>Max Pain: </p>
-
-      </div>
-      <div id="max_pain_value" style="font-size: 16px;"></div>
-    </div>
-    <div class="lot_size_strategies">
-      <p>Lot Size:</p>
-      <div id="lot_size_value"></div>
-    </div>
-    <div class="low52_strategies">
-      <p>Low 52 Wk: </p>
-
-      <div id="low52_value"></div>
-    </div>
-
-    <div class="high52_strategies">
-      <p>High 52 Wk: </p>
-
-      <div id="high52_value"></div>
-    </div>
-    <div class="open_strategies">
-      <p>Open: </p>
-
-      <div id="open_value"></div>
-    </div>
-
-    <div class="low_strategies">
-      <p>Low: </p>
-
-      <div id="low_value"></div>
-    </div>
-    <div class="high_strategies">
-      <p>High: </p>
-
-      <div id="high_value"></div>
-    </div>
-
-  </div>
-  <div class="top_content_option_chain">
+  <div class="top_content_option_chain" style=" padding: 0 19px 0 11px; box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;">
     <div class="main_top_all_left_right d-flex align-items-center justify-content-between">
       <div class="left_side_top_strategies">
         <div class="main_top_strategies d-flex align-items-center" style="gap: 0.80rem;">
@@ -1612,9 +1574,53 @@ background: #ffb7b71d !important;
                 </div>
               </div>
 
-              <div class="innerStraddle_lot_size">
+              <style>
+                #main_future_qty{
+
+                  border: 1px solid #8080803b !important;
+                      border-radius: 4px !important;
+                  }
+
+                #future_decrement{
+                  all: unset;
+                  width: 26px !important;
+    text-align: center;
+    border-right: 1px solid #8080803b !important;
+    height: 37px;
+    padding: 2px 2px 0px 2px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+#future_decrement:hover,
+#future_increment:hover{
+  background: #80808029;
+}
+#future_decrement:active,
+#future_increment:active{
+  background: #80808042;
+}
+
+                  #futures_counter_input{
+                    all: unset !important;
+                    width: 30px !important;
+    text-align: center !important;
+
+                  }
+                  #future_increment{
+                    all: unset;
+                    width: 26px !important;
+                    border-left: 1px solid #8080803b !important;
+    text-align: center !important;
+    padding: 2px 2px 0px 2px;
+    cursor: pointer;
+    transition: 0.2s;
+                  }
+              </style>
+
+              <div class="innerStraddle_lot_size" id="future_qty">
                 <p class="fs-6 lot_title">Qty:</p>
-                <div class="counter_straddle d-flex justify-content-center gap-1">
+                <div class="counter_straddle d-flex justify-content-center gap-1" id="main_future_qty">
                   <button class="btn" id="future_decrement">
                     <i class="bx bx-minus"></i>
                   </button>
@@ -1631,16 +1637,16 @@ background: #ffb7b71d !important;
 
 <style>
   #future_add_positions{
-    background: green;
+    background: #00a900;
     color: white;
     height: 37px;
     border-radius: 5px;
-    font-size: 14px;
+    font-size: 12px;
     width: 123px;
     font-weight: 500;
   }
   #future_add_positions:active{
-    background: rgb(0, 90, 0);
+    background: rgb(0, 118, 0);
  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;;
 
   }
@@ -4383,6 +4389,69 @@ async function updateActiveApi(brokerId, isActive) {
 
 
   </div>
+
+
+  <div class="main_all_spot_futures_val" style=" padding: 0 19px 0 11px; box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;">
+
+    <div class="main_inner_spot_future">
+
+
+    <div class="spot_strategies">
+      <p class="spot_title">Spot:</p>
+
+      <div id="last_traded_price"></div>
+      <div id="closest_strike_price" style="display: none"></div>
+      <div id="closen_expiry_date" style="display: none;"></div>
+    </div>
+
+    <div class="main_futures_price_as_per_expiries">
+      <p class="futures_title">Futures: </p>
+
+      <div class="futures_ltp"></div>
+    </div>
+
+    <div class="main_max_pain_strategies">
+      <div class="max_pain_strategies d-flex align-items-center gap-1">
+        <p>Max Pain: </p>
+
+      </div>
+      <div id="max_pain_value" style="font-size: 16px;"></div>
+    </div>
+    <div class="lot_size_strategies">
+      <p>Lot Size:</p>
+      <div id="lot_size_value"></div>
+    </div>
+    <div class="low52_strategies">
+      <p>Low 52 Wk: </p>
+
+      <div id="low52_value" class="text-success"></div>
+    </div>
+
+    <div class="high52_strategies">
+      <p>High 52 Wk: </p>
+
+      <div id="high52_value" class="text-danger"></div>
+    </div>
+    <div class="open_strategies">
+      <p>Open: </p>
+
+      <div id="open_value"></div>
+    </div>
+
+    <div class="low_strategies">
+      <p>Low: </p>
+
+      <div id="low_value" class="text-danger"></div>
+    </div>
+    <div class="high_strategies">
+      <p>High: </p>
+
+      <div id="high_value" class="text-success"></div>
+    </div>
+  </div>
+  </div>
+
+
   <script>
     $(document).ready(function () {
       const optionChainButton = $("#optionChain_canvas");
@@ -4672,7 +4741,8 @@ font-weight: 100 !important ;
   cursor: pointer;
 }
   </style>
-   
+   <div class="main_all_strategy_nav_content" style="box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;     padding: 13px;
+   margin: 11px 0 0 0;">
    <ul class="nav nav-tabs">
     <li class="nav-item">
       <a class="nav-link active" data-toggle="tab" data-filter_val="popular">Popular</a>
@@ -6049,6 +6119,7 @@ font-weight: 100 !important ;
         </div>
       </div>
     </div>
+  </div>
   
   </div>
 
@@ -6487,16 +6558,117 @@ $(".all_strategy_filter").removeClass("main_all_strategy_active")
     #toast-container {
       z-index: 999999999999999999 !important;
     }
+    .right_side_top_strategies,.left_size_top_strategies{
+      box-shadow: 0 3px 16px 0 rgba(35,47,62,.15);  
+      
+      margin-bottom: 11px;
+      margin-bottom: 11px;
+    padding: 9px 8px 9px 0;
+    margin-top: 12px;}
+
+    .right_side_top_strategies button{
+      border-right: 1px solid #e7e7e7;
+    }
+    .right_side_top_strategies button p,
+    .btn_add_broker,
+    #buid_custom_strategy_btn,
+    #order_btn,
+    #Activate_broker_btn{
+      color: darkred;
+    font-size: 16px;
+
+    }
+
+    #all_scheduled_order,
+    #saveStrategies,
+    #Activate_broker_btn,
+    .btn_outline_primary,
+    .all_api_details,
+    .btn_add_broker{
+      border-right: 1px solid #e7e7e7;
+    }
   </style>
   <script>
 
   </script>
 
+  <div class="main_all_startegy_saved_schedulor row" style="gap: 1rem;">
+
+    <div class="left_size_top_strategies col-md-4 col-lg-4 col-sm-12">
+
+    </div>
+
+
+<div class="right_side_top_strategies col-md-7 col-lg-7 col-sm-12">
+
+      <button class="d-flex align-items-center" id="all_scheduled_order">
+
+        <p style="margin-bottom: 0;">Scheduled order</p>
+      </button>
+   
+      <button class="d-flex align-items-center" id="saveStrategies">
+        <p style="margin-bottom: 0;">Strategies Saved</p>
+      </button>
+      <button style="padding: 0px 14px;" class="btn_outline_primary" type="button" data-bs-toggle="offcanvas"
+        data-bs-target="#optionChain_canvas" aria-controls="optionChain_canvasLabel" id="buid_custom_strategy_btn">
+        Option Chain
+        <i class="bx bx-chevron-down"></i>
+      </button>
+
+      <button class="btn_add_broker" data-bs-toggle="offcanvas" data-bs-target="#add_api" aria-controls="add_api">
+        Add Broker
+      </button>
+
+      <div class="activate_broker_toggle_main_btn">
+
+
+
+        <button class="btn_outline_primary" class="all_api_details" data-bs-toggle="collapse" id="Activate_broker_btn">
+          Activate Broker <i class="bx bx-chevron-down"></i>
+        </button>
+
+
+        <div id="overlay"></div>
+
+        <div class="" id="active_broker_modal" style="display: none;">
+          <div class="dismiss_active_modal">
+            <!-- <i class="bx bx-plus dismiss_icon_active_modal"></i> -->
+            <div class="triangle-up-active-modal"></div>
+          </div>
+          <div class="modal_dialog">
+            <div class="modal_content">
+
+
+              <div class="all_broker">
+                <div id="zerodha_data_display"></div>
+              </div>
+
+
+
+
+
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+
+
+
+      <button id="order_btn">Order History</button>
+
+
+    </div>
+
+    
+  </div>
+
   <div class="main_option_p_l_greeks_charts">
     <div class="inner_p_l_greeks row">
       <div class="left_main_strategy_position col-md-4 col-lg-4 col-sm-12">
 
-        <div class="main_top_startegy_positions">
+        <div class="main_top_startegy_positions ">
           <div class="strategy_position_reset d-flex justify-content-between">
             <p class="fw-bold">Strategy Positions</p>
 
@@ -7846,67 +8018,7 @@ $(".all_strategy_filter").removeClass("main_all_strategy_active")
         <div class="table_pl_greek">
           <div class="main_filter_greek_P_L">
              
-    <div class="right_side_top_strategies">
-
-      <button class="d-flex align-items-center" id="all_scheduled_order">
-
-        <p style="margin-bottom: 0;">Scheduled order</p>
-      </button>
-   
-      <button class="d-flex align-items-center" id="saveStrategies">
-        <p style="margin-bottom: 0;">Strategies Saved</p>
-      </button>
-      <button style="padding: 0px 14px;" class="btn_outline_primary" type="button" data-bs-toggle="offcanvas"
-        data-bs-target="#optionChain_canvas" aria-controls="optionChain_canvasLabel" id="buid_custom_strategy_btn">
-        Option Chain
-        <i class="bx bx-chevron-down"></i>
-      </button>
-
-      <button class="btn_add_broker" data-bs-toggle="offcanvas" data-bs-target="#add_api" aria-controls="add_api">
-        Add Broker
-      </button>
-
-      <div class="activate_broker_toggle_main_btn">
-
-
-
-        <button class="btn_outline_primary" class="all_api_details" data-bs-toggle="collapse" id="Activate_broker_btn">
-          Activate Broker <i class="bx bx-chevron-down"></i>
-        </button>
-
-
-        <div id="overlay"></div>
-
-        <div class="" id="active_broker_modal" style="display: none;">
-          <div class="dismiss_active_modal">
-            <!-- <i class="bx bx-plus dismiss_icon_active_modal"></i> -->
-            <div class="triangle-up-active-modal"></div>
-          </div>
-          <div class="modal_dialog">
-            <div class="modal_content">
-
-
-              <div class="all_broker">
-                <div id="zerodha_data_display"></div>
-              </div>
-
-
-
-
-
-            </div>
-          </div>
-        </div>
-
-      </div>
-
-
-
-
-      <button id="order_btn">Order History</button>
-
-
-    </div>
+    
 
             <div class="inner_greek_p_l d-flex">
               <p class="payoff_charts greek_strategy_active">
@@ -8521,7 +8633,7 @@ $(".all_strategy_filter").removeClass("main_all_strategy_active")
 
     </div>
     <div class="history_table">
-      <p>History is under developements</p>
+      <p class="text-danger" style="border-bottom:1px solid">History is under developements</p>
     </div>
 
   </div>
