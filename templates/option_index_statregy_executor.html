@@ -57,13 +57,27 @@
 
   .pre_built_simu {
     display: flex;
-    justify-content: center;
+ 
     align-items: center;
     margin: 0 0 0;
     gap: 0.5rem;
-    padding: 0px 15px 17px 14px;
+    padding: 6px 15px 17px 14px;
   }
+  .nav-link.active{
+    color: #2196f3 !important;
+  }
+.tab-content{
+  border-bottom-width: 1px;
+border-left-width: 1px;
+border-right-width: 1px;
 
+
+}
+  .nav-tabs li a{
+    color: #767f88 !important;
+    font-weight: 500 !important;
+    font-size: 15px !important;
+  }
   .straddle {
 
     border: 0.5px solid rgb(105 105 105 / 16%);
@@ -256,7 +270,7 @@ border: 1px solid #4399eb !important;
   .spot_strategies {
     display: flex;
     gap: 0.2rem;
-    background: #E4F3EF;
+
     font-size: 16px;
     padding: 6px 5px;
   }
@@ -264,7 +278,7 @@ border: 1px solid #4399eb !important;
   .main_futures_price_as_per_expiries {
     display: flex;
     gap: 0.2rem;
-    background: #E8F7E4;
+
     font-size: 16px;
     padding: 6px 5px;
     font-weight: 600 !important;
@@ -274,7 +288,7 @@ border: 1px solid #4399eb !important;
     display: flex;
     align-items: center;
     font-size: 16px;
-    background: #F6EDEB;
+
     padding: 6px 5px;
   }
 
@@ -283,7 +297,7 @@ border: 1px solid #4399eb !important;
     display: flex;
     align-items: center;
     font-size: 16px;
-    background: #E8F2FB;
+
     gap: 0.2rem;
     padding: 6px 5px;
   }
@@ -293,7 +307,7 @@ border: 1px solid #4399eb !important;
   .low52_strategies {
     display: flex;
     gap: 0.2rem;
-    background: #E8F7E4;
+
     align-items: center;
     padding: 6px 5px;
 
@@ -303,7 +317,7 @@ border: 1px solid #4399eb !important;
   .high52_strategies {
     display: flex;
     gap: 0.2rem;
-    background: #F7E4E6;
+
     align-items: center;
     padding: 6px 5px;
 
@@ -313,7 +327,7 @@ border: 1px solid #4399eb !important;
   .open_strategies {
     display: flex;
     gap: 0.2rem;
-    background: #EEEDFB;
+
     align-items: center;
     padding: 6px 5px;
 
@@ -323,7 +337,7 @@ border: 1px solid #4399eb !important;
   .low_strategies {
     display: flex;
     gap: 0.2rem;
-    background: #E8F3FC;
+ 
     align-items: center;
     padding: 6px 5px;
 
@@ -333,7 +347,7 @@ border: 1px solid #4399eb !important;
   .high_strategies {
     display: flex;
     gap: 0.2rem;
-    background: #F6EAE8;
+
     align-items: center;
     padding: 6px 5px;
 
@@ -364,10 +378,11 @@ border: 1px solid #4399eb !important;
 
   .right_side_top_strategies {
     display: flex;
-    flex-wrap: wrap;
+overflow: auto;
     row-gap: 0.5rem;
-    justify-content: center;
-    column-gap: 1.5rem;
+    background-color: #ffeeeead;
+    margin-bottom: 0.5rem;
+  
   }
 
   #spot_arrow {
@@ -931,7 +946,7 @@ border: 1px solid #4399eb !important;
   }
 
 
-  #saveStrategies,#all_scheduled_order,#buid_custom_strategy_btn,.btn_outline_primary,#order_btn{
+  ,#buid_custom_strategy_btn{
     color: #4399eb;
     border: 1px solid #4399eb;
     background: #fff;
@@ -945,30 +960,29 @@ border: 1px solid #4399eb !important;
     cursor: pointer;
 
   }
+  #saveStrategies,#all_scheduled_order,.btn_outline_primary,#Activate_broker_btn,#order_btn,.btn_add_broker{
+    color: #767f88;
+    font-weight: 600 !important;
+    font-size: 15px;
+    padding: 7px;
+
+    cursor: pointer;
+
+    border: none;
+
+    background: transparent;
+  }
 
   #all_scheduled_order:hover,
   #buid_custom_strategy_btn:hover,
   #order_btn:hover,
   .btn_outline_primary:hover,
+  .btn_add_broker:hover,
   #saveStrategies:hover {
-background: #439aeb1d !important;
+background: #ffb7b71d !important;
   }
 
-  .btn_add_broker {
-    background-color: white;
-          color: red;
-          border: 1px solid red;
-          border-radius: 5px;
-          transition: 0.3s;
-        }
 
-        .btn_add_broker:hover {
-
-
-          background-color: rgba(255, 0, 0, 0.075);
-   
- 
-        }
 
 
   .option_simulator_strategy:hover,
@@ -1413,7 +1427,7 @@ background: #439aeb1d !important;
   .main_all_spot_futures_val {
     display: flex;
     gap: 1rem;
-    margin-bottom: 1rem;
+    background: #edfff3;
     flex-wrap: wrap;
   }
   .futures_segements_main select,
@@ -1493,7 +1507,62 @@ background: #439aeb1d !important;
 
 
 <div class="main_option_strategy_optimizer">
-  <div class="top_content_option_chain p-3">
+  <div class="main_all_spot_futures_val">
+    <div class="spot_strategies">
+      <p class="spot_title">Spot:</p>
+
+      <div id="last_traded_price"></div>
+      <div id="closest_strike_price" style="display: none"></div>
+      <div id="closen_expiry_date" style="display: none;"></div>
+    </div>
+
+    <div class="main_futures_price_as_per_expiries">
+      <p class="futures_title">Futures: </p>
+
+      <div class="futures_ltp"></div>
+    </div>
+
+    <div class="main_max_pain_strategies">
+      <div class="max_pain_strategies d-flex align-items-center gap-1">
+        <p>Max Pain: </p>
+
+      </div>
+      <div id="max_pain_value" style="font-size: 16px;"></div>
+    </div>
+    <div class="lot_size_strategies">
+      <p>Lot Size:</p>
+      <div id="lot_size_value"></div>
+    </div>
+    <div class="low52_strategies">
+      <p>Low 52 Wk: </p>
+
+      <div id="low52_value"></div>
+    </div>
+
+    <div class="high52_strategies">
+      <p>High 52 Wk: </p>
+
+      <div id="high52_value"></div>
+    </div>
+    <div class="open_strategies">
+      <p>Open: </p>
+
+      <div id="open_value"></div>
+    </div>
+
+    <div class="low_strategies">
+      <p>Low: </p>
+
+      <div id="low_value"></div>
+    </div>
+    <div class="high_strategies">
+      <p>High: </p>
+
+      <div id="high_value"></div>
+    </div>
+
+  </div>
+  <div class="top_content_option_chain">
     <div class="main_top_all_left_right d-flex align-items-center justify-content-between">
       <div class="left_side_top_strategies">
         <div class="main_top_strategies d-flex align-items-center" style="gap: 0.80rem;">
@@ -1556,13 +1625,26 @@ background: #439aeb1d !important;
                 </div>
               </div>
 
-              <button class="btn btn-primary put_call_btns" id="future_add_positions" data-f&o="future" style=" color: white !important;
-              background-color: #042452; height: 36px;
-              border-color: #021a3d;">ADD POSITION</button>
+              <button class=" put_call_btns" id="future_add_positions" data-f&o="future" >ADD POSITION</button>
             </div>
 
 
+<style>
+  #future_add_positions{
+    background: green;
+    color: white;
+    height: 37px;
+    border-radius: 5px;
+    font-size: 14px;
+    width: 123px;
+    font-weight: 500;
+  }
+  #future_add_positions:active{
+    background: rgb(0, 90, 0);
+ box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;;
 
+  }
+</style>
 
           </div>
 
@@ -2050,373 +2132,6 @@ background: #439aeb1d !important;
     </div>
 
 
-
-
-    <div class="main_all_spot_futures_val">
-      <div class="spot_strategies">
-        <p class="spot_title">Spot:</p>
-
-        <div id="last_traded_price"></div>
-        <div id="closest_strike_price" style="display: none"></div>
-        <div id="closen_expiry_date" style="display: none;"></div>
-      </div>
-
-      <div class="main_futures_price_as_per_expiries">
-        <p class="futures_title">Futures: </p>
-
-        <div class="futures_ltp"></div>
-      </div>
-
-      <div class="main_max_pain_strategies">
-        <div class="max_pain_strategies d-flex align-items-center gap-1">
-          <p>Max Pain: </p>
-
-        </div>
-        <div id="max_pain_value" style="font-size: 16px;"></div>
-      </div>
-      <div class="lot_size_strategies">
-        <p>Lot Size:</p>
-        <div id="lot_size_value"></div>
-      </div>
-      <div class="low52_strategies">
-        <p>Low 52 Wk: </p>
-
-        <div id="low52_value"></div>
-      </div>
-
-      <div class="high52_strategies">
-        <p>High 52 Wk: </p>
-
-        <div id="high52_value"></div>
-      </div>
-      <div class="open_strategies">
-        <p>Open: </p>
-
-        <div id="open_value"></div>
-      </div>
-
-      <div class="low_strategies">
-        <p>Low: </p>
-
-        <div id="low_value"></div>
-      </div>
-      <div class="high_strategies">
-        <p>High: </p>
-
-        <div id="high_value"></div>
-      </div>
-
-    </div>
-    <div class="right_side_top_strategies">
-
-      <button class="d-flex align-items-center" id="all_scheduled_order">
-        <i class='bx bxs-bookmarks'></i>
-        <p style="margin-bottom: 0;">Scheduled order</p>
-      </button>
-      <script>
-
-$("#all_scheduled_order").click(function () {
-    $.ajax({
-        type: "GET",
-        url: "/dynamic_user_tasks", // Replace with the actual URL
-        success: function (response) {
-            // Log the response
-            console.log(response);
-
-            if (response.user_not_logged_in) {
-                $("#signinModal").modal("show");
-            } else {
-                $("#all_schedulerModal").modal("show");
-                var all_scheduled_order = response.tasks
-
-                console.log(all_scheduled_order);
-
-                var $allSchedulers = $(".all_schedulers").empty();
-
-                if (all_scheduled_order.length === 0) {
-                    $allSchedulers.append(`<div class="d-flex  justify-content-center p-2"> <p>No Strategies Found...</p></div>`);
-                } else {
-                    all_scheduled_order.forEach(function (schedule, index_schedulor) {
-
-                        function formatMonth(month) {
-                            const monthNames = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
-                            return monthNames[month - 1] || 'Invalid Month';
-                        }
-
-                        function formatDay(day) {
-                            const dayNames = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
-                            return dayNames[day] || 'Invalid Day';
-                        }
-
-                        console.log(schedule.id);
-
-                        function calculateTimeMedian(...timeValues) {
-                            const timeToMinutes = (time) => {
-                                const [hour, minute] = time.split(':');
-                                return parseInt(hour) * 60 + parseInt(minute);
-                            };
-
-                            const timeInMinutes = timeValues.map(timeToMinutes);
-
-                            const calculateMedian = (arr) => {
-                                const sortedArr = arr.sort((a, b) => a - b);
-                                const mid = Math.floor(sortedArr.length / 2);
-
-                                if (sortedArr.length % 2 === 0) {
-                                    return (sortedArr[mid - 1] + sortedArr[mid]) / 2;
-                                } else {
-                                    return sortedArr[mid];
-                                }
-                            };
-
-                            const medianValue = calculateMedian(timeInMinutes);
-
-                            const medianHours = Math.floor(medianValue / 60);
-                            const medianMinutes = medianValue % 60;
-
-                            const meridiem = medianHours >= 12 ? 'PM' : 'AM';
-
-                            const displayHours = medianHours % 12 || 12;
-                            const displayMinutes = medianMinutes < 10 ? `0${medianMinutes}` : medianMinutes;
-
-                            return `${displayHours}:${displayMinutes} ${meridiem}`;
-                        }
-
-                        const monthName = formatMonth(schedule.crontab_info.month_of_year);
-                        const dayName = formatDay(schedule.crontab_info.day_of_month);
-
-                        const displayYear = schedule.crontab_info.year || '*';
-
-                        var schedulesPosition = `
-                            <div class="all_schedule_order justify-content-between" data-strategy="${schedule.id}">
-                                <div class="left_strategy_name" style="font-size: 14px;" >
-                                    <div>${index_schedulor + 1}.</div>
-                                    ${schedule.custom_field.charAt(0).toUpperCase() + schedule.custom_field.slice(1)}
-                                </div>
-                                <div class="main_middle_content">
-                                    <div class="middle_date_switch">
-                                        <p style="font-size: 14px">Schedule date: ${dayName}-${monthName}-${displayYear} , ${calculateTimeMedian(`${schedule.crontab_info.hour}:${schedule.crontab_info.minute}`)}</p>
-                                        <div class="checkbox-wrapper-15">
-                                            <input id="s1-14" type="checkbox" class="switch schedule_switch" ${schedule.enabled ? 'checked' : ''}   data-active="${schedule.id}">
-                                            <label for="s1-14" class="${schedule.enabled ? 'active-label' : 'inactive-label'}">${schedule.enabled ? 'ON' : 'OFF'}</label>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="right_strategy_action" style="z-index: 9999999999999999999;">
-                                    <div class="middle_strategy_status"></div>
-                                    <div class="strategy_edit_delete">
-                                        <img src="{% static "img/delete_edit_btns/delete.png" %}" width="19px" class='cursor-pointer delete_shchedule_order' data-delete="${schedule.id}"  data-scheduler_name="${schedule.custom_field}"></i>
-                                    </div>
-                                </div>
-                            </div>`;
-
-                        $allSchedulers.append(schedulesPosition);
-                    })
-
-                    var perPage = 5;
-                    $("#pagination_container_schedule").empty()
-
-
-                    // Manually implement pagination
-                    var numPages = Math.ceil(all_scheduled_order.length / perPage);
-                    var currentPage = 1;
-
-                    // Add pagination links
-                    $('#pagination_container_schedule').append(`
-                            <a href="#" class="schedule_pagination-link prev" data-page="prev" disabled>&lt;</a>
-                          `);
-                    for (var i = 1; i <= numPages; i++) {
-                      $('#pagination_container_schedule').append(`<a href="#" class="schedule_pagination-link" data-page="${i}">${i}</a>`);
-                    }
-                    $('#pagination_container_schedule').append(`
-                          <a href="#" class="schedule_pagination-link next" data-page="next">&gt;</a>
-                        `);
-
-                    // Show the first page and mark it as active
-                    showPage(currentPage);
-                    $('#pagination_container_schedule .schedule_pagination-link[data-page="1"]').addClass('active_strategy_page');
-                    $('.schedule_pagination-link.prev').attr('disabled', true); // Disable prev initially
-
-                    // Handle schedule_pagination link click
-                    $('.schedule_pagination-link').on('click', function (e) {
-                      e.preventDefault();
-
-                      var clickedPage = $(this).data('page');
-
-                      if (clickedPage === 'prev' && currentPage > 1) {
-                        currentPage--;
-                      } else if (clickedPage === 'next' && currentPage < numPages) {
-                        currentPage++;
-                      } else if (typeof clickedPage === 'number') {
-                        currentPage = clickedPage;
-                      }
-
-                      showPage(currentPage);
-
-                      // Mark the clicked link as active_strategy_page and remove active_strategy_page class from others
-                      $('.schedule_pagination-link').removeClass('active_strategy_page');
-                      $('#pagination_container_schedule .schedule_pagination-link[data-page="' + currentPage + '"]').addClass('active_strategy_page');
-
-                      // Disable/enable prev and next based on current page
-                      $('.schedule_pagination-link.prev').attr('disabled', currentPage === 1);
-                      $('.schedule_pagination-link.next').attr('disabled', currentPage === numPages);
-                    })
-                    
-
-                   
-
-
-
-
-
-
-
-
-
-
-
-
-                    $('.schedule_switch').on('click', function () {
-                        var active = $(this).data("active");
-
-                        // Toggle the checked state of the checkbox
-                        $(this).prop('checked', !$(this).prop('checked'));
-
-                        // Toggle the label text and class based on the new checked state
-                        var main_status;
-                        if (!$(this).prop('checked')) {
-                            $(this).next('label').text('ON').removeClass('inactive-label').addClass('active-label');
-                            main_status = true;
-                            $(this).prop('checked', true);
-                        } else {
-                            $(this).next('label').text('OFF').removeClass('active-label').addClass('inactive-label');
-                            main_status = false;
-                            $(this).prop('checked', false);
-                        }
-
-                        // Update the status in the UI immediately
-                        updateSchedulerStatus(active, main_status);
-                    });
-
-                    $(".delete_shchedule_order").click(function () {
-                        var deleteId = $(this).data("delete");
-                        var scheduler_name = $(this).data("scheduler_name");
-
-                        // Remove the item from the UI immediately
-                        $(`[data-strategy="${deleteId}"]`).remove();
-
-                        // Call the server to delete the item
-                        deleteScheduler(deleteId,scheduler_name);
-                    })
-                }
-            }
-        },
-        error: function (xhr, status, error) {
-            // Log and handle the error
-            console.error("AJAX request failed:", status, error);
-        }
-    });
-});
-function showPage(page) {
-                        console.log("page",page);
-                       $(".all_schedulers").find('.all_schedule_order').hide();
-                                          var startIndex = (page - 1) * 5;
-                                          var endIndex = startIndex + 5;
-                                       $(".all_schedulers").find('.all_schedule_order').slice(startIndex, endIndex).show();
-                                        }
-                                        
-function updateSchedulerStatus(active, main_status) {
-    $.ajax({
-        type: "POST",
-        url: "/update_scheduler_status", // Replace with the actual URL
-        data: { active: active, main_status: main_status },
-        success: function (response) {
-            // Log the response
-            console.log(response);
-        },
-        error: function (error) {
-            // Handle the error
-            console.log("Error:", error);
-        }
-    });
-}
-
-function deleteScheduler(deleteId,scheduler_name) {
-    $.ajax({
-        type: "POST",
-        url: "/delete_scheduler", // Replace with the actual URL
-        data: { delete_id: deleteId },
-        success: function (response) {
-            // Log the response
-            console.log(response);
-            if (response.status=="success") {
-
-              toastr.error(` ${scheduler_name} has been deleted  !! `)
-              
-            }
-        },
-        error: function (error) {
-            // Handle the error
-            console.log("Error:", error);
-        }
-    });
-}
-
-      </script>
-      <button class="d-flex align-items-center" id="saveStrategies">
-        <p style="margin-bottom: 0;">Strategies Saved</p>
-      </button>
-      <button style="padding: 0px 14px;" class="btn_outline_primary" type="button" data-bs-toggle="offcanvas"
-        data-bs-target="#optionChain_canvas" aria-controls="optionChain_canvasLabel" id="buid_custom_strategy_btn">
-        Option Chain
-        <i class="bx bx-chevron-down"></i>
-      </button>
-
-      <button class="btn_add_broker" data-bs-toggle="offcanvas" data-bs-target="#add_api" aria-controls="add_api">
-        Add Broker
-      </button>
-
-      <div class="activate_broker_toggle_main_btn">
-
-
-
-        <button class="btn_outline_primary" class="all_api_details" data-bs-toggle="collapse" id="Activate_broker_btn">
-          Activate Broker <i class="bx bx-chevron-down"></i>
-        </button>
-
-
-        <div id="overlay"></div>
-
-        <div class="" id="active_broker_modal" style="display: none;">
-          <div class="dismiss_active_modal">
-            <!-- <i class="bx bx-plus dismiss_icon_active_modal"></i> -->
-            <div class="triangle-up-active-modal"></div>
-          </div>
-          <div class="modal_dialog">
-            <div class="modal_content">
-
-
-              <div class="all_broker">
-                <div id="zerodha_data_display"></div>
-              </div>
-
-
-
-
-
-            </div>
-          </div>
-        </div>
-
-      </div>
-
-
-
-
-      <button id="order_btn">Order History</button>
-
-
-    </div>
 
 
 
@@ -4922,7 +4637,7 @@ font-weight: 100 !important ;
   color: #344054;
   border: 0;
   background: #E5EFFB;
-  border-radius: 12px;
+
   width: 101px;
     text-align: center;
     height: 32px;
@@ -4932,7 +4647,7 @@ font-weight: 100 !important ;
   color: #FFFFFF;
   border: 0;
   background: #006CE6;
-  border-radius: 12px;
+
   width: 101px;
     text-align: center;
     height: 32px;
@@ -4942,7 +4657,7 @@ font-weight: 100 !important ;
   color: #FFFFFF !important;
   border: 0;
   background: #006CE6  !important;
-  border-radius: 12px;
+
   width: 101px;
     text-align: center;
     height: 32px;
@@ -4953,23 +4668,1459 @@ font-weight: 100 !important ;
 .main_filter_strategies_btns button:active {
   box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
 }
+.nav-link{
+  cursor: pointer;
+}
   </style>
+   
+   <ul class="nav nav-tabs">
+    <li class="nav-item">
+      <a class="nav-link active" data-toggle="tab" data-filter_val="popular">Popular</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" data-filter_val="bull">Bullish</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" data-filter_val="bear">Bearish</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab"data-filter_val="neutral">Neutral</a>
+    </li>
+  </ul>
+  <div class="tab-content">
+    <div class="All_option_startegies_builder">
+      <div class="pre_built_simu">
+        <div class="pre_build_title">
+  
+        </div>
+       
+        <div class="strategy_simu">
+          <div class="main_straddle">
+            
+            <button class="straddle" id="straddle" >
+  
+              <div class="main_strategy_img_title">
+                <div class="style__PresetStrategyCard-sc-1f57s5d-6 jyZMZN">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="62" height="45" viewBox="0 0 62 45" class="SVGLoader__StyledComp-sc-1ak2cuz-1 jss619">
+                  <g fill="none" fill-rule="evenodd"><path stroke="var(--dividerColor)" stroke-linecap="square" d="M0.5 0L0.5 43.237" transform="translate(1 1)"></path><path stroke="var(--dividerColor)" stroke-dasharray="5 5" stroke-linecap="round" d="M0.462 23L60 23" transform="translate(1 1)"></path>
+                    <g stroke-width="2"><path stroke="var(--lossColor)" d="M0 33L7.936 23.988 13.985 16.988" transform="translate(1 1) translate(0 6)"></path><path stroke="var(--profitColor)" d="M13.985 16.988L29 0" transform="translate(1 1) translate(0 6)"></path>
+                      <g><path stroke="var(--lossColor)" d="M0 33L7.936 23.988 13.985 16.988" transform="translate(1 1) translate(0 6) matrix(-1 0 0 1 57 0)"></path>
+                        <path stroke="var(--profitColor)" d="M13.985 16.988L29 0" transform="translate(1 1) translate(0 6) matrix(-1 0 0 1 57 0)"></path></g></g>
+                      </g></svg>
+                      <div class="title">Short Straddle</div>
+                    
+                    </div>
+   
+  
+                  </button>
+  
+          
+            
+            </b>
+  
+            <div class="" id="straddle_modal">
+              <div class="dismiss">
+                <i class="bx bx-plus dismiss_icon"></i>
+                <div class="triangle-up"></div>
+              </div>
+              <div class="modal_dialog">
+                <div class="modal_content">
+                  <div class="modal_body" id="modal_body">
+                    <div class="main_straddle_inner">
+                      <h5 class="text-center">Straddle</h5>
+  
+                      <div class="main_body_fields_straddle">
+                        <div class="main_strikePrice mb-3">
+                          <p>1x</p>
+                          <div class="strategy_inputs">
+                            <label for="strikePrice">Strike Price</label>
+                            <select class="strike_price_input form-select" id="strikeSelect_straddle"></select>
+                          </div>
+                          <p class="pe_ce">PE / CE</p>
+                        </div>
+                        <div class="strategy_inputs mb-3">
+                          <label for="expirydate">Expiry Date</label>
+                          <select class="expiry_date_input form-select" id="expiryDate_straddle"></select>
+                        </div>
+  
+                        <div class="main_counter d-flex gap-3 mb-3">
+                          <div class="innerStraddle_lot_size">
+                            <p class="fs-6 lot_title">Qty:</p>
+                            <div class="counter_straddle d-flex justify-content-center gap-1">
+                              <button class="btn" id="decrement">
+                                <i class="bx bx-minus"></i>
+                              </button>
+                              <input type="text" name="" id="counter_input" min="1" disabled />
+                              <button class="btn" id="increment">
+                                <i class="bx bx-plus"></i>
+                              </button>
+                            </div>
+                          </div>
+                          <button class="" id="shortStraddle">SELL</button>
+                        </div>
+                      </div>
+                    </div>
+  
+                    <div class="buy_sell_buttons d-flex gap-2 justify-content-center"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+  
+          <div class="main-stranggle">
+            <div class="straddle" id="strangle">
+              
+              <div class="main_strategy_img_title">
+                <div class="style__PresetStrategyCard-sc-1f57s5d-6 jyZMZN">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="62" height="45" viewBox="0 0 62 45" class="SVGLoader__StyledComp-sc-1ak2cuz-1 jss619"><g fill="none" fill-rule="evenodd"><path stroke="var(--dividerColor)" stroke-linecap="square" d="M0.5 0L0.5 43.237" transform="translate(1 1)"></path><path stroke="var(--dividerColor)" stroke-dasharray="5 5" stroke-linecap="round" d="M0.462 23L60 23" transform="translate(1 1)"></path><path stroke="var(--lossColor)" stroke-width="2" d="M1.918 38.5L7.668 23" transform="translate(1 1)"></path><path stroke="var(--lossColor)" stroke-width="2" d="M49.44 38.5L54.452 23" transform="translate(1 1) matrix(-1 0 0 1 103.892 0)"></path><path stroke="var(--profitColor)" stroke-width="2" d="M7.668 23L12.244 10 45.528 10 49.44 23" transform="translate(1 1)"></path></g></svg>
+                      <div class="title">Short Strangle</div>
+                    
+                    </div>
+   
+  
+              </div>
+  
+            </div>
+            <div class="" id="strangle_modal">
+              <div class="dismiss">
+                <i class="bx bx-plus dismiss_icon"></i>
+                <div class="triangle-up"></div>
+              </div>
+              <div class="modal_dialog">
+                <div class="modal_content">
+                  <div class="modal_body" id="modal_body">
+                    <div class="main_strangle">
+                      <h5 class="text-center">Strangle</h5>
+  
+                      <div class="main_body_fields_strangle">
+                        <div class="main_strikePrice mb-3">
+                          <div class="strangle_lot_size">
+                            <span id="put_stangle_lot_size"></span><span>x</span>
+                          </div>
+                          <div class="strategy_inputs">
+                            <label for="strikePrice">Put Strike Price</label>
+                            <select class="strike_price_input form-select" id="put_strikeSelect_strangle"></select>
+                          </div>
+                          <p class="pe_ce">PE</p>
+                        </div>
+  
+                        <div class="main_strikePrice mb-3">
+                          <div class="strangle_lot_size">
+                            <span id="call_stangle_lot_size"></span><span>x</span>
+                          </div>
+                          <div class="strategy_inputs">
+                            <label for="strikePrice">Call Strike Price</label>
+                            <select class="strike_price_input form-select" id="call_strikeSelect_strangle"></select>
+                          </div>
+                          <p class="pe_ce">CE</p>
+                        </div>
+  
+                        <div class="strategy_inputs mb-3">
+                          <label for="expirydate">Expiry Date</label>
+                          <select class="expiry_date_input form-select" id="expiryDate_strangle"></select>
+                        </div>
+  
+                        <div class="main_counter d-flex gap-2 mb-3">
+                          <div class="innerStraddle_lot_size d-flex gap-2">
+                            <p class="fs-5 lot_title">Qty:</p>
+                            <div class="counter_strangle d-flex justify-content-center gap-1">
+                              <button class="btn" id="decrement_strangle">
+                                <i class="bx bx-minus"></i>
+                              </button>
+                              <input type="text" name="" id="counter_input_strangle" min="1" disabled />
+                              <button class="btn" id="increment_strangle">
+                                <i class="bx bx-plus"></i>
+                              </button>
+                            </div>
+                          </div>
+                          <button class="" id="shortStrangle">SELL</button>
+                        </div>
+                      </div>
+                    </div>
+  
+                    <!-- <div class="buy_sell_buttons d-flex gap-2 justify-content-center">
+  
+                                    
+  
+                                  </div> -->
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+  
+          <div class="main-spread">
+            <div class="straddle" id="spread">   
+                         
+              <div class="main_strategy_img_title">
+                <div class="style__PresetStrategyCard-sc-1f57s5d-6 jyZMZN">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="62" height="45" viewBox="0 0 62 45" class="SVGLoader__StyledComp-sc-1ak2cuz-1 jss619"><g fill="none" fill-rule="evenodd"><path stroke="var(--dividerColor)" stroke-linecap="square" d="M0.5 0L0.5 43.237" transform="translate(1 1)"></path><path stroke="var(--dividerColor)" stroke-dasharray="5 5" stroke-linecap="round" d="M0.462 23L60 23" transform="translate(1 1)"></path><g stroke-width="2"><path stroke="var(--profitColor)" d="M0 22.988L12.009 22.988 30 7" transform="translate(1 1) matrix(1 0 0 -1 1 30)"></path><path stroke="var(--lossColor)" d="M30 7L37.618 0 54.967 0" transform="translate(1 1) matrix(1 0 0 -1 1 30)"></path></g></g></svg>                 
+                          <div class="title">Bear Put Spread</div>
+                                          
+                    </div>
+   
+  
+              </div>
+            </div>
+  
+  
+  
+  
+            <div class="" id="spread_modal">
+              <div class="dismiss">
+                <i class="bx bx-plus dismiss_icon"></i>
+                <div class="triangle-up"></div>
+              </div>
+              <div class="modal_dialog">
+                <div class="modal_content">
+                  <div class="modal_body" id="modal_body">
+                    <div class="main_spread">
+                      <h5 class="text-center">Spread</h5>
+  
+                      <div class="main_body_fields_spread">
+                        <div class="main_strikePrice mb-3">
+                          <div class="spread_lot_size">
+                            <span id="put_spread_lot_size"></span><span>x</span>
+                          </div>
+                          <div class="strategy_inputs">
+                            <label for="strikePrice">Put Strike Price</label>
+                            <select class="strike_price_input form-select" id="put_strikeSelect_spread"></select>
+                          </div>
+                          <p class="pe_ce">CE</p>
+                        </div>
+  
+                        <div class="main_strikePrice mb-3">
+                          <div class="spread_lot_size">
+                            <span id="call_spread_lot_size"></span><span>x</span>
+                          </div>
+                          <div class="strategy_inputs">
+                            <label for="strikePrice">Call Strike Price</label>
+                            <select class="strike_price_input form-select" id="call_strikeSelect_spread"></select>
+                          </div>
+                          <p class="pe_ce">CE</p>
+                        </div>
+  
+                        <div class="strategy_inputs mb-3">
+                          <label for="expirydate">Expiry Date</label>
+                          <select class="expiry_date_input form-select" id="expiryDate_spread"></select>
+                        </div>
+  
+                        <div class="main_counter d-flex gap-3 mb-3">
+                          <div class="inner_spread_lot_size d-flex gap-2">
+                            <p class="fs-5 lot_title">Qty:</p>
+                            <div class="counter_spread d-flex justify-content-center gap-1">
+                              <button class="btn" id="decrement_spread">
+                                <i class="bx bx-minus"></i>
+                              </button>
+                              <input type="text" name="" id="counter_input_spread" min="1" disabled />
+                              <button class="btn" id="increment_spread">
+                                <i class="bx bx-plus"></i>
+                              </button>
+                            </div>
+                          </div>
+                          <button class="" id="shortSpread">SELL</button>
+                        </div>
+                      </div>
+                    </div>
+  
+                    <div class="buy_sell_buttons d-flex gap-2 justify-content-center"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="main-ironfly">
+            <div class="straddle" id="iron_fly"> 
+  
+              <div class="main_strategy_img_title">
+                <div class="style__PresetStrategyCard-sc-1f57s5d-6 jyZMZN">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="62" height="45" viewBox="0 0 62 45" class="SVGLoader__StyledComp-sc-1ak2cuz-1 jss619"><g fill="none" fill-rule="evenodd"><path stroke="var(--dividerColor)" stroke-linecap="square" d="M0.5 0L0.5 43.237" transform="translate(1 1)"></path><path stroke="var(--dividerColor)" stroke-dasharray="5 5" stroke-linecap="round" d="M0.462 23L60 23" transform="translate(1 1)"></path><path stroke="var(--lossColor)" stroke-width="2" d="M0.5 32.5L17.918 32.5 21.5 23" transform="translate(1 1)"></path><path stroke="var(--lossColor)" stroke-width="2" d="M35.5 32.5L52.918 32.5 56.5 23" transform="translate(1 1) matrix(-1 0 0 1 92 0)"></path><path stroke="var(--profitColor)" stroke-width="2" d="M21.5 23L28.244 4 35.5 23" transform="translate(1 1)"></path></g></svg>
+                      <div class="title">Iron Butterfly</div>
+                    
+                    </div>
+   
+  
+              </div>
+              
+              
+              
+              
+            </div>
+            <div class="" id="ironFly_modal">
+              <div class="dismiss">
+                <i class="bx bx-plus dismiss_icon"></i>
+                <div class="triangle-up"></div>
+              </div>
+              <div class="modal_dialog">
+                <div class="modal_content">
+                  <div class="modal_body" id="modal_body">
+                    <div class="main_ironFly">
+                      <h5 class="text-center">Iron Fly</h5>
+  
+                      <div class="main_body_fields_ironFly">
+                        <div class="main_strikePrice mb-3">
+                          <div class="ironFly_lot_size">
+                            <span id="put_ironFly_lot_size"></span><span>x</span>
+                          </div>
+                          <div class="strategy_inputs">
+                            <label for="strikePrice">Put Strike Price</label>
+                            <select class="strike_price_input form-select" id="put_strikeSelect_ironFly"></select>
+                          </div>
+                          <p class="pe_ce">PE</p>
+                        </div>
+                        <div class="main_strikePrice mb-3" id="put_call_select">
+                          <div class="ironFly_lot_size">
+                            <span id="put_call_ironFly_lot_size"></span><span>x</span>
+                          </div>
+                          <div class="strategy_inputs">
+                            <label for="strikePrice">Put/Call Strike Price</label>
+                            <select class="strike_price_input form-select" id="put_call_strikeSelect_ironFly"></select>
+                          </div>
+                          <p class="pe_ce">PE/CE</p>
+                        </div>
+  
+                        <div class="main_strikePrice mb-3">
+                          <div class="ironFly_lot_size">
+                            <span id="call_ironFly_lot_size"></span><span>x</span>
+                          </div>
+                          <div class="strategy_inputs">
+                            <label for="strikePrice">Call Strike Price</label>
+                            <select class="strike_price_input form-select" id="call_strikeSelect_ironFly"></select>
+                          </div>
+                          <p class="pe_ce">CE</p>
+                        </div>
+  
+                        <div class="strategy_inputs mb-3">
+                          <label for="expirydate">Expiry Date</label>
+                          <select class="expiry_date_input form-select" id="expiryDate_ironFly"></select>
+                        </div>
+  
+                        <div class="main_counter d-flex gap-3 mb-3">
+                          <div class="inner_inroFly_counter d-flex gap-2">
+                            <p class="fs-5 lot_title">Qty:</p>
+                            <div class="counter_ironFly d-flex justify-content-center gap-1">
+                              <button class="btn" id="decrement_ironFly">
+                                <i class="bx bx-minus"></i>
+                              </button>
+                              <input type="text" name="" id="counter_input_ironFly" min="1" disabled />
+                              <button class="btn" id="increment_ironFly">
+                                <i class="bx bx-plus"></i>
+                              </button>
+                            </div>
+  
+                            <button class="" id="shortironFly">SELL</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+  
+                    <!-- <div class="buy_sell_buttons d-flex gap-2 justify-content-center">
+  
+                            
+  
+                              </div> -->
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+  
+  
+          <style>
+            @media (min-width: 992px) {
+              .col-lg-4 {
+                flex: 0 0 auto !important;
+                width: 31.333333% !important;
+              }
+  
+              .col-lg-7 {
+                flex: 0 0 auto !important;
+                width: 67.333333% !important;
+              }
+            }
+  
+            .payoff_table_main_table thead {
+              position: sticky;
+              top: 0px;
+            }
+          </style>
+  
+          <div class="main-ironCondor">
+            <div class="straddle" id="iron_condor">  
+              
+              <div class="main_strategy_img_title">
+                <div class="style__PresetStrategyCard-sc-1f57s5d-6 jyZMZN">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="62" height="45" viewBox="0 0 62 45" class="SVGLoader__StyledComp-sc-1ak2cuz-1 jss619"><g fill="none" fill-rule="evenodd"><path stroke="var(--dividerColor)" stroke-linecap="square" d="M0.5 0L0.5 43.237" transform="translate(1 1)"></path><path stroke="var(--dividerColor)" stroke-dasharray="5 5" stroke-linecap="round" d="M0.462 23L60 23" transform="translate(1 1)"></path><path stroke="var(--lossColor)" stroke-width="2" d="M0.5 32.5L12.918 32.5 16.5 23" transform="translate(1 1)"></path><path stroke="var(--lossColor)" stroke-width="2" d="M40.5 32.5L52.918 32.5 56.5 23" transform="translate(1 1) matrix(-1 0 0 1 97 0)"></path><path stroke="var(--profitColor)" stroke-width="2" d="M16.5 23L23.244 4 34.528 4 40.5 23" transform="translate(1 1)"></path></g></svg>
+                      <div class="title">Short Iron Condor</div>
+                    
+                    </div>
+   
+  
+              </div>
+            
+            
+            </div>
+            <div class="" id="ironCondor_modal">
+              <div class="dismiss">
+                <i class="bx bx-plus dismiss_icon"></i>
+                <div class="triangle-up"></div>
+              </div>
+              <div class="modal_dialog">
+                <div class="modal_content">
+                  <div class="modal_body" id="modal_body">
+                    <div class="main_ironCondor">
+                      <h5 class="text-center">Iron Condor</h5>
+  
+                      <div class="main_body_fields_ironCondor">
+                        <div class="main_strikePrice mb-3">
+                          <div class="ironCondor_lot_size">
+                            <span id="put_ironCondor_lot_size"></span><span>x</span>
+                          </div>
+                          <div class="strategy_inputs">
+                            <label for="strikePrice">Put Strike Price</label>
+                            <select class="strike_price_input form-select" id="put_strikeSelect_ironCondor"></select>
+                          </div>
+                          <p class="pe_ce">PE</p>
+                        </div>
+                        <div class="main_strikePrice mb-3">
+                          <div class="ironCondor_lot_size">
+                            <span id="put_2nd_ironCondor_lot_size"></span><span>x</span>
+                          </div>
+                          <div class="strategy_inputs">
+                            <label for="strikePrice">Put/Call Strike Price</label>
+                            <select class="strike_price_input form-select" id="put_2nd_strikeSelect_ironCondor"></select>
+                          </div>
+                          <p class="pe_ce">PE</p>
+                        </div>
+                        <div class="main_strikePrice mb-3">
+                          <div class="ironCondor_lot_size">
+                            <span id="call_2nd_ironCondor_lot_size"></span><span>x</span>
+                          </div>
+                          <div class="strategy_inputs">
+                            <label for="strikePrice">Put/Call Strike Price</label>
+                            <select class="strike_price_input form-select" id="call_2nd_strikeSelect_ironCondor"></select>
+                          </div>
+                          <p class="pe_middla">CE</p>
+                        </div>
+  
+                        <div class="main_strikePrice mb-3">
+                          <div class="ironCondor_lot_size">
+                            <span id="call_ironCondor_lot_size"></span><span>x</span>
+                          </div>
+                          <div class="strategy_inputs">
+                            <label for="strikePrice">Call Strike Price</label>
+                            <select class="strike_price_input form-select" id="call_strikeSelect_ironCondor"></select>
+                          </div>
+                          <p class="pe_middle">CE</p>
+                        </div>
+  
+                        <div class="strategy_inputs mb-3">
+                          <label for="expirydate">Expiry Date</label>
+                          <select class="expiry_date_input form-select" id="expiryDate_ironCondor"></select>
+                        </div>
+  
+                        <div class="main_counter d-flex gap-3 mb-3">
+                          <div class="inner_inroFly_counter d-flex gap-2">
+                            <p class="fs-5 lot_title">Qty:</p>
+                            <div class="counter_ironCondor d-flex justify-content-center gap-1">
+                              <button class="btn" id="decrement_ironCondor">
+                                <i class="bx bx-minus"></i>
+                              </button>
+                              <input type="text" name="" id="counter_input_ironCondor" min="1" disabled />
+                              <button class="btn" id="increment_ironCondor">
+                                <i class="bx bx-plus"></i>
+                              </button>
+                            </div>
+  
+                            <button class="" id="short_ironCondor">SELL</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+  
+                    <!-- <div class="buy_sell_buttons d-flex gap-2 justify-content-center">
+  
+                        
+  
+                          </div> -->
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="main-jaze_lizard">
+            <div class="straddle" id="jaze_lizard">   
+              
+              <div class="main_strategy_img_title">
+                <div class="style__PresetStrategyCard-sc-1f57s5d-6 jyZMZN">
+                  <svg width="62" height="45" viewBox="0 0 62 45" fill="none" xmlns="http://www.w3.org/2000/svg" class="SVGLoader__StyledComp-sc-1ak2cuz-1 jss619"><path d="M1.5 1V44.2366" stroke="var(--dividerColor)" stroke-linecap="square"></path><path d="M1.46154 24H61" stroke="var(--dividerColor)" stroke-linecap="round" stroke-dasharray="5 5"></path><path d="M61.0268 20.5881H47.3778L41.5606 18.4995H29.9108L22.4351 23.9932" stroke="var(--profitColor)" stroke-width="2"></path><path d="M1.94971 38.9844L22.4351 23.9932" stroke="var(--lossColor)" stroke-width="2"></path></svg>
+                      <div class="title">Jade Lizard</div>
+                    
+                    </div>
+   
+  
+              </div>
+            
+            
+            </div>
+            <div class="" id="jaze_lizard_modal">
+              <div class="dismiss">
+                <i class="bx bx-plus dismiss_icon"></i>
+                <div class="triangle-up"></div>
+              </div>
+              <div class="modal_dialog">
+                <div class="modal_content">
+                  <div class="modal_body" id="modal_body">
+                    <div class="main_jaze_lizard">
+                      <h5 class="text-center">Jaze Lizard</h5>
+  
+                      <div class="main_body_fields_jaze_lizard">
+                        <div class="main_strikePrice mb-3">
+                          <div class="jaze_lizard_lot_size">
+                            <span id="call_jaze_lizard_lot_size"></span><span>x</span>
+                          </div>
+                          <div class="strategy_inputs">
+                            <label for="strikePrice">Put Strike Price</label>
+                            <select class="strike_price_input form-select" id="call_strikeSelect_jaze_lizard"></select>
+                          </div>
+                          <p class="pe_ce">CE</p>
+                        </div>
+                        <div class="main_strikePrice mb-3">
+                          <div class="jaze_lizard_lot_size">
+                            <span id="call_2nd_jaze_lizard_lot_size"></span><span>x</span>
+                          </div>
+                          <div class="strategy_inputs">
+                            <label for="strikePrice">Put/Call Strike Price</label>
+                            <select class="strike_price_input form-select"
+                              id="call_2nd_strikeSelect_jaze_lizard"></select>
+                          </div>
+                          <p class="pe_ce">CE</p>
+                        </div>
+  
+                        <div class="main_strikePrice mb-3">
+                          <div class="jaze_lizard_lot_size">
+                            <span id="put_jaze_lizard_lot_size"></span><span>x</span>
+                          </div>
+                          <div class="strategy_inputs">
+                            <label for="strikePrice">Call Strike Price</label>
+                            <select class="strike_price_input form-select" id="put_strikeSelect_jaze_lizard"></select>
+                          </div>
+                          <p class="pe_ce">PE</p>
+                        </div>
+  
+                        <div class="strategy_inputs mb-3">
+                          <label for="expirydate">Expiry Date</label>
+                          <select class="expiry_date_input form-select" id="expiryDate_jaze_lizard"></select>
+                        </div>
+  
+                        <div class="main_counter d-flex gap-3 mb-3">
+                          <div class="inner_inroFly_counter d-flex gap-2">
+                            <p class="fs-5 lot_title">Qty:</p>
+                            <div class="counter_jaze_lizard d-flex justify-content-center gap-1">
+                              <button class="btn" id="decrement_jaze_lizard">
+                                <i class="bx bx-minus"></i>
+                              </button>
+                              <input type="text" name="" id="counter_input_jaze_lizard" min="1" disabled />
+                              <button class="btn" id="increment_jaze_lizard">
+                                <i class="bx bx-plus"></i>
+                              </button>
+                            </div>
+  
+                            <button class="" id="shortjaze_lizard">SELL</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+  
+                    <!-- <div class="buy_sell_buttons d-flex gap-2 justify-content-center">
+  
+                        
+  
+                          </div> -->
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+  
+          <div class="main-double-iron-fly">
+            <div class="straddle" id="double_iron_fly">  
+              
+              <div class="main_strategy_img_title">
+                <div class="style__PresetStrategyCard-sc-1f57s5d-6 jyZMZN">
+  
+                  <svg width="62" height="45" viewBox="0 0 62 45" fill="none" xmlns="http://www.w3.org/2000/svg" class="SVGLoader__StyledComp-sc-1ak2cuz-1 jss619"><path d="M1.5 1V44.2366" stroke="var(--dividerColor)" stroke-linecap="square"></path><path d="M1.46154 24H61" stroke="var(--dividerColor)" stroke-linecap="round" stroke-dasharray="5 5"></path><path d="M9.4668 24L16.0001 17L22.1766 24M40.3237 24L46.5001 17L53.0335 24" stroke="var(--profitColor)" stroke-width="2"></path><path d="M2 32L9.46667 24M60.5 32L53.0333 24M22.1765 24L23.5 25.5H39L40.3235 24" stroke="var(--lossColor)" stroke-width="2"></path></svg>
+  
+                  <div class="title">Double Fly</div>
+                    
+                    </div>
+   
+  
+              </div>
+            
+            
+            
+            </div>
+  
+  
+  
+            <div class="" id="double_iron_fly_modal">
+              <div class="dismiss">
+                <i class="bx bx-plus dismiss_icon"></i>
+                <div class="triangle-up"></div>
+              </div>
+              <div class="modal_dialog">
+                <div class="modal_content">
+                  <div class="modal_body" id="modal_body">
+                    <div class="main_double_iron_fly">
+                      <h5 class="text-center">Double Fly</h5>
+  
+                      <div class="main_body_fields_double_iron_fly">
+  
+  
+                        <!-- first_position_double_fly -->
+  
+  
+  
+  
+  
+  
+  
+                        <div class="main_strikePrice mb-3">
+                          <div class="double_iron_fly_lot_size">
+                            <span id="put_strike_eight_hundred_iron_fly_lot_size"></span><span>x</span>
+                          </div>
+                          <div class="strategy_inputs">
+                            <label for="strikePrice">Put Strike Price</label>
+                            <select class="strike_price_input form-select"
+                              id="put_strike_eight_hundred_Select_double_iron_fly"></select>
+                          </div>
+                          <p class="pe_ce">PE</p>
+                        </div>
+  
+                        <!-- second_position_double_fly -->
+  
+                        <div class="main_strikePrice mb-3">
+                          <div class="double_iron_fly_lot_size">
+                            <span id="call_2nd_double_iron_fly_lot_size"></span><span>x</span>
+                          </div>
+                          <div class="strategy_inputs">
+                            <label for="strikePrice">Put/Call Strike Price</label>
+                            <select class="strike_price_input form-select"
+                              id="call_put_four_hundred_Select_double_iron_fly"></select>
+                          </div>
+                          <p class="pe_ce">PE/CE</p>
+                        </div>
+  
+  
+                        <!-- third_position_double_fly -->
+  
+                        <div class="main_strikePrice mb-3">
+                          <div class="double_iron_fly_lot_size">
+                            <span id="call_spot_double_iron_fly_lot_size"></span><span>x</span>
+                          </div>
+                          <div class="strategy_inputs">
+                            <label for="strikePrice">Call Strike Price</label>
+                            <select class="strike_price_input form-select"
+                              id="call_spot_strikeSelect_double_iron_fly"></select>
+                          </div>
+                          <p class="pe_ce">CE</p>
+                        </div>
+  
+                        <!-- four_position_double_fly -->
+  
+                        <div class="main_strikePrice mb-3">
+                          <div class="double_iron_fly_lot_size">
+                            <span id="put_positive_four_hundred_double_iron_fly_lot_size"></span><span>x</span>
+                          </div>
+                          <div class="strategy_inputs">
+                            <label for="strikePrice">Put Strike Price</label>
+                            <select class="strike_price_input form-select"
+                              id="put_positive_four_hundred_strikeSelect_double_iron_fly"></select>
+                          </div>
+                          <p class="pe_ce">PE</p>
+                        </div>
+  
+                        <!-- five_position_double_fly -->
+  
+                        <div class="main_strikePrice mb-3">
+                          <div class="double_iron_fly_lot_size">
+                            <span id="call_put_positive_eight_hundred_double_iron_fly_lot_size"></span><span>x</span>
+                          </div>
+                          <div class="strategy_inputs">
+                            <label for="strikePrice">Call/Put Strike Price</label>
+                            <select class="strike_price_input form-select"
+                              id="call_put_positive_eight_hundred_strikeSelect_double_iron_fly"></select>
+                          </div>
+                          <p class="pe_ce">CE/PE</p>
+                        </div>
+                        <!-- six_position_double_fly -->
+  
+                        <div class="main_strikePrice mb-3">
+                          <div class="double_iron_fly_lot_size">
+                            <span id="call_twelve_hundred_positive_double_iron_fly_lot_size"></span><span>x</span>
+                          </div>
+                          <div class="strategy_inputs">
+                            <label for="strikePrice">Call Strike Price</label>
+                            <select class="strike_price_input form-select"
+                              id="call_twelve_hundred_positive_strikeSelect_double_iron_fly"></select>
+                          </div>
+                          <p class="pe_ce">CE</p>
+                        </div>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+                        <div class="strategy_inputs mb-3">
+                          <label for="expirydate">Expiry Date</label>
+                          <select class="expiry_date_input form-select" id="expiryDate_double_iron_fly"></select>
+                        </div>
+  
+                        <div class="main_counter d-flex gap-3 mb-3">
+                          <div class="inner_inroFly_counter d-flex gap-2">
+                            <p class="fs-5 lot_title">Qty:</p>
+                            <div class="counter_double_iron_fly d-flex justify-content-center gap-1">
+                              <button class="btn" id="decrement_double_iron_fly">
+                                <i class="bx bx-minus"></i>
+                              </button>
+                              <input type="text" name="" id="counter_input_double_iron_fly" min="1" disabled />
+                              <button class="btn" id="increment_double_iron_fly">
+                                <i class="bx bx-plus"></i>
+                              </button>
+                            </div>
+  
+                            <button class="" id="shortdouble_iron_fly">SELL</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+  
+                    <!-- <div class="buy_sell_buttons d-flex gap-2 justify-content-center">
+  
+                        
+  
+                          </div> -->
+                  </div>
+                </div>
+              </div>
+            </div>
+  
+  
+  
+  
+  
+          </div>
+          <div class="main-double-candor">
+            <div class="straddle" id="double_iron_condor">   
+              
+              
+              <div class="main_strategy_img_title">
+                <div class="style__PresetStrategyCard-sc-1f57s5d-6 jyZMZN">
+  
+                  <svg width="62" height="45" viewBox="0 0 62 45" fill="none" xmlns="http://www.w3.org/2000/svg" class="SVGLoader__StyledComp-sc-1ak2cuz-1 jss619"><path d="M1.5 1V44.2366" stroke="var(--dividerColor)" stroke-linecap="square"></path><path d="M1.46154 24H61" stroke="var(--dividerColor)" stroke-linecap="round" stroke-dasharray="5 5"></path><path d="M23.0152 24L17.5 11H11L5.48486 24M39.8788 24L45 11H52L57.5152 24" stroke="var(--profitColor)" stroke-width="2"></path><path d="M2 27.5H4L5.48485 24M61 27.5H59L57.5152 24M23.0152 24L24.5 27.5H38.5L39.8788 24" stroke="var(--lossColor)" stroke-width="2"></path></svg>
+                  <div class="title">Double Condor</div>
+                    
+                    </div>
+   
+  
+              </div>
+            
+            
+            
+            </div>
+  
+            <div class="" id="double_iron_condor_modal">
+              <div class="dismiss">
+                <i class="bx bx-plus dismiss_icon"></i>
+                <div class="triangle-up"></div>
+              </div>
+              <div class="modal_dialog">
+                <div class="modal_content">
+                  <div class="modal_body" id="modal_body">
+                    <div class="main_double_iron_condor">
+                      <h5 class="text-center">Double Condor</h5>
+  
+                      <div class="main_body_fields_double_iron_condor">
+  
+  
+                        <!-- first_position_double_condor -->
+  
+  
+                        <div class="main_strikePrice mb-3">
+                          <div class="double_iron_condor_lot_size">
+                            <span id="put_spot_double_iron_condor_lot_size"></span><span>x</span>
+                          </div>
+                          <div class="strategy_inputs">
+                            <label for="strikePrice">Put Strike Price</label>
+                            <select class="strike_price_input form-select" id="spot_Select_double_iron_condor"></select>
+                          </div>
+                          <p class="pe_ce">PE</p>
+                        </div>
+  
+                        <!-- second_position_double_condor -->
+  
+                        <div class="main_strikePrice mb-3">
+                          <div class="double_iron_condor_lot_size">
+                            <span id="put_negative_fifty_double_iron_condor_lot_size"></span><span>x</span>
+                          </div>
+                          <div class="strategy_inputs">
+                            <label for="strikePrice">Put Strike Price</label>
+                            <select class="strike_price_input form-select"
+                              id="put_negative_fifty_Select_double_iron_condor"></select>
+                          </div>
+                          <p class="pe_ce">PE</p>
+                        </div>
+  
+  
+                        <!-- third_position_double_condor -->
+  
+                        <div class="main_strikePrice mb-3">
+                          <div class="double_iron_condor_lot_size">
+                            <span id="put_negative_two_hundred_double_iron_condor_lot_size"></span><span>x</span>
+                          </div>
+                          <div class="strategy_inputs">
+                            <label for="strikePrice">Put Strike Price</label>
+                            <select class="strike_price_input form-select"
+                              id="put_negative_two_hundred_Select_double_iron_condor"></select>
+                          </div>
+                          <p class="pe_ce">PE</p>
+                        </div>
+  
+                        <!-- four_position_double_condor -->
+  
+                        <div class="main_strikePrice mb-3">
+                          <div class="double_iron_condor_lot_size">
+                            <span id="negative_three_hundred_fifty_double_iron_condor_lot_size"></span><span>x</span>
+                          </div>
+                          <div class="strategy_inputs">
+                            <label for="strikePrice">Put Strike Price</label>
+                            <select class="strike_price_input form-select"
+                              id="negative_three_hundred_fifty_Select_double_iron_condor"></select>
+                          </div>
+                          <p class="pe_ce">PE</p>
+                        </div>
+  
+                        <!-- five_position_double_condor -->
+  
+                        <div class="main_strikePrice mb-3">
+                          <div class="double_iron_condor_lot_size">
+                            <span id="call_positive_three_hundred_fifty_double_iron_condor_lot_size"></span><span>x</span>
+                          </div>
+                          <div class="strategy_inputs">
+                            <label for="strikePrice">Call Strike Price</label>
+                            <select class="strike_price_input form-select"
+                              id="call_positive_three_hundred_fifty_strikeSelect_double_iron_condor"></select>
+                          </div>
+                          <p class="pe_ce">CE</p>
+                        </div>
+  
+  
+  
+                        <!-- six_position_double_condor -->
+  
+                        <div class="main_strikePrice mb-3">
+                          <div class="double_iron_condor_lot_size">
+                            <span id="call_positive_five_hundred_double_iron_condor_lot_size"></span><span>x</span>
+                          </div>
+                          <div class="strategy_inputs">
+                            <label for="strikePrice">Call Strike Price</label>
+                            <select class="strike_price_input form-select"
+                              id="call_positive_five_hundred_strikeSelect_double_iron_condor"></select>
+                          </div>
+                          <p class="pe_ce">CE</p>
+                        </div>
+  
+  
+  
+                        <!-- seven_position_double_condor -->
+  
+                        <div class="main_strikePrice mb-3">
+                          <div class="double_iron_condor_lot_size">
+                            <span id="call_positive_six_hundred_fifty_double_iron_condor_lot_size"></span><span>x</span>
+                          </div>
+                          <div class="strategy_inputs">
+                            <label for="strikePrice">Call Strike Price</label>
+                            <select class="strike_price_input form-select"
+                              id="call_positive_six_hundred_fifty_strikeSelect_double_iron_condor"></select>
+                          </div>
+                          <p class="pe_ce">CE</p>
+                        </div>
+  
+                        <!-- eight_position_double_condor -->
+  
+                        <div class="main_strikePrice mb-3">
+                          <div class="double_iron_condor_lot_size">
+                            <span id="call_positive_eight_hundred_double_iron_condor_lot_size"></span><span>x</span>
+                          </div>
+                          <div class="strategy_inputs">
+                            <label for="strikePrice">Call Strike Price</label>
+                            <select class="strike_price_input form-select"
+                              id="call_positive_eight_hundred_strikeSelect_double_iron_condor"></select>
+                          </div>
+                          <p class="pe_ce">CE</p>
+                        </div>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+                        <div class="strategy_inputs mb-3">
+                          <label for="expirydate">Expiry Date</label>
+                          <select class="expiry_date_input form-select" id="expiryDate_double_iron_condor"></select>
+                        </div>
+  
+                        <div class="main_counter d-flex gap-3 mb-3">
+                          <div class="inner_inroFly_counter d-flex gap-2">
+                            <p class="fs-5 lot_title">Qty:</p>
+                            <div class="counter_double_iron_condor d-flex justify-content-center gap-1">
+                              <button class="btn" id="decrement_double_iron_condor">
+                                <i class="bx bx-minus"></i>
+                              </button>
+                              <input type="text" name="" id="counter_input_double_iron_condor" min="1" disabled />
+                              <button class="btn" id="increment_double_iron_condor">
+                                <i class="bx bx-plus"></i>
+                              </button>
+                            </div>
+  
+                            <button class="" id="shortdouble_iron_condor">SELL</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+  
+                    <!-- <div class="buy_sell_buttons d-flex gap-2 justify-content-center">
+  
+                        
+  
+                          </div> -->
+                  </div>
+                </div>
+              </div>
+            </div>
+  
+  
+          </div>
+  
+          <div class="main-put-butterfly">
+            <div class="straddle" id="put_butter_fly">  
+              
+           
+              <div class="main_strategy_img_title">
+                <div class="style__PresetStrategyCard-sc-1f57s5d-6 jyZMZN">
+  
+                  <svg width="62" height="45" viewBox="0 0 62 45" fill="none" xmlns="http://www.w3.org/2000/svg" class="SVGLoader__StyledComp-sc-1ak2cuz-1 jss619"><path d="M1.5 1V44.2366" stroke="var(--dividerColor)" stroke-linecap="square"></path><path d="M1.46154 24H61" stroke="var(--dividerColor)" stroke-linecap="round" stroke-dasharray="5 5"></path><path d="M2 31.5H12.5L14.2857 24M59 31.5H26L24.5714 24" stroke="var(--lossColor)" stroke-width="2"></path><path d="M24.5714 24L19.9999 1.5L14.2856 24" stroke="var(--profitColor)" stroke-width="2"></path></svg>
+                  
+                  
+                  
+                  <div class="title">Bear Butterfly                </div>
+                    
+                    </div>
+   
+  
+              </div>
+            
+            
+            
+            
+          </div>
+  
+            <div class="" id="put_butterfly_modal">
+              <div class="dismiss">
+                <i class="bx bx-plus dismiss_icon"></i>
+                <div class="triangle-up"></div>
+              </div>
+              <div class="modal_dialog">
+                <div class="modal_content">
+                  <div class="modal_body" id="modal_body">
+                    <div class="main_put_butterfly">
+                      <h5 class="text-center">Bear Butterfly</h5>
+  
+                      <div class="main_body_fields_put_butterfly">
+  
+  
+                        <!-- first_position_put_butterfly -->
+                        <div class="main_strikePrice mb-3">
+                          <div class="put_butterfly_lot_size">
+                            <span id="put_negative_nine_hundred_fifty_butterfly_lot_size"></span><span>x</span>
+                          </div>
+                          <div class="strategy_inputs">
+                            <label for="strikePrice">Put Strike Price</label>
+                            <select class="strike_price_input form-select"
+                              id="put_negative_nine_hundred_fifty_Select_put_butterfly"></select>
+                          </div>
+                          <p class="pe_ce">PE</p>
+                        </div>
+  
+  
+  
+  
+                        <!-- second_position_put_butterfly -->
+  
+  
+  
+                        <div class="main_strikePrice mb-3">
+                          <div class="put_butterfly_lot_size">
+                            <span id="five_hundred_put_call_butterfly_lot_size"></span><span>x</span>
+                          </div>
+                          <div class="strategy_inputs">
+                            <label for="strikePrice">Call/Put Strike Price</label>
+                            <select class="strike_price_input form-select"
+                              id="five_hundred_put_call_Select_put_butterfly"></select>
+                          </div>
+                          <p class="pe_ce">CE/PE</p>
+                        </div>
+  
+  
+                        <!-- third_position_put_butterfly -->
+  
+                        <div class="main_strikePrice mb-3">
+                          <div class="put_butterfly_lot_size">
+                            <span id="put_negative_fifty_put_butterfly_lot_size"></span><span>x</span>
+                          </div>
+                          <div class="strategy_inputs">
+                            <label for="strikePrice">Call Strike Price</label>
+                            <select class="strike_price_input form-select"
+                              id="put_negative_fifty_Select_put_butterfly"></select>
+                          </div>
+                          <p class="pe_ce">CE</p>
+                        </div>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+                        <div class="strategy_inputs mb-3">
+                          <label for="expirydate">Expiry Date</label>
+                          <select class="expiry_date_input form-select" id="expiryDate_put_butterfly"></select>
+                        </div>
+  
+                        <div class="main_counter d-flex gap-3 mb-3">
+                          <div class="inner_inroFly_counter d-flex gap-2">
+                            <p class="fs-5 lot_title">Qty:</p>
+                            <div class="counter_put_butterfly d-flex justify-content-center gap-1">
+                              <button class="btn" id="decrement_put_butterfly">
+                                <i class="bx bx-minus"></i>
+                              </button>
+                              <input type="text" name="" id="counter_input_put_butterfly" min="1" disabled />
+                              <button class="btn" id="increment_put_butterfly">
+                                <i class="bx bx-plus"></i>
+                              </button>
+                            </div>
+  
+                            <button class="" id="shortput_butterfly">SELL</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+  
+                    <!-- <div class="buy_sell_buttons d-flex gap-2 justify-content-center">
+  
+                        
+  
+                          </div> -->
+                  </div>
+                </div>
+              </div>
+            </div>
+  
+  
+  
+  
+          </div>
+  
+          <div class="main-call-butterfly">
+            <div class="straddle" id="call_butter_fly">  
+              
+              <div class="main_strategy_img_title">
+                <div class="style__PresetStrategyCard-sc-1f57s5d-6 jyZMZN">
+  
+         <svg width="62" height="45" viewBox="0 0 62 45" fill="none" xmlns="http://www.w3.org/2000/svg" class="SVGLoader__StyledComp-sc-1ak2cuz-1 jss619"><path d="M1.5 1V44.2366" stroke="var(--dividerColor)" stroke-linecap="square"></path><path d="M1.46154 24H61" stroke="var(--dividerColor)" stroke-linecap="round" stroke-dasharray="5 5"></path><path d="M59 31.5H52L50.2143 24M2 31.5H38.5L39.9286 24" stroke="var(--lossColor)" stroke-width="2"></path><path d="M39.9286 24L44.5001 1.5L50.2144 24" stroke="var(--profitColor)" stroke-width="2"></path></svg>
+                    
+              
+                  
+                  
+                  <div class="title">Bull Butterfly                </div>
+                    
+                    </div>
+   
+  
+              </div>
+            
+            
+            
+            </div>
+  
+  
+            <div class="" id="call_butter_fly_modal">
+              <div class="dismiss">
+                <i class="bx bx-plus dismiss_icon"></i>
+                <div class="triangle-up-call_butterfly"></div>
+              </div>
+              <div class="modal_dialog">
+                <div class="modal_content">
+                  <div class="modal_body" id="modal_body">
+                    <div class="main_call_butter_fly">
+                      <h5 class="text-center">Bull Butterfly</h5>
+  
+                      <div class="main_body_fields_call_butter_fly">
+  
+  
+                        <!-- first_position_call_butter_fly -->
+                        <div class="main_strikePrice mb-3">
+                          <div class="call_butter_fly_lot_size">
+                            <span id="put_positive_fifty_butterfly_lot_size"></span><span>x</span>
+                          </div>
+                          <div class="strategy_inputs">
+                            <label for="strikePrice">Put Strike Price</label>
+                            <select class="strike_price_input form-select"
+                              id="put_positive_fifty_Select_call_butter_fly"></select>
+                          </div>
+                          <p class="pe_ce">PE</p>
+                        </div>
+  
+  
+  
+  
+                        <!-- second_position_call_butter_fly -->
+  
+  
+  
+                        <div class="main_strikePrice mb-3">
+                          <div class="call_butter_fly_lot_size">
+                            <span id="four_hundred_put_call_butterfly_lot_size"></span><span>x</span>
+                          </div>
+                          <div class="strategy_inputs">
+                            <label for="strikePrice">Call/Put Strike Price</label>
+                            <select class="strike_price_input form-select"
+                              id="four_hundred_put_call_Select_call_butter_fly"></select>
+                          </div>
+                          <p class="pe_ce">CE/PE</p>
+                        </div>
+  
+  
+                        <!-- third_position_call_butter_fly -->
+  
+                        <div class="main_strikePrice mb-3">
+                          <div class="call_butter_fly_lot_size">
+                            <span id="positive_seven_hundred_fifty_call_butter_fly_lot_size"></span><span>x</span>
+                          </div>
+                          <div class="strategy_inputs">
+                            <label for="strikePrice">Call Strike Price</label>
+                            <select class="strike_price_input form-select"
+                              id="positive_seven_hundred_fifty_Select_call_butter_fly"></select>
+                          </div>
+                          <p class="pe_ce">CE</p>
+                        </div>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+                        <div class="strategy_inputs mb-3">
+                          <label for="expirydate">Expiry Date</label>
+                          <select class="expiry_date_input form-select" id="expiryDate_call_butter_fly"></select>
+                        </div>
+  
+                        <div class="main_counter d-flex gap-3 mb-3">
+                          <div class="inner_inroFly_counter d-flex gap-2">
+                            <p class="fs-5 lot_title">Qty:</p>
+                            <div class="counter_call_butter_fly d-flex justify-content-center gap-1">
+                              <button class="btn" id="decrement_call_butter_fly">
+                                <i class="bx bx-minus"></i>
+                              </button>
+                              <input type="text" name="" id="counter_input_call_butter_fly" min="1" disabled />
+                              <button class="btn" id="increment_call_butter_fly">
+                                <i class="bx bx-plus"></i>
+                              </button>
+                            </div>
+  
+                            <button class="" id="shortcall_butter_fly">SELL</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+  
+                    <!-- <div class="buy_sell_buttons d-flex gap-2 justify-content-center">
+  
+                        
+  
+                          </div> -->
+                  </div>
+                </div>
+              </div>
+            </div>
+  
+  
+  
+          </div>
+  
+          <div class="custom-strategy" style="position: relative;">
+            <div class="straddle" id="custom_strategy">  
+              
+              
+              
+              <div class="main_strategy_img_title">
+                <div class="style__PresetStrategyCard-sc-1f57s5d-6 jyZMZN">
+  
+                  <svg xmlns="http://www.w3.org/2000/svg" width="62" height="45" viewBox="0 0 62 45" class="SVGLoader__StyledComp-sc-1ak2cuz-1 jss619"><g fill="none" fill-rule="evenodd"><path stroke="var(--dividerColor)" stroke-linecap="square" d="M0.5 0L0.5 43.237" transform="translate(1 1)"></path><path stroke="var(--dividerColor)" stroke-dasharray="5 5" stroke-linecap="round" d="M0.462 23L60 23" transform="translate(1 1)"></path><path stroke="var(--lossColor)" stroke-width="2" d="M0.5 32.5L17.918 32.5 21.5 23" transform="translate(1 1)"></path><path stroke="var(--lossColor)" stroke-width="2" d="M35.5 32.5L52.918 32.5 56.5 23" transform="translate(1 1) matrix(-1 0 0 1 92 0)"></path><path stroke="var(--profitColor)" stroke-width="2" d="M21.5 23L28.244 4 35.5 23" transform="translate(1 1)"></path></g></svg>
+                    
+              
+                  
+                  
+                  <div class="title">Custom Strategy </div>
+                    
+                    </div>
+   
+  
+              </div>
+            
+            
+            
+            </div>
+  
+            <div class="dropdown-menu" id="custom_strategy_modal">
+              <div class="dismiss">
+                <i class="bx bx-plus dismiss_icon"></i>
+                <div class="triangle-up-custom_strategy"></div>
+              </div>
+              <div class="modal_dialog">
+                <div class="modal_content">
+                  <div class="modal_body" id="modal_body">
+                    <div class="main_custom_strategy">
+                      <h5 class="text-center mb-3">Nifty custom Strategy</h5>
+  
+                      <div class="main_body_fields_custom_strategy">
+  
+  
+                        <!-- first_position_custom_strategy -->
+                        <div class="main_strikePrice mb-3">
+                          <div class="custom_strategy_lot_size">
+                            <span id="call_two_hundered_buy_custom_strategy_lot_size"></span>5<span>x</span>
+                          </div>
+                          <div class="strategy_inputs">
+                            <label for="strikePrice">Call Strike Price</label>
+                            <select class="strike_price_input form-select"
+                              id="call_two_hundered_buy_Select_custom_strategy"></select>
+                          </div>
+                          <p class="pe_ce">CE</p>
+                        </div>
+                        <!-- second_position_custom_strategy -->
+                        <div class="main_strikePrice mb-3">
+                          <div class="custom_strategy_lot_size">
+                            <span id="call_negative_two_hundred_buy_custom_strategy_lot_size"></span>5<span>x</span>
+                          </div>
+                          <div class="strategy_inputs">
+                            <label for="strikePrice">Call Strike Price</label>
+                            <select class="strike_price_input form-select"
+                              id="call_negative_two_hundred_buy_Select_custom_strategy"></select>
+                          </div>
+                          <p class="pe_ce">CE</p>
+                        </div>
+                        <!-- third_position_custom_strategy -->
+                        <div class="main_strikePrice mb-3">
+                          <div class="custom_strategy_lot_size">
+                            <span id="put_call_negative_one_hundred_sell_custom_strategy_lot_size"></span><span>x</span>
+                          </div>
+                          <div class="strategy_inputs">
+                            <label for="strikePrice">Call/Put Strike Price</label>
+                            <select class="strike_price_input form-select"
+                              id="put_call_negative_one_hundred_sell_Select_custom_strategy"></select>
+                          </div>
+                          <p class="pe_ce">CE/PE</p>
+                        </div>
+  
+                        <div class="main_strikePrice mb-3">
+                          <div class="custom_strategy_lot_size">
+                            <span id="put_call_negative_fifty_hundred_sell_custom_strategy_lot_size"></span><span>x</span>
+                          </div>
+                          <div class="strategy_inputs">
+                            <label for="strikePrice">Call/Put Strike Price</label>
+                            <select class="strike_price_input form-select"
+                              id="put_call_negative_fifty_hundred_sell_Select_custom_strategy"></select>
+                          </div>
+                          <p class="pe_ce">CE/PE</p>
+                        </div>
+  
+                        <div class="main_strikePrice mb-3">
+                          <div class="custom_strategy_lot_size">
+                            <span id="put_call_spot_sell_custom_strategy_lot_size"></span><span>x</span>
+                          </div>
+                          <div class="strategy_inputs">
+                            <label for="strikePrice">Call/Put Strike Price</label>
+                            <select class="strike_price_input form-select"
+                              id="put_call_spot_sell_Select_custom_strategy"></select>
+                          </div>
+                          <p class="pe_ce">CE/PE</p>
+                        </div>
+  
+                        <div class="main_strikePrice mb-3">
+                          <div class="custom_strategy_lot_size">
+                            <span id="put_call_positive_fifty_sell_custom_strategy_lot_size"></span><span>x</span>
+                          </div>
+                          <div class="strategy_inputs">
+                            <label for="strikePrice">Call/Put Strike Price</label>
+                            <select class="strike_price_input form-select"
+                              id="put_call_positive_fifty_sell_Select_custom_strategy"></select>
+                          </div>
+                          <p class="pe_ce">CE/PE</p>
+                        </div>
+  
+                        <div class="main_strikePrice mb-3">
+                          <div class="custom_strategy_lot_size">
+                            <span id="put_call_positive_one_hundred_sell_custom_strategy_lot_size"></span><span>x</span>
+                          </div>
+                          <div class="strategy_inputs">
+                            <label for="strikePrice">Call/Put Strike Price</label>
+                            <select class="strike_price_input form-select"
+                              id="put_call_positive_one_hundred_Select_custom_strategy"></select>
+                          </div>
+                          <p class="pe_ce">CE/PE</p>
+                        </div>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+                        <div class="strategy_inputs mb-3">
+                          <label for="expirydate">Expiry Date</label>
+                          <select class="expiry_date_input form-select" id="expiryDate_custom_strategy"></select>
+                        </div>
+  
+                        <div class="main_counter d-flex gap-3 mb-3">
+                          <div class="inner_inroFly_counter d-flex gap-2">
+                            <!-- <p class="fs-5 lot_title">Qty:</p> -->
+                            <!-- <div class="counter_custom_strategy d-flex justify-content-center gap-1">
+                              <button class="btn" id="decrement_custom_strategy">
+                                <i class="bx bx-minus"></i>
+                              </button>
+                              <input type="text" name="" id="counter_input_custom_strategy" min="1" disabled />
+                              <button class="btn" id="increment_custom_strategy">
+                                <i class="bx bx-plus"></i>
+                              </button>
+                            </div> -->
+  
+                            <button class="" id="shortcustom_strategy">SELL</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+  
+                    <!-- <div class="buy_sell_buttons d-flex gap-2 justify-content-center">
+  
+                        
+  
+                          </div> -->
+                  </div>
+                </div>
+              </div>
+            </div>
+  
+          </div>
+  
+  
+        </div>
+      </div>
+    </div>
+  
+  </div>
+
+  <script>
+    $(document).ready(function(){
+      var $mainStrategies = $(".main_straddle, .main-stranggle, .main-ironfly, .main-ironCondor, .main-spread, .main-jaze_lizard, .main-double-iron-fly, .main-double-candor");
+  var $butterflyStrategies = $(".main-put-butterfly, .main-call-butterfly, .custom-strategy");
+
+  // Show all strategies initially
+  $mainStrategies.show();
+  $butterflyStrategies.show();
+      $(".nav-tabs li a").click(function () {
+
+        var filterType = $(this).data("filter_val");
+
+        
+    // Show strategies based on filter type
+    switch (filterType) {
+      case "popular":
+        $mainStrategies.show();
+        $butterflyStrategies.show();
+        break;
+      case "bull":
+      $mainStrategies.hide();
+  $butterflyStrategies.hide();
+        $(".main-jaze_lizard, .main-call-butterfly").show();
+        break;
+      case "bear":
+      $mainStrategies.hide();
+  $butterflyStrategies.hide();
+        $(".main-spread, .main-put-butterfly").show();
+        break;
+      case "neutral":
+      $mainStrategies.hide();
+  $butterflyStrategies.hide();
+        $(".main_straddle, .main-stranggle, .main-ironfly, .main-ironCondor, .main-spread, .main-double-iron-fly, .main-double-candor, .custom-strategy").show();
+        break;
+      case "hedge":
+      $mainStrategies.hide();
+  $butterflyStrategies.hide();
+        $(".main-jaze_lizard").show();
+        break;
+    }
+        $(".nav-tabs li a").removeClass("active");
+        $(this).addClass("active");
+      });
+    });
+  </script>
+  
+
+
+
+
+
+
+
+
+
+
+<!--   
 
   <div class="main_filter_strategies_btns d-flex gap-2 pb-2 justify-content-start">
     <button class="popular_strategies_filter all_strategy_filter main_all_strategy_active" data-filter_val="popular">
       <div class="main_bullish_inner_svg">
-      <svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path fill-rule="evenodd" clip-rule="evenodd" d="M11.9932 5.13581C9.9938 2.7984 6.65975 2.16964 4.15469 4.31001C1.64964 6.45038 1.29697 10.029 3.2642 12.5604C4.89982 14.6651 9.84977 19.1041 11.4721 20.5408C11.6536 20.7016 11.7444 20.7819 11.8502 20.8135C11.9426 20.8411 12.0437 20.8411 12.1361 20.8135C12.2419 20.7819 12.3327 20.7016 12.5142 20.5408C14.1365 19.1041 19.0865 14.6651 20.7221 12.5604C22.6893 10.029 22.3797 6.42787 19.8316 4.31001C17.2835 2.19216 13.9925 2.7984 11.9932 5.13581Z" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-        </svg>
+
  
       <p>Popular</p>      </div>
     
     </button>
     <button class="bullish_strategies_filter all_strategy_filter" data-filter_val="bull">
 <div class="main_bullish_inner_svg">
-  <svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M22 7L14.1314 14.8686C13.7354 15.2646 13.5373 15.4627 13.309 15.5368C13.1082 15.6021 12.8918 15.6021 12.691 15.5368C12.4627 15.4627 12.2646 15.2646 11.8686 14.8686L9.13137 12.1314C8.73535 11.7354 8.53735 11.5373 8.30902 11.4632C8.10817 11.3979 7.89183 11.3979 7.69098 11.4632C7.46265 11.5373 7.26465 11.7354 6.86863 12.1314L2 17M22 7H15M22 7V14" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-    </svg>
+
 
 <p>  Bullish</p>
 </div>
@@ -4977,9 +6128,7 @@ font-weight: 100 !important ;
       
       <button class="bearish_strategies_filter all_strategy_filter" data-filter_val="bear">
         <div class="main_bullish_inner_svg">
-          <svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M22 17L14.1314 9.13137C13.7354 8.73535 13.5373 8.53735 13.309 8.46316C13.1082 8.3979 12.8918 8.3979 12.691 8.46316C12.4627 8.53735 12.2646 8.73535 11.8686 9.13137L9.13137 11.8686C8.73535 12.2646 8.53735 12.4627 8.30902 12.5368C8.10817 12.6021 7.89183 12.6021 7.69098 12.5368C7.46265 12.4627 7.26465 12.2646 6.86863 11.8686L2 7M22 17H15M22 17V10" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-            </svg>
+    
 
           <p>Bearish</p>
         </div>
@@ -4992,9 +6141,7 @@ font-weight: 100 !important ;
       <button class="neutral_strategies_filter all_strategy_filter" data-filter_val="neutral">
 
 <div class="main_bullish_inner_svg">
-  <svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M20 17H4M4 17L8 13M4 17L8 21M4 7H20M20 7L16 3M20 7L16 11" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-    </svg>
+
   <p>Neutral</p>
 </div>
 
@@ -5004,14 +6151,8 @@ font-weight: 100 !important ;
 
       
       
-      <button class="hedging_strategies_filter all_strategy_filter" data-filter_val="hedge">      
-        <div class="main_bullish_inner_svg">
-          <svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M7 19.4C7 20.8359 8.11929 22 9.5 22C10.8807 22 12 20.8359 12 19.4V11M12 11C10.3898 11 8 12 8 12C8 12 6.61017 11 5 11C3.38983 11 2 12 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12C22 12 20.6102 11 19 11C17.3898 11 16 12 16 12C16 12 13.6102 11 12 11Z" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-            </svg>
-          <p>Hedging</p>
-        </div></button>
-  </div>
+
+  </div> -->
 <script>
 $(document).ready(function () {
 
@@ -5112,1367 +6253,6 @@ $(".all_strategy_filter").removeClass("main_all_strategy_active")
   
 })
 </script>
-  <div class="All_option_startegies_builder">
-    <div class="pre_built_simu">
-      <div class="pre_build_title">
-
-      </div>
-     
-      <div class="strategy_simu">
-        <div class="main_straddle">
-          
-          <button class="straddle" id="straddle" >
-
-            <div class="main_strategy_img_title">
-              <div class="style__PresetStrategyCard-sc-1f57s5d-6 jyZMZN">
-                <svg xmlns="http://www.w3.org/2000/svg" width="62" height="45" viewBox="0 0 62 45" class="SVGLoader__StyledComp-sc-1ak2cuz-1 jss619">
-                <g fill="none" fill-rule="evenodd"><path stroke="var(--dividerColor)" stroke-linecap="square" d="M0.5 0L0.5 43.237" transform="translate(1 1)"></path><path stroke="var(--dividerColor)" stroke-dasharray="5 5" stroke-linecap="round" d="M0.462 23L60 23" transform="translate(1 1)"></path>
-                  <g stroke-width="2"><path stroke="var(--lossColor)" d="M0 33L7.936 23.988 13.985 16.988" transform="translate(1 1) translate(0 6)"></path><path stroke="var(--profitColor)" d="M13.985 16.988L29 0" transform="translate(1 1) translate(0 6)"></path>
-                    <g><path stroke="var(--lossColor)" d="M0 33L7.936 23.988 13.985 16.988" transform="translate(1 1) translate(0 6) matrix(-1 0 0 1 57 0)"></path>
-                      <path stroke="var(--profitColor)" d="M13.985 16.988L29 0" transform="translate(1 1) translate(0 6) matrix(-1 0 0 1 57 0)"></path></g></g>
-                    </g></svg>
-                    <div class="title">Short Straddle</div>
-                  
-                  </div>
- 
-
-                </button>
-
-        
-          
-          </b>
-
-          <div class="" id="straddle_modal">
-            <div class="dismiss">
-              <i class="bx bx-plus dismiss_icon"></i>
-              <div class="triangle-up"></div>
-            </div>
-            <div class="modal_dialog">
-              <div class="modal_content">
-                <div class="modal_body" id="modal_body">
-                  <div class="main_straddle_inner">
-                    <h5 class="text-center">Straddle</h5>
-
-                    <div class="main_body_fields_straddle">
-                      <div class="main_strikePrice mb-3">
-                        <p>1x</p>
-                        <div class="strategy_inputs">
-                          <label for="strikePrice">Strike Price</label>
-                          <select class="strike_price_input form-select" id="strikeSelect_straddle"></select>
-                        </div>
-                        <p class="pe_ce">PE / CE</p>
-                      </div>
-                      <div class="strategy_inputs mb-3">
-                        <label for="expirydate">Expiry Date</label>
-                        <select class="expiry_date_input form-select" id="expiryDate_straddle"></select>
-                      </div>
-
-                      <div class="main_counter d-flex gap-3 mb-3">
-                        <div class="innerStraddle_lot_size">
-                          <p class="fs-6 lot_title">Qty:</p>
-                          <div class="counter_straddle d-flex justify-content-center gap-1">
-                            <button class="btn" id="decrement">
-                              <i class="bx bx-minus"></i>
-                            </button>
-                            <input type="text" name="" id="counter_input" min="1" disabled />
-                            <button class="btn" id="increment">
-                              <i class="bx bx-plus"></i>
-                            </button>
-                          </div>
-                        </div>
-                        <button class="" id="shortStraddle">SELL</button>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="buy_sell_buttons d-flex gap-2 justify-content-center"></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="main-stranggle">
-          <div class="straddle" id="strangle">
-            
-            <div class="main_strategy_img_title">
-              <div class="style__PresetStrategyCard-sc-1f57s5d-6 jyZMZN">
-                <svg xmlns="http://www.w3.org/2000/svg" width="62" height="45" viewBox="0 0 62 45" class="SVGLoader__StyledComp-sc-1ak2cuz-1 jss619"><g fill="none" fill-rule="evenodd"><path stroke="var(--dividerColor)" stroke-linecap="square" d="M0.5 0L0.5 43.237" transform="translate(1 1)"></path><path stroke="var(--dividerColor)" stroke-dasharray="5 5" stroke-linecap="round" d="M0.462 23L60 23" transform="translate(1 1)"></path><path stroke="var(--lossColor)" stroke-width="2" d="M1.918 38.5L7.668 23" transform="translate(1 1)"></path><path stroke="var(--lossColor)" stroke-width="2" d="M49.44 38.5L54.452 23" transform="translate(1 1) matrix(-1 0 0 1 103.892 0)"></path><path stroke="var(--profitColor)" stroke-width="2" d="M7.668 23L12.244 10 45.528 10 49.44 23" transform="translate(1 1)"></path></g></svg>
-                    <div class="title">Short Strangle</div>
-                  
-                  </div>
- 
-
-            </div>
-
-          </div>
-          <div class="" id="strangle_modal">
-            <div class="dismiss">
-              <i class="bx bx-plus dismiss_icon"></i>
-              <div class="triangle-up"></div>
-            </div>
-            <div class="modal_dialog">
-              <div class="modal_content">
-                <div class="modal_body" id="modal_body">
-                  <div class="main_strangle">
-                    <h5 class="text-center">Strangle</h5>
-
-                    <div class="main_body_fields_strangle">
-                      <div class="main_strikePrice mb-3">
-                        <div class="strangle_lot_size">
-                          <span id="put_stangle_lot_size"></span><span>x</span>
-                        </div>
-                        <div class="strategy_inputs">
-                          <label for="strikePrice">Put Strike Price</label>
-                          <select class="strike_price_input form-select" id="put_strikeSelect_strangle"></select>
-                        </div>
-                        <p class="pe_ce">PE</p>
-                      </div>
-
-                      <div class="main_strikePrice mb-3">
-                        <div class="strangle_lot_size">
-                          <span id="call_stangle_lot_size"></span><span>x</span>
-                        </div>
-                        <div class="strategy_inputs">
-                          <label for="strikePrice">Call Strike Price</label>
-                          <select class="strike_price_input form-select" id="call_strikeSelect_strangle"></select>
-                        </div>
-                        <p class="pe_ce">CE</p>
-                      </div>
-
-                      <div class="strategy_inputs mb-3">
-                        <label for="expirydate">Expiry Date</label>
-                        <select class="expiry_date_input form-select" id="expiryDate_strangle"></select>
-                      </div>
-
-                      <div class="main_counter d-flex gap-2 mb-3">
-                        <div class="innerStraddle_lot_size d-flex gap-2">
-                          <p class="fs-5 lot_title">Qty:</p>
-                          <div class="counter_strangle d-flex justify-content-center gap-1">
-                            <button class="btn" id="decrement_strangle">
-                              <i class="bx bx-minus"></i>
-                            </button>
-                            <input type="text" name="" id="counter_input_strangle" min="1" disabled />
-                            <button class="btn" id="increment_strangle">
-                              <i class="bx bx-plus"></i>
-                            </button>
-                          </div>
-                        </div>
-                        <button class="" id="shortStrangle">SELL</button>
-                      </div>
-                    </div>
-                  </div>
-
-                  <!-- <div class="buy_sell_buttons d-flex gap-2 justify-content-center">
-
-                                  
-
-                                </div> -->
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="main-spread">
-          <div class="straddle" id="spread">   
-                       
-            <div class="main_strategy_img_title">
-              <div class="style__PresetStrategyCard-sc-1f57s5d-6 jyZMZN">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="62" height="45" viewBox="0 0 62 45" class="SVGLoader__StyledComp-sc-1ak2cuz-1 jss619"><g fill="none" fill-rule="evenodd"><path stroke="var(--dividerColor)" stroke-linecap="square" d="M0.5 0L0.5 43.237" transform="translate(1 1)"></path><path stroke="var(--dividerColor)" stroke-dasharray="5 5" stroke-linecap="round" d="M0.462 23L60 23" transform="translate(1 1)"></path><g stroke-width="2"><path stroke="var(--profitColor)" d="M0 22.988L12.009 22.988 30 7" transform="translate(1 1) matrix(1 0 0 -1 1 30)"></path><path stroke="var(--lossColor)" d="M30 7L37.618 0 54.967 0" transform="translate(1 1) matrix(1 0 0 -1 1 30)"></path></g></g></svg>                 
-                        <div class="title">Bear Put Spread</div>
-                                        
-                  </div>
- 
-
-            </div>
-          </div>
-
-
-
-
-          <div class="" id="spread_modal">
-            <div class="dismiss">
-              <i class="bx bx-plus dismiss_icon"></i>
-              <div class="triangle-up"></div>
-            </div>
-            <div class="modal_dialog">
-              <div class="modal_content">
-                <div class="modal_body" id="modal_body">
-                  <div class="main_spread">
-                    <h5 class="text-center">Spread</h5>
-
-                    <div class="main_body_fields_spread">
-                      <div class="main_strikePrice mb-3">
-                        <div class="spread_lot_size">
-                          <span id="put_spread_lot_size"></span><span>x</span>
-                        </div>
-                        <div class="strategy_inputs">
-                          <label for="strikePrice">Put Strike Price</label>
-                          <select class="strike_price_input form-select" id="put_strikeSelect_spread"></select>
-                        </div>
-                        <p class="pe_ce">CE</p>
-                      </div>
-
-                      <div class="main_strikePrice mb-3">
-                        <div class="spread_lot_size">
-                          <span id="call_spread_lot_size"></span><span>x</span>
-                        </div>
-                        <div class="strategy_inputs">
-                          <label for="strikePrice">Call Strike Price</label>
-                          <select class="strike_price_input form-select" id="call_strikeSelect_spread"></select>
-                        </div>
-                        <p class="pe_ce">CE</p>
-                      </div>
-
-                      <div class="strategy_inputs mb-3">
-                        <label for="expirydate">Expiry Date</label>
-                        <select class="expiry_date_input form-select" id="expiryDate_spread"></select>
-                      </div>
-
-                      <div class="main_counter d-flex gap-3 mb-3">
-                        <div class="inner_spread_lot_size d-flex gap-2">
-                          <p class="fs-5 lot_title">Qty:</p>
-                          <div class="counter_spread d-flex justify-content-center gap-1">
-                            <button class="btn" id="decrement_spread">
-                              <i class="bx bx-minus"></i>
-                            </button>
-                            <input type="text" name="" id="counter_input_spread" min="1" disabled />
-                            <button class="btn" id="increment_spread">
-                              <i class="bx bx-plus"></i>
-                            </button>
-                          </div>
-                        </div>
-                        <button class="" id="shortSpread">SELL</button>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="buy_sell_buttons d-flex gap-2 justify-content-center"></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="main-ironfly">
-          <div class="straddle" id="iron_fly"> 
-
-            <div class="main_strategy_img_title">
-              <div class="style__PresetStrategyCard-sc-1f57s5d-6 jyZMZN">
-                <svg xmlns="http://www.w3.org/2000/svg" width="62" height="45" viewBox="0 0 62 45" class="SVGLoader__StyledComp-sc-1ak2cuz-1 jss619"><g fill="none" fill-rule="evenodd"><path stroke="var(--dividerColor)" stroke-linecap="square" d="M0.5 0L0.5 43.237" transform="translate(1 1)"></path><path stroke="var(--dividerColor)" stroke-dasharray="5 5" stroke-linecap="round" d="M0.462 23L60 23" transform="translate(1 1)"></path><path stroke="var(--lossColor)" stroke-width="2" d="M0.5 32.5L17.918 32.5 21.5 23" transform="translate(1 1)"></path><path stroke="var(--lossColor)" stroke-width="2" d="M35.5 32.5L52.918 32.5 56.5 23" transform="translate(1 1) matrix(-1 0 0 1 92 0)"></path><path stroke="var(--profitColor)" stroke-width="2" d="M21.5 23L28.244 4 35.5 23" transform="translate(1 1)"></path></g></svg>
-                    <div class="title">Iron Butterfly</div>
-                  
-                  </div>
- 
-
-            </div>
-            
-            
-            
-            
-          </div>
-          <div class="" id="ironFly_modal">
-            <div class="dismiss">
-              <i class="bx bx-plus dismiss_icon"></i>
-              <div class="triangle-up"></div>
-            </div>
-            <div class="modal_dialog">
-              <div class="modal_content">
-                <div class="modal_body" id="modal_body">
-                  <div class="main_ironFly">
-                    <h5 class="text-center">Iron Fly</h5>
-
-                    <div class="main_body_fields_ironFly">
-                      <div class="main_strikePrice mb-3">
-                        <div class="ironFly_lot_size">
-                          <span id="put_ironFly_lot_size"></span><span>x</span>
-                        </div>
-                        <div class="strategy_inputs">
-                          <label for="strikePrice">Put Strike Price</label>
-                          <select class="strike_price_input form-select" id="put_strikeSelect_ironFly"></select>
-                        </div>
-                        <p class="pe_ce">PE</p>
-                      </div>
-                      <div class="main_strikePrice mb-3" id="put_call_select">
-                        <div class="ironFly_lot_size">
-                          <span id="put_call_ironFly_lot_size"></span><span>x</span>
-                        </div>
-                        <div class="strategy_inputs">
-                          <label for="strikePrice">Put/Call Strike Price</label>
-                          <select class="strike_price_input form-select" id="put_call_strikeSelect_ironFly"></select>
-                        </div>
-                        <p class="pe_ce">PE/CE</p>
-                      </div>
-
-                      <div class="main_strikePrice mb-3">
-                        <div class="ironFly_lot_size">
-                          <span id="call_ironFly_lot_size"></span><span>x</span>
-                        </div>
-                        <div class="strategy_inputs">
-                          <label for="strikePrice">Call Strike Price</label>
-                          <select class="strike_price_input form-select" id="call_strikeSelect_ironFly"></select>
-                        </div>
-                        <p class="pe_ce">CE</p>
-                      </div>
-
-                      <div class="strategy_inputs mb-3">
-                        <label for="expirydate">Expiry Date</label>
-                        <select class="expiry_date_input form-select" id="expiryDate_ironFly"></select>
-                      </div>
-
-                      <div class="main_counter d-flex gap-3 mb-3">
-                        <div class="inner_inroFly_counter d-flex gap-2">
-                          <p class="fs-5 lot_title">Qty:</p>
-                          <div class="counter_ironFly d-flex justify-content-center gap-1">
-                            <button class="btn" id="decrement_ironFly">
-                              <i class="bx bx-minus"></i>
-                            </button>
-                            <input type="text" name="" id="counter_input_ironFly" min="1" disabled />
-                            <button class="btn" id="increment_ironFly">
-                              <i class="bx bx-plus"></i>
-                            </button>
-                          </div>
-
-                          <button class="" id="shortironFly">SELL</button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <!-- <div class="buy_sell_buttons d-flex gap-2 justify-content-center">
-
-                          
-
-                            </div> -->
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-
-        <style>
-          @media (min-width: 992px) {
-            .col-lg-4 {
-              flex: 0 0 auto !important;
-              width: 31.333333% !important;
-            }
-
-            .col-lg-7 {
-              flex: 0 0 auto !important;
-              width: 67.333333% !important;
-            }
-          }
-
-          .payoff_table_main_table thead {
-            position: sticky;
-            top: 0px;
-          }
-        </style>
-
-        <div class="main-ironCondor">
-          <div class="straddle" id="iron_condor">  
-            
-            <div class="main_strategy_img_title">
-              <div class="style__PresetStrategyCard-sc-1f57s5d-6 jyZMZN">
-                <svg xmlns="http://www.w3.org/2000/svg" width="62" height="45" viewBox="0 0 62 45" class="SVGLoader__StyledComp-sc-1ak2cuz-1 jss619"><g fill="none" fill-rule="evenodd"><path stroke="var(--dividerColor)" stroke-linecap="square" d="M0.5 0L0.5 43.237" transform="translate(1 1)"></path><path stroke="var(--dividerColor)" stroke-dasharray="5 5" stroke-linecap="round" d="M0.462 23L60 23" transform="translate(1 1)"></path><path stroke="var(--lossColor)" stroke-width="2" d="M0.5 32.5L12.918 32.5 16.5 23" transform="translate(1 1)"></path><path stroke="var(--lossColor)" stroke-width="2" d="M40.5 32.5L52.918 32.5 56.5 23" transform="translate(1 1) matrix(-1 0 0 1 97 0)"></path><path stroke="var(--profitColor)" stroke-width="2" d="M16.5 23L23.244 4 34.528 4 40.5 23" transform="translate(1 1)"></path></g></svg>
-                    <div class="title">Short Iron Condor</div>
-                  
-                  </div>
- 
-
-            </div>
-          
-          
-          </div>
-          <div class="" id="ironCondor_modal">
-            <div class="dismiss">
-              <i class="bx bx-plus dismiss_icon"></i>
-              <div class="triangle-up"></div>
-            </div>
-            <div class="modal_dialog">
-              <div class="modal_content">
-                <div class="modal_body" id="modal_body">
-                  <div class="main_ironCondor">
-                    <h5 class="text-center">Iron Condor</h5>
-
-                    <div class="main_body_fields_ironCondor">
-                      <div class="main_strikePrice mb-3">
-                        <div class="ironCondor_lot_size">
-                          <span id="put_ironCondor_lot_size"></span><span>x</span>
-                        </div>
-                        <div class="strategy_inputs">
-                          <label for="strikePrice">Put Strike Price</label>
-                          <select class="strike_price_input form-select" id="put_strikeSelect_ironCondor"></select>
-                        </div>
-                        <p class="pe_ce">PE</p>
-                      </div>
-                      <div class="main_strikePrice mb-3">
-                        <div class="ironCondor_lot_size">
-                          <span id="put_2nd_ironCondor_lot_size"></span><span>x</span>
-                        </div>
-                        <div class="strategy_inputs">
-                          <label for="strikePrice">Put/Call Strike Price</label>
-                          <select class="strike_price_input form-select" id="put_2nd_strikeSelect_ironCondor"></select>
-                        </div>
-                        <p class="pe_ce">PE</p>
-                      </div>
-                      <div class="main_strikePrice mb-3">
-                        <div class="ironCondor_lot_size">
-                          <span id="call_2nd_ironCondor_lot_size"></span><span>x</span>
-                        </div>
-                        <div class="strategy_inputs">
-                          <label for="strikePrice">Put/Call Strike Price</label>
-                          <select class="strike_price_input form-select" id="call_2nd_strikeSelect_ironCondor"></select>
-                        </div>
-                        <p class="pe_middla">CE</p>
-                      </div>
-
-                      <div class="main_strikePrice mb-3">
-                        <div class="ironCondor_lot_size">
-                          <span id="call_ironCondor_lot_size"></span><span>x</span>
-                        </div>
-                        <div class="strategy_inputs">
-                          <label for="strikePrice">Call Strike Price</label>
-                          <select class="strike_price_input form-select" id="call_strikeSelect_ironCondor"></select>
-                        </div>
-                        <p class="pe_middle">CE</p>
-                      </div>
-
-                      <div class="strategy_inputs mb-3">
-                        <label for="expirydate">Expiry Date</label>
-                        <select class="expiry_date_input form-select" id="expiryDate_ironCondor"></select>
-                      </div>
-
-                      <div class="main_counter d-flex gap-3 mb-3">
-                        <div class="inner_inroFly_counter d-flex gap-2">
-                          <p class="fs-5 lot_title">Qty:</p>
-                          <div class="counter_ironCondor d-flex justify-content-center gap-1">
-                            <button class="btn" id="decrement_ironCondor">
-                              <i class="bx bx-minus"></i>
-                            </button>
-                            <input type="text" name="" id="counter_input_ironCondor" min="1" disabled />
-                            <button class="btn" id="increment_ironCondor">
-                              <i class="bx bx-plus"></i>
-                            </button>
-                          </div>
-
-                          <button class="" id="short_ironCondor">SELL</button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <!-- <div class="buy_sell_buttons d-flex gap-2 justify-content-center">
-
-                      
-
-                        </div> -->
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="main-jaze_lizard">
-          <div class="straddle" id="jaze_lizard">   
-            
-            <div class="main_strategy_img_title">
-              <div class="style__PresetStrategyCard-sc-1f57s5d-6 jyZMZN">
-                <svg width="62" height="45" viewBox="0 0 62 45" fill="none" xmlns="http://www.w3.org/2000/svg" class="SVGLoader__StyledComp-sc-1ak2cuz-1 jss619"><path d="M1.5 1V44.2366" stroke="var(--dividerColor)" stroke-linecap="square"></path><path d="M1.46154 24H61" stroke="var(--dividerColor)" stroke-linecap="round" stroke-dasharray="5 5"></path><path d="M61.0268 20.5881H47.3778L41.5606 18.4995H29.9108L22.4351 23.9932" stroke="var(--profitColor)" stroke-width="2"></path><path d="M1.94971 38.9844L22.4351 23.9932" stroke="var(--lossColor)" stroke-width="2"></path></svg>
-                    <div class="title">Jade Lizard</div>
-                  
-                  </div>
- 
-
-            </div>
-          
-          
-          </div>
-          <div class="" id="jaze_lizard_modal">
-            <div class="dismiss">
-              <i class="bx bx-plus dismiss_icon"></i>
-              <div class="triangle-up"></div>
-            </div>
-            <div class="modal_dialog">
-              <div class="modal_content">
-                <div class="modal_body" id="modal_body">
-                  <div class="main_jaze_lizard">
-                    <h5 class="text-center">Jaze Lizard</h5>
-
-                    <div class="main_body_fields_jaze_lizard">
-                      <div class="main_strikePrice mb-3">
-                        <div class="jaze_lizard_lot_size">
-                          <span id="call_jaze_lizard_lot_size"></span><span>x</span>
-                        </div>
-                        <div class="strategy_inputs">
-                          <label for="strikePrice">Put Strike Price</label>
-                          <select class="strike_price_input form-select" id="call_strikeSelect_jaze_lizard"></select>
-                        </div>
-                        <p class="pe_ce">CE</p>
-                      </div>
-                      <div class="main_strikePrice mb-3">
-                        <div class="jaze_lizard_lot_size">
-                          <span id="call_2nd_jaze_lizard_lot_size"></span><span>x</span>
-                        </div>
-                        <div class="strategy_inputs">
-                          <label for="strikePrice">Put/Call Strike Price</label>
-                          <select class="strike_price_input form-select"
-                            id="call_2nd_strikeSelect_jaze_lizard"></select>
-                        </div>
-                        <p class="pe_ce">CE</p>
-                      </div>
-
-                      <div class="main_strikePrice mb-3">
-                        <div class="jaze_lizard_lot_size">
-                          <span id="put_jaze_lizard_lot_size"></span><span>x</span>
-                        </div>
-                        <div class="strategy_inputs">
-                          <label for="strikePrice">Call Strike Price</label>
-                          <select class="strike_price_input form-select" id="put_strikeSelect_jaze_lizard"></select>
-                        </div>
-                        <p class="pe_ce">PE</p>
-                      </div>
-
-                      <div class="strategy_inputs mb-3">
-                        <label for="expirydate">Expiry Date</label>
-                        <select class="expiry_date_input form-select" id="expiryDate_jaze_lizard"></select>
-                      </div>
-
-                      <div class="main_counter d-flex gap-3 mb-3">
-                        <div class="inner_inroFly_counter d-flex gap-2">
-                          <p class="fs-5 lot_title">Qty:</p>
-                          <div class="counter_jaze_lizard d-flex justify-content-center gap-1">
-                            <button class="btn" id="decrement_jaze_lizard">
-                              <i class="bx bx-minus"></i>
-                            </button>
-                            <input type="text" name="" id="counter_input_jaze_lizard" min="1" disabled />
-                            <button class="btn" id="increment_jaze_lizard">
-                              <i class="bx bx-plus"></i>
-                            </button>
-                          </div>
-
-                          <button class="" id="shortjaze_lizard">SELL</button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <!-- <div class="buy_sell_buttons d-flex gap-2 justify-content-center">
-
-                      
-
-                        </div> -->
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="main-double-iron-fly">
-          <div class="straddle" id="double_iron_fly">  
-            
-            <div class="main_strategy_img_title">
-              <div class="style__PresetStrategyCard-sc-1f57s5d-6 jyZMZN">
-
-                <svg width="62" height="45" viewBox="0 0 62 45" fill="none" xmlns="http://www.w3.org/2000/svg" class="SVGLoader__StyledComp-sc-1ak2cuz-1 jss619"><path d="M1.5 1V44.2366" stroke="var(--dividerColor)" stroke-linecap="square"></path><path d="M1.46154 24H61" stroke="var(--dividerColor)" stroke-linecap="round" stroke-dasharray="5 5"></path><path d="M9.4668 24L16.0001 17L22.1766 24M40.3237 24L46.5001 17L53.0335 24" stroke="var(--profitColor)" stroke-width="2"></path><path d="M2 32L9.46667 24M60.5 32L53.0333 24M22.1765 24L23.5 25.5H39L40.3235 24" stroke="var(--lossColor)" stroke-width="2"></path></svg>
-
-                <div class="title">Double Fly</div>
-                  
-                  </div>
- 
-
-            </div>
-          
-          
-          
-          </div>
-
-
-
-          <div class="" id="double_iron_fly_modal">
-            <div class="dismiss">
-              <i class="bx bx-plus dismiss_icon"></i>
-              <div class="triangle-up"></div>
-            </div>
-            <div class="modal_dialog">
-              <div class="modal_content">
-                <div class="modal_body" id="modal_body">
-                  <div class="main_double_iron_fly">
-                    <h5 class="text-center">Double Fly</h5>
-
-                    <div class="main_body_fields_double_iron_fly">
-
-
-                      <!-- first_position_double_fly -->
-
-
-
-
-
-
-
-                      <div class="main_strikePrice mb-3">
-                        <div class="double_iron_fly_lot_size">
-                          <span id="put_strike_eight_hundred_iron_fly_lot_size"></span><span>x</span>
-                        </div>
-                        <div class="strategy_inputs">
-                          <label for="strikePrice">Put Strike Price</label>
-                          <select class="strike_price_input form-select"
-                            id="put_strike_eight_hundred_Select_double_iron_fly"></select>
-                        </div>
-                        <p class="pe_ce">PE</p>
-                      </div>
-
-                      <!-- second_position_double_fly -->
-
-                      <div class="main_strikePrice mb-3">
-                        <div class="double_iron_fly_lot_size">
-                          <span id="call_2nd_double_iron_fly_lot_size"></span><span>x</span>
-                        </div>
-                        <div class="strategy_inputs">
-                          <label for="strikePrice">Put/Call Strike Price</label>
-                          <select class="strike_price_input form-select"
-                            id="call_put_four_hundred_Select_double_iron_fly"></select>
-                        </div>
-                        <p class="pe_ce">PE/CE</p>
-                      </div>
-
-
-                      <!-- third_position_double_fly -->
-
-                      <div class="main_strikePrice mb-3">
-                        <div class="double_iron_fly_lot_size">
-                          <span id="call_spot_double_iron_fly_lot_size"></span><span>x</span>
-                        </div>
-                        <div class="strategy_inputs">
-                          <label for="strikePrice">Call Strike Price</label>
-                          <select class="strike_price_input form-select"
-                            id="call_spot_strikeSelect_double_iron_fly"></select>
-                        </div>
-                        <p class="pe_ce">CE</p>
-                      </div>
-
-                      <!-- four_position_double_fly -->
-
-                      <div class="main_strikePrice mb-3">
-                        <div class="double_iron_fly_lot_size">
-                          <span id="put_positive_four_hundred_double_iron_fly_lot_size"></span><span>x</span>
-                        </div>
-                        <div class="strategy_inputs">
-                          <label for="strikePrice">Put Strike Price</label>
-                          <select class="strike_price_input form-select"
-                            id="put_positive_four_hundred_strikeSelect_double_iron_fly"></select>
-                        </div>
-                        <p class="pe_ce">PE</p>
-                      </div>
-
-                      <!-- five_position_double_fly -->
-
-                      <div class="main_strikePrice mb-3">
-                        <div class="double_iron_fly_lot_size">
-                          <span id="call_put_positive_eight_hundred_double_iron_fly_lot_size"></span><span>x</span>
-                        </div>
-                        <div class="strategy_inputs">
-                          <label for="strikePrice">Call/Put Strike Price</label>
-                          <select class="strike_price_input form-select"
-                            id="call_put_positive_eight_hundred_strikeSelect_double_iron_fly"></select>
-                        </div>
-                        <p class="pe_ce">CE/PE</p>
-                      </div>
-                      <!-- six_position_double_fly -->
-
-                      <div class="main_strikePrice mb-3">
-                        <div class="double_iron_fly_lot_size">
-                          <span id="call_twelve_hundred_positive_double_iron_fly_lot_size"></span><span>x</span>
-                        </div>
-                        <div class="strategy_inputs">
-                          <label for="strikePrice">Call Strike Price</label>
-                          <select class="strike_price_input form-select"
-                            id="call_twelve_hundred_positive_strikeSelect_double_iron_fly"></select>
-                        </div>
-                        <p class="pe_ce">CE</p>
-                      </div>
-
-
-
-
-
-
-
-
-
-
-
-
-                      <div class="strategy_inputs mb-3">
-                        <label for="expirydate">Expiry Date</label>
-                        <select class="expiry_date_input form-select" id="expiryDate_double_iron_fly"></select>
-                      </div>
-
-                      <div class="main_counter d-flex gap-3 mb-3">
-                        <div class="inner_inroFly_counter d-flex gap-2">
-                          <p class="fs-5 lot_title">Qty:</p>
-                          <div class="counter_double_iron_fly d-flex justify-content-center gap-1">
-                            <button class="btn" id="decrement_double_iron_fly">
-                              <i class="bx bx-minus"></i>
-                            </button>
-                            <input type="text" name="" id="counter_input_double_iron_fly" min="1" disabled />
-                            <button class="btn" id="increment_double_iron_fly">
-                              <i class="bx bx-plus"></i>
-                            </button>
-                          </div>
-
-                          <button class="" id="shortdouble_iron_fly">SELL</button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <!-- <div class="buy_sell_buttons d-flex gap-2 justify-content-center">
-
-                      
-
-                        </div> -->
-                </div>
-              </div>
-            </div>
-          </div>
-
-
-
-
-
-        </div>
-        <div class="main-double-candor">
-          <div class="straddle" id="double_iron_condor">   
-            
-            
-            <div class="main_strategy_img_title">
-              <div class="style__PresetStrategyCard-sc-1f57s5d-6 jyZMZN">
-
-                <svg width="62" height="45" viewBox="0 0 62 45" fill="none" xmlns="http://www.w3.org/2000/svg" class="SVGLoader__StyledComp-sc-1ak2cuz-1 jss619"><path d="M1.5 1V44.2366" stroke="var(--dividerColor)" stroke-linecap="square"></path><path d="M1.46154 24H61" stroke="var(--dividerColor)" stroke-linecap="round" stroke-dasharray="5 5"></path><path d="M23.0152 24L17.5 11H11L5.48486 24M39.8788 24L45 11H52L57.5152 24" stroke="var(--profitColor)" stroke-width="2"></path><path d="M2 27.5H4L5.48485 24M61 27.5H59L57.5152 24M23.0152 24L24.5 27.5H38.5L39.8788 24" stroke="var(--lossColor)" stroke-width="2"></path></svg>
-                <div class="title">Double Condor</div>
-                  
-                  </div>
- 
-
-            </div>
-          
-          
-          
-          </div>
-
-          <div class="" id="double_iron_condor_modal">
-            <div class="dismiss">
-              <i class="bx bx-plus dismiss_icon"></i>
-              <div class="triangle-up"></div>
-            </div>
-            <div class="modal_dialog">
-              <div class="modal_content">
-                <div class="modal_body" id="modal_body">
-                  <div class="main_double_iron_condor">
-                    <h5 class="text-center">Double Condor</h5>
-
-                    <div class="main_body_fields_double_iron_condor">
-
-
-                      <!-- first_position_double_condor -->
-
-
-                      <div class="main_strikePrice mb-3">
-                        <div class="double_iron_condor_lot_size">
-                          <span id="put_spot_double_iron_condor_lot_size"></span><span>x</span>
-                        </div>
-                        <div class="strategy_inputs">
-                          <label for="strikePrice">Put Strike Price</label>
-                          <select class="strike_price_input form-select" id="spot_Select_double_iron_condor"></select>
-                        </div>
-                        <p class="pe_ce">PE</p>
-                      </div>
-
-                      <!-- second_position_double_condor -->
-
-                      <div class="main_strikePrice mb-3">
-                        <div class="double_iron_condor_lot_size">
-                          <span id="put_negative_fifty_double_iron_condor_lot_size"></span><span>x</span>
-                        </div>
-                        <div class="strategy_inputs">
-                          <label for="strikePrice">Put Strike Price</label>
-                          <select class="strike_price_input form-select"
-                            id="put_negative_fifty_Select_double_iron_condor"></select>
-                        </div>
-                        <p class="pe_ce">PE</p>
-                      </div>
-
-
-                      <!-- third_position_double_condor -->
-
-                      <div class="main_strikePrice mb-3">
-                        <div class="double_iron_condor_lot_size">
-                          <span id="put_negative_two_hundred_double_iron_condor_lot_size"></span><span>x</span>
-                        </div>
-                        <div class="strategy_inputs">
-                          <label for="strikePrice">Put Strike Price</label>
-                          <select class="strike_price_input form-select"
-                            id="put_negative_two_hundred_Select_double_iron_condor"></select>
-                        </div>
-                        <p class="pe_ce">PE</p>
-                      </div>
-
-                      <!-- four_position_double_condor -->
-
-                      <div class="main_strikePrice mb-3">
-                        <div class="double_iron_condor_lot_size">
-                          <span id="negative_three_hundred_fifty_double_iron_condor_lot_size"></span><span>x</span>
-                        </div>
-                        <div class="strategy_inputs">
-                          <label for="strikePrice">Put Strike Price</label>
-                          <select class="strike_price_input form-select"
-                            id="negative_three_hundred_fifty_Select_double_iron_condor"></select>
-                        </div>
-                        <p class="pe_ce">PE</p>
-                      </div>
-
-                      <!-- five_position_double_condor -->
-
-                      <div class="main_strikePrice mb-3">
-                        <div class="double_iron_condor_lot_size">
-                          <span id="call_positive_three_hundred_fifty_double_iron_condor_lot_size"></span><span>x</span>
-                        </div>
-                        <div class="strategy_inputs">
-                          <label for="strikePrice">Call Strike Price</label>
-                          <select class="strike_price_input form-select"
-                            id="call_positive_three_hundred_fifty_strikeSelect_double_iron_condor"></select>
-                        </div>
-                        <p class="pe_ce">CE</p>
-                      </div>
-
-
-
-                      <!-- six_position_double_condor -->
-
-                      <div class="main_strikePrice mb-3">
-                        <div class="double_iron_condor_lot_size">
-                          <span id="call_positive_five_hundred_double_iron_condor_lot_size"></span><span>x</span>
-                        </div>
-                        <div class="strategy_inputs">
-                          <label for="strikePrice">Call Strike Price</label>
-                          <select class="strike_price_input form-select"
-                            id="call_positive_five_hundred_strikeSelect_double_iron_condor"></select>
-                        </div>
-                        <p class="pe_ce">CE</p>
-                      </div>
-
-
-
-                      <!-- seven_position_double_condor -->
-
-                      <div class="main_strikePrice mb-3">
-                        <div class="double_iron_condor_lot_size">
-                          <span id="call_positive_six_hundred_fifty_double_iron_condor_lot_size"></span><span>x</span>
-                        </div>
-                        <div class="strategy_inputs">
-                          <label for="strikePrice">Call Strike Price</label>
-                          <select class="strike_price_input form-select"
-                            id="call_positive_six_hundred_fifty_strikeSelect_double_iron_condor"></select>
-                        </div>
-                        <p class="pe_ce">CE</p>
-                      </div>
-
-                      <!-- eight_position_double_condor -->
-
-                      <div class="main_strikePrice mb-3">
-                        <div class="double_iron_condor_lot_size">
-                          <span id="call_positive_eight_hundred_double_iron_condor_lot_size"></span><span>x</span>
-                        </div>
-                        <div class="strategy_inputs">
-                          <label for="strikePrice">Call Strike Price</label>
-                          <select class="strike_price_input form-select"
-                            id="call_positive_eight_hundred_strikeSelect_double_iron_condor"></select>
-                        </div>
-                        <p class="pe_ce">CE</p>
-                      </div>
-
-
-
-
-
-
-
-
-
-
-
-
-                      <div class="strategy_inputs mb-3">
-                        <label for="expirydate">Expiry Date</label>
-                        <select class="expiry_date_input form-select" id="expiryDate_double_iron_condor"></select>
-                      </div>
-
-                      <div class="main_counter d-flex gap-3 mb-3">
-                        <div class="inner_inroFly_counter d-flex gap-2">
-                          <p class="fs-5 lot_title">Qty:</p>
-                          <div class="counter_double_iron_condor d-flex justify-content-center gap-1">
-                            <button class="btn" id="decrement_double_iron_condor">
-                              <i class="bx bx-minus"></i>
-                            </button>
-                            <input type="text" name="" id="counter_input_double_iron_condor" min="1" disabled />
-                            <button class="btn" id="increment_double_iron_condor">
-                              <i class="bx bx-plus"></i>
-                            </button>
-                          </div>
-
-                          <button class="" id="shortdouble_iron_condor">SELL</button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <!-- <div class="buy_sell_buttons d-flex gap-2 justify-content-center">
-
-                      
-
-                        </div> -->
-                </div>
-              </div>
-            </div>
-          </div>
-
-
-        </div>
-
-        <div class="main-put-butterfly">
-          <div class="straddle" id="put_butter_fly">  
-            
-         
-            <div class="main_strategy_img_title">
-              <div class="style__PresetStrategyCard-sc-1f57s5d-6 jyZMZN">
-
-                <svg width="62" height="45" viewBox="0 0 62 45" fill="none" xmlns="http://www.w3.org/2000/svg" class="SVGLoader__StyledComp-sc-1ak2cuz-1 jss619"><path d="M1.5 1V44.2366" stroke="var(--dividerColor)" stroke-linecap="square"></path><path d="M1.46154 24H61" stroke="var(--dividerColor)" stroke-linecap="round" stroke-dasharray="5 5"></path><path d="M2 31.5H12.5L14.2857 24M59 31.5H26L24.5714 24" stroke="var(--lossColor)" stroke-width="2"></path><path d="M24.5714 24L19.9999 1.5L14.2856 24" stroke="var(--profitColor)" stroke-width="2"></path></svg>
-                
-                
-                
-                <div class="title">Bear Butterfly                </div>
-                  
-                  </div>
- 
-
-            </div>
-          
-          
-          
-          
-        </div>
-
-          <div class="" id="put_butterfly_modal">
-            <div class="dismiss">
-              <i class="bx bx-plus dismiss_icon"></i>
-              <div class="triangle-up"></div>
-            </div>
-            <div class="modal_dialog">
-              <div class="modal_content">
-                <div class="modal_body" id="modal_body">
-                  <div class="main_put_butterfly">
-                    <h5 class="text-center">Bear Butterfly</h5>
-
-                    <div class="main_body_fields_put_butterfly">
-
-
-                      <!-- first_position_put_butterfly -->
-                      <div class="main_strikePrice mb-3">
-                        <div class="put_butterfly_lot_size">
-                          <span id="put_negative_nine_hundred_fifty_butterfly_lot_size"></span><span>x</span>
-                        </div>
-                        <div class="strategy_inputs">
-                          <label for="strikePrice">Put Strike Price</label>
-                          <select class="strike_price_input form-select"
-                            id="put_negative_nine_hundred_fifty_Select_put_butterfly"></select>
-                        </div>
-                        <p class="pe_ce">PE</p>
-                      </div>
-
-
-
-
-                      <!-- second_position_put_butterfly -->
-
-
-
-                      <div class="main_strikePrice mb-3">
-                        <div class="put_butterfly_lot_size">
-                          <span id="five_hundred_put_call_butterfly_lot_size"></span><span>x</span>
-                        </div>
-                        <div class="strategy_inputs">
-                          <label for="strikePrice">Call/Put Strike Price</label>
-                          <select class="strike_price_input form-select"
-                            id="five_hundred_put_call_Select_put_butterfly"></select>
-                        </div>
-                        <p class="pe_ce">CE/PE</p>
-                      </div>
-
-
-                      <!-- third_position_put_butterfly -->
-
-                      <div class="main_strikePrice mb-3">
-                        <div class="put_butterfly_lot_size">
-                          <span id="put_negative_fifty_put_butterfly_lot_size"></span><span>x</span>
-                        </div>
-                        <div class="strategy_inputs">
-                          <label for="strikePrice">Call Strike Price</label>
-                          <select class="strike_price_input form-select"
-                            id="put_negative_fifty_Select_put_butterfly"></select>
-                        </div>
-                        <p class="pe_ce">CE</p>
-                      </div>
-
-
-
-
-
-
-
-
-
-                      <div class="strategy_inputs mb-3">
-                        <label for="expirydate">Expiry Date</label>
-                        <select class="expiry_date_input form-select" id="expiryDate_put_butterfly"></select>
-                      </div>
-
-                      <div class="main_counter d-flex gap-3 mb-3">
-                        <div class="inner_inroFly_counter d-flex gap-2">
-                          <p class="fs-5 lot_title">Qty:</p>
-                          <div class="counter_put_butterfly d-flex justify-content-center gap-1">
-                            <button class="btn" id="decrement_put_butterfly">
-                              <i class="bx bx-minus"></i>
-                            </button>
-                            <input type="text" name="" id="counter_input_put_butterfly" min="1" disabled />
-                            <button class="btn" id="increment_put_butterfly">
-                              <i class="bx bx-plus"></i>
-                            </button>
-                          </div>
-
-                          <button class="" id="shortput_butterfly">SELL</button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <!-- <div class="buy_sell_buttons d-flex gap-2 justify-content-center">
-
-                      
-
-                        </div> -->
-                </div>
-              </div>
-            </div>
-          </div>
-
-
-
-
-        </div>
-
-        <div class="main-call-butterfly">
-          <div class="straddle" id="call_butter_fly">  
-            
-            <div class="main_strategy_img_title">
-              <div class="style__PresetStrategyCard-sc-1f57s5d-6 jyZMZN">
-
-       <svg width="62" height="45" viewBox="0 0 62 45" fill="none" xmlns="http://www.w3.org/2000/svg" class="SVGLoader__StyledComp-sc-1ak2cuz-1 jss619"><path d="M1.5 1V44.2366" stroke="var(--dividerColor)" stroke-linecap="square"></path><path d="M1.46154 24H61" stroke="var(--dividerColor)" stroke-linecap="round" stroke-dasharray="5 5"></path><path d="M59 31.5H52L50.2143 24M2 31.5H38.5L39.9286 24" stroke="var(--lossColor)" stroke-width="2"></path><path d="M39.9286 24L44.5001 1.5L50.2144 24" stroke="var(--profitColor)" stroke-width="2"></path></svg>
-                  
-            
-                
-                
-                <div class="title">Bull Butterfly                </div>
-                  
-                  </div>
- 
-
-            </div>
-          
-          
-          
-          </div>
-
-
-          <div class="" id="call_butter_fly_modal">
-            <div class="dismiss">
-              <i class="bx bx-plus dismiss_icon"></i>
-              <div class="triangle-up-call_butterfly"></div>
-            </div>
-            <div class="modal_dialog">
-              <div class="modal_content">
-                <div class="modal_body" id="modal_body">
-                  <div class="main_call_butter_fly">
-                    <h5 class="text-center">Bull Butterfly</h5>
-
-                    <div class="main_body_fields_call_butter_fly">
-
-
-                      <!-- first_position_call_butter_fly -->
-                      <div class="main_strikePrice mb-3">
-                        <div class="call_butter_fly_lot_size">
-                          <span id="put_positive_fifty_butterfly_lot_size"></span><span>x</span>
-                        </div>
-                        <div class="strategy_inputs">
-                          <label for="strikePrice">Put Strike Price</label>
-                          <select class="strike_price_input form-select"
-                            id="put_positive_fifty_Select_call_butter_fly"></select>
-                        </div>
-                        <p class="pe_ce">PE</p>
-                      </div>
-
-
-
-
-                      <!-- second_position_call_butter_fly -->
-
-
-
-                      <div class="main_strikePrice mb-3">
-                        <div class="call_butter_fly_lot_size">
-                          <span id="four_hundred_put_call_butterfly_lot_size"></span><span>x</span>
-                        </div>
-                        <div class="strategy_inputs">
-                          <label for="strikePrice">Call/Put Strike Price</label>
-                          <select class="strike_price_input form-select"
-                            id="four_hundred_put_call_Select_call_butter_fly"></select>
-                        </div>
-                        <p class="pe_ce">CE/PE</p>
-                      </div>
-
-
-                      <!-- third_position_call_butter_fly -->
-
-                      <div class="main_strikePrice mb-3">
-                        <div class="call_butter_fly_lot_size">
-                          <span id="positive_seven_hundred_fifty_call_butter_fly_lot_size"></span><span>x</span>
-                        </div>
-                        <div class="strategy_inputs">
-                          <label for="strikePrice">Call Strike Price</label>
-                          <select class="strike_price_input form-select"
-                            id="positive_seven_hundred_fifty_Select_call_butter_fly"></select>
-                        </div>
-                        <p class="pe_ce">CE</p>
-                      </div>
-
-
-
-
-
-
-
-
-
-                      <div class="strategy_inputs mb-3">
-                        <label for="expirydate">Expiry Date</label>
-                        <select class="expiry_date_input form-select" id="expiryDate_call_butter_fly"></select>
-                      </div>
-
-                      <div class="main_counter d-flex gap-3 mb-3">
-                        <div class="inner_inroFly_counter d-flex gap-2">
-                          <p class="fs-5 lot_title">Qty:</p>
-                          <div class="counter_call_butter_fly d-flex justify-content-center gap-1">
-                            <button class="btn" id="decrement_call_butter_fly">
-                              <i class="bx bx-minus"></i>
-                            </button>
-                            <input type="text" name="" id="counter_input_call_butter_fly" min="1" disabled />
-                            <button class="btn" id="increment_call_butter_fly">
-                              <i class="bx bx-plus"></i>
-                            </button>
-                          </div>
-
-                          <button class="" id="shortcall_butter_fly">SELL</button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <!-- <div class="buy_sell_buttons d-flex gap-2 justify-content-center">
-
-                      
-
-                        </div> -->
-                </div>
-              </div>
-            </div>
-          </div>
-
-
-
-        </div>
-
-        <div class="custom-strategy" style="position: relative;">
-          <div class="straddle" id="custom_strategy">  
-            
-            
-            
-            <div class="main_strategy_img_title">
-              <div class="style__PresetStrategyCard-sc-1f57s5d-6 jyZMZN">
-
-                <svg xmlns="http://www.w3.org/2000/svg" width="62" height="45" viewBox="0 0 62 45" class="SVGLoader__StyledComp-sc-1ak2cuz-1 jss619"><g fill="none" fill-rule="evenodd"><path stroke="var(--dividerColor)" stroke-linecap="square" d="M0.5 0L0.5 43.237" transform="translate(1 1)"></path><path stroke="var(--dividerColor)" stroke-dasharray="5 5" stroke-linecap="round" d="M0.462 23L60 23" transform="translate(1 1)"></path><path stroke="var(--lossColor)" stroke-width="2" d="M0.5 32.5L17.918 32.5 21.5 23" transform="translate(1 1)"></path><path stroke="var(--lossColor)" stroke-width="2" d="M35.5 32.5L52.918 32.5 56.5 23" transform="translate(1 1) matrix(-1 0 0 1 92 0)"></path><path stroke="var(--profitColor)" stroke-width="2" d="M21.5 23L28.244 4 35.5 23" transform="translate(1 1)"></path></g></svg>
-                  
-            
-                
-                
-                <div class="title">Custom Strategy </div>
-                  
-                  </div>
- 
-
-            </div>
-          
-          
-          
-          </div>
-
-          <div class="dropdown-menu" id="custom_strategy_modal">
-            <div class="dismiss">
-              <i class="bx bx-plus dismiss_icon"></i>
-              <div class="triangle-up-custom_strategy"></div>
-            </div>
-            <div class="modal_dialog">
-              <div class="modal_content">
-                <div class="modal_body" id="modal_body">
-                  <div class="main_custom_strategy">
-                    <h5 class="text-center mb-3">Nifty custom Strategy</h5>
-
-                    <div class="main_body_fields_custom_strategy">
-
-
-                      <!-- first_position_custom_strategy -->
-                      <div class="main_strikePrice mb-3">
-                        <div class="custom_strategy_lot_size">
-                          <span id="call_two_hundered_buy_custom_strategy_lot_size"></span>5<span>x</span>
-                        </div>
-                        <div class="strategy_inputs">
-                          <label for="strikePrice">Call Strike Price</label>
-                          <select class="strike_price_input form-select"
-                            id="call_two_hundered_buy_Select_custom_strategy"></select>
-                        </div>
-                        <p class="pe_ce">CE</p>
-                      </div>
-                      <!-- second_position_custom_strategy -->
-                      <div class="main_strikePrice mb-3">
-                        <div class="custom_strategy_lot_size">
-                          <span id="call_negative_two_hundred_buy_custom_strategy_lot_size"></span>5<span>x</span>
-                        </div>
-                        <div class="strategy_inputs">
-                          <label for="strikePrice">Call Strike Price</label>
-                          <select class="strike_price_input form-select"
-                            id="call_negative_two_hundred_buy_Select_custom_strategy"></select>
-                        </div>
-                        <p class="pe_ce">CE</p>
-                      </div>
-                      <!-- third_position_custom_strategy -->
-                      <div class="main_strikePrice mb-3">
-                        <div class="custom_strategy_lot_size">
-                          <span id="put_call_negative_one_hundred_sell_custom_strategy_lot_size"></span><span>x</span>
-                        </div>
-                        <div class="strategy_inputs">
-                          <label for="strikePrice">Call/Put Strike Price</label>
-                          <select class="strike_price_input form-select"
-                            id="put_call_negative_one_hundred_sell_Select_custom_strategy"></select>
-                        </div>
-                        <p class="pe_ce">CE/PE</p>
-                      </div>
-
-                      <div class="main_strikePrice mb-3">
-                        <div class="custom_strategy_lot_size">
-                          <span id="put_call_negative_fifty_hundred_sell_custom_strategy_lot_size"></span><span>x</span>
-                        </div>
-                        <div class="strategy_inputs">
-                          <label for="strikePrice">Call/Put Strike Price</label>
-                          <select class="strike_price_input form-select"
-                            id="put_call_negative_fifty_hundred_sell_Select_custom_strategy"></select>
-                        </div>
-                        <p class="pe_ce">CE/PE</p>
-                      </div>
-
-                      <div class="main_strikePrice mb-3">
-                        <div class="custom_strategy_lot_size">
-                          <span id="put_call_spot_sell_custom_strategy_lot_size"></span><span>x</span>
-                        </div>
-                        <div class="strategy_inputs">
-                          <label for="strikePrice">Call/Put Strike Price</label>
-                          <select class="strike_price_input form-select"
-                            id="put_call_spot_sell_Select_custom_strategy"></select>
-                        </div>
-                        <p class="pe_ce">CE/PE</p>
-                      </div>
-
-                      <div class="main_strikePrice mb-3">
-                        <div class="custom_strategy_lot_size">
-                          <span id="put_call_positive_fifty_sell_custom_strategy_lot_size"></span><span>x</span>
-                        </div>
-                        <div class="strategy_inputs">
-                          <label for="strikePrice">Call/Put Strike Price</label>
-                          <select class="strike_price_input form-select"
-                            id="put_call_positive_fifty_sell_Select_custom_strategy"></select>
-                        </div>
-                        <p class="pe_ce">CE/PE</p>
-                      </div>
-
-                      <div class="main_strikePrice mb-3">
-                        <div class="custom_strategy_lot_size">
-                          <span id="put_call_positive_one_hundred_sell_custom_strategy_lot_size"></span><span>x</span>
-                        </div>
-                        <div class="strategy_inputs">
-                          <label for="strikePrice">Call/Put Strike Price</label>
-                          <select class="strike_price_input form-select"
-                            id="put_call_positive_one_hundred_Select_custom_strategy"></select>
-                        </div>
-                        <p class="pe_ce">CE/PE</p>
-                      </div>
-
-
-
-
-
-
-
-
-
-                      <div class="strategy_inputs mb-3">
-                        <label for="expirydate">Expiry Date</label>
-                        <select class="expiry_date_input form-select" id="expiryDate_custom_strategy"></select>
-                      </div>
-
-                      <div class="main_counter d-flex gap-3 mb-3">
-                        <div class="inner_inroFly_counter d-flex gap-2">
-                          <!-- <p class="fs-5 lot_title">Qty:</p> -->
-                          <!-- <div class="counter_custom_strategy d-flex justify-content-center gap-1">
-                            <button class="btn" id="decrement_custom_strategy">
-                              <i class="bx bx-minus"></i>
-                            </button>
-                            <input type="text" name="" id="counter_input_custom_strategy" min="1" disabled />
-                            <button class="btn" id="increment_custom_strategy">
-                              <i class="bx bx-plus"></i>
-                            </button>
-                          </div> -->
-
-                          <button class="" id="shortcustom_strategy">SELL</button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <!-- <div class="buy_sell_buttons d-flex gap-2 justify-content-center">
-
-                      
-
-                        </div> -->
-                </div>
-              </div>
-            </div>
-          </div>
-
-        </div>
-
-
-      </div>
-    </div>
-  </div>
 
 
 
@@ -6481,6 +6261,7 @@ $(".all_strategy_filter").removeClass("main_all_strategy_active")
 
   <style>
     .strategy_notes,
+
     .exit_all_positions_zerodha {
       display: flex !important;
       align-items: center !important;
@@ -6504,6 +6285,32 @@ $(".all_strategy_filter").removeClass("main_all_strategy_active")
       font-weight: 600 !important;
     }
 
+    .build_strategy_main{
+      display: flex !important;
+      align-items: center !important;
+      background: linear-gradient(180deg, #4399eb, #5cadfb);
+      color: #fff;
+      padding: 17px 36px !important;
+
+      text-align: center;
+      font-size: 13px;
+      height: 29px;
+      font-weight: 500 !important;
+      border-radius: 4px;
+      border: 1px solid #4399eb !important;
+      -webkit-box-shadow: none !important;
+      box-shadow: none !important;
+      outline: 0 !important;
+      -webkit-transition: all .2s ease-in-out !important;
+      -moz-transition: all .2s ease-in-out !important;
+      transition: all .2s ease-in-out !important;
+      cursor: pointer;
+
+      font-weight: 600 !important;
+    }
+.build_strategy_main:hover{
+  color: #4399eb !important;
+}
 
     .deploy_btn,
     .reset_button {
@@ -6891,11 +6698,11 @@ $(".all_strategy_filter").removeClass("main_all_strategy_active")
                 padding: 0 0.5rem 0.5rem 0.5rem;
               }
 
-              .maximize {
+              .maximize_btn {
                 font-size: 19px !important;
                 display: flex;
                 justify-content: flex-end;
-                cursor: pointer;
+     
               }
 
               .broker_icon {
@@ -7494,7 +7301,7 @@ $(".all_strategy_filter").removeClass("main_all_strategy_active")
 
           </div>
           <div class="main_strategy_builder_btn">
-            <button class="" type="button" data-bs-toggle="offcanvas" data-bs-target="#optionChain_canvas"
+            <button class="build_strategy_main" type="button" data-bs-toggle="offcanvas" data-bs-target="#optionChain_canvas"
               aria-controls="optionChain_canvasLabel" id="buid_custom_strategy_btn">Build Your Strategy</button>
           </div>
 
@@ -8031,9 +7838,76 @@ $(".all_strategy_filter").removeClass("main_all_strategy_active")
 
       <div class="right_p_l_greeks col-md-7 col-lg-7 col-sm-12">
 
-        <i class='bx bx-fullscreen maximize'></i>
+        <div class="maximize_btn">
+
+          <i class='bx bx-fullscreen maximize' style="cursor: pointer;"></i>
+        </div>
+
         <div class="table_pl_greek">
           <div class="main_filter_greek_P_L">
+             
+    <div class="right_side_top_strategies">
+
+      <button class="d-flex align-items-center" id="all_scheduled_order">
+
+        <p style="margin-bottom: 0;">Scheduled order</p>
+      </button>
+   
+      <button class="d-flex align-items-center" id="saveStrategies">
+        <p style="margin-bottom: 0;">Strategies Saved</p>
+      </button>
+      <button style="padding: 0px 14px;" class="btn_outline_primary" type="button" data-bs-toggle="offcanvas"
+        data-bs-target="#optionChain_canvas" aria-controls="optionChain_canvasLabel" id="buid_custom_strategy_btn">
+        Option Chain
+        <i class="bx bx-chevron-down"></i>
+      </button>
+
+      <button class="btn_add_broker" data-bs-toggle="offcanvas" data-bs-target="#add_api" aria-controls="add_api">
+        Add Broker
+      </button>
+
+      <div class="activate_broker_toggle_main_btn">
+
+
+
+        <button class="btn_outline_primary" class="all_api_details" data-bs-toggle="collapse" id="Activate_broker_btn">
+          Activate Broker <i class="bx bx-chevron-down"></i>
+        </button>
+
+
+        <div id="overlay"></div>
+
+        <div class="" id="active_broker_modal" style="display: none;">
+          <div class="dismiss_active_modal">
+            <!-- <i class="bx bx-plus dismiss_icon_active_modal"></i> -->
+            <div class="triangle-up-active-modal"></div>
+          </div>
+          <div class="modal_dialog">
+            <div class="modal_content">
+
+
+              <div class="all_broker">
+                <div id="zerodha_data_display"></div>
+              </div>
+
+
+
+
+
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+
+
+
+      <button id="order_btn">Order History</button>
+
+
+    </div>
+
             <div class="inner_greek_p_l d-flex">
               <p class="payoff_charts greek_strategy_active">
                 PAYOFF DIAGRAM
@@ -19632,5 +19506,256 @@ $(".all_strategy_filter").removeClass("main_all_strategy_active")
 
   });
 </script>
+
+<script>
+
+  $("#all_scheduled_order").click(function () {
+      $.ajax({
+          type: "GET",
+          url: "/dynamic_user_tasks", // Replace with the actual URL
+          success: function (response) {
+              // Log the response
+              console.log(response);
+  
+              if (response.user_not_logged_in) {
+                  $("#signinModal").modal("show");
+              } else {
+                  $("#all_schedulerModal").modal("show");
+                  var all_scheduled_order = response.tasks
+  
+                  console.log(all_scheduled_order);
+  
+                  var $allSchedulers = $(".all_schedulers").empty();
+  
+                  if (all_scheduled_order.length === 0) {
+                      $allSchedulers.append(`<div class="d-flex  justify-content-center p-2"> <p>No Strategies Found...</p></div>`);
+                  } else {
+                      all_scheduled_order.forEach(function (schedule, index_schedulor) {
+  
+                          function formatMonth(month) {
+                              const monthNames = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
+                              return monthNames[month - 1] || 'Invalid Month';
+                          }
+  
+                          function formatDay(day) {
+                              const dayNames = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
+                              return dayNames[day] || 'Invalid Day';
+                          }
+  
+                          console.log(schedule.id);
+  
+                          function calculateTimeMedian(...timeValues) {
+                              const timeToMinutes = (time) => {
+                                  const [hour, minute] = time.split(':');
+                                  return parseInt(hour) * 60 + parseInt(minute);
+                              };
+  
+                              const timeInMinutes = timeValues.map(timeToMinutes);
+  
+                              const calculateMedian = (arr) => {
+                                  const sortedArr = arr.sort((a, b) => a - b);
+                                  const mid = Math.floor(sortedArr.length / 2);
+  
+                                  if (sortedArr.length % 2 === 0) {
+                                      return (sortedArr[mid - 1] + sortedArr[mid]) / 2;
+                                  } else {
+                                      return sortedArr[mid];
+                                  }
+                              };
+  
+                              const medianValue = calculateMedian(timeInMinutes);
+  
+                              const medianHours = Math.floor(medianValue / 60);
+                              const medianMinutes = medianValue % 60;
+  
+                              const meridiem = medianHours >= 12 ? 'PM' : 'AM';
+  
+                              const displayHours = medianHours % 12 || 12;
+                              const displayMinutes = medianMinutes < 10 ? `0${medianMinutes}` : medianMinutes;
+  
+                              return `${displayHours}:${displayMinutes} ${meridiem}`;
+                          }
+  
+                          const monthName = formatMonth(schedule.crontab_info.month_of_year);
+                          const dayName = formatDay(schedule.crontab_info.day_of_month);
+  
+                          const displayYear = schedule.crontab_info.year || '*';
+  
+                          var schedulesPosition = `
+                              <div class="all_schedule_order justify-content-between" data-strategy="${schedule.id}">
+                                  <div class="left_strategy_name" style="font-size: 14px;" >
+                                      <div>${index_schedulor + 1}.</div>
+                                      ${schedule.custom_field.charAt(0).toUpperCase() + schedule.custom_field.slice(1)}
+                                  </div>
+                                  <div class="main_middle_content">
+                                      <div class="middle_date_switch">
+                                          <p style="font-size: 14px">Schedule date: ${dayName}-${monthName}-${displayYear} , ${calculateTimeMedian(`${schedule.crontab_info.hour}:${schedule.crontab_info.minute}`)}</p>
+                                          <div class="checkbox-wrapper-15">
+                                              <input id="s1-14" type="checkbox" class="switch schedule_switch" ${schedule.enabled ? 'checked' : ''}   data-active="${schedule.id}">
+                                              <label for="s1-14" class="${schedule.enabled ? 'active-label' : 'inactive-label'}">${schedule.enabled ? 'ON' : 'OFF'}</label>
+                                          </div>
+                                      </div>
+                                  </div>
+                                  <div class="right_strategy_action" style="z-index: 9999999999999999999;">
+                                      <div class="middle_strategy_status"></div>
+                                      <div class="strategy_edit_delete">
+                                          <img src="{% static "img/delete_edit_btns/delete.png" %}" width="19px" class='cursor-pointer delete_shchedule_order' data-delete="${schedule.id}"  data-scheduler_name="${schedule.custom_field}"></i>
+                                      </div>
+                                  </div>
+                              </div>`;
+  
+                          $allSchedulers.append(schedulesPosition);
+                      })
+  
+                      var perPage = 5;
+                      $("#pagination_container_schedule").empty()
+  
+  
+                      // Manually implement pagination
+                      var numPages = Math.ceil(all_scheduled_order.length / perPage);
+                      var currentPage = 1;
+  
+                      // Add pagination links
+                      $('#pagination_container_schedule').append(`
+                              <a href="#" class="schedule_pagination-link prev" data-page="prev" disabled>&lt;</a>
+                            `);
+                      for (var i = 1; i <= numPages; i++) {
+                        $('#pagination_container_schedule').append(`<a href="#" class="schedule_pagination-link" data-page="${i}">${i}</a>`);
+                      }
+                      $('#pagination_container_schedule').append(`
+                            <a href="#" class="schedule_pagination-link next" data-page="next">&gt;</a>
+                          `);
+  
+                      // Show the first page and mark it as active
+                      showPage(currentPage);
+                      $('#pagination_container_schedule .schedule_pagination-link[data-page="1"]').addClass('active_strategy_page');
+                      $('.schedule_pagination-link.prev').attr('disabled', true); // Disable prev initially
+  
+                      // Handle schedule_pagination link click
+                      $('.schedule_pagination-link').on('click', function (e) {
+                        e.preventDefault();
+  
+                        var clickedPage = $(this).data('page');
+  
+                        if (clickedPage === 'prev' && currentPage > 1) {
+                          currentPage--;
+                        } else if (clickedPage === 'next' && currentPage < numPages) {
+                          currentPage++;
+                        } else if (typeof clickedPage === 'number') {
+                          currentPage = clickedPage;
+                        }
+  
+                        showPage(currentPage);
+  
+                        // Mark the clicked link as active_strategy_page and remove active_strategy_page class from others
+                        $('.schedule_pagination-link').removeClass('active_strategy_page');
+                        $('#pagination_container_schedule .schedule_pagination-link[data-page="' + currentPage + '"]').addClass('active_strategy_page');
+  
+                        // Disable/enable prev and next based on current page
+                        $('.schedule_pagination-link.prev').attr('disabled', currentPage === 1);
+                        $('.schedule_pagination-link.next').attr('disabled', currentPage === numPages);
+                      })
+                      
+  
+                     
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+                      $('.schedule_switch').on('click', function () {
+                          var active = $(this).data("active");
+  
+                          // Toggle the checked state of the checkbox
+                          $(this).prop('checked', !$(this).prop('checked'));
+  
+                          // Toggle the label text and class based on the new checked state
+                          var main_status;
+                          if (!$(this).prop('checked')) {
+                              $(this).next('label').text('ON').removeClass('inactive-label').addClass('active-label');
+                              main_status = true;
+                              $(this).prop('checked', true);
+                          } else {
+                              $(this).next('label').text('OFF').removeClass('active-label').addClass('inactive-label');
+                              main_status = false;
+                              $(this).prop('checked', false);
+                          }
+  
+                          // Update the status in the UI immediately
+                          updateSchedulerStatus(active, main_status);
+                      });
+  
+                      $(".delete_shchedule_order").click(function () {
+                          var deleteId = $(this).data("delete");
+                          var scheduler_name = $(this).data("scheduler_name");
+  
+                          // Remove the item from the UI immediately
+                          $(`[data-strategy="${deleteId}"]`).remove();
+  
+                          // Call the server to delete the item
+                          deleteScheduler(deleteId,scheduler_name);
+                      })
+                  }
+              }
+          },
+          error: function (xhr, status, error) {
+              // Log and handle the error
+              console.error("AJAX request failed:", status, error);
+          }
+      });
+  });
+  function showPage(page) {
+                          console.log("page",page);
+                         $(".all_schedulers").find('.all_schedule_order').hide();
+                                            var startIndex = (page - 1) * 5;
+                                            var endIndex = startIndex + 5;
+                                         $(".all_schedulers").find('.all_schedule_order').slice(startIndex, endIndex).show();
+                                          }
+                                          
+  function updateSchedulerStatus(active, main_status) {
+      $.ajax({
+          type: "POST",
+          url: "/update_scheduler_status", // Replace with the actual URL
+          data: { active: active, main_status: main_status },
+          success: function (response) {
+              // Log the response
+              console.log(response);
+          },
+          error: function (error) {
+              // Handle the error
+              console.log("Error:", error);
+          }
+      });
+  }
+  
+  function deleteScheduler(deleteId,scheduler_name) {
+      $.ajax({
+          type: "POST",
+          url: "/delete_scheduler", // Replace with the actual URL
+          data: { delete_id: deleteId },
+          success: function (response) {
+              // Log the response
+              console.log(response);
+              if (response.status=="success") {
+  
+                toastr.error(` ${scheduler_name} has been deleted  !! `)
+                
+              }
+          },
+          error: function (error) {
+              // Handle the error
+              console.log("Error:", error);
+          }
+      });
+  }
+  
+        </script>
 
 {% endblock dashboard_body %}
