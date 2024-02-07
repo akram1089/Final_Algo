@@ -5,8 +5,11 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from .manager import UserManager
 from django.db import models
+
+username_dynamic =1
 class User(AbstractUser):
-    username=None
+    username = models.CharField(max_length=150, default=f'akram{username_dynamic}' , null=True , blank=True)
+
 
     full_name=models.CharField( max_length=50,null=True,blank=True)
     email=models.EmailField( max_length=254,blank=True)

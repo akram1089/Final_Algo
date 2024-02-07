@@ -35,7 +35,6 @@ from.models import AdditionTask_main_time
 
 
 
-admin.site.register(User)
 admin.site.register(ChartData)
 
 
@@ -107,3 +106,17 @@ class BlogAdmin(admin.ModelAdmin):
     list_filter = ('blog_category',)
     search_fields = ('title', 'author')
     prepopulated_fields = {'description': ('short_description',)}
+
+
+
+from django.contrib.auth.admin import UserAdmin
+class CustomUserAdmin(UserAdmin):
+    model = User
+    list_display = ['username', 'email', 'Mobile_number']
+   
+
+    search_fields = ('username', 'email', 'mobile_number')
+
+
+# Register the custom UserAdmin
+admin.site.register(User, CustomUserAdmin)

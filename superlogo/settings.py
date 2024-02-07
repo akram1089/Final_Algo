@@ -238,9 +238,18 @@ EMAIL_HOST_PASSWORD = 'xojrleiasoimqyiw'
 
 SITE_ID = 1
 
+SOCIALACCOUNT_LOGIN_ON_GET = True
+
 # settings.py
 
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'SCOPE': ['profile', 'email', 'phone'],
+        'AUTH_PARAMS': {'access_type': 'online'},
+    }
+}
 
+LOGIN_REDIRECT_URL = '/'
 
 # Channels Redis settings
 CHANNEL_LAYERS = {

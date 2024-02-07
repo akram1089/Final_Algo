@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 {% load static %}
+{% load socialaccount %}
 <html lang="en">
   <head>
     <meta charset="UTF-8">
@@ -2528,11 +2529,12 @@ width: 16rem !important;
         {% with first_letter=user.full_name|slice:":1"|upper %}
           {{ first_letter }}
         {% endwith %}
+      {% elif user.username %}
+        {{ user.username|slice:":1"|upper }}
       {% else %}
-        {% with first_letter='N' %}
-          {{ first_letter }}
-        {% endwith %}
+        N
       {% endif %}
+      
       
         
       </h5>
@@ -3915,9 +3917,12 @@ display: none !important;
            <div class="dotted-line-text">
              OR
          </div>
-   
+
            <!-- "Sign in with Google" button using Bootstrap's button styles -->
-           <button type="button" class="btn btn-outline-success w-100" id="google_btn"><img src="{% static "img/google _png'.png" %} " style="height: 20px;" alt=""> Sign in with Google</button>
+           <a href="{% provider_login_url 'google' %}" class="btn btn-outline-success w-100" id="google_btn">
+            <img src="{% static "img/google _png'.png" %} " style="height: 20px;" alt=""> Sign in with Google</a>
+           <!-- <a >Login with Google</a> -->
+
            <p class="text-center mt-2" id="signup_text">Oops, don't have an account? 
             <a data-bs-dismiss='modal' data-bs-toggle='modal' style="cursor: pointer;"
             data-bs-target='#signupModal' class="text-success singup_signin_page" >Sign up now</a></p>
@@ -4255,8 +4260,10 @@ display: none !important;
         </div>
   
           <!-- "Sign in with Google" button using Bootstrap's button styles -->
-          <button type="button" class="btn btn-outline-success w-100" id="google_btn"><img src="{% static "img/google _png'.png" %} " style="height: 20px;" alt=""> Sign in with Google</button>
-          <p class="text-center mt-2" id="signup_text">Already have an account?   <a data-bs-dismiss='modal' data-bs-toggle='modal' style="cursor: pointer;"
+           <!-- "Sign in with Google" button using Bootstrap's button styles -->
+           <a href="{% provider_login_url 'google' %}" class="btn btn-outline-success w-100" id="google_btn">
+            <img src="{% static "img/google _png'.png" %} " style="height: 20px;" alt=""> Sign in with Google</a>
+           <!-- <a >Login with Google</a> -->          <p class="text-center mt-2" id="signup_text">Already have an account?   <a data-bs-dismiss='modal' data-bs-toggle='modal' style="cursor: pointer;"
             data-bs-target='#signinModal' class="text-success" >Sign in now</a></p>
 
             </div>
@@ -4588,6 +4595,9 @@ $('.main_retry_otp').click(function () {
   #google_btn{
     outline: none !important;
     border: 1px solid green !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .fs-14:hover {

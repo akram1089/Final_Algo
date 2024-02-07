@@ -7130,10 +7130,14 @@ from django.core import serializers
 @csrf_exempt
 def get_user_data(request):
     user = request.user
+
+    print("user",user)
+    print("user.first_name",user.first_name)
+    full_name = user.full_name if user.full_name else f"{user.first_name} {user.last_name}"
     data = {
         'id': user.id,
         'username': user.username,
-        'full_name': user.full_name,
+        'full_name': full_name,
         'email': user.email,
         'Mobile_number': user.Mobile_number,
         'Phone_code': user.Phone_code,
@@ -7143,7 +7147,6 @@ def get_user_data(request):
     }
 
     return JsonResponse(data)
-
 
 
 @csrf_exempt
@@ -17121,28 +17124,6 @@ def stock_live_max(request):
 
 
 
-from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
-from django.contrib.auth.decorators import login_required
-from django.core import serializers
-
-@login_required
-@csrf_exempt
-def get_user_data(request):
-    user = request.user
-    data = {
-        'id': user.id,
-        'username': user.username,
-        'full_name': user.full_name,
-        'email': user.email,
-        'Mobile_number': user.Mobile_number,
-        'Phone_code': user.Phone_code,
-        'Country': user.Country,
-        'State': user.State,
-        # Add other fields as needed
-    }
-
-    return JsonResponse(data)
 
 
 
