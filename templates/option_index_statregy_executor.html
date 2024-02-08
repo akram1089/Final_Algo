@@ -61,7 +61,7 @@
     align-items: center;
     margin: 0 0 0;
     gap: 0.5rem;
-    padding: 6px 15px 17px 14px;
+    padding: 14px 14px 14px 14px;
   }
   .nav-link.active{
     color: #2196f3 !important;
@@ -559,12 +559,12 @@ border: 1px solid #4399eb !important;
 
   .table-striped-custom>tbody>tr:nth-child(2n)>td,
   .table-striped-custom>tbody>tr:nth-child(2n)>th {
-    background-color: rgb(240, 247, 253) !important;
+    background-color: rgb(226 226 226 / 30%) !important;
   }
 
   .table-striped-custom>tr:nth-child(2n)>td,
   .table-striped-custom>tr:nth-child(2n)>th {
-    background-color: rgb(240, 247, 253) !important;
+    background-color: rgb(226 226 226 / 30%)!important;
   }
 </style>
 <style>
@@ -1528,7 +1528,11 @@ box-shadow: 0 3px 16px 0 rgba(35,47,62,.15);    padding: 0 18px 18px 18px;
     <div class="main_top_all_left_right d-flex align-items-center justify-content-between">
       <div class="left_side_top_strategies">
         <div class="main_top_strategies d-flex align-items-center" style="gap: 0.80rem;">
-          <select class="form-select stockDropdown" style="width: 200px;">
+
+          <div class="futures_segements_main" style="width: 250px;">
+            <label for="" class="text-success" style="
+    font-size: 13px;">Select Indices</label>
+          <select class="form-select stockDropdown" style="height: 41px;">
             <optgroup label="Indices">
               <option value="NIFTY">NIFTY</option>
               <option value="BANKNIFTY">BANKNIFTY</option>
@@ -1536,24 +1540,26 @@ box-shadow: 0 3px 16px 0 rgba(35,47,62,.15);    padding: 0 18px 18px 18px;
             </optgroup>
             {% comment %} <optgroup label="Stocks"></optgroup> {% endcomment %}
           </select>
-
+        </div>
 
           <div class="main_futures_option_chains mb-2">
 
             <div class="main_futures_inputs">
 
-              <div class="futures_segements_main">
-                <label for="">Futures Segment</label>
-                <select class="form-select">
+              <div class="futures_segements_main"  style="width: 250px;">
+                <label for="" class="text-success" style="
+                font-size: 13px;">Derivative Type</label>
+                <select class="form-select" style="height: 41px;">
 
                   <option value="futures">Futures</option>
                 </select>
               </div>
 
 
-              <div class="futures_segements_main_expiry">
-                <label for="">Select Expiry</label>
-                <select class="form-select futures_expiry">
+              <div class="futures_segements_main_expiry"  style="width: 250px;">
+                <label for="" class="text-success" style="
+                font-size: 13px;">Select Expiry</label>
+                <select class="form-select futures_expiry" style="height: 41px;">
 
 
                 </select>
@@ -1616,6 +1622,12 @@ box-shadow: 0 3px 16px 0 rgba(35,47,62,.15);    padding: 0 18px 18px 18px;
     cursor: pointer;
     transition: 0.2s;
                   }
+
+                  .main_future_loz_size{
+                    display: flex;
+    gap: 0.2rem;
+    width: 6.3rem;
+                  }
               </style>
 
               <div class="innerStraddle_lot_size" id="future_qty">
@@ -1631,7 +1643,18 @@ box-shadow: 0 3px 16px 0 rgba(35,47,62,.15);    padding: 0 18px 18px 18px;
                 </div>
               </div>
 
-              <button class=" put_call_btns" id="future_add_positions" data-f&o="future" >ADD POSITION</button>
+              <div class="main_future_loz_size">
+
+                <div class="main_lot_future_title fs-6 fw-semibold">
+                  Lot Size:
+                </div>
+                <div class="main_future_lot_val text-success fw-semibold">
+
+                </div>
+
+              </div>
+
+              <button class=" put_call_btns" id="future_add_positions" data-f&o="future" >ADD</button>
             </div>
 
 
@@ -1641,9 +1664,9 @@ box-shadow: 0 3px 16px 0 rgba(35,47,62,.15);    padding: 0 18px 18px 18px;
     color: white;
     height: 37px;
     border-radius: 5px;
-    font-size: 12px;
+    font-size: 14px;
     width: 123px;
-    font-weight: 500;
+    font-weight: 600;
   }
   #future_add_positions:active{
     background: rgb(0, 118, 0);
@@ -1881,6 +1904,7 @@ box-shadow: 0 3px 16px 0 rgba(35,47,62,.15);    padding: 0 18px 18px 18px;
         }
 
         #callSellRadio,
+        #zerodha_advance_security_no,
         #putSellRadio {
 
           border-radius: 13% !important;
@@ -1889,6 +1913,7 @@ box-shadow: 0 3px 16px 0 rgba(35,47,62,.15);    padding: 0 18px 18px 18px;
         }
 
         #callSellRadio:focus,
+        #zerodha_advance_security_no:focus,
         #putSellRadio:focus {
           background-color: #e6191e !important;
           border-color: #e6191e !important;
@@ -1896,6 +1921,7 @@ box-shadow: 0 3px 16px 0 rgba(35,47,62,.15);    padding: 0 18px 18px 18px;
         }
 
         #callSellRadio:checked,
+        #zerodha_advance_security_no:checked,
         #putSellRadio:checked {
           background-color: #e6191e !important;
           border-color: #e6191e !important;
@@ -2639,7 +2665,22 @@ box-shadow: 0 3px 16px 0 rgba(35,47,62,.15);    padding: 0 18px 18px 18px;
 
 
 
+<style>
+     .main_add_api {
 
+        overflow-y: auto; /* Enable vertical scrollbar */
+        scrollbar-width: thin; /* Thin scrollbar */
+    }
+    
+    .main_add_api::-webkit-scrollbar {
+        width: 3px; /* Adjust as needed */
+    }
+    
+    .main_add_api::-webkit-scrollbar-thumb {
+        background-color: #888; /* Color of the scrollbar thumb */
+        border-radius: 3px; /* Roundness of the scrollbar thumb */
+    }
+</style>
 
 
 
@@ -2655,8 +2696,15 @@ box-shadow: 0 3px 16px 0 rgba(35,47,62,.15);    padding: 0 18px 18px 18px;
 
 
     <div class="offcanvas offcanvas-end" tabindex="-1" id="add_api" aria-labelledby="offcanvasRightLabel"
-      style="z-index: 9999999999999999">
-      <div class="offcanvas-header">
+      style="z-index: 9999999999999999; background: #eefaff;">
+
+      <div class="main_add_api" style="    background: white; overflow: auto;
+      margin: 20px;
+      margin-top: 6px;">
+   
+      <div class="offcanvas-header" style="    position: sticky;
+      top: 0px;
+      background: white;">
 
 
 
@@ -2672,7 +2720,7 @@ box-shadow: 0 3px 16px 0 rgba(35,47,62,.15);    padding: 0 18px 18px 18px;
         <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
       </div>
       <div class="offcanvas-body">
-        <form>
+        <form style="padding: 0 4px; overflow: auto;" >
           <div class="select_broker">
             <label for="expirydate">Select Broker</label>
             <select name="All_brokers" id="all_brokers" class="form-select mb-3">
@@ -2704,6 +2752,8 @@ box-shadow: 0 3px 16px 0 rgba(35,47,62,.15);    padding: 0 18px 18px 18px;
             .select_broker label {
               color: #c50000 !important;
             }
+
+
           </style>
 
           <div id="zerodhaFields">
@@ -2726,6 +2776,9 @@ box-shadow: 0 3px 16px 0 rgba(35,47,62,.15);    padding: 0 18px 18px 18px;
 
               <input type="password" class="form-control" id="zerodha_password" placeholder="Enter Zerodha Password"
                 required />
+                
+                <div style="font-size: 12px; opacity: 65%;
+                font-weight: 500;">Note : Your password is kept hidden for total security and privacy.</div>
             </div>
             <div class="">
               <label for="zerodha_totp_key">TOTP Secret key </label>
@@ -2733,6 +2786,9 @@ box-shadow: 0 3px 16px 0 rgba(35,47,62,.15);    padding: 0 18px 18px 18px;
 
               <input type="text" class="form-control" id="zerodha_totp_key" placeholder="Enter Zerodha TOTP Key"
                 required />
+
+                <p style="font-size: 12px; opacity: 65%;
+                font-weight: 500;">Note : Your TOTP secret key is securely stored for authentication.</p>
             </div>
 
 
@@ -2748,24 +2804,30 @@ box-shadow: 0 3px 16px 0 rgba(35,47,62,.15);    padding: 0 18px 18px 18px;
               <label for="zerodha_advance_security_radios d-block">TOTP Advance Security</label>
 
               <div class="main_advance_security d-flex gap-2 align-items-center" id="zerodha_advance_security_radios">
-              
 
-                <div class="form-check" >
-                  <input class="form-check-input" type="radio" name="zerodha_advance_security" id="zerodha_advance_security_yes" value="yes">
-                  <label class="form-check-label" for="zerodha_advance_security_yes">
-                  Yes
-                  </label>
-                </div>
 
-                <div class="form-check">
-                  <input class="form-check-input" type="radio" name="zerodha_advance_security" id="zerodha_advance_security_no" checked value="no">
-                  <label class="form-check-label" for="zerodha_advance_security_no">
-                    No
-                  </label>
+           
+                  <div class="checkbox-wrapper-4" style="
+                  display: flex;
+                  gap: 0.3rem;
+
+                  cursor: pointer;">
+
+       
+
+                    <input type="checkbox" id="zerodha_advance_security" class="sc-gJwTLC ikxBAC" value="no">
+                    <label class="form-check-label" for="zerodha_advance_security">No</label>
+                  </div>
+  
+
               </div>
-            </div>
+
+              <p style="font-size: 12px;     margin-bottom: 10px !important; opacity: 65%;
+              font-weight: 500;"> Note : To enhance security, we employ TOTP when activating the broker.</p>
 
           </div>
+
+
 
           </div>
 
@@ -2783,11 +2845,15 @@ box-shadow: 0 3px 16px 0 rgba(35,47,62,.15);    padding: 0 18px 18px 18px;
             <label for="angelone_password">Password</label>
             <input type="password" class="form-control" id="angelone_password" name="angelone_password"
               placeholder="Enter Angel One MPIN" required />
+              <div style="font-size: 12px; opacity: 65%;
+              font-weight: 500;">Note : Your password is kept hidden for total security and privacy.</div>
+ 
 
             <label for="angelone_totp_key">TOTP Secret key</label>
             <input type="text" class="form-control" id="angelone_totp_key" name="angelone_totp_key"
               placeholder="Enter Angel One TOTP Key" required />
-
+              <p style="font-size: 12px; opacity: 65%;
+              font-weight: 500;">Note : Your TOTP secret key is securely stored for authentication.</p>
             <label for="angelone_api_key">API Key</label>
             <input type="text" class="form-control" id="angelone_api_key" name="angelone_api_key"
               placeholder="Enter Angel One API Key" required />
@@ -2803,22 +2869,23 @@ box-shadow: 0 3px 16px 0 rgba(35,47,62,.15);    padding: 0 18px 18px 18px;
                 <div class="main_advance_security d-flex gap-2 align-items-center" id="angelone_advance_security_radios">
                 
   
-                  <div class="form-check" >
-                    <input class="form-check-input" type="radio" name="angelone_advance_security" id="angelone_advance_security_yes" value="yes">
-                    <label class="form-check-label" for="angelone_advance_security_yes">
-                    Yes
-                    </label>
+                  <div class="checkbox-wrapper-4" style="
+                  display: flex;
+                  gap: 0.3rem;
+
+                  cursor: pointer;">
+
+       
+
+                    <input type="checkbox" id="angelone_advance_security" class="sc-gJwTLC ikxBAC" value="no">
+                    <label class="form-check-label" for="angelone_advance_security">No</label>
                   </div>
   
-                  <div class="form-check">
-                    <input class="form-check-input" type="radio" name="angelone_advance_security" id="angelone_advance_security_no" checked value="no">
-                    <label class="form-check-label" for="angelone_advance_security_no">
-                      No
-                    </label>
-                </div>
-
+                  
+          
               </div>
-
+              <p style="font-size: 12px;     margin-bottom: 10px !important; opacity: 65%;
+              font-weight: 500;"> Note : To enhance security, we employ TOTP when activating the broker.</p>
               </div>
 
 
@@ -2840,11 +2907,14 @@ box-shadow: 0 3px 16px 0 rgba(35,47,62,.15);    padding: 0 18px 18px 18px;
             <label for="upstocks_password">Password</label>
             <input type="password" class="form-control" id="upstocks_password" name="upstocks_password"
               placeholder="Enter Upstox 2FA pin" required />
-
+              <div style="font-size: 12px; opacity: 65%;
+              font-weight: 500;">Note : Your password is kept hidden for total security and privacy.</div>
+  
             <label for="upstocks_totp_key">TOTP Secret key</label>
             <input type="text" class="form-control" id="upstocks_totp_key" name="upstocks_totp_key"
               placeholder="Enter Upstox TOTP Key" required />
-
+              <p style="font-size: 12px; opacity: 65%;
+              font-weight: 500;">Note : Your TOTP secret key is securely stored for authentication.</p>
             <label for="upstocks_phone_number">Registered phone Number</label>
             <input type="text" class="form-control" id="upstocks_phone_number" name="upstocks_phone_number"
               placeholder="Enter Upstox Reg phone Number" required />
@@ -2860,7 +2930,74 @@ box-shadow: 0 3px 16px 0 rgba(35,47,62,.15);    padding: 0 18px 18px 18px;
             <label for="upstocks_app_name">App name</label>
             <input type="text" class="form-control" id="upstocks_app_name" name="upstocks_app_name"
               placeholder="Enter App Name" required />
+              <style>
+                .checkbox-wrapper-4 .ikxBAC {
+                  appearance: none;
+                  background-color: #dfe1e4;
+                  border-radius: 72px;
+                  border-style: none;
+                  flex-shrink: 0;
+                  height: 20px;
+                  margin: 0;
+                  position: relative;
+                  gap: 0.4rem;
 
+                  width: 30px;
+                }
+              
+                .checkbox-wrapper-4 .ikxBAC::before {
+                  bottom: -6px;
+                  content: "";
+                  left: -6px;
+                  position: absolute;
+                  right: -6px;
+                  top: -6px;
+                }
+              
+                .checkbox-wrapper-4 .ikxBAC,
+                .checkbox-wrapper-4 .ikxBAC::after {
+                  transition: all 100ms ease-out;
+                }
+              
+                .checkbox-wrapper-4 .ikxBAC::after {
+                  background-color: #fff;
+                  border-radius: 50%;
+                  content: "";
+                  height: 14px;
+                  left: 3px;
+                  position: absolute;
+                  top: 3px;
+                  width: 14px;
+                }
+              
+                .checkbox-wrapper-4 input[type=checkbox] {
+                  cursor: default;
+cursor: pointer;
+                  padding: 0 19px;
+                }
+              
+                .checkbox-wrapper-4 .ikxBAC:hover {
+                  background-color: #c9cbcd;
+                  transition-duration: 0s;
+                }
+              
+                .checkbox-wrapper-4 .ikxBAC:checked {
+                  background-color: blue;
+                }
+              
+                .checkbox-wrapper-4 .ikxBAC:checked::after {
+                  background-color: #fff;
+                  left: 21px;
+                }
+              
+                .checkbox-wrapper-4 :focus:not(.focus-visible) {
+                  outline: 0;
+                }
+              
+                .checkbox-wrapper-4 .ikxBAC:checked:hover {
+                  background-color: #273eff;
+                }
+              </style>
 
   <div class="main_upstocks_totp_section">
 
@@ -2869,43 +3006,77 @@ box-shadow: 0 3px 16px 0 rgba(35,47,62,.15);    padding: 0 18px 18px 18px;
                 <div class="main_advance_security d-flex gap-2 align-items-center" id="upstocks_advance_security_radios">
                 
   
-                  <div class="form-check" >
-                    <input class="form-check-input" type="radio" name="upstocks_advance_security" id="upstocks_advance_security_yes" value="yes">
-                    <label class="form-check-label" for="upstocks_advance_security_yes">
-                    Yes
-                    </label>
+  
+                  <div class="checkbox-wrapper-4" style="
+                  display: flex;
+                  gap: 0.3rem;
+
+                  cursor: pointer;">
+
+       
+
+                    <input type="checkbox" id="upstocks_advance_security" class="sc-gJwTLC ikxBAC" value="no">
+                    <label class="form-check-label" for="upstocks_advance_security">No</label>
                   </div>
   
-                  <div class="form-check">
-                    <input class="form-check-input" type="radio" name="upstocks_advance_security" id="upstocks_advance_security_no" checked value="no">
-                    <label class="form-check-label" for="upstocks_advance_security_no">
-                      No
-                    </label>
-                </div>
+                  
 
               </div>
               
+       <p style="font-size: 12px;     margin-bottom: 10px !important; opacity: 65%;
+       font-weight: 500;"> Note : To enhance security, we employ TOTP when activating the broker.</p>
               </div>
 
 
           </div>
-
+       
+   
+          
           <div class="validating_space"></div>
 
 
           <!-- Add similar div blocks for other brokers -->
           <div class="action_broker_btn_save_validate d-flex gap-1">
-            <button class="btn btn-success save_validate_btn">Validate</button>
+        
             <button class="btn btn-primary save_zerodha_btn">Add Broker</button>
           </div>
         </form>
       </div>
 
 
+     
+    </div>
 
 
+    <script>
+      var checkbox = $("#zerodha_advance_security");
+      var checkbox_angel_one = $("#angelone_advance_security");
+      var checkbox_upstocks = $("#upstocks_advance_security");
+  checkbox.change(function() {
+// Update label text and value based on checkbox state
+label = checkbox.is(":checked") ? "Yes" : "No";
+value = checkbox.is(":checked") ? "yes" : "no";
+$("label[for='zerodha_advance_security']").text(label);
 
+checkbox.val(value)
+});
+  checkbox_angel_one.change(function() {
+// Update label text and value based on checkbox_angel_one state
+label = checkbox_angel_one.is(":checked") ? "Yes" : "No";
+value = checkbox_angel_one.is(":checked") ? "yes" : "no";
+$("label[for='angelone_advance_security']").text(label);
 
+checkbox_angel_one.val(value)
+});
+  checkbox_upstocks.change(function() {
+// Update label text and value based on checkbox_upstocks state
+label = checkbox_upstocks.is(":checked") ? "Yes" : "No";
+value = checkbox_upstocks.is(":checked") ? "yes" : "no";
+$("label[for='upstocks_advance_security']").text(label);
+
+checkbox_upstocks.val(value)
+});
+</script>
 
 
 
@@ -3463,6 +3634,7 @@ color: #c50000 !important;
 
               <input type="password" class="form-control" id="update_zerodha_password" placeholder="Enter Zerodha Password"
                 required />
+
             </div>
             <div class="">
               <label for="zerodha_totp_key">TOTP Secret key </label>
@@ -3738,7 +3910,16 @@ color: #c50000 !important;
           // Remove undefined values
           
           var phone_number_val = $("#" + selectedBroker + "_phone_number").val();
-          var advanceTotpSecurity = $("input[name='"+selectedBroker+"_advance_security']:checked").val();
+
+
+         
+
+          var advanceTotpSecurity  = $("#"+ selectedBroker +"_advance_security").val()
+
+          // zerodha_advance_security
+
+
+
           console.log(phone_number_val);
           //upstocks_phone_number
           const definedValues = [platform, loginId, password, totpKey, appName, apiKey, secret_key, phone_number_val].filter(val => val !== undefined);
@@ -4390,7 +4571,7 @@ async function updateActiveApi(brokerId, isActive) {
   </div>
 
 
-  <div class="main_all_spot_futures_val" style=" padding: 0 19px 0 11px; box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;">
+  <div class="main_all_spot_futures_val" style="     padding: 4px 19px 4px 11px;box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;">
 
     <div class="main_inner_spot_future">
 
@@ -4429,12 +4610,12 @@ async function updateActiveApi(brokerId, isActive) {
     </div>
 
     <div class="low_strategies">
-      <p>Low: </p>
+      <p>Day Low: </p>
 
       <div id="low_value" class="text-danger"></div>
     </div>
     <div class="high_strategies">
-      <p>High: </p>
+      <p>Day High: </p>
 
       <div id="high_value" class="text-success"></div>
     </div>
@@ -4611,6 +4792,8 @@ async function updateActiveApi(brokerId, isActive) {
     .main_position {
       margin-top: 0.5rem;
       display: none;
+
+      border-top: 1px solid #dfdfdf;
     }
 
     .inner_greek_p_l {
@@ -4622,6 +4805,7 @@ async function updateActiveApi(brokerId, isActive) {
       display: flex;
       flex-direction: column;
       row-gap: 0.8rem;
+      font-weight: 600;
     }
 
     .exit_price {
@@ -6418,6 +6602,12 @@ $(".all_strategy_filter").removeClass("main_all_strategy_active")
       white-space: nowrap;
     }
 
+    .tab-content{
+      border-left: 1px solid #dbdbdb;
+    border-bottom: 1px solid #dbdbdb;
+    border-right: 1px solid #dbdbdb;
+    }
+
     .check_liquidity {
       background: #fff;
       color: #4399eb;
@@ -7185,7 +7375,7 @@ $(".all_strategy_filter").removeClass("main_all_strategy_active")
           <div class="main_all_profit_loss" style="display: none;">
             <div class="d-flex align-items-center justify-content-between mt-2">
               <p class="fs-14 fw-500 label-color-6">Max. Profit</p>
-              <p class="fs-14 fw-500 text-green" id="max_profit">Null</p>
+              <p class="fs-14 fw-500 text-success" id="max_profit">Null</p>
             </div>
             <div class="d-flex align-items-center justify-content-between mt-2">
               <p class="fs-14 fw-500 label-color-6">Max. Loss</p>
@@ -7744,6 +7934,8 @@ $(".all_strategy_filter").removeClass("main_all_strategy_active")
                           ////console.log(future.expiry);
                           if (index === 0) {
                             $(".futures_ltp").text(future.last_price);
+                            $(".main_future_lot_val").text(future.lot_size)
+                            localStorage.setItem('lotSize_main_future', future.lot_size);
                           }
                           // Format the date using the formatFutureDate function
                           const formattedDate = formatFutureDate(future.expiry);
@@ -8039,7 +8231,7 @@ $(".all_strategy_filter").removeClass("main_all_strategy_active")
             <div class="table_container" style="width: 100%; height: 400px;     overflow: auto;">
 
 
-              <table class="payoff_table_main_table table table-striped-custom">
+              <table class="payoff_table_main_table table table-striped-custom" style="    font-weight: 500;">
                 <thead>
                   <tr>
                     <th>
@@ -11987,9 +12179,20 @@ $(".all_strategy_filter").removeClass("main_all_strategy_active")
 
     var counterValue_future = 1;
 
+    var lot_size_value =$("#lot_size_value").text()
+
     // Function to update the input field with the current value
-    function updateCounterInput_future() {
+    function updateCounterInput_future(one) {
       $("#futures_counter_input").val(counterValue_future);
+      var main_future_lot_size=$(".main_future_lot_val").text()
+
+      var storedLotSize = localStorage.getItem('lotSize_main_future');
+
+      $(".main_future_lot_val").text(storedLotSize*counterValue_future)
+
+      console.log(counterValue_future*storedLotSize);
+
+    
     }
 
     // Initialize the input field
@@ -11999,7 +12202,7 @@ $(".all_strategy_filter").removeClass("main_all_strategy_active")
     $("#future_increment").click(function () {
 
       counterValue_future++;
-      updateCounterInput_future();
+      updateCounterInput_future(1);
     });
 
     // Decrement button click handler
