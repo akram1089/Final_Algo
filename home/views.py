@@ -20534,3 +20534,5 @@ def get_user_strategy_results(request):
     return JsonResponse({'user_results': serialized_results})
 
 
+def terms_conditions(request):
+    return render(request, "terms_conditions.html")

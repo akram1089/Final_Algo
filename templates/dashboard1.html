@@ -276,7 +276,7 @@
   }
 
   .dataTables_wrapper .dataTables_length, .dataTables_wrapper .dataTables_filter, .dataTables_wrapper .dataTables_info, .dataTables_wrapper .dataTables_processing, .dataTables_wrapper .dataTables_paginate {
-    color: white !important;
+    color: black !important;
     padding: 10px;
 }
 
@@ -402,6 +402,23 @@ body .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
   box-shadow: 0 3px 16px 0 rgba(35,47,62,.15)!important; /* Adjust the values as needed */
   padding: 0.3em 0.9em !important;
 }
+
+.dataTables_length{
+  margin-top: 17px !important;
+}
+
+.dataTables_length label{
+  text-transform: capitalize !important;
+}
+.dataTables_length select{
+  border: 1px solid #aaa;
+    border-radius: 10px !important;
+    background-color: transparent;
+    padding: 2px 9px !important;
+    margin: 0 5px !important;
+    font-weight: 500 !important;
+}
+
 .bearish {
   /* Set the background gradient */
   background: linear-gradient(to right, yellow, red);
@@ -1107,6 +1124,7 @@ right: 0;">
 
       </div>
       <hr>
+
       <div class="bottom_card">
         <a id="market_top"  href="/put_call_ratio/open_interest/" onclick="handleClick('open_interest')" >Analytics</a>
         <a href="/put_call_ratio/change_OI/" onclick="handleClick('change_OI')" id="market_top" class="nifty_oi">Options</a>
@@ -1364,7 +1382,7 @@ $(document).ready(function () {
     <div class="cards_section">
       
        
-          <a class="card_one_section info_card" target="_blank" href="/option_index_statregy_executor" style="border-radius: 15px !important; display: flex; justify-content: space-between; flex-direction: column;">
+          <div class="card_one_section info_card" data-href="/option_index_statregy_executor" style="border-radius: 15px !important; display: flex; justify-content: space-between; flex-direction: column;">
             
                 <div class="p-6">
                   <div class="number_circle">1</div>
@@ -1373,15 +1391,15 @@ $(document).ready(function () {
                   </p>
                 </div>
                 <div>
-                 <img src="{% static "img/top_features_img_updated.png" %}" alt="" width="100%">
+                 <img src="{% static "img/fotor_1706959933884.jpg" %}" alt="" width="100%">
                 </div>
             
           
-          </a>
+          </div>
        
          <div class="card_two_section d-flex flex-column gap-5" style="flex: 1;">
 
-            <a class="card_two_upper info_card" target="_blank" href="/event_tracker" style="border-radius: 15px !important;">
+            <div class="card_two_upper info_card" data-href="/event_tracker" style="border-radius: 15px !important;">
              <div class="p-6">
                <div class="number_circle">2</div>
                <h3 class="py-2 text-xl font-bold text-txt-menu">Event Tracker</h3>
@@ -1389,10 +1407,10 @@ $(document).ready(function () {
                 Dividend declarations notify shareholders of upcoming returns. Other events tracked include bonus issues, stock splits, buybacks, rights offerings, AGMs, EGMs, board meetings, book closure periods, and offers for sale (OFS).
                 </p>
              </div>
-            </a>
+            </div>
          
               
-            <a class="card_two_lower info_card" target="_blank" href="/nifty_tracker" style="border-radius: 15px !important;">
+            <div class="card_two_lower info_card" data-href="/nifty_tracker" style="border-radius: 15px !important;">
              <div class="p-6">
                <div class="number_circle">3</div>
                <h3 class="py-2 text-xl font-bold text-txt-menu">Nifty Tracker</h3>
@@ -1408,14 +1426,14 @@ $(document).ready(function () {
              <div class="text-end">
                <img src="https://joinditto.in/static/41f4ebc95ac05dbd2ca2b93f96e37ef4/99e8d/hourglass-2.webp" alt="" width="80px">
              </div>
-            </a>
+            </div>
          
                   
          </div>
       
          <div class="card_three_section d-flex flex-column gap-4" style="flex: 1;">
           
-            <a class="card_two_upper info_card" target="_blank" href="/contributor" style="border-radius: 15px !important; flex: 1; display: flex; flex-direction: column; justify-content: space-between;" >
+            <div class="card_two_upper info_card" data-href="/contributor" style="border-radius: 15px !important; flex: 1; display: flex; flex-direction: column; justify-content: space-between;" >
              <div class="p-6">
                <div class="number_circle">4</div>
                <h3 class="py-2 text-xl font-bold text-txt-menu">Indices Contributor</h3>
@@ -1425,9 +1443,9 @@ $(document).ready(function () {
              <div class="text-end">
                <img src="https://joinditto.in/static/8e97a302b988193c788d6dcb8b2712ea/efc8a/star.webp" alt="" width="80px">
              </div>
-            </a>
+            </div>
           
-            <a class="card_two_lower info_card" target="_blank" href="/ipo_dashboard" style="border-radius: 15px !important;">
+            <div class="card_two_lower info_card" data-href="/ipo_dashboard" style="border-radius: 15px !important;">
              <div class="p-6">
                <div class="number_circle">5</div>
                <h3 class="py-2 text-xl font-bold text-txt-menu">IPO Dashboard</h3>
@@ -1435,7 +1453,7 @@ $(document).ready(function () {
                 It displays IPO returns, tracks upcoming and recent listings, highlights top performers, and provides data on basis of allotment.</p>
              </div>
              
-            </a>
+            </div>
           
          </div>
       
@@ -1445,7 +1463,18 @@ $(document).ready(function () {
   </div>
 </section>
 
-
+<script>
+  $(document).ready(function () {
+      // Add a click event to elements with class 'info_card'
+      $('.info_card').click(function () {
+          // Get the data-href attribute of the clicked card
+          var href = $(this).data('href');
+          
+          // Redirect to the corresponding page
+          window.location.href = href;
+      });
+  });
+</script>
   
 
   <style>
@@ -1535,6 +1564,7 @@ $(document).ready(function () {
             </thead>
             <tbody id="top_gainers_table"></tbody>
           </table>
+          <h5 class="text-primary d-flex justify-content-end"><a href="{% url "top_gainers" %}" id="market_action_view_more">View more</a></h5>
         </div>
         <div class="toplosers" id="toplosers" style="width: 100%; height: 80%">
           <table class="table table-hover ">
@@ -1554,6 +1584,7 @@ $(document).ready(function () {
             </thead>
             <tbody id="top_losers_table"></tbody>
           </table>
+          <h5 class="text-primary d-flex justify-content-end"><a href="{% url "top_loosers" %}" id="market_action_view_more">View more</a></h5>
         </div>
 
         <div class="sameopenandlow" id="sameopenandlow" style="width: 100%; height: 80%">
@@ -1574,6 +1605,7 @@ $(document).ready(function () {
             </thead>
             <tbody id="same_open_and_low"></tbody>
           </table>
+          <h5 class="text-primary d-flex justify-content-end"><a href="{% url "opening_price_clues" %}" id="market_action_view_more">View more</a></h5>
         </div>
         <div class="sameOpenAndHigh" id="sameOpenAndHigh" style="width: 100%; height: 80%">
           <table class="table table-hover ">
@@ -1593,6 +1625,7 @@ $(document).ready(function () {
             </thead>
             <tbody id="same_Open_And_High"></tbody>
           </table>
+          <h5 class="text-primary d-flex justify-content-end"><a href="{% url "opening_price_clues" %}" id="market_action_view_more">View more</a></h5>
         </div>
         <div class="gapUp" id="gapUp" style="width: 100%; height: 80%">
           <table class="table table-hover ">
@@ -1612,6 +1645,7 @@ $(document).ready(function () {
             </thead>
             <tbody id="gap_Up"></tbody>
           </table>
+          <h5 class="text-primary d-flex justify-content-end"><a href="{% url "gap_up_gap_down" %}" id="market_action_view_more">View more</a></h5>
         </div>
         <div class="gapDown" id="gapDown" style="width: 100%; height: 80%">
           <table class="table table-hover ">
@@ -1631,11 +1665,12 @@ $(document).ready(function () {
             </thead>
             <tbody id="gap_Down"></tbody>
           </table>
+          <h5 class="text-primary d-flex justify-content-end"><a href="{% url "gap_up_gap_down" %}" id="market_action_view_more">View more</a></h5>
         </div>
-
+       
 
       </div>
-      <h5 class="text-primary d-flex justify-content-end">View more</h5>
+      
       {% comment %} <div class="button_end_table d-flex justify-content-center gap-2 flex-wrap">
         <button class=" btn btn-primary">Get a Lifetime Free Demat Account</button>
         <button class=" btn btn-danger">Intraday & Options Tradings @ Zero Brockrage</button>
@@ -1662,9 +1697,9 @@ $(document).ready(function () {
         <div id="OI_gainer" onclick="future_filter('OI_gainer')"> OI Gainer</div>
         <div id="OI_loser" onclick="future_filter('OI_loser')">OI Loser</div>
         <div id="OI_volume_buzzers" onclick="future_filter('OI_volume_buzzers')">Volume Buzzers</div>
-        <div id="OI_volume_1" onclick="future_filter('OI_volume_1')">Volume Buzzers 1 </div>
+        <!-- <div id="OI_volume_1" onclick="future_filter('OI_volume_1')">Volume Buzzers 1 </div>
         <div id="OI_volume_2" onclick="future_filter('OI_volume_2')"> Volume Buzzers 2 </div>
-
+ -->
       </div>
     </div>
 
@@ -1768,7 +1803,7 @@ $(document).ready(function () {
     width: 163px !important;
     box-shadow: none;
     border-radius: 6px;
-    border: 1px solid hsla(0,0%,72.5%,.3);
+    border: 1px solid hsl(0deg 0% 68.36%);
     background-color: #fff;
       }
       .chart-header{
@@ -1788,6 +1823,35 @@ $(document).ready(function () {
     left: 50% !important;
     transform: translate(-50%, -50%);
     z-index: 0;
+}
+
+.week_52_high,.week_52_low,.only_buyers,.only_sellers{
+  display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+#security_select label{
+  font-size: 18px !important;
+  margin-top: 0px !important;
+  padding-bottom: 0 !important;
+}
+
+.security_main{
+  position: absolute;
+    top: 3%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 9 !important;
+}
+
+@media (max-width: 768px) { /* Adjust the max-width as needed */
+    .security_main {
+        position: static;
+        left: auto;
+        transform: none;
+        z-index: auto;
+    }
 }
     </style>
     <div class="main_upper_future_open d-flex gap-4 container" style="    justify-content: center;
@@ -1822,7 +1886,7 @@ white-space: nowrap;">
       
 
       <div class="main_table_52 table-responsive">
-
+       
         <table id="stock_table_52_high" class="mt-3 table table-hover">
           <thead style="background: #f1f5fa;border-bottom: 1px solid black !important;">
             <tr>
@@ -1962,11 +2026,16 @@ white-space: nowrap;">
 
     <script>
       $(document).ready(function () {
+
+        // $('.dataTables_filter input[type="search"]').attr('placeholder', 'Search !important');
         // Define the DataTable instance variable
+        // $('.dataTables_filter label').text('').end().find('input[type="search"]').attr('placeholder', 'Your Placeholder Text Here');
         var dataTable = null;
 
         // Function to update the table data using AJAX
         function updateTable() {
+          
+         
           // Show the spinner
           $("#spinner").show();
 
@@ -1982,8 +2051,6 @@ white-space: nowrap;">
               // Hide the spinner
               $("#spinner").hide();
 
-              var customDiv = $('#customDiv').detach();
-            $('#stock_table_52_low_wrapper .dataTables_length').after(customDiv);
               // Clear the existing table rows and destroy the DataTable instance
               if (dataTable !== null) {
                 dataTable.clear().destroy();
@@ -1992,6 +2059,7 @@ white-space: nowrap;">
 
               // Populate the table with the received data
               var stockData = data[selectedOption];
+
 
               for (var i = 0; i < stockData.length; i++) {
                 var stock = stockData[i];
@@ -2010,13 +2078,25 @@ white-space: nowrap;">
                   "</tr>";
                 $("#stock_table_52_high tbody").append(row);
               }
+              
 
-             
 
               // Initialize DataTable plugin after updating the table
               dataTable = $('#stock_table_52_high').DataTable({
-                "pageLength": 10
+                "pageLength": 10,
+                "dom": '<"top"lf>rt<"bottom"ip><"clear">',
+                "language": {
+                 "search": '<div class="custom-search" style="position: relative"><i class="bi bi-search" style="position: absolute;right: 7px;top: 10px;"></i><input class="form-control" type="search" placeholder=Search aria-controls="volume_shocker_table"></div>'
+                }
               });
+              $('#stock_table_52_high_filter input[type="search"]').attr('placeholder', 'Search...');
+              $('#stock_table_52_high_filter input:eq(1)').hide();
+              // var wrapperDiv = $("<div class='custom-wrapper'></div>");
+              // $('#stock_table_52_high_length, #stock_table_52_high_filter').wrapAll(wrapperDiv);
+
+              
+              // $('#stock_table_52_high_wrapper').prepend(wrapperDiv);
+
             },
             error: function () {
               console.log("Error occurred while fetching data.");
@@ -2089,8 +2169,14 @@ white-space: nowrap;">
                 $("#stock_table_52_low tbody").append(row);
               }
               dataTable_Low = $('#stock_table_52_low').DataTable({
-                "pageLength": 10
+                "pageLength": 10,
+                "dom": '<"top"lf>rt<"bottom"ip><"clear">',
+                "language": {
+                 "search": '<div class="custom-search" style="position: relative"><i class="bi bi-search" style="position: absolute;right: 7px;top: 10px;"></i><input class="form-control" type="search" placeholder=Search aria-controls="volume_shocker_table"></div>'
+                }
               });
+              $('#stock_table_52_low_filter input[type="search"]').attr('placeholder', 'Search...');
+              $('#stock_table_52_low_filter input:eq(1)').hide();
             },
             error: function () {
               console.log("Error occurred while fetching data.");
@@ -2166,8 +2252,14 @@ white-space: nowrap;">
                 $("#stock_table_upper tbody").append(row);
               }
               dataTable_upper = $('#stock_table_upper').DataTable({
-                "pageLength": 10
+                "pageLength": 10,
+                "dom": '<"top"lf>rt<"bottom"ip><"clear">',
+                "language": {
+                 "search": '<div class="custom-search" style="position: relative"><i class="bi bi-search" style="position: absolute;right: 7px;top: 10px;"></i><input class="form-control" type="search" placeholder=Search aria-controls="volume_shocker_table"></div>'
+                }
               });
+              $('#stock_table_upper_filter input[type="search"]').attr('placeholder', 'Search...');
+              $('#stock_table_upper_filter input:eq(1)').hide();
             },
             error: function () {
               console.log("Error occurred while fetching data.");
@@ -2200,49 +2292,62 @@ white-space: nowrap;">
       $(document).ready(function () {
         // Function to update the table data using AJAX
         function updateTable(selectedOption_lower) {
-          // Show the spinner
-          $("#spinner").show();
+    // Show the spinner
+    $("#spinner").show();
 
-          $.ajax({
-            url: "/only_buyers",
-            type: "GET",
-            data: { option: selectedOption_lower }, // Pass the selected option as a parameter
-            dataType: "json",
-            success: function (data) {
-              console.log(data["lower"][selectedOption_lower]["data"]);
-              // Hide the spinner
-              $("#spinner").hide();
+    $.ajax({
+        url: "/only_buyers",
+        type: "GET",
+        data: { option: selectedOption_lower },
+        dataType: "json",
+        success: function(data) {
+            // Hide the spinner
+            $("#spinner").hide();
 
-              // Clear the existing table rows
-              var table = $("#stock_table_lower").DataTable();
-              table.clear().draw();
+            // Retrieve existing DataTable instance or initialize if not exists
+            var table = $("#stock_table_lower").DataTable();
+            if (!table) {
+                table = $("#stock_table_lower").DataTable({
+                    "pageLength": 10,
+                    "dom": '<"top"lf>rt<"bottom"ip><"clear">',
+                    "language": {
+                        "search": '<div class="custom-search" style="position: relative"><i class="bi bi-search" style="position: absolute; right: 7px; top: 50%; transform: translateY(-50%);"></i><input class="form-control" type="search" placeholder="Search" aria-controls="stock_table_lower"></div>'
+                    }
+                });
+            } else {
+                // Clear existing table data
+                table.clear();
+            }
 
-              // Populate the table with the received data
-              var stockData = data["lower"][selectedOption_lower]["data"];
-
-              for (var i = 0; i < stockData.length; i++) {
+            // Populate the table with the received data
+            var stockData = data["lower"][selectedOption_lower]["data"];
+            for (var i = 0; i < stockData.length; i++) {
                 var stock = stockData[i];
                 table.row.add([
-                  stock.symbol,
-                  stock.series,
-                  stock.ltp,
-                  stock.change,
-                  stock.pChange,
-                  stock.priceBand,
-                  stock.highPrice,
-                  stock.lowPrice,
-                  stock.yearHigh,
-                  stock.yearLow,
-                  stock.totalTradedVol,
-                  stock.turnover
-                ]).draw(false);
-              }
-            },
-            error: function () {
-              console.log("Error occurred while fetching data.");
+                    stock.symbol,
+                    stock.series,
+                    stock.ltp,
+                    stock.change,
+                    stock.pChange,
+                    stock.priceBand,
+                    stock.highPrice,
+                    stock.lowPrice,
+                    stock.yearHigh,
+                    stock.yearLow,
+                    stock.totalTradedVol,
+                    stock.turnover
+                ]);
             }
-          });
+
+            // Redraw the table to reflect the changes
+            table.draw();
+        },
+        error: function() {
+            console.log("Error occurred while fetching data.");
         }
+    });
+}
+
 
         // Function to save the dropdown selection to local storage
         function saveSelection() {
@@ -2555,7 +2660,7 @@ white-space: nowrap;">
                   </div>
                   <div>
                     <p style="margin-left: -13px !important;">Talk to an advisor</p>
-                    <u> <span style="font-size: 17px !important; font-weight: 500 !important; white-space:nowrap">+91 9000-500-600 </span></u>
+                    <u> <span style="font-size: 17px !important; font-weight: 500 !important;">+91 9000-500-600 </span></u>
                     <!-- <p style="font-weight: 600 !important;font-size: 24px !important; ">+91 9000500600</p> -->
                   </div>
                 </div>
@@ -2670,7 +2775,7 @@ background-color: #f1eded !important;
               <p style="color: white !important;">Text us on WhatsApp</p>
             </div>
             <!-- <div class="text-white bg-waModal text-sm text-center m-4 px-1.5 py-2.5 rounded-md">Option perks offers a completely <span class="font-semibold text-secondary-350">spam-free</span> experience. We will never contact you unless you request us to do so</div> -->
-            <div class="text-white bg-waModal text-sm text-center m-4 px-1.5 py-2.5 rounded-md" style="font-size: 21px !important; white-space:nowrap;" >+91 9000500600</div>
+            <div class="text-white bg-waModal text-sm text-center m-4 px-1.5 py-2.5 rounded-md" style="font-size: 21px !important;">+91 9000500600</div>
           </div>
           <div class="col-lg-8 insurance_inquiry_page" style="padding: 20px 30px !important;">
             <form style="position: relative;">
@@ -3007,13 +3112,13 @@ padding: 25px;">
 
     if (filter === "topgainers") {
       topgainers.style.display = "block";
-
-
       toplosers.style.display = "none";
       sameopenandlow.style.display = "none";
       sameOpenAndHigh.style.display = "none";
       gapUp.style.display = "none";
       gapDown.style.display = "none";
+      
+
     } else if (filter === "toplosers") {
       topgainers.style.display = "none";
       toplosers.style.display = "block";
@@ -3213,8 +3318,14 @@ padding: 25px;">
       // Join the rows array and append it to the table body
       tableBody.append(rows.join(''));
       $('#volumeShockerTable').DataTable({
-        "pageLength": 10
+        "pageLength": 10,
+        "dom": '<"top"lf>rt<"bottom"ip><"clear">',
+                "language": {
+                 "search": '<div class="custom-search" style="position: relative"><i class="bi bi-search" style="position: absolute;right: 7px;top: 10px;"></i><input class="form-control" type="search" placeholder=Search aria-controls="volume_shocker_table"></div>'
+                }
       });
+      $('#volumeShockerTable_filter input[type="search"]').attr('placeholder', 'Search...');
+      $('#volumeShockerTable_filter input:eq(1)').hide();
     }
   });
 </script>
@@ -3263,15 +3374,22 @@ padding: 25px;">
           '<td>' + row[8] + '</td>' +  // Basis
           '<td>' + row[9] + '</td>' +  // COC
           '<td>' + row[10] + '</td>' + // Spot
-          '<td>' + row[11] + '</td>' + // Build Up
+          '<td > <div style="color: green;">' + row[11] + '</div></td>' + // Build Up
           '</tr>';
       });
       tableBody.html(tableRows.join(''));
 
       // Initialize DataTable
       $('#Oi_gainer_data').DataTable({
-        "pageLength": 10
+        "pageLength": 10,
+        "dom": '<"top"lf>rt<"bottom"ip><"clear">',
+                "language": {
+                 "search": '<div class="custom-search" style="position: relative"><i class="bi bi-search" style="position: absolute;right: 7px;top: 10px;"></i><input class="form-control" type="search" placeholder=Search aria-controls="volume_shocker_table"></div>'
+                }
+
       });
+      $('#Oi_gainer_data_filter input[type="search"]').attr('placeholder', 'Search...');
+      $('#Oi_gainer_data_filter input:eq(1)').hide();
 
     }
   });
@@ -3306,6 +3424,7 @@ padding: 25px;">
         var date_change_percent = row[2] > 0 ? " text-success  " : "text-danger";
         var volume_contract_percent = row[4] > 0 ? " text-success  " : "text-danger";
         var oi_percent = row[4] > 0 ? " text-success  " : "text-danger";
+        var build_up_text_color = row[11] === "Long Unwinding" ? "orange" : (row[11] === "Short Covering" ? "lightgreen" : "");
         return '<tr>' +
           '<td>' + row[0] + '</td>' +  // name
           '<td>' + row[1] + '</td>' +  // price
@@ -3318,13 +3437,20 @@ padding: 25px;">
           '<td>' + row[8] + '</td>' +  // Basis
           '<td>' + row[9] + '</td>' +  // COC
           '<td>' + row[10] + '</td>' + // Spot
-          '<td>' + row[11] + '</td>' + // Build Up
+          '<td style="color: ' + build_up_text_color + '">' + row[11] + '</td>' + // Build Up (conditionally set text color)
           '</tr>';
       });
       tableBody.html(tableRows.join(''));
       $('#Oi_loser_data_table_data_table').DataTable({
-        "pageLength": 10
+        "pageLength": 10,
+        "dom": '<"top"lf>rt<"bottom"ip><"clear">',
+                "language": {
+                 "search": '<div class="custom-search" style="position: relative"><i class="bi bi-search" style="position: absolute;right: 7px;top: 10px;"></i><input class="form-control" type="search" placeholder=Search aria-controls="volume_shocker_table"></div>'
+                }
       });
+      $('#Oi_loser_data_table_data_table_filter input[type="search"]').attr('placeholder', 'Search...');
+      $('#Oi_loser_data_table_data_table_filter input:eq(1)').hide();
+
     }
   });
   $(document).ready(function () {

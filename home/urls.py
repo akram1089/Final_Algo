@@ -565,6 +565,7 @@ urlpatterns = [
      path("update_broker_api_main",views.update_broker_api_main,name="update_broker_api_main"),
      path("verify_active_api",views.verify_active_api,name="verify_active_api"),
      path("verify_otp_api_activation",views.verify_otp_api_activation,name="verify_otp_api_activation"),
+     path('terms_conditions', views.terms_conditions, name='terms_conditions'),
 
 
      
