@@ -2577,6 +2577,13 @@ height: 8rem;
     color: rgb(88, 88, 88);
 
 }
+.modal_close_btn{
+  transition: .3s;
+}
+.modal_close_btn:hover{
+/* background-color: #f2f2f2 !important; */
+background-color: #f1eded !important;
+}
 </style>
     <ul class="dropdown-menu" id="user_dropdown">
       <li><a class="dropdown-item" href=" {% url 'account_details'%} ">Account Details</a></li>
@@ -2626,7 +2633,18 @@ height: 8rem;
 
       </div>
 
-      <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+      <button type="button" class="btn-close modal_close_btn" data-bs-dismiss="modal" aria-label="Close" 
+      style="    position: absolute;
+      right: 14px;
+      top: 17px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px;">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-4 h-4 modal_cut">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
     </div>
     <style>
       #resources_dropdown_dashboard_markets_mobile,#resources_dropdown_dashboard_markets_quicK_glances,#future_dropdown_mobile,#options_dropdown_mobile,#resources_dropdown_mobile{
@@ -3860,7 +3878,18 @@ display: none !important;
       <div class="modal-content">
         <div class="modal-header">
        
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          <button type="button" class="btn-close modal_close_btn" data-bs-dismiss="modal" aria-label="Close" 
+      style="    position: absolute;
+      right: 14px;
+      top: 17px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px;">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-4 h-4 modal_cut">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
         </div>
           
           <div class="modal-body">
@@ -4138,7 +4167,18 @@ display: none !important;
         <!-- Remove border from modal header -->
         <div class="modal-header">
 
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          <button type="button" class="btn-close modal_close_btn" data-bs-dismiss="modal" aria-label="Close" 
+          style="    position: absolute;
+          right: 14px;
+          top: 17px;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 12px;">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-4 h-4 modal_cut">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
         </div>
         <div class="modal-body">
           <div class="row">
@@ -5273,6 +5313,18 @@ $('.arrow_for_top').click(function() {
 
 
 <style>
+
+
+        .custom-search{
+                            position: relative;
+
+                        }
+
+                        .bi.bi-search{
+                            position: absolute;
+                            top: 8px;
+                            right: 4px;
+                        }
   .error_alert{
       border-left: 4px solid red ;
   }
@@ -5313,10 +5365,25 @@ top: 10vh !important;
  
 $(document).ready(function () {
   $('#example').DataTable();
-  $('#lots').DataTable({
-    "pageLength": 25
-  });
-  
+
+
+                    // Initialize DataTable on the element
+                    var table_new = $("#lots").DataTable({
+                      "pageLength": 25,
+                        // Customizing the search input
+                        language: {
+                             // Customize the search placeholder text
+                        searchPlaceholder: "Search...",
+
+                            search: '<div class="custom-search"><i class="bi bi-search"></i><input type="search" class="form-control form-control-sm" placeholder="Custom Search..." aria-controls="ipo-watch"></div>'
+                        }
+                    });
+                    $('#lots_filter input:eq(1)').hide();
+                    // Triggering the search on keyup event of the custom search input
+                    $('.custom-search input').on('keyup', function() {
+                        table_new.search($(this).val()).draw();
+                    });
+
 $('#lots').wrap('<div class="parent_table"></div>');
 $('#lots_length,#lots_filter').wrapAll('<div class="parent_search_length"></div>');
 $('#example').wrap('<div class="parent_table"></div>');

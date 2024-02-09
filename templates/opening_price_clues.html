@@ -116,12 +116,7 @@ thead tr th{
     border-right: .2px solid white !important;
   }
 
-  tbody td div{
-    font-weight: 200 !important;
-  }
-  tbody td span{
-    font-weight: 200 !important;
-  }
+  
   
 
   .parent_table{
@@ -168,7 +163,7 @@ thead tr th{
     display: inline-block;
     min-width: 1.5em;
     padding: 0.5em 1em;
-    margin-left: 2px;
+    margin-left: 7px !important;
     text-align: center;
     text-decoration: none !important;
     cursor: pointer;
@@ -246,13 +241,38 @@ thead tr th{
     box-shadow: 0 3px 16px 0 rgba(35,47,62,.15)!important; /* Adjust the values as needed */
   }
 
+  .dataTables_length select{
+    border: 1px solid #aaa;
+      
+      background-color: transparent;
+      padding: 2px 9px !important;
+      margin: 0 5px !important;
+      font-weight: 500 !important;
+  }
+
+  .dataTables_length label {
+    text-transform: capitalize !important;
+}
+
+.bottom{
+    margin-top: 20px !important;
+}
+
+tbody td div span{
+    font-weight: 400 !important;
+}
+
+tbody td div {
+    font-weight: 400 !important;
+}
+
 </style>
 
 <div>
-    <h5 class="my-3">Opening Price Clues</h5>
+    <h5 class="my-3 ms-4">Opening Price Clues</h5>
 
     <div class="open_clue_low">
-        <div class="low_table">
+        <div class="low_table" id="open_low">
             <table id="low-table" class="table  table-striped-custom cell-border">
                 <p>Filter Criteria : Stocks With Same Open And Low
                 </p>
@@ -303,7 +323,7 @@ thead tr th{
     <div class="open_clue_low">
         <p>Filter Criteria: Stocks With Same Open And High
         </p>
-        <div class="high_table">
+        <div class="high_table" id="open_high">
             <table id="high-table" class="table table-striped-custom cell-border">
                 <thead >
                     <tr>
@@ -390,8 +410,14 @@ thead tr th{
                     "searching": true,
                     "ordering": true,
                     "info": true,
-                    "order": [] // Disable default sorting
+                    "order": [], // Disable default sorting
+                    "dom": '<"top"lf>rt<"bottom"ip><"clear">',
+                    "language": {
+                      "search": '<div class="custom-search" style="position: relative"><i class="bi bi-search" style="position: absolute;right: 7px;top: 10px;"></i></i><input class="form-control" type="search" placeholder="Search" aria-controls="volume_shocker_table"></div>'
+                    }
                 });
+                $('#high-table_filter input:eq(1)').hide();
+                $('#high-table_filter input[type="search"]').attr('placeholder', 'Search...');
                 // Initialize DataTables for the table with no default sorting
                 $('#high-table').wrap('<div class="parent_table"></div>');
                 $('#high-table_filter,#high-table_length').wrapAll('<div class="parent_search_length"></div>');
@@ -434,8 +460,14 @@ thead tr th{
                         "searching": true,
                         "ordering": true,
                         "info": true,
-                        "order": [] // Disable default sorting
+                        "order": [], // Disable default sorting
+                        "dom": '<"top"lf>rt<"bottom"ip><"clear">',
+                    "language": {
+                      "search": '<div class="custom-search" style="position: relative"><i class="bi bi-search" style="position: absolute;right: 7px;top: 10px;"></i></i><input class="form-control" type="search" placeholder="Search" aria-controls="volume_shocker_table"></div>'
+                    }
                     });
+                    $('#low-table_filter input:eq(1)').hide();
+                    $('#low-table_filter input[type="search"]').attr('placeholder', 'Search...');
                     $('#low-table').wrap('<div class="parent_table"></div>');
                     $('#low-table_filter,#low-table_length').wrapAll('<div class="parent_search_length"></div>');
             }

@@ -971,6 +971,7 @@ border: 1px solid #4399eb !important;
   #all_scheduled_order:hover,
   #buid_custom_strategy_btn:hover,
   #order_btn:hover,
+  #Activate_broker_btn:hover,
   .btn_outline_primary:hover,
   .btn_add_broker:hover,
   #saveStrategies:hover {
@@ -1277,7 +1278,7 @@ background: #ffb7b71d ;
   }
 
   .left_main_strategy_position {
-box-shadow: 0 3px 16px 0 rgba(35,47,62,.15);    padding: 18px 18px;
+box-shadow: 0 3px 16px 0 rgba(35,47,62,.15);    padding: 18px 18px 0px 18px;
   }
 
   .right_p_l_greeks {
@@ -1317,7 +1318,7 @@ box-shadow: 0 3px 16px 0 rgba(35,47,62,.15);    padding: 0 18px 18px 18px;
   .main_add_position_actions {
     border-bottom: 1px solid #8080803b;
     transition: 0.3s;
-    overflow: auto;
+ 
 
   }
 
@@ -1622,7 +1623,7 @@ box-shadow: 0 3px 16px 0 rgba(35,47,62,.15);    padding: 0 18px 18px 18px;
                   .main_future_loz_size{
                     display: flex;
     gap: 0.2rem;
-    width: 6.3rem;
+    width: 7rem;
                   }
               </style>
 
@@ -4336,11 +4337,19 @@ color: #c50000 !important;
                   if (advance_indicator) {
                   // Append the input field to the parent with class "broker_active_totp"
                 
-                  var inputField = $('<div class="d-flex gap-3 align-items-baseline enter_totp_verify_input"><label>Enter TOTP : </label><input type="text" placeholder="Enter TOTP" class="form-control api_activation_otp"></div>');
+                  var inputField = $('<div class="d-flex gap-3 align-items-baseline enter_totp_verify_input"><label>Enter TOTP : </label><input type="text" placeholder="Enter TOTP" class="form-control api_activation_otp"><i class="bx bx-x delete_topt_input" style="cursor:pointer;"></i></div>');
                   $(this).closest('.main_broker_card').find('.broker_active_totp').empty().append(inputField);
                   $(this).prop('checked', false);
 
-     
+     // Add click event handler for delete icon
+inputField.find('.delete_topt_input').on('click', function(e) {
+  e.preventDefault()
+  e.stopPropagation();
+
+    $(this).closest('.enter_totp_verify_input').remove(); // Remove the entire input field container when delete icon is clicked
+});
+
+
                   return
 
                   }
@@ -4703,7 +4712,7 @@ async function updateActiveApi(brokerId, isActive) {
       all: unset !important;
     }
 
-    .reset_button,
+
     .setTarget,
     .adjust {
       display: flex !important;
@@ -4727,7 +4736,7 @@ async function updateActiveApi(brokerId, isActive) {
       font-weight: 600 !important;
     }
 
-    .reset_button:hover,
+
     .setTarget:hover,
     .adjust:hover {
       background: #fff !important;
@@ -6589,50 +6598,7 @@ $(".all_strategy_filter").removeClass("main_all_strategy_active")
 
   }
 
-    .deploy_btn,
-    .reset_button {
 
-      background: linear-gradient(180deg, #4399eb, #5cadfb);
-      color: #fff;
-      padding: 0px 27px;
-      text-align: center;
-      font-size: 13px;
-      height: 34px;
-      font-weight: 500 !important;
-      border-radius: 4px;
-      border: 1px solid #4399eb !important;
-      -webkit-box-shadow: none !important;
-      box-shadow: none !important;
-      outline: 0 !important;
-      -webkit-transition: all .2s ease-in-out !important;
-      -moz-transition: all .2s ease-in-out !important;
-      transition: all .2s ease-in-out !important;
-      cursor: pointer;
-      font-weight: 600 !important;
-      white-space: nowrap;
-
-    }
-
-    .save_strategy {
-      background: #fff;
-      color: #4399eb;
-      padding: 0px 27px;
-      text-align: center;
-      font-size: 13px;
-      height: 34px;
-      font-weight: 500 !important;
-      border-radius: 4px;
-      border: 1px solid #4399eb !important;
-      -webkit-box-shadow: none !important;
-      box-shadow: none !important;
-      outline: 0 !important;
-      -webkit-transition: all .2s ease-in-out !important;
-      -moz-transition: all .2s ease-in-out !important;
-      transition: all .2s ease-in-out !important;
-      cursor: pointer;
-      font-weight: 600 !important;
-      white-space: nowrap;
-    }
 
     .tab-content{
       border-left: 1px solid #dbdbdb;
@@ -6689,7 +6655,7 @@ $(".all_strategy_filter").removeClass("main_all_strategy_active")
       color: #4399eb;
     }
 
-    .save_strategy:hover,
+
     .check_liquidity:hover {
       background: linear-gradient(180deg, #4399eb, #5cadfb);
       color: #fff;
@@ -6712,7 +6678,7 @@ $(".all_strategy_filter").removeClass("main_all_strategy_active")
       gap: 1rem;
       margin-top: 6rem;
       flex-direction: column;
-      overflow: auto;
+
     }
 
     .strategy_position_reset {
@@ -6724,7 +6690,7 @@ $(".all_strategy_filter").removeClass("main_all_strategy_active")
     .left_main_strategy_position {
       display: flex;
       flex-direction: column;
-      /* justify-content: space-between; */
+      justify-content: flex-end;
     }
 
     .main_build_custom_strategy_empty {
@@ -6778,27 +6744,36 @@ $(".all_strategy_filter").removeClass("main_all_strategy_active")
     padding: 9px 8px 9px 0;
     margin-top: 12px;}
 
-    .right_side_top_strategies button{
-      border-right: 1px solid #e7e7e7;
-    }
+
     .right_side_top_strategies button p,
     .btn_add_broker,
     #buid_custom_strategy_btn,
     #order_btn,
     #Activate_broker_btn{
-      color: darkred;
-    font-size: 16px;
+      color: #d4351d;
+    font-size: 17px;
 
     }
 
-    #all_scheduled_order,
+    /* #all_scheduled_order,
     #saveStrategies,
     #Activate_broker_btn,
     .btn_outline_primary,
     .all_api_details,
     .btn_add_broker{
       border-right: 1px solid #e7e7e7;
-    }
+    } */
+
+    .separator_schedulor_section {
+  height: 17px;
+  width: 1px;
+  background-color: #a6a4a4;
+  display: flex;
+  margin: inherit;
+  align-items: center;
+}
+
+
   </style>
   <script>
 
@@ -6817,19 +6792,25 @@ $(".all_strategy_filter").removeClass("main_all_strategy_active")
 
         <p style="margin-bottom: 0;">Scheduled order</p>
       </button>
+      <div class="separator_schedulor_section"></div>
    
       <button class="d-flex align-items-center" id="saveStrategies">
         <p style="margin-bottom: 0;">Strategies Saved</p>
       </button>
+      <div class="separator_schedulor_section"></div>
+
       <button style="padding: 0px 14px;" class="btn_outline_primary" type="button" data-bs-toggle="offcanvas"
         data-bs-target="#optionChain_canvas" aria-controls="optionChain_canvasLabel" id="buid_custom_strategy_btn">
         Option Chain
         <i class="bx bx-chevron-down"></i>
       </button>
+      <div class="separator_schedulor_section"></div>
 
       <button class="btn_add_broker" data-bs-toggle="offcanvas" data-bs-target="#add_api" aria-controls="add_api">
         Add Broker
       </button>
+      <div class="separator_schedulor_section"></div>
+     
 
       <div class="activate_broker_toggle_main_btn" style="position: relative;">
 
@@ -6838,10 +6819,10 @@ $(".all_strategy_filter").removeClass("main_all_strategy_active")
         <button class="btn_outline_primary" class="all_api_details" data-bs-toggle="collapse" id="Activate_broker_btn">
           Activate Broker <i class="bx bx-chevron-down"></i>
         </button>
-
-
+        
         <div id="overlay"></div>
-
+       
+        
         <div class="" id="active_broker_modal" style="display: none;">
           <div class="dismiss_active_modal">
             <!-- <i class="bx bx-plus dismiss_icon_active_modal"></i> -->
@@ -6862,8 +6843,8 @@ $(".all_strategy_filter").removeClass("main_all_strategy_active")
             </div>
           </div>
         </div>
-
       </div>
+      <div class="separator_schedulor_section" style="  width: 1px;"></div>
 
 
 
@@ -6889,7 +6870,7 @@ $(".all_strategy_filter").removeClass("main_all_strategy_active")
               .main_right_reset_note_btn {
                 display: flex;
                 align-items: center;
-                gap: 0.1rem;
+                gap: 0.4rem;
 
               }
             </style>
@@ -6989,8 +6970,8 @@ $(".all_strategy_filter").removeClass("main_all_strategy_active")
 
               .left_positions_reset_notes button,
 
-              .updateStrategy,
-              .saveStrategy {
+              .updateStrategy
+            {
                 display: flex !important;
                 align-items: center !important;
                 background: linear-gradient(180deg, #4399eb, #5cadfb);
@@ -7013,6 +6994,7 @@ $(".all_strategy_filter").removeClass("main_all_strategy_active")
               }
 
               .saveNotes,
+              .saveStrategy:hover ,
               .editNotes:hover {
                 display: flex !important;
                 align-items: center !important;
@@ -7035,6 +7017,7 @@ $(".all_strategy_filter").removeClass("main_all_strategy_active")
                 font-weight: 600 !important;
               }
 
+              .saveStrategy ,
               .editNotes {
                 display: flex !important;
                 align-items: center !important;
@@ -7057,13 +7040,12 @@ $(".all_strategy_filter").removeClass("main_all_strategy_active")
                 font-weight: 600 !important;
               }
 
-              .deploy_btn:hover,
-              .reset_button:hover,
+         
               .left_positions_reset_notes button:hover,
               .saveNotes:hover,
 
-              .updateStrategy:hover,
-              .saveStrategy:hover {
+              .updateStrategy:hover
+           {
                 background: #fff !important;
                 color: #4399eb !important;
               }
@@ -7451,26 +7433,58 @@ $(".all_strategy_filter").removeClass("main_all_strategy_active")
 
           </div>
           <style>
-            .strategy_buttons_deploy_execute {
+.strategy_buttons_deploy_execute{
+  background: #00a900;
+  color: white;
 
-              display: flex;
-              gap: 1rem;
-            }
+  border-radius: 5px;
+}
+.strategy_buttons_deploy_execute button{
+  background-color: transparent ;
+  border: none;
+  color: white;
+text-align: center !important;
+  font-size: 15px !important;
+  padding: 6px 0;
+  font-weight: 600;
+}
+.strategy_buttons_deploy_execute button:active{
+
+  background: rgb(0, 118, 0) !important;
+ box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px !important;
+
+}
+
+.deploy_btn:active{
+  border-end-end-radius: 5px;
+  border-top-right-radius: 5px;
+}
+     
+.save_strategy:active{
+  border-start-start-radius: 5px;
+  border-bottom-left-radius: 5px;
+}
+
+.save_strategy,.execute_all_strategies{
+  border-right: 2px solid !important;
+}
           </style>
-          <div class="strategy_buttons_deploy_execute">
-            <div class="d-flex flex-wrap justify-content-between gap-2">
-              <button data-bs-toggle="modal" data-bs-target="#save_startegyModal"
-                class="save_strategy mb-2 mb-md-0">Save Strategy</button>
+          <div class="strategy_buttons_deploy_execute row">
 
-              <button class="reset_button execute_all_strategies d-flex gap-1 align-items-center" disabled
+
+       
+              <button data-bs-toggle="modal" data-bs-target="#save_startegyModal"
+                class="save_strategy col-4">Save Strategy</button>
+
+              <button class="reset_button execute_all_strategies col-4" disabled
                 title="Please Activate your API for placing order">
-                <p style="margin-bottom: auto; margin-top: auto; font-size: 12px" class="">
+    
                   Execute Order
-                </p>
+            
               </button>
 
-              <button class="deploy_btn mt-2 mt-md-0">Deploy</button>
-            </div>
+              <button class="deploy_btn col-4">Deploy</button>
+  
 
           </div>
 
@@ -7711,7 +7725,7 @@ $(".all_strategy_filter").removeClass("main_all_strategy_active")
 
 
             .main_strategy_builder_btn {
-
+margin-bottom: 38px;
               margin-right: 41px;
             }
 
@@ -17617,7 +17631,7 @@ $(".right_side_top_strategies ,#buid_custom_strategy_btn,.oi_option,.greeks_opti
                                         <div class="action_option_strategy d-flex justify-content-center align-items-center gap-1">
                                                     <i class="bi bi-pencil-square edit-button" data-bs-toggle="modal" data-bs-target="#editPositionModal"></i>
                                                     <i class="bi bi-trash-fill delete-button dlt-btn" id="delete-btn"></i>
-                                                    <i class='green-option-indicator exit_indicator'></i>
+                                                    <i class='green-option-indicator exit_indicator d-none'></i>
                                                 </div>
                                             
                                             

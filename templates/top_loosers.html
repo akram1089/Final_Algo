@@ -445,9 +445,7 @@
         padding: 18px !important;
       }
 
-      tbody td{
-        font-weight: 200 !important;
-      }
+      
       tbody td{
         padding: 18px !important;
       }
@@ -596,6 +594,25 @@ table.dataTable thead>tr>td.sorting_desc:before, table.dataTable thead>tr>td.sor
     padding-bottom: 15px !important;
   }
 
+  .dataTables_length select{
+    border: 1px solid #aaa;
+      
+      background-color: transparent;
+      padding: 2px 9px !important;
+      margin: 0 5px !important;
+      font-weight: 500 !important;
+  }
+
+  .dataTables_length label {
+    text-transform: capitalize !important;
+}
+.bottom{
+  margin-top: 20px !important;
+}
+.main_table{
+    padding: 10px !important;
+}
+
 </style>
 
 <script>
@@ -608,8 +625,14 @@ table.dataTable thead>tr>td.sorting_desc:before, table.dataTable thead>tr>td.sor
             "searching": true,
             "ordering": true,
             "info": true,
-            "order": [] // Disable default sorting
+            "order": [], // Disable default sorting
+            "dom": '<"top"lf>rt<"bottom"ip><"clear">',
+            "language": {
+                "search": '<div class="custom-search" style="position: relative"><i class="bi bi-search" style="position: absolute;right: 7px;top: 10px;"></i></i><input class="form-control" type="search" placeholder="Search" aria-controls="volume_shocker_table"></div>'
+            }
         });
+        $('#stock-table_filter input:eq(1)').hide();
+        $('#stock-table_filter input[type="search"]').attr('placeholder', 'Search...');
         $('#stock-table').wrap('<div class="parent_table"></div>');
         $('#stock-table_length,#stock-table_filter').wrapAll('<div class="parent_search_length"></div>');
         function loadStockData(filter) {
@@ -672,7 +695,7 @@ table.dataTable thead>tr>td.sorting_desc:before, table.dataTable thead>tr>td.sor
 
 
 <div>
-    <div class="top_gainer_header mt-5 d-flex justify-content-between">
+    <div class="top_gainer_header mt-5 d-flex justify-content-between" style="padding: 0 15px !important;">
         <h5>Top Loosers Stock </h5>
 
         <a class="top_loosers" href="{% url 'top_gainers' %}">

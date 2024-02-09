@@ -2,6 +2,18 @@
 {% load static %}
 {% block dashboard_body %}
 <style>
+  .dataTables_length select{
+    border: 1px solid #aaa;
+      
+      background-color: transparent;
+      padding: 2px 9px !important;
+      margin: 0 5px !important;
+      font-weight: 500 !important;
+  }
+  
+  .bottom{
+    margin-top: 20px !important;
+  }
   .traded_icons {
     display: flex;
     align-items: center;
@@ -409,14 +421,6 @@ body .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
 
 .dataTables_length label{
   text-transform: capitalize !important;
-}
-.dataTables_length select{
-  border: 1px solid #aaa;
-    border-radius: 10px !important;
-    background-color: transparent;
-    padding: 2px 9px !important;
-    margin: 0 5px !important;
-    font-weight: 500 !important;
 }
 
 .bearish {
@@ -1371,21 +1375,24 @@ $(document).ready(function () {
   .cards_section a{
     color: black !important;
   }
-  
+  .center_card{
+    background-color: #f9f9f9;
+    cursor: pointer;
+  }
 </style>
 <section style="padding-top: 2rem;">
   <div class="claims_heading text-center">
     <!-- <h5>BEHIND THE SCENES</h5> -->
-    <h4>Top 5 Features of our site.</h4>
+    <h4>Top Features of our site.</h4>
   </div>
   <div>
     <div class="cards_section">
       
        
-          <div class="card_one_section info_card" data-href="/option_index_statregy_executor" style="border-radius: 15px !important; display: flex; justify-content: space-between; flex-direction: column;">
+          <a class="card_one_section info_card" href="{% url "option_index_statregy_executor" %}" target="_blank" style="border-radius: 15px !important; display: flex; justify-content: space-between; flex-direction: column;">
             
                 <div class="p-6">
-                  <div class="number_circle">1</div>
+                  
                   <h3 class="py-2 text-xl font-bold text-txt-menu">Option Index Strategy Executor</h3>
                   <p class="text-cld text-txt-cl">A tool enabling users to build & save the different kinds of future and options trading strategies, save the strategy. It also facilitates the automated execution of predefined options trading strategies, we can run the strategy with multiple brokers without having to re-create the strategy. <br> Once you build a strategy, users can see the pay-off diagram, Pay-off Table, Strategy cost, OI charts and greeks for the build strategy.
                   </p>
@@ -1395,65 +1402,67 @@ $(document).ready(function () {
                 </div>
             
           
-          </div>
+          </a>
        
          <div class="card_two_section d-flex flex-column gap-5" style="flex: 1;">
 
-            <div class="card_two_upper info_card" data-href="/event_tracker" style="border-radius: 15px !important;">
+            <a class="card_two_upper info_card" href="{% url "event_tracker" %}" target="_blank" style="border-radius: 15px !important;">
              <div class="p-6">
-               <div class="number_circle">2</div>
+               
                <h3 class="py-2 text-xl font-bold text-txt-menu">Event Tracker</h3>
                <p class="text-cld text-txt-cl">The event tracker offers insights into crucial events and outcomes pertaining to stocks, including earnings results, informing investors about the company's financial performance.<br> <br>
                 Dividend declarations notify shareholders of upcoming returns. Other events tracked include bonus issues, stock splits, buybacks, rights offerings, AGMs, EGMs, board meetings, book closure periods, and offers for sale (OFS).
                 </p>
              </div>
-            </div>
+            </a>
          
               
-            <div class="card_two_lower info_card" data-href="/nifty_tracker" style="border-radius: 15px !important;">
-             <div class="p-6">
-               <div class="number_circle">3</div>
-               <h3 class="py-2 text-xl font-bold text-txt-menu">Nifty Tracker</h3>
-               <p class="text-cld text-txt-cl">A Nifty tracker provides comparison charts for a stocks for Nifty/Bank Nifty/Fin Nifty</p>
-               <p class="mt-4">The comparison charts includes:</p>
-               <ul>
-                 <li>Previous Day Close & Today Close,</li>
-                 <li>Day Opens & Day Closes,</li>
-                 <li>Previous Close & Today Open</li>
-                 <li>Day Closes & Today Closes - Previous Close & Today Open</li>
-               </ul>
-             </div>
-             <div class="text-end">
-               <img src="https://joinditto.in/static/41f4ebc95ac05dbd2ca2b93f96e37ef4/99e8d/hourglass-2.webp" alt="" width="80px">
-             </div>
-            </div>
+            <a class="card_two_lower info_card" href="{% url "ipo_dashboard" %}" target="_blank" style="border-radius: 15px !important;">
+              <div class="p-6">
+                
+                <h3 class="py-2 text-xl font-bold text-txt-menu">IPO Dashboard</h3>
+                <p class="text-cld text-txt-cl">An IPO dashboard provides key data in a concise and accessible format, offers insights on IPO performance, new listings, and market trends.<br>
+                 It displays IPO returns, tracks upcoming and recent listings, highlights top performers, and provides data on basis of allotment.</p>
+              </div>
+              
+            </a>
+            
          
-                  
          </div>
       
          <div class="card_three_section d-flex flex-column gap-4" style="flex: 1;">
           
-            <div class="card_two_upper info_card" data-href="/contributor" style="border-radius: 15px !important; flex: 1; display: flex; flex-direction: column; justify-content: space-between;" >
+            <a class="card_two_upper info_card" href="{% url "contributor" %}" target="_blank" style="border-radius: 15px !important; flex: 1; display: flex; flex-direction: column;" >
              <div class="p-6">
-               <div class="number_circle">4</div>
+               
                <h3 class="py-2 text-xl font-bold text-txt-menu">Indices Contributor</h3>
-               <p class="text-cld text-txt-cl">Provides data of the top NSE indices for positive contributors and negative contributors in the stock market for a specified period of time. <br>
-                 The data is available for Nifty 50, Nifty Next 50, Bank Nifty, Fin Nifty, Midcap Nifty & Midcap Select.</p>
+               <p class="text-cld text-txt-cl">Provides data of the top NSE indices for positive contributors and negative contributors in the stock market for a specified period of time. <br> <br>
+                The data is available for Nifty 50, Nifty Next 50, Bank Nifty, Fin Nifty, Midcap Nifty & Midcap Select.</p>
              </div>
-             <div class="text-end">
-               <img src="https://joinditto.in/static/8e97a302b988193c788d6dcb8b2712ea/efc8a/star.webp" alt="" width="80px">
-             </div>
-            </div>
+            </a>
+
+            <a class="center_card info_card" href="{% url "mutual_fund" %}" target="_blank" style="border-radius: 15px !important;">
+              <div class="">
+                <div class="p-6">
+                  <h3 class="py-2 text-xl font-bold text-txt-menu">Mutual Fund</h3>
+                  <p class="text-cld text-txt-cl">Mutual funds provide data on Mutual Fund Activity, NAV, Fund Performance, Holdings, Fund Profile, New Fund Offers, and more.</p>
+                </div>
+               </div>
+            </a>
+
+            <a class="card_two_lower info_card" href="{% url "nifty_tracker" %}" target="_blank" style="border-radius: 15px !important;">
+              <div class="p-6">
+                
+                <h3 class="py-2 text-xl font-bold text-txt-menu">Nifty Tracker</h3>
+                <p class="text-cld text-txt-cl">A Nifty tracker offers comparative charts displaying stocks' closing and opening prices from the previous day and today, including comparisons for Nifty, Bank Nifty, and Fin Nifty.</p>
+                
+              </div>
+              <div class="text-end">
+               
+              </div>
+            </a>
           
-            <div class="card_two_lower info_card" data-href="/ipo_dashboard" style="border-radius: 15px !important;">
-             <div class="p-6">
-               <div class="number_circle">5</div>
-               <h3 class="py-2 text-xl font-bold text-txt-menu">IPO Dashboard</h3>
-               <p class="text-cld text-txt-cl">An IPO dashboard provides key data in a concise and accessible format, offers insights on IPO performance, new listings, and market trends.<br>
-                It displays IPO returns, tracks upcoming and recent listings, highlights top performers, and provides data on basis of allotment.</p>
-             </div>
-             
-            </div>
+           
           
          </div>
       
@@ -1462,7 +1471,6 @@ $(document).ready(function () {
     </div>
   </div>
 </section>
-
 <script>
   $(document).ready(function () {
       // Add a click event to elements with class 'info_card'
@@ -1892,11 +1900,11 @@ white-space: nowrap;">
             <tr>
               <th>SYMBOL</th>
               <th>SECURITY</th>
-              <th>NEW 52W/H
+              <th> 52W/H
                 PRICE</th>
               <th>PREV.
                 HIGH</th>
-              <th>PREV. HIGH
+              <th> HIGH
                 DATE</th>
               <th>LTP</th>
               <th>PREV. CLOSE</th>
@@ -1930,11 +1938,11 @@ white-space: nowrap;">
           <tr>
             <th>SYMBOL</th>
             <th>SECURITY</th>
-            <th>NEW 52W/H
+            <th> 52W/H
               PRICE</th>
             <th>PREV.
               HIGH</th>
-            <th>PREV. HIGH
+            <th> HIGH
               DATE</th>
             <th>LTP</th>
             <th>PREV. CLOSE</th>
@@ -2779,7 +2787,10 @@ background-color: #f1eded !important;
           </div>
           <div class="col-lg-8 insurance_inquiry_page" style="padding: 20px 30px !important;">
             <form style="position: relative;">
-              <button type="button" class="btn-close modal_close_btn" data-bs-dismiss="modal" aria-label="Close" style="position: absolute; right: -7px; top: -12px; border-radius: 50%; display: flex; align-items: center; justify-content: center; padding: 12px;"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-4 h-4 modal_cut"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
+              <button type="button" class="btn-close modal_close_btn" data-bs-dismiss="modal" aria-label="Close" style="position: absolute; right: -7px; top: -12px; border-radius: 50%; display: flex; align-items: center; justify-content: center; padding: 12px;">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-4 h-4 modal_cut">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
               <div class="">
                   <label style="font-size: 13px !important;">Please let us know if your query is regarding option buying, option<br> selling, or algo trading?</label>
               </div>

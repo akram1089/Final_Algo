@@ -364,6 +364,17 @@ table thead th{
                         /* background-color: #f2f2f2 !important; */
                         background-color: #f1eded !important;
                         }
+
+                        .custom-search{
+                            position: relative;
+
+                        }
+
+                        .bi.bi-search{
+                            position: absolute;
+                            top: 8px;
+                            right: 4px;
+                        }
                 </style>
 
                 <!-- Modal -->
@@ -699,7 +710,28 @@ table thead th{
 
 
 
-        var table_pros = $('#draft-prospectus-table').DataTable();
+ 
+
+
+
+
+
+                    // Initialize DataTable on the element
+                    var table_pros = $("#draft-prospectus-table").DataTable({
+                        // Customizing the search input
+                        language: {
+                             // Customize the search placeholder text
+                        searchPlaceholder: "Search...",
+
+                            search: '<div class="custom-search"><i class="bi bi-search"></i><input type="search" class="form-control form-control-sm" placeholder="Custom Search..." aria-controls="ipo-watch"></div>'
+                        }
+                    });
+                    $('#draft-prospectus-table_filter input:eq(1)').hide();
+                    // Triggering the search on keyup event of the custom search input
+                    $('.custom-search input').on('keyup', function() {
+                        table_new.search($(this).val()).draw();
+                    });
+
 
         // Function to update the table with data
         function updateTable_pros(data_props) {
@@ -760,7 +792,15 @@ table thead th{
 
 
         // Function to update the table with data
-        var table = $('#best-performers-table').DataTable();
+        var table = $('#best-performers-table').DataTable({
+            language: {
+                             // Customize the search placeholder text
+                        searchPlaceholder: "Search...",
+
+                            search: '<div class="custom-search"><i class="bi bi-search"></i><input type="search" class="form-control form-control-sm" placeholder="Custom Search..." aria-controls="ipo-watch"></div>'
+                        }
+        });
+        $('#best-performers-table_filter input:eq(1)').hide();
         function updateTable(data) {
             console.log(data);
             table.clear().draw();
@@ -794,6 +834,16 @@ table thead th{
                 ]).draw(false);
 
             });
+
+            
+                    // Initialize DataTable on the element
+              
+                  
+                    // Triggering the search on keyup event of the custom search input
+                    $('.custom-search input').on('keyup', function() {
+                        table_new.search($(this).val()).draw();
+                    });
+
         }
 
 
@@ -1056,6 +1106,8 @@ table thead th{
             success: function (data) {
                 var res_data = data.data
                 $("#basis_allotment").empty()
+                $("#basis-allotment").DataTable().clear().destroy();
+
                 res_data.forEach(element => {
                     var row = `<tr>
                             <td>${element.lname}</td>
@@ -1065,7 +1117,25 @@ table thead th{
                     var table = $("#basis_allotment")
                     table.append(row)
                 });
-                $("#basis-allotment").DataTable()
+            
+
+                
+                    // Initialize DataTable on the element
+                    var table_new = $("#basis-allotment").DataTable({
+                        // Customizing the search input
+                        language: {
+                             // Customize the search placeholder text
+                        searchPlaceholder: "Search...",
+
+                            search: '<div class="custom-search"><i class="bi bi-search"></i><input type="search" class="form-control form-control-sm" placeholder="Custom Search..." aria-controls="ipo-watch"></div>'
+                        }
+                    });
+                    $('#basis-allotment_filter input:eq(1)').hide();
+                    // Triggering the search on keyup event of the custom search input
+                    $('.custom-search input').on('keyup', function() {
+                        table_new.search($(this).val()).draw();
+                    });
+
             }
         })
     }
@@ -1154,6 +1224,9 @@ table thead th{
                 success: function (data) {
                     new_listing = data.data;
                     $("#new_listing_data").empty()
+
+                    $("#new-lists").DataTable().clear().destroy();
+
                     new_listing.forEach(element => {
                         console.log(element);
                         var row = `<tr>
@@ -1167,7 +1240,23 @@ table thead th{
                         var table = $("#new_listing_data")
                         table.append(row)
                     });
-                    $("#new-lists").DataTable()
+          
+                    // Initialize DataTable on the element
+                    var table_new = $("#new-lists").DataTable({
+                        // Customizing the search input
+                        language: {
+                             // Customize the search placeholder text
+                        searchPlaceholder: "Search...",
+
+                            search: '<div class="custom-search"><i class="bi bi-search"></i><input type="search" class="form-control form-control-sm" placeholder="Custom Search..." aria-controls="ipo-watch"></div>'
+                        }
+                    });
+                    $('#new-lists_filter input:eq(1)').hide();
+                    // Triggering the search on keyup event of the custom search input
+                    $('.custom-search input').on('keyup', function() {
+                        table_new.search($(this).val()).draw();
+                    });
+
                 }
             })
         }
@@ -1207,7 +1296,7 @@ table thead th{
                 success: function (response) {
                     var table_data = response.data
                     $("#table_data_to_show").empty()
-
+                    $("#ipo-watch").DataTable().clear().destroy();
                     table_data.forEach(element => {
 
 
@@ -1259,7 +1348,25 @@ table thead th{
 
 
                     });
-                    $("#ipo-watch").DataTable()
+
+
+                    // Initialize DataTable on the element
+                    var table_new = $("#ipo-watch").DataTable({
+                        // Customizing the search input
+                        language: {
+                             // Customize the search placeholder text
+                        searchPlaceholder: "Search...",
+
+                            search: '<div class="custom-search"><i class="bi bi-search"></i><input type="search" class="form-control form-control-sm" placeholder="Custom Search..." aria-controls="ipo-watch"></div>'
+                        }
+                    });
+                    $('#ipo-watch_filter input:eq(1)').hide();
+                    // Triggering the search on keyup event of the custom search input
+                    $('.custom-search input').on('keyup', function() {
+                        table_new.search($(this).val()).draw();
+                    });
+
+
                 }
 
 

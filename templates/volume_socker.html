@@ -390,13 +390,23 @@ table.dataTable thead>tr>td.sorting_desc:before, table.dataTable thead>tr>td.sor
     box-shadow: 0 3px 16px 0 rgba(35,47,62,.15)!important; /* Adjust the values as needed */
   }
 
+  .dataTables_length label {
+    text-transform: capitalize !important;
+}
+
+.bottom{
+  margin-top: 20px !important;
+}
+tbody tr td div{
+  font-weight: 500 !important;
+}
 </style>
 <div>
   <div>
 
 
     <div class="">
-      <h4 class="my-3">Volume Shockers Intraday | NSE Stocks | NiftyTrader</h4>
+      <h4 class="ms-4 mt-3 my-3">Volume Shockers Intraday | NSE Stocks | NiftyTrader</h4>
       <!-- Button trigger modal -->
   
       <!-- <button id="volume_shocker">Volume Shocker</button> -->
@@ -488,8 +498,14 @@ table.dataTable thead>tr>td.sorting_desc:before, table.dataTable thead>tr>td.sor
         }
 
         $('#volume_shocker_table').DataTable({
-          "pageLength": 10
+          "pageLength": 10,
+          "dom": '<"top"lf>rt<"bottom"ip><"clear">',
+          "language": {
+          "search": '<div class="custom-search" style="position: relative"><i class="bi bi-search" style="position: absolute;right: 7px;top: 10px;"></i></i><input class="form-control" type="search" placeholder="Search" aria-controls="volume_shocker_table"></div>'
+         }
         });
+        $('#volume_shocker_table_filter input:eq(1)').hide();
+        $('#volume_shocker_table_filter input[type="search"]').attr('placeholder', 'Search...');
         $('#volume_shocker_table').wrap('<div class="parent_table"></div>');
         $('#volume_shocker_table_length,#volume_shocker_table_filter').wrapAll('<div class="parent_search_length"></div>');
         

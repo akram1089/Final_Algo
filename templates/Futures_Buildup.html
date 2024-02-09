@@ -35,8 +35,15 @@
         }
 
         // Initialize DataTable with default options
-        var dataTable = $("#buildupTable").DataTable();
-
+        var dataTable = $("#buildupTable").DataTable({
+            "pageLength": 10,
+          "dom": '<"top"lf>rt<"bottom"ip><"clear">',
+          "language": {
+          "search": '<div class="custom-search" style="position: relative"><i class="bi bi-search" style="position: absolute;right: 7px;top: 10px;"></i></i><input class="form-control" type="search" placeholder="Search" aria-controls="volume_shocker_table"></div>'
+         }
+        });
+        $('#buildupTable_filter input:eq(1)').hide();
+        $('#buildupTable_filter input[type="search"]').attr('placeholder', 'Search...')
         // Initial load with stored or default buildupType
         loadData(storedBuildupType || "all");
 
@@ -340,6 +347,22 @@ tr:hover .sorting_1 {
     font-weight: 600 !important;
   }
 
+  .dataTables_length select{
+    border: 1px solid #aaa;
+      
+      background-color: transparent;
+      padding: 2px 9px !important;
+      margin: 0 5px !important;
+      font-weight: 500 !important;
+  }
+
+  .dataTables_length label {
+    text-transform: capitalize !important;
+}
+.bottom{
+  margin-top: 20px !important;
+}
+
   @media screen and (max-width: 768px) {
    .collapse_filters{
     flex-wrap: wrap !important;
@@ -400,7 +423,7 @@ tr:hover .sorting_1 {
 
 
 
-<div class="parent_table table-responsive">
+<div class="parent_table table-responsive" style="padding: 10px !important;">
     <table id="buildupTable" class="table" style="white-space: nowrap;">
         <thead style="background: #59aaf9; color:white;">
             <tr>

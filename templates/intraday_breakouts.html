@@ -232,10 +232,10 @@ tbody tr td{
 }
 
 tbody tr td div span{
-    font-weight: 300 !important;
+    font-weight: 500 !important;
 }
 tbody tr td div{
-    font-weight: 300 !important;
+    font-weight: 500 !important;
 }
 
 .parent_table{
@@ -371,6 +371,26 @@ table.dataTable thead>tr>td.sorting_desc:before, table.dataTable thead>tr>td.sor
   }
 
 
+  .dataTables_length select{
+    border: 1px solid #aaa;
+      
+      background-color: transparent;
+      padding: 2px 9px !important;
+      margin: 0 5px !important;
+      font-weight: 500 !important;
+  }
+
+  .dataTables_length label {
+    text-transform: capitalize !important;
+}
+.bottom{
+  margin-top: 20px !important;
+}
+
+.dataTables_info{
+  margin-top: 5px !important;
+}
+
   </style>
 <div>
     <h4 class="my-3">NSE Stocks – Intraday Breakouts</h4>
@@ -488,8 +508,14 @@ table.dataTable thead>tr>td.sorting_desc:before, table.dataTable thead>tr>td.sor
                     "searching": true,
                     "ordering": true,
                     "info": true,
-                    "order": [] // Disable default sorting
+                    "order": [], // Disable default sorting
+                    "dom": '<"top"lf>rt<"bottom"ip><"clear">',
+                    "language": {
+                      "search": '<div class="custom-search" style="position: relative"><i class="bi bi-search" style="position: absolute;right: 7px;top: 10px;"></i></i><input class="form-control" type="search" placeholder="Search" aria-controls="volume_shocker_table"></div>'
+                    }
                 });
+                $('#breakoutTable_filter input:eq(1)').hide();
+                $('#breakoutTable_filter input[type="search"]').attr('placeholder', 'Search...');
                 $('#breakoutTable').wrap('<div class="parent_table"></div>');
                 $('#breakoutTable_length,#breakoutTable_filter').wrapAll('<div class="parent_search_length"></div>');
             }

@@ -290,6 +290,23 @@
         padding: 7px 16px !important;
     }
 
+    .dataTables_filter label {
+        display: none !important;
+    }
+
+    .dataTables_length select{
+        border: 1px solid #aaa;
+          
+          background-color: transparent;
+          padding: 2px 9px !important;
+          margin: 0 5px !important;
+          font-weight: 500 !important;
+      }
+
+    .dataTables_length label {
+        text-transform: capitalize !important;
+    }
+
      @media only screen and (max-width: 768px) {
         .ofs_filter button{
             width: 100%;
@@ -310,7 +327,7 @@
 <section class="pt-4">
 
     <div class="events_inner_data">
-        <div class="calender_header">
+        <div class="calender_header ms-4">
             <h3>Event/Result Calender</h3>
         </div>
         <div class="main_event">
@@ -405,6 +422,8 @@
 
 <script>
     $(document).ready(function () {
+
+   
         
         $(".btn_event").click(function () {
             $(".btn_event").removeClass("btn_active");
@@ -1022,10 +1041,25 @@
 
 
                 var dataTable = table.DataTable({
-                    paging: true,      
-                    
-                    searching: true    
-                    
+                    paging: true,
+                    searching: true,
+                    dom: '<"top"lf>rt<"bottom"ip><"clear">', // Define the DataTables layout
+                    language: {
+                        // Customize the search placeholder text
+                        searchPlaceholder: "Search..."
+                    },
+                    initComplete: function() {
+                        // Hide the default search input
+                        $('.dataTables_filter input').hide();
+                
+                        // Append a custom search input field
+                        $('.dataTables_filter').append('<input type="search" class="form-control" placeholder="Search..." aria-controls="example"><i class="bi bi-search" style="position: absolute; top: 10px; right: 7px;"></i>');
+                
+                        // Bind keyup event to custom search input to update DataTable search
+                        $('.dataTables_filter input').keyup(function() {
+                            dataTable.search($(this).val()).draw();
+                        });
+                    }
                 });
 
                 dataTable.draw();
