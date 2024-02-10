@@ -14,7 +14,7 @@
         width: 33px;
         display: block;
         height: 29px;
-        color: gray;
+        color: ;
         transition: 0.3s;
         display: inline;
         text-decoration: none;
@@ -123,13 +123,13 @@
   }
 
   .bi.bi-graph-up {
-      border: 1px solid #80808030;
+      border: 1px solid #2e9cf4 !important;
       border-radius: 7px;
       padding: 6px 9px;
       width: 33px;
       display: block;
       height: 29px;
-      color: gray;
+      color: #2e9cf4 !important;
       transition: 0.3s;
       display: inline;
   }
@@ -137,7 +137,7 @@
   .bi.bi-graph-up:hover {
       background-color: rgb(0, 132, 255);
       border: none;
-      color: white;
+      color: white !important;
   }
 .chart_redirect_trading_view{
     text-decoration: none !important;
@@ -578,6 +578,13 @@ table.dataTable thead>tr>td.sorting_desc:before, table.dataTable thead>tr>td.sor
     border-top-left-radius: 10px !important;
     border-top-right-radius: 10px !important ;
 }
+
+.dataTables_length label {
+  text-transform: capitalize !important;
+}
+.dataTables_length select{
+  margin: 0 5px !important;
+  }
 </style>
 <div class="alert alert-dismissible" role="alert" id="alert-watchlist" style="display: none;
 z-index: 100000000009 !important;
@@ -589,7 +596,7 @@ right: 0;">
 </div>
 
 <div>
-    <h4 class="my-3">Watchlist</h4>
+    <h4 class="my-3 ms-4">Watchlist</h4>
     <div class="main_watch_list_table" style="    overflow: auto;">
     <table class="table table-striped-custom cell-border" id="watchlist-table">
         <thead >
@@ -907,7 +914,15 @@ right: 0;">
                     });
 
 
-                    $("#watchlist-table").DataTable();
+                    $("#watchlist-table").DataTable({
+                      "pageLength": 10,
+                      "dom": '<"top"lf>rt<"bottom"ip><"clear">',
+                      "language": {
+                      "search": '<div class="custom-search" style="position: relative"><i class="bi bi-search" style="position: absolute;right: 7px;top: 10px;"></i></i><input class="form-control" type="search" placeholder="Search" aria-controls="volume_shocker_table"></div>'
+                      }
+                    });
+                    $('#watchlist-table_filter input:eq(1)').hide();
+                    $('#watchlist-table_filter input[type="search"]').attr('placeholder', 'Search...');
                     $('#watchlist-table').wrap('<div class="parent_table"></div>');
         $('#watchlist-table_length,#watchlist-table_filter').wrapAll('<div class="parent_search_length"></div>');
 

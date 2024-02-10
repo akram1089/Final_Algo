@@ -211,7 +211,7 @@ margin-top: 20px !important;
 
 <div class="main_head_strategies border-bottom my-4">
    
-      <h4 class="">Holidays</h4>
+      <h4 class="ms-4">Holidays</h4>
       <span>
        
       </span>
@@ -259,6 +259,22 @@ color: white; margin-top:1rem;'>
     {% endfor %}
 
    <script>
+
+    $(document).ready(function() {
+      // DataTable initialization
+      $('#example').DataTable({
+          "pageLength": 10,
+          "dom": '<"top"lf>rt<"bottom"ip><"clear">',
+          "language": {
+              "search": '<div class="custom-search" style="position: relative"><i class="bi bi-search" style="position: absolute;right: 7px;top: 10px;"></i><input class="form-control" type="search" placeholder="Search" aria-controls="example"></div>'
+          }
+      });
+
+      // Hide the default DataTables search input
+      $('#example_filter input:eq(1)').hide();
+      // Change the placeholder of the custom search input
+      $('#example_filter input[type="search"]').attr('placeholder', 'Search...');
+  });
 
     $('#example').wrap('<div class="parent_table"></div>');
     $('#example_length,#example_filter').wrapAll('<div class="parent_search_length"></div>');

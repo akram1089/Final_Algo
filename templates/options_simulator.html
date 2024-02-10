@@ -709,11 +709,11 @@
         <style>
             @media screen and (min-width: 1000px) {
                 .col-lg-5.left_main_strategy {
-                    width: 30% !important;
+                    width: 32% !important;
                 }
 
                 .col-lg-6.right_table_greeks {
-                    width: 68% !important;
+                    width: 66% !important;
                 }
             }
 
@@ -733,7 +733,7 @@
                     <p class="fw-bold">Strategy Positions</p>
                     <div class="left_positions_reset_notes d-flex gap-1 align-items-center">
 
-                        <button data-bs-toggle="modal" data-bs-target="#save_startegyModal">Save Strategy</button>
+                        <button data-bs-toggle="modal" data-bs-target="#save_startegyModal" style="display: none !important;">Save Strategy</button>
                         <button data-bs-toggle="modal" data-bs-target="#notesModal">Notes</button>
 
 
@@ -897,11 +897,11 @@
 
 
 
-                                    console.log(strategyData);
+                                    //console.log(strategyData);
 
                                     $(".delete_strategy").click(function () {
                                         var strategyId = $(this).data('delete');
-                                        console.log(strategyId);
+                                        //console.log(strategyId);
 
                                         // Perform delete operation with strategyId
                                         $.ajax({
@@ -913,20 +913,20 @@
                                             },
                                             success: function (response) {
                                                 // handle success
-                                                console.log(response.message);
+                                                //console.log(response.message);
                                                 getStrategies_data()
                                                 // Refresh the strategies list or remove the deleted strategy from the DOM
                                             },
                                             error: function (response) {
                                                 // handle error
-                                                console.log('Error deleting strategy:', response);
+                                                //console.log('Error deleting strategy:', response);
                                             }
                                         });
                                     });
                                     // Open the modal on clicking the edit icon
                                     $(".edit_strategy").click(function () {
                                         var strategyId = $(this).data('edit');
-                                        console.log(strategyId);
+                                        //console.log(strategyId);
 
                                         $.ajax({
                                             type: "POST",
@@ -937,14 +937,14 @@
                                             },
                                             success: function (response) {
                                                 // handle success
-                                                console.log(response.strategy_data);
+                                                //console.log(response.strategy_data);
 
                                                 $("#updateStrategyname").val(response.strategy_data.strategy_name).attr('data-id-update', strategyId);
 
                                             },
                                             error: function (response) {
                                                 // handle error
-                                                console.log('Error updating strategy:', response);
+                                                //console.log('Error updating strategy:', response);
                                             }
                                         });
 
@@ -968,13 +968,13 @@
                                             },
                                             success: function (response) {
                                                 // handle success
-                                                console.log(response.message);
+                                                //console.log(response.message);
                                                 getStrategies_data(); // Refresh the strategies list
 
                                             },
                                             error: function (response) {
                                                 // handle error
-                                                console.log('Error updating strategy:', response);
+                                                //console.log('Error updating strategy:', response);
                                             }
                                         });
                                     });
@@ -1003,7 +1003,7 @@
                                 },
                                 error: function (response) {
                                     // handle error
-                                    console.log('Error fetching strategies:', response);
+                                    //console.log('Error fetching strategies:', response);
                                 }
                             });
 
@@ -1062,7 +1062,7 @@
                                     }
                                 },
                                 error: function (error) {
-                                    console.log('Error fetching notes:', error);
+                                    //console.log('Error fetching notes:', error);
                                 }
                             });
                         }
@@ -1221,7 +1221,6 @@
                 </div>
 
                 <style>
-              
                     .real_alerts_table,
                     .real_stoploss_table {
                         width: 100%;
@@ -1258,25 +1257,45 @@
                                 <td>STRIKE PRICE</td>
                                 <td>OPTION PRICE</td>
                                 <td>ACTION</td>
-                          
+
                             </tr>
                         </thead>
                         <tbody class="real_adjustment_table_body">
                             <tr>
-                                <td> <div>ADJUSTMENTS 1</div>  </td>
-                                <td><div>19318.75</div></td>
-                                <td><div>19200</div></td>
-                                <td><div>65.2</div></td>
-                                <td><div><button>ADJUST</button></div></td>
-                            
+                                <td>
+                                    <div>ADJUSTMENTS 1</div>
+                                </td>
+                                <td>
+                                    <div>19318.75</div>
+                                </td>
+                                <td>
+                                    <div>19200</div>
+                                </td>
+                                <td>
+                                    <div>65.2</div>
+                                </td>
+                                <td>
+                                    <div><button>ADJUST</button></div>
+                                </td>
+
                             </tr>
                             <tr>
-                                <td> <div>ADJUSTMENTS 1</div>  </td>
-                                <td><div> 19781.25</div></td>
-                                <td><div>19200</div></td>
-                                <td><div>65.2</div></td>
-                                <td><div><button>ADJUST</button></div></td>
-                            
+                                <td>
+                                    <div>ADJUSTMENTS 1</div>
+                                </td>
+                                <td>
+                                    <div> 19781.25</div>
+                                </td>
+                                <td>
+                                    <div>19200</div>
+                                </td>
+                                <td>
+                                    <div>65.2</div>
+                                </td>
+                                <td>
+                                    <div><button>ADJUST</button></div>
+                                </td>
+
                             </tr>
 
                         </tbody>
@@ -2687,6 +2706,10 @@
                         <label for="call_inst_type">Call_inst_type</label>
                         <!-- <input type="text" id="call_inst_type" class="form-control" min="1" disabled> -->
                     </div>
+                    <div class="form-group" style="display: block;">
+                        <label for="rowNFO">Lot Size:</label>
+                        <input type="text" id="rowNFO" class="form-control" min="1" disabled>
+                    </div>
                     <div class="form-group" style="display: none;">
                         <label for="callLotSizeInput">Lot Size:</label>
                         <input type="number" id="callLotSizeInput" class="form-control" min="1" disabled>
@@ -2767,6 +2790,10 @@
                     <div class="form-group d-none">
                         <label for="put_inst_type">put_inst_type</label>
 
+                    </div>
+                    <div class="form-group d-block">
+                        <label for="putRow_instances">Lot Size:</label>
+                        <input type="text" id="putRow_instances" class="form-control" min="1" disabled>
                     </div>
                     <div class="form-group d-none">
                         <label for="putLotSizeInput">Lot Size:</label>
@@ -2868,11 +2895,6 @@
 
     <script>
         $(document).ready(function () {
-
-
-
-
-
 
             $(".main_table_instruments_data").hide();
             $(".payoff_diagram_chart").show();
@@ -2994,7 +3016,7 @@
 
             function time_current_price(All_data) {
                 $(".inst_type_current_price").each(function (index) {
-                    //console.log('Hii ');
+                    ////console.log('Hii ');
 
                     var strike_price = $(this).text();
                     var reversed_string = strike_price.split('').reverse().join('');
@@ -3002,7 +3024,7 @@
                     var reversed_first_two_letters = first_two_letters.split('').reverse().join('');
                     var numeric_part = reversed_string.match(/\d+/);
                     var numeric_value = numeric_part ? parseFloat(numeric_part[0].split('').reverse().join('')) : 0;
-                    //console.log('strike_price: ' + numeric_value);
+                    ////console.log('strike_price: ' + numeric_value);
 
                     // Find the corresponding object in All_data["stock_data"]
                     var matchingObject = All_data["stock_data"].find(function (x) {
@@ -3019,7 +3041,7 @@
                     if (matchingObject) {
                         // Check reversed_first_two_letters and update the appropriate value
                         if (reversed_first_two_letters === 'PE') {
-                            //console.log('puts_ltp:', matchingObject.puts_ltp);
+                            ////console.log('puts_ltp:', matchingObject.puts_ltp);
                             current_edit.text(matchingObject.puts_ltp);
 
                             delta_curr.text(parseFloat(matchingObject.puts_delta));
@@ -3027,7 +3049,7 @@
                             gamma_curr.text(parseFloat(matchingObject.puts_gamma));
                             vega_curr.text(parseFloat(matchingObject.puts_vega));
                         } else if (reversed_first_two_letters === 'CE') {
-                            //console.log('calls_ltp:', matchingObject.calls_ltp);
+                            ////console.log('calls_ltp:', matchingObject.calls_ltp);
                             current_edit.text(matchingObject.calls_ltp);
 
                             delta_curr.text(parseFloat(matchingObject.calls_delta));
@@ -3036,11 +3058,11 @@
                             vega_curr.text(parseFloat(matchingObject.calls_vega));
                         }
                         else {
-                            //console.log('Neither PE nor CE.');
+                            ////console.log('Neither PE nor CE.');
                             current_edit.text(''); // Clear the text if it doesn't match PE or CE
                         }
                     } else {
-                        //console.log('No matching object found in All_data["stock_data"].');
+                        ////console.log('No matching object found in All_data["stock_data"].');
                     }
                     edit_final_p_l()
                     updateTotalPAndL();
@@ -3062,17 +3084,17 @@
 
                     if ($this.hasClass("ltp_edit_curr")) {
                         ltp_values.push(parseFloat(value));
-                        // console.log("ltp" + value);
+                        // //console.log("ltp" + value);
                     } else if ($this.hasClass("current_edit_curr")) {
                         current_values.push(parseFloat(value));
-                        // console.log("current_val" + value);
+                        // //console.log("current_val" + value);
                     } else if ($this.hasClass("exit_edit_curr")) {
 
                         // If exit_edit_curr is zero, calculate and push the difference
                         var ltp = ltp_values.pop() || 0; // Get the last value from ltp_values or 0 if empty
                         var current = current_values.pop() || 0; // Get the last value from current_values or 0 if empty
                         var difference = (ltp - current) * parseInt(lot_size);
-                        // console.log("difference" + difference);
+                        // //console.log("difference" + difference);
 
 
                         // Check the .short_long class for "+" or "-"
@@ -3086,11 +3108,11 @@
                     }
                 });
 
-                // console.log(current_values);
+                // //console.log(current_values);
                 // Iterate over elements with class "indicator_edit_table"
                 $(".indicator_edit_table").each(function (index) {
                     var $this = $(this);
-                    // console.log('$this', $this.text());
+                    // //console.log('$this', $this.text());
 
                     var shortLongClass = $this.closest('tr').find('.short_long');
 
@@ -3098,7 +3120,7 @@
                         var value = parseFloat($this.text());
 
                         if (value === 0 || isNaN(value)) {
-                            // console.log("Zero");
+                            // //console.log("Zero");
                         } else {
                             if (value > 0) {
                                 value = -value; // Convert positive to negative
@@ -3106,17 +3128,17 @@
                                 value = Math.abs(value); // Convert negative to positive
                             }
                             $this.text(value.toFixed(2));
-                            // console.log("Converted Value: " + value.toFixed(2));
+                            // //console.log("Converted Value: " + value.toFixed(2));
                         }
                     } else {
-                        // console.log('No');
+                        // //console.log('No');
                     }
 
                     // Check if the corresponding exit_edit_curr is zero before calculating
                     if (index < current_values.length && $(".exit_edit_curr").eq(index).text() === "0") {
                         var value = current_values[index].toFixed(2);
                         $this.text(value);
-                        // console.log("$     " + value);
+                        // //console.log("$     " + value);
 
                         // Set the value in the corresponding .indicator_edit element using index
                         $(".indicator_edit").eq(index).text(value);
@@ -3139,10 +3161,51 @@
 
             var indicator = $(".indicator_edit").text()
             var loss_profit = parseInt(indicator) < 0 ? "red-option-indicator" : "green-option-indicator";
-            function addPosition(inst_type, lotSize, ltp, action, counterValue, strike_price, delta, theta, gamma, vega) {
+
+            // var main_row_instances = []
+            function addPosition(rowInstances, inst_type, lotSize, ltp, action, counterValue, strike_price, delta, theta, gamma, vega) {
+
+
+                // Split the value
+                var splitValues = rowInstances.split(':');
+
+                // Store the values in separate variables
+                var exchange = splitValues[0];
+                var tradingSymbol = splitValues[1];
+
+                var transaction_type = action
+
+                var quantity = parseFloat(counterValue) * lotSize
+
+                var price = ltp
+
+
+
+                var rowObject = {
+                    "exchange": exchange,
+                    "tradingSymbol": tradingSymbol,
+                    "transaction_type": transaction_type,
+                    "quantity": quantity,
+                    "price": price
+                };
+
+                // Push the object into the main_row_instances array
+                // main_row_instances.push(rowObject);
+
+
+
+
+
+
+
+
+
+
+
                 var currentDate = new Date(); // Get the current date and time
                 var timestamp = currentDate.toLocaleString(); // Convert the date to a readable string format
-
+                // {"exchange":"NFO","tradingsymbol":"NIFTY23N0219150CE","transaction_type":"SELL","variety":"regular","product":"MIS","order_type":"LIMIT",
+                // "quantity":50,"price":20.55,"trigger_price":0,"squareoff":0,"stoploss":0},
                 var tradingPosition = {
                     "history_id": history_id++,
                     "timestamp": timestamp,
@@ -3159,17 +3222,25 @@
                     "activePosition": false
                 };
 
+                //                 localStorage.removeItem('main_row_instances');
+
+                // // Save main_row_instances to local storage
+                // localStorage.setItem('main_row_instances', JSON.stringify(main_row_instances));
+
                 // Get existing positions from local storage
                 var existingPositions = JSON.parse(localStorage.getItem('TradingPositions')) || [];
                 var TempExistingPositions = JSON.parse(localStorage.getItem('Temp_TradingPositions')) || [];
+              
 
                 // Add the new position to the array
                 existingPositions.push(tradingPosition);
                 TempExistingPositions.push(tradingPosition);
+            
 
                 // Store the updated array back into local storage
                 localStorage.setItem('TradingPositions', JSON.stringify(existingPositions));
                 localStorage.setItem('Temp_TradingPositions', JSON.stringify(TempExistingPositions));
+              
 
 
                 var lot_size_filter = action === "sell" ? "-" : "+";
@@ -3214,16 +3285,16 @@
 `
 
                 var table_greek = `
-<tr id=${greek_unique++}>
-    <td>   <div class="instument_type_slot_strike_premium" id="main_instruments"><span class="main_lot_size_option_simulator"><span class="short_long">${lot_size_filter}</span><span class="lot_size_option_simulator">${counterValue}</span>x</span> <span class="instrument_type_edit">${inst_type}</span></td>
-    <td> <span class="delta">${parseFloat(delta).toFixed(3)}</span></td>
-    <td> <span class="theta">${parseFloat(theta).toFixed(3)}</span></td>
-    <td> <span class="gamma">${parseFloat(gamma).toFixed(3)}</span></td>
-    <td> <span class="vega">${parseFloat(vega).toFixed(3)}</span></td>
-    </tr>
+                            <tr id=${greek_unique++}>
+                                <td>   <div class="instument_type_slot_strike_premium" id="main_instruments"><span class="main_lot_size_option_simulator"><span class="short_long">${lot_size_filter}</span><span class="lot_size_option_simulator">${counterValue}</span>x</span> <span class="instrument_type_edit">${inst_type}</span></td>
+                                <td> <span class="delta">${parseFloat(delta).toFixed(3)}</span></td>
+                                <td> <span class="theta">${parseFloat(theta).toFixed(3)}</span></td>
+                                <td> <span class="gamma">${parseFloat(gamma).toFixed(3)}</span></td>
+                                <td> <span class="vega">${parseFloat(vega).toFixed(3)}</span></td>
+                                </tr>
 
 
-`
+                            `
 
 
                 $(".p_l_table").append(table_PL)
@@ -3246,7 +3317,7 @@
 
                     // Check and log the length of children in #myTable
                     var childrenLength = $('#myTable').children().length;
-                    //console.log("Children length in #myTable:", childrenLength);
+                    ////console.log("Children length in #myTable:", childrenLength);
 
 
                     // Check if #myTable has no child elements
@@ -3296,7 +3367,7 @@
                     var exit_price = position.find('.exit_price').text()
 
                     $('#ltpInput').val(currentLTP);
-                    // console.log(currentLTP);
+                    // //console.log(currentLTP);
 
                     $('#exitPriceInput').val(exit_price);
                     $('#counterValueInput').val(parseFloat(currentCounterValue));
@@ -3395,6 +3466,35 @@
                 setActivePositionFromLocalStorage();
                 updateTotalPAndL()
                 greeks_total()
+         
+            }
+            function margin_calculations() {
+                // Assuming main_row_instances is already defined
+                // Remove the specific data associated with the key 'main_row_instances' from local storage
+
+
+                // Retrieve main_row_instances from local storage
+                var retrievedData = localStorage.getItem('main_row_instances');
+                var parsedData = JSON.parse(retrievedData);
+
+                // Log the data to the console
+                //console.log(parsedData);
+
+                // Send data to the Django backend using AJAX
+                $.ajax({
+                    type: "POST",
+                    url: "/margin_calculations", // Change the URL to match your Django URL
+                    data: JSON.stringify(parsedData),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        //console.log("Data sent successfully!");
+                        //console.log(response); // Print the response from the Django backend
+                    },
+                    error: function (error) {
+                        console.error("Error sending data:", error);
+                    }
+                });
             }
 
 
@@ -3527,7 +3627,7 @@
                 for (var i = 0; i < indicatorElements.length; i++) {
                     var currentValue = parseFloat(indicatorElements[i].textContent);
 
-                    // console.log("currentValue" + currentValue);
+                    // //console.log("currentValue" + currentValue);
                     // Find the corresponding .short_long element within the same parent
 
 
@@ -3703,10 +3803,12 @@
                 var puts_theta = document.getElementById("puts_theta").value;
                 var puts_gamma = document.getElementById("puts_gamma").value;
                 var puts_vega = document.getElementById("puts_vega").value;
+
+                var putRow_instances = document.getElementById("putRow_instances").value;
                 greeks_total()
                 $(".main_table_instruments_data").show()
                 // Call the function to add the position to the table
-                addPosition(put_inst_type, putLotSize, puts_ltp, putAction, putCounterValue, puts_strike, puts_delta, puts_theta, puts_gamma, puts_vega);
+                addPosition(putRow_instances, put_inst_type, putLotSize, puts_ltp, putAction, putCounterValue, puts_strike, puts_delta, puts_theta, puts_gamma, puts_vega);
                 $(".modal-header .btn-close").click()
                 var Strategy_parmeters = $(".Strategy_parmeters").text()
                 straddle_calculation(Strategy_parmeters);
@@ -3724,10 +3826,12 @@
                 var calls_theta = document.getElementById("calls_theta").value;
                 var calls_gamma = document.getElementById("calls_gamma").value;
                 var calls_vega = document.getElementById("calls_vega").value;
+
+                var rowNFO = document.getElementById("rowNFO").value;
                 greeks_total()
                 $(".main_table_instruments_data").show()
                 // Call the function to add the position to the table
-                addPosition(call_inst_type, callLotSize, call_ltp, callAction, callCounterValue, call_strike, calls_delta, calls_theta, calls_gamma, calls_vega);
+                addPosition(rowNFO, call_inst_type, callLotSize, call_ltp, callAction, callCounterValue, call_strike, calls_delta, calls_theta, calls_gamma, calls_vega);
                 $(".modal-header .btn-close").click()
                 var Strategy_parmeters = $(".Strategy_parmeters").text()
                 straddle_calculation(Strategy_parmeters);
@@ -3780,7 +3884,7 @@
                         var dateParts = date.split('-');
                         // Rearrange the parts to the desired format
                         var formattedDate = dateParts[2] + '-' + dateParts[1] + '-' + dateParts[0];
-                        console.log(formattedDate);
+                        //console.log(formattedDate);
                         // Append the option to the dropdown with the formatted date
 
                         expiryDropdown.append($('<option>').val(date).text(date));
@@ -3841,7 +3945,7 @@
                         day: 'numeric'
                     })
                     : '';
-                //console.log(formattedPreviousClosestDate);
+                ////console.log(formattedPreviousClosestDate);
                 $(".date_formated").text(formattedPreviousClosestDate)
                 sendDataToDjango();
 
@@ -3881,7 +3985,7 @@
                         day: 'numeric'
                     })
                     : '';
-                //console.log(formattedPreviousClosestDate);
+                ////console.log(formattedPreviousClosestDate);
                 $(".date_formated").text(formattedPreviousClosestDate)
             }
             var updatePrevBtn;
@@ -3902,14 +4006,14 @@
                 // Call prevOneDay_disable to initially disable the button
                 prevOneDay_disable();
                 // Now, you can log the initial value
-                // console.log("initial_date (after 1 second delay): " + updatePrevBtn);
+                // //console.log("initial_date (after 1 second delay): " + updatePrevBtn);
 
                 const btnOneDayBack = $('#btnOneDayBack');
 
                 // Set up an event listener to update the prevOneDay_disable function whenever #startDate changes
                 startDateInput.on("change", function () {
                     updatePrevBtn = startDateInput.val(); // Save the new initial value
-                    // console.log(updatePrevBtn);
+                    // //console.log(updatePrevBtn);
                     $(".sample_startdate").val(updatePrevBtn)
                     prevOneDay_disable(); // Run the function
                 });
@@ -3918,7 +4022,7 @@
 
             function prevOneDay_disable() {
 
-                //console.log("current_date: " + startDateValue);
+                ////console.log("current_date: " + startDateValue);
 
                 const btnOneDayBack = $('#btnOneDayBack');
 
@@ -3948,7 +4052,7 @@
 
 
                 // Format both dates to be in yyyy-mm-dd format for comparison
-                //console.log(expiryDropdownValue, startDateValue);
+                ////console.log(expiryDropdownValue, startDateValue);
 
                 return expiryDropdownValue === startDateValue;
             }
@@ -4026,8 +4130,8 @@
                     });
 
                     // Log the closest and previous closest dates
-                    //console.log("Previous Closest Date:", previousClosestDate);
-                    //console.log("Closest Date:", closestDate);
+                    ////console.log("Previous Closest Date:", previousClosestDate);
+                    ////console.log("Closest Date:", closestDate);
                     $(".expiry_inner_option_chain").text(closestDate)
                     $("#startDate").val(previousClosestDate)
                     var formatedString = previousClosestDate
@@ -4040,9 +4144,9 @@
                             day: 'numeric'
                         })
                         : '';
-                    //console.log(formattedPreviousClosestDate);
+                    ////console.log(formattedPreviousClosestDate);
                     $(".date_formated").text(formattedPreviousClosestDate)
-                    // console.log(formattedPreviousClosestDate);
+                    // //console.log(formattedPreviousClosestDate);
                     // Populate the dropdown options and set 'selected' property
                     data.forEach(date => {
                         var dateParts = date.split('-');
@@ -4110,9 +4214,9 @@
             $('#btn15MintBack').prop('disabled', true);
             $('#btn5MintBack').prop('disabled', true);
             function changeStartTimeMinutes(minutesDelta) {
-                //console.log(minutesDelta);
+                ////console.log(minutesDelta);
                 var time = $(".time_formated").text();
-                //console.log(typeof (time));
+                ////console.log(typeof (time));
                 const timeParts = time.split(':');
                 let hours = parseInt(timeParts[0]);
                 let minutes = parseInt(timeParts[1]);
@@ -4175,7 +4279,7 @@
                 const paddedMinutes = minutes.toString().padStart(2, '0');
 
                 createTime = `${paddedHours}:${paddedMinutes}:00`; // Update the createTime variable
-                //console.log(createTime);
+                ////console.log(createTime);
                 // Call the function to send the updated data to Django view
                 sendDataToDjango(createTime);
             }
@@ -4200,7 +4304,7 @@
                     url: '/option_simulator_data',  // Replace with your Django view URL
                     data: data,
                     success: function (response) {
-                        //console.log(response);
+                        ////console.log(response);
                         // Call the function to run it only once
                         time_current_price(response);
 
@@ -4209,7 +4313,7 @@
 
                         var lot_size = response_spot["lot_size"]
                         var last_traded_price = response_spot["last_traded_price"]
-                        //console.log(response_spot);
+                        ////console.log(response_spot);
                         $(".lot_size_value").text(lot_size)
                         $(".spot_value").text(last_traded_price)
 
@@ -4220,14 +4324,14 @@
                         var index_close = response.map((x) => {
                             return x.index_close
                         })
-                        //console.log(index_close);
+                        ////console.log(index_close);
                         $(".spot_value").text(index_close[0])
                         $(".spot_data").text(index_close[0])
 
                         var cteateTime = response.map((currtime) => {
                             return currtime.time
                         })
-                        // console.log(cteateTime);
+                        // //console.log(cteateTime);
                         $(".time_formated").text(cteateTime[0])
                         // Handle the response from Django view
 
@@ -4262,6 +4366,7 @@
             function updateCallLotSize(lotSize, call_inst_type, call_ltp, strike_price, calls_delta, calls_theta, calls_gamma, calls_vega) {
                 // Remove "NFO:" from the beginning of call_inst_type
                 const firstPart = call_inst_type.replace(/^NFO:/, '');
+                //console.log(firstPart);
 
                 // Extract the first part dynamically
                 const dynamicFirstPart = firstPart.split(/[^a-zA-Z]+/)[0];
@@ -4271,16 +4376,22 @@
 
                 // Remove the first two characters from cleanCallInstType
                 const trimmedCleanCallInstType = cleanCallInstType.substring(2);
+                //console.log(trimmedCleanCallInstType);
                 const month = trimmedCleanCallInstType[0]
+                //console.log(month);
                 const monthString = getMonthAbbreviation(month)
                 const strike_instrument = trimmedCleanCallInstType.slice(-7);
+                //console.log(strike_instrument);
                 const day = trimmedCleanCallInstType.replace(strike_instrument, '').replace(month, '')
+                //console.log(day);
+                let extractedSubstring = trimmedCleanCallInstType.substring(0, 3);
 
 
 
                 // Set the values in the corresponding input elements
+                $("#rowNFO").val(call_inst_type)
                 $('#callLotSizeInput').val(lotSize);
-                $('#call_inst_type').val(`${dynamicFirstPart}${day}${monthString.toUpperCase()} ${strike_instrument}`);
+                $('#call_inst_type').val(`${dynamicFirstPart}${extractedSubstring}${monthString.toUpperCase()} ${strike_instrument}`);
                 $('#call_ltp').val(call_ltp);
                 $('#call_strike').val(strike_price);
 
@@ -4290,13 +4401,13 @@
                 $('#calls_vega').val(calls_vega);
 
                 // Use trimmedCleanCallInstType for your separate value
-                //// console.log(day);
-                //// console.log(month);
-                //// console.log(monthString);
-                //// console.log(trimmedCleanCallInstType);
-                //// console.log(strike_instrument);
-                //// console.log(call_inst_type);
-                //console.log(calls_delta, calls_theta, calls_gamma, calls_vega);
+                //// //console.log(day);
+                //// //console.log(month);
+                //// //console.log(monthString);
+                //// //console.log(trimmedCleanCallInstType);
+                //// //console.log(strike_instrument);
+                //// //console.log(call_inst_type);
+                ////console.log(calls_delta, calls_theta, calls_gamma, calls_vega);
             }
 
             function putMonthAbbreviation(monthNumber) {
@@ -4306,6 +4417,7 @@
 
             // Function to update the lot size in the input field for Put Actions modal
             function updatePutLotSize(lotSize, put_inst_type, puts_ltp, strike_price, puts_delta, puts_theta, puts_gamma, puts_vega) {
+                // //console.log(put_inst_type);
 
 
                 const firstPart = put_inst_type.replace(/^NFO:/, '');
@@ -4322,14 +4434,16 @@
                 const monthString = putMonthAbbreviation(month)
                 const strike_instrument = trimmedCleanCallInstType.slice(-7);
                 const day = trimmedCleanCallInstType.replace(strike_instrument, '').replace(month, '')
+                let extractedSubstring = trimmedCleanCallInstType.substring(0, 3);
 
 
 
 
 
 
+                $('#putRow_instances').val(put_inst_type);
                 $('#putLotSizeInput').val(lotSize);
-                $('#put_inst_type').val(`${dynamicFirstPart}${day}${monthString.toUpperCase()} ${strike_instrument}`);
+                $('#put_inst_type').val(`${dynamicFirstPart}${extractedSubstring}${monthString.toUpperCase()} ${strike_instrument}`);
 
                 $('#puts_ltp').val(puts_ltp);
                 $('#puts_strike').val(strike_price);
@@ -4338,7 +4452,7 @@
                 $('#puts_gamma').val(puts_gamma);
                 $('#puts_vega').val(puts_vega);
 
-                //console.log(puts_delta, puts_theta, puts_gamma, puts_vega);
+                ////console.log(puts_delta, puts_theta, puts_gamma, puts_vega);
             }
 
 
@@ -4347,7 +4461,7 @@
 
 
             function displayTable(data, lot_size, spot_strike) {
-                //console.log(lot_size);
+                ////console.log(lot_size);
                 const tableBody = $('.option_simulator_body');
                 tableBody.empty();
 
@@ -4363,7 +4477,7 @@
 
                 var closestStrikePrice = null;
                 var closestDiff = Number.MAX_VALUE;
-                //console.log('closestDiff' + closestDiff);
+                ////console.log('closestDiff' + closestDiff);
                 var callOI = 0
                 var putOI = 0
                 var all_callsOI_putsOI = []
@@ -4443,12 +4557,12 @@
                     // Add more cells for other properties
                     tableBody.append(newRow);
                 });
-                console.log(all_callsOI_putsOI);
+                //console.log(all_callsOI_putsOI);
 
                 OI_charts(all_callsOI_putsOI)
-                //console.log("Closest Strike Price" + closestStrikePrice);
+                ////console.log("Closest Strike Price" + closestStrikePrice);
 
-                // console.log('Putcall_ratio'+ putOI/callOI);
+                // //console.log('Putcall_ratio'+ putOI/callOI);
                 $(".pcr_value").text((putOI / callOI).toFixed(3))
 
                 // Check if .sample_startdate has a value before setting it
@@ -4462,7 +4576,8 @@
 
                 $(".straddle").on("click", function () {
                     localStorage.removeItem('Temp_TradingPositions');
-                    //console.log('closestStrikePrice_main' + closestStrikePrice);
+                    localStorage.removeItem('main_row_instances');
+                    ////console.log('closestStrikePrice_main' + closestStrikePrice);
                     var clostest_strike_value = $(".closest_value").text()
                     var $straddle = $(this);
 
@@ -4508,7 +4623,8 @@
 
                 $(".strangle").on("click", function () {
                     localStorage.removeItem('Temp_TradingPositions');
-                    //console.log('closestStrikePrice_main' + closestStrikePrice);
+                    localStorage.removeItem('main_row_instances');
+                    ////console.log('closestStrikePrice_main' + closestStrikePrice);
                     var closestStrikePrice = parseFloat($(".closest_value").text()); // Corrected variable name
 
                     var $strangle = $(this);
@@ -4544,15 +4660,15 @@
                             }
                         }
 
-                        // console.log("Previous 5 Strike Prices:", prev5);
-                        // console.log("Next 5 Strike Prices:", forw5);
+                        // //console.log("Previous 5 Strike Prices:", prev5);
+                        // //console.log("Next 5 Strike Prices:", forw5);
 
                         if (prev5.length === 5 && forw5.length === 5) {
                             var lastIndexPrev = prev5[prev5.length - 1];
                             var lastIndexForw = forw5[forw5.length - 1];
-                            // console.log(lastIndexPrev)
-                            // console.log(lastIndexForw)
-                            //console.log(lastIndexForw, lastIndexPrev);
+                            // //console.log(lastIndexPrev)
+                            // //console.log(lastIndexForw)
+                            ////console.log(lastIndexForw, lastIndexPrev);
 
                             // Find the closest row for lastIndexPrev and click on Auto_puts_short_click
                             var closestRowPrev = optionChainTable.find(".simulator_strike:contains(" + lastIndexPrev + ")").closest(".simulator_option_tr");
@@ -4589,6 +4705,7 @@
 
                 $(".spread").on("click", function () {
                     localStorage.removeItem('Temp_TradingPositions');
+                    localStorage.removeItem('main_row_instances');
 
                     var new_closestStrikePrice = parseFloat($(".closest_value").text()); // Corrected variable name
 
@@ -4640,7 +4757,7 @@
                         }
 
 
-                        //console.log("Next 5 Strike Prices:", forw5);
+                        ////console.log("Next 5 Strike Prices:", forw5);
 
 
 
@@ -4649,7 +4766,7 @@
                         if (forw5.length === 3) {
 
                             var lastIndexForw = forw5[forw5.length - 1];
-                            //console.log(lastIndexForw);
+                            ////console.log(lastIndexForw);
 
 
                             $("#callBuyRadio").prop('checked', true);
@@ -4679,6 +4796,7 @@
 
                 $(".iron_fly").on("click", function () {
                     localStorage.removeItem('Temp_TradingPositions');
+                    localStorage.removeItem('main_row_instances');
 
                     var new_closestStrikePrice = parseFloat($(".closest_value").text()); // Corrected variable name
 
@@ -4737,7 +4855,7 @@
                         }
 
 
-                        //console.log("Next 5 Strike Prices:", forw5);
+                        ////console.log("Next 5 Strike Prices:", forw5);
 
                         var prev3 = [];
                         for (var i = currentIndex - 1; i >= 0 && prev3.length < 4; i--) {
@@ -4754,7 +4872,7 @@
 
                             var lastIndexForw = forw5[forw5.length - 1];
                             var lastIndexPrev = prev3[prev3.length - 1];
-                            //console.log(lastIndexForw);
+                            ////console.log(lastIndexForw);
 
 
                             $("#callBuyRadio").prop('checked', true);
@@ -4789,6 +4907,7 @@
                 $(".iron_condor").on("click", function () {
 
                     localStorage.removeItem('Temp_TradingPositions');
+                    localStorage.removeItem('main_row_instances');
                     var new_closestStrikePrice = parseFloat($(".closest_value").text()); // Corrected variable name
 
                     var $spread = $(this);
@@ -4836,7 +4955,7 @@
                         }
 
 
-                        //console.log("Next 5 Strike Prices:", forw3, forw4);
+                        ////console.log("Next 5 Strike Prices:", forw3, forw4);
 
                         var prev3 = [];
                         for (var k = currentIndex - 1; k >= 0 && prev3.length < 3; k--) {
@@ -4853,12 +4972,12 @@
                             }
                         }
 
-                        //console.log("Next 5 Strike Prices:", prev3, prev4);
+                        ////console.log("Next 5 Strike Prices:", prev3, prev4);
                         // First Condition
                         if (forw3.length === 3 && prev3.length === 3) {
                             var lastIndexForw = forw3[forw3.length - 1];
                             var lastIndexPrev = prev3[prev3.length - 1];
-                            //console.log(lastIndexForw);
+                            ////console.log(lastIndexForw);
                             $("#putSellRadio").prop('checked', true);
                             $("#callSellRadio").prop('checked', true);
 
@@ -4915,6 +5034,7 @@
                 $(".jade_lizard").on("click", function () {
 
                     localStorage.removeItem('Temp_TradingPositions');
+                    localStorage.removeItem('main_row_instances');
                     var new_closestStrikePrice = parseFloat($(".closest_value").text()); // Corrected variable name
 
                     var $spread = $(this);
@@ -4962,7 +5082,7 @@
                         }
 
 
-                        //console.log("Next 5 Strike Prices:", forw2, forw4);
+                        ////console.log("Next 5 Strike Prices:", forw2, forw4);
 
 
                         var prev4 = [];
@@ -4973,12 +5093,12 @@
                             }
                         }
 
-                        //console.log("Next 5 Strike Prices:", prev4);
+                        ////console.log("Next 5 Strike Prices:", prev4);
                         // First Condition
                         if (forw2.length === 2 && prev4.length === 4) {
                             var lastIndexForw = forw2[forw2.length - 1];
                             var lastIndexPrev = prev4[prev4.length - 1];
-                            //console.log(lastIndexForw);
+                            ////console.log(lastIndexForw);
                             $("#putSellRadio").prop('checked', true);
                             $("#callSellRadio").prop('checked', true);
 
@@ -5075,7 +5195,7 @@
                     var leftMyTable = $("#myTable");
                     // Now, attempt to get the value
                     var lot_size_simulator = parseFloat($(".lot_size_value").text());
-                    //console.log("Lot Size Simulator: " + parseInt(lot_size_simulator));
+                    ////console.log("Lot Size Simulator: " + parseInt(lot_size_simulator));
 
                     // Now, attempt to get the instrument type
                     var max_profit = $("#max_profit");
@@ -5099,10 +5219,10 @@
                             var lot_size = parseFloat($parent.find(".lot_size_option_simulator").text());
                             var breakeven_premium = parseFloat($parent.find(".ltp_edit").text());
                             var short_long = $parent.find(".short_long").text()
-                            console.log(short_long);
+                            //console.log(short_long);
 
                             if (short_long === "+") {
-                                console.log(premium);
+                                //console.log(premium);
                                 positive_premium.push(-premium)
 
                             } else {
@@ -5110,13 +5230,13 @@
                             }
 
 
-                            //console.log("Premium: " + premium);
-                            //console.log("Lot Size: " + lot_size);
-                            //console.log("Break-Even Premium: " + breakeven_premium);
+                            ////console.log("Premium: " + premium);
+                            ////console.log("Lot Size: " + lot_size);
+                            ////console.log("Break-Even Premium: " + breakeven_premium);
 
                             max_loss_value += premium * lot_size;
 
-                            //console.log("max_loss_value " + max_loss_value);
+                            ////console.log("max_loss_value " + max_loss_value);
                             breakeven += breakeven_premium;
 
                             var strike_price = $parent.find(".instrument_type_edit").text();
@@ -5128,18 +5248,18 @@
                             var numeric_part = reversed_string.match(/\d+/); // This extracts one or more consecutive digits
                             var numeric_value = numeric_part ? parseFloat(numeric_part[0].split('').reverse().join('')) : 0; // Reverse back and convert to a numeric value
 
-                            //console.log('numeric_value: ' + numeric_value);
+                            ////console.log('numeric_value: ' + numeric_value);
 
                             strike_price_all += numeric_value;
                             count++;
                         } else {
-                            //console.log("Skipping calculation for element at index " + index);
+                            ////console.log("Skipping calculation for element at index " + index);
                         }
                     });
 
                     var all_premium_sum = 0;
                     for (var premiumIndex = 0; premiumIndex < positive_premium.length; premiumIndex++) {
-                        all_premium_sum += positive_premium[premiumIndex];
+                        all_premium_sum += positive_premium[premiumIndex];  0
                     }
 
                     if (all_premium_sum < 0) {
@@ -5149,13 +5269,13 @@
 
                         $("#net_credit_value").text((all_premium_sum * lot_size_simulator).toFixed(2))
                     }
-                    console.log("Net Credit ", (all_premium_sum * lot_size_simulator).toFixed(2));
-                    //console.log("Max Loss Value: " + max_loss_value);
+                    //console.log("Net Credit ", (all_premium_sum * lot_size_simulator).toFixed(2));
+                    ////console.log("Max Loss Value: " + max_loss_value);
 
                     // Calculate the average
                     var average_strike_price = strike_price_all / count;
 
-                    //console.log("Average Strike Price: " + average_strike_price);
+                    ////console.log("Average Strike Price: " + average_strike_price);
 
                     // Calculate break-even values
                     var lower_break_even = average_strike_price - breakeven;
@@ -5212,9 +5332,9 @@
 
                     // Now, you have all values in the allValues array,
                     // "-" values in negativeValues, and "+" values in positiveValues
-                    //console.log("All Values:", allValues);
-                    //console.log("Negative Values:", negativeValues);
-                    //console.log("Positive Values:", positiveValues);
+                    ////console.log("All Values:", allValues);
+                    ////console.log("Negative Values:", negativeValues);
+                    ////console.log("Positive Values:", positiveValues);
                     $("#ratio").text("No Defined")
 
 
@@ -5224,7 +5344,7 @@
                     var leftMyTable = $("#myTable");
                     // Now, attempt to get the value
                     var lot_size_simulator = $(".lot_size_value").text();
-                    //console.log("Lot Size Simulator: " + parseInt(lot_size_simulator));
+                    ////console.log("Lot Size Simulator: " + parseInt(lot_size_simulator));
 
                     // Now, attempt to get the instrument type
                     var max_profit = $("#max_profit");
@@ -5252,22 +5372,22 @@
                             var lot_size = parseFloat($parent.find(".lot_size_option_simulator").text());
                             var short_long = $parent.find(".short_long").text();
 
-                            console.log(short_long);
+                            //console.log(short_long);
 
                             if (short_long === "+") {
-                                console.log(premium);
+                                //console.log(premium);
                                 positive_premium_strangle.push(-premium)
 
                             } else {
                                 positive_premium_strangle.push(Math.abs(premium))
                             }
 
-                            //console.log('Short Long' + short_long);
+                            ////console.log('Short Long' + short_long);
 
 
-                            //console.log("Premium: " + premium);
-                            //console.log("Lot Size: " + lot_size);
-                            //console.log("Break-Even Premium: " + breakeven_premium);
+                            ////console.log("Premium: " + premium);
+                            ////console.log("Lot Size: " + lot_size);
+                            ////console.log("Break-Even Premium: " + breakeven_premium);
 
 
 
@@ -5282,25 +5402,25 @@
                             var numeric_part = reversed_string.match(/\d+/); // This extracts one or more consecutive digits
                             var numeric_value = numeric_part ? parseFloat(numeric_part[0].split('').reverse().join('')) : 0; // Reverse back and convert to a numeric value
 
-                            //console.log('numeric_value: ' + numeric_value);
+                            ////console.log('numeric_value: ' + numeric_value);
 
                             strike_price_all += numeric_value;
 
                             if (short_long === "+") {
 
                                 premiumsArray.push(-premium * lot_size);
-                                //console.log('HIi there negative premium');
+                                ////console.log('HIi there negative premium');
 
 
                             } else {
                                 premiumsArray.push(premium * lot_size);
-                                //console.log('HIi there positive premium');
+                                ////console.log('HIi there positive premium');
 
                             }
                             numericValuesArray.push(parseFloat(numeric_value));
                             count++;
                         } else {
-                            //console.log("Skipping calculation for element at index " + index);
+                            ////console.log("Skipping calculation for element at index " + index);
                         }
                     });
 
@@ -5316,9 +5436,9 @@
 
                         $("#net_credit_value").text((all_premium_sum * lot_size_simulator).toFixed(2))
                     }
-                    console.log("Net Credit ", (all_premium_sum * lot_size_simulator).toFixed(2));
-                    // console.log(premiumsArray);
-                    // console.log(numericValuesArray)
+                    //console.log("Net Credit ", (all_premium_sum * lot_size_simulator).toFixed(2));
+                    // //console.log(premiumsArray);
+                    // //console.log(numericValuesArray)
 
 
                     var premiumDifferences = 0
@@ -5344,9 +5464,9 @@
                         }
                     }
 
-                    // console.log("Premium Differences: " + premiumDifferences);
-                    // console.log("Numeric Differences: " + numericDifferences);
-                    // console.log("numericDifferencesIndex: " + numericDifferencesIndex);
+                    // //console.log("Premium Differences: " + premiumDifferences);
+                    // //console.log("Numeric Differences: " + numericDifferences);
+                    // //console.log("numericDifferencesIndex: " + numericDifferencesIndex);
 
                     max_profit_value = (Math.abs(numericDifferences) - premiumDifferences) * lot_size_simulator
 
@@ -5361,7 +5481,7 @@
                     // Calculate the average
                     var average_strike_price = strike_price_all / count;
 
-                    //console.log("Average Strike Price: " + average_strike_price);
+                    ////console.log("Average Strike Price: " + average_strike_price);
 
                     // Calculate break-even values
                     var lower_break_even = average_strike_price - breakeven;
@@ -5418,9 +5538,9 @@
 
                     // Now, you have all values in the allValues array,
                     // "-" values in negativeValues, and "+" values in positiveValues
-                    //console.log("All Values:", allValues);
-                    //console.log("Negative Values:", negativeValues);
-                    //console.log("Positive Values:", positiveValues);
+                    ////console.log("All Values:", allValues);
+                    ////console.log("Negative Values:", negativeValues);
+                    ////console.log("Positive Values:", positiveValues);
 
 
 
@@ -5430,7 +5550,7 @@
                     var leftMyTable = $("#myTable");
                     // Now, attempt to get the value
                     var lot_size_simulator = $(".lot_size_value").text();
-                    //console.log("Lot Size Simulator: " + parseInt(lot_size_simulator));
+                    ////console.log("Lot Size Simulator: " + parseInt(lot_size_simulator));
 
                     // Now, attempt to get the instrument type
                     var max_profit = $("#max_profit");
@@ -5457,20 +5577,20 @@
                             var breakeven_premium = parseFloat($parent.find(".ltp_edit").text());
                             var lot_size = parseFloat($parent.find(".lot_size_option_simulator").text());
                             var short_long = $parent.find(".short_long").text();
-                            //console.log('Short Long' + short_long);
+                            ////console.log('Short Long' + short_long);
 
-                            console.log(short_long);
+                            //console.log(short_long);
 
                             if (short_long === "+") {
-                                console.log(premium);
+                                //console.log(premium);
                                 positive_premium_strangle.push(-premium)
 
                             } else {
                                 positive_premium_strangle.push(Math.abs(premium))
                             }
-                            //console.log("Premium: " + premium);
-                            //console.log("Lot Size: " + lot_size);
-                            //console.log("Break-Even Premium: " + breakeven_premium);
+                            ////console.log("Premium: " + premium);
+                            ////console.log("Lot Size: " + lot_size);
+                            ////console.log("Break-Even Premium: " + breakeven_premium);
 
 
 
@@ -5485,25 +5605,25 @@
                             var numeric_part = reversed_string.match(/\d+/); // This extracts one or more consecutive digits
                             var numeric_value = numeric_part ? parseFloat(numeric_part[0].split('').reverse().join('')) : 0; // Reverse back and convert to a numeric value
 
-                            //console.log('numeric_value: ' + numeric_value);
+                            ////console.log('numeric_value: ' + numeric_value);
 
                             strike_price_all += numeric_value;
 
                             if (short_long === "+") {
 
                                 premiumsArray.push(-premium * lot_size);
-                                //console.log('HIi there negative premium');
+                                ////console.log('HIi there negative premium');
 
 
                             } else {
                                 premiumsArray.push(premium * lot_size);
-                                //console.log('HIi there positive premium');
+                                ////console.log('HIi there positive premium');
 
                             }
                             numericValuesArray.push(parseFloat(numeric_value));
                             count++;
                         } else {
-                            //console.log("Skipping calculation for element at index " + index);
+                            ////console.log("Skipping calculation for element at index " + index);
                         }
                     });
 
@@ -5520,9 +5640,9 @@
 
                         $("#net_credit_value").text((all_premium_sum * lot_size_simulator).toFixed(2))
                     }
-                    console.log("Net Credit ", (all_premium_sum * lot_size_simulator).toFixed(2));
-                    // console.log(premiumsArray);
-                    // console.log(numericValuesArray)
+                    //console.log("Net Credit ", (all_premium_sum * lot_size_simulator).toFixed(2));
+                    // //console.log(premiumsArray);
+                    // //console.log(numericValuesArray)
 
 
                     var premiumDifferences = 0
@@ -5548,9 +5668,9 @@
                         }
                     }
 
-                    // console.log("Premium Differences: " + premiumDifferences);
-                    // console.log("Numeric Differences: " + numericDifferences);
-                    // console.log("numericDifferencesIndex: " + numericDifferencesIndex);
+                    // //console.log("Premium Differences: " + premiumDifferences);
+                    // //console.log("Numeric Differences: " + numericDifferences);
+                    // //console.log("numericDifferencesIndex: " + numericDifferencesIndex);
 
                     max_profit_value = (Math.abs(200) - premiumDifferences) * lot_size_simulator
 
@@ -5565,7 +5685,7 @@
                     // Calculate the average
                     var average_strike_price = strike_price_all / count;
 
-                    //console.log("Average Strike Price: " + average_strike_price);
+                    ////console.log("Average Strike Price: " + average_strike_price);
 
                     // Calculate break-even values
                     var lower_break_even = average_strike_price - breakeven;
@@ -5622,9 +5742,9 @@
 
                     // Now, you have all values in the allValues array,
                     // "-" values in negativeValues, and "+" values in positiveValues
-                    //console.log("All Values:", allValues);
-                    //console.log("Negative Values:", negativeValues);
-                    //console.log("Positive Values:", positiveValues);
+                    ////console.log("All Values:", allValues);
+                    ////console.log("Negative Values:", negativeValues);
+                    ////console.log("Positive Values:", positiveValues);
 
 
 
@@ -5634,7 +5754,7 @@
                     var leftMyTable = $("#myTable");
                     // Now, attempt to get the value
                     var lot_size_simulator = $(".lot_size_value").text();
-                    //console.log("Lot Size Simulator: " + parseInt(lot_size_simulator));
+                    ////console.log("Lot Size Simulator: " + parseInt(lot_size_simulator));
 
                     // Now, attempt to get the instrument type
                     var max_profit = $("#max_profit");
@@ -5660,21 +5780,21 @@
                             var breakeven_premium = parseFloat($parent.find(".ltp_edit").text());
                             var lot_size = parseFloat($parent.find(".lot_size_option_simulator").text());
                             var short_long = $parent.find(".short_long").text();
-                            //console.log('Short Long' + short_long);
+                            ////console.log('Short Long' + short_long);
 
-                            console.log(short_long);
+                            //console.log(short_long);
 
                             if (short_long === "+") {
-                                console.log(premium);
+                                //console.log(premium);
                                 positive_premium_strangle.push(-premium)
 
                             } else {
                                 positive_premium_strangle.push(Math.abs(premium))
                             }
 
-                            //console.log("Premium: " + premium);
-                            //console.log("Lot Size: " + lot_size);
-                            //console.log("Break-Even Premium: " + breakeven_premium);
+                            ////console.log("Premium: " + premium);
+                            ////console.log("Lot Size: " + lot_size);
+                            ////console.log("Break-Even Premium: " + breakeven_premium);
 
 
 
@@ -5689,29 +5809,29 @@
                             var numeric_part = reversed_string.match(/\d+/); // This extracts one or more consecutive digits
                             var numeric_value = numeric_part ? parseFloat(numeric_part[0].split('').reverse().join('')) : 0; // Reverse back and convert to a numeric value
 
-                            //console.log('numeric_value: ' + numeric_value);
+                            ////console.log('numeric_value: ' + numeric_value);
 
                             strike_price_all += numeric_value;
 
                             if (short_long === "+") {
 
                                 premiumsArray.push(-premium * lot_size);
-                                //console.log('HIi there negative premium');
+                                ////console.log('HIi there negative premium');
 
 
                             } else {
                                 premiumsArray.push(premium * lot_size);
-                                //console.log('HIi there positive premium');
+                                ////console.log('HIi there positive premium');
 
                             }
                             numericValuesArray.push(parseFloat(numeric_value));
                             count++;
                         } else {
-                            //console.log("Skipping calculation for element at index " + index);
+                            ////console.log("Skipping calculation for element at index " + index);
                         }
                     });
-                    // console.log(premiumsArray);
-                    // console.log(numericValuesArray)
+                    // //console.log(premiumsArray);
+                    // //console.log(numericValuesArray)
 
 
                     var all_premium_sum = 0;
@@ -5726,7 +5846,9 @@
 
                         $("#net_credit_value").text((all_premium_sum * lot_size_simulator).toFixed(2))
                     }
-                    console.log("Net Credit ", (all_premium_sum * lot_size_simulator).toFixed(2));
+                    //console.log("Net Credit ", (all_premium_sum * lot_size_simulator).toFixed(2));
+
+                    
                     var premiumDifferences = 0
 
 
@@ -5750,9 +5872,9 @@
                         }
                     }
 
-                    // console.log("Premium Differences: " + premiumDifferences);
-                    // console.log("Numeric Differences: " + numericDifferences);
-                    // console.log("numericDifferencesIndex: " + numericDifferencesIndex);
+                    // //console.log("Premium Differences: " + premiumDifferences);
+                    // //console.log("Numeric Differences: " + numericDifferences);
+                    // //console.log("numericDifferencesIndex: " + numericDifferencesIndex);
 
                     max_profit_value = (Math.abs(50) - premiumDifferences) * lot_size_simulator
 
@@ -5767,7 +5889,7 @@
                     // Calculate the average
                     var average_strike_price = strike_price_all / count;
 
-                    //console.log("Average Strike Price: " + average_strike_price);
+                    ////console.log("Average Strike Price: " + average_strike_price);
 
                     // Calculate break-even values
                     var lower_break_even = average_strike_price - breakeven;
@@ -5824,9 +5946,9 @@
 
                     // Now, you have all values in the allValues array,
                     // "-" values in negativeValues, and "+" values in positiveValues
-                    //console.log("All Values:", allValues);
-                    //console.log("Negative Values:", negativeValues);
-                    //console.log("Positive Values:", positiveValues);
+                    ////console.log("All Values:", allValues);
+                    ////console.log("Negative Values:", negativeValues);
+                    ////console.log("Positive Values:", positiveValues);
 
 
 
@@ -5837,7 +5959,7 @@
                     var leftMyTable = $("#myTable");
                     // Now, attempt to get the value
                     var lot_size_simulator = $(".lot_size_value").text();
-                    //console.log("Lot Size Simulator: " + parseInt(lot_size_simulator));
+                    ////console.log("Lot Size Simulator: " + parseInt(lot_size_simulator));
 
                     // Now, attempt to get the instrument type
                     var max_profit = $("#max_profit");
@@ -5863,22 +5985,22 @@
                             var breakeven_premium = parseFloat($parent.find(".ltp_edit").text());
                             var lot_size = parseFloat($parent.find(".lot_size_option_simulator").text());
                             var short_long = $parent.find(".short_long").text();
-                            //console.log('Short Long' + short_long);
+                            ////console.log('Short Long' + short_long);
 
 
-                            console.log(short_long);
+                            //console.log(short_long);
 
                             if (short_long === "+") {
-                                console.log(premium);
+                                //console.log(premium);
                                 positive_premium_strangle.push(-premium)
 
                             } else {
                                 positive_premium_strangle.push(Math.abs(premium))
                             }
 
-                            //console.log("Premium: " + premium);
-                            //console.log("Lot Size: " + lot_size);
-                            //console.log("Break-Even Premium: " + breakeven_premium);
+                            ////console.log("Premium: " + premium);
+                            ////console.log("Lot Size: " + lot_size);
+                            ////console.log("Break-Even Premium: " + breakeven_premium);
 
 
 
@@ -5893,29 +6015,29 @@
                             var numeric_part = reversed_string.match(/\d+/); // This extracts one or more consecutive digits
                             var numeric_value = numeric_part ? parseFloat(numeric_part[0].split('').reverse().join('')) : 0; // Reverse back and convert to a numeric value
 
-                            //console.log('numeric_value: ' + numeric_value);
+                            ////console.log('numeric_value: ' + numeric_value);
 
                             strike_price_all += numeric_value;
 
                             if (short_long === "+") {
 
                                 premiumsArray.push(-premium * lot_size);
-                                //console.log('HIi there negative premium');
+                                ////console.log('HIi there negative premium');
 
 
                             } else {
                                 premiumsArray.push(premium * lot_size);
-                                //console.log('HIi there positive premium');
+                                ////console.log('HIi there positive premium');
 
                             }
                             numericValuesArray.push(parseFloat(numeric_value));
                             count++;
                         } else {
-                            //console.log("Skipping calculation for element at index " + index);
+                            ////console.log("Skipping calculation for element at index " + index);
                         }
                     });
-                    //console.log(premiumsArray);
-                    //console.log(numericValuesArray);
+                    ////console.log(premiumsArray);
+                    ////console.log(numericValuesArray);
 
                     var all_premium_sum = 0;
                     for (var premiumIndex = 0; premiumIndex < positive_premium_strangle.length; premiumIndex++) {
@@ -5929,7 +6051,7 @@
 
                         $("#net_credit_value").text((all_premium_sum * lot_size_simulator).toFixed(2))
                     }
-                    console.log("Net Credit ", (all_premium_sum * lot_size_simulator).toFixed(2));
+                    //console.log("Net Credit ", (all_premium_sum * lot_size_simulator).toFixed(2));
 
                     var premiumDifferences = 0
                     var numericDifferences = 0
@@ -5952,8 +6074,8 @@
                         }
                     }
 
-                    //console.log("Premium Differences: " + premiumDifferences);
-                    //console.log("Numeric Differences: " + numericDifferences);
+                    ////console.log("Premium Differences: " + premiumDifferences);
+                    ////console.log("Numeric Differences: " + numericDifferences);
 
                     max_profit_value = "Unlimited"
 
@@ -5968,7 +6090,7 @@
                     // Calculate the average
                     var average_strike_price = strike_price_all / count;
 
-                    //console.log("Average Strike Price: " + average_strike_price);
+                    ////console.log("Average Strike Price: " + average_strike_price);
 
                     // Calculate break-even values
                     var lower_break_even = average_strike_price - breakeven;
@@ -6025,9 +6147,9 @@
 
                     // Now, you have all values in the allValues array,
                     // "-" values in negativeValues, and "+" values in positiveValues
-                    //console.log("All Values:", allValues);
-                    //console.log("Negative Values:", negativeValues);
-                    //console.log("Positive Values:", positiveValues);
+                    ////console.log("All Values:", allValues);
+                    ////console.log("Negative Values:", negativeValues);
+                    ////console.log("Positive Values:", positiveValues);
 
 
 
@@ -6080,7 +6202,7 @@
                     var numericValue = requiredValue.replace(/\D/g, ''); // Extracting only the numbers
                     main_strike_price_dynamic.push({ numericValue, long_shorts, premiums, requiredStringValue })
                 });
-                // console.log(main_strike_price_dynamic);
+                // //console.log(main_strike_price_dynamic);
 
 
 
@@ -6102,36 +6224,36 @@
                 option_simulator_body.find(".simulator_strike").each(function () {
                     var ultra_strike_price = parseInt($(this).text());
 
-                    // console.log("ultra_strike_price         "  + ultra_strike_price);
+                    // //console.log("ultra_strike_price         "  + ultra_strike_price);
 
 
                     var tempArray = []; // Temporary array to store values
                     main_strike_price_dynamic.forEach(function (item) {
                         if (item.requiredStringValue === 'CE' && item.long_shorts === '+') {
-                            // console.log('Inside CE and + condition');
-                            // console.log(parseFloat(item.numericValue));
-                            // console.log(parseFloat(item.premiums));
-                            // console.log(ultra_strike_price);
+                            // //console.log('Inside CE and + condition');
+                            // //console.log(parseFloat(item.numericValue));
+                            // //console.log(parseFloat(item.premiums));
+                            // //console.log(ultra_strike_price);
                             tempArray.push(ULTRAMAX(0, ultra_strike_price - parseFloat(item.numericValue)) - parseFloat(item.premiums));
                         }
                         if (item.requiredStringValue === 'CE' && item.long_shorts === '-') {
-                            // console.log('Inside CE and - condition');
+                            // //console.log('Inside CE and - condition');
                             tempArray.push(parseFloat(item.premiums) - ULTRAMAX(0, ultra_strike_price - parseFloat(item.numericValue)));
                         }
                         if (item.requiredStringValue === 'PE' && item.long_shorts === '+') {
-                            // console.log('Inside PE and + condition');
+                            // //console.log('Inside PE and + condition');
                             tempArray.push(ULTRAMAX(0, parseFloat(item.numericValue) - ultra_strike_price) - parseFloat(item.premiums));
                         }
                         if (item.requiredStringValue === 'PE' && item.long_shorts === '-') {
-                            // console.log('Inside PE and - condition');
+                            // //console.log('Inside PE and - condition');
                             tempArray.push(parseFloat(item.premiums) - ULTRAMAX(0, parseFloat(item.numericValue) - ultra_strike_price));
                         }
                     });
-                    // console.log(tempArray);
+                    // //console.log(tempArray);
                     resultArray.push(tempArray); // Push the tempArray into the resultArray
                 });
 
-                // console.log(resultArray);
+                // //console.log(resultArray);
 
 
                 var sumArray = []; // Array to store the sums
@@ -6147,7 +6269,7 @@
                 });
 
                 // Logging the sums of each array in resultArray multiplied by lot_size
-                // console.log(sumArray);
+                // //console.log(sumArray);
 
 
 
@@ -6162,7 +6284,7 @@
                 $(".main_logic").each(function () {
                     var premium_condition = $(this).find(".short_long").text()
                     var premuim_values = parseFloat($(this).find(".ltp_edit").text())
-                    // console.log(premium_condition);
+                    // //console.log(premium_condition);
                     if (premium_condition === "-") {
                         all_premium_chart.push(-Math.abs(premuim_values))
                     } else {
@@ -6170,16 +6292,16 @@
 
                     }
                 })
-                // console.log(all_premium_chart);
+                // //console.log(all_premium_chart);
 
                 var sum_all_premium_chart = all_premium_chart.reduce(function (a, b) {
                     return a + b;
                 }, 0);
 
-                // console.log("Sum of all elements in all_premium_chart array: ", sum_all_premium_chart);
+                // //console.log("Sum of all elements in all_premium_chart array: ", sum_all_premium_chart);
                 // Your existing code to generate chart data goes here
                 var option_simulator_body = $(".option_simulator_body");
-                // console.log(option_simulator_body);
+                // //console.log(option_simulator_body);
                 const closest_value = parseInt($(".closest_value").text()); // Parse closest_value as an integer
                 // Create a new array to store strike prices
                 var strikePrices = [];
@@ -6256,9 +6378,9 @@
                 });
 
                 // Display the results
-                // console.log("Final Long Call New: ", final_long_call_new);
-                // console.log("Final Long Put New: ", final_long_put_new);
-                // console.log("Addition Result: ", addition_result);
+                // //console.log("Final Long Call New: ", final_long_call_new);
+                // //console.log("Final Long Put New: ", final_long_put_new);
+                // //console.log("Addition Result: ", addition_result);
 
 
 
@@ -6266,17 +6388,17 @@
 
 
 
-                // console.log(strikePrices);
-                // console.log("Main calls_ltp: " + main_calls_ltp);
-                // console.log("Main puts_ltp: " + main_puts_ltp);
+                // //console.log(strikePrices);
+                // //console.log("Main calls_ltp: " + main_calls_ltp);
+                // //console.log("Main puts_ltp: " + main_puts_ltp);
 
                 var final_p_l = []
                 const priceDifferences = strikePrices.map((strikePrice) => Math.abs(closest_value - strikePrice));
-                // console.log(priceDifferences);
+                // //console.log(priceDifferences);
                 priceDifferences.forEach((p_l) => {
                     final_p_l.push(-(sum_all_premium_chart - p_l) * parseInt(lot_size))
                 });
-                // console.log(final_p_l)
+                // //console.log(final_p_l)
 
                 var spot_price = $(".spot_value").text()
 
@@ -6421,7 +6543,7 @@
                 chart.height = am4core.percent(100);
 
 
-                // console.log('Hi');
+                // //console.log('Hi');
 
 
             }
@@ -6430,7 +6552,7 @@
             var Oi_chart = null;
 
             function OI_charts(all_callsOI_putsOI) {
-                console.log("inside:", all_callsOI_putsOI);
+                //console.log("inside:", all_callsOI_putsOI);
 
                 am4core.ready(function () {
                     if (Oi_chart) {
@@ -6448,7 +6570,7 @@
                             puts_oi: data.puts_oi,
                         };
                     });
-                    console.log(chartData);
+                    //console.log(chartData);
 
                     // Add data
                     chart.data = chartData;

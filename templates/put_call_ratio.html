@@ -1,27 +1,5 @@
 {% extends "base_dashboard.html" %} {% load static %} {% block dashboard_body %}
 
-<script>
-  $(document).ready(function () {
-    // Retrieve the active_section value passed from Django
-// Retrieve the active_section value passed from Django
-var activeSection = "{{ active_section }}";
-console.log("Active Section:", activeSection);
-
-if (activeSection === "put_call_ratio_volume") {
-    $("#vpcr").click(); // Trigger the click event on the element with id "vpcr"
-}else if (activeSection==="open_interest") {
-  
-
-}else if (activeSection==="change_OI") {
-  $("#coi").click()
-
-}else if (activeSection==="put_call_ratio_main") {
-  $("#pcr").click()
-}
-
-  });
-</script>
-
 <style>
   #first_symbol_id,
   #second_symbol_id,
@@ -100,7 +78,7 @@ if (activeSection === "put_call_ratio_volume") {
     align-items: baseline;
   }
 </style>
-<h5 class="my-2">Nifty Open Interest Live Chart: Nifty Option Chain</h5>
+<h5 class="my-2 ms-4 mt-3">Nifty Open Interest Live Chart: Nifty Option Chain</h5>
 <div class="main_content_put_oi">
   <div class="Oi_date_bars">
     <div id="oi_barCount">
@@ -114,7 +92,11 @@ if (activeSection === "put_call_ratio_volume") {
     </div>
     <div id="Oi_expiryDate">
       <label for="expiryDate">Expiry Date:</label>
-      <select id="expiryDate" onchange="updateChart()" class="form-select"></select>
+      <select
+        id="expiryDate"
+        onchange="updateChart()"
+        class="form-select"
+      ></select>
     </div>
     <div class="main_spot_price d-flex">
       <div class="inner_spot d-flex">
@@ -141,7 +123,11 @@ if (activeSection === "put_call_ratio_volume") {
     </div>
     <div id="Oi_c_expiryDate">
       <label for="expiryDate_C">Expiry Date:</label>
-      <select id="expiryDate_C" onchange="updateChart_oi()" class="form-select"></select>
+      <select
+        id="expiryDate_C"
+        onchange="updateChart_oi()"
+        class="form-select"
+      ></select>
     </div>
     <div class="main_spot_price d-flex">
       <div class="inner_spot d-flex">
@@ -157,10 +143,16 @@ if (activeSection === "put_call_ratio_volume") {
     </div>
   </div>
   <div class="main_content_toggles">
-    <div class="mian_put_call_head d-flex justify-content-between"
-      style="flex-wrap: wrap; white-space: nowrap; overflow: auto">
+    <div
+      class="mian_put_call_head d-flex justify-content-between"
+      style="flex-wrap: wrap; white-space: nowrap; overflow: auto"
+    >
       <div class="head_toggles d-flex gap-2 my-2">
-        <h5 onclick="main_put('OI')" class="main_toggles main_toggles_active" id="oi">
+        <h5
+          onclick="main_put('OI')"
+          class="main_toggles main_toggles_active"
+          id="oi"
+        >
           Open Interest
         </h5>
         <h5 onclick="main_put('C_OI')" class="main_toggles" id="coi">
@@ -178,38 +170,60 @@ if (activeSection === "put_call_ratio_volume") {
       </div>
       <div class="symbol_toggles" id="symbol_toggles">
         <div class="first_symbol gap-2" id="first_symbol_id">
-          <h5 class="symbol_toggles" id="symbol_nifty" onclick="OI_symbols('niftyoilist', 'NIFTY+50')">
+          <h5
+            class="symbol_toggles"
+            id="symbol_nifty"
+            onclick="OI_symbols('niftyoilist', 'NIFTY+50')"
+          >
             Nifty
           </h5>
-          <h5 class="symbol_toggles" id="symbol_banknifty" onclick="OI_symbols('bankniftyoi', 'NIFTY+BANK')">
+          <h5
+            class="symbol_toggles"
+            id="symbol_banknifty"
+            onclick="OI_symbols('bankniftyoi', 'NIFTY+BANK')"
+          >
             Bank Nifty
           </h5>
-          <h5 class="symbol_toggles" id="symbol_fin_nifty" onclick="OI_symbols('finniftyoilist', 'NIFTY+FIN+SERVICE')">
-            Fin Nifty
+          <h5
+            class="symbol_toggles"
+            id="symbol_fin_nifty"
+            onclick="OI_symbols('finniftyoilist', 'NIFTY+FIN+SERVICE')"
+          >
+            Fin Nifty 
           </h5>
           <h5 class="symbol_toggles" id="symbol_stocks">Stock </h5>
         </div>
         <div class="second_symbol gap-2" id="second_symbol_id">
-          <h5 class="symbol_toggles" id="symbol_nifty_oi" onclick="OI_symbols_oi('niftyoichange', 'NIFTY+50')">
-            Nifty
+          <h5
+            class="symbol_toggles"
+            id="symbol_nifty_oi"
+            onclick="OI_symbols_oi('niftyoichange', 'NIFTY+50')"
+          >
+            Nifty 
           </h5>
-          <h5 class="symbol_toggles" id="symbol_banknifty_oi"
-            onclick="OI_symbols_oi('bankniftyoichange', 'NIFTY+BANK')">
-            Bank Nifty
+          <h5
+            class="symbol_toggles"
+            id="symbol_banknifty_oi"
+            onclick="OI_symbols_oi('bankniftyoichange', 'NIFTY+BANK')"
+          >
+            Bank Nifty 
           </h5>
-          <h5 class="symbol_toggles" id="symbol_fin_nifty_oi"
-            onclick="OI_symbols_oi('finniftyoichange', 'NIFTY+FIN+SERVICE')">
-            Fin Nifty
+          <h5
+            class="symbol_toggles"
+            id="symbol_fin_nifty_oi"
+            onclick="OI_symbols_oi('finniftyoichange', 'NIFTY+FIN+SERVICE')"
+          >
+            Fin Nifty 
           </h5>
           <h5 class="symbol_toggles">Stock </h5>
         </div>
         <div class="third_symbol gap-2" id="third_symbol_id">
           <h5 class="symbol_toggles" onclick="traders('nifty')">Nifty</h5>
           <h5 class="symbol_toggles" onclick="traders('banknifty')">
-            Bank Nifty
+            Bank Nifty 
           </h5>
           <h5 class="symbol_toggles" onclick="traders('finnifty')">
-            Fin Nifty
+            Fin Nifty 
           </h5>
           <h5 class="symbol_toggles">Stock </h5>
         </div>
@@ -218,20 +232,20 @@ if (activeSection === "put_call_ratio_volume") {
             Nifty
           </h5>
           <h5 class="symbol_toggles" onclick="pcr_volume('bankniftyvolumepcr')">
-            Bank Nifty
+            Bank Nifty 
           </h5>
           <h5 class="symbol_toggles" onclick="pcr_volume('finniftyvolumepcr')">
-            Fin Nifty
+            Fin Nifty 
           </h5>
           <h5 class="symbol_toggles">Stock </h5>
         </div>
         <div class="fifth_symbol gap-2" id="fifth_symbol_id">
           <h5 class="symbol_toggles" onclick="symbol_pain('nifty')">Nifty</h5>
           <h5 class="symbol_toggles" onclick="symbol_pain('banknifty')">
-            Bank Nifty
+            Bank Nifty 
           </h5>
           <h5 class="symbol_toggles" onclick="symbol_pain('finnifty')">
-            Fin Nifty
+            Fin Nifty 
           </h5>
           <h5 class="symbol_toggles">Stock </h5>
         </div>
@@ -528,7 +542,7 @@ if (activeSection === "put_call_ratio_volume") {
             {
               label: "pp",
               data: ppValues,
-
+            
               backgroundColor: "rgb(249,108,146)",
               borderColor: "rgb(249,108,146)",
               borderWidth: 1,
@@ -572,7 +586,7 @@ if (activeSection === "put_call_ratio_volume") {
         });
       },
       error: function (xhr, errmsg, err) {
-        //console.log(errmsg);
+        console.log(errmsg);
       },
     });
   }
@@ -586,9 +600,9 @@ if (activeSection === "put_call_ratio_volume") {
   // Function to update the chart with new data
   function updateChart_pcr(chartData) {
     const pcrValues = chartData.pcr_values;
-    //console.log(pcrValues)
+    console.log(pcrValues)
     const indexCloseValues = chartData.index_close_values;
-    //console.log(indexCloseValues)
+    console.log(indexCloseValues)
     const timeValues = chartData.time_values;
 
     // Update the chart data
@@ -606,11 +620,11 @@ if (activeSection === "put_call_ratio_volume") {
       dataType: "json",
       data: { trade: pcr_chart_arg }, // Pass the argument in the data object
       success: function (data) {
-        //console.log(data);
+        console.log(data);
         updateChart_pcr(data);
       },
       error: function (xhr, status, error) {
-        //console.log("Error:", error);
+        console.log("Error:", error);
       },
     });
   }
