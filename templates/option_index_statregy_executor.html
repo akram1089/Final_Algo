@@ -19028,7 +19028,7 @@ $(".right_side_top_strategies ,#buid_custom_strategy_btn,.oi_option,.greeks_opti
           dataType: 'json', // Expect JSON response from Django
           success: function (data) {
             // Print the response from Django (you can handle it as needed)
-            // //////console.log(data);
+            console.log("data",data);
 
 
             var premiumsData = data.main_premiums;
@@ -19396,6 +19396,9 @@ $(".right_side_top_strategies ,#buid_custom_strategy_btn,.oi_option,.greeks_opti
             var categories = tableData.map(data => parseInt(data.category));
             var values = tableData.map(data => data.value);
 
+            // console.log("categories",categories);
+            
+
             // Structure _result with category and value arrays
             _result = [
               { "Strikes": categories },
@@ -19416,10 +19419,28 @@ $(".right_side_top_strategies ,#buid_custom_strategy_btn,.oi_option,.greeks_opti
 
             // Find the maximum number of values among all days
             var maxValuesCount = Math.max(..._result.map(dayData => dayData[Object.keys(dayData)[0]].length));
+  
 
             // Create the table header dynamically
             var thead = $("<thead>");
             var headerRow = $("<tr>");
+
+              console.log('_result',_result);
+              
+              var currentDate = new Date();
+var currentDay = currentDate.getDay(); // 0 (Sunday) to 6 (Saturday)
+// Filter out Saturday (6) and Sunday (0) from _result
+_result = _result.filter(function(dayData) {
+    var day = Object.keys(dayData)[0];
+    if (!day.includes('Day')) return true; // Include entries not related to days
+    var dayNumber = parseInt(day.split('-')[1]);
+    var targetDate = new Date(currentDate);
+    targetDate.setDate(currentDate.getDate() + dayNumber - 1); // Calculate target date for the day
+    var targetDay = targetDate.getDay();
+    return targetDay !== 0 && targetDay !== 6; // Exclude Saturday (6) and Sunday (0)
+});
+console.log('_result2',_result);
+
 
             // Add header cells for each day
             _result.forEach(function (dayData) {
@@ -19498,66 +19519,65 @@ $(".right_side_top_strategies ,#buid_custom_strategy_btn,.oi_option,.greeks_opti
 
             // Get the current date
             var currentDate = new Date();
+// Display dates based on the number of th elements
+thElements.each(function (index) {
+    // Calculate the date for each th
+    var dateForTH = new Date(currentDate);
+    dateForTH.setDate(currentDate.getDate() + index);
+
+    // Skip Saturday (6) and Sunday (0)
+    while (dateForTH.getDay() === 0 || dateForTH.getDay() === 6) {
+        dateForTH.setDate(dateForTH.getDate() + 1); // Move to the next day
+    }
+
+    // Format the date as "On Target Date Mon DD MMM"
+    var formattedDate = getDayOfWeek(dateForTH) + ", " + formatDate(dateForTH);
+    
+    // Display the formatted date
+    $(this).text(formattedDate);
+});
+
+// Function to get the day of the week
+function getDayOfWeek(date) {
+    var daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    return daysOfWeek[date.getDay()];
+}
+
+// Function to format the date as "DDth MMM"
+function formatDate(date) {
+    var day = date.getDate();
+    var suffix = getDaySuffix(day);
+    var options = { day: 'numeric', month: 'short' };
+    return date.toLocaleDateString('en-US', options).replace(/\b\d{1,2}\b/, day + suffix);
+}
+
+// Function to format the dropdown value as "Thu, Feb 1st"
+function formatDropdownDate(value) {
+    var date = new Date(value);
+    var day = date.getDate();
+    var suffix = getDaySuffix(day);
+
+    // Define the options for formatting
+    var options = { weekday: 'short', month: 'short', day: 'numeric' };
+
+    return date.toLocaleDateString('en-US', options).replace(/\b\d{1,2}\b/, day + suffix);
+}
+
+// Function to get the day suffix (st, nd, rd, th)
+function getDaySuffix(day) {
+    if (day >= 11 && day <= 13) {
+        return 'th';
+    }
+    var lastDigit = day % 10;
+    switch (lastDigit) {
+        case 1: return 'st';
+        case 2: return 'nd';
+        case 3: return 'rd';
+        default: return 'th';
+    }
+}
 
 
-            // Display dates based on the number of th elements
-            thElements.each(function (index) {
-              // Calculate the date for each th
-              var dateForTH = new Date(currentDate);
-              dateForTH.setDate(currentDate.getDate() + index);
-
-              // Format the date as "On Target Date Mon DD MMM"
-              var formattedDate = getDayOfWeek(dateForTH) + ", " + formatDate(dateForTH);
-              console.log(getDayOfWeek(dateForTH));
-              console.log(formatDate(dateForTH));
-              // Display the formatted date
-              $(this).text(formattedDate);
-
-
-            });
-
-
-
-            // Function to get the day of the week
-            function getDayOfWeek(date) {
-              var daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-              return daysOfWeek[date.getDay()];
-            }
-
-            // Function to format the date as "DDth MMM"
-            function formatDate(date) {
-              var day = date.getDate();
-              var suffix = getDaySuffix(day);
-              var options = { day: 'numeric', month: 'short' };
-              return date.toLocaleDateString('en-US', options).replace(/\b\d{1,2}\b/, day + suffix);
-            }
-
-            // Function to format the dropdown value as "Thu, Feb 1st"
-            function formatDropdownDate(value) {
-              var date = new Date(value);
-              var day = date.getDate();
-              var suffix = getDaySuffix(day);
-
-              // Define the options for formatting
-              var options = { weekday: 'short', month: 'short', day: 'numeric' };
-
-              return date.toLocaleDateString('en-US', options).replace(/\b\d{1,2}\b/, day + suffix);
-            }
-
-
-            // Function to get the day suffix (st, nd, rd, th)
-            function getDaySuffix(day) {
-              if (day >= 11 && day <= 13) {
-                return 'th';
-              }
-              var lastDigit = day % 10;
-              switch (lastDigit) {
-                case 1: return 'st';
-                case 2: return 'nd';
-                case 3: return 'rd';
-                default: return 'th';
-              }
-            }
 
             // Get the value of closest_strike_price
 
