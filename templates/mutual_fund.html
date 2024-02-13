@@ -309,6 +309,19 @@ table.dataTable.no-footer{
   box-shadow: 0 3px 16px 0 rgba(35,47,62,.15)!important; /* Adjust the values as needed */
 }
 
+.dataTables_length select{
+  border: 1px solid #aaa;
+    
+    background-color: transparent;
+    
+    margin: 0 5px !important;
+    font-weight: 500 !important;
+}
+
+.dataTables_length label {
+  text-transform: capitalize !important;
+}
+
   @media only screen and (max-width: 768px) {
     .holdings_filter {
       flex-wrap: wrap !important;
@@ -383,7 +396,7 @@ table.dataTable.no-footer{
 </style>
 <section class="mutual_fund_section container">
   <section>
-    <div class="cate_performance">
+    <div class="cate_performance mt-4">
       <h4>Category Performance</h4>
 
       <div class="table-box mt-3 p-5">
@@ -681,7 +694,7 @@ table.dataTable.no-footer{
             </select>
           </div>
         </div>
-        <div class="what_in_out_table mt-3 table-responsive">
+        <div class="what_in_out_table mt-3 table-responsive p-4">
           <table class="table table-bordered" id="what_in_out">
             <thead>
               <tr>
@@ -1509,141 +1522,143 @@ if (allNegative) {
     }
     mutual_fund_activity();
 
-    // Top 10 Holdings
-    var top_holding_header_conditions = true;
-    var cate_one;
-    var initial_secondd_val;
-    var get_second_cate_val_condition = true;
-    var scheme_last_dropdown;
-    var final_pagination_limit = 8;
-    var final_data_condition_dropdown = true;
-    function top_holding_header() {
-      $.ajax({
-        type: "get",
-        url: "/top_holdings_fund_house",
-        dataType: "json",
-        success: function (data) {
-          var holdings_h_dropdown = data.data;
-          console.log(holdings_h_dropdown);
-          var topHCate1 = $("#topHCate1");
-          topHCate1.empty();
-          holdings_h_dropdown.forEach((element) => {
-            topHCate1.append(
-              $("<option>").val(element.mf_cocode).text(element.co_name)
-            );
-          });
-          cate_one = topHCate1.val();
-          if (top_holding_header_conditions) {
-            get_second_cate_val(cate_one);
-            top_holding_header_conditions = false;
-            console.log(top_holding_header_conditions);
-          }
-
-          topHCate1.off("change").on("change", function () {
-            var get_scheme = $(this).val();
-            console.log(get_scheme);
-            cate_one = get_scheme;
-            get_second_cate_val(cate_one);
-          });
-        },
-      });
-    }
-
-    function get_second_cate_val(get_val) {
-      console.log("GET" + get_val);
-      $.ajax({
-        type: "post",
-        url: "/top_holdings_category",
-        data: {
-          pass_val: get_val,
-        },
-        success: function (data) {
-          var get_data = data.data;
-          var topHCate2 = $("#topHCate2");
-          topHCate2.empty();
-          get_data.forEach((element) => {
-            topHCate2.append(
-              $("<option>").val(element.VCLASSCODE).text(element.VCLASS)
-            );
-          });
-
-          initial_secondd_val = topHCate2.val();
-          get_third_cate_val(cate_one, initial_secondd_val);
-          get_second_cate_val_condition = false;
-          console.log(get_second_cate_val_condition);
-
-          topHCate2.off("change").on("change", function () {
-            initial_secondd_val = $(this).val();
-            console.log(initial_secondd_val);
-            get_third_cate_val(cate_one, initial_secondd_val);
-
-            console.log(cate_one);
-          });
-        },
-      });
-    }
-
-    function get_third_cate_val(get_hold_house, get_schemes) {
-      $.ajax({
-        type: "post",
-        url: "/holdings_scheme",
-        data: {
-          pass_hold_house: get_hold_house,
-          pass_schemes: get_schemes,
-        },
-        success: function (data) {
-          var selectScheme = $("#selectScheme");
-          selectScheme.empty(); // Clear previous options
-          console.log(data.data);
-          var options = data.data.map(function (item) {
-            return $("<option>").val(item.MF_SCHCODE).text(item.SCH_NAME);
-          });
-
-          selectScheme.append(options);
-
-          console.log(selectScheme.val());
-          var scheme_last_dropdown = selectScheme.val();
-
-          get_main_holding_table_data(
-            scheme_last_dropdown,
-            final_pagination_limit
-          );
-
-          selectScheme.off("change").on("change", function () {
-            hodling_last_dropdown = $(this).val();
-            scheme_last_dropdown = hodling_last_dropdown;
-            console.log(hodling_last_dropdown);
-            get_main_holding_table_data(
-              scheme_last_dropdown,
-              final_pagination_limit
-            );
-          });
-        },
-      });
-    }
-    function get_main_holding_table_data(cate_one, initial_secondd_val) {
-      $.ajax({
-        type: "post",
-        url: "/main_holding_table_data",
-        data: {
-          cate_one: cate_one,
-          initial_secondd_val: initial_secondd_val,
-        },
-        success: function (data) {
-          var hold_table_data = data.data;
-          hold_table_data.forEach((element) => {
-            var row = `<tr>
-                        <td>${element.co_name}</td>
-                        <td>${parseFloat(element.Perc_hold).toFixed(2)}</td>
-                      </tr>`;
-            var table = $("#top_holding_table");
-            table.append(row);
-          });
-        },
-      });
-    }
-
-    top_holding_header();
+     // Top 10 Holdings
+     var top_holding_header_conditions = true;
+     var cate_one;
+     var initial_secondd_val;
+     var get_second_cate_val_condition = true;
+     var scheme_last_dropdown;
+     var final_pagination_limit = 8;
+     var final_data_condition_dropdown = true;
+     function top_holding_header() {
+       $.ajax({
+         type: "get",
+         url: "/top_holdings_fund_house",
+         dataType: "json",
+         success: function (data) {
+           var holdings_h_dropdown = data.data;
+           console.log(holdings_h_dropdown);
+           var topHCate1 = $("#topHCate1");
+           topHCate1.empty();
+           holdings_h_dropdown.forEach((element) => {
+             topHCate1.append(
+               $("<option>").val(element.mf_cocode).text(element.co_name)
+             );
+           });
+           cate_one = topHCate1.val();
+           if (top_holding_header_conditions) {
+             get_second_cate_val(cate_one);
+             top_holding_header_conditions = false;
+             console.log(top_holding_header_conditions);
+           }
+ 
+           topHCate1.off("change").on("change", function () {
+             var get_scheme = $(this).val();
+             console.log(get_scheme);
+             cate_one = get_scheme;
+             get_second_cate_val(cate_one);
+           });
+         },
+       });
+     }
+ 
+     function get_second_cate_val(get_val) {
+       console.log("GET" + get_val);
+       $.ajax({
+         type: "post",
+         url: "/top_holdings_category",
+         data: {
+           pass_val: get_val,
+         },
+         success: function (data) {
+           var get_data = data.data;
+           var topHCate2 = $("#topHCate2");
+           topHCate2.empty();
+           get_data.forEach((element) => {
+             topHCate2.append(
+               $("<option>").val(element.VCLASSCODE).text(element.VCLASS)
+             );
+           });
+ 
+           initial_secondd_val = topHCate2.val();
+           get_third_cate_val(cate_one, initial_secondd_val);
+           get_second_cate_val_condition = false;
+           console.log(get_second_cate_val_condition);
+ 
+           topHCate2.off("change").on("change", function () {
+             initial_secondd_val = $(this).val();
+             console.log(initial_secondd_val);
+             get_third_cate_val(cate_one, initial_secondd_val);
+ 
+             console.log(cate_one);
+           });
+         },
+       });
+     }
+ 
+     function get_third_cate_val(get_hold_house, get_schemes) {
+       $.ajax({
+         type: "post",
+         url: "/holdings_scheme",
+         data: {
+           pass_hold_house: get_hold_house,
+           pass_schemes: get_schemes,
+         },
+         success: function (data) {
+           var selectScheme = $("#selectScheme");
+           selectScheme.empty(); // Clear previous options
+           console.log(data.data);
+           var options = data.data.map(function (item) {
+             return $("<option>").val(item.MF_SCHCODE).text(item.SCH_NAME);
+           });
+ 
+           selectScheme.append(options);
+ 
+           console.log(selectScheme.val());
+           var scheme_last_dropdown = selectScheme.val();
+ 
+           get_main_holding_table_data(
+             scheme_last_dropdown,
+             final_pagination_limit
+           );
+ 
+           selectScheme.off("change").on("change", function () {
+             hodling_last_dropdown = $(this).val();
+             scheme_last_dropdown = hodling_last_dropdown;
+             console.log(hodling_last_dropdown);
+             get_main_holding_table_data(
+               scheme_last_dropdown,
+               final_pagination_limit
+             );
+           });
+         },
+       });
+     }
+     function get_main_holding_table_data(cate_one, initial_secondd_val) {
+       $.ajax({
+         type: "post",
+         url: "/main_holding_table_data",
+         data: {
+           cate_one: cate_one,
+           initial_secondd_val: initial_secondd_val,
+         },
+         success: function (data) {
+           var hold_table_data = data.data;
+           $("#top_holding_table").empty()
+           hold_table_data.forEach((element) => {
+             var row = `<tr>
+                         <td>${element.co_name}</td>
+                         <td>${parseFloat(element.Perc_hold).toFixed(2)}</td>
+                       </tr>`;
+             var table = $("#top_holding_table");
+             table.append(row);
+           });
+         },
+       });
+     }
+ 
+     top_holding_header();
+    
 
     // Whats In/Out Start Here !!!!
 
@@ -1707,140 +1722,153 @@ if (allNegative) {
             table.append(row);
           });
 
-          $("#what_in_out").DataTable();
+          $("#what_in_out").DataTable({
+            "dom": '<"top"lf>rt<"bottom"ip><"clear">',
+            "language": {
+            "search": '<div class="custom-search" style="position: relative"><i class="bi bi-search" style="position: absolute;right: 7px;top: 10px;"></i></i><input class="form-control" type="search" placeholder="Search" aria-controls="volume_shocker_table"></div>'
+           }
+          });
+          $('#what_in_out_filter input:eq(1)').hide();
+          $('#what_in_out_filter input[type="search"]').attr('placeholder', 'Search...');
         },
       });
     }
 
     // Dividend
-    var initial_fund = "5946";
-    $("#fundHouse").change(function () {
-      var div_fund_h = $(this).val();
-      initial_fund = div_fund_h;
-      name_is_div();
-    });
-
-    function get_dividend_category(get_fund_h) {
-      $.ajax({
-        type: "post",
-        url: "/dividend_category",
-        data: {
-          pass_fund_h: get_fund_h,
-        },
-        success: function (data) {
-          var cate_data = data.data;
-          $("#myCategory").empty();
-          cate_data.forEach((element) => {
-            $("#myCategory").append(
-              $("<option>").val(element.VCLASSCODE).text(element.VCLASS)
-            );
-          });
-        },
-      });
-    }
-
-    function dividend_fund_house() {
-      $.ajax({
-        type: "get",
-        url: "/dividend_data",
-        dataType: "json",
-        success: function (data) {
-          var dividend_dropdown = data.data;
-          dividend_dropdown.forEach((element) => {
-            $("#fundHouse").append(
-              $("<option>").val(element.mf_cocode).text(element.co_name)
-            );
-          });
-        },
-      });
-    }
-    dividend_fund_house();
-
-    function divdend_date_dropdown() {
-      $.ajax({
-        type: "get",
-        url: "/dividend_date",
-        dataType: "json",
-        success: function (data) {
-          var div_date = data.data;
-
-          div_date.forEach((element) => {
-            var original_val = element.DivDate;
-            encodedDate = original_val.replace(/ /g, "%20");
-
-            $("#selectDate").append(
-              $("<option>").val(encodedDate).text(element.DivDate)
-            );
-          });
-        },
-      });
-    }
-
-    var initial_d_cate = "26";
-    $("#myCategory").change(function () {
-      var div_cate = $(this).val();
-      initial_d_cate = div_cate;
-      name_is_div();
-    });
-
-    var initial_d_date = "Sep%202023";
-    $("#selectDate").change(function () {
-      var div_o_date = $(this).val();
-      initial_d_date = div_o_date;
-      name_is_div();
-    });
-
-    function name_is_div() {
-      dividend_table_date(initial_fund, initial_d_cate, initial_d_date);
-    }
-    name_is_div();
-    function dividend_table_date(
-      get_initial_fund,
-      get_initial_d_cate,
-      get_initial_d_date
-    ) {
-      // console.log(get_initial_d_cate);
-      // console.log(get_initial_d_date);
-      // console.log(get_initial_fund);
-      $.ajax({
-        type: "post",
-        url: "/dividend_datas",
-        data: {
-          param1: get_initial_fund,
-          param2: get_initial_d_cate,
-          param3: get_initial_d_date,
-        },
-        success: function (data) {
-          var dividends = data.data;
-          $("#dividend_table").empty();
-          if (!dividends) {
-            $("#dividend_table").html(
-              "<p class='text-danger text-center'>no record found !!"
-            );
-          } else {
-            dividends.forEach((element) => {
-              var row = `<tr>
-                                <td>${element.Sch_Name}</td>
-                                <td>${parseFloat(element.NAVRS.toFixed(2))}</td>
-                                <td>${parseFloat(
-                                  element.DivAmount.toFixed(2)
-                                )}</td>
-                                <td>${element.RecordDate.split("T")[0]}</td>
-                                <td>${parseFloat(element.year1.toFixed(2))}</td>
-                                <td>${element.year3}</td>
-                               </tr>`;
-              var table = $("#dividend_table");
-              table.append(row);
-            });
-          }
-        },
-      });
-    }
-
-    // dividend_table_date()
-
-    divdend_date_dropdown();
-    get_dividend_category();
+       // Dividend
+       var initial_fund = "5946";
+       $("#fundHouse").change(function () {
+         var div_fund_h = $(this).val();
+         initial_fund = div_fund_h;
+         name_is_div();
+       });
+   
+       function get_dividend_category(get_fund_h) {
+         $.ajax({
+           type: "post",
+           url: "/dividend_category",
+           data: {
+             pass_fund_h: get_fund_h,
+           },
+           success: function (data) {
+             var cate_data = data.data;
+             $("#myCategory").empty();
+             cate_data.forEach((element) => {
+               $("#myCategory").append(
+                 $("<option>").val(element.VCLASSCODE).text(element.VCLASS)
+               );
+             });
+           },
+         });
+       }
+   
+       function dividend_fund_house() {
+         $.ajax({
+           type: "get",
+           url: "/dividend_data",
+           dataType: "json",
+           success: function (data) {
+             var dividend_dropdown = data.data;
+       
+             $("#fundHouse").empty();
+             dividend_dropdown.forEach((element) => {
+               $("#fundHouse").append(
+                 $("<option>").val(element.mf_cocode).text(element.co_name)
+               );
+             });
+             var initialValue = dividend_dropdown.length > 0 ? dividend_dropdown[0].mf_cocode : "";
+             $("#fundHouse").val(initialValue);
+             console.log("Initial value:", initialValue);
+           }
+         });
+       
+         $("#fundHouse").change(function () {
+           var initialValue = $(this).val();
+           console.log("Selected value:", initialValue);
+           get_dividend_category(initialValue);
+         });
+       }
+       
+       dividend_fund_house();
+       
+       function divdend_date_dropdown() {
+         $.ajax({
+           type: "get",
+           url: "/dividend_date",
+           dataType: "json",
+           success: function (data) {
+             var div_date = data.data;
+   
+             div_date.forEach((element) => {
+               var original_val = element.DivDate;
+               encodedDate = original_val.replace(/ /g, "%20");
+   
+               $("#selectDate").append(
+                 $("<option>").val(encodedDate).text(element.DivDate)
+               );
+             });
+           },
+         });
+       }
+   
+       var initial_d_cate = "26";
+       $("#myCategory").change(function () {
+         var div_cate = $(this).val();
+         initial_d_cate = div_cate;
+         name_is_div();
+       });
+   
+       var initial_d_date = "Sep%202023";
+       $("#selectDate").change(function () {
+         var div_o_date = $(this).val();
+         initial_d_date = div_o_date;
+         name_is_div();
+       });
+   
+       function name_is_div() {
+         dividend_table_date(initial_fund, initial_d_cate, initial_d_date);
+       }
+       name_is_div();
+      function dividend_table_date(
+     get_initial_fund,
+     get_initial_d_cate,
+     get_initial_d_date
+   ) {
+     $.ajax({
+       type: "post",
+       url: "/dividend_datas",
+       data: {
+         param1: get_initial_fund,
+         param2: get_initial_d_cate,
+         param3: get_initial_d_date,
+       },
+       success: function (data) {
+         var dividends = data.data;
+         var table = $("#dividend_table").empty();
+   
+         if (!dividends || dividends.length === 0) {
+           table.html("<p class='text-danger text-center'>No records found !!</p>");
+         } else {
+           dividends.forEach((element) => {
+             var row = `<tr>
+                           <td>${element.Sch_Name}</td>
+                           <td>${parseFloat(element.NAVRS).toFixed(2)}</td>
+                           <td>${parseFloat(element.DivAmount).toFixed(2)}</td>
+                           <td>${element.RecordDate.split("T")[0]}</td>
+                           <td>${parseFloat(element.year1).toFixed(2)}</td>
+                           <td>${element.year3}</td>
+                        </tr>`;
+             table.append(row);
+           });
+         }
+       },
+     });
+   }
+   
+       // dividend_table_date()
+   
+       divdend_date_dropdown();
+       get_dividend_category();
 
     // Fund Profile
 

@@ -128,7 +128,8 @@ flex-wrap: wrap;
             <th><div>High</div></th>
             <th><div>Low</div></th>
             <th><div>Close*</div></th>
-            <th><div>Adj Close**</div></th>
+            <!-- <th><div>Adj Close**</div></th> -->
+            <th><div>Change</div></th>
             <th><div>Volume</div></th>
         </tr>
     </thead>
@@ -212,17 +213,33 @@ function get_all_filtered_historical_data() {
                     return "-";
                 }
             }
+            function formatDate(dateString) {
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const [year, month, day] = dateString.split('-');
+    const monthIndex = parseInt(month, 10) - 1; // Subtract 1 as months are 0-indexed in JavaScript
+    return `${parseInt(day, 10)}-${months[monthIndex]}-${year}`;
+}
+
+function formatNumber(num) {
+    return num.toFixed(2); // Example: formats to two decimal places
+}
 
             // Iterate through the historical data and append rows to the table body
             response.historical_data.forEach(function(data) {
+
+                var priceDifference = data.Close - data.Open;
+var percentChange = ((data.Close - data.Open) / data.Open) * 100;
                 var row = $("<tr>");
-                row.append($("<td>").text(data.Date || "-"));
+                    row.append($("<td>").text(formatDate(data.Date || "-")));
+
                 row.append($("<td>").text(formatNumber(data.Open)));
-                row.append($("<td>").text(formatNumber(data.High)));
-                row.append($("<td>").text(formatNumber(data.Low)));
-                row.append($("<td>").text(formatNumber(data.Close)));
-                row.append($("<td>").text(formatNumber(data["Adj Close"])));
-                row.append($("<td>").text(data.Volume || "-"));
+                    row.append($("<td>").text(formatNumber(data.High)));
+                        row.append($("<td>").text(formatNumber(data.Low)));
+                            row.append($("<td>").text(formatNumber(data.Close)));
+                       
+                                row.append($("<td>").text(formatNumber(priceDifference) + " (" + formatNumber(percentChange) + "%)"));
+
+                                    row.append($("<td>").text(data.Volume || "-"));
                 table.find("tbody").append(row);
             });
 
