@@ -14,6 +14,8 @@ from .views import Fetch_Future_Unique_Data
 urlpatterns = [
     path('', views.home, name="home"),
     path('features', views.features, name="features"),
+    path('get_client_ip', views.get_client_ip, name="get_client_ip"),
+
     path('use_cases_strategy', views.use_cases_strategy, name="use_cases_strategy"),
     path('use_cases_invester', views.use_cases_invester, name="use_cases_invester"),
     path('Open_interest_analysis', views.Open_interest_analysis,
@@ -566,6 +568,13 @@ urlpatterns = [
      path("verify_active_api",views.verify_active_api,name="verify_active_api"),
      path("verify_otp_api_activation",views.verify_otp_api_activation,name="verify_otp_api_activation"),
      path('terms_conditions', views.terms_conditions, name='terms_conditions'),
+     path('indices_historical_data', views.indices_historical_data, name='indices_historical_data'),
+     path('get_index_historical_data', views.get_index_historical_data, name='get_index_historical_data'),
+
+
+
+
+
 
 
      

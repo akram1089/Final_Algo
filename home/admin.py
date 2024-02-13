@@ -70,6 +70,10 @@ admin.site.register(AdditionTask_main_time)
 
 
 
+# Register the custom UserAdmin
+admin.site.register(User)
+
+
 
 # admin.py
 
@@ -109,14 +113,3 @@ class BlogAdmin(admin.ModelAdmin):
 
 
 
-from django.contrib.auth.admin import UserAdmin
-class CustomUserAdmin(UserAdmin):
-    model = User
-    list_display = ['username', 'email', 'Mobile_number']
-   
-
-    search_fields = ('username', 'email', 'mobile_number')
-
-
-# Register the custom UserAdmin
-admin.site.register(User, CustomUserAdmin)

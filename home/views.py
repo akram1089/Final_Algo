@@ -492,6 +492,8 @@ def courses_details(request):
 def reset_password(request):
     return render(request, "reset_password.html")
 
+from ipware import get_client_ip
+
 
 def Open_interest_analysis(request):
     if request.method == "POST":
@@ -586,52 +588,19 @@ def Open_interest_analysis(request):
 
 
 
+def get_client_ip(request):
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    print(x_forwarded_for)
+    if x_forwarded_for:
+        ip = x_forwarded_for.split(',')[0]
+        print("ipmain",ip)
+    else:
+        ip = request.META.get('REMOTE_ADDR')
+        print("ipmain",ip)
+    return ip
 
 
 from django.template.loader import get_template
-@csrf_exempt
-def signUp(request):
-    if request.method == "POST":
-        fname = request.POST["name"]
-        email = request.POST["email"]
-        phone_code = request.POST["phone_code"]
-        mobile = request.POST["mobile"]
-        country_id = request.POST.get("country_id", "")
-        state_id = request.POST.get("state_id", "")
-        password = request.POST["password"]
-        Cofirm_password = request.POST["Cofirm_password"]
-        if User.objects.filter(email=email):
-            messages.error(request, 'Email already being taken')
-            return redirect('/')
-        else:
-            Mysignup = User.objects.create_user(
-                full_name=fname,
-                email=email,
-                Mobile_number=mobile,
-                password=password,
-                confirm_password=Cofirm_password,
-                Country=country_id,
-                State=state_id,
-                Phone_code=phone_code,
-            )
-            Mysignup.save()
-
-            email_template = get_template('custom_email_template.html')
-            context = {'username': fname}
-            email_content = email_template.render(context)
-            subject = 'Welcome to Option Perks'
-            message = 'Thank you for signing up on Your Website. We are glad to have you as part of our community.'
-            from_email = 'optionperks@gmail.com'  # Use the same email as configured in settings.py
-            recipient_list = [email]  
-
-            send_mail(subject, message, from_email, recipient_list, html_message=email_content, fail_silently=False)
-            # Picture=Display_picture(image=images)
-            # Picture.save()
-            messages.success(
-                request, 'You have successfully signed up , please login with correct credential')
-            return redirect('/')
-    return render(request,'home.html')
-
 
 
 # views.py
@@ -688,7 +657,7 @@ def user_signUp(request):
             print(otp_value)
            
             user_ip = get_client_ip(request)
-            print(user_ip)
+            print("user_ip",user_ip)
             # Replace the placeholder values with your actual credentials and recipient number
             api_url = "https://login5.spearuc.com/MOBILE_APPS_API/sms_api.php"
             user_name = "kozytran"
@@ -713,13 +682,8 @@ def user_signUp(request):
 
     else:
         return JsonResponse({'error': 'Invalid request method'}, status=400)
-def get_client_ip(request):
-    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
-    if x_forwarded_for:
-        ip = x_forwarded_for.split(',')[0]
-    else:
-        ip = request.META.get('REMOTE_ADDR')
-    return ip
+    
+
 
 
 
@@ -827,7 +791,8 @@ def verify_otp(request):
 
 def all_users(request):
     users = User.objects.all()
-    user_list = [{'id': user.id, 'username': user.username, 'first_name': user.first_name, 'last_name': user.last_name, 'email': user.email, 'date_joined': user.date_joined, 'last_login': user.last_login} for user in users]
+    print(users)
+    user_list = [{'id': user.id, 'username': user.username,'ip_address':user.ip_address ,'first_name': user.first_name, 'last_name': user.last_name, 'email': user.email, 'date_joined': user.date_joined, 'last_login': user.last_login} for user in users]
     
     return JsonResponse({'users': user_list})
 
@@ -1747,6 +1712,9 @@ def global_market(request):
 
 
 def dashboard1(request):
+
+    # Return the IP address
+
     return render(request, 'dashboard1.html')
 
 
@@ -10603,6 +10571,9 @@ def signUp(request):
         state_id = request.POST.get("state_id", "")
         password = request.POST["password"]
         Cofirm_password = request.POST["Cofirm_password"]
+        user_ip = get_client_ip(request)
+        print("user_ip",user_ip)
+     
         if User.objects.filter(email=email):
             messages.error(request, 'Email already being taken')
             return redirect('/')
@@ -10616,6 +10587,7 @@ def signUp(request):
                 Country=country_id,
                 State=state_id,
                 Phone_code=phone_code,
+                ip_address_user=user_ip,
             )
             Mysignup.save()
 
@@ -10691,7 +10663,7 @@ def user_signUp(request):
             print(otp_value)
            
             user_ip = get_client_ip(request)
-            print(user_ip)
+            print("user_ip",user_ip)
             # Replace the placeholder values with your actual credentials and recipient number
             api_url = "https://login5.spearuc.com/MOBILE_APPS_API/sms_api.php"
             user_name = "kozytran"
@@ -10716,13 +10688,8 @@ def user_signUp(request):
 
     else:
         return JsonResponse({'error': 'Invalid request method'}, status=400)
-def get_client_ip(request):
-    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
-    if x_forwarded_for:
-        ip = x_forwarded_for.split(',')[0]
-    else:
-        ip = request.META.get('REMOTE_ADDR')
-    return ip
+
+        
 
 
 
@@ -10811,10 +10778,11 @@ def verify_otp(request):
         print(secret_key)
         print(verify_otp)
         print(veri_otp.now())
+        user_ip = get_client_ip(request)
 
 
         if veri_otp.verify(otp_value):
-            user = User.objects.create_user(full_name=name, password=password,Phone_code=phone_code, Mobile_number=mobile,confirm_password=confirm_password,terms_of_service=terms_of_service,secret_key=secret_key)
+            user = User.objects.create_user(full_name=name, password=password,Phone_code=phone_code, Mobile_number=mobile,confirm_password=confirm_password,terms_of_service=terms_of_service,secret_key=secret_key,ip_address_user=user_ip)
             user.save()
             print(user.is_active)
     
@@ -20536,3 +20504,46 @@ def get_user_strategy_results(request):
 
 def terms_conditions(request):
     return render(request, "terms_conditions.html")
+
+def indices_historical_data(request):
+    return render(request, "indices_historical_data.html")
+
+
+@csrf_exempt
+def get_index_historical_data(request):
+    if request.method == 'POST':
+        frequency = request.POST.get('frequency')
+        symbol = request.POST.get('symbol')
+        start_date = request.POST.get('start_date')
+        end_date = request.POST.get('end_date')
+
+        print(frequency)
+        print(symbol)
+        print(start_date)
+        print(end_date)
+
+        try:
+            # Convert start_date and end_date to timestamps
+            start_timestamp = datetime.datetime.strptime(start_date, '%m/%d/%Y').timestamp()
+            end_timestamp = datetime.datetime.strptime(end_date, '%m/%d/%Y').timestamp()
+        except ValueError:
+            return JsonResponse({'error': 'Invalid date format. Please use MM/DD/YYYY.'}, status=400)
+
+        events = 'history'
+        url = f'https://query1.finance.yahoo.com/v7/finance/download/{symbol}?period1={int(start_timestamp)}&period2={int(end_timestamp)}&interval={frequency}&events={events}&includeAdjustedClose=true'
+        
+        try:
+            stockdata = pd.read_csv(url)
+            print(stockdata)
+            stockdata.replace({np.nan: None}, inplace=True)
+            # Convert DataFrame to a list of dictionaries
+            data_list = stockdata.to_dict(orient='records')
+            return JsonResponse({"historical_data": data_list})
+        except Exception as e:
+            # Log the error and return a user-friendly message
+            print(f"Error fetching data: {e}")
+            return JsonResponse({'error': 'Failed to fetch historical data. Please try again later.'}, status=500)
+            
+    else:
+        # Return a JSON response indicating failure (if the request method is not POST)
+        return JsonResponse({'error': 'Invalid request method.'}, status=400)

@@ -1,0 +1,376 @@
+{% extends "base_dashboard.html" %}
+
+{% block title %}Indices Historical Data{% endblock title %}
+{% load static %}
+{% block dashboard_body %}
+
+<style>
+  .date_time_dropdown {
+        display: none; /* Initially hide the dropdown */
+
+    padding: 10px;
+ background-color: white;
+ z-index: 9;
+        box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+    }
+
+    .main_date_range_filter{
+        position: relative;
+        display: flex;
+        align-items: center;
+
+        gap: 0.4rem;
+    }
+
+    .date_time_dropdown{
+        position: absolute;
+
+        top: 40px;
+    left: 136px;
+}
+
+    .date_time_filter_btn {
+        width: 16rem;
+    }
+
+    .main_top_filter_historical_data{
+        display: flex;
+    align-items: center;
+flex-wrap: wrap;
+    gap: 1rem;
+    }
+
+    .main_frequency_filter,.main_index_symbol_filter{
+        display: flex;
+        gap: 0.4rem;
+        align-items: center;
+    }
+
+    .main_index_symbol_filter label,
+    .main_frequency_filter label,
+    .main_date_range_filter label{
+        white-space: nowrap;
+    }
+    .date_time_dropdown input{
+        width: 12rem;
+    }
+
+    .main_all_index_historical_table_header{
+        box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+        padding: 1rem;
+    border-radius: 10px;
+    border: 1px solid #e4e4e4;
+    }
+</style>
+
+
+
+<div class="container mt-4" style="margin-bottom:200px ;">
+
+    <h5 class="pb-2">Index Historical Data</h5>
+
+<div class="main_all_index_historical_table_header">
+<div class="main_top_filter_historical_data"> 
+
+    <div class="main_index_symbol_filter">
+        <label for="symbol_filter">Select Index :</label>
+   <select name="" id="symbol_filter" class="form-select">
+
+
+    <option value="%5ENSEI">Nifty</option>
+    <option value="%5ENSEBANK">Bank Nifty</option>
+    <option value="NIFTY_FIN_SERVICE.NS">Fin Nifty</option>
+</select>
+    </div>
+
+    <div class="main_date_range_filter">
+    <label for="range_date_btn">Date Range :</label>
+  <button class="date_time_filter_btn form-select bg-light text-dark" id="range_date_btn"> 02/10/2020 - 02/10/2024 </button>
+
+
+        <div class="date_time_dropdown">
+            <label for="from_date">Start Date :</label>
+            <input type="date" class="form-control" name="" id="from_date">
+            <label for="to_date">End Date :</label>
+            <input type="date" class="form-control" name="" id="to_date">
+
+            <div class="action_btn d-flex justify-content-end gap-2 mt-3">
+
+                <div class="button btn btn-primary btn-sm" id="done_date">Done</div>
+                <div class="button btn btn-outline-primary btn-sm" id="cancel_date">Cancel</div>
+            </div>
+        </div>
+    </div>
+    <div class="main_frequency_filter">
+        <label for="frequency_filter">Frequency :</label>
+        <select name="" id="frequency_filter" class="form-select">
+
+            <option value="1d">Daily</option>
+            <option value="1wk">Weekly</option>
+            <option value="1mo">Monthly</option>
+        </select>
+
+    </div>
+
+    <div class="main_apply_action">
+<button class="apply_button  btn btn-success">Apply</button>
+    </div>
+
+</div>
+
+
+
+<table class="table mt-3" id="historical_data_table">
+    <thead>
+        <tr>
+            <th><div>Date</div></th>
+            <th><div>Open</div></th>
+            <th><div>High</div></th>
+            <th><div>Low</div></th>
+            <th><div>Close*</div></th>
+            <th><div>Adj Close**</div></th>
+            <th><div>Volume</div></th>
+        </tr>
+    </thead>
+    <tbody>
+
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+<script>
+
+    $(document).ready(function () {
+
+        $("#done_date").click(function () {
+            $(".date_time_dropdown").hide()
+            
+        })
+        $("#cancel_date").click(function () {
+            $(".date_time_dropdown").hide()
+            
+        })
+
+
+
+        $(".apply_button").click(function () {
+    // Get the selected values of the select elements
+    get_all_filtered_historical_data()
+
+});
+function get_all_filtered_historical_data() {
+    
+
+    var frequency = $("#frequency_filter").val();
+    var symbol = $("#symbol_filter").val();
+    
+    // Get the text content of the button
+    var dateRangeText = $("#range_date_btn").text();
+    // Split the text to get start and end dates
+    var dates = dateRangeText.split(" - ");
+    var startDate = dates[0];
+    var endDate = dates[1];
+
+    // Prepare data to be sent to the backend
+    var requestData = {
+        'frequency': frequency,
+        'symbol': symbol,
+        'start_date': startDate,
+        'end_date': endDate
+    };
+
+    // Make AJAX request to Django backend
+    $.ajax({
+        url: '/get_index_historical_data', // URL of the Django backend endpoint
+        type: 'POST', // You can change this to 'POST' if needed
+        data: requestData,
+        success: function(response) {
+            // Handle successful response from the backend
+            console.log('Response from backend:', response.historical_data);
+
+            var table = $("#historical_data_table")
+            table.find("tbody").empty();
+            function formatNumber(num) {
+                if (typeof num === 'number') {
+                    return num.toFixed(2);
+                } else {
+                    return "-";
+                }
+            }
+
+            // Iterate through the historical data and append rows to the table body
+            response.historical_data.forEach(function(data) {
+                var row = $("<tr>");
+                row.append($("<td>").text(data.Date || "-"));
+                row.append($("<td>").text(formatNumber(data.Open)));
+                row.append($("<td>").text(formatNumber(data.High)));
+                row.append($("<td>").text(formatNumber(data.Low)));
+                row.append($("<td>").text(formatNumber(data.Close)));
+                row.append($("<td>").text(formatNumber(data["Adj Close"])));
+                row.append($("<td>").text(data.Volume || "-"));
+                table.find("tbody").append(row);
+            });
+
+        },
+        error: function(xhr, status, error) {
+            // Handle error response from the backend
+            console.error('Error:', error);
+        }
+    });
+
+   }
+
+
+
+        var from_date_input = $('#from_date');
+        var to_date_input = $('#to_date');
+        var date_filter_btn = $('.date_time_filter_btn');
+
+        // Function to set the initial date range and update button text
+        function setInitialDateRange() {
+    var currentDate = new Date();
+    var oneMonthBack = new Date(currentDate);
+    oneMonthBack.setMonth(currentDate.getMonth() - 1);
+
+    from_date_input.val(oneMonthBack.toISOString().slice(0,10));
+    to_date_input.val(currentDate.toISOString().slice(0,10));
+
+    updateButtonDateText(oneMonthBack, currentDate);
+}
+
+        // Function to update the button text with the selected dates
+        function updateButtonDateText(fromDate, toDate) {
+            var fromDateStr = formatDate(fromDate);
+            var toDateStr = formatDate(toDate);
+            console.log('updateButtonDateText');
+            
+            date_filter_btn.text(fromDateStr + " - " + toDateStr);
+        }
+
+        // Function to format date as "MM/DD/YYYY"
+        function formatDate(date) {
+            var mm = date.getMonth() + 1;
+            var dd = date.getDate();
+            return [(mm>9 ? '' : '0') + mm, (dd>9 ? '' : '0') + dd, date.getFullYear()].join('/');
+        }
+
+        // Set initial date range and button text
+        setInitialDateRange();
+
+        // Disable weekends in to_date
+
+        to_date_input.on('input', function () {
+
+            console.log('Changing to_date');
+            
+    var from_date_input = $('#from_date');
+    var inputDate = $(this).val();
+    
+    // Store the existing value of the input
+    var existingValue = $(this).val();
+    
+    // Check if the input date is empty
+    if (!inputDate) {
+        // If the input is empty, do not perform any further action
+        return;
+    }
+    
+    var selectedDate = new Date(inputDate);
+    var today = new Date();
+    var dayOfWeek = selectedDate.getDay(); // 0 for Sunday, 1 for Monday, etc.
+
+    // Check if selected date is a weekend or beyond today
+    if (dayOfWeek === 6 || dayOfWeek === 0 || selectedDate < new Date(from_date_input.val()) || selectedDate > new Date()) {
+        if (dayOfWeek === 6 || dayOfWeek === 0) {
+            alert("You can't select Saturday or Sunday for the To Date.");
+        } else if (selectedDate < new Date(from_date_input.val())) {
+            alert("To Date cannot be before From Date.");
+        } else {
+            alert("To Date cannot be beyond today.");
+        }
+        // Set back the existing value if an error occurs
+        $(this).val(existingValue);
+    } else {
+        // Update button text only if the input date is valid
+        updateButtonDateText(new Date(from_date_input.val()), selectedDate);
+    }
+});
+
+        // Update button text when from_date changes
+    // Update button text when from_date changes
+from_date_input.on('input', function () {
+    var inputDate = $(this).val();
+    var existingValue = $(this).val();
+    
+    // Check if the input date is empty
+    if (!inputDate) {
+        // If the input is empty, do not perform any further action
+        return;
+    }
+    
+    var selectedDate = new Date(inputDate);
+    var toDate = new Date(to_date_input.val());
+
+    // Check if from_date is after to_date, if so, set to_date to from_date
+    if (selectedDate > toDate) {
+
+        alert("To Date cannot be before From Date. To Date has been adjusted.");
+     $(this).val(existingValue);
+
+    } else if (selectedDate > new Date()) {
+        alert("From Date cannot be beyond today.");
+        $(this).val(existingValue);
+    } else {
+        updateButtonDateText(selectedDate, toDate);
+    }
+});
+
+
+        // Button click event to trigger some action with selected date range
+        date_filter_btn.click(function () {
+            var fromDate = from_date_input.val();
+            var toDate = to_date_input.val();
+         
+            // Perform some action with selected date range
+        });
+        get_all_filtered_historical_data()
+    });
+
+</script>
+
+</div>
+
+<script>
+    $(document).ready(function () {
+
+        $(".date_time_filter_btn").click(function () {
+
+            $(".date_time_dropdown").fadeToggle()
+            
+        })
+
+        $(document).click(function(event) {
+      var $target = $(event.target);
+      if(!$target.closest('.date_time_filter_btn').length && !$target.closest('.date_time_dropdown').length) {
+        $(".date_time_dropdown").fadeOut();
+      }
+    });
+
+    })
+</script>
+{% endblock dashboard_body %}
