@@ -897,7 +897,7 @@ border: 1px solid #4399eb !important;
     width: 23.4rem;
     box-shadow: 0px 0px 1px 2px #4399eb3b;
     position: absolute;
-    z-index: 99;
+    z-index: 9;
     border-radius: 8px;
     background-color: white;
     display: none;
@@ -14046,6 +14046,8 @@ margin-bottom: 38px;
     });
 
     function loadOptionData(selectedOption, selectedExpiry) {
+
+      $("#spinner").show()
       $.ajax({
         url:
           '{% url "get_option_strategy_optimizer_option_data" %}?selected_option=' +
@@ -14054,6 +14056,7 @@ margin-bottom: 38px;
           selectedExpiry,
         type: "GET",
         success: function (response) {
+          $("#spinner").hide()
           //////console.log(response.option_data);
           var optionExpiryDropdown = $("#optionExpiryDropdown");
           optionExpiryDropdown.empty();
