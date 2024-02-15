@@ -1711,6 +1711,7 @@ if (allNegative) {
         },
         success: function (data) {
           var all_data = data.data;
+          console.log(all_data)
           $("#what_in_out_body").empty();
           all_data.forEach((element) => {
             var row = `<tr>
@@ -1718,18 +1719,23 @@ if (allNegative) {
                        <td>${element.NO_SHARES}</td>
                        <td>${parseFloat(element.mktvalue).toFixed(2)}</td>
                     </tr>`;
-            var table = $("#what_in_out_body");
-            table.append(row);
+                    $("#what_in_out_body").append(row);
           });
 
-          $("#what_in_out").DataTable({
-            "dom": '<"top"lf>rt<"bottom"ip><"clear">',
-            "language": {
-            "search": '<div class="custom-search" style="position: relative"><i class="bi bi-search" style="position: absolute;right: 7px;top: 10px;"></i></i><input class="form-control" type="search" placeholder="Search" aria-controls="volume_shocker_table"></div>'
-           }
-          });
-          $('#what_in_out_filter input:eq(1)').hide();
-          $('#what_in_out_filter input[type="search"]').attr('placeholder', 'Search...');
+        //   if ($.fn.DataTable.isDataTable('#what_in_out')) {
+        //     $('#what_in_out').DataTable().destroy();
+        // }
+
+        // // Reinitialize DataTable with updated data
+        // $("#what_in_out").DataTable({
+        //     "dom": '<"top"lf>rt<"bottom"ip><"clear">',
+        //     "language": {
+        //         "search": '<div class="custom-search" style="position: relative"><i class="bi bi-search" style="position: absolute;right: 7px;top: 10px;"></i></i><input class="form-control" type="search" placeholder="Search" aria-controls="volume_shocker_table"></div>'
+        //     }
+        // });
+        // console.log('DataTable initialized:', $.fn.DataTable.isDataTable('#what_in_out'));
+        //   $('#what_in_out_filter input:eq(1)').hide();
+        //   $('#what_in_out_filter input[type="search"]').attr('placeholder', 'Search...');
         },
       });
     }
@@ -1798,11 +1804,11 @@ if (allNegative) {
            dataType: "json",
            success: function (data) {
              var div_date = data.data;
-   
+             
              div_date.forEach((element) => {
                var original_val = element.DivDate;
                encodedDate = original_val.replace(/ /g, "%20");
-   
+               console.log(encodedDate)
                $("#selectDate").append(
                  $("<option>").val(encodedDate).text(element.DivDate)
                );
@@ -1818,7 +1824,7 @@ if (allNegative) {
          name_is_div();
        });
    
-       var initial_d_date = "Sep%202023";
+       var initial_d_date = "Apr%202024";
        $("#selectDate").change(function () {
          var div_o_date = $(this).val();
          initial_d_date = div_o_date;
@@ -1844,6 +1850,7 @@ if (allNegative) {
        },
        success: function (data) {
          var dividends = data.data;
+         
          var table = $("#dividend_table").empty();
    
          if (!dividends || dividends.length === 0) {

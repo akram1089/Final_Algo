@@ -207,7 +207,7 @@
         var expiry_date = ""
         var strike_val = "10" // Initialize with a default value if needed
 
-
+        console.log(initial_filter_val)
 
         $(".stock_filter").click(function () {
             main_initial_val = $(this).data("value")
@@ -374,7 +374,7 @@
                 },
                 success: function (data) {
                     var spot_data = data.resultData
-                    console.log(spot_data);
+                 
                     $(".spot_price").empty()
 
                     var creatSpot_data = `<div class=" spot_data d-flex gap-3">
@@ -416,7 +416,7 @@
                 },
                 success: function (data) {
                     var ex_dates = data.resultData
-                    console.log(ex_dates);
+                    
                     var select = $("<select>", {
                         id: "dateDropdown",
                         class: "form-select form-select-sm"
@@ -490,6 +490,7 @@
                 },
                 success: function (data) {
                     var datas = data.resultData;
+                    
                     var strikePrices = [];
                     var callsOIs = [];
                     var putsOIs = [];
@@ -776,6 +777,9 @@
                                     borderColor: '#2196f3',
                                     borderWidth: 2,
                                     fill: false,
+                                    pointStyle: 'circle', // Set point style to 'rect' (rectangle)
+                                    pointRadius: 0,    // Adjust point radius to control the size (0 to remove points)
+                                    pointHoverRadius: 8,
                                     yAxisID: 'pcr-y-axis'
                                 },
                                 {
@@ -784,8 +788,12 @@
                                     borderColor: '#f96c92',
                                     borderWidth: 2,
                                     fill: false,
+                                    pointStyle: 'circle', // Set point style to 'rect' (rectangle)
+                                    pointRadius: 0,    // Adjust point radius to control the size (0 to remove points)
+                                    pointHoverRadius: 8,
                                     yAxisID: 'index-y-axis'
                                 }
+                                
                             ]
                         },
                         options: {
@@ -823,13 +831,17 @@
                                     }
                                 ]
                             }
+
                         }
                     });
 
 
                 },
+
             })
         }
+
+        
         put_call_ratio_data()
 
         var volumeChart
@@ -886,6 +898,9 @@
                                     borderColor: '#2196f3',
                                     borderWidth: 2,
                                     fill: false,
+                                    pointStyle: 'circle', // Set point style to 'rect' (rectangle)
+                                    pointRadius: 0,    // Adjust point radius to control the size (0 to remove points)
+                                    pointHoverRadius: 8,
                                     yAxisID: 'pcr-y-axis'
                                 },
                                 {
@@ -894,6 +909,9 @@
                                     borderColor: '#f96c92',
                                     borderWidth: 2,
                                     fill: false,
+                                    pointStyle: 'circle', // Set point style to 'rect' (rectangle)
+                                    pointRadius: 0,    // Adjust point radius to control the size (0 to remove points)
+                                    pointHoverRadius: 8,
                                     yAxisID: 'index-y-axis'
                                 }
                             ]
@@ -933,6 +951,7 @@
                                     }
                                 ]
                             }
+                            
                         }
                     });
 
@@ -940,6 +959,7 @@
                 }
             })
         }
+
         volume_pcr_data()
 
 
@@ -1313,7 +1333,11 @@
                     var stock_pcr = data.resultData
                     var all_pcr_data = stock_pcr.oiDatas
                     console.log(all_pcr_data);
-                    var times = all_pcr_data.map(item => item.time);
+                    var times = all_pcr_data.map(item => {
+                        // Split datetime string by 'T' and take the second part (time)
+                        return item.time.split('T')[1];
+                    });
+                    console.log(times+"Pcr_stock")
                     var pcrValues = all_pcr_data.map(item => item.pcr);
                     var indexCloseValues = all_pcr_data.map(item => item.index_close);
 
@@ -1334,6 +1358,9 @@
                                     borderColor: '#2196f3',
                                     borderWidth: 2,
                                     fill: false,
+                                    pointStyle: 'circle', // Set point style to 'rect' (rectangle)
+                                    pointRadius: 0,    // Adjust point radius to control the size (0 to remove points)
+                                    pointHoverRadius: 8,
                                     yAxisID: 'left-y-axis', // Assign this dataset to the left y-axis
                                 },
                                 {
@@ -1342,6 +1369,9 @@
                                     borderColor: '#f96c92',
                                     borderWidth: 2,
                                     fill: false,
+                                    pointStyle: 'circle', // Set point style to 'rect' (rectangle)
+                                    pointRadius: 0,    // Adjust point radius to control the size (0 to remove points)
+                                    pointHoverRadius: 8,
                                     yAxisID: 'right-y-axis', // Assign this dataset to the right y-axis
                                 },
                             ],
@@ -1349,30 +1379,41 @@
                         options: {
                             maintainAspectRatio: false, // Disable the aspect ratio
                             scales: {
-                                xAxis: {
-                                    title: {
-                                        display: true,
-                                        text: 'Time',
+                                xAxes: [{ // Use 'xAxes' for the x-axis
+                                   gridLines: {
+                                        display: false,
+                                        color: "#FFFFFF"
                                     },
-                                },
-                                left: {
+                                    scaleLabel: {
+                                        display: true,
+                                        labelString: 'Time', // Set x-axis title here
+                                    },
+                                    
+                                   
+                                }],
+                                yAxes: [{
                                     id: 'left-y-axis',
                                     position: 'left',
-                                    title: {
+                                    scaleLabel: {
                                         display: true,
-                                        text: 'PCR',
+                                        labelString: 'PCR', // Set left y-axis title here
                                     },
-                                },
-                                right: {
+                                    gridLines: {
+                                      display: false
+                                    }
+                                }, {
                                     id: 'right-y-axis',
                                     position: 'right',
-                                    title: {
+                                    scaleLabel: {
                                         display: true,
-                                        text: 'Index Close',
+                                        labelString: 'Index Close', // Set right y-axis title here
                                     },
-                                },
+                                   
+                                }],
                             },
                         },
+                        
+                        
                     });
 
 
@@ -1391,18 +1432,17 @@
                     stock_live_max_symbol: stockName,
                 },
                 success: function (data) {
-                    var live_chart = data.resultData
-                    var labels = live_chart.map(item => item.symbol_name);
+                    var live_chart = data.resultData;
+                    var labels = live_chart.map(item => item.strike_price); // Change to strike prices
                     var cpValues = live_chart.map(item => item.cp);
                     var ppValues = live_chart.map(item => item.pp);
-
+        
                     var ctx = document.getElementById('myLiveStockchart').getContext('2d');
-
-
+        
                     if (myLiveChart) {
-                        myLiveChart.destroy()
+                        myLiveChart.destroy();
                     }
-
+        
                     myLiveChart = new Chart(ctx, {
                         type: 'bar',
                         data: {
@@ -1426,7 +1466,7 @@
                                 x: {
                                     title: {
                                         display: true,
-                                        text: 'Symbol Name'
+                                        text: 'Strike Price' // Change x-axis title to 'Strike Price'
                                     }
                                 },
                                 y: {
@@ -1438,8 +1478,8 @@
                             }
                         }
                     });
-                },
-            })
+                }
+            });
         }
 
         function stocks_data() {
