@@ -747,23 +747,16 @@ z-index: 9;
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WDSFTLPW"
   height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <!-- End Google Tag Manager (noscript) -->
-  <div class="swiper-container" style="overflow: hidden; background: linear-gradient(0deg, rgba(9,50,145,1) 22%, rgba(28,116,250,1) 89%, rgba(28,116,250,1) 89%); color: white;   display: flex;
-  height: 30px;
-  position: relative;
-">
-    <div class="swiper-wrapper">
-      <!-- Slides will be added here dynamically through AJAX -->
+  <div class="swiper-container" id="swiper-container" style="overflow: hidden; background: linear-gradient(0deg, rgba(9,50,145,1) 22%, rgba(28,116,250,1) 89%, rgba(28,116,250,1) 89%); color: white; display: flex; height: 30px; position: relative;">
+    <div class="swiper-wrapper" id="swipper-wrapper">
+        <!-- Slides will be added here dynamically through AJAX -->
     </div>
-    <div class="swiper-button-pause-resume"
-      style="position: absolute; right: -2px; z-index: 99; background: linear-gradient(0deg, rgba(9,50,145,1) 22%, rgba(28,116,250,1) 89%, rgba(28,116,250,1) 89%); padding: 3px 17px;">
-
-      <box-icon name='pause' style="background-color: white; cursor: pointer;     border-radius: 7px;"></box-icon>
-      <box-icon name='play'
-        style="background-color: white; display: none; cursor: pointer;border-radius: 7px; "></box-icon>
-
+    <div class="swiper-button-pause-resume" style="position: absolute; right: -2px; z-index: 99; background: linear-gradient(0deg, rgba(9,50,145,1) 22%, rgba(28,116,250,1) 89%, rgba(28,116,250,1) 89%); padding: 3px 17px;">
+        <box-icon name='pause' style="background-color: white; cursor: pointer; border-radius: 7px;"></box-icon>
+        <box-icon name='play' style="background-color: white; display: none; cursor: pointer;border-radius: 7px;"></box-icon>
     </div>
     <div class="swiper-pagination"></div>
-  </div>
+</div>
 
 
   <header class="flex-md-nowrap p-0" data-bs-theme="light" id="dashboard_nav"
@@ -5135,18 +5128,18 @@ font-weight: 400 !important;
 <script>
   // AJAX call to fetch data and populate Swiper
   function fetchDataAndPopulateSwiper() {
-    $.ajax({
-      url: '/base_api_border_top',
-      method: 'GET',
-      dataType: 'json',
-      success: function (data) {
-        // Clear existing slides
-        $('.swiper-wrapper').empty();
-        // Add new slides
-        for (var i = 0; i < data.length; i++) {
-          var border_color = data[i].pChange < 0 ? "text_danger" : "text-green";
-          var icon_border = data[i].pChange < 0 ? "down" : "up";
-          var slideHtml = `
+      $.ajax({
+          url: '/base_api_border_top',
+          method: 'GET',
+          dataType: 'json',
+          success: function (data) {
+              // Clear existing slides
+              $('#swipper-wrapper').empty();
+              // Add new slides
+              for (var i = 0; i < data.length; i++) {
+                  var border_color = data[i].pChange < 0 ? "text_danger" : "text-green";
+                  var icon_border = data[i].pChange < 0 ? "down" : "up";
+                  var slideHtml = `
                       <div class="swiper-slide" id="swiper_top_bar">
                           <span class="d-flex align-items-center gap-1">
                               <p style="margin-bottom:auto;">${data[i].symbol}</p>
@@ -5155,64 +5148,61 @@ font-weight: 400 !important;
 
                           <span class="d-flex align-items-start ${border_color}">
                               <i class="bi bi-caret-${icon_border}-fill"></i>
-                              <p style="margin-bottom:auto;">  ${data[i].pChange}% </p>
+                              <p style="margin-bottom:auto;">${data[i].pChange}% </p>
                           </span>
-
                       </div>
                   `;
-          $('.swiper-wrapper').append(slideHtml);
-        }
-        // Initialize Swiper after data is loaded and slides are added
-        initSwiper();
-      },
-      error: function (error) {
-        // console.error('Error fetching data:', error);
-      }
-    });
+                  $('#swipper-wrapper').append(slideHtml);
+              }
+              // Initialize Swiper after data is loaded and slides are added
+              initSwiper('#swiper-container'); // Initialize Swiper with specific container ID
+          },
+          error: function (error) {
+              // console.error('Error fetching data:', error);
+          }
+      });
   }
 
   // Initialize Swiper
-  function initSwiper() {
-    var swiper = new Swiper('.swiper-container', {
+  function initSwiper(containerId) {
+      var swiper = new Swiper(containerId, {
+          slidesPerView: 'auto',
+          spaceBetween: 5,
+          autoplay: {
+              delay: 100,
+              disableOnInteraction: false,
+          },
+          speed: 4000,
+          effect: 'slide',
+      });
 
-      slidesPerView: 'auto', // Automatically adjust the number of slides visible based on container's size
-      spaceBetween: 5, // Adjust the space between slides as needed
-      autoplay: {
-        delay: 100, // Adjust the delay as needed (in milliseconds)
-        disableOnInteraction: false, // Autoplay continues even when user interacts with slides
-      },
-      speed: 4000, // Adjust the slide transition speed (in milliseconds)
-      effect: 'slide', // You can try other effects like 'fade', 'cube', 'coverflow', etc.
-    });
+      var pauseIcon = document.querySelector('[name="pause"]');
+      var playIcon = document.querySelector('[name="play"]');
+      var isPaused = false;
 
-    var pauseIcon = document.querySelector('[name="pause"]');
-    var playIcon = document.querySelector('[name="play"]');
+      pauseIcon.addEventListener('click', function () {
+          if (!isPaused) {
+              swiper.autoplay.stop();
+              isPaused = true;
+              pauseIcon.style.display = 'none';
+              playIcon.style.display = 'block';
+          }
+      });
 
-    var isPaused = false;
-
-    pauseIcon.addEventListener('click', function () {
-      if (!isPaused) {
-        swiper.autoplay.stop();
-        isPaused = true;
-        pauseIcon.style.display = 'none';
-        playIcon.style.display = 'block';
-      }
-    });
-
-    playIcon.addEventListener('click', function () {
-      if (isPaused) {
-        swiper.autoplay.start();
-        isPaused = false;
-        playIcon.style.display = 'none';
-        pauseIcon.style.display = 'block';
-      }
-    });
-
+      playIcon.addEventListener('click', function () {
+          if (isPaused) {
+              swiper.autoplay.start();
+              isPaused = false;
+              playIcon.style.display = 'none';
+              pauseIcon.style.display = 'block';
+          }
+      });
   }
 
   // Call fetchDataAndPopulateSwiper function to load data initially and populate Swiper
   fetchDataAndPopulateSwiper();
 </script>
+
 <script>
 
    
