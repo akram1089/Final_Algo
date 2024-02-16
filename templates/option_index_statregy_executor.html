@@ -238,7 +238,7 @@ border: 1px solid #4399eb !important;
   }
 
   .background_opiton_closest {
- border-left: 4px solid green !important;
+ border-bottom: 2px solid green !important;
     color: black !important;
   }
 
@@ -968,6 +968,7 @@ border: 1px solid #4399eb !important;
     align-items: center !important; 
     justify-content: center;
     row-gap: 0.6rem;
+    border-radius: 10px;
   }
 
   #future_buildUP:hover,
@@ -978,8 +979,8 @@ border: 1px solid #4399eb !important;
   .btn_outline_primary:hover,
   .btn_add_broker:hover,
   #saveStrategies:hover {
-    background-color: #e9f5ff !important;
-    border-radius: 10px;
+
+
     color: #2196f3 !important;
   }
 
@@ -7089,7 +7090,7 @@ $(".all_strategy_filter").removeClass("main_all_strategy_active")
     .build_strategy_main{
       background: #00a900;
       border: none;
-    color: white;
+    color: white !important;
     height: 37px;
     border-radius: 5px;
     font-size: 14px !important;
@@ -7303,7 +7304,7 @@ $(".all_strategy_filter").removeClass("main_all_strategy_active")
 }
 .main_cart_navigations_top_features a:hover  {
 
-  background-color: #e9f5ff !important;
+
 
     border-radius: 10px;
     color: #2196f3 !important;
@@ -7347,7 +7348,7 @@ $(".all_strategy_filter").removeClass("main_all_strategy_active")
     align-items: center;
 }
 #future_buildUP:hover a{
-  background-color: #e9f5ff !important;
+
     border-radius: 10px;
     color: #2196f3 !important;
 }
@@ -7376,11 +7377,19 @@ $(".all_strategy_filter").removeClass("main_all_strategy_active")
 <div class="right_side_top_strategies col-md-12 col-lg-8 col-sm-12">
 
   <button id="future_buildUP" class="d-flex align-items-center">
+    <a href="{% url 'bulk_deal_data_page' %}" target="_blank">
+
+      <i class="bi bi-box"></i>
+
+      <p class="m-0">Bulk Deals</p>
+    </a>
+  </button>
+  <button id="future_buildUP" class="d-flex align-items-center">
     <a href="{% url 'market_heavy' %}" target="_blank">
 
       <i class="bi bi-bar-chart"></i>
 
-      <p class="m-0">Market Heavy Wgt</p>
+      <p class="m-0">Heavy Wgt</p>
     </a>
   </button>
   <button id="future_buildUP" class="d-flex align-items-center">
@@ -8320,15 +8329,29 @@ text-align: center !important;
           </div>
           <div class="main_strategy_builder_btn">
             <button class="build_strategy_main" type="button" data-bs-toggle="offcanvas" data-bs-target="#optionChain_canvas"
-              aria-controls="optionChain_canvasLabel" id="buid_custom_strategy_btn" style="color: white;">Build Your Strategy</button>
+              aria-controls="optionChain_canvasLabel" id="buid_custom_strategy_btn" style="color: white !important ;">Build Your Strategy</button>
           </div>
 
           <style>
-
+            .atm-label{
+              position: absolute;
+    top: 99%;
+    z-index: 9;
+    color: white;
+    background: green;
+    padding: 1px 9px;
+    border-radius: 10px;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 11px;
+            }
+        .strikePrice_main_bg {
+          position: relative;
+        }
 .build_strategy_main{
       background: #00a900 !important;
       border: none;
-    color: white;
+    color: white !important;
     height: 37px;
     border-radius: 5px;
     font-size: 14px;
@@ -8757,7 +8780,7 @@ margin-bottom: 38px;
 
             <div class="main_options_tables">
 
-              <div class="main_option_chain_table">
+              <div class="main_option_chain_table position-relative">
                 <table class="table table-hover table-bordered">
                   <thead>
                     <th class="text-end">Call IV</th>
@@ -8776,6 +8799,8 @@ margin-bottom: 38px;
 
                   <tbody class="strategy_option_chain"></tbody>
                 </table>
+
+                <div class="atm_main">22250</div>
               </div>
 
               <div class="main_option_oi">
@@ -14578,6 +14603,9 @@ margin-bottom: 38px;
                         <div class="${valid_spot_value_strategies} d-flex align-items-center gap-1">
                             <p class="last_traded_price">${response.spot_data.resultData.last_trade_price}</p>
                             <i class='bx bxs-${arrow_valid}-arrow' id="spot_arrow"></i>
+
+
+                            <p class="change_change_per">${response.spot_data.resultData.change_per} </p>
                             <p>${response.spot_data.resultData.change_value}(${response.spot_data.resultData.change_per})</p>
                             
                             </div>
@@ -14741,7 +14769,7 @@ margin-bottom: 38px;
           
             </td>
             <td class="text-center strikePrice_main_bg bg-light text-dark">
-                <div class='strike_price'>${optionChain.strike_price}</div>
+                <div class='strike_price strike_main_optionchain' >${optionChain.strike_price}</div>
                 <div class=d-none>
                     <div class="expiry_date">${option_expiry_date}</div>
                     <div class="opiton_lot_size">${lot_size_value_option}</div>
@@ -14862,27 +14890,39 @@ margin-bottom: 38px;
 // Function to handle scrolling for the main_option_chain_table container
 function scrollToClosestStrikeTable() {
 
-    $(".main_option_chain").each(function () {
-      var $strikePrice = $(this).find(".strike_price");
-      var currentStrikePrice = parseInt($strikePrice.text());
+$(".main_option_chain").each(function () {
+  var $strikePrice = $(this).find(".strike_main_optionchain");
+  var $strikePrice_main_bg = $(this).find(".strikePrice_main_bg");
+  var currentStrikePrice = parseInt($strikePrice.text());
 
-      if (currentStrikePrice === closestStrikePrice) {
-        $(this).addClass("background_opiton_closest").addClass("bg-light");
-        $(this).find("td").removeClass("bg_option_for");
-        $(this).find("td").addClass("text-dark");
-    
+  // Check if atm-label span already exists
+  if (!$strikePrice_main_bg.find('.atm-label').length) {
+    // Select only elements with the class 'strike_main_optionchain'
+    if (currentStrikePrice === closestStrikePrice) {
 
-        var scrollTo = $(this).position().top - $(".main_option_chain_table").height() / 2 + $(this).height() / 2;
+      var index_change_value = parseFloat($(".change_change_per").text())
 
-        $(".main_option_chain_table").animate({
-          scrollTop: scrollTo
-        }, 1000, function() {
+      var last_traded_price = $(".last_traded_price").text()
 
-        });
+      var main_bg_atm_dyanamic = index_change_value < 0 ? "index_atm_negative" : "index_atm_positive";
+      var main_border_atm_dyanamic = index_change_value < 0 ? "index_atm_negative_border" : "index_atm_positive_border";
 
-      }
-    });
-  
+      // Prepend atm-label only if it doesn't exist already
+      $strikePrice_main_bg.prepend(`<span class='atm-label'>${last_traded_price}(+${index_change_value}%)</span>`)
+
+      $(this).addClass(`background_opiton_closest bg-light ${main_border_atm_dyanamic} `)
+                .find("td").removeClass("bg_option_for").addClass("text-dark");
+
+      var scrollTo = $(this).position().top - $(".main_option_chain_table").height() / 2 + $(this).height() / 2;
+
+      $(".main_option_chain_table").animate({
+        scrollTop: scrollTo
+      }, 1000, function() {
+
+      });
+    }
+  }
+});
 }
 
 // Function to handle scrolling for the main_option_oi container
