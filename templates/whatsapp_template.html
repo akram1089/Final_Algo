@@ -1,0 +1,177 @@
+{% extends "base_admin_panel.html" %}
+{% load static %}
+{% block dashboard_admin_body %}
+
+<style>
+    .card {
+        max-width: 600px;
+        margin: 50px auto;
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    
+    .header {
+        text-align: center;
+    }
+    
+    .header img {
+        max-width: 150px;
+    }
+    
+    .content {
+        padding: 20px;
+    }
+    
+    .content h2 {
+        margin-top: 0;
+    }
+    
+    .content p {
+        margin: 10px 0;
+    }
+    .left_side_img{
+        position: relatives;
+
+    }
+
+    .left_side_img h5{
+    font-size: 13px;
+    position: absolute;
+    top: 15%;
+    left: 78%;
+    font-weight: bold;
+    }
+    #template_submit{
+        background-color: #4399eb;
+        color: white;
+        border: 1px solid #4399eb;
+        padding: 9px;
+        border-radius: 5px;
+
+    }
+
+    #template_review{
+        background-color: #4399eb;
+        color: white;
+        border: 1px solid #4399eb;
+        padding: 9px;
+        border-radius: 5px;
+        margin-left: 15px;
+    }
+    .content p{
+        font-size: 17px !important;
+    font-weight: 600 !important;
+    }
+</style>
+<section>
+    <div class="whatsapp_template">
+        <div class="row">
+            <div class="col-lg-6">
+                <h2>Whatsapp Template</h2>
+                <div class="whatspp_fields">
+                    <div class="mb-3">
+                    <label for="">Title:</label>
+                      <input type="text" name="" id="title" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <label for="url">URL:</label>
+                        <input type="text" id="url" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <label for="image_upload">Upload Image:</label>
+                        <input type="file" id="image_upload" accept="image/*" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <textarea name="" id="text_area" class="form-control" rows="4"></textarea>
+                    </div>
+                    
+                    <div class="buttons">
+                        <button id="template_submit">Submit</button>
+                        <button id="template_review">Preview</button>
+                    </div>
+                  </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="preview_section">
+                    <div class="card">
+                        <div class="header d-flex justify-content-between align-items-center p-3">
+                            <div>
+                                <img src="{% static 'img/OptionPerksLogo.png' %}" alt="Company Logo">
+                            </div>
+                            <div class="left_side_img">
+                                <h5>Valuable <br> Knowledge</h5>
+                                <img src="{% static 'img/notice_board_two.png' %}" alt="Company Logo">
+                            </div>
+                        </div>
+                        <div class="content">
+                            <p>Text: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed at cursus orci. Integer id leo eget dolor malesuada convallis. Proin malesuada risus vitae tellus euismod, sit amet pharetra odio dictum. In hac habitasse platea dictumst. Donec sed arcu sed neque venenatis commodo.</p>
+                        </div>
+                        <div class="content d-flex justify-content-between">
+                            <h2>Good Morning</h2>
+                            <p>Thanks and Regards,<br>OptionPerks</p>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+    
+    </div>
+</section>
+
+<script>
+    $(document).ready(function () {
+        tinymce.init({
+    selector: '#text_area',
+    plugins: [
+    'advlist', 'autolink', 'link', 'image', 'lists', 'charmap', 'preview', 'anchor', 'pagebreak',
+    'searchreplace', 'wordcount', 'visualblocks', 'code', 'fullscreen', 'insertdatetime', 'media',
+    'table', 'emoticons', 'template', 'help'
+  ],
+  toolbar: "undo redo  h2 h3 bold italic underline  blockquote bullist numlist  hr",
+});
+
+
+$("#template_submit").click(function() {
+        // Get values from input fields
+        var title = $("#title").val();
+        var url = $("#url").val();
+        var text = $("#text_area").val();
+        var image = $("#image_upload").prop('files')[0];  // Get the first selected file
+
+        // Create FormData object to send file data
+        var formData = new FormData();
+        formData.append('title', title);
+        formData.append('url', url);
+        formData.append('text', text);
+        formData.append('image', image);
+
+        $.ajax({
+            url: '/save_template',  
+            type: 'POST',
+            data: formData,
+            processData: false,  
+            contentType: false, 
+            success: function(response) {
+                console.log(response.template)
+                console.log('Template saved successfully');
+            $("#title").val("");
+            $("#url").val("");
+            $("#text_area").val("");
+            $("#image_upload").val(""); 
+               
+            },
+            error: function(xhr, status, error) {
+                
+                console.error('Error:', error);
+                
+            }
+        });
+    });
+
+    });
+</script>
+
+{% endblock dashboard_admin_body %}

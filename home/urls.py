@@ -570,6 +570,10 @@ urlpatterns = [
      path('terms_conditions', views.terms_conditions, name='terms_conditions'),
      path('indices_historical_data', views.indices_historical_data, name='indices_historical_data'),
      path('get_index_historical_data', views.get_index_historical_data, name='get_index_historical_data'),
+     path('whatsapp_template', views.whatsapp_template, name='whatsapp_template'),
+     path('save_template', views.save_template, name='save_template'),
+     path('update_blog', views.update_blog, name='update_blog'),
+     path('delete_blog', views.delete_blog, name='delete_blog'),
 
 
 

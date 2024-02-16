@@ -21,6 +21,12 @@ referrerpolicy="origin"></script>
     background-color: #2397f3 !important;
     border: 1px solid #2397f3 !important;
 }
+.blogs img{
+    max-width: 300px !important;
+}
+.blogs_list{
+    flex-wrap: wrap !important;
+}
 </style>
 <section>
     <div class="mt-3">
@@ -108,6 +114,68 @@ referrerpolicy="origin"></script>
                       </tbody>
                 </table>
             </div> -->
+            <div>
+                <div class="modal fade" id="editBlogModal" tabindex="-1" role="dialog" aria-labelledby="editBlogModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="editBlogModalLabel">Edit Blog</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                
+                                <input type="text" id="editBlogId">
+                                <div class="mb-3">
+                                    <label for="editTitle" class="form-label">Title</label>
+                                    <input type="text" class="form-control" name="title" id="editTitle" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="editWriter_name" class="form-label">Writer Name</label>
+                                    <input type="text" class="form-control" name="name" id="editWriter_name" required>
+                                </div>
+                                <div class="mb-3 image_field">
+                                    <label for="editImageUrl">Image URL:</label>
+                                    <input type="file" class="form-control" id="editImageFile" accept="image/*">
+                                    <input type="hidden" class="form-control" id="editImageUrl">
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label for="edit_blog_category">Blog Category:</label>
+                                    <select class="form-control" id="edit_blog_category" name="blog_category" required>
+                                      <option value="featured">Featured</option>
+                                      <option value="newest">Newest</option>
+                                      <option value="platform_updates">Platform Updates</option>
+                                      <option value="research_insights">Research Insights</option>
+                                      <option value="company_news">Company News</option>
+                                    </select>
+                                  </div>
+                                <div class="mb-3">
+                                    <label for="editShortDescription">Short Description:</label>
+                                    <textarea class="form-control" id="editShortDescription" rows="3"></textarea>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="editmytextarea" class="form-label">Descriptions</label>
+                                    <textarea name="" id="editmytextarea" cols="30" rows="8" class="form-control" required></textarea>
+                                    
+                                </div>
+                                <button id="saveChangesBtn">update data</button>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-primary" id="saveChangesBtn">Save Changes</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="all_blogs mt-4">
+              <div class="blogs_list d-flex gap-3">
+                 
+              </div>
+            </div>
         </div>
 
         
@@ -273,13 +341,134 @@ $('#blogForm input, #blogForm textarea, #blogForm select').on('input change', fu
              var blogs = response.data
              console.log(blogs);
              blogs.forEach(element => {
-                
+                var cards = `
+                <div class="blogs">
+                   <img src="${element.image_url}" alt="">
+                   <div class="short_descriptions">${element.short_description}</div>
+                   <div class="action_div">
+                    <i class='bx bx-trash'  data-blog-id="${element.id}"></i>
+                    <i class='bx bx-edit' data-blog-id="${element.id}"></i>
+                   </div>
+                 </div>
+                        `
+                $(".blogs_list").append(cards);
              });
+
+             $(".bx-edit").click(function () {
+                    var blogId = $(this).data("blog-id");
+                    var blog = blogs.find(blog => blog.id === blogId);
+                    populateEditModal(blog);
+                });
+
+             $(".bx-trash").click(function() {
+                var blogId = $(this).data("blog-id");
+                deleteBlog(blogId);
+            });
             },
 
             })
         }
+    
+        function populateEditModal(blog) {
+
+            currentBlog = blog;
+
+        $("#editBlogId").val(blog.id);
+        $("#editTitle").val(blog.title);
+        $("#editWriter_name").val(blog.author);
+        $("#edit_blog_category").val(blog.blog_category);
+        $("#editImageUrl").hide();
+        var $fileInput = $('<input type="file" class="form-control" id="editImageFile" accept="image/*">');
+        $(".image_field").append($fileInput);
+
+    // Set the image URL if it exists
+       if (blog.image_url) {
+        $("#editImageUrl").val(blog.image_url);
+       }
+
+        $("#editShortDescription").val(blog.short_description);
+        tinymce.init({
+        selector: '#editmytextarea',
+        plugins: [
+            'advlist', 'autolink', 'link', 'image', 'lists', 'charmap', 'preview', 'anchor', 'pagebreak',
+            'searchreplace', 'wordcount', 'visualblocks', 'code', 'fullscreen', 'insertdatetime', 'media',
+            'table', 'emoticons', 'template', 'help'
+        ],
+        toolbar: "undo redo | formatselect | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | link image media",
+        height: 400, // Adjust height as needed
+        setup: function (editor) {
+            editor.on('init', function () {
+                // Set content of TinyMCE editor
+                editor.setContent(blog.description);
+            });
+        }
+    });
         
+        $("#editBlogModal").modal("show");
+    }
+
+    $("#saveChangesBtn").click(function () { 
+
+        var imageFile = document.getElementById('editImageFile').files[0];
+     
+        var updatedBlog = {
+        id: $("#editBlogId").val(),
+        title: $("#editTitle").val(),
+        author: $("#editWriter_name").val(),
+        blog_category: $("#edit_blog_category").val(),
+        short_description: $("#editShortDescription").val(),
+        description: tinymce.get('editmytextarea').getContent()
+    };
+
+    if (imageFile) {
+        // If a file is selected, store its reference for upload
+        updatedBlog.image_file = imageFile;
+    } else {
+        // If no new file is selected, keep the image URL as it is
+        updatedBlog.image_url = $("#editImageUrl").val();
+    }
+
+    $.ajax({
+        url: 'update_blog', // Replace with your actual backend endpoint
+        method: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify(updatedBlog),
+        success: function (response) {
+            get_blog_data();
+            console.log("Blog updated successfully:", response);
+            // Optionally, you can perform additional actions after successful update
+        },
+        error: function (xhr, status, error) {
+            console.error("Error updating blog:", error);
+            // Optionally, you can handle error scenarios here
+        }
+    });
+
+    // Close the modal
+    $("#editBlogModal").modal("hide");
+        
+    });
+    
+    function deleteBlog(blogId) {
+    $.ajax({
+        url: '/delete_blog',  // Replace with your actual delete endpoint
+        method: 'POST',
+        data: {
+            blog_id: blogId
+        },
+        success: function(response) {
+            // Remove the deleted blog card from the DOM
+            $(`.blogs[data-blog-id="${blogId}"]`).remove();
+            console.log('Blog deleted successfully');
+            get_blog_data();
+        },
+        error: function(xhr, status, error) {
+            console.error('Error:', error);
+        }
+    });
+}
+
+
         get_blog_data()
        
 

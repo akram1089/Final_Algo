@@ -990,25 +990,6 @@ def email_template(request):
 
 
 
-@csrf_exempt
-def login_user(request):
-    if request.method == 'POST':
-        Mobile_number = request.POST['phone_number']
-        password = request.POST['password']
-        print(Mobile_number, password)
-        user = authenticate(Mobile_number=Mobile_number, password=password)
-        if user is not None:
-            login(request, user)
-            if request.user.is_superuser:
-                messages.success(
-                    request, 'You are successfully logged in as Admin')
-                return redirect("/admin_panel")
-            else:
-                messages.success(request, 'You are successfully logged in')
-                return redirect("/")
-        else:
-            messages.error(request, 'Invalid credential')
-            return redirect("/")
 
 
 def logout_user(request):
@@ -11002,8 +10983,13 @@ def login_user(request):
         Mobile_number = request.POST['phone_number']
         password = request.POST['password']
         print(Mobile_number, password)
+        user_ip = get_client_ip(request)
+        print("user_ip",user_ip)
+     
         user = authenticate(Mobile_number=Mobile_number, password=password)
         if user is not None:
+            if user.ip_address_user != user_ip:
+                print("Your account logged in different device !!")
             login(request, user)
             if request.user.is_superuser:
                 messages.success(
@@ -20531,7 +20517,7 @@ def get_index_historical_data(request):
 
         events = 'history'
         url = f'https://query1.finance.yahoo.com/v7/finance/download/{symbol}?period1={int(start_timestamp)}&period2={int(end_timestamp)}&interval={frequency}&events={events}&includeAdjustedClose=true'
-        
+        print(url)
         try:
             stockdata = pd.read_csv(url)
             print(stockdata)
@@ -20547,3 +20533,121 @@ def get_index_historical_data(request):
     else:
         # Return a JSON response indicating failure (if the request method is not POST)
         return JsonResponse({'error': 'Invalid request method.'}, status=400)
+
+
+
+
+
+
+
+
+
+
+
+
+@csrf_exempt
+def update_blog(request):
+    if request.method == 'POST':
+        # Retrieve data from the POST request
+        data = json.loads(request.body.decode('utf-8'))  # If data sent as form data
+
+        # Retrieve blog ID from the request data
+        blog_id = data.get('id')
+        print(blog_id)
+        # Check if the blog ID exists
+        if not blog_id:
+            return JsonResponse({'error': 'Blog ID is missing'}, status=400)
+
+        # Retrieve the blog object from the database
+        try:
+            blog = Blog.objects.get(id=blog_id)
+        except Blog.DoesNotExist:
+            return JsonResponse({'error': 'Blog not found'}, status=404)
+
+        # Update blog data with the received data
+        blog.title = data.get('title', blog.title)
+        blog.author = data.get('author', blog.author)
+        blog.blog_category = data.get('blog_category', blog.blog_category)
+        
+        blog.short_description = data.get('short_description', blog.short_description)
+        blog.description = data.get('description', blog.description)
+
+
+        if 'image_file' in request.FILES:
+            image_file = request.FILES['image_file']
+            # Generate a unique filename for the uploaded image
+            filename = f'blog_{blog_id}_{image_file.name}'
+            # Save the uploaded image file to your server
+            blog.image = filename
+            with open(filename, 'wb+') as destination:
+                for chunk in image_file.chunks():
+                    destination.write(chunk)
+        # Save the updated blog object
+            
+        blog.save()
+
+        # Return success response
+        return JsonResponse({'message': 'Blog updated successfully'})
+    else:
+        return JsonResponse({'error': 'Invalid request method'}, status=405)
+
+@csrf_exempt
+def delete_blog(request):
+    if request.method == 'POST':
+        # Get the blog ID from the request POST data
+        blog_id = request.POST.get('blog_id')
+        try:
+            # Retrieve the blog entry from the database
+            blog = Blog.objects.get(id=blog_id)
+            # Delete the blog entry
+            blog.delete()
+            # Return a success response
+            return JsonResponse({'message': 'Blog deleted successfully'}, status=200)
+        except Blog.DoesNotExist:
+            # If the blog entry does not exist, return an error response
+            return JsonResponse({'error': 'Blog not found'}, status=404)
+    else:
+        # If the request method is not POST, return a method not allowed response
+        return JsonResponse({'error': 'Method not allowed'}, status=405)
+
+
+
+
+
+
+def whatsapp_template(request):
+    return render(request, "whatsapp_template.html")
+
+from.models import WhatsAppTemplate
+
+@csrf_exempt  
+def save_template(request):
+    if request.method == 'POST':
+        # Get data from the POST request
+        title = request.POST.get('title')
+        url = request.POST.get('url')
+        text = request.POST.get('text')
+        image = request.FILES.get('image')  # Get the uploaded image file
+
+        # Save data to the database
+        template = WhatsAppTemplate(
+            title=title,
+            url=url,
+            text=text,
+            image=image
+        )
+        template.save()
+
+        template_data = {
+            'id': template.id,
+            'title': template.title,
+            'url': template.url,
+            'text': template.text,
+            'image_url': template.image.url if template.image else None  # Get the image URL if it exists
+        }
+
+        # Return a JSON response to indicate success
+        return JsonResponse({'template': template_data}, status=201)
+    else:
+        # If request method is not POST, return an error response
+        return JsonResponse({'error': 'Invalid request method'}, status=400)

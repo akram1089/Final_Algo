@@ -30,6 +30,7 @@ from.models import PopupContent
 from.models import Book
 from.models import BookCart
 from.models import AdditionTask_main_time
+from.models import WhatsAppTemplate
 
 # from.models import StockListing
 
@@ -72,6 +73,7 @@ admin.site.register(AdditionTask_main_time)
 
 # Register the custom UserAdmin
 admin.site.register(User)
+admin.site.register(WhatsAppTemplate)
 
 
 
