@@ -175,7 +175,7 @@ font-weight: 600 !important;
 
     .bi-graph-up:hover {
         background-color: rgb(0, 132, 255) !important;
-        border: none !important;
+      
         color: white !important;
     }
   #spinner{
@@ -4004,7 +4004,54 @@ display: none !important;
  </div>
  </div>
  
+ <script>
+  //Login form validaton-constraints
+
+document.addEventListener('DOMContentLoaded', function () {
  
+ const loginForm = document.querySelector('#modalSignInForm');
+ const remindMeCheckbox = document.querySelector('#rememberMe');
+
+ // Load saved credentials from local storage
+ const savedCredentials = JSON.parse(localStorage.getItem('savedCredentials')) || {};
+
+ // If saved credentials exist and the "Remind Me" checkbox is checked, fill in the form fields
+ if (savedCredentials.rememberMe && savedCredentials.mobileNumber && savedCredentials.password) {
+   document.querySelector('#modalEmailSignIn').value = savedCredentials.mobileNumber;
+   document.querySelector('#modalPasswordSignIn').value = savedCredentials.password;
+   remindMeCheckbox.checked = true;
+ }
+
+ // Event listener for login form submission
+ loginForm.addEventListener('submit', function (event) {
+   event.preventDefault();
+
+   const mobileNumber = document.querySelector('#modalEmailSignIn').value.trim();
+   const password = document.querySelector('#modalPasswordSignIn').value.trim();
+
+   //   Remind me check box
+   const rememberMe = remindMeCheckbox.checked;
+   if (rememberMe) {
+     localStorage.setItem('savedCredentials', JSON.stringify({ mobileNumber, password, rememberMe }));
+   } else {
+     localStorage.removeItem('savedCredentials');
+   }
+
+   // Check if the mobile number and password are empty or not
+   if (mobileNumber === '' || password === '') {
+     toastr.error('Please enter both mobile number and password.');
+     return;
+   }
+
+   // Check the mobile number field contains only numbers or not
+   if (!/^\d+$/.test(mobileNumber)) {
+     toastr.error('Mobile number should contain numbers only.');9
+     return;
+   }
+   this.submit();
+ });
+});
+ </script>
  <style>
    .modal-header {
      border: none !important;
