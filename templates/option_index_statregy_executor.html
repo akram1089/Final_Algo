@@ -172,6 +172,7 @@ border: 1px solid #4399eb !important;
   .call-pul-ltp-btns {
     gap: 0.5rem !important;
     display: none;
+    z-index: 99;
   }
 
   .main_option_chain_table table thead tr th {
@@ -237,15 +238,15 @@ border: 1px solid #4399eb !important;
     align-items: center;
   }
 
-  .background_opiton_closest {
+  .index_atm_positive_border {
  border-bottom: 2px solid green !important;
     color: black !important;
   }
-
-  .background_opiton_closest_payoff_table {
-    background: #dddddd9c;
-    border-left: 5px solid green;
+  .index_atm_negative_border {
+ border-bottom: 2px solid red !important;
+    color: black !important;
   }
+
 
 
   .add-btn {
@@ -547,6 +548,7 @@ border: 1px solid #4399eb !important;
     background: #4399eb;
     color: white;
     font-size: 14px !important;
+    z-index: 9;
   }
 
   .bg_option_for {
@@ -5795,6 +5797,7 @@ font-weight: 100 !important ;
             .payoff_table_main_table thead {
               position: sticky;
               top: 0px;
+              z-index: 9;
             }
           </style>
   
@@ -8333,7 +8336,8 @@ text-align: center !important;
           </div>
 
           <style>
-            .atm-label{
+        .index_atm_positive
+     {
               position: absolute;
     top: 99%;
     z-index: 9;
@@ -8345,6 +8349,26 @@ text-align: center !important;
     transform: translate(-50%, -50%);
     font-size: 11px;
             }
+        .index_atm_negative
+            {
+              position: absolute;
+    top: 99%;
+    z-index: 9;
+    color: white;
+    background: red;
+    padding: 1px 9px;
+    border-radius: 10px;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 11px;
+            }
+
+
+
+
+
+
+
         .strikePrice_main_bg {
           position: relative;
         }
@@ -8952,8 +8976,8 @@ margin-bottom: 38px;
             <div class="table_container" style="width: 100%; height: 500px;     overflow: auto;">
 
 
-              <table class="payoff_table_main_table table table-striped-custom" style="    font-weight: 500;">
-                <thead>
+              <table class="payoff_table_main_table table table-striped-custom" style="font-weight: 500;">
+                <thead style="z-index: 9;">
                   <tr>
                     <th>
 
@@ -9952,7 +9976,10 @@ margin-bottom: 38px;
     gap: 0.3rem;
     align-items: center;
   }
-
+.atm-label-payoff-table{
+  padding: 3px 12px;
+    left: 121px;
+}
   .api_actions {
     display: flex;
     align-items: center;
@@ -10067,7 +10094,14 @@ margin-bottom: 38px;
     padding: 4px;
     border-radius: 9px;
   }
+.cell-container{
+  position: relative;
+}
 
+.index_atm_positive{
+  background-color: green !important;
+  position: absolute;
+}
   #pagination-container ,
   #pagination_container_schedule {
     display: flex;
@@ -14806,8 +14840,8 @@ margin-bottom: 38px;
                 </div>
           
             </td>
-            <td class="text-center strikePrice_main_bg bg-light text-dark">
-                <div class='strike_price'>${optionChain.strike_price}</div>
+            <td class="text-center strikePrice_main_bg strikePrice_oi bg-light text-dark">
+                <div class='strike_price strike_main_oi'>${optionChain.strike_price}</div>
                 <div class=d-none>
                     <div class="expiry_date">${option_expiry_date}</div>
                     <div class="opiton_lot_size">${lot_size_value_option}</div>
@@ -14843,8 +14877,8 @@ margin-bottom: 38px;
 
           
             </td>
-            <td class="text-center strikePrice_main_bg bg-light text-dark">
-                <div class='strike_price'>${optionChain.strike_price}</div>
+            <td class="text-center strikePrice_main_bg strikePrice_greek  bg-light text-dark">
+                <div class='strike_price strike_main_greek'>${optionChain.strike_price}</div>
                 <div class=d-none>
                     <div class="expiry_date">${option_expiry_date}</div>
                     <div class="opiton_lot_size">${lot_size_value_option}</div>
@@ -14893,13 +14927,17 @@ function scrollToClosestStrikeTable() {
 $(".main_option_chain").each(function () {
   var $strikePrice = $(this).find(".strike_main_optionchain");
   var $strikePrice_main_bg = $(this).find(".strikePrice_main_bg");
+ 
   var currentStrikePrice = parseInt($strikePrice.text());
+      // Remove any existing atm-label span
+      $strikePrice_main_bg.find('.atm-label').remove();
 
   // Check if atm-label span already exists
   if (!$strikePrice_main_bg.find('.atm-label').length) {
     // Select only elements with the class 'strike_main_optionchain'
     if (currentStrikePrice === closestStrikePrice) {
 
+ 
       var index_change_value = parseFloat($(".change_change_per").text())
 
       var last_traded_price = $(".last_traded_price").text()
@@ -14907,12 +14945,11 @@ $(".main_option_chain").each(function () {
       var main_bg_atm_dyanamic = index_change_value < 0 ? "index_atm_negative" : "index_atm_positive";
       var main_border_atm_dyanamic = index_change_value < 0 ? "index_atm_negative_border" : "index_atm_positive_border";
 
-      // Prepend atm-label only if it doesn't exist already
-      $strikePrice_main_bg.prepend(`<span class='atm-label'>${last_traded_price}(+${index_change_value}%)</span>`)
+
 
       $(this).addClass(`background_opiton_closest bg-light ${main_border_atm_dyanamic} `)
                 .find("td").removeClass("bg_option_for").addClass("text-dark");
-
+   
       var scrollTo = $(this).position().top - $(".main_option_chain_table").height() / 2 + $(this).height() / 2;
 
       $(".main_option_chain_table").animate({
@@ -14920,6 +14957,10 @@ $(".main_option_chain").each(function () {
       }, 1000, function() {
 
       });
+
+     
+            // Prepend atm-label only if it doesn't exist already
+            $strikePrice_main_bg.prepend(`<span class='atm-label ${main_bg_atm_dyanamic}'>${last_traded_price}(+${index_change_value}%)</span>`)
     }
   }
 });
@@ -14930,14 +14971,33 @@ function scrollToClosestStrikeOI() {
 
 
     $(".main_option_oi_tr").each(function () {
-      var $strikePrice = $(this).find(".strike_price");
+      var $strikePrice = $(this).find(".strike_main_oi");
       var currentStrikePrice = parseInt($strikePrice.text());
+      var $strikePrice_oi = $(this).find(".strikePrice_oi");
 
+
+            // Remove any existing atm-label span
+            $strikePrice_oi.find('.atm-label-oi').remove();
+
+            if (!$strikePrice_oi.find('.atm-label-oi').length) {
       if (currentStrikePrice === closestStrikePrice) {
-        $(this).addClass("background_opiton_closest").addClass("bg-light");
-        $(this).find("td").removeClass("bg_option_for");
-        $(this).find("td").addClass("text-dark");
-  
+
+
+        
+      var index_change_value = parseFloat($(".change_change_per").text())
+
+      var last_traded_price = $(".last_traded_price").text()
+
+      var main_bg_atm_dyanamic = index_change_value < 0 ? "index_atm_negative" : "index_atm_positive";
+      var main_border_atm_dyanamic = index_change_value < 0 ? "index_atm_negative_border" : "index_atm_positive_border";
+
+
+
+      $(this).addClass(`background_opiton_closest bg-light ${main_border_atm_dyanamic} `)
+                      .find("td").removeClass("bg_option_for").addClass("text-dark");
+
+
+
 
         var scrollTo = $(this).position().top - $(".main_option_oi").height() / 2 + $(this).height() / 2;
 
@@ -14946,8 +15006,10 @@ function scrollToClosestStrikeOI() {
         }, 1000, function() {
        
         });
+          // Prepend atm-label only if it doesn't exist already
+          $strikePrice_oi.prepend(`<span class='atm-label-oi ${main_bg_atm_dyanamic}'>${last_traded_price}(+${index_change_value}%)</span>`)
 
-
+      }
       }
     });
   
@@ -14958,13 +15020,29 @@ function scrollToClosestStrikeGreeks() {
 
 
     $(".main_option_greeks .call_put_tr").each(function () {
-      var $strikePrice = $(this).find(".strike_price");
+      var $strikePrice = $(this).find(".strike_main_greek");
       var currentStrikePrice = parseInt($strikePrice.text());
 
+      var $strikePrice_greek = $(this).find(".strikePrice_greek");
+
+                  // Remove any existing atm-label span
+                  $strikePrice_greek.find('.atm-label-greek').remove();
+
+                  if (!$strikePrice_greek.find('.atm-label-greek').length) {
+
       if (currentStrikePrice === closestStrikePrice) {
-        $(this).addClass("background_opiton_closest").addClass("bg-light");
-        $(this).find("td").removeClass("bg_option_for");
-        $(this).find("td").addClass("text-dark");
+        
+        var index_change_value = parseFloat($(".change_change_per").text())
+
+        var last_traded_price = $(".last_traded_price").text()
+
+        var main_bg_atm_dyanamic = index_change_value < 0 ? "index_atm_negative" : "index_atm_positive";
+        var main_border_atm_dyanamic = index_change_value < 0 ? "index_atm_negative_border" : "index_atm_positive_border";
+
+
+
+      $(this).addClass(`background_opiton_closest bg-light ${main_border_atm_dyanamic} `)
+                      .find("td").removeClass("bg_option_for").addClass("text-dark");
 
 
         var scrollTo = $(this).position().top - $(".main_option_greeks").height() / 2 + $(this).height() / 2;
@@ -14974,8 +15052,10 @@ function scrollToClosestStrikeGreeks() {
         }, 1000, function() {
 
         });
+          // Prepend atm-label only if it doesn't exist already
+          $strikePrice_greek.prepend(`<span class='atm-label-greek ${main_bg_atm_dyanamic}'>${last_traded_price}(+${index_change_value}%)</span>`)
 
-
+      }
       }
     });
   
@@ -20270,149 +20350,61 @@ function getDaySuffix(day) {
 
 
 
-            // Get the value of closest_strike_price
+
+var closestStrikePriceText = $("#closest_strike_price").text();
+            function payoff_atm_scroll() {
+    var closestStrikePrice = parseInt(closestStrikePriceText);
+
+    console.log('Yes called');
+    $(".payoff_table_main_table tr").each(function() {
+      
+      var $strikePrice = $(this).find("td:first-child div");
+      var currentStrikePrice = parseInt($strikePrice.text());
+      var $cell_container = $(this).find(".cell-container");
+      var $first_child = $cell_container.first();
+      $first_child.find('.atm-label-payoff-table').remove();
 
 
-            // // Find the corresponding row in the "payoff_table_main_table"
-            // var correspondingRow = $(".payoff_table_main_table tr").filter(function() {
-            //     // Extract the value from the first TD in the row
-            //     var rowValue = parseInt($(this).find("td:first").text());
-            //     return rowValue === closestStrikePrice;
-            // });
+      
 
-            // // Check if a corresponding row was found
-            // if (correspondingRow.length > 0) {
+      console.log('closestStrikePrice',closestStrikePrice);
+      console.log('currentStrikePrice',currentStrikePrice);
+      if (currentStrikePrice === closestStrikePrice) {
+        console.log('currentStrikePrice',currentStrikePrice);
+        var index_change_value = parseFloat($(".change_change_per").text());
+        var last_traded_price = $(".last_traded_price").text();
+        var main_bg_atm_dynamic = index_change_value < 0 ? "index_atm_negative" : "index_atm_positive";
+        var main_border_atm_dynamic = index_change_value < 0 ? "index_atm_negative_border" : "index_atm_positive_border";
+        
+        console.log("$first_child:", $first_child); // Debugging statement
+        
+        $(this).addClass(` ${main_border_atm_dynamic} background_opiton_closest_payoff_table`);
+        // Check if $first_child exists and is selected correctly
+        if ($first_child.length > 0) {
+          // Create the span element using jQuery and append it to the first child
+          var spanElement = $("<span>").addClass("atm-label-payoff-table").addClass(main_bg_atm_dynamic).text(`${last_traded_price}(+${index_change_value}%)`);
+          $first_child.append(spanElement);
+          console.log("Span element appended successfully"); // Debugging statement
+        } else {
+          console.log("Error: $first_child not found or selected incorrectly"); // Debugging statement
+        }
 
+        var container = $(".table_container");
+        var scrollTo = $(this).position().top - container.height() / 2 + $(this).height() / 2;
 
-            //     // Scroll to the corresponding row
-            //     var container = $(".payoff_table_main_table");
+        $(".table_container").animate({
+          scrollTop: scrollTo
+        }, 1000, function() {});
+      }
+    });
+  }
+  // Call the function initially
+  payoff_atm_scroll();
 
-            //     var scrollTo =
-            //                 1200 -
-            //                 container.height() / 2 +
-            //                 1200/ 2;
-            //                 //////console.log("scrollTo",scrollTo);
-
-
-            //     // Reset the scroll position first
-            //     container.animate(
-            //         {
-            //             scrollTop: 0,
-            //         },
-            //         0,
-            //         function () {
-            //             // Scroll to the desired position after the reset
-            //             container.animate(
-            //                 {
-            //                     scrollTop: scrollTo,
-            //                 },
-            //                 1000
-            //             ); // You can adjust the scrolling speed here (in milliseconds)
-            //         }
-            //     );
-            // } else {
-            //     //////console.log("No corresponding row found.");
-            // }
-
-
-
-            var isScrolling = false; // Flag to check if scrolling is in progress
-
-            if (!isScrolling) { // Check if scrolling is not in progress
-              isScrolling = true; // Set the flag to true
-
-              var closestStrikePriceText = $("#closest_strike_price").text();
-              var closestStrikePrice = parseInt(closestStrikePriceText);
-
-              $(".payoff_table_main_table tr").each(function () {
-                var $strikePrice = $(this).find("td:first");
-                var currentStrikePrice = parseInt($strikePrice.text());
-
-                if (currentStrikePrice === closestStrikePrice) {
-                  $(this).addClass("background_opiton_closest_payoff_table");
-
-                  var container = $(".table_container");
-                  var scrollTo =
-                    $(this).position().top -
-                    container.height() / 2 +
-                    $(this).height() / 2;
-
-                  console.log("ScrollTo:", scrollTo);
-
-                  container.animate(
-                    {
-                      scrollTop: scrollTo,
-                    },
-                    1000,
-                    function () {
-                      // Animation complete
-                      console.log("Scroll animation complete");
-                      isScrolling = false; // Reset the flag after scrolling is complete
-                    }
-                  );
-
-                  return false;
-                }
-              });
-            }
-
-
-
-
-
-
-
-
-
-            var isScrolling = false; // Flag to check if scrolling is in progress
-
-            $(".payoff_table").click(function () {
-
-              console.log("Hii ");
-              if (!isScrolling) { // Check if scrolling is not in progress
-                isScrolling = true; // Set the flag to true
-
-                var closestStrikePriceText = $("#closest_strike_price").text();
-                var closestStrikePrice = parseInt(closestStrikePriceText);
-
-                $(".payoff_table_main_table tr").each(function () {
-                  var $strikePrice = $(this).find("td:first");
-                  var currentStrikePrice = parseInt($strikePrice.text());
-                  console.log(currentStrikePrice);
-                  console.log(closestStrikePrice);
-
-                  if (currentStrikePrice === closestStrikePrice) {
-
-                    console.log('Print');
-
-                    $(this).addClass("background_opiton_closest_payoff_table");
-
-                    var container = $(".table_container");
-                    var scrollTo =
-                      $(this).position().top -
-                      container.height() / 2 +
-                      $(this).height() / 2;
-
-                    console.log("ScrollTo:", scrollTo);
-
-                    container.animate(
-                      {
-                        scrollTop: scrollTo,
-                      },
-                      1000,
-                      function () {
-                        // Animation complete
-                        console.log("Scroll animation complete");
-                        isScrolling = false; // Reset the flag after scrolling is complete
-                      }
-                    );
-
-                    return false;
-                  }
-                });
-              }
-            });
-
+  // Add click event listener to trigger the scrolling function
+  $(".payoff_table").click(function() {
+    payoff_atm_scroll();
+  });
 
 
 
@@ -20512,7 +20504,7 @@ function getDaySuffix(day) {
         table.empty();
 
         // Add the new headers
-        var newHeaders = $("<thead><tr><th>Strikes</th><th >On expiry</th></tr></thead>");
+        var newHeaders = $("<thead><tr><th>Strikes</th><th >On expiry</th></tr></thead>").css("z-index","9")
         table.append(newHeaders);
 
         // Create an empty tbody
@@ -20628,102 +20620,8 @@ function getDaySuffix(day) {
             default: return 'th';
           }
         }
-        var isScrolling = false; // Flag to check if scrolling is in progress
 
-
-        console.log("Hii ");
-        if (!isScrolling) { // Check if scrolling is not in progress
-          isScrolling = true; // Set the flag to true
-
-          var closestStrikePriceText = $("#closest_strike_price").text();
-          var closestStrikePrice = parseInt(closestStrikePriceText);
-
-          $(".payoff_table_main_table tr").each(function () {
-            var $strikePrice = $(this).find("td:first");
-            var currentStrikePrice = parseInt($strikePrice.text());
-            console.log(currentStrikePrice);
-            console.log(closestStrikePrice);
-
-            if (currentStrikePrice === closestStrikePrice) {
-
-              console.log('Print');
-
-              $(this).addClass("background_opiton_closest_payoff_table");
-
-              var container = $(".table_container");
-              var scrollTo =
-                $(this).position().top -
-                container.height() / 2 +
-                $(this).height() / 2;
-
-              console.log("ScrollTo:", scrollTo);
-
-              container.animate(
-                {
-                  scrollTop: scrollTo,
-                },
-                1000,
-                function () {
-                  // Animation complete
-                  console.log("Scroll animation complete");
-                  isScrolling = false; // Reset the flag after scrolling is complete
-                }
-              );
-
-              return false;
-            }
-          });
-        }
-
-        var isScrolling = false; // Flag to check if scrolling is in progress
-
-        $(".payoff_table").click(function () {
-
-          console.log("Hii ");
-          if (!isScrolling) { // Check if scrolling is not in progress
-            isScrolling = true; // Set the flag to true
-
-            var closestStrikePriceText = $("#closest_strike_price").text();
-            var closestStrikePrice = parseInt(closestStrikePriceText);
-
-            $(".payoff_table_main_table tr").each(function () {
-              var $strikePrice = $(this).find("td:first");
-              var currentStrikePrice = parseInt($strikePrice.text());
-              console.log(currentStrikePrice);
-              console.log(closestStrikePrice);
-
-              if (currentStrikePrice === closestStrikePrice) {
-
-                console.log('Print');
-
-                $(this).addClass("background_opiton_closest_payoff_table");
-
-                var container = $(".table_container");
-                var scrollTo =
-                  $(this).position().top -
-                  container.height() / 2 +
-                  $(this).height() / 2;
-
-                console.log("ScrollTo:", scrollTo);
-
-                container.animate(
-                  {
-                    scrollTop: scrollTo,
-                  },
-                  1000,
-                  function () {
-                    // Animation complete
-                    console.log("Scroll animation complete");
-                    isScrolling = false; // Reset the flag after scrolling is complete
-                  }
-                );
-
-                return false;
-              }
-            });
-          }
-        });
-
+   
 
       }
 
