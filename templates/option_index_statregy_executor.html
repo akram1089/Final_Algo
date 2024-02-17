@@ -1451,6 +1451,7 @@ box-shadow: 0 3px 16px 0 rgba(35,47,62,.15);
     display: flex;
     column-gap: 1.2rem;
     flex-wrap: wrap;
+    align-items: center;
   }
   .futures_segements_main select,
   .futures_expiry,
@@ -1469,6 +1470,8 @@ box-shadow: 0 3px 16px 0 rgba(35,47,62,.15);
     padding: 9px 0 0 0px;
   }
 </style>
+
+
 <div class="title d-flex gap-2 p-2 align-items-center">
   <h5 class="m-0">Option Index Strategy Executor </h5>  -
 
@@ -5011,7 +5014,7 @@ async function updateActiveApi(brokerId, isActive) {
   <div class="main_all_spot_futures_val" style="     padding: 4px 19px 4px 11px;box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;">
 
     <div class="main_inner_spot_future">
-
+      <a id="chartLink" href="https://in.tradingview.com/chart/mKWHqfku/?symbol=NSE%3ANIFTY" target="_blank"><i class="bi bi-graph-up"></i></a>
 
     <div class="spot_strategies">
       <p class="spot_title">Spot:</p>
@@ -5025,6 +5028,11 @@ async function updateActiveApi(brokerId, isActive) {
       <p class="futures_title">Futures: </p>
 
       <div class="futures_ltp"></div>
+    </div>
+    <div class="main_futures_price_as_per_expiries">
+      <p class="futures_title">Volume: </p>
+
+      <div class="futures_volume"></div>
     </div>
 
     <div class="main_max_pain_strategies">
@@ -5179,12 +5187,12 @@ async function updateActiveApi(brokerId, isActive) {
       display: flex;
     }
 
-    .edit-button,
+
     .edit_broker,
     .edit_strategy,
     .delete_broker,
-    .delete_strategy,
-    .delete-button {
+    .delete_strategy
+   {
       color: #767f88;
       transition: 0.3s;
     }
@@ -5195,7 +5203,8 @@ async function updateActiveApi(brokerId, isActive) {
       gap: 2.5rem;
     }
 
-
+.delete-button,
+.edit-button,
     .delete_strategy,
     .edit_shchedule_order,
     .delete_shchedule_order,
@@ -5208,7 +5217,8 @@ async function updateActiveApi(brokerId, isActive) {
       transition: filter 0.3s;
       /* Add a smooth transition effect */
     }
-
+    .delete-button:hover,
+.edit-button:hover,
     .delete_shchedule_order:hover,
     .edit_shchedule_order:hover ,
     .delete_strategy:hover,
@@ -8577,13 +8587,15 @@ margin-bottom: 38px;
 
 <style>
   .maximize{
+
     cursor: pointer;
-    background: #d1d1d1;
+    background: #d9d9d9;
     position: absolute;
     padding: 5px 5px 5px 5px;
     top: 17px;
     border-radius: 50%;
-    right: -17px;
+    right: 12px;
+    color: #7d7d7d;
   }
 </style>
 
@@ -8647,6 +8659,18 @@ margin-bottom: 38px;
                   $(".stockDropdown").change(function () {
                     var symbolIndices = $(this).val();
                     getFutureData(symbolIndices);
+                    var chartUrl;
+                    if (symbolIndices === 'NIFTY') {
+                chartUrl = "https://in.tradingview.com/chart/mKWHqfku/?symbol=NSE%3ANIFTY";
+            } else if (symbolIndices === 'BANKNIFTY') {
+                chartUrl = "https://in.tradingview.com/chart/mKWHqfku/?symbol=NSE%3ABANKNIFTY";
+            }else if(symbolIndices==="FINNIFTY"){
+              chartUrl='https://in.tradingview.com/chart/mKWHqfku/?symbol=NSE%3AFINNIFTY1%21'
+            }
+            
+            
+            console.log(chartUrl);
+            $("#chartLink").removeAttr("href").attr("href", chartUrl);
                   });
 
 
@@ -8677,6 +8701,7 @@ margin-bottom: 38px;
                           ////console.log(future.expiry);
                           if (index === 0) {
                             $(".futures_ltp").text(future.last_price);
+                            $(".futures_volume").text(future.valume);
                             $(".main_future_lot_val").text(future.lot_size)
                             localStorage.setItem('lotSize_main_future', future.lot_size);
                           }
@@ -8766,11 +8791,14 @@ margin-bottom: 38px;
                       data: { symbol_indices: symbol_names, future_expiry: future_expiry },
                       success: function (data) {
                         // Handle the successful response, e.g., update the table body
-                        ////console.log(data);
+                        // console.log(data);
 
                         if (data && data.length > 0) {
+
+
                           var expiryValue = data[0].last_price;
                           $(".futures_ltp").text(expiryValue);
+                          $(".futures_volume").text(data[0].valume);
                         } else {
                           console.error("Empty or invalid data received");
                         }
@@ -8824,7 +8852,7 @@ margin-bottom: 38px;
                   <tbody class="strategy_option_chain"></tbody>
                 </table>
 
-                <div class="atm_main">22250</div>
+             
               </div>
 
               <div class="main_option_oi">
@@ -8939,7 +8967,7 @@ margin-bottom: 38px;
 
         <div class="maximize_btn">
 
-          <i class='bx bx-fullscreen maximize' style="cursor: pointer;"></i>
+          <i class='bx bx-expand maximize' style="cursor: pointer;"></i>
         </div>
 
         <div class="table_pl_greek">
@@ -8949,23 +8977,23 @@ margin-bottom: 38px;
 
             <div class="inner_greek_p_l d-flex">
               <p class="payoff_charts greek_strategy_active">
-                PAYOFF DIAGRAM
+                Payoff Diagram
 
               </p>
               <p class="payoff_table">
-                PAYOFF TABLE
+                Payoff Table
 
               </p>
               <p class="strategy_cost_table">
-                STRATEGY COST
+                Strategy Cost
               </p>
-              <p class="greek_table">GREEKS</p>
-              <p class="oi_chart">OI CHART</p>
-              <p class="adjustment">ADJUSTMENT</p>
-              <p class="targets">TARGET</p>
-              <p class="stoploss">STOPLOSS</p>
-              <p class="alerts">ALERT</p>
-              <p class="history">HISTORY</p>
+              <p class="greek_table">Greeks</p>
+              <p class="oi_chart">OI Chart</p>
+              <p class="adjustment">Adjustment </p>
+              <p class="targets">Target</p>
+              <p class="stoploss">Stoploss</p>
+              <p class="alerts">Alert</p>
+              <p class="history">History</p>
             </div>
           </div>
 
@@ -9047,13 +9075,14 @@ margin-bottom: 38px;
             <table id="resultTable" class="table table-striped-custom">
               <thead class="bg-light">
                 <tr>
-                  <th>POSITION</th>
-                  <th>IV</th>
-                  <th>DELTA</th>
-                  <th>THETA</th>
-                  <th>GAMMA</th>
-                  <th>VEGA</th>
-                  <th>RHO</th>
+                  <th style="text-transform: capitalize;">Position</th>
+                  <th style="text-transform: capitalize;">Iv</th>
+                  <th style="text-transform: capitalize;">Delta</th>
+                  <th style="text-transform: capitalize;">Theta</th>
+                  <th style="text-transform: capitalize;">Gamma</th>
+                  <th style="text-transform: capitalize;">Vega</th>
+                  <th style="text-transform: capitalize;">Rho</th>
+                  
                 </tr>
               </thead>
               <tbody></tbody>
@@ -9065,13 +9094,14 @@ margin-bottom: 38px;
             <table class="PL-table table table-striped-custom">
               <thead class="bg-light">
                 <tr>
-                  <th>POSITION</th>
-                  <th>TRADED PRICE</th>
-                  <th>CURRENT PRICE</th>
-                  <th>LOTS</th>
-                  <th class="text-end">QTY.</th>
-                  <th class="text-end">TOTAL CUR. COST</th>
-                  <th class="text-center">P/L</th>
+                  <th style="text-transform: capitalize;">Position</th>
+                  <th style="text-transform: capitalize;">Traded Price</th>
+                  <th style="text-transform: capitalize;">Current Price</th>
+                  <th style="text-transform: capitalize;">Lots</th>
+                  <th class="text-end" style="text-transform: capitalize;">Qty.</th>
+                  <th class="text-end" style="text-transform: capitalize;">Total Cur. Cost</th>
+                  <th class="text-center" style="text-transform: capitalize;">P/L</th>
+                  
                 </tr>
               </thead>
               <tbody id="table-PL"></tbody>
@@ -9090,50 +9120,53 @@ margin-bottom: 38px;
               <thead class="adjsuments_table_thead">
 
                 <tr>
-
-                  <td>STRATEGY</td>
-                  <td>BREAKEVENS</td>
-                  <td>STRIKE PRICE</td>
-                  <td>OPTION PRICE</td>
-                  <td>ACTION</td>
+                  <td style="text-transform: capitalize;">Strategy</td>
+                  <td style="text-transform: capitalize;">Breakevens</td>
+                  <td style="text-transform: capitalize;">Strike Price</td>
+                  <td style="text-transform: capitalize;">Option Price</td>
+                  <td style="text-transform: capitalize;">Action</td>
+                  
 
                 </tr>
               </thead>
               <tbody class="real_adjustment_table_body">
                 <tr>
                   <td>
-                    <div>ADJUSTMENTS 1</div>
-                  </td>
-                  <td>
-                    <div>19318.75</div>
-                  </td>
-                  <td>
-                    <div>19200</div>
-                  </td>
-                  <td>
-                    <div>65.2</div>
-                  </td>
-                  <td>
+                    <div style="text-transform: capitalize;">Adjustments 1</div>
+                </td>
+                <td>
+                    <div style="text-transform: capitalize;">19318.75</div>
+                </td>
+                <td>
+                    <div style="text-transform: capitalize;">19200</div>
+                </td>
+                <td>
+                    <div style="text-transform: capitalize;">65.2</div>
+                </td>
+                <td>
                     <div><button class="adjust">Adjust</button></div>
-                  </td>
+                </td>
+                
 
                 </tr>
                 <tr>
+
                   <td>
-                    <div>ADJUSTMENTS 1</div>
-                  </td>
-                  <td>
-                    <div> 19781.25</div>
-                  </td>
-                  <td>
-                    <div>19200</div>
-                  </td>
-                  <td>
-                    <div>65.2</div>
-                  </td>
-                  <td>
+                    <div style="text-transform: capitalize;">Adjustments 2</div>
+                </td>
+                <td>
+                    <div style="text-transform: capitalize;">19781.25</div>
+                </td>
+                <td>
+                    <div style="text-transform: capitalize;">19200</div>
+                </td>
+                <td>
+                    <div style="text-transform: capitalize;">65.2</div>
+                </td>
+                <td>
                     <div><button class="adjust">Adjust</button></div>
-                  </td>
+                </td>
+                
 
                 </tr>
 
@@ -9149,12 +9182,13 @@ margin-bottom: 38px;
               <thead>
                 <tr>
 
-                  <th>STRATEGY</th>
-                  <th> STRIKE PRICE</th>
-                  <th>TARGET PRICE</th>
-                  <th>TARGET PERCENTAGE</th>
-                  <th>VARIANCE</th>
-                  <th>ACTION</th>
+                  <th style="text-transform: capitalize;">Strategy</th>
+                  <th style="text-transform: capitalize;"> Strike Price</th>
+                  <th style="text-transform: capitalize;">Target Price</th>
+                  <th style="text-transform: capitalize;">Target Percentage</th>
+                  <th style="text-transform: capitalize;">Variance</th>
+                  <th style="text-transform: capitalize;">Action</th>
+                  
                 </tr>
               </thead>
 
@@ -9327,12 +9361,13 @@ margin-bottom: 38px;
         <thead>
           <tr>
 
-            <th>STRATEGY</th>
-            <th> STRIKE PRICE</th>
-            <th>STOPLOSS PRICE</th>
-            <th>STOPLOSS PERCENTAGE</th>
-            <th> VARIANCE</th>
-            <th>ACTION</th>
+            <th style="text-transform: capitalize;">Strategy</th>
+            <th style="text-transform: capitalize;"> Strike Price</th>
+            <th style="text-transform: capitalize;">Stoploss Price</th>
+            <th style="text-transform: capitalize;">Stoploss Percentage</th>
+            <th style="text-transform: capitalize;"> Variance</th>
+            <th style="text-transform: capitalize;">Action</th>
+            
           </tr>
         </thead>
 
@@ -9505,11 +9540,12 @@ margin-bottom: 38px;
 
           <tr>
 
-            <td>STRATEGY</td>
-            <td>BREAKEVENS</td>
-            <td>STRIKE PRICE</td>
-            <td>OPTION PRICE</td>
-            <td>ACTION</td>
+            <td style="text-transform: capitalize;">Strategy</td>
+            <td style="text-transform: capitalize;">Breakevens</td>
+            <td style="text-transform: capitalize;">Strike Price</td>
+            <td style="text-transform: capitalize;">Option Price</td>
+            <td style="text-transform: capitalize;">Action</td>
+            
 
           </tr>
         </thead>
@@ -9657,7 +9693,7 @@ margin-bottom: 38px;
         payoffTable.style.height = '90vh'; // Set the height of the payoff_table to 90vh
         oi_charts.style.height = '90vh'; // Set the height of the payoff_table to 90vh
         table_container.style.height = '90vh'; // Set the height of the payoff_table to 90vh
-        maximizeIcon.classList.remove('bx-fullscreen');
+        maximizeIcon.classList.remove('bx-expand');
         maximizeIcon.classList.add('bx-exit-fullscreen');
       } else if (elem.webkitRequestFullscreen) { /* Safari */
         elem.webkitRequestFullscreen();
@@ -9666,7 +9702,7 @@ margin-bottom: 38px;
         payoffTable.style.height = '90vh';
         oi_charts.style.height = '90vh'; // Set the height of the payoff_table to 90vh
         table_container.style.height = '90vh'; // Set the height of the payoff_table to 90vh
-        maximizeIcon.classList.remove('bx-fullscreen');
+        maximizeIcon.classList.remove('bx-expand');
         table_container.classList.add('bx-exit-fullscreen');
       } else if (elem.msRequestFullscreen) { /* IE11 */
         elem.msRequestFullscreen();
@@ -9675,7 +9711,7 @@ margin-bottom: 38px;
         payoffTable.style.height = '90vh';
         oi_charts.style.height = '90vh'; // Set the height of the payoff_table to 90vh
         table_container.style.height = '90vh'; // Set the height of the payoff_table to 90vh
-        maximizeIcon.classList.remove('bx-fullscreen');
+        maximizeIcon.classList.remove('bx-expand');
         maximizeIcon.classList.add('bx-exit-fullscreen');
       }
     } else {
@@ -9687,7 +9723,7 @@ margin-bottom: 38px;
         oi_charts.style.height = '400px'; // Set the height of the payoff_table to 90vh
         table_container.style.height = '500px'; // Set the height of the payoff_table to 90vh
         maximizeIcon.classList.remove('bx-exit-fullscreen');
-        maximizeIcon.classList.add('bx-fullscreen');
+        maximizeIcon.classList.add('bx-expand');
       } else if (document.webkitExitFullscreen) { /* Safari */
         document.webkitExitFullscreen();
         $('.right_p_l_greeks').css('background-color', 'white');
@@ -9696,7 +9732,7 @@ margin-bottom: 38px;
         oi_charts.style.height = '400px'; // Set the height of the payoff_table to 90vh
         table_container.style.height = '500px'; // Set the height of the payoff_table to 90vh
         maximizeIcon.classList.remove('bx-exit-fullscreen');
-        maximizeIcon.classList.add('bx-fullscreen');
+        maximizeIcon.classList.add('bx-expand');
 
       } else if (document.msExitFullscreen) { /* IE11 */
         document.msExitFullscreen();
@@ -9706,7 +9742,7 @@ margin-bottom: 38px;
         oi_charts.style.height = '400px'; // Set the height of the payoff_table to 90vh
         table_container.style.height = '500px'; // Set the height of the payoff_table to 90vh
         maximizeIcon.classList.remove('bx-exit-fullscreen');
-        maximizeIcon.classList.add('bx-fullscreen');
+        maximizeIcon.classList.add('bx-expand');
 
       }
     }
@@ -9744,7 +9780,7 @@ margin-bottom: 38px;
       document.getElementById('payoff_table').style.height = '400px'; // Revert to default height
       document.getElementById('oi_charts').style.height = '400px'; // Set the height of the oi_charts to 400px
       maximizeIcon.classList.remove('bx-exit-fullscreen');
-      maximizeIcon.classList.add('bx-fullscreen');
+      maximizeIcon.classList.add('bx-expand');
     }
   }
 
@@ -14452,7 +14488,7 @@ margin-bottom: 38px;
             //   $("#ratio").text("No defined");
             // }
 
-            $("#break_evens").text(`${minStrikePrice}~${maxStrikePrice}`);
+    
             tableHTML += `
                                                                 <tr>
                                                                     <td colspan="5">NET COST OF STRATEGY :</td>
@@ -18507,7 +18543,7 @@ $(".right_side_top_strategies ,#buid_custom_strategy_btn,.oi_option,.greeks_opti
                                           <div class="main_inner_op_fu_legs">
                                             <div class="main_short_long_lot_size">
                                             <div class="short_long"><span class="long_short_inner">${action === "Long" ? "+" : "-"
-              }</span></div> <div class="option_lot_size_input">${lot_size_inner}</div>x
+                                              }</span></div> <div class="option_lot_size_input">${lot_size_inner}</div>x
                                         </div>
                                         <div class="symbol_expiry"><span class="symbol">${stockDropdown}</span><span class="expiry">${formattedDate}</span><span class="expiry_initial" style="display:none">${expiry_date}</span></div>
                                         <div class="strike_price_call_put d-flex"> <span class="strikePrice ${option_side === "Call" ? "d-flex" : (option_side === "Put" ? "d-flex" : "d-none")}">${parseFloat(strike_price)}</span>
@@ -18516,10 +18552,10 @@ $(".right_side_top_strategies ,#buid_custom_strategy_btn,.oi_option,.greeks_opti
                                         <div class="ltp_main">-₹<span class="entryPrice">${parseFloat(ltpValue)}</span></div></div>(<span class="exit_price">0</span>) <span class="current_price me-2">0</span></div>
             
                                         <div class="action_option_strategy d-flex justify-content-center align-items-center gap-1">
-                                                    <i class="bi bi-pencil-square edit-button" data-bs-toggle="modal" data-bs-target="#editPositionModal"></i>
-                                                    <i class="bi bi-trash-fill delete-button dlt-btn" id="delete-btn"></i>
-                                                    <i class='green-option-indicator exit_indicator d-none'></i>
-                                                </div>
+                                          <img class='cursor-pointer edit-button' data-bs-toggle="modal" data-bs-target="#editPositionModal" width="19px" src="{% static "img/delete_edit_btns/edit.png" %}"></i>
+                                          <img src="{% static "img/delete_edit_btns/delete.png" %}" width="19px" class='cursor-pointer  delete-button dlt-btn' id="delete-btn"></i>
+                                          <i class='green-option-indicator exit_indicator d-none'></i>
+                                          </div>
                                             
                                             
                                             </div>
@@ -19315,23 +19351,12 @@ $(".right_side_top_strategies ,#buid_custom_strategy_btn,.oi_option,.greeks_opti
 
 
 
-
-
-
-
-
-
-
-
-
-
-
       // Calculate and set the ratio
       var ratio = Math.max(...sumArray) / Math.min(...sumArray);
       $("#ratio").text(ratio.toFixed(2));
 
 
-
+console.log("sumArraymain", sumArray);
 
 
 
@@ -19380,12 +19405,42 @@ $(".right_side_top_strategies ,#buid_custom_strategy_btn,.oi_option,.greeks_opti
 
 
 
+      function findPositiveNegativeBreakpoints(arr) {
+    const breakpoints = [];
+    for (let i = 1; i < arr.length; i++) {
+        if ((arr[i] >= 0 && arr[i - 1] < 0) || (arr[i] < 0 && arr[i - 1] >= 0)) {
+          breakpoints.push({ index: arr[i] >= 0 ? i : i - 1, value: arr[i] >= 0 ? arr[i] : arr[i - 1] });
+        }
+    }
+    return breakpoints;
+}
+
+const breakpoints = findPositiveNegativeBreakpoints(sumArray);
+
+console.log('breakpointsMain', breakpoints);
+console.log('sumArray_length', sumArray.length);
+console.log('strikePrices_length', strikePrices.length);
+
+console.log("strikePrices[58]",strikePrices[0]);
+
+const strikePricesAtBreakpoints = breakpoints.map(({index}) => strikePrices[index]);
+
+console.log('strikePricesAtBreakpoints',strikePricesAtBreakpoints);
 
 
 
 
 
+function formatStrikePrices(strikePrices_breaks) {
+    return strikePrices_breaks.join(' ~ ');
+}
 
+// Example usage:
+let strikePrices_breaks = strikePricesAtBreakpoints
+let formattedString = formatStrikePrices(strikePrices_breaks);
+console.log(formattedString);
+
+ $("#break_evens").text(`${formattedString}`);
 
 
 
@@ -20367,8 +20422,8 @@ var closestStrikePriceText = $("#closest_strike_price").text();
 
       
 
-      console.log('closestStrikePrice',closestStrikePrice);
-      console.log('currentStrikePrice',currentStrikePrice);
+      // console.log('closestStrikePrice',closestStrikePrice);
+      // console.log('currentStrikePrice',currentStrikePrice);
       if (currentStrikePrice === closestStrikePrice) {
         console.log('currentStrikePrice',currentStrikePrice);
         var index_change_value = parseFloat($(".change_change_per").text());
