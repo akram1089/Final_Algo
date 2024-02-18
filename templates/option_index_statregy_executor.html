@@ -1791,12 +1791,12 @@ box-shadow: 0 3px 16px 0 rgba(35,47,62,.15);
 
               </div>
 
-              <button class="put_call_btns" id="future_add_positions" data-f&o="future" >ADD</button>
+              <button  id="add_future_position_main"  >ADD</button>
             </div>
 
 
 <style>
-  #future_add_positions,.save_zerodha_btn{
+  #add_future_position_main,.save_zerodha_btn{
     background: #00a900;
     color: white;
     height: 37px;
@@ -1807,7 +1807,7 @@ box-shadow: 0 3px 16px 0 rgba(35,47,62,.15);
 
     border: none;
   }
-  #future_add_positions:active,
+  #add_future_position_main:active,
   .save_zerodha_btn:active{
     background: rgb(0, 118, 0);
  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;;
@@ -5509,6 +5509,14 @@ font-weight: 100 !important ;
                           <label for="expirydate">Expiry Date</label>
                           <select class="expiry_date_input form-select" id="expiryDate_straddle"></select>
                         </div>
+                        <label for="main_short_straddle" style="display: none;">ATM :</label>
+                        <div class="main_short_straddle d-none mb-2" id="main_short_straddle" style="display: none;">
+                          <button class="decrease_straddle_value">-</button>
+                          <input type="text" style="width: 100px;" class="staddle_strike_input">
+                          <button class="increase_straddle_value">+</button>
+                        </div>
+
+                      
   
                         <div class="main_counter d-flex gap-3 mb-3">
                           <div class="innerStraddle_lot_size">
@@ -14609,12 +14617,19 @@ margin-bottom: 38px;
 
       $(".stockDropdown").val(selectedOption);
 
-      loadSpotData(selectedOption);
 
 
 
-      loadExpiryData(selectedOption);
-      loadOptionData(selectedOption, "");
+
+
+      loadSpotData(selectedOption).then(function() {
+        // Spot data loaded, now load expiry and option data synchronously
+        $.when(
+            loadExpiryData(selectedOption),
+        
+        ).then(function() {
+
+          loadOptionData(selectedOption, "")
 
 
 
@@ -14641,6 +14656,8 @@ margin-bottom: 38px;
       $(".expiry_date_input").empty();
 
     });
+    });
+    });
 
     //         setInterval(function() {
     //     loadSpotData($(".stockDropdown").val());
@@ -14663,8 +14680,8 @@ margin-bottom: 38px;
           $("#open_value").text(response.spot_data.resultData.open);
           $("#low_value").text(response.spot_data.resultData.low);
           $("#high_value").text(response.spot_data.resultData.high);
-     
- 
+
+
           var spot_check_strategies = response.spot_data.resultData.change_per;
           var valid_spot_value_strategies =
             spot_check_strategies > 0 ? "text-success" : "text-danger";
@@ -14682,6 +14699,8 @@ margin-bottom: 38px;
                         `);
         },
       });
+      return $.Deferred().resolve().promise(); // Placeholder for demo, resolve immediately
+
     }
 
 
@@ -18134,7 +18153,7 @@ $(".right_side_top_strategies ,#buid_custom_strategy_btn,.oi_option,.greeks_opti
 
 
           $(".put_call_btns").click(function () {
-            $(".strategy_notes_main").empty()
+       
 
             if ($(this).data("f&o") === "option") {
               var row = $(this).closest("tr"); // Find the closest table row
@@ -18224,53 +18243,8 @@ $(".right_side_top_strategies ,#buid_custom_strategy_btn,.oi_option,.greeks_opti
               }
 
 
-            } else if ($(this).data("f&o") === "future") {
-
-
-              var option_side = "FUTURE";
-              ////console.log("Option Side: " + option_side);
-
-              var opiton_selected = $(".stockDropdown").val();
-              ////console.log("Option Selected: " + opiton_selected);
-
-              var expiry_date = $(".futures_expiry").val();
-              ////console.log("Expiry Date: " + expiry_date);
-
-              var opiton_lot_size = $("#lot_size_value").text();
-              ////console.log("Option Lot Size: " + opiton_lot_size);
-
-              var lot_size_inner = $("#futures_counter_input").val();
-              ////console.log("Lot Size Inner: " + lot_size_inner);
-
-              var strike_price = $(".futures_ltp").text();
-              ////console.log("Strike Price: " + strike_price);
-
-              var ltpValue = $(".futures_ltp").text();
-              ////console.log("LTP Value: " + ltpValue);
-
-              var action = $("input[name='callAction']:checked").val();
-              ////console.log("Action: " + action);
-
-
-              populateInputTable(
-                option_side,
-                expiry_date,
-                strike_price,
-                action,
-                opiton_lot_size,
-                ltpValue,
-                opiton_selected, lot_size_inner
-              );
-
-              Table_chart_pyoff()
-              $(".main_position,.main_all_profit_loss,.main_bottom_strategy_positions").show()
-              $(".main_build_custom_strategy_empty").css("display", "none")
-              $("#customRange2").show()
-              $('#taget_date_table').show()
-              $("#resultTable tbody,#table-PL,.option_oi_charts,#chartdiv,.payoff_table_data").show()
-              margin_calculations()
-            }
-
+            } 
+            
 
             if (isTableEmpty) {
               $(".data-display-table").empty();
@@ -18294,6 +18268,70 @@ $(".right_side_top_strategies ,#buid_custom_strategy_btn,.oi_option,.greeks_opti
             checkMainPositionContent();
 
           });
+          $(document).off("click", "#add_future_position_main").on("click", "#add_future_position_main", function () {
+    var option_side = "FUTURE";
+    console.log("Option SideMain: " + option_side);
+
+    var opiton_selected = $(".stockDropdown").val();
+    //console.log("Option Selected: " + opiton_selected);
+
+    var expiry_date = $(".futures_expiry").val();
+    //console.log("Expiry Date: " + expiry_date);
+
+    var opiton_lot_size = $("#lot_size_value").text();
+    //console.log("Option Lot Size: " + opiton_lot_size);
+
+    var lot_size_inner = $("#futures_counter_input").val();
+    //console.log("Lot Size Inner: " + lot_size_inner);
+
+    var strike_price = $(".futures_ltp").text();
+    //console.log("Strike Price: " + strike_price);
+
+    var ltpValue = $(".futures_ltp").text();
+    //console.log("LTP Value: " + ltpValue);
+
+    var action = $("input[name='callAction']:checked").val();
+    //console.log("Action: " + action);
+
+    populateInputTable(
+        option_side,
+        expiry_date,
+        strike_price,
+        action,
+        opiton_lot_size,
+        ltpValue,
+        opiton_selected, lot_size_inner
+    );
+
+    Table_chart_pyoff();
+    $(".main_position,.main_all_profit_loss,.main_bottom_strategy_positions").show();
+    $(".main_build_custom_strategy_empty").css("display", "none");
+    $("#customRange2").show();
+    $('#taget_date_table').show();
+    $("#resultTable tbody,#table-PL,.option_oi_charts,#chartdiv,.payoff_table_data").show();
+    margin_calculations();
+
+    if (isTableEmpty) {
+        $(".data-display-table").empty();
+        isTableEmpty = false;
+    }
+
+    $(".inner_p_l_greeks").show();
+    if ($(this).data("HI1") === undefined) {
+        //console.log("Yes");
+        // Remove the "HI1" data attribute
+        calculate_data();
+    } else {
+        //console.log("No");
+        $(this).removeData("HI1");
+    }
+    checkMainPositionContent();
+});
+
+
+
+
+          
 
           var positions = 1;
           var positions_input = 1;
@@ -18782,6 +18820,8 @@ $(".right_side_top_strategies ,#buid_custom_strategy_btn,.oi_option,.greeks_opti
 
         },
       });
+      return $.Deferred().resolve().promise(); // Placeholder for demo, resolve immediately
+
     }
 
     function getDate_on_date() {
@@ -19005,6 +19045,8 @@ $(".right_side_top_strategies ,#buid_custom_strategy_btn,.oi_option,.greeks_opti
           console.error("Error loading expiry data:", error);
         },
       });
+      return $.Deferred().resolve().promise(); // Placeholder for demo, resolve immediately
+
     }
 
     function populateExpiry_Strike(expiryDates, expiryStrikes) {
