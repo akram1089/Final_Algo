@@ -996,7 +996,7 @@ border: 1px solid #4399eb !important;
     width: 22rem;
     box-shadow: 0px 0px 1px 2px #4399eb3b;
     position: absolute;
-    z-index: 9;
+z-index:99;
     margin: 14px 0 0 0;
     display: none;
     border-radius: 8px;
@@ -1007,7 +1007,7 @@ border: 1px solid #4399eb !important;
     width: 22rem;
     box-shadow: 0px 0px 1px 2px #4399eb3b;
     position: absolute;
-    z-index: 9;
+z-index:99;
     margin: 14px 0 0 0;
     display: none;
     border-radius: 8px;
@@ -1018,7 +1018,7 @@ border: 1px solid #4399eb !important;
     width: 24rem;
     box-shadow: 0px 0px 1px 2px #4399eb3b;
     position: absolute;
-    z-index: 9;
+z-index:99;
     margin: 14px 0 0 0;
     display: none;
     border-radius: 8px;
@@ -1029,7 +1029,7 @@ border: 1px solid #4399eb !important;
     width: 24rem;
     box-shadow: 0px 0px 1px 2px #4399eb3b;
     position: absolute;
-    z-index: 9;
+z-index:99;
     margin: 14px 0 0 0;
     display: none;
     border-radius: 8px;
@@ -1040,7 +1040,7 @@ border: 1px solid #4399eb !important;
     width: 24rem;
     box-shadow: 0px 0px 1px 2px #4399eb3b;
     position: absolute;
-    z-index: 9;
+z-index:99;
     margin: 14px 0 0 0;
     display: none;
     border-radius: 8px;
@@ -1051,7 +1051,7 @@ border: 1px solid #4399eb !important;
     width: 24rem;
     box-shadow: 0px 0px 1px 2px #4399eb3b;
     position: absolute;
-    z-index: 9;
+z-index:99;
     margin: 14px 0 0 0;
     display: none;
     border-radius: 8px;
@@ -1062,7 +1062,7 @@ border: 1px solid #4399eb !important;
     width: 24rem;
     box-shadow: 0px 0px 1px 2px #4399eb3b;
     position: absolute;
-    z-index: 9;
+z-index:99;
     margin: 14px 0 0 0;
     display: none;
     border-radius: 8px;
@@ -1073,7 +1073,7 @@ border: 1px solid #4399eb !important;
     width: 24rem;
     box-shadow: 0px 0px 1px 2px #4399eb3b;
     position: absolute;
-    z-index: 9;
+z-index:99;
     margin: 14px 0 0 0;
     display: none;
     border-radius: 8px;
@@ -1084,7 +1084,7 @@ border: 1px solid #4399eb !important;
     width: 24rem;
     box-shadow: 0px 0px 1px 2px #4399eb3b;
     position: absolute;
-    z-index: 9;
+z-index:99;
     margin: 15px 0 0px -47px;
     display: none;
     left: -61px;
@@ -1097,7 +1097,7 @@ border: 1px solid #4399eb !important;
     width: 24rem;
     box-shadow: 0px 0px 1px 2px #4399eb3b;
     position: absolute;
-    z-index: 9;
+z-index:99;
     /* margin: 15px 0px 1px 0; */
     display: none;
 
@@ -5044,7 +5044,7 @@ async function updateActiveApi(brokerId, isActive) {
     </div>
     <div class="lot_size_strategies">
       <p>Lot Size:</p>
-      <div id="lot_size_value"></div>
+      <div id="lot_size_value" data="lot-size"></div>
     </div>
 
 
@@ -5509,8 +5509,12 @@ font-weight: 100 !important ;
                           <label for="expirydate">Expiry Date</label>
                           <select class="expiry_date_input form-select" id="expiryDate_straddle"></select>
                         </div>
-                        <label for="main_short_straddle" style="display: none;">ATM :</label>
-                        <div class="main_short_straddle d-none mb-2" id="main_short_straddle" style="display: none;">
+
+
+                        <label for="main_short_straddle">ATM :</label>
+
+
+                        <div class="main_short_straddle d-flex mb-2" id="main_short_straddle">
                           <button class="decrease_straddle_value">-</button>
                           <input type="text" style="width: 100px;" class="staddle_strike_input">
                           <button class="increase_straddle_value">+</button>
@@ -14790,6 +14794,22 @@ margin-bottom: 38px;
           var spot_strike_price = $(".last_traded_price").text();
 
           var closestStrikePrice = null;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
           var closestDiff = Number.MAX_VALUE;
           var all_callsOI_putsOI = []
           let maxCallsOI = -Infinity;
@@ -14965,10 +14985,79 @@ margin-bottom: 38px;
             optionChainTable.append(rowContent);
             strategy_option_chain_oi.append(oi_content);
             strategy_option_chain_greeks.append(greeks_content);
+
+
+
+
+
+
+
+
           });
 
-          // //////console.log("Nearest Strike Price:", closestStrikePrice);
-          $("#closest_strike_price").text(closestStrikePrice);
+          var lotSize_main_future_int=0
+
+// Convert the value to an integer
+
+
+
+// Handle click event for increasing the value
+
+
+  $(document).off("click", ".increase_straddle_value").on("click", ".increase_straddle_value", function () {
+  lotSize_main_future_str = localStorage.getItem('lotSize_main_future');
+  var lotSize_main_future_int = parseInt(lotSize_main_future_str);
+  console.log(lotSize_main_future_int);
+  var currentValue_atm = parseInt($(".staddle_strike_input").val());
+  var newValue_atm = currentValue_atm +  lotSize_main_future_int
+  $(".staddle_strike_input").val(newValue_atm);
+    // Call function to set the dynamic ATM
+    set_the_dynamic_atm(newValue_atm);
+});
+// Handle click event for decreasing the value
+
+$(document).off("click", ".decrease_straddle_value").on("click", ".decrease_straddle_value", function () {
+
+  lotSize_main_future_str = localStorage.getItem('lotSize_main_future');
+  var lotSize_main_future_int = parseInt(lotSize_main_future_str);
+  console.log(lotSize_main_future_int);
+
+
+  var currentValue_atm = parseInt($(".staddle_strike_input").val());
+  var newValue_atm = currentValue_atm - lotSize_main_future_int
+  if (newValue_atm >= 0) {
+    $(".staddle_strike_input").val(newValue_atm);
+      // Call function to set the dynamic ATM
+      set_the_dynamic_atm(newValue_atm);
+  }
+});
+
+
+// Function to set the dynamic ATM
+function set_the_dynamic_atm(newValue_atm) {
+    console.log("New ATM Value:", newValue_atm);
+    $("#strikeSelect_straddle").val(newValue_atm);
+    // You can add your logic here to handle the new ATM value
+}
+
+
+
+
+
+
+
+
+// Reset lot_size_value_main_new when updating closest strike price
+$("#closest_strike_price").text(closestStrikePrice);
+
+$(".staddle_strike_input").val(closestStrikePrice);
+$(".staddle_strike_input").attr({
+  "min": 0
+});
+
+
+
+
           // //////console.log(all_callsOI_putsOI);
 
           OI_charts(all_callsOI_putsOI)

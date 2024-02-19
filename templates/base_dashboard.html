@@ -175,7 +175,7 @@ font-weight: 600 !important;
 
     .bi-graph-up:hover {
         background-color: rgb(0, 132, 255) !important;
-      
+        border: none !important;
         color: white !important;
     }
   #spinner{
@@ -760,14 +760,14 @@ z-index: 9;
 
 
   <header class="flex-md-nowrap p-0" data-bs-theme="light" id="dashboard_nav"
-    style=" background-color: white !important; z-index: 99;     position: sticky;
+    style=" background-color: white !important; z-index: 999;     position: sticky;
     top: 0;">
 
     <div class="header shadow_header" style="transition: all 0.2s ease-in-out 0s; box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;">
       <a href="{% url 'home' %}">
 
 
-  <img src="{% static 'img/OptionPerksLogo_footer.png' %}" alt="OptionPerks Logo" width="180px">
+  <img src="{% static 'img/OptionPerksLogo.png' %}" alt="OptionPerks Logo" width="180px">
 
 </a>
 <style>
@@ -1354,18 +1354,6 @@ height: 126px !important;
                                   <div class="main_title_desc_volume_socker">
                                       <h6>Option Chain Put Call Ratio Volume</h6>
                                       <p>Trading volume of <br> Put / Call options</p>
-                                  </div>
-                                </a></div>
-                                <div class="option_strategy_nav col-xl-6 col-lg-12">
-                                <a class="main_volume_socker other_services_nav_main {% if request.path == "/indices_historical_data"  %} active_navigations {% endif %}" href="{% url 'indices_historical_data' %}"
-                                >
-                                  <div class="volume_socker_icon"><img src="{% static "/img/demo_images/chart-up.png" %}"
-                                      width="25px" alt=""></div>
-
-                                  <div class="main_title_desc_volume_socker">
-
-                                    <h6>Index Historical Data</h6>
-                                    <p>The OHLC data<br> of popular indices. </p>
                                   </div>
                                 </a></div>
                                 <div class="option_strategy_nav col-xl-6 col-lg-12">
@@ -1995,11 +1983,10 @@ height: 8rem;
           }
           .main_logo_built_main{
             display: flex;
-            align-items: center;
-            border: 1px solid;
-            column-gap: 0.3rem;
-            padding: 5px 11px;
-            border-radius: 10px;
+    align-items: center;
+    border: 1px solid;
+    padding: 5px 11px;
+    border-radius: 10px;
           }
           .main_contactUs_title_desc h6{
             font-size: 15px;
@@ -2368,7 +2355,7 @@ height: 8rem;
 
       <div class="main_bottom_logo_contactUs_main">
         <div class="main_logo_built_main">
-          <img src="{% static 'img/OptionPerksLogo_footer.png' %}" alt="OptionPerks Logo"
+          <img src="{% static 'img/OptionPerksLogo.png' %}" alt="OptionPerks Logo"
             width="120px">
 
           <div href="#" style="font-size: 13px;">The only Market solutions that’s custom-built for you 
@@ -2642,7 +2629,7 @@ background-color: #f1eded !important;
     <div class="offcanvas-header">
       <div class="top_off_canvas d-flex justify-content-between align-items-center flex-row-reverse">
 
-      <img src="{% static 'img/OptionPerksLogo_footer.png' %}" alt="OptionPerks Logo" width="180px">
+      <img src="{% static 'img/OptionPerksLogo.png' %}" alt="OptionPerks Logo" width="180px">
 
       </div>
 
@@ -3962,13 +3949,13 @@ display: none !important;
                  {% csrf_token %}
                  <div class="mb-3">
                    <label for="modalEmailSignIn" class="form-label fw-semibold">Phone Number</label>
-                   <input type="text" class="form-control" name="phone_number" id="modalEmailSignIn" placeholder="9100000000">
+                   <input type="text" class="form-control" name="phone_number" id="modalEmailSignIn" placeholder="9100000000" pattern="\d*">
                  </div>
                  <div class="mb-3" style="position: relative;">
                    <label for="modalPasswordSignIn" class="form-label fw-semibold"">Password</label>
                    <input type="password" class="form-control" id="modalPasswordSignIn" name="password" placeholder="Enter your password" aria-describedby="eyeIcon">
                    <span class="eye-icon" id="eyeIcon" style="cursor: pointer;">
-                       <i class="bi bi-eye" aria-hidden="true"></i>
+                       <i class="bi bi-eye-slash" aria-hidden="true"></i>
                    </span>
                 </div>
                    <div class="d-flex justify-content-between align-items-center mt-2">
@@ -3988,7 +3975,7 @@ display: none !important;
          </div>
 
            <!-- "Sign in with Google" button using Bootstrap's button styles -->
-           <a href="{% provider_login_url 'google' %}" class="btn btn-outline-success w-100" id="google_btn">
+           <a href="" class="btn btn-outline-success w-100" id="google_btn">
             <img src="{% static "img/google _png'.png" %} " style="height: 20px;" alt=""> Sign in with Google</a>
            <!-- <a >Login with Google</a> -->
 
@@ -4004,54 +3991,7 @@ display: none !important;
  </div>
  </div>
  
- <script>
-  //Login form validaton-constraints
-
-document.addEventListener('DOMContentLoaded', function () {
  
- const loginForm = document.querySelector('#modalSignInForm');
- const remindMeCheckbox = document.querySelector('#rememberMe');
-
- // Load saved credentials from local storage
- const savedCredentials = JSON.parse(localStorage.getItem('savedCredentials')) || {};
-
- // If saved credentials exist and the "Remind Me" checkbox is checked, fill in the form fields
- if (savedCredentials.rememberMe && savedCredentials.mobileNumber && savedCredentials.password) {
-   document.querySelector('#modalEmailSignIn').value = savedCredentials.mobileNumber;
-   document.querySelector('#modalPasswordSignIn').value = savedCredentials.password;
-   remindMeCheckbox.checked = true;
- }
-
- // Event listener for login form submission
- loginForm.addEventListener('submit', function (event) {
-   event.preventDefault();
-
-   const mobileNumber = document.querySelector('#modalEmailSignIn').value.trim();
-   const password = document.querySelector('#modalPasswordSignIn').value.trim();
-
-   //   Remind me check box
-   const rememberMe = remindMeCheckbox.checked;
-   if (rememberMe) {
-     localStorage.setItem('savedCredentials', JSON.stringify({ mobileNumber, password, rememberMe }));
-   } else {
-     localStorage.removeItem('savedCredentials');
-   }
-
-   // Check if the mobile number and password are empty or not
-   if (mobileNumber === '' || password === '') {
-     toastr.error('Please enter both mobile number and password.');
-     return;
-   }
-
-   // Check the mobile number field contains only numbers or not
-   if (!/^\d+$/.test(mobileNumber)) {
-     toastr.error('Mobile number should contain numbers only.');9
-     return;
-   }
-   this.submit();
- });
-});
- </script>
  <style>
    .modal-header {
      border: none !important;
@@ -4211,16 +4151,84 @@ document.addEventListener('DOMContentLoaded', function () {
  
  <script>
    $(document).ready(function() {
+
+    function getCookie(name) {
+      const cookieValue = document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)');
+      return cookieValue ? cookieValue.pop() : '';
+  }
+
+    function encryptPassword(password) {
+      const secretKey = 'your_secret_key';
+      const encryptedPassword = CryptoJS.AES.encrypt(password, secretKey).toString();
+      return encryptedPassword;
+  }
+  
+  // Function to decrypt the password using CryptoJS
+  function decryptPassword(encryptedPassword) {
+      const secretKey = 'your_secret_key'; 
+      const decryptedPassword = CryptoJS.AES.decrypt(encryptedPassword, secretKey).toString(CryptoJS.enc.Utf8);
+      return decryptedPassword;
+  }
+
+
+    $('#headermainSignin').click(function() {
+      var phoneNumber = $('#modalEmailSignIn').val();
+      var password = $('#modalPasswordSignIn').val();
+  
+      if (!phoneNumber || !password) {
+          toastr.error('Phone number and password are required.');
+          return false;
+      }
+  
+      if ($('.remind_me').is(':checked')) {
+          
+          var encryptedPassword = encryptPassword(password);
+  
+          // Set cookies with expiration time (e.g., 30 days)
+          document.cookie = `phone_number=${phoneNumber}; expires=Wed, 01 Jan 2025 00:00:00 UTC; path=/`;
+          document.cookie = `password=${encryptedPassword}; expires=Wed, 01 Jan 2025 00:00:00 UTC; path=/`;
+      } else {
+          // If "Remind Me" checkbox is not checked, remove any existing cookies
+          document.cookie = 'phone_number=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+          document.cookie = 'password=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+      }
+      
+      // Submit the form
+      $('#modalSignInForm').submit();
+  });
+  
+  // Function to retrieve the saved cookies and fill them into input fields
+  function fillLoginForm() {
+      const phoneNumber = getCookie('phone_number');
+      const encryptedPassword = getCookie('password');
+      console.log(encryptedPassword)
+      console.log(phoneNumber)
+      $('#modalEmailSignIn').val(phoneNumber);
+      // Decrypt the password before filling it into the password field
+      $('#modalPasswordSignIn').val(decryptPassword(encryptedPassword));
+  }
+  
+  // Call the fillLoginForm function when the document is ready
+  $(document).ready(function() {
+      fillLoginForm();
+  });
+  
+  
+
+  $('#modalEmailSignIn').on('input', function () {
+    this.value = this.value.replace(/[^0-9]/g, '');
+});
+  
      $('#eyeIcon').click(function() {
        var passwordInput = $('#modalPasswordSignIn');
        var eyeIcon = $('#eyeIcon i');
  
        if (passwordInput.prop('type') === 'password') {
            passwordInput.prop('type', 'text');
-           eyeIcon.removeClass('bi-eye').addClass('bi-eye-slash');
+           eyeIcon.removeClass('bi-eye-slash').addClass('bi-eye');
        } else {
            passwordInput.prop('type', 'password');
-           eyeIcon.removeClass('bi-eye-slash').addClass('bi-eye');
+           eyeIcon.removeClass('bi-eye').addClass('bi-eye-slash');
        }
    });
  });
@@ -4389,7 +4397,7 @@ document.addEventListener('DOMContentLoaded', function () {
   
           <!-- "Sign in with Google" button using Bootstrap's button styles -->
            <!-- "Sign in with Google" button using Bootstrap's button styles -->
-           <a href="{% provider_login_url 'google' %}" class="btn btn-outline-success w-100" id="google_btn">
+           <a href="" class="btn btn-outline-success w-100" id="google_btn">
             <img src="{% static "img/google _png'.png" %} " style="height: 20px;" alt=""> Sign in with Google</a>
            <!-- <a >Login with Google</a> -->          <p class="text-center mt-2" id="signup_text">Already have an account?   <a data-bs-dismiss='modal' data-bs-toggle='modal' style="cursor: pointer;"
             data-bs-target='#signinModal' class="text-success" >Sign in now</a></p>
@@ -4698,6 +4706,21 @@ $('.main_retry_otp').click(function () {
                   // Add the 'required' attribute dynamically <button type="button" class="btn btn-success w-100 mt-3 get_otp_signup" id="headermainSignin">Get OTP</button>
               $("#modalOTPSignUp").prop("required", false);
   })
+
+
+  function clearFormFields() {
+    $('#modalFullNameSignUp').val("");
+    $('#modalCountryCodeSignUp').val("");
+    $('#modalPhoneSignUp').val("");
+    $('#modalPasswordSignUp').val("");
+    $('#modalCPasswordSignUp').val("");
+    $('#modalAgreeSignUp').prop('checked', false);
+    $('.modalOTPSignUp').val("");
+}
+
+  $('#signupModal').on('hidden.bs.modal', function (e) {
+    clearFormFields(); // Clear form fields when the modal is closed
+});
 
 });
         </script>
@@ -5418,6 +5441,7 @@ top: 10vh !important;
 
 ">
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/aes.js" integrity="sha256-/H4YS+7aYb9kJ5OKhFYPUjSJdrtV6AeyJOtTkw6X72o=" crossorigin="anonymous"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
