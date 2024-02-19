@@ -1277,7 +1277,7 @@ z-index:99;
 
   .main_counter {
     align-items: center;
-    justify-content: center;
+    margin-left: 49px;
   }
 </style>
 
@@ -1641,7 +1641,7 @@ box-shadow: 0 3px 16px 0 rgba(35,47,62,.15);
                   text-align: center;
                   border-right: 1px solid #8080803b !important;
                   height: 37px;
-                  padding: 2px 2px 0px 2px;
+                  padding: 0px 3px 0px 4px;
                   cursor: pointer;
                   transition: 0.2s;
               }
@@ -1755,7 +1755,7 @@ box-shadow: 0 3px 16px 0 rgba(35,47,62,.15);
                     width: 26px !important;
                     border-left: 1px solid #8080803b !important;
                     text-align: center !important;
-                    padding: 2px 2px 0px 2px;
+                    padding: 0px 3px 0px 4px;
                     cursor: pointer;
                     transition: 0.2s;
                                   }
@@ -5510,15 +5510,83 @@ font-weight: 100 !important ;
                           <select class="expiry_date_input form-select" id="expiryDate_straddle"></select>
                         </div>
 
+                        <style>
+                          .main_short_straddle_atm_indicator{
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            column-gap: 0.4rem;
+                            margin-bottom: 0.5rem;
+                          }
 
-                        <label for="main_short_straddle">ATM :</label>
+                          .decrease_straddle_value,.increase_straddle_value{
+                            padding: 8px 8px 6px 8px;
+                            background-color: white;
+                          }
+                  
+                          .decrease_straddle_value{
+                            border: none;
+                            border-radius: 5px 0px 0px 5px;
+                            border-right: 1px solid #8080803b;
+                            transition: 0.2s;
+                          }
+                          .increase_straddle_value{
+                            border: none;
+                            border-radius: 0px 5px 5px 0px;
+                            border-left: 1px solid #8080803b;
+
+                            transition: 0.2s;
+                          }
+
+                          .decrease_straddle_value:hover,.increase_straddle_value:hover{
+                      
+                            background-color: rgb(232, 232, 232);
+                          }
+                          .decrease_straddle_value:active,.increase_straddle_value:active{
+                      
+                            background-color: rgb(201, 201, 201);
+                          }
+                          .main_short_straddle {
+                            border: 1px solid #8080803b;
+                            border-radius: 5px 5px 5px 5px;
+                          }
+                          .staddle_strike_input{
+                            background-color: white;
+                            border: none;
+                            text-align: center;
+                          }
+
+                          .main_short_straddle_atm_indicator label{
+                            font-weight: 400 !important;
+
+                          }
+                          .malipulation_text_straddle{
+                            width: 40px;
+                          }
+
+                          .main_deploy_straddle_btn{
+                            display: flex;
+    justify-content: center;
+                          }
+                        </style>
+
+                            <div class="main_short_straddle_atm_indicator">
+
+                              <label for="main_short_straddle" class="m-0">ATM:</label>
 
 
-                        <div class="main_short_straddle d-flex mb-2" id="main_short_straddle">
-                          <button class="decrease_straddle_value">-</button>
-                          <input type="text" style="width: 100px;" class="staddle_strike_input">
-                          <button class="increase_straddle_value">+</button>
-                        </div>
+                              <div class="main_short_straddle d-flex m-0" id="main_short_straddle">
+                                <button class="decrease_straddle_value"><i class="bx bx-minus"></i></button>
+                                <input type="text" style="width: 100px;" class="staddle_strike_input">
+                                <button class="increase_straddle_value"><i class="bx bx-plus"></i></button>
+                              </div>
+
+                              <div class="main_straddle_new_strike_price_malipulations">
+                                <p class="malipulation_text_straddle">0</p>
+                              </div>
+
+                            </div>
+
 
                       
   
@@ -5529,14 +5597,19 @@ font-weight: 100 !important ;
                               <button class="btn" id="decrement">
                                 <i class="bx bx-minus"></i>
                               </button>
-                              <input type="text" name="" id="counter_input" min="1" disabled />
+                              <input type="text" name="" id="counter_input" min="1" disabled style="    width: 91px !important;" />
                               <button class="btn" id="increment">
                                 <i class="bx bx-plus"></i>
                               </button>
                             </div>
                           </div>
-                          <button class="" id="shortStraddle">SELL</button>
+                   
                         </div>
+
+                        <div class="main_deploy_straddle_btn">
+                          <button class="" id="shortStraddle" style="     width: 124px !important;">SELL</button>
+                        </div>
+                  
                       </div>
                     </div>
   
@@ -8716,6 +8789,7 @@ margin-bottom: 38px;
                             $(".futures_volume").text(future.valume);
                             $(".main_future_lot_val").text(future.lot_size)
                             localStorage.setItem('lotSize_main_future', future.lot_size);
+                            localStorage.setItem('stockDropdown_symbol_main', $(".stockDropdown").val());
                           }
                           // Format the date using the formatFutureDate function
                           const formattedDate = formatFutureDate(future.expiry);
@@ -10026,7 +10100,9 @@ margin-bottom: 38px;
   }
 .atm-label-payoff-table{
   padding: 3px 12px !important;
-    left: 121px;
+  left: 322%;
+
+    transform: translate(50%, -50%);
 }
   .api_actions {
     display: flex;
@@ -14997,39 +15073,154 @@ margin-bottom: 38px;
 
           var lotSize_main_future_int=0
 
-// Convert the value to an integer
+          $(".malipulation_text_straddle").text(0)
+          $(".counter_input").val(1)
+
+                // Convert the value to an integer
+                $(".decrease_straddle_value").attr("disabled",false)
+                $(".increase_straddle_value").attr("disabled",false)
 
 
-
-// Handle click event for increasing the value
+                  // Handle click event for increasing the value
 
 
   $(document).off("click", ".increase_straddle_value").on("click", ".increase_straddle_value", function () {
-  lotSize_main_future_str = localStorage.getItem('lotSize_main_future');
-  var lotSize_main_future_int = parseInt(lotSize_main_future_str);
-  console.log(lotSize_main_future_int);
-  var currentValue_atm = parseInt($(".staddle_strike_input").val());
-  var newValue_atm = currentValue_atm +  lotSize_main_future_int
-  $(".staddle_strike_input").val(newValue_atm);
-    // Call function to set the dynamic ATM
-    set_the_dynamic_atm(newValue_atm);
-});
-// Handle click event for decreasing the value
 
-$(document).off("click", ".decrease_straddle_value").on("click", ".decrease_straddle_value", function () {
-
-  lotSize_main_future_str = localStorage.getItem('lotSize_main_future');
-  var lotSize_main_future_int = parseInt(lotSize_main_future_str);
-  console.log(lotSize_main_future_int);
+      var stockDropdown_symbol_main = localStorage.getItem('stockDropdown_symbol_main');
 
 
-  var currentValue_atm = parseInt($(".staddle_strike_input").val());
-  var newValue_atm = currentValue_atm - lotSize_main_future_int
-  if (newValue_atm >= 0) {
-    $(".staddle_strike_input").val(newValue_atm);
-      // Call function to set the dynamic ATM
-      set_the_dynamic_atm(newValue_atm);
-  }
+        if (stockDropdown_symbol_main==="NIFTY") {
+          var currentValue_atm = parseInt($(".staddle_strike_input").val());
+          lotSize_main_future_int+=50
+        var newValue_atm = currentValue_atm +  50
+        $(".staddle_strike_input").val(newValue_atm);
+
+        var lotSize_main_future_int_class  = lotSize_main_future_int < 0 ? "text-danger":"text-success"
+        $(".malipulation_text_straddle").text(lotSize_main_future_int).removeClass("text-danger").addClass(lotSize_main_future_int_class);
+          // Call function to set the dynamic ATM
+          set_the_dynamic_atm(newValue_atm);
+
+          $(this).attr("disabled", lotSize_main_future_int >= 300 ? true : false);
+          $(".decrease_straddle_value").attr("disabled", lotSize_main_future_int <= -300 ? true : false);
+        }
+        
+        else if (stockDropdown_symbol_main==="BANKNIFTY") {
+          var currentValue_atm = parseInt($(".staddle_strike_input").val());
+          lotSize_main_future_int+=100
+        var newValue_atm = currentValue_atm +  100
+        $(".staddle_strike_input").val(newValue_atm);
+          // Call function to set the dynamic ATM
+          var lotSize_main_future_int_class  = lotSize_main_future_int < 0 ? "text-danger":"text-success"
+        $(".malipulation_text_straddle").text(lotSize_main_future_int).removeClass("text-danger").addClass(lotSize_main_future_int_class);
+          // Call function to set the dynamic ATM
+          set_the_dynamic_atm(newValue_atm);
+
+          $(this).attr("disabled", lotSize_main_future_int >= 500 ? true : false);
+          $(".decrease_straddle_value").attr("disabled", lotSize_main_future_int <= -500 ? true : false);
+
+
+
+
+
+
+
+        }
+        else if (stockDropdown_symbol_main==="FINNIFTY") {
+          var currentValue_atm = parseInt($(".staddle_strike_input").val());
+        var newValue_atm = currentValue_atm +  50
+        lotSize_main_future_int+=50
+        $(".staddle_strike_input").val(newValue_atm);
+
+
+          // Call function to set the dynamic ATM
+          var lotSize_main_future_int_class  = lotSize_main_future_int < 0 ? "text-danger":"text-success"
+        $(".malipulation_text_straddle").text(lotSize_main_future_int).removeClass("text-danger").addClass(lotSize_main_future_int_class);
+          // Call function to set the dynamic ATM
+          set_the_dynamic_atm(newValue_atm);
+
+          $(this).attr("disabled", lotSize_main_future_int >= 300 ? true : false);
+          $(".decrease_straddle_value").attr("disabled", lotSize_main_future_int <= -300 ? true : false);
+
+
+        }
+
+
+
+      });
+      // Handle click event for decreasing the value
+
+      $(document).off("click", ".decrease_straddle_value").on("click", ".decrease_straddle_value", function () {
+
+
+        var stockDropdown_symbol_main = localStorage.getItem('stockDropdown_symbol_main');
+
+
+      if (stockDropdown_symbol_main==="NIFTY") {
+
+        var currentValue_atm = parseInt($(".staddle_strike_input").val());
+        lotSize_main_future_int-=50
+        var newValue_atm = currentValue_atm -  50
+
+
+        var lotSize_main_future_int_class  = lotSize_main_future_int < 0 ? "text-danger":"text-success"
+
+
+        $(".malipulation_text_straddle").text(lotSize_main_future_int).removeClass("text-success").addClass(lotSize_main_future_int_class);
+      $(".staddle_strike_input").val(newValue_atm);
+        // Call function to set the dynamic ATM
+        set_the_dynamic_atm(newValue_atm);
+
+        $(".increase_straddle_value").attr("disabled", lotSize_main_future_int >= 300 ? true : false);
+        $(this).attr("disabled", lotSize_main_future_int <= -300 ? true : false);
+      }
+
+      else if (stockDropdown_symbol_main==="BANKNIFTY") {
+        var currentValue_atm = parseInt($(".staddle_strike_input").val());
+        lotSize_main_future_int-=100
+      var newValue_atm = currentValue_atm -  100
+
+
+
+
+        var lotSize_main_future_int_class  = lotSize_main_future_int < 0 ? "text-danger":"text-success"
+
+
+        $(".malipulation_text_straddle").text(lotSize_main_future_int).removeClass("text-success").addClass(lotSize_main_future_int_class);
+      $(".staddle_strike_input").val(newValue_atm);
+        // Call function to set the dynamic ATM
+        set_the_dynamic_atm(newValue_atm);
+
+        $(".increase_straddle_value").attr("disabled", lotSize_main_future_int >= 500 ? true : false);
+        $(this).attr("disabled", lotSize_main_future_int <= -500 ? true : false);
+
+      }
+      else if (stockDropdown_symbol_main==="FINNIFTY") {
+        var currentValue_atm = parseInt($(".staddle_strike_input").val());
+      var newValue_atm = currentValue_atm -  50
+      lotSize_main_future_int-=50
+
+      $(".malipulation_text_straddle").text(lotSize_main_future_int).removeClass("text-success").addClass(lotSize_main_future_int_class);
+      $(".staddle_strike_input").val(newValue_atm);
+        // Call function to set the dynamic ATM
+        set_the_dynamic_atm(newValue_atm);
+
+        $(".increase_straddle_value").attr("disabled", lotSize_main_future_int >= 300 ? true : false);
+        $(this).attr("disabled", lotSize_main_future_int <= -300 ? true : false);
+      }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 });
 
 
