@@ -5511,6 +5511,7 @@ font-weight: 100 !important ;
                         </div>
 
                         <style>
+                          .main_iron_fly_atm_indicator,
                           .main_short_straddle_atm_indicator{
                             display: flex;
                             align-items: center;
@@ -5519,17 +5520,20 @@ font-weight: 100 !important ;
                             margin-bottom: 0.5rem;
                           }
 
-                          .decrease_straddle_value,.increase_straddle_value{
+                          .decrease_straddle_value,.increase_straddle_value,
+                          .decrease_ironfly_value,.increase_ironfly_value{
                             padding: 8px 8px 6px 8px;
                             background-color: white;
                           }
                   
-                          .decrease_straddle_value{
+                          .decrease_straddle_value,
+                          .decrease_ironfly_value{
                             border: none;
                             border-radius: 5px 0px 0px 5px;
                             border-right: 1px solid #8080803b;
                             transition: 0.2s;
                           }
+                          .increase_ironfly_value,
                           .increase_straddle_value{
                             border: none;
                             border-radius: 0px 5px 5px 0px;
@@ -5538,28 +5542,34 @@ font-weight: 100 !important ;
                             transition: 0.2s;
                           }
 
+                          .decrease_ironfly_value:hover,.increase_ironfly_value:hover,
                           .decrease_straddle_value:hover,.increase_straddle_value:hover{
                       
                             background-color: rgb(232, 232, 232);
                           }
+                          .decrease_ironfly_value:active,.increase_ironfly_value:active,
                           .decrease_straddle_value:active,.increase_straddle_value:active{
                       
                             background-color: rgb(201, 201, 201);
                           }
+                          .main_iron_fly ,
                           .main_short_straddle {
                             border: 1px solid #8080803b;
                             border-radius: 5px 5px 5px 5px;
                           }
-                          .staddle_strike_input{
+                          .staddle_strike_input,
+                          .ironfly_strike_input{
                             background-color: white;
                             border: none;
                             text-align: center;
                           }
 
+                          .main_iron_fly_atm_indicator label,
                           .main_short_straddle_atm_indicator label{
                             font-weight: 400 !important;
 
                           }
+                          .malipulation_text_ironfly,
                           .malipulation_text_straddle{
                             width: 40px;
                           }
@@ -5847,22 +5857,48 @@ font-weight: 100 !important ;
                           <label for="expirydate">Expiry Date</label>
                           <select class="expiry_date_input form-select" id="expiryDate_ironFly"></select>
                         </div>
+
+
+                        <div class="main_iron_fly_atm_indicator">
+
+                          <label for="main_iron_fly" class="m-0">ATM:</label>
+
+
+                          <div class="main_iron_fly d-flex m-0" id="main_iron_fly">
+                            <button class="decrease_ironfly_value"><i class="bx bx-minus"></i></button>
+                            <input type="text" style="width: 100px;" class="ironfly_strike_input">
+                            <button class="increase_ironfly_value"><i class="bx bx-plus"></i></button>
+                          </div>
+
+                          <div class="main_ironfly_new_strike_price_malipulations">
+                            <p class="malipulation_text_ironfly">0</p>
+                          </div>
+
+                        </div>
+
+
+
+
   
                         <div class="main_counter d-flex gap-3 mb-3">
-                          <div class="inner_inroFly_counter d-flex gap-2">
+                          <div class="inner_inroFly_counter d-flex gap-2" style="    margin-left: 2px !important;">
                             <p class="fs-5 lot_title">Qty:</p>
                             <div class="counter_ironFly d-flex justify-content-center gap-1">
                               <button class="btn" id="decrement_ironFly">
                                 <i class="bx bx-minus"></i>
                               </button>
-                              <input type="text" name="" id="counter_input_ironFly" min="1" disabled />
+                              <input type="text" name="" id="counter_input_ironFly" min="1" disabled style="    width: 91px !important;" />
                               <button class="btn" id="increment_ironFly">
                                 <i class="bx bx-plus"></i>
                               </button>
                             </div>
   
-                            <button class="" id="shortironFly">SELL</button>
                           </div>
+                        </div>
+                        <div class="short_iron_fly_sell_btn d-flex justify-content-center">
+
+
+                          <button class="" id="shortironFly" style="     width: 124px !important;">SELL</button>
                         </div>
                       </div>
                     </div>
@@ -15072,18 +15108,169 @@ margin-bottom: 38px;
           });
 
           var lotSize_main_future_int=0
+          var lotSize_main_iron_fly=0
 
           $(".malipulation_text_straddle").text(0)
+          $(".malipulation_text_ironfly").text(0)
           $(".counter_input").val(1)
 
                 // Convert the value to an integer
                 $(".decrease_straddle_value").attr("disabled",false)
                 $(".increase_straddle_value").attr("disabled",false)
+                $(".decrease_ironfly_value").attr("disabled",false)
+                $(".increase_ironfly_value").attr("disabled",false)
 
 
                   // Handle click event for increasing the value
 
 
+  $(document).off("click", ".increase_ironfly_value").on("click", ".increase_ironfly_value", function () {
+
+      var stockDropdown_symbol_main = localStorage.getItem('stockDropdown_symbol_main');
+
+
+        if (stockDropdown_symbol_main==="NIFTY") {
+          var currentValue_atm = parseInt($(".ironfly_strike_input").val());
+          lotSize_main_iron_fly+=50
+        var newValue_atm = currentValue_atm +  50
+        $(".ironfly_strike_input").val(newValue_atm);
+
+        var lotSize_main_iron_fly_class  = lotSize_main_iron_fly < 0 ? "text-danger":"text-success"
+        $(".malipulation_text_ironfly").text(lotSize_main_iron_fly).removeClass("text-danger").addClass(lotSize_main_iron_fly_class);
+          // Call function to set the dynamic ATM
+          set_the_dynamic_atm_iron_fly(50);
+
+          $(this).attr("disabled", lotSize_main_iron_fly >= 300 ? true : false);
+          $(".decrease_ironfly_value").attr("disabled", lotSize_main_iron_fly <= -300 ? true : false);
+        }
+        
+        else if (stockDropdown_symbol_main==="BANKNIFTY") {
+          var currentValue_atm = parseInt($(".ironfly_strike_input").val());
+          lotSize_main_iron_fly+=100
+        var newValue_atm = currentValue_atm +  100
+        $(".ironfly_strike_input").val(newValue_atm);
+          // Call function to set the dynamic ATM
+          var lotSize_main_iron_fly_class  = lotSize_main_iron_fly < 0 ? "text-danger":"text-success"
+        $(".malipulation_text_ironfly").text(lotSize_main_iron_fly).removeClass("text-danger").addClass(lotSize_main_iron_fly_class);
+          // Call function to set the dynamic ATM
+          set_the_dynamic_atm_iron_fly(100);
+
+          $(this).attr("disabled", lotSize_main_iron_fly >= 500 ? true : false);
+          $(".decrease_ironfly_value").attr("disabled", lotSize_main_iron_fly <= -500 ? true : false);
+
+
+
+
+
+
+
+        }
+        else if (stockDropdown_symbol_main==="FINNIFTY") {
+          var currentValue_atm = parseInt($(".ironfly_strike_input").val());
+        var newValue_atm = currentValue_atm +  50
+        lotSize_main_iron_fly+=50
+        $(".ironfly_strike_input").val(newValue_atm);
+
+
+          // Call function to set the dynamic ATM
+          var lotSize_main_iron_fly_class  = lotSize_main_iron_fly < 0 ? "text-danger":"text-success"
+        $(".malipulation_text_ironfly").text(lotSize_main_iron_fly).removeClass("text-danger").addClass(lotSize_main_iron_fly_class);
+          // Call function to set the dynamic ATM
+          set_the_dynamic_atm_iron_fly(50);
+
+          $(this).attr("disabled", lotSize_main_iron_fly >= 300 ? true : false);
+          $(".decrease_ironfly_value").attr("disabled", lotSize_main_iron_fly <= -300 ? true : false);
+
+
+        }
+
+
+
+      });
+
+
+
+      $(document).off("click", ".decrease_ironfly_value").on("click", ".decrease_ironfly_value", function () {
+
+
+var stockDropdown_symbol_main = localStorage.getItem('stockDropdown_symbol_main');
+
+
+if (stockDropdown_symbol_main==="NIFTY") {
+
+var currentValue_atm = parseInt($(".ironfly_strike_input").val());
+lotSize_main_iron_fly-=50
+var newValue_atm = currentValue_atm -  50
+
+
+var lotSize_main_iron_fly_class  = lotSize_main_iron_fly < 0 ? "text-danger":"text-success"
+
+
+$(".malipulation_text_ironfly").text(lotSize_main_iron_fly).removeClass("text-success").addClass(lotSize_main_iron_fly_class);
+$(".ironfly_strike_input").val(newValue_atm);
+// Call function to set the dynamic ATM
+set_the_dynamic_atm_iron_fly(-50)
+
+$(".increase_ironfly_value").attr("disabled", lotSize_main_iron_fly >= 300 ? true : false);
+$(this).attr("disabled", lotSize_main_iron_fly <= -300 ? true : false);
+}
+
+else if (stockDropdown_symbol_main==="BANKNIFTY") {
+var currentValue_atm = parseInt($(".ironfly_strike_input").val());
+lotSize_main_iron_fly-=100
+var newValue_atm = currentValue_atm -  100
+
+
+
+
+var lotSize_main_iron_fly_class  = lotSize_main_iron_fly < 0 ? "text-danger":"text-success"
+
+
+$(".malipulation_text_ironfly").text(lotSize_main_iron_fly).removeClass("text-success").addClass(lotSize_main_iron_fly_class);
+$(".ironfly_strike_input").val(newValue_atm);
+// Call function to set the dynamic ATM
+set_the_dynamic_atm_iron_fly(-100)
+
+$(".increase_ironfly_value").attr("disabled", lotSize_main_iron_fly >= 500 ? true : false);
+$(this).attr("disabled", lotSize_main_iron_fly <= -500 ? true : false);
+
+}
+else if (stockDropdown_symbol_main==="FINNIFTY") {
+var currentValue_atm = parseInt($(".ironfly_strike_input").val());
+var newValue_atm = currentValue_atm -  50
+lotSize_main_iron_fly-=50
+var lotSize_main_iron_fly_class  = lotSize_main_iron_fly < 0 ? "text-danger":"text-success"
+
+$(".malipulation_text_ironfly").text(lotSize_main_iron_fly).removeClass("text-success").addClass(lotSize_main_iron_fly_class);
+$(".ironfly_strike_input").val(newValue_atm);
+// Call function to set the dynamic ATM
+set_the_dynamic_atm_iron_fly(-50)
+
+$(".increase_ironfly_value").attr("disabled", lotSize_main_iron_fly >= 300 ? true : false);
+$(this).attr("disabled", lotSize_main_iron_fly <= -300 ? true : false);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+});
+
+
+
+
+
+
+      
   $(document).off("click", ".increase_straddle_value").on("click", ".increase_straddle_value", function () {
 
       var stockDropdown_symbol_main = localStorage.getItem('stockDropdown_symbol_main');
@@ -15198,6 +15385,7 @@ margin-bottom: 38px;
         var currentValue_atm = parseInt($(".staddle_strike_input").val());
       var newValue_atm = currentValue_atm -  50
       lotSize_main_future_int-=50
+      var lotSize_main_iron_fly_class  = lotSize_main_iron_fly < 0 ? "text-danger":"text-success"
 
       $(".malipulation_text_straddle").text(lotSize_main_future_int).removeClass("text-success").addClass(lotSize_main_future_int_class);
       $(".staddle_strike_input").val(newValue_atm);
@@ -15223,6 +15411,21 @@ margin-bottom: 38px;
 
 });
 
+// Function to set the dynamic ATM
+function set_the_dynamic_atm_iron_fly(lotSize_main_iron_fly) {
+    console.log("New ATM Value:", lotSize_main_iron_fly);
+
+
+
+$("select[id$='_strikeSelect_ironFly']").each(function() {
+        var current_value = parseFloat($(this).val());
+        var result = current_value + lotSize_main_iron_fly;
+        $(this).val(result);
+    });
+
+    // You can add your logic here to handle the new ATM value
+}
+
 
 // Function to set the dynamic ATM
 function set_the_dynamic_atm(newValue_atm) {
@@ -15241,6 +15444,7 @@ function set_the_dynamic_atm(newValue_atm) {
 // Reset lot_size_value_main_new when updating closest strike price
 $("#closest_strike_price").text(closestStrikePrice);
 
+$(".ironfly_strike_input").val(closestStrikePrice);
 $(".staddle_strike_input").val(closestStrikePrice);
 $(".staddle_strike_input").attr({
   "min": 0
