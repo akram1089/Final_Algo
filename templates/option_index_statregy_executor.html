@@ -1910,7 +1910,7 @@ box-shadow: 0 3px 16px 0 rgba(35,47,62,.15);
   background-color: white;
   margin: 12px 0 0 0;
   padding: 0 16px 20px 20px;
-  z-index: 9;
+  z-index: 99;
 }
 
 /* Media queries for responsiveness */
@@ -1961,7 +1961,7 @@ box-shadow: 0 3px 16px 0 rgba(35,47,62,.15);
         #overlay {
           display: none;
           position: fixed;
-          z-index: 9;
+          z-index: 99;
           top: 0;
           left: 0;
           width: 100%;
@@ -8486,7 +8486,7 @@ text-align: center !important;
     top: 99%;
     z-index: 9;
     color: white;
-    background: red;
+    background: red !important;
     padding: 1px 9px;
     border-radius: 10px;
     left: 50%;
@@ -11430,7 +11430,34 @@ margin-bottom: 38px;
 
                   if (response.broker_name === "zerodha") {
 
-                    //////console.log(response);
+                    console.log(response.margin_info);
+
+                    if (response.margin_info.status ==="error") {
+
+                      toastr.error(response.margin_info.message)
+
+                      $(".check_liquidity").prop("disabled", true);
+
+// Create a new paragraph element
+var $errorParagraph = $("<p></p>");
+
+// Set the text and class for the error message
+$errorParagraph.text("Invalid zerodha credentials !! Please check your Zerodha Login, password or TOTP secret key !!");
+$errorParagraph.addClass("text-danger");
+$errorParagraph.css({
+    "border": "1px solid red",
+    "padding": "5px",
+    "border-radius": "10px"
+});
+
+// Empty the .main_extented_status_liquidity element and append the error message
+$(".main_extented_status_liquidity").empty().append($errorParagraph);
+
+                      return
+                      
+                    }else{
+                      $(".check_liquidity").prop("disabled", false);
+                    }
 
                     if (response.status === "success") {
 
@@ -15691,6 +15718,11 @@ $(".right_side_top_strategies ,#buid_custom_strategy_btn,.oi_option,.greeks_opti
                   // Trigger the click event for the element with ID "#calculate"
                   localStorage.setItem("strategy_builder", "straddle");
                   calculate_data();
+                  $(".staddle_strike_input").val(parseInt($("#closest_strike_price").text()));
+                  $(".malipulation_text_straddle ").text(0);
+                   lotSize_main_future_int=0
+                  console.log('$("#closest_strike_price").val()',$("#closest_strike_price").text());
+                  
                 }
               });
 
@@ -16282,6 +16314,10 @@ $(".right_side_top_strategies ,#buid_custom_strategy_btn,.oi_option,.greeks_opti
                 Table_chart_pyoff()
                 // margin_calculations()
                 localStorage.removeItem('main_row_instances');
+
+                $(".ironfly_strike_input").val(parseInt($("#closest_strike_price").text()));
+                  $(".malipulation_text_ironfly").text(0);
+                   lotSize_main_iron_fly=0
               });
             }
             else if (filter_arg_strategy === "iron_condor") {
@@ -20212,7 +20248,7 @@ console.log(formattedString);
       $("#optionExpiryDropdown").change(function () {
         updateRangeLimits();
         logDateInfo("customRange2");
-        black_scholes_table(tableData)
+        // black_scholes_table(tableData)
         var selectedValue = $(this).val();
         console.log('selectedValue',selectedValue);
         
@@ -20933,53 +20969,52 @@ function getDaySuffix(day) {
 
 
 var closestStrikePriceText = $("#closest_strike_price").text();
-            function payoff_atm_scroll() {
+
+function payoff_atm_scroll() {
     var closestStrikePrice = parseInt(closestStrikePriceText);
 
-    console.log('Yes called');
+    console.log('Function called');
+
     $(".payoff_table_main_table tr").each(function() {
-      
-      var $strikePrice = $(this).find("td:first-child div");
-      var currentStrikePrice = parseInt($strikePrice.text());
-      var $cell_container = $(this).find(".cell-container");
-      var $first_child = $cell_container.first();
-      $first_child.find('.atm-label-payoff-table').remove();
+        var $strikePrice = $(this).find("td:first-child div");
+        var currentStrikePrice = parseInt($strikePrice.text());
+        var $cellContainer = $(this).find(".cell-container");
+        var $firstChild = $cellContainer.first();
+        $firstChild.find('.atm-label-payoff-table').remove();
 
+        if (currentStrikePrice === closestStrikePrice) {
+            console.log('Current Strike Price:', currentStrikePrice);
+            var indexChangeValue = parseFloat($(".change_change_per").text());
+            var lastTradedPrice = $(".last_traded_price").text();
+            var mainBgAtmDynamic = indexChangeValue < 0 ? "index_atm_negative" : "index_atm_positive";
+            var mainBorderAtmDynamic = indexChangeValue < 0 ? "index_atm_negative_border" : "index_atm_positive_border";
 
-      
+            $(this).addClass(`${mainBorderAtmDynamic} background_option_closest_payoff_table`);
 
-      // console.log('closestStrikePrice',closestStrikePrice);
-      // console.log('currentStrikePrice',currentStrikePrice);
-      if (currentStrikePrice === closestStrikePrice) {
-        console.log('currentStrikePrice',currentStrikePrice);
-        var index_change_value = parseFloat($(".change_change_per").text());
-        var last_traded_price = $(".last_traded_price").text();
-        var main_bg_atm_dynamic = index_change_value < 0 ? "index_atm_negative" : "index_atm_positive";
-        var main_border_atm_dynamic = index_change_value < 0 ? "index_atm_negative_border" : "index_atm_positive_border";
-        
-        console.log("$first_child:", $first_child); // Debugging statement
-        
-        $(this).addClass(` ${main_border_atm_dynamic} background_opiton_closest_payoff_table`);
-        // Check if $first_child exists and is selected correctly
-        if ($first_child.length > 0) {
-          // Create the span element using jQuery and append it to the first child
-          var spanElement = $("<span>").addClass("atm-label-payoff-table").addClass(main_bg_atm_dynamic).text(`${last_traded_price}(+${index_change_value}%)`);
-          $first_child.append(spanElement);
-          console.log("Span element appended successfully"); // Debugging statement
-        } else {
-          console.log("Error: $first_child not found or selected incorrectly"); // Debugging statement
+            if ($firstChild.length > 0) {
+                var spanElement = $("<span>").addClass("atm-label-payoff-table").addClass(mainBgAtmDynamic).text(`${lastTradedPrice}(+${indexChangeValue}%)`);
+                $firstChild.append(spanElement);
+                console.log("Span element appended successfully");
+            } else {
+                console.log("Error: $firstChild not found or selected incorrectly");
+            }
+
+            var container = $(".table_container");
+            var scrollTo = $(this).position().top - container.height() / 2 + $(this).height() / 2;
+
+            $(".table_container").stop().animate({
+                scrollTop: scrollTo
+            }, 1000, function() {
+                console.log("Scroll animation completed");
+                // You can add any additional actions to perform after scrolling here
+            });
+
+            // Exit the each loop once the closest strike price is found
+            return false;
         }
-
-        var container = $(".table_container");
-        var scrollTo = $(this).position().top - container.height() / 2 + $(this).height() / 2;
-
-        $(".table_container").animate({
-          scrollTop: scrollTo
-        }, 1000, function() {});
-      }
     });
-  }
-  // Call the function initially
+}
+
   payoff_atm_scroll();
 
   // Add click event listener to trigger the scrolling function
