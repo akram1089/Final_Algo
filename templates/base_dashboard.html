@@ -140,7 +140,130 @@
 
   spinner();
 </script>
+<style>
 
+  /* Custom Toastr Styles */
+
+#toast-container>div{
+  padding: 2px 16px 15px 50px  !important;
+}
+  /* Custom Toastr Styles */
+.toast-success {
+  background-color: #ffffff; /* White background for success */
+  color: #28a745; /* Green color for success */
+opacity: 1 !important;
+}
+
+.toast-error {
+  background-color: #ffffff; /* White background for error */
+  color: #dc3545; /* Red color for error */
+  opacity: 1 !important;
+}
+
+.toast-warning {
+  background-color: #ffffff; /* White background for warning */
+  color: #ffc107; /* Yellow color for warning */
+  opacity: 1 !important;
+}
+.toast-close-button{
+  color: rgba(0, 0, 0, 0.697) !important;
+
+  font-size: 30px !important;
+  font-weight: 200 !important;
+
+  top: 0px !important;
+}
+.toast-message{
+  color: black;
+  margin-top: 7px;
+}
+/* Set success text in bold */
+.toast-success .toast-message strong {
+  font-weight: bold;
+}
+.toast-error .toast-message strong {
+  font-weight: bold;
+}
+.toast-warning .toast-message strong {
+  font-weight: bold;
+}
+
+</style>
+
+<style>
+
+
+
+
+
+
+  #toast-container>.toast-success{
+      background-image: none !important;
+  }
+  #toast-container > .toast-success::after {
+  content: "\F270";
+  font-family: "bootstrap-icons";
+  font-size: 1.5rem;
+  color: green;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+      padding: 0 6px 0 6px;
+  display: flex;
+  background-color: rgb(215, 255, 227);
+  align-items: center;
+
+  font-weight: 500 !important;
+}
+
+  #toast-container>.toast-error{
+      background-image: none !important;
+  }
+  #toast-container > .toast-error::after {
+  content: "\F623";
+  font-family: "bootstrap-icons";
+  font-size: 1.5rem;
+  color: red;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+      padding: 0 6px 0 6px;
+  display: flex;
+  background-color: rgb(255, 205, 205) ;
+  align-items: center;
+  font-weight: 500 !important;
+}
+
+  #toast-container>.toast-warning{
+      background-image: none !important;
+  }
+  #toast-container > .toast-warning::after {
+  content: "\F33B";
+  font-family: "bootstrap-icons";
+  font-size: 1.5rem;
+  color: orange;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+      padding: 0 6px 0 6px;
+  display: flex;
+  background-color:rgb(255, 237, 204);
+  align-items: center;
+  font-weight: 500 !important;
+}
+
+
+
+
+
+
+
+
+
+</style>
 <style>
      #resources_dropdown {
 
@@ -4150,90 +4273,92 @@ display: none !important;
  
  
  <script>
-   $(document).ready(function() {
-
-    function getCookie(name) {
-      const cookieValue = document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)');
-      return cookieValue ? cookieValue.pop() : '';
-  }
-
-    function encryptPassword(password) {
-      const secretKey = 'your_secret_key';
-      const encryptedPassword = CryptoJS.AES.encrypt(password, secretKey).toString();
-      return encryptedPassword;
-  }
-  
-  // Function to decrypt the password using CryptoJS
-  function decryptPassword(encryptedPassword) {
-      const secretKey = 'your_secret_key'; 
-      const decryptedPassword = CryptoJS.AES.decrypt(encryptedPassword, secretKey).toString(CryptoJS.enc.Utf8);
-      return decryptedPassword;
-  }
-
-
-    $('#headermainSignin').click(function() {
-      var phoneNumber = $('#modalEmailSignIn').val();
-      var password = $('#modalPasswordSignIn').val();
-  
-      if (!phoneNumber || !password) {
-          toastr.error('Phone number and password are required.');
-          return false;
-      }
-  
-      if ($('.remind_me').is(':checked')) {
-          
-          var encryptedPassword = encryptPassword(password);
-  
-          // Set cookies with expiration time (e.g., 30 days)
-          document.cookie = `phone_number=${phoneNumber}; expires=Wed, 01 Jan 2025 00:00:00 UTC; path=/`;
-          document.cookie = `password=${encryptedPassword}; expires=Wed, 01 Jan 2025 00:00:00 UTC; path=/`;
-      } else {
-          // If "Remind Me" checkbox is not checked, remove any existing cookies
-          document.cookie = 'phone_number=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
-          document.cookie = 'password=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
-      }
-      
-      // Submit the form
-      $('#modalSignInForm').submit();
-  });
-  
-  // Function to retrieve the saved cookies and fill them into input fields
-  function fillLoginForm() {
-      const phoneNumber = getCookie('phone_number');
-      const encryptedPassword = getCookie('password');
-      console.log(encryptedPassword)
-      console.log(phoneNumber)
-      $('#modalEmailSignIn').val(phoneNumber);
-      // Decrypt the password before filling it into the password field
-      $('#modalPasswordSignIn').val(decryptPassword(encryptedPassword));
-  }
-  
-  // Call the fillLoginForm function when the document is ready
   $(document).ready(function() {
-      fillLoginForm();
-  });
-  
-  
 
-  $('#modalEmailSignIn').on('input', function () {
-    this.value = this.value.replace(/[^0-9]/g, '');
-});
-  
-     $('#eyeIcon').click(function() {
-       var passwordInput = $('#modalPasswordSignIn');
-       var eyeIcon = $('#eyeIcon i');
+   function getCookie(name) {
+     const cookieValue = document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)');
+     return cookieValue ? cookieValue.pop() : '';
+ }
+
+   function encryptPassword(password) {
+     const secretKey = 'your_secret_key';
+     const encryptedPassword = CryptoJS.AES.encrypt(password, secretKey).toString();
+     return encryptedPassword;
+ }
  
-       if (passwordInput.prop('type') === 'password') {
-           passwordInput.prop('type', 'text');
-           eyeIcon.removeClass('bi-eye-slash').addClass('bi-eye');
-       } else {
-           passwordInput.prop('type', 'password');
-           eyeIcon.removeClass('bi-eye').addClass('bi-eye-slash');
-       }
-   });
+ // Function to decrypt the password using CryptoJS
+ function decryptPassword(encryptedPassword) {
+     const secretKey = 'your_secret_key'; 
+     const decryptedPassword = CryptoJS.AES.decrypt(encryptedPassword, secretKey).toString(CryptoJS.enc.Utf8);
+     return decryptedPassword;
+ }
+
+
+   $('#headermainSignin').click(function() {
+     var phoneNumber = $('#modalEmailSignIn').val();
+     var password = $('#modalPasswordSignIn').val();
+ 
+     if (!phoneNumber || !password) {
+         toastr.error('Phone number and password are required.');
+         return false;
+     }
+ 
+     if ($('.remind_me').is(':checked')) {
+         
+         var encryptedPassword = encryptPassword(password);
+ 
+         // Set cookies with expiration time (e.g., 30 days)
+         document.cookie = `phone_number=${phoneNumber}; expires=Wed, 01 Jan 2025 00:00:00 UTC; path=/`;
+         document.cookie = `password=${encryptedPassword}; expires=Wed, 01 Jan 2025 00:00:00 UTC; path=/`;
+     }
+     
+     // Submit the form
+     $('#modalSignInForm').submit();
  });
  
- </script>
+  // Call the fillLoginForm function when the document is ready
+  $(document).ready(function() {
+   fillLoginForm();
+  });
+
+ // Function to retrieve the saved cookies and fill them into input fields
+ function fillLoginForm() {
+     const phoneNumber = getCookie('phone_number');
+     const encryptedPassword = getCookie('password');
+     console.log(encryptedPassword)
+     console.log(phoneNumber)
+     if (phoneNumber && encryptedPassword) {
+       $('#modalEmailSignIn').val(phoneNumber);
+       // Decrypt the password before filling it into the password field
+       $('#modalPasswordSignIn').val(decryptPassword(encryptedPassword));
+   }
+   
+ }
+ 
+
+ 
+ 
+
+ $('#modalEmailSignIn').on('input', function () {
+   this.value = this.value.replace(/[^0-9]/g, '');
+});
+ 
+    $('#eyeIcon').click(function() {
+      var passwordInput = $('#modalPasswordSignIn');
+      var eyeIcon = $('#eyeIcon i');
+
+      if (passwordInput.prop('type') === 'password') {
+          passwordInput.prop('type', 'text');
+          eyeIcon.removeClass('bi-eye-slash').addClass('bi-eye');
+      } else {
+          passwordInput.prop('type', 'password');
+          eyeIcon.removeClass('bi-eye').addClass('bi-eye-slash');
+      }
+  });
+});
+
+</script>
+
   <!-- MODAL sign in :: END-->
 
   <!-- MODAL sign in :: START-->
@@ -4405,6 +4530,8 @@ display: none !important;
             </div>
           </div>
         </div>
+
+     
         <script>
           $(document).ready(function () {
             $(document).on('click', '.get_otp_signup', function() {
@@ -4514,6 +4641,7 @@ display: none !important;
                       toastr.success(response.message);
                       
                     }
+
                     // You can redirect or perform other actions here
                   },
                   error: function (error) {
@@ -4528,6 +4656,10 @@ display: none !important;
                     // You can display an error message to the user
                   }
                 });
+              });
+
+              $('#modalPhoneSignUp').on('input', function () {
+                this.value = this.value.replace(/[^0-9]/g, '');
               });
                       // Countdown timer function
                       function startCountdown() {
@@ -4599,7 +4731,9 @@ $('.main_retry_otp').click(function () {
     }
 });
 
-
+$('#modalPhoneSignUp').on('input', function () {
+  this.value = this.value.replace(/[^0-9]/g, '');
+});
 
 
               $(".validate_otp").click(function () {
@@ -4710,7 +4844,6 @@ $('.main_retry_otp').click(function () {
 
   function clearFormFields() {
     $('#modalFullNameSignUp').val("");
-    $('#modalCountryCodeSignUp').val("");
     $('#modalPhoneSignUp').val("");
     $('#modalPasswordSignUp').val("");
     $('#modalCPasswordSignUp').val("");
@@ -4720,11 +4853,19 @@ $('.main_retry_otp').click(function () {
 
   $('#signupModal').on('hidden.bs.modal', function (e) {
     clearFormFields(); // Clear form fields when the modal is closed
+    $("#password_main").show()
+    $("#cpassword_main").show()
+    $("#term_conditions").show()
+    $("#headermainSignin").show()
+    $(".headersignIN").show()
+    $(".get_otp_signup").show()
+    $("#otpsignup").hide()
+    $("#validate_otp").hide()
+    $(".main_retry_otp").hide()
 });
 
 });
-        </script>
-        
+</script>
       </div>
     </div>
   </div>
@@ -5516,18 +5657,25 @@ $('#example_length,#example_filter').wrapAll('<div class="parent_search_length">
             "closeButton": true,
             "debug": true,
             "newestOnTop": true,
-            "progressBar": true,
+            "progressBar": false,
+            "preventDuplicates": false,
             "positionClass": "toast-bottom-right",
-            "preventDuplicates": true,
-            "showDuration": "300",
-            "hideDuration": "1000",
-            "timeOut": "5000",
-            "extendedTimeOut": "1000",
+    
+            "showDuration": "30000",
+            "hideDuration": "100000",
+            "timeOut": "500000",
+            "extendedTimeOut": "100000",
             "showEasing": "swing",
             "hideEasing": "linear",
             "showMethod": "fadeIn",
             "hideMethod": "fadeOut",
             "toastClass": "toastr-custom", // Add a custom class
+            "iconClasses": {
+              "success": " toast-success",
+              "error": " toast-error",
+              "warning": " toast-warning"
+          },
+          "escapeHtml": false
           };
 
 $("#subscribe_mail").click(function () {
