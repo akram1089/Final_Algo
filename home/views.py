@@ -9013,65 +9013,6 @@ def get_content_data(request):
 
 
 
-def get_order_positions_details(request):
-    try:
-        # Assuming 'user' is defined somewhere in your code
-        user = request.user
-        broker_instance_zerodha = Broker.objects.filter(user=user, broker_name="zerodha", active_api=True).first()
-        broker_instance_angelone = Broker.objects.filter(user=user, broker_name="angelone", active_api=True).first()
-
-        if broker_instance_zerodha:
-            enctoken = get_enctoken_internal(
-                broker_instance_zerodha.logging_id,
-                broker_instance_zerodha.password,
-                broker_instance_zerodha.totp_key
-            )
-
-            if enctoken:
-                zerodha_api = ZerodhaPlaceOrder(enctoken)
-                all_profile = zerodha_api.get_user_profile()
-                all_position = zerodha_api.positions()
-                all_holdings = zerodha_api.holdings()
-
-                # Create separate lists for 'tradingsymbol' values with exchange
-                net_tradingsymbols = [f"{entry['exchange']}:{entry['tradingsymbol']}" for entry in all_position['net']]
-                day_tradingsymbols = [f"{entry['exchange']}:{entry['tradingsymbol']}" for entry in all_position['day']]
-
-                # Fetch OHLC for net_tradingsymbols
-                main_net_ohlc = []
-                for net_symbol in net_tradingsymbols:
-                    ohlc_market_indepth_net = zerodha_api.quote(net_symbol)
-                    main_net_ohlc.append(ohlc_market_indepth_net)
-                    print(f"Net Trading Symbol: {net_symbol}")
-
-                # Fetch OHLC for day_tradingsymbols
-                main_day_ohlc = []
-                for day_symbol in day_tradingsymbols:
-                    ohlc_market_indepth_day = zerodha_api.quote(day_symbol)
-                    main_day_ohlc.append(ohlc_market_indepth_day)
-                    print(f"Day Trading Symbol: {day_symbol}")
-
-                return JsonResponse({
-                    "all_profile": all_profile,
-                    "all_position": all_position,
-                    "all_holdings": all_holdings,
-                    "net_tradingsymbols": net_tradingsymbols,
-                    "day_tradingsymbols": day_tradingsymbols,
-                    "main_net_ohlc": main_net_ohlc,
-                    "main_day_ohlc": main_day_ohlc
-                })
-
-        elif broker_instance_angelone:
-            # Add your logic for Angel-one
-            print("Angel-one")
-        
-        # Return a response if no broker instance is found
-        return JsonResponse({"error": "No active broker instance found for the user."})
-
-    except Exception as e:
-        # Log the exception for further analysis
-        print(f"An error occurred: {str(e)}")
-        return JsonResponse({"error": "An unexpected error occurred. Please try again later."})
 
 
 
@@ -18313,7 +18254,16 @@ class ZerodhaPlaceOrder:
             print(order_response.text)
             # print(f"Failed to place order. Status Code: {response.status_code}")
             return order_response.text
-        
+    def cancel_order(self, variety, order_id, parent_order_id=None):
+        order_id = self.session.delete(f"{self.root_url}/orders/{variety}/{order_id}",
+                                       data={"parent_order_id": parent_order_id} if parent_order_id else {},
+                                       headers=self.headers).json()["data"]["order_id"]
+        return order_id
+    
+    
+    def orders(self):
+        orders = self.session.get(f"{self.root_url}/orders", headers=self.headers).json()["data"]
+        return orders
 
 
 
@@ -18742,6 +18692,7 @@ def quote_data_from_broker(request):
                 broker_instance_zerodha.password,
                 broker_instance_zerodha.totp_key
             )
+            print(enctoken)
 
             trading_quotes = data.get('trading_quote')
             # print("trading_quotes",trading_quotes)
@@ -19482,68 +19433,6 @@ def get_content_data(request):
 
 
 
-
-
-
-def get_order_positions_details(request):
-    try:
-        # Assuming 'user' is defined somewhere in your code
-        user = request.user
-        broker_instance_zerodha = Broker.objects.filter(user=user, broker_name="zerodha", active_api=True).first()
-        broker_instance_angelone = Broker.objects.filter(user=user, broker_name="angelone", active_api=True).first()
-
-        if broker_instance_zerodha:
-            enctoken = get_enctoken_internal(
-                broker_instance_zerodha.logging_id,
-                broker_instance_zerodha.password,
-                broker_instance_zerodha.totp_key
-            )
-
-            if enctoken:
-                zerodha_api = ZerodhaPlaceOrder(enctoken)
-                all_profile = zerodha_api.get_user_profile()
-                all_position = zerodha_api.positions()
-                all_holdings = zerodha_api.holdings()
-
-                # Create separate lists for 'tradingsymbol' values with exchange
-                net_tradingsymbols = [f"{entry['exchange']}:{entry['tradingsymbol']}" for entry in all_position['net']]
-                day_tradingsymbols = [f"{entry['exchange']}:{entry['tradingsymbol']}" for entry in all_position['day']]
-
-                # Fetch OHLC for net_tradingsymbols
-                main_net_ohlc = []
-                for net_symbol in net_tradingsymbols:
-                    ohlc_market_indepth_net = zerodha_api.quote(net_symbol)
-                    main_net_ohlc.append(ohlc_market_indepth_net)
-                    print(f"Net Trading Symbol: {net_symbol}")
-
-                # Fetch OHLC for day_tradingsymbols
-                main_day_ohlc = []
-                for day_symbol in day_tradingsymbols:
-                    ohlc_market_indepth_day = zerodha_api.quote(day_symbol)
-                    main_day_ohlc.append(ohlc_market_indepth_day)
-                    print(f"Day Trading Symbol: {day_symbol}")
-
-                return JsonResponse({
-                    "all_profile": all_profile,
-                    "all_position": all_position,
-                    "all_holdings": all_holdings,
-                    "net_tradingsymbols": net_tradingsymbols,
-                    "day_tradingsymbols": day_tradingsymbols,
-                    "main_net_ohlc": main_net_ohlc,
-                    "main_day_ohlc": main_day_ohlc
-                })
-
-        elif broker_instance_angelone:
-            # Add your logic for Angel-one
-            print("Angel-one")
-        
-        # Return a response if no broker instance is found
-        return JsonResponse({"error": "No active broker instance found for the user."})
-
-    except Exception as e:
-        # Log the exception for further analysis
-        print(f"An error occurred: {str(e)}")
-        return JsonResponse({"error": "An unexpected error occurred. Please try again later."})
 
 
 
@@ -20651,3 +20540,191 @@ def save_template(request):
     else:
         # If request method is not POST, return an error response
         return JsonResponse({'error': 'Invalid request method'}, status=400)
+
+
+
+def order_manager(request):
+    return render(request , "order_manager.html")
+
+
+
+
+
+
+
+
+def get_order_positions_details(request):
+    try:
+        user = request.user
+        broker_instance_zerodha = Broker.objects.filter(user=user, broker_name="zerodha", active_api=True).first()
+        broker_instance_angelone = Broker.objects.filter(user=user, broker_name="angelone", active_api=True).first()
+
+        if broker_instance_zerodha:
+            enctoken = broker_instance_zerodha.enctoken
+            zerodha_api = ZerodhaPlaceOrder(enctoken)
+            all_profile = zerodha_api.get_user_profile()
+
+            if all_profile:
+                enctoken = broker_instance_zerodha.enctoken
+            else:    
+
+                enctoken = get_enctoken_internal(
+                    broker_instance_zerodha.logging_id,
+                    broker_instance_zerodha.password,
+                    broker_instance_zerodha.totp_key
+                )
+                broker_instance_zerodha.enctoken=enctoken
+                broker_instance_zerodha.save()
+
+
+            # print(enctoken)    
+
+            if enctoken:
+                zerodha_api = ZerodhaPlaceOrder(enctoken)
+                all_profile = zerodha_api.get_user_profile()
+                all_position = zerodha_api.positions()
+                all_holdings = zerodha_api.holdings()
+
+                net_tradingsymbols = [f"{entry['exchange']}:{entry['tradingsymbol']}" for entry in all_position.get('net', [])]
+                day_tradingsymbols = [f"{entry['exchange']}:{entry['tradingsymbol']}" for entry in all_position.get('day', [])]
+
+                main_net_ohlc = [zerodha_api.quote(net_symbol) for net_symbol in net_tradingsymbols]
+                main_day_ohlc = [zerodha_api.quote(day_symbol) for day_symbol in day_tradingsymbols]
+
+                return JsonResponse({
+                    "all_profile": all_profile,
+                    "all_position": all_position,
+                    "all_holdings": all_holdings,
+                    "net_tradingsymbols": net_tradingsymbols,
+                    "day_tradingsymbols": day_tradingsymbols,
+                    "main_net_ohlc": main_net_ohlc,
+                    "main_day_ohlc": main_day_ohlc
+                })
+
+        elif broker_instance_angelone:
+            # Add your logic for Angel-one
+            print("Angel-one")
+
+        return JsonResponse({"error": "No active broker instance found for the user."})
+
+    except Exception as e:
+        # Log the exception for further analysis
+        print(f"An error occurred: {str(e)}")
+        return JsonResponse({"error": "An unexpected error occurred. Please try again later."})
+
+
+
+
+
+
+def toastr_ui_test(request):
+    return render(request , "test_templates/toastr_ui_test.html")
+def draggle_modal(request):
+    return render(request , "test_templates/draggle_modal.html")
+
+
+
+@csrf_exempt
+def exit_zerodha_order(request):
+    try:
+        user = request.user
+        broker_instance_zerodha = Broker.objects.filter(user=user, broker_name="zerodha", active_api=True).first()
+        broker_instance_angelone = Broker.objects.filter(user=user, broker_name="angelone", active_api=True).first()
+        data_trade = json.loads(request.body)
+
+        if broker_instance_zerodha:
+            enctoken = broker_instance_zerodha.enctoken
+            zerodha_api = ZerodhaPlaceOrder(enctoken)
+            all_profile = zerodha_api.get_user_profile()
+
+            if all_profile:
+                enctoken = broker_instance_zerodha.enctoken
+            else:    
+
+                enctoken = get_enctoken_internal(
+                    broker_instance_zerodha.logging_id,
+                    broker_instance_zerodha.password,
+                    broker_instance_zerodha.totp_key
+                )
+                broker_instance_zerodha.enctoken=enctoken
+                broker_instance_zerodha.save()
+
+
+            # print(enctoken)    
+
+            if enctoken:
+                zerodha_api = ZerodhaPlaceOrder(enctoken)
+                order_details = []
+                
+                for trade_data in data_trade:
+                    tradingsymbol = trade_data.get('main_trading_symbol', '')
+                    sell_buy_indicator = trade_data.get('sell_buy_indicator', '').upper()  # Ensure it's uppercase
+                    quantity = int(trade_data.get('Quantity', 0))
+                    price = float(trade_data.get('price', 0))
+                    mis_select = trade_data.get('mis_select', '').lower()  # Ensure it's lowercase
+                    isRadioChecked = trade_data.get('isRadioChecked', '')  # assuming 'isRadioChecked' is present in each trade_data
+
+                    # Map sell_buy_indicator to TRANSACTION_TYPE
+                    if sell_buy_indicator == 'BUY':
+                        transaction_type = zerodha_api.TRANSACTION_TYPE_BUY
+                    elif sell_buy_indicator == 'SELL':
+                        transaction_type = zerodha_api.TRANSACTION_TYPE_SELL
+                    else:
+                        print(f"Invalid sell_buy_indicator: {sell_buy_indicator}")
+                        continue  # Skip processing this trade_data if the indicator is invalid
+
+                    # Map mis_select to product type
+                    if mis_select == 'overnight':
+                        product_type = zerodha_api.PRODUCT_NRML
+                    elif mis_select == 'intraday':
+                        product_type = zerodha_api.PRODUCT_MIS
+                    else:
+                        print(f"Invalid mis_select: {mis_select}")
+                        continue  # Skip processing this trade_data if the mis_select is invalid
+
+                    # Map isRadioChecked to order type
+                    if isRadioChecked == 'market':
+                        order_type = zerodha_api.ORDER_TYPE_MARKET
+                    elif isRadioChecked == 'limit':
+                        order_type = zerodha_api.ORDER_TYPE_LIMIT
+                    else:
+                        print(f"Invalid isRadioChecked: {isRadioChecked}")
+                        continue  # Skip processing this trade_data if the isRadioChecked is invalid
+
+                    order = zerodha_api.place_order(
+                        variety=zerodha_api.VARIETY_REGULAR,
+                        exchange=zerodha_api.EXCHANGE_NFO,
+                        tradingsymbol=tradingsymbol,
+                        transaction_type=transaction_type,
+                        quantity=quantity,
+                        product=product_type,
+                        order_type=order_type,
+                        price=price,
+                        validity=zerodha_api.VALIDITY_DAY,
+                        disclosed_quantity=0,
+                        trigger_price=0,
+                        squareoff=0,
+                        stoploss=0,
+                        trailing_stoploss=0,
+                    )
+                    order_details.append({
+                        'tradingsymbol': tradingsymbol,
+                        'transaction_type': transaction_type,
+                        'mis_select': mis_select,
+                        'order_type': order_type,
+                        'order_id': order,
+                    })
+
+                    print(f"Order ID for {tradingsymbol} ({transaction_type}, {mis_select}, {order_type}): {order}")
+
+                    # Continue with your logic here, e.g., handling the order response
+
+                return JsonResponse({'status': 'success','broker':'zerodha', 'message': 'Orders placed successfully', 'order_details': order_details})
+
+    
+    except Exception as e:
+        # Log the exception for further analysis
+        print(f"An error occurred: {str(e)}")
+        return JsonResponse({"error": "An unexpected error occurred. Please try again later."})
+
+

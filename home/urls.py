@@ -574,6 +574,10 @@ urlpatterns = [
      path('save_template', views.save_template, name='save_template'),
      path('update_blog', views.update_blog, name='update_blog'),
      path('delete_blog', views.delete_blog, name='delete_blog'),
+     path('order_manager', views.order_manager, name='order_manager'),
+     path('toastr_ui_test', views.toastr_ui_test, name='toastr_ui_test'),
+     path('draggle_modal', views.draggle_modal, name='draggle_modal'),
+     path('exit_zerodha_order', views.exit_zerodha_order, name='exit_zerodha_order'),
 
 
 
