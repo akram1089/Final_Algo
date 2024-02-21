@@ -1,0 +1,309 @@
+{% extends "base_dashboard.html" %} {% load static %} {% block dashboard_body %}
+
+<style>
+  #all_broker,#individual_broker_user{
+    width: 23rem;
+  }
+
+  .main_top_filters{
+    align-items: center;
+  }
+
+  .broker_position_icon{
+    width: 40px;
+  }
+  .position_names_user_details h5{
+    font-size: 15px;
+
+  }
+  .position_names_user_details p{
+    font-size: 12px;
+
+  }
+  .main_profile_broker_details{
+    display: flex;
+    align-items: center; 
+    gap: 0.2rem;
+  }
+</style>
+
+
+<div class="main_top_filters d-flex gap-3 my-3 px-2">
+  <label for="all_broker">Select Broker :</label>
+  <select name="" id="all_broker" class="form-select">
+    <option value="zerodha">zerodha</option>
+  </select>
+
+  <label for="individual_broker_user">Select User :</label>
+  <select name="" id="individual_broker_user" class="form-select">
+    <option value="XF1020">XF1020</option>
+
+  </select>
+  <button class="btn btn-success">Get All Positions</button>
+</div>
+
+<div class="main_profile_broker_details px-2">
+  <div class="broker_position_icon"></div>
+  <div class="position_names_user_details">
+    <h5 class="m-0"></h5>
+    <p class="m-0"></p>
+  </div>
+</div>
+
+<div class="All_positions table-responsive">
+    <table id="positionsTable" class="display table">
+      <thead>
+        <tr>
+          <th>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+
+            </div>
+          </th>
+          <th>Products</th>
+          <th>Symbol</th>
+          <th>Exchange</th>
+          <th>Quantity</th>
+          <th>Average Price</th>
+
+          <th>Last Price</th>
+          <th>P&L</th>
+
+        </tr>
+      </thead>
+      <tbody class="All_positions_body">
+        <!-- DataTable will populate this tbody dynamically -->
+      </tbody>
+      <tfoot>
+        <tr>
+          <td colspan="4"><button type="button" class="button-small button-blue" fdprocessedid="x3nu1">
+              Exit 1 position<!----> <!----></button></td>
+          <td colspan="2"></td>
+          <td class="text-right">Total</td>
+          <td class="text-right"><span class="main_all_pnl"></span>
+          </td>
+
+        </tr>
+      </tfoot>
+    </table>
+
+  </div>
+
+
+       <script>
+
+$(document).ready(function () {
+  var intervalId_order = null; // Initialize the interval ID variable
+  var totalPLAdded = false; // Variable to track if Total_p_l is added
+
+  function fetchData() {
+    $.ajax({
+      type: "GET",
+      url: "/get_order_positions_details", // Replace with the actual URL
+
+      
+      success: function (response) {
+        // Log the response
+        // //////console.log(response.main_net_ohlc);
+        let mainNetOHLC = response.main_net_ohlc;
+        let lastPrices = {};
+
+        // Loop through the mainNetOHLC array
+        for (let i = 0; i < mainNetOHLC.length; i++) {
+          let tradingsymbol = Object.keys(mainNetOHLC[i])[0];
+          let lastPrice = mainNetOHLC[i][tradingsymbol].last_price;
+
+          // Remove "NFO:" from the tradingsymbol
+          tradingsymbol = tradingsymbol.replace('NFO:', '');
+
+          // Store lastPrice in the object
+          lastPrices[tradingsymbol] = lastPrice;
+        }
+
+        // //////console.log(lastPrices);
+
+        $(".broker_position_icon").empty().append(`
+                <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 90 60">
+                  <defs>
+                    <style>
+                      .cls-1 {
+                        fill: #f6461a;
+                      }
+
+                      .cls-2 {
+                        fill: #db342c;
+                      }
+                    </style>
+                  </defs>
+                  <title>Kite logo trimmed</title>
+                  <polygon class="cls-1" points="30 0 0 30 30 60 60 30 90 0 30 0" />
+                  <polygon class="cls-2" points="30 60 60 30 90 60 30 60" />
+                </svg>
+              `);
+
+        var zerodha_kite_profile = response.all_profile.data;
+        $(".position_names_user_details h5").text(zerodha_kite_profile.user_name);
+        $(".position_names_user_details p").text(`Client ID:${zerodha_kite_profile.user_id}`);
+
+        if ($.fn.DataTable.isDataTable('#positionsTable')) {
+          $('#positionsTable').DataTable().destroy();
+        }
+
+        $('#positionsTable tbody').empty();
+
+        const rowTemplate = (position, lastPrice, main_p_n_l) => `
+                          <tr class="selected">
+                            <td>
+                              <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                              </div>
+                            </td>
+                            <td>
+                              <div class="${position.product === "NRML" ? 'normal_order_background' : 'text-danger'}">${position.product}</div>
+                            </td>
+                            <td>${position.tradingsymbol}</td>
+                            <td>${position.exchange}</td>
+                            <td class="${parseFloat(position.exchange) > 0 ? 'text-success' : 'text-danger'}">${position.quantity}</td>
+                            <td>${position.average_price.toFixed(2)}</td>
+
+
+                            <td>${lastPrice}</td>
+                            <td class="${main_p_n_l > 0 ? 'text-success' : 'text-danger'}">${main_p_n_l > 0 ? '+' : ''}${(main_p_n_l).toFixed(2)}</td>
+                          </tr>`;
+
+        // Assuming 'tradingsymbol' is available in the position object
+        // Initialize a variable to store the total P&L
+        let totalMainPNL = 0;
+
+        response.all_position.net.forEach(function (position) {
+          let tradingsymbol = position.tradingsymbol;
+          // //////console.log(tradingsymbol);
+
+          // Remove "NFO:" from the tradingsymbol
+          tradingsymbol = tradingsymbol.replace('NFO:', '');
+
+          let lastPrice = lastPrices[tradingsymbol] || ''; // Retrieve lastPrice from the object
+          var average_price_main = position.average_price;
+          var quantity_main = position.quantity;
+
+          // Check if both average_price_main and quantity_main are zero
+          if (average_price_main === 0 && quantity_main === 0) {
+            var main_p_n_l = position.pnl;
+          } else {
+            var main_p_n_l = lastPrice * quantity_main - average_price_main * quantity_main;
+          }
+
+          // //////console.log(main_p_n_l);
+
+          // Add main_p_n_l to the total
+          totalMainPNL += main_p_n_l;
+
+          // Use the modified row template with lastPrice
+          $('#positionsTable tbody').append(rowTemplate(position, lastPrice, main_p_n_l));
+        });
+
+        // Display the total P&L in the element with the class .main_all_pnl
+        let totalPNLElement = $('.main_all_pnl');
+        totalPNLElement.text(`Total P&L: ${(totalMainPNL.toFixed(2))}`);
+
+        // Add class based on the condition
+        if (totalMainPNL < 0) {
+          totalPNLElement.addClass('text-danger');
+        } else {
+          totalPNLElement.addClass('text-success');
+        }
+
+
+
+
+        //     $('#positionsTable').DataTable({
+        //       order: [[6, 'asc']], // 6 is the column index for "Unrealised P&L"
+        //       drawCallback: function () {
+        //         if (!totalPLAdded) {
+        //           var totalUnrealised = response.all_position.net.reduce(function (sum, position) {
+        //             return sum + position.unrealised;
+        //           }, 0);
+
+        //           var totalPLDiv = $(`
+        // <div class="Total_p_l">
+        //   <div class="main_exit_positions">
+        //     <button class="exit_all_positions_zerodha">Exit Positions</button>
+        //   </div>
+        //   <div class="main_p_l_table">Total P&L: <span class="${totalUnrealised > 0 ? 'text-success' : 'text-danger'}">${totalUnrealised > 0 ? '+' : '-'}${totalUnrealised.toFixed(2)}</span></div>
+        // </div>`);
+
+        //           $('#positionsTable_wrapper').append(totalPLDiv);
+        //           totalPLAdded = true;
+        //         }
+        //       }
+        //     });
+
+
+      },
+      
+      
+      
+      
+      error: function (error) {
+        console.error("Error:", error);
+      }
+    });
+  }
+
+
+      // Run the fetchData function every 1000 milliseconds (1 second)
+      // intervalId_order = setInterval(fetchData, 3000);
+
+
+  // Initial call to fetchData
+  fetchData();
+
+
+  function fetchData_dynamic() {
+    $.ajax({
+      type: "GET",
+      url: "/get_order_positions_details", // Replace with the actual URL
+
+      
+      success: function (response) {
+
+        // console.log("response",response);
+
+        console.log(response.all_position.net.length);
+
+
+
+        var positionsTable = $(".All_positions_body");
+    var bodyTrLength = 0;
+    
+    // Iterate over each <tr> element directly under the positionsTable
+    positionsTable.find('tr').each(function() {
+        // Increment the count for each <tr> found
+        bodyTrLength++;
+    });
+
+    console.log(bodyTrLength);
+
+
+      },
+      
+      
+      
+      
+      error: function (error) {
+        console.error("Error:", error);
+      }
+    });
+  }
+
+         intervalId_order = setInterval(fetchData_dynamic, 3000);
+  
+
+
+});
+
+
+</script>
+
+
+{% endblock dashboard_body %}
