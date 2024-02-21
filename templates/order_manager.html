@@ -56,7 +56,7 @@
         <tr>
           <th>
             <div class="form-check">
-              <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+              <input class="form-check-input  main_global_check_btn" type="checkbox" value="" id="flexCheckDefault">
 
             </div>
           </th>
@@ -88,7 +88,84 @@
     </table>
 
   </div>
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body exit_window_main">
 
+        <div class="trading_symbol">
+          
+
+        </div>
+
+        <div class="main_instraday_normal_buttons d-flex gap-3">
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" value="intraday">
+            <label class="form-check-label" for="flexRadioDefault1">
+              Intraday MIS
+            </label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" value="overnight" checked>
+            <label class="form-check-label" for="flexRadioDefault2">
+              Overnight NRML
+            </label>
+          </div>
+        </div>
+
+
+
+
+
+<div class="main_qty_price">
+  <div class="form-group">
+    <label for="order_qty">Qty</label>
+    <input type="text" class="form-control" id="order_qty">
+
+  </div>
+
+  <div class="form-group">
+    <label for="order_price">Price</label>
+    <input type="text" class="form-control" id="order_price">
+
+    <div class="main_limit_market_btns">
+      <div class="form-check">
+        <input class="form-check-input" type="radio" name="market_limit" id="market_order" value="market">
+        <label class="form-check-label" for="market_order">
+       Market
+        </label>
+      </div>
+      <div class="form-check">
+        <input class="form-check-input" type="radio" name="market_limit" id="limit_order" checked value="limit">
+        <label class="form-check-label" for="limit_order">
+        Limit
+        </label>
+      </div>
+    </div>
+  </div>
+
+
+</div>
+
+
+
+
+
+
+
+
+      </div>
+      <div class="modal-footer">
+<div class="buy_sell_btn"></div>
+      </div>
+    </div>
+  </div>
+</div>
 
        <script>
 
@@ -97,6 +174,8 @@ $(document).ready(function () {
   var totalPLAdded = false; // Variable to track if Total_p_l is added
 
   function fetchData() {
+
+    console.log('Initial called');
     $.ajax({
       type: "GET",
       url: "/get_order_positions_details", // Replace with the actual URL
@@ -114,7 +193,8 @@ $(document).ready(function () {
           let lastPrice = mainNetOHLC[i][tradingsymbol].last_price;
 
           // Remove "NFO:" from the tradingsymbol
-          tradingsymbol = tradingsymbol.replace('NFO:', '');
+                  tradingsymbol = tradingsymbol.replace(/NSE:|NFO:/g, '');
+
 
           // Store lastPrice in the object
           lastPrices[tradingsymbol] = lastPrice;
@@ -152,23 +232,27 @@ $(document).ready(function () {
         $('#positionsTable tbody').empty();
 
         const rowTemplate = (position, lastPrice, main_p_n_l) => `
-                          <tr class="selected">
+                          <tr class="selected order_leg_main" id="order_leg_main">
                             <td>
                               <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                                <input class="form-check-input legs_instant_exit_check" type="checkbox" value="" id="flexCheckDefault">
                               </div>
                             </td>
                             <td>
-                              <div class="${position.product === "NRML" ? 'normal_order_background' : 'text-danger'}">${position.product}</div>
+                              <div class="${position.product === "NRML" ? 'normal_order_background' : 'normal_order_background'}">${position.product}</div>
                             </td>
-                            <td>${position.tradingsymbol}</td>
+                            <td> <div class="main_tradingsymbol">${position.tradingsymbol}</div>
+                              <button type="button" class="btn btn-primary exit_order" id="exit_order" data-bs-toggle="modal" data-bs-target="#exampleModal">
+ Exit
+</button>
+                              </td>
                             <td>${position.exchange}</td>
-                            <td class="${parseFloat(position.exchange) > 0 ? 'text-success' : 'text-danger'}">${position.quantity}</td>
+                            <td class="${parseFloat(position.exchange) > 0 ? 'text-success' : 'text-danger'} all_quantity">${position.quantity}</td>
                             <td>${position.average_price.toFixed(2)}</td>
 
 
-                            <td>${lastPrice}</td>
-                            <td class="${main_p_n_l > 0 ? 'text-success' : 'text-danger'}">${main_p_n_l > 0 ? '+' : ''}${(main_p_n_l).toFixed(2)}</td>
+                            <td class="lastPrice">${lastPrice}</td>
+                            <td class="${main_p_n_l > 0 ? 'text-success' : 'text-danger'} All_net_pl">${main_p_n_l > 0 ? '+' : ''}${(main_p_n_l).toFixed(2)}</td>
                           </tr>`;
 
         // Assuming 'tradingsymbol' is available in the position object
@@ -180,7 +264,8 @@ $(document).ready(function () {
           // //////console.log(tradingsymbol);
 
           // Remove "NFO:" from the tradingsymbol
-          tradingsymbol = tradingsymbol.replace('NFO:', '');
+                  tradingsymbol = tradingsymbol.replace(/NSE:|NFO:/g, '');
+
 
           let lastPrice = lastPrices[tradingsymbol] || ''; // Retrieve lastPrice from the object
           var average_price_main = position.average_price;
@@ -215,7 +300,165 @@ $(document).ready(function () {
 
 
 
+$('input[name="market_limit"]').change(function() {
+    // Check if the value of the selected radio button is "market_order"
+    if ($(this).val() === "market") {
+      console.log('market');
+      
+      $('#order_price').prop('disabled', true);
+    } else {
 
+      console.log('limit');
+      $('#order_price').prop('disabled', false);
+    }
+  });
+
+
+     $('.main_global_check_btn').click(function(){
+      // Check if it's checked or unchecked
+      if($(this).is(':checked')){
+
+        console.log('Checked');
+        
+        // If checked, check all checkboxes with class .legs_instant_exit_check
+        $('.legs_instant_exit_check').prop('checked', true);
+      } else {
+
+        console.log('UnChecked');
+        // If unchecked, uncheck all checkboxes with class .legs_instant_exit_check
+        $('.legs_instant_exit_check').prop('checked', false);
+      }
+    });
+
+
+
+
+
+        $(".exit_order").click(function () {
+        console.log('Hi there');
+        var order_leg_main = $(this).closest(".order_leg_main");
+        console.log(order_leg_main.find(".main_tradingsymbol").text());
+
+        $(".trading_symbol").text(order_leg_main.find(".main_tradingsymbol").text())
+
+
+        if (order_leg_main.find(".normal_order_background").text() === "NRML" || order_leg_main.find(".normal_order_background").text() === "CNC") {
+        console.log("Overnight NRML");
+        $("#flexRadioDefault2").prop("checked", true); // Set Overnight NRML radio button
+    } else {
+        console.log("Intraday MIS");
+        $("#flexRadioDefault1").prop("checked", true); // Set Intraday MIS radio button
+    }
+
+
+
+
+
+
+        console.log(order_leg_main.find(".normal_order_background").text());
+        console.log(order_leg_main.find(".all_quantity").text());
+        console.log(order_leg_main.find(".lastPrice").text());
+
+
+    $("#order_qty").empty().val(order_leg_main.find(".all_quantity").text())
+    $("#order_price").empty().val(order_leg_main.find(".lastPrice").text())
+
+    $("#limit_order").prop("checked" , true)
+    $('#order_price').prop('disabled', false);
+
+
+    if (parseFloat(order_leg_main.find(".all_quantity").text()) < 0) {
+
+      console.log('BUY');
+
+      $(".buy_sell_btn").replaceWith(`<button class="buy_exit">BUY</button>`)
+      
+      
+    }else{
+      console.log('SELl');
+      $(".buy_sell_btn").replaceWith(`<button class="sell_exit">SELL</button>`)
+    }
+
+
+    // [{"orderNumber":1,"sell_buy_indicator":"SELL","tradingsymbol":"NIFTY24F2222050CE","main_trading_symbol":"NIFTY2422222050CE",
+    // "strikePrice_order_window":"22050","Quantity":"50","price":"62.7","isRadioChecked":"market","mis_select":"overnight","main_instrument_token":"","main_strikePrice_values":"0","stockDropdown_main":"NIFTY"}
+    // ,{"orderNumber":2,"sell_buy_indicator":"SELL","tradingsymbol":"NIFTY24F2222050PE","main_trading_symbol":"NIFTY2422222050PE","strikePrice_order_window":"22050","Quantity":"50","price":"106.6","isRadioChecked":"market","mis_select":"overnight","main_instrument_token":"","main_strikePrice_values":"0","stockDropdown_main":"NIFTY"}]
+
+    $(".sell_exit").click(function (event) {
+    event.stopPropagation(); // Exclude event propagation
+
+    var All_positionTrade = []; // Initialize as an array
+
+    var sell_buy_indicator = "SELL";
+    console.log("sell_buy_indicator:", sell_buy_indicator);
+
+    var tradingsymbol = $(".trading_symbol").text();
+    console.log("tradingsymbol:", tradingsymbol);
+
+    var main_trading_symbol = $(".trading_symbol").text();
+    console.log("main_trading_symbol:", main_trading_symbol);
+
+    var Quantity = $("#order_qty").val();
+    console.log("Quantity:", Quantity);
+
+    var price = $("#order_price").val();
+    console.log("price:", price);
+
+    var isRadioChecked = $('input[name="market_limit"]:checked').val();
+    console.log("isRadioChecked:", isRadioChecked);
+
+    var mis_select = $('input[name="flexRadioDefault"]:checked').val();
+    console.log("mis_select:", mis_select);
+
+    All_positionTrade.push({
+        sell_buy_indicator: sell_buy_indicator,
+        tradingsymbol: tradingsymbol,
+        main_trading_symbol: main_trading_symbol,
+        Quantity: Quantity, // Corrected variable name
+        price: price, // Corrected variable name
+        isRadioChecked: isRadioChecked,
+        mis_select: mis_select,
+    });
+
+    $.ajax({
+        url: "/exit_zerodha_order", // Replace with the actual URL of your Django view
+        type: "POST",
+        data: JSON.stringify(All_positionTrade),
+        contentType: "application/json",
+        success: function (response) {
+            console.log(response);
+
+            
+            response.order_details.forEach((order, index) => {
+              var order_status_text = order.order_id;
+
+              //////console.log(order_status_text);
+
+              // Check if order_status_text is not an object
+              if (typeof order_status_text === 'object') {
+                // Run this code block if it's not an object
+        toastr.success(`<strong>Success</strong><br> Order Exited Successfully : Order Id - ${order_status_text.data.order_id}`)
+              } else {
+                // If it's an object, proceed with JSON parsing
+                var orderObject = JSON.parse(order_status_text);
+
+                if (orderObject.status === "error") {
+       
+
+                      toastr.error( `<strong>Error</strong><br> ${orderObject.message.replace(/\s*\[Read more.\].*$/, '')}`)
+                }
+              }
+            });
+        }
+    });
+});
+
+
+    });
+
+
+
+     
         //     $('#positionsTable').DataTable({
         //       order: [[6, 'asc']], // 6 is the column index for "Unrealised P&L"
         //       drawCallback: function () {
@@ -260,6 +503,9 @@ $(document).ready(function () {
 
 
   function fetchData_dynamic() {
+
+    console.log('Dynamic called');
+    
     $.ajax({
       type: "GET",
       url: "/get_order_positions_details", // Replace with the actual URL
@@ -269,20 +515,155 @@ $(document).ready(function () {
 
         // console.log("response",response);
 
-        console.log(response.all_position.net.length);
+
+
+        var get_net_positions = response.all_position.net
+            // console.log(get_net_positions);
+            
+        let mainNetOHLC = response.main_net_ohlc;
+        let lastPrices = {};
+
+        // Loop through the mainNetOHLC array
+        for (let i = 0; i < mainNetOHLC.length; i++) {
+          let tradingsymbol = Object.keys(mainNetOHLC[i])[0];
+          let lastPrice = mainNetOHLC[i][tradingsymbol].last_price;
+
+          // Remove "NFO:" from the tradingsymbol
+                  tradingsymbol = tradingsymbol.replace(/NSE:|NFO:/g, '');
+
+          // tradingsymbol = tradingsymbol.replace(`${ mainNetOHLC[i].exchange}:${ mainNetOHLC[i].tradingsymbol}`);
+          // Store lastPrice in the object
+          lastPrices[tradingsymbol] = lastPrice;
+        }
+
+
+        var  get_user_positions_length= response.all_position.net.length
+
+        // console.log();
 
 
 
-        var positionsTable = $(".All_positions_body");
-    var bodyTrLength = 0;
-    
-    // Iterate over each <tr> element directly under the positionsTable
-    positionsTable.find('tr').each(function() {
-        // Increment the count for each <tr> found
-        bodyTrLength++;
+          var positionsTable = $(".All_positions_body");
+          var bodyTrLength = 0;
+          
+          // Iterate over each <tr> element directly under the positionsTable
+          positionsTable.find('tr').each(function() {
+              // Increment the count for each <tr> found
+              bodyTrLength++;
+          });
+
+          // console.log(bodyTrLength);
+
+
+          if (get_user_positions_length!==bodyTrLength) {
+            fetchData();
+
+            // console.log('False');
+            
+          }
+    else if ($('.All_positions_body').find('.all_quantity').length > 0) {
+    var allQuantitiesMatch = true;
+    $('.All_positions_body').find('.all_quantity').each(function(index, element) {
+        var quantity = parseInt($(element).text());
+        if (quantity !== get_net_positions[index].quantity) { // Assuming you want to check if the quantity is 100
+            allQuantitiesMatch = false;
+ 
+            return false; // Exit the loop early
+        }
     });
 
-    console.log(bodyTrLength);
+    if (allQuantitiesMatch) {
+        // Do something if all quantities match
+        
+
+        $('.All_positions_body').find('.lastPrice').each(function(index) {
+    // Check if the element has class .lastPrice
+
+    // console.log("index",index);
+    if ($(this).hasClass('lastPrice')) {
+        // Set the new value for .lastPrice element based on index
+
+
+          let tradingsymbol = get_net_positions[index].tradingsymbol;
+          // //////console.log(tradingsymbol);
+
+          // Remove "NFO:" from the tradingsymbol
+                  tradingsymbol = tradingsymbol.replace(/NSE:|NFO:/g, '');
+
+
+          let lastPrice = lastPrices[tradingsymbol] || ''; // Retrieve lastPrice from the object
+
+          // console.log(lastPrice);
+            $(this).text(lastPrice);
+
+        
+    } else {
+        // Set the new value for .All_net_pl element based on index
+    
+    }
+});
+
+
+let totalMainPNL = 0;
+
+            $('.All_positions_body').find('.All_net_pl').each(function(index) {
+    // Check if the element has class .lastPrice
+
+    // console.log("index",index);
+    let tradingsymbol = get_net_positions[index].tradingsymbol;
+          // Remove "NFO:" from the tradingsymbol
+                  tradingsymbol = tradingsymbol.replace(/NSE:|NFO:/g, '');
+
+
+          let lastPrice = lastPrices[tradingsymbol] || ''; // Retrieve lastPrice from the object
+          var average_price_main = get_net_positions[index].average_price;
+          var quantity_main = get_net_positions[index].quantity;
+
+          // Check if both average_price_main and quantity_main are zero
+          if (average_price_main === 0 && quantity_main === 0) {
+            var main_p_n_l = get_net_positions[index].pnl;
+          } else {
+            var main_p_n_l = lastPrice * quantity_main - average_price_main * quantity_main;
+          }
+          totalMainPNL+=main_p_n_l
+        // Set the new value for .lastPrice element based on index
+// console.log(main_p_n_l);
+$(this).text((main_p_n_l > 0 ? '+' : '') + main_p_n_l.toFixed(2)).removeClass("text-success text-danger").addClass(main_p_n_l > 0 ? 'text-success' : 'text-danger');
+
+        // Display the total P&L in the element with the class .main_all_pnl
+        let totalPNLElement = $('.main_all_pnl');
+        totalPNLElement.text(`Total P&L: ${(totalMainPNL.toFixed(2))}`);
+
+        // Add class based on the condition
+        if (totalMainPNL < 0) {
+          totalPNLElement.addClass('text-danger');
+        } else {
+          totalPNLElement.addClass('text-success');
+        }
+
+
+});
+
+
+
+
+
+
+
+
+
+
+
+    } else {
+      fetchData();
+        console.log('False'); // Log 'False' if quantities don't match
+    }
+
+
+            // console.log('True');
+          }
+
+          
 
 
       },
