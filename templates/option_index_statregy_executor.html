@@ -2945,8 +2945,8 @@ cursor: pointer;
 
 
 
-        <h5 class="offcanvas-title" id="offcanvasRightLabel">
-          Add broker API details
+        <h5 class="offcanvas-title" id="offcanvasRightLabel" style="color: #4399eb;" >
+          Add Broker
         </h5>
 
 
@@ -3013,7 +3013,7 @@ cursor: pointer;
               </script>
             <div class="">
               <label for="zerodha_login_id">Login Id</label>
-              <input type="text" class="form-control" id="zerodha_login_id" placeholder="Enter Zerodha Login ID"
+              <input type="text" class="form-control zerodha_login_id" id="zerodha_login_id" placeholder="Enter Zerodha Login ID"
                 required />
             </div>
             <div class="">
@@ -3055,15 +3055,56 @@ cursor: pointer;
                   </div>
                 </div>
         
-                <i class='bx bx-play-circle' id="secret_key_tuto_1" ></i>
+                <i class='bx bx-play-circle text-danger' id="secret_key_tuto_zerodha"   data-bs-toggle="modal" data-bs-target="#zerodha_tuto"></i>
 
               </div>
+<!-- Modal -->
+<div class="modal fade zerodha_tuto" id="zerodha_tuto" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content" style="background: transparent;">
+
+     
    
- 
+      <div class="modal-body">
+        <!-- Content to be displayed in the center of the modal -->
+        <iframe width="560" height="315" src="https://www.youtube.com/embed/yw4Bc3EVNV0?si=8inWWMUpWhojwtJC" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+      </div>
+
+    </div>
+  </div>
+</div>
+   
 
 
-              <input type="text" class="form-control" id="zerodha_totp_key" placeholder="Enter Zerodha TOTP Key"
+              <input type="text" class="form-control m-0" id="zerodha_totp_key" placeholder="Enter Zerodha TOTP Key"
                 required />
+
+
+                <a href="https://kite.zerodha.com/edit-profile" onclick="openNewWindow(); return false;" style="font-size: 12px; font-weight: 600; text-decoration: none;">Get TOPT key</a>
+                <script>
+                  $(document).ready(function() {
+                    // Pause YouTube video when modal is closed
+                    $('#zerodha_tuto').on('hidden.bs.modal', function(e) {
+                      var $iframe = $(this).find('iframe');
+                      var iframeSrc = $iframe.attr('src');
+                      $iframe.attr('src', iframeSrc);
+                    });
+                  });
+                </script>
+                <script>
+                function openNewWindow() {
+                    var newWindow = window.open('https://kite.zerodha.com/edit-profile', '_blank', 'width=900,height=800');
+                    if (newWindow) {
+                        newWindow.focus();
+                    } else {
+                        alert('Please allow popups for this site to open the link.');
+                    }
+                }
+
+  
+                </script>
+                
+
 
                 <p style="font-size: 12px; opacity: 65%;
                 font-weight: 500;" class="add_broker_note"></p>
@@ -3073,7 +3114,19 @@ cursor: pointer;
 
 
             <div class="">
-              <label for="zerodha_app_name">App name </label>
+
+      
+
+              <div class="main_label_alert_add_broker d-flex align-items-center m-0">
+                <label for="zerodha_totp_key" class="m-0">Header name (Editable)</label>
+                <div class="tooltip-container">
+               <svg class="MuiSvgIcon-root tooltip-trigger" focusable="false" viewBox="0 0 24 24" aria-hidden="true" role="presentation" style="width: 13px; height: 13px; color: var(--textColor2); margin-left: 2px; vertical-align: text-bottom;"><path d="M11 18h2v-2h-2v2zm1-16C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-2.21 0-4 1.79-4 4h2c0-1.1.9-2 2-2s2 .9 2 2c0 2-3 1.75-3 5h2c0-2.25 3-2.5 3-5 0-2.21-1.79-4-4-4z"></path></svg>
+                  <div class="tooltip_totp_advance">This field is designated as your account name for activating the broker functionality. You can choose any name you prefer.</div>
+                </div>
+
+
+              </div>
+
 
               <input type="text" class="form-control" id="zerodha_app_name" placeholder="Enter App Name" required />
             </div>
@@ -3161,7 +3214,7 @@ cursor: pointer;
             </select>
 
             <label for="angelone_login_id">Login Id</label>
-            <input type="text" class="form-control" id="angelone_login_id" name="angelone_login_id"
+            <input type="text" class="form-control angelone_login_id" id="angelone_login_id" name="angelone_login_id"
               placeholder="Enter Angel One Login ID" required />
 
               <div class="main_label_alert_add_broker d-flex align-items-center m-0">
@@ -3170,7 +3223,7 @@ cursor: pointer;
                <svg class="MuiSvgIcon-root tooltip-trigger" focusable="false" viewBox="0 0 24 24" aria-hidden="true" role="presentation" style="width: 13px; height: 13px; color: var(--textColor2); margin-left: 2px; vertical-align: text-bottom;"><path d="M11 18h2v-2h-2v2zm1-16C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-2.21 0-4 1.79-4 4h2c0-1.1.9-2 2-2s2 .9 2 2c0 2-3 1.75-3 5h2c0-2.25 3-2.5 3-5 0-2.21-1.79-4-4-4z"></path></svg>
                   <div class="tooltip">Your password is kept encypted for total security and privacy.</div>
                 </div>
-
+        
 
               </div>
             <input type="password" class="form-control" id="angelone_password" name="angelone_password"
@@ -3190,14 +3243,41 @@ cursor: pointer;
 
               </div>
    
-            <input type="text" class="form-control" id="angelone_totp_key" name="angelone_totp_key"
+            <input type="text" class="form-control m-0" id="angelone_totp_key" name="angelone_totp_key"
               placeholder="Enter Angel One TOTP Key" required />
-
+              <div class="hyper_totp_secret">
+                <a href="https://smartapi.angelbroking.com/enable-totp" onclick="angelOne()" target="_blank" style="    font-size: 12px;
+                font-weight: 600;
+                text-decoration: none;
+                ">Get TOPT key .</a>
+    
+              </div>
+             <script>
+                function angelOne() {
+                    var newWindow = window.open('https://smartapi.angelbroking.com/enable-totp', '_blank', 'width=900,height=800');
+                    if (newWindow) {
+                        newWindow.focus();
+                    } else {
+                        alert('Please allow popups for this site to open the link.');
+                    }
+                }
+                </script>
             <label for="angelone_api_key">API Key</label>
             <input type="text" class="form-control" id="angelone_api_key" name="angelone_api_key"
               placeholder="Enter Angel One API Key" required />
 
-            <label for="angelone_app_name">App name</label>
+      
+
+              <div class="main_label_alert_add_broker d-flex align-items-center m-0">
+                <label for="zerodha_totp_key" class="m-0">Header name (Editable)</label>
+                <div class="tooltip-container">
+               <svg class="MuiSvgIcon-root tooltip-trigger" focusable="false" viewBox="0 0 24 24" aria-hidden="true" role="presentation" style="width: 13px; height: 13px; color: var(--textColor2); margin-left: 2px; vertical-align: text-bottom;"><path d="M11 18h2v-2h-2v2zm1-16C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-2.21 0-4 1.79-4 4h2c0-1.1.9-2 2-2s2 .9 2 2c0 2-3 1.75-3 5h2c0-2.25 3-2.5 3-5 0-2.21-1.79-4-4-4z"></path></svg>
+                  <div class="tooltip_totp_advance">This field is designated as your account name for activating the broker functionality. You can choose any name you prefer.</div>
+                </div>
+
+
+              </div>
+
             <input type="text" class="form-control" id="angelone_app_name" name="angelone_app_name"
               placeholder="Enter App Name" required />
 
@@ -3247,9 +3327,25 @@ cursor: pointer;
             </select>
 
             <label for="upstocks_login_id">Login Id</label>
-            <input type="text" class="form-control" id="upstocks_login_id" name="upstocks_login_id"
+            <input type="text" class="form-control upstocks_login_id" id="upstocks_login_id" name="upstocks_login_id"
               placeholder="Enter Upstox Login ID" required />
-
+              <script>
+                $(".zerodha_login_id").on("input", function() {
+                    var value = $(this).val();
+                    console.log(value);
+                    $("#zerodha_app_name").val(value);
+                });
+                $(".angelone_login_id").on("input", function() {
+                    var value = $(this).val();
+                    console.log(value);
+                    $("#angelone_app_name").val(value);
+                });
+                $(".upstocks_login_id").on("input", function() {
+                    var value = $(this).val();
+                    console.log(value);
+                    $("#upstocks_app_name").val(value);
+                });
+                </script>
               <div class="main_label_alert_add_broker d-flex align-items-center m-0">
                 <label for="zerodha_password" class="m-0">Password</label> 
                 <div class="tooltip-container">
@@ -3275,9 +3371,27 @@ cursor: pointer;
 
               </div>
    
-            <input type="text" class="form-control" id="upstocks_totp_key" name="upstocks_totp_key"
+            <input type="text" class="form-control m-0" id="upstocks_totp_key" name="upstocks_totp_key"
               placeholder="Enter Upstox TOTP Key" required />
- 
+              <div class="hyper_totp_secret">
+                <a href="https://account.upstox.com/totp" onclick="upstocks()" target="_blank" style="    font-size: 12px;
+                font-weight: 600;
+                text-decoration: none;
+                ">Get TOPT key .</a>
+    
+              </div>
+
+              <script>
+                function upstocks() {
+                    var newWindow = window.open('https://account.upstox.com/totp', '_blank', 'width=900,height=800');
+                    if (newWindow) {
+                        newWindow.focus();
+                    } else {
+                        alert('Please allow popups for this site to open the link.');
+                    }
+                }
+                </script>
+        
             <label for="upstocks_phone_number">Registered phone Number</label>
             <input type="text" class="form-control" id="upstocks_phone_number" name="upstocks_phone_number"
               placeholder="Enter Upstox Reg phone Number" required />
@@ -3290,7 +3404,18 @@ cursor: pointer;
             <input type="text" class="form-control" id="upstocks_secret_key" name="upstocks_secret_key"
               placeholder="Enter Upstox Secret Key" required />
 
-            <label for="upstocks_app_name">App name</label>
+             
+
+              <div class="main_label_alert_add_broker d-flex align-items-center m-0">
+                <label for="zerodha_totp_key" class="m-0">Header name (Editable)</label>
+                <div class="tooltip-container">
+               <svg class="MuiSvgIcon-root tooltip-trigger" focusable="false" viewBox="0 0 24 24" aria-hidden="true" role="presentation" style="width: 13px; height: 13px; color: var(--textColor2); margin-left: 2px; vertical-align: text-bottom;"><path d="M11 18h2v-2h-2v2zm1-16C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-2.21 0-4 1.79-4 4h2c0-1.1.9-2 2-2s2 .9 2 2c0 2-3 1.75-3 5h2c0-2.25 3-2.5 3-5 0-2.21-1.79-4-4-4z"></path></svg>
+                  <div class="tooltip_totp_advance">This field is designated as your account name for activating the broker functionality. You can choose any name you prefer.</div>
+                </div>
+
+
+              </div>
+
             <input type="text" class="form-control" id="upstocks_app_name" name="upstocks_app_name"
               placeholder="Enter App Name" required />
               <style>
@@ -4072,7 +4197,7 @@ color: #c50000 !important;
               <label for="zerodha_totp_key">TOTP Secret key </label>
 
 
-              <input type="text" class="form-control" id="update_zerodha_totp_key" placeholder="Enter Zerodha TOTP Key"
+              <input type="password" class="form-control" id="update_zerodha_totp_key" placeholder="Enter Zerodha TOTP Key"
                 required />
             </div>
 
@@ -4103,7 +4228,7 @@ color: #c50000 !important;
               placeholder="Enter Angel One MPIN" required />
 
             <label for="update_angelone_totp_key">TOTP Secret key</label>
-            <input type="text" class="form-control" id="update_angelone_totp_key" name="update_angelone_totp_key"
+            <input type="password" class="form-control" id="update_angelone_totp_key" name="update_angelone_totp_key"
               placeholder="Enter Angel One TOTP Key" required />
 
             <label for="update_angelone_api_key">API Key</label>
@@ -4131,7 +4256,7 @@ color: #c50000 !important;
               placeholder="Enter Upstox 2FA pin" required />
 
             <label for="update_upstocks_totp_key">TOTP Secret key</label>
-            <input type="text" class="form-control" id="update_upstocks_totp_key" name="update_upstocks_totp_key"
+            <input type="password" class="form-control" id="update_upstocks_totp_key" name="update_upstocks_totp_key"
               placeholder="Enter Upstox TOTP Key" required />
 
             <label for="update_upstocks_phone_number">Registered phone Number</label>
