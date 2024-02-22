@@ -17,7 +17,7 @@
 
     .bi.bi-graph-up:hover {
         background-color: rgb(0, 132, 255);
-        border: none;
+        border: 1px solid #2397f3 !important;
         color: white;
     }
 
@@ -179,7 +179,21 @@ table thead tr th{
                     spotPriceElement.empty().text(data.spot_price_list).removeClass("text-success text-danger").addClass(spot_change_list_clr);
                     spotChangeElement.empty().text("(" + data.spot_change_list + "%)").removeClass("text-success text-danger").addClass(spot_change_list_clr);
 
-
+                    function formatDate(dateString) {
+                        // Extract the date part from the date string
+                        var datePart = dateString.split('T')[0];
+                    
+                        // Split the date into year, month, and day
+                        var dateParts = datePart.split('-');
+                        var year = dateParts[0];
+                        var month = dateParts[1];
+                        var day = dateParts[2];
+                    
+                        // Format the date as DD-MM-YYYY
+                        var formattedDate = day + '-' + month + '-' + year;
+                    
+                        return formattedDate;
+                    }
                     // Retrieve selected symbol from local storage
                     var selectedSymbol = getSelectedSymbol();
                     if (selectedSymbol) {
@@ -187,7 +201,7 @@ table thead tr th{
                     }
 
                     // Update future expiry data
-                    $('#expiry1').text(data.future_expiry_list[0].expiry);
+                    $('#expiry1').text(formatDate(data.future_expiry_list[0].expiry));
                     $('#oi1').text(data.future_expiry_list[0].oi);
                     $('#changeOi1').text(data.future_expiry_list[0].oi_change + "(" + data.future_expiry_list[0].oi_percent_change.toFixed(2) + "%)");
                     $('#lastPrice1').text(data.future_expiry_list[0].last_price);
@@ -207,7 +221,7 @@ table thead tr th{
                         $('#changeOi1').removeClass('text-danger text-success').addClass('text-success');
                     }
 
-                    $('#expiry2').text(data.future_expiry_list[1].expiry);
+                    $('#expiry2').text(formatDate(data.future_expiry_list[1].expiry));
                     $('#oi2').text(data.future_expiry_list[1].oi);
                     $('#changeOi2').text(data.future_expiry_list[1].oi_change + "(" + data.future_expiry_list[1].oi_percent_change.toFixed(2) + "%)");
                     $('#lastPrice2').text(data.future_expiry_list[1].last_price);
@@ -228,7 +242,8 @@ table thead tr th{
                     } else {
                         $('#changeOi2').removeClass('text-danger text-success').addClass('text-success');
                     }
-                    $('#expiry3').text(data.future_expiry_list[2].expiry);
+
+                    $('#expiry3').text(formatDate(data.future_expiry_list[2].expiry));
                     $('#oi3').text(data.future_expiry_list[2].oi);
                     $('#changeOi3').text(data.future_expiry_list[2].oi_change + "(" + data.future_expiry_list[2].oi_percent_change.toFixed(2) + "%)");
                     $('#lastPrice3').text(data.future_expiry_list[2].last_price);
@@ -273,9 +288,25 @@ table thead tr th{
             filterContainer2.empty();
             filterContainer3.empty();
 
-            var button1 = $('<button class="filterBtn"></button>').text(get_chart_data[0].expiry_date);
-            var button2 = $('<button class="filterBtn"></button>').text(get_chart_data[1].expiry_date);
-            var button3 = $('<button class="filterBtn"></button>').text(get_chart_data[2].expiry_date);
+            function formatDate(dateString) {
+                // Extract the date part from the date string
+                var datePart = dateString.split('T')[0];
+            
+                // Split the date into year, month, and day
+                var dateParts = datePart.split('-');
+                var year = dateParts[0];
+                var month = dateParts[1];
+                var day = dateParts[2];
+            
+                // Format the date as DD-MM-YYYY
+                var formattedDate = day + '-' + month + '-' + year;
+            
+                return formattedDate;
+            }
+
+            var button1 = $('<button class="filterBtn"></button>').text(formatDate(get_chart_data[0].expiry_date));
+            var button2 = $('<button class="filterBtn"></button>').text(formatDate(get_chart_data[1].expiry_date));
+            var button3 = $('<button class="filterBtn"></button>').text(formatDate(get_chart_data[2].expiry_date));
 
             filterContainer1.append(button1);
             filterContainer2.append(button2);
@@ -367,15 +398,18 @@ table thead tr th{
                         {
                             label: 'Spot Price',
                             data: spotPriceData,
-
                             borderColor: 'rgba(255, 70, 70, 0.8)',
-                            fill: false
+                            fill: false,
+                            pointRadius: 0, 
+                            pointStyle: 'circle',
                         },
                         {
                             label: 'Future Price',
                             data: futurePriceData,
                             borderColor: 'rgba(81, 252, 127, 0.8)',
-                            fill: false
+                            fill: false,
+                            pointRadius: 0, 
+                            pointStyle: 'circle',
                         }
                     ]
                 },

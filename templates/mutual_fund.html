@@ -1489,8 +1489,24 @@ if (allNegative) {
           var table_data = data.data;
           //  console.log(table_data);
           table_data.forEach((element) => {
+            function formatDate(dateString) {
+              // Extract the date part from the date string
+              var datePart = dateString.split('T')[0];
+          
+              // Split the date into year, month, and day
+              var dateParts = datePart.split('-');
+              var year = dateParts[0];
+              var month = dateParts[1];
+              var day = dateParts[2];
+          
+              // Format the date as DD-MM-YYYY
+              var formattedDate = day + '-' + month + '-' + year;
+          
+              return formattedDate;
+          }
+
             var row = `<tr>
-                        <td>${element.TRANS_DATE.split("T")[0]}</td>
+                        <td>${formatDate(element.TRANS_DATE)}</td>
                         <td>Equity</td>
                         <td>${element.EQ_GR_PURC}</td>
                         <td>${element.EQ_GR_SALE}</td>
@@ -1857,11 +1873,27 @@ if (allNegative) {
            table.html("<p class='text-danger text-center'>No records found !!</p>");
          } else {
            dividends.forEach((element) => {
+            function formatDate(dateString) {
+              // Extract the date part from the date string
+              var datePart = dateString.split('T')[0];
+          
+              // Split the date into year, month, and day
+              var dateParts = datePart.split('-');
+              var year = dateParts[0];
+              var month = dateParts[1];
+              var day = dateParts[2];
+          
+              // Format the date as DD-MM-YYYY
+              var formattedDate = day + '-' + month + '-' + year;
+          
+              return formattedDate;
+          }
+
              var row = `<tr>
                            <td>${element.Sch_Name}</td>
                            <td>${parseFloat(element.NAVRS).toFixed(2)}</td>
                            <td>${parseFloat(element.DivAmount).toFixed(2)}</td>
-                           <td>${element.RecordDate.split("T")[0]}</td>
+                           <td>${formatDate(element.RecordDate)}</td>
                            <td>${parseFloat(element.year1).toFixed(2)}</td>
                            <td>${element.year3}</td>
                         </tr>`;
@@ -1887,12 +1919,27 @@ if (allNegative) {
         success: function (data) {
           var fundData = data.data;
           fundData.forEach((element) => {
+            function formatDate(dateString) {
+              // Extract the date part from the date string
+              var datePart = dateString.split('T')[0];
+          
+              // Split the date into year, month, and day
+              var dateParts = datePart.split('-');
+              var year = dateParts[0];
+              var month = dateParts[1];
+              var day = dateParts[2];
+          
+              // Format the date as DD-MM-YYYY
+              var formattedDate = day + '-' + month + '-' + year;
+          
+              return formattedDate;
+          }
             var row = `<tr>
                         <td>${element.LNAME}</td>
-                        <td>${element.STARTED_ON.split("T")[0]}</td>
+                        <td>${formatDate(element.STARTED_ON)}</td>
                         <td>${element.FUND_TYPE}</td>
                         <td>${element.SumOfTOTNAV}</td>
-                        <td>${element.dateas.split("T")[0]}</td>
+                        <td>${formatDate(element.dateas)}</td>
                       </tr>`;
             var table = $("#fund_profile_table");
             table.append(row);
@@ -1930,6 +1977,21 @@ if (allNegative) {
             );
           } else {
             new_fund_all_data.forEach((element) => {
+              function formatDate(dateString) {
+                // Extract the date part from the date string
+                var datePart = dateString.split('T')[0];
+            
+                // Split the date into year, month, and day
+                var dateParts = datePart.split('-');
+                var year = dateParts[0];
+                var month = dateParts[1];
+                var day = dateParts[2];
+            
+                // Format the date as DD-MM-YYYY
+                var formattedDate = day + '-' + month + '-' + year;
+            
+                return formattedDate;
+            }
               if (intial_type === "equity") {
                 tdVal = element.TypeName;
               } else if (intial_type === "Debt") {
@@ -1941,8 +2003,8 @@ if (allNegative) {
               var row = `<tr>
                               <td>${element.Sch_Name}</td>
                               <td>${tdVal}</td>
-                              <td>${element.Launc_Date.split("T")[0]}</td>
-                              <td>${element.CLDATE.split("T")[0]}</td>
+                              <td>${formatDate(element.Launc_Date)}</td>
+                              <td>${formatDate(element.CLDATE)}</td>
                               <td>${element.MININVT}</td>
                               <td>${element.OFFERPRICE}</td>
                               <td>${element.VClass}</td>
@@ -1972,13 +2034,28 @@ if (allNegative) {
         success: function (data) {
           var mutual_news = data.data.slice(0, 6);
           mutual_news.forEach((element) => {
+            function formatDate(dateString) {
+              // Extract the date part from the date string
+              var datePart = dateString.split('T')[0];
+          
+              // Split the date into year, month, and day
+              var dateParts = datePart.split('-');
+              var year = dateParts[0];
+              var month = dateParts[1];
+              var day = dateParts[2];
+          
+              // Format the date as DD-MM-YYYY
+              var formattedDate = day + '-' + month + '-' + year;
+          
+              return formattedDate;
+          }
             var news_box = `<div class="Mutualnews-wq" data-value=${
               element.Sno
             }>
                                   <div>
                                     <p>${element.Heading}</p>
                                     <span>${
-                                      element.Date.split("T")[0]
+                                      formatDate(element.Date)
                                     }</span> <span>(${element.Time})</span>
                                     </div>
                                </div>   

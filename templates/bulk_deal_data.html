@@ -507,11 +507,26 @@ tr:hover .symbol_name_watchlist {
     function generateTableRows(data) {
       var rows = "";
       for (var i = 0; i < data.length; i++) {
+        function formatDate(dateString) {
+          // Extract the date part from the date string
+          var datePart = dateString.split('T')[0];
+      
+          // Split the date into year, month, and day
+          var dateParts = datePart.split('-');
+          var year = dateParts[0];
+          var month = dateParts[1];
+          var day = dateParts[2];
+      
+          // Format the date as DD-MM-YYYY
+          var formattedDate = day + '-' + month + '-' + year;
+      
+          return formattedDate;
+      }
   
           var Null_value = data[i].totaL_VALUE !== null ? data[i].totaL_VALUE : "-";
   
           var row = "<tr class='bg-light'>" +
-              "<td><div>" + data[i].created_at + "</div></td>" +
+              "<td><div>" + formatDate(data[i].created_at) + "</div></td>" +
               "<td class='symbol_name_watchlist'><div>" + data[i].symbol_name + "</div></td>" +
               "<td><div>" + data[i].security_name + "</div></td>" +
               "<td><div>" + data[i].client_name + "</div></td>" +
@@ -531,10 +546,25 @@ tr:hover .symbol_name_watchlist {
     // Function to populate date options in the select element
     function populateDateOptions(dates) {
       var options = "";
+      function formatDate(dateString) {
+        // Extract the date part from the date string
+        var datePart = dateString.split('T')[0];
+    
+        // Split the date into year, month, and day
+        var dateParts = datePart.split('-');
+        var year = dateParts[0];
+        var month = dateParts[1];
+        var day = dateParts[2];
+    
+        // Format the date as DD-MM-YYYY
+        var formattedDate = day + '-' + month + '-' + year;
+    
+        return formattedDate;
+    }
       for (var i = 0; i < dates.length; i++) {
         options += "<option value='" + dates[i] + "'>" + dates[i] + "</option>";
       }
-      $('#date').html(options);
+      $('#date').html((options));
       
     }
 

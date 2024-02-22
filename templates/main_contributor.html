@@ -1124,7 +1124,24 @@
         var startDateDropdown = $('#dateDropdown');
 
         $.each(start_indices_expiries, function (index, expiry) {
-            startDateDropdown.append($('<option></option>').val(expiry).html(expiry));
+
+            function formatDate(dateString) {
+                // Extract the date part from the date string
+                var datePart = dateString.split('T')[0];
+            
+                // Split the date into year, month, and day
+                var dateParts = datePart.split('-');
+                var year = dateParts[0];
+                var month = dateParts[1];
+                var day = dateParts[2];
+            
+                // Format the date as DD-MM-YYYY
+                var formattedDate = day + '-' + month + '-' + year;
+            
+                return formattedDate;
+            }
+
+            startDateDropdown.append($('<option></option>').val(expiry).html(formatDate(expiry)));
         });
         $('#end_date').val(max_date);
 

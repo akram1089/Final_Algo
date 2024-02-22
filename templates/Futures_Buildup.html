@@ -908,6 +908,7 @@ table.dataTable thead>tr>td.sorting_desc:before, table.dataTable thead>tr>td.sor
 
 
                         $.each(data, function (index, item) {
+                            
                             if (!filter || item.filter === filter) {
                                 var change_in_OI = item.change_in_OI < 0 ? "text-danger" : "text-success"
                                 var change_in_LTP = item.change_in_LTP < 0 ? "text-danger" : "text-success"
@@ -925,6 +926,21 @@ table.dataTable thead>tr>td.sorting_desc:before, table.dataTable thead>tr>td.sor
                                 } else {
                                     build_class = ""; // Set default class or use "build_class = null" if needed
                                 }
+                                function formatDate(dateString) {
+                                    // Extract the date part from the date string
+                                    var datePart = dateString.split('T')[0];
+                                
+                                    // Split the date into year, month, and day
+                                    var dateParts = datePart.split('-');
+                                    var year = dateParts[0];
+                                    var month = dateParts[1];
+                                    var day = dateParts[2];
+                                
+                                    // Format the date as DD-MM-YYYY
+                                    var formattedDate = day + '-' + month + '-' + year;
+                                
+                                    return formattedDate;
+                                }
 
                                 var row = `<tr>
                     <td>
@@ -933,7 +949,7 @@ table.dataTable thead>tr>td.sorting_desc:before, table.dataTable thead>tr>td.sor
                         </div>
                     </td>
                     <td>
-                        <div>${item.expiry}</div>
+                        <div>${formatDate(item.expiry)}</div>
                     </td>
                     <td>
                         <div>${item.oi}</div>

@@ -241,10 +241,25 @@ font-weight: 500 !important;
         expiry_data = data.resultData
         // console.log(expiry_data)
         for (let expiry = 0; expiry < expiry_data.length; expiry++) {
+            function formatDate(dateString) {
+                // Extract the date part from the date string
+                var datePart = dateString.split('T')[0];
+            
+                // Split the date into year, month, and day
+                var dateParts = datePart.split('-');
+                var year = dateParts[0];
+                var month = dateParts[1];
+                var day = dateParts[2];
+            
+                // Format the date as DD-MM-YYYY
+                var formattedDate = day + '-' + month + '-' + year;
+            
+                return formattedDate;
+            }
             const element = expiry_data[expiry];
             console.log(element.split("T")[0])
             console.log(element)
-            $(".expiry_date").append($("<option class='dates_for_change'>").val(element.split("T")[0]).text(element.split("T")[0]))
+            $(".expiry_date").append($("<option class='dates_for_change'>").val(element.split("T")[0]).text(formatDate(element)))
                       
         }   
      }

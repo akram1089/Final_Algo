@@ -807,9 +807,24 @@ console.log("Closest Strike Price:", closestStrikePrice);
 
 
                     for (var i = 0; i < data.All_dates.length; i++) {
+                        function formatDate(dateString) {
+                            // Extract the date part from the date string
+                            var datePart = dateString.split('T')[0];
+                        
+                            // Split the date into year, month, and day
+                            var dateParts = datePart.split('-');
+                            var year = dateParts[0];
+                            var month = dateParts[1];
+                            var day = dateParts[2];
+                        
+                            // Format the date as DD-MM-YYYY
+                            var formattedDate = day + '-' + month + '-' + year;
+                        
+                            return formattedDate;
+                        }
                         dateDropdown.append($('<option>', {
                             value: data.All_dates[i],
-                            text: data.All_dates[i]
+                            text: formatDate(data.All_dates[i])
                         }));
                     }
 

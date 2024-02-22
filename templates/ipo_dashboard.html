@@ -820,9 +820,21 @@ table thead th{
 
 
             data.forEach(function (data) {
+
+                var dateTimeParts = data.LISTDATE.split('T');
+    var datePart = dateTimeParts[0]; // Extract the date part
+    
+    // Split the date into year, month, and day
+    var dateParts = datePart.split('-');
+    var year = dateParts[0];
+    var month = dateParts[1];
+    var day = dateParts[2];
+    
+    // Format the date as DD-MM-YYYY
+    var formattedDate = day + '-' + month + '-' + year;
                 table.row.add([
                     data.CO_NAME,
-                    formatDate(data.LISTDATE),          // Company
+                    formattedDate,          // Company
                     // Listing Date
                     data.listprice,            // Listing Price 
                     data.OfferPrice,           // Offer Price 
@@ -1105,6 +1117,21 @@ table thead th{
             dataType: "json",
             success: function (data) {
                 var res_data = data.data
+                function formatDate(dateString) {
+                    // Extract the date part from the date string
+                    var datePart = dateString.split('T')[0];
+                
+                    // Split the date into year, month, and day
+                    var dateParts = datePart.split('-');
+                    var year = dateParts[0];
+                    var month = dateParts[1];
+                    var day = dateParts[2];
+                
+                    // Format the date as DD-MM-YYYY
+                    var formattedDate = day + '-' + month + '-' + year;
+                
+                    return formattedDate;
+                }
                 $("#basis_allotment").empty()
                 $("#basis-allotment").DataTable().clear().destroy();
 
@@ -1112,7 +1139,7 @@ table thead th{
                     var row = `<tr>
                             <td>${element.lname}</td>
                             <td>${element.IssueType}</td>
-                            <td>${element.ClosDate.split("T")[0]}</td>
+                            <td>${formatDate(element.ClosDate)}</td>
                           </tr>`
                     var table = $("#basis_allotment")
                     table.append(row)
@@ -1229,9 +1256,24 @@ table thead th{
 
                     new_listing.forEach(element => {
                         console.log(element);
+                        function formatDate(dateString) {
+                            // Extract the date part from the date string
+                            var datePart = dateString.split('T')[0];
+                        
+                            // Split the date into year, month, and day
+                            var dateParts = datePart.split('-');
+                            var year = dateParts[0];
+                            var month = dateParts[1];
+                            var day = dateParts[2];
+                        
+                            // Format the date as DD-MM-YYYY
+                            var formattedDate = day + '-' + month + '-' + year;
+                        
+                            return formattedDate;
+                        }
                         var row = `<tr>
                             <td>${element.CO_NAME}</td>
-                            <td>${element.LISTDATE.split("T")[0]}</td>
+                            <td>${formatDate(element.LISTDATE)}</td>
                             <td>${element.LISTPRICE}</td>
                             <td>${element.HIGH}</td>
                             <td>${element.LOW}</td>
@@ -1295,10 +1337,26 @@ table thead th{
                 },
                 success: function (response) {
                     var table_data = response.data
+                    
                     $("#table_data_to_show").empty()
                     $("#ipo-watch").DataTable().clear().destroy();
                     table_data.forEach(element => {
 
+                        function formatDate(dateString) {
+                            // Extract the date part from the date string
+                            var datePart = dateString.split('T')[0];
+                        
+                            // Split the date into year, month, and day
+                            var dateParts = datePart.split('-');
+                            var year = dateParts[0];
+                            var month = dateParts[1];
+                            var day = dateParts[2];
+                        
+                            // Format the date as DD-MM-YYYY
+                            var formattedDate = day + '-' + month + '-' + year;
+                        
+                            return formattedDate;
+                        }
 
                         if (!element) {
                             var table = $("#table_data_to_show")
@@ -1307,12 +1365,13 @@ table thead th{
                         else {
 
                             if (btn_value == 2) {
+
                                 var row = `<tr>
                                      <td>${element.lname || element.LNAME}</td>
                                      <td>${element.ISSUETYPE}</td>
                                      <td>${element.IssueSize}</td>
-                                     <td>${element.OPENDATE.split("T")[0]}</td>
-                                     <td>${element.CLOSDATE.split("T")[0]}</td>
+                                     <td>${formatDate(element.OPENDATE)}</td>
+                                     <td>${formatDate(element.CLOSDATE)}</td>
                                      <td>${element.ISSUEPRICE}</td>
                                     </tr>`
                                 var table = $("#table_data_to_show")
@@ -1323,8 +1382,8 @@ table thead th{
                                      <td>${element.Lname}</td>
                                      <td>${element.IssueType}</td>
                                      <td>${element.IssueSize}</td>
-                                     <td>${element.OPENDATE.split("T")[0]}</td>
-                                     <td>${element.CLOSDATE.split("T")[0]}</td>
+                                     <td>${formatDate(element.OPENDATE)}</td>
+                                     <td>${formatDate(element.CLOSDATE)}</td>
                                      <td>${element.ISSUEPRICE}</td>
                                     </tr>`
                                 var table = $("#table_data_to_show")
@@ -1335,8 +1394,8 @@ table thead th{
                                      <td>${element.lname || element.LNAME}</td>
                                      <td>${element.ISSUETYPE || element.IssueType}</td>
                                      <td>${element.IssueSize}</td>
-                                     <td>${element.OPENDATE.split("T")[0]}</td>
-                                     <td>${element.CLOSDATE.split("T")[0]}</td>
+                                     <td>${formatDate(element.OPENDATE)}</td>
+                                     <td>${formatDate(element.CLOSDATE)}</td>
                                      <td>${element.ISSUEPRICE}</td>
                                     </tr>`
                                 var table = $("#table_data_to_show")
