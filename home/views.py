@@ -18687,54 +18687,64 @@ def quote_data_from_broker(request):
         print("data  :"  ,  data)
 
         if broker_instance_zerodha:
-            enctoken = get_enctoken_internal(
-                broker_instance_zerodha.logging_id,
-                broker_instance_zerodha.password,
-                broker_instance_zerodha.totp_key
-            )
-            print(enctoken)
+            enctoken = broker_instance_zerodha.enctoken
+            zerodha_api = ZerodhaPlaceOrder(enctoken)
+            all_profile = zerodha_api.get_user_profile()
+
+            if not all_profile:
+                enctoken = get_enctoken_internal(
+                    broker_instance_zerodha.logging_id,
+                    broker_instance_zerodha.password,
+                    broker_instance_zerodha.totp_key
+                )
+                print(enctoken)
+                broker_instance_zerodha.enctoken = enctoken
+                broker_instance_zerodha.save()
 
             trading_quotes = data.get('trading_quote')
-            # print("trading_quotes",trading_quotes)
-
-            for quote in trading_quotes:
-                print("quote :" , quote)
-                target_string = {
-                    'symbol': quote["symbol"],
-                    'optionType': 'FUT' if quote["callPutEntrance"] == "FUTURE" else quote["callPutEntrance"],
-                    'expiry': quote["expiry_initial"],
-                    'strikePrice': quote["strikePrice"]
-                }
-
-                
-
-
-                print("target_string",target_string)
-                tradingsymbols = download_csv_and_display(target_string)
-
-                # Print only the 'tradingsymbol'
-                print("tradingsymbols.iloc[0]",tradingsymbols.iloc[0])
-                closest_match=tradingsymbols.iloc[0]
-
-                quote['combinedString'] = f'NFO:{closest_match}'
-
-            result_data = {'trading_quotes': trading_quotes,'closest_match':closest_match, 'ohlc_market_indepth': []}
+            result_data = {'trading_quotes': [], 'closest_match': None, 'ohlc_market_indepth': []}
 
             if enctoken:
                 zerodha_api = ZerodhaPlaceOrder(enctoken)
                 all_profile = zerodha_api.get_user_profile()
                 margin_info = zerodha_api.margins()
-                print("trading_quotes",trading_quotes)
 
                 for quote in trading_quotes:
+                    target_string = {
+                        'symbol': quote["symbol"],
+                        'optionType': 'FUT' if quote["callPutEntrance"] == "FUTURE" else quote["callPutEntrance"],
+                        'expiry': quote["expiry_initial"],
+                        'strikePrice': quote["strikePrice"]
+                    }
+
+                    tradingsymbols = download_csv_and_display(target_string)
+
+                    if not tradingsymbols.empty:
+                        closest_match = tradingsymbols.iloc[0]
+                        quote['combinedString'] = f'NFO:{closest_match}'
+                        result_data['closest_match'] = closest_match
+                    else:
+                        # Handle case where tradingsymbols is empty
+                        quote['combinedString'] = None
+
                     ohlc_market_indepth = zerodha_api.quote(quote["combinedString"])
                     result_data['ohlc_market_indepth'].append(ohlc_market_indepth)
+                    result_data['trading_quotes'].append(quote)
 
-                response_data = {'status': 'success', 'message': 'Data received successfully',"broker_name":"zerodha",
-                                 'result_data': result_data, 'all_profile': all_profile, "margin_info": margin_info}
+                response_data = {
+                    'status': 'success',
+                    'message': 'Data received successfully',
+                    "broker_name": "zerodha",
+                    'result_data': result_data,
+                    'all_profile': all_profile,
+                    "margin_info": margin_info
+                }
                 return JsonResponse(response_data)
             else:
                 return JsonResponse({'status': 'error', 'message': 'Failed to get enctoken'})
+
+
+
         elif broker_instance_angelone:
                 data = json.loads(request.body)
                 trading_quotes = data.get('trading_quote')
