@@ -62,6 +62,7 @@
           </th>
           <th>Products</th>
           <th>Symbol</th>
+          <th>Status</th>
           <th>Exchange</th>
           <th>Quantity</th>
           <th>Average Price</th>
@@ -76,9 +77,11 @@
       </tbody>
       <tfoot>
         <tr>
-          <td colspan="4"><button type="button" class="button-small button-blue" fdprocessedid="x3nu1">
+          <td colspan="4" class="instant_exit_button_main">
+            
+            <button type="button" class="button-small button-blue" id="exit_selected_positions" fdprocessedid="x3nu1" style="display: none;">
               Exit 1 position<!----> <!----></button></td>
-          <td colspan="2"></td>
+          <td colspan="3"></td>
           <td class="text-right">Total</td>
           <td class="text-right"><span class="main_all_pnl"></span>
           </td>
@@ -93,11 +96,13 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Exit position</h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body exit_window_main">
+<div class="exchnage_nse_nfo">
 
+</div>
         <div class="trading_symbol">
           
 
@@ -114,6 +119,12 @@
             <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" value="overnight" checked>
             <label class="form-check-label" for="flexRadioDefault2">
               Overnight NRML
+            </label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault3" value="cnc" checked>
+            <label class="form-check-label" for="flexRadioDefault3">
+              Longterm CNC
             </label>
           </div>
         </div>
@@ -235,18 +246,20 @@ $(document).ready(function () {
                           <tr class="selected order_leg_main" id="order_leg_main">
                             <td>
                               <div class="form-check">
-                                <input class="form-check-input legs_instant_exit_check" type="checkbox" value="" id="flexCheckDefault">
+                                <input class="form-check-input legs_instant_exit_check" type="checkbox" value="" id="flexCheckDefault" ${position.quantity===0?"disabled":""}>
                               </div>
                             </td>
                             <td>
                               <div class="${position.product === "NRML" ? 'normal_order_background' : 'normal_order_background'}">${position.product}</div>
                             </td>
                             <td> <div class="main_tradingsymbol">${position.tradingsymbol}</div>
-                              <button type="button" class="btn btn-primary exit_order" id="exit_order" data-bs-toggle="modal" data-bs-target="#exampleModal">
- Exit
-</button>
+                              <button type="button" class="btn btn-primary exit_order ${position.quantity===0?"d-none":"d-block"}" id="exit_order" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                    Exit
+                                    </button>
                               </td>
-                            <td>${position.exchange}</td>
+                              <td>${position.quantity < 0 ? "Sell" : position.quantity > 0 ? "Buy" : "Closed"}</td>
+
+                            <td class="exchange_value">${position.exchange}</td>
                             <td class="${parseFloat(position.exchange) > 0 ? 'text-success' : 'text-danger'} all_quantity">${position.quantity}</td>
                             <td>${position.average_price.toFixed(2)}</td>
 
@@ -293,205 +306,416 @@ $(document).ready(function () {
 
         // Add class based on the condition
         if (totalMainPNL < 0) {
-          totalPNLElement.addClass('text-danger');
-        } else {
-          totalPNLElement.addClass('text-success');
-        }
+                totalPNLElement.removeClass('text-danger text-success').addClass('text-danger');
+              } else {
+                totalPNLElement.removeClass('text-danger text-success').addClass('text-success');
+              }
 
 
 
-$('input[name="market_limit"]').change(function() {
-    // Check if the value of the selected radio button is "market_order"
-    if ($(this).val() === "market") {
-      console.log('market');
-      
-      $('#order_price').prop('disabled', true);
-    } else {
+            $('input[name="market_limit"]').change(function() {
+                // Check if the value of the selected radio button is "market_order"
+                if ($(this).val() === "market") {
+                  console.log('market');
+                  
+                  $('#order_price').prop('disabled', true);
+                } else {
 
-      console.log('limit');
-      $('#order_price').prop('disabled', false);
-    }
-  });
+                  console.log('limit');
+                  $('#order_price').prop('disabled', false);
+                }
+              });
+// Function to update checked count
+function updateCheckedCount() {
+  var checkedCount = $('.legs_instant_exit_check:checked').length;
+  console.log('Number of legs_instant_exit_check checked: ' + checkedCount);
+}
 
+// Event handler for the main global check button
+$('.main_global_check_btn').click(function(){
+  // Check if it's checked or unchecked
+  if($(this).is(':checked')){
+    console.log('Checked');
+    
+    // Loop through checkboxes
+    $('.legs_instant_exit_check').each(function() {
+      var $tr = $(this).closest('tr'); // Get the closest parent <tr>
+      var $quantity = $tr.find('.all_quantity'); // Find the quantity cell
+      var quantityValue = $quantity.text().trim(); // Get the quantity value
 
-     $('.main_global_check_btn').click(function(){
-      // Check if it's checked or unchecked
-      if($(this).is(':checked')){
-
-        console.log('Checked');
-        
-        // If checked, check all checkboxes with class .legs_instant_exit_check
-        $('.legs_instant_exit_check').prop('checked', true);
-      } else {
-
-        console.log('UnChecked');
-        // If unchecked, uncheck all checkboxes with class .legs_instant_exit_check
-        $('.legs_instant_exit_check').prop('checked', false);
+      // Check if quantity is not 0
+      if (quantityValue !== '0') {
+        $(this).prop('checked', true); // Check the checkbox
       }
     });
+  } else {
+    console.log('UnChecked');
+    // If unchecked, uncheck all checkboxes with class .legs_instant_exit_check
+    $('.legs_instant_exit_check').prop('checked', false);
+  }
+  
+  // Update checked count
+  updateCheckedCount();
+  updateExitButton();
 
-
-
-
-
-        $(".exit_order").click(function () {
-        console.log('Hi there');
-        var order_leg_main = $(this).closest(".order_leg_main");
-        console.log(order_leg_main.find(".main_tradingsymbol").text());
-
-        $(".trading_symbol").text(order_leg_main.find(".main_tradingsymbol").text())
-
-
-        if (order_leg_main.find(".normal_order_background").text() === "NRML" || order_leg_main.find(".normal_order_background").text() === "CNC") {
-        console.log("Overnight NRML");
-        $("#flexRadioDefault2").prop("checked", true); // Set Overnight NRML radio button
-    } else {
-        console.log("Intraday MIS");
-        $("#flexRadioDefault1").prop("checked", true); // Set Intraday MIS radio button
-    }
-
-
-
-
-
-
-        console.log(order_leg_main.find(".normal_order_background").text());
-        console.log(order_leg_main.find(".all_quantity").text());
-        console.log(order_leg_main.find(".lastPrice").text());
-
-
-    $("#order_qty").empty().val(order_leg_main.find(".all_quantity").text())
-    $("#order_price").empty().val(order_leg_main.find(".lastPrice").text())
-
-    $("#limit_order").prop("checked" , true)
-    $('#order_price').prop('disabled', false);
-
-
-    if (parseFloat(order_leg_main.find(".all_quantity").text()) < 0) {
-
-      console.log('BUY');
-
-      $(".buy_sell_btn").replaceWith(`<button class="buy_exit">BUY</button>`)
-      
-      
-    }else{
-      console.log('SELl');
-      $(".buy_sell_btn").replaceWith(`<button class="sell_exit">SELL</button>`)
-    }
-
-
-    // [{"orderNumber":1,"sell_buy_indicator":"SELL","tradingsymbol":"NIFTY24F2222050CE","main_trading_symbol":"NIFTY2422222050CE",
-    // "strikePrice_order_window":"22050","Quantity":"50","price":"62.7","isRadioChecked":"market","mis_select":"overnight","main_instrument_token":"","main_strikePrice_values":"0","stockDropdown_main":"NIFTY"}
-    // ,{"orderNumber":2,"sell_buy_indicator":"SELL","tradingsymbol":"NIFTY24F2222050PE","main_trading_symbol":"NIFTY2422222050PE","strikePrice_order_window":"22050","Quantity":"50","price":"106.6","isRadioChecked":"market","mis_select":"overnight","main_instrument_token":"","main_strikePrice_values":"0","stockDropdown_main":"NIFTY"}]
-
-    $(".sell_exit").click(function (event) {
-    event.stopPropagation(); // Exclude event propagation
-
-    var All_positionTrade = []; // Initialize as an array
-
-    var sell_buy_indicator = "SELL";
-    console.log("sell_buy_indicator:", sell_buy_indicator);
-
-    var tradingsymbol = $(".trading_symbol").text();
-    console.log("tradingsymbol:", tradingsymbol);
-
-    var main_trading_symbol = $(".trading_symbol").text();
-    console.log("main_trading_symbol:", main_trading_symbol);
-
-    var Quantity = $("#order_qty").val();
-    console.log("Quantity:", Quantity);
-
-    var price = $("#order_price").val();
-    console.log("price:", price);
-
-    var isRadioChecked = $('input[name="market_limit"]:checked').val();
-    console.log("isRadioChecked:", isRadioChecked);
-
-    var mis_select = $('input[name="flexRadioDefault"]:checked').val();
-    console.log("mis_select:", mis_select);
-
-    All_positionTrade.push({
-        sell_buy_indicator: sell_buy_indicator,
-        tradingsymbol: tradingsymbol,
-        main_trading_symbol: main_trading_symbol,
-        Quantity: Quantity, // Corrected variable name
-        price: price, // Corrected variable name
-        isRadioChecked: isRadioChecked,
-        mis_select: mis_select,
-    });
-
-    $.ajax({
-        url: "/exit_zerodha_order", // Replace with the actual URL of your Django view
-        type: "POST",
-        data: JSON.stringify(All_positionTrade),
-        contentType: "application/json",
-        success: function (response) {
-            console.log(response);
-
-            
-            response.order_details.forEach((order, index) => {
-              var order_status_text = order.order_id;
-
-              //////console.log(order_status_text);
-
-              // Check if order_status_text is not an object
-              if (typeof order_status_text === 'object') {
-                // Run this code block if it's not an object
-        toastr.success(`<strong>Success</strong><br> Order Exited Successfully : Order Id - ${order_status_text.data.order_id}`)
-              } else {
-                // If it's an object, proceed with JSON parsing
-                var orderObject = JSON.parse(order_status_text);
-
-                if (orderObject.status === "error") {
-       
-
-                      toastr.error( `<strong>Error</strong><br> ${orderObject.message.replace(/\s*\[Read more.\].*$/, '')}`)
-                }
-              }
-            });
-        }
-    });
 });
 
+  // Event handler for the checkboxes with class .legs_instant_exit_check
+  $('.legs_instant_exit_check').change(function() {
+    // Check if it's checked or unchecked
+    $(".main_global_check_btn").prop('checked',false)
+    if($(this).is(':checked')) {
+      console.log('A legs_instant_exit_check checkbox is checked');
+    } else {
+      console.log('A legs_instant_exit_check checkbox is unchecked');
+    }
+    
+    // Update checked count
+    updateCheckedCount();
+    updateExitButton();
 
-    });
+  });
 
+// Initial count
+updateCheckedCount();
 
-
-     
-        //     $('#positionsTable').DataTable({
-        //       order: [[6, 'asc']], // 6 is the column index for "Unrealised P&L"
-        //       drawCallback: function () {
-        //         if (!totalPLAdded) {
-        //           var totalUnrealised = response.all_position.net.reduce(function (sum, position) {
-        //             return sum + position.unrealised;
-        //           }, 0);
-
-        //           var totalPLDiv = $(`
-        // <div class="Total_p_l">
-        //   <div class="main_exit_positions">
-        //     <button class="exit_all_positions_zerodha">Exit Positions</button>
-        //   </div>
-        //   <div class="main_p_l_table">Total P&L: <span class="${totalUnrealised > 0 ? 'text-success' : 'text-danger'}">${totalUnrealised > 0 ? '+' : '-'}${totalUnrealised.toFixed(2)}</span></div>
-        // </div>`);
-
-        //           $('#positionsTable_wrapper').append(totalPLDiv);
-        //           totalPLAdded = true;
-        //         }
-        //       }
-        //     });
-
-
-      },
-      
-      
-      
-      
-      error: function (error) {
-        console.error("Error:", error);
-      }
-    });
+// Function to update the button visibility and label
+function updateExitButton() {
+  var checkedCount = $('.legs_instant_exit_check:checked').length;
+  var exitButton = $('.instant_exit_button_main button');
+  
+  if (checkedCount === 0) {
+    exitButton.hide();
+  } else {
+    exitButton.show();
+    if (checkedCount === 1) {
+      exitButton.text('Exit 1 position');
+    } else {
+      exitButton.text('Exit ' + checkedCount + ' positions');
+    }
   }
+}
+
+
+
+
+    $("#exit_selected_positions").click(function () {
+      Swal.fire({
+        title: 'Are you sure?',
+        text: 'Are you sure you want to exit all the selected order?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, exit',
+        cancelButtonText: 'No, cancel',
+      }).then((result) => {
+        // If user confirms, proceed
+        if (result.isConfirmed) {
+
+      // Initialize an array to store the trade details
+      var All_positionTrade = [];
+
+      // Iterate over each checked checkbox
+      $('.legs_instant_exit_check:checked').each(function() {
+        var $row = $(this).closest('tr'); // Get the closest <tr> parent of the checkbox
+
+          if ($row.find('.all_quantity').text().trim() !== '0') {
+
+        // Extract values from the row
+        var exchnage_nse_nfo = $row.find('.exchange_value').text();
+        var sell_buy_indicator = 'SELL'; // Assuming it's always sell for exit
+        var tradingsymbol = $row.find('.main_tradingsymbol').text();
+        var main_trading_symbol = $row.find('.main_tradingsymbol').text();
+        var Quantity = $row.find('.all_quantity').text();
+        var price = $row.find('.lastPrice').text();
+        var isRadioChecked = 'Market'; // Assuming it's always market for exit
+        var mis_select =$row.find(".normal_order_background").text()
+
+        var main_mis_select 
+        if (mis_select==="NRML") {
+          main_mis_select= 'overnight'
+        }
+      else if (mis_select==="CNC") {
+        main_mis_select= 'cnc'
+        }
+        else {
+          main_mis_select= 'intraday'
+        }
+
+        // Push the extracted values as an object to the array
+        All_positionTrade.push({
+          exchnage_nse_nfo: exchnage_nse_nfo,
+          sell_buy_indicator: sell_buy_indicator,
+          tradingsymbol: tradingsymbol,
+          main_trading_symbol: main_trading_symbol,
+          Quantity: Quantity,
+          price: price,
+          isRadioChecked: isRadioChecked.toLocaleLowerCase(),
+          mis_select: main_mis_select
+        });
+      }
+      });
+
+      // Log the trade details
+      console.log("All Position Trades:", All_positionTrade);
+
+      exit_order_manager_main(All_positionTrade)
+        } else {
+          // If user cancels, do nothing or handle accordingly
+          console.log("Exit cancelled.");
+        }
+      });
+
+
+
+      
+
+    });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        // Event handler for the checkboxes with class .legs_instant_exit_check
+        $('.legs_instant_exit_check').change(function() {
+          updateExitButton();
+        });
+
+        // Initial button visibility and label
+        updateExitButton();
+
+
+                $(".exit_order").click(function () {
+                console.log('Hi there');
+                var order_leg_main = $(this).closest(".order_leg_main");
+                var exchange_value = order_leg_main.find(".exchange_value").text();
+
+                $(".exchnage_nse_nfo").text(exchange_value)
+
+                console.log(exchange_value);
+                console.log(order_leg_main.find(".main_tradingsymbol").text());
+
+                $(".trading_symbol").text(order_leg_main.find(".main_tradingsymbol").text())
+
+
+                if (order_leg_main.find(".normal_order_background").text() === "NRML") {
+                console.log("Overnight NRML");
+                $("#flexRadioDefault2").prop("checked", true); // Set Overnight NRML radio button
+                $('#flexRadioDefault2, .form-check-label[for="flexRadioDefault2"]').show();
+                $('#flexRadioDefault3, .form-check-label[for="flexRadioDefault3"]').hide();
+            }
+
+            else if (order_leg_main.find(".normal_order_background").text() === "CNC") {
+
+              $('#flexRadioDefault2, .form-check-label[for="flexRadioDefault2"]').hide();
+              $('#flexRadioDefault3, .form-check-label[for="flexRadioDefault3"]').show();
+
+              $("#flexRadioDefault3").prop("checked", true); // Set Overnight NRML radio button
+            }
+            
+            
+            else {
+                console.log("Intraday MIS");
+                $('#flexRadioDefault2, .form-check-label[for="flexRadioDefault2"]').show();
+                $("#flexRadioDefault1").prop("checked", true); // Set Intraday MIS radio button
+            }
+
+            console.log(`${exchange_value}:${order_leg_main.find(".main_tradingsymbol").text()}`);
+
+            var trading_nse_nfo_quote =  `${exchange_value}:${order_leg_main.find(".main_tradingsymbol").text()}`
+            $.ajax({
+            url: "/get_zerodha_quote_order_manager",
+            type: "POST",
+            data: {
+                'trading_nse_nfo_quote': trading_nse_nfo_quote,
+                'csrfmiddlewaretoken': '{{ csrf_token }}' // Ensure CSRF token is included
+            },
+            success: function(response) {
+                console.log(response);
+            },
+            error: function(xhr, textStatus, errorThrown) {
+                console.error("Error:", errorThrown);
+            }
+        });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                console.log(order_leg_main.find(".normal_order_background").text());
+                console.log(order_leg_main.find(".all_quantity").text());
+                console.log(order_leg_main.find(".lastPrice").text());
+
+
+            $("#order_qty").empty().val(order_leg_main.find(".all_quantity").text())
+            $("#order_price").empty().val(order_leg_main.find(".lastPrice").text())
+
+            $("#limit_order").prop("checked" , true)
+            $('#order_price').prop('disabled', false);
+
+
+            if (parseFloat(order_leg_main.find(".all_quantity").text()) < 0) {
+
+              console.log('BUY');
+
+              $(".buy_sell_btn").replaceWith(`<button class="buy_exit">BUY</button>`)
+              
+              
+            }else{
+              console.log('SELl');
+              $(".buy_sell_btn").replaceWith(`<button class="sell_exit">SELL</button>`)
+            }
+
+
+            // [{"orderNumber":1,"sell_buy_indicator":"SELL","tradingsymbol":"NIFTY24F2222050CE","main_trading_symbol":"NIFTY2422222050CE",
+            // "strikePrice_order_window":"22050","Quantity":"50","price":"62.7","isRadioChecked":"market","mis_select":"overnight","main_instrument_token":"","main_strikePrice_values":"0","stockDropdown_main":"NIFTY"}
+            // ,{"orderNumber":2,"sell_buy_indicator":"SELL","tradingsymbol":"NIFTY24F2222050PE","main_trading_symbol":"NIFTY2422222050PE","strikePrice_order_window":"22050","Quantity":"50","price":"106.6","isRadioChecked":"market","mis_select":"overnight","main_instrument_token":"","main_strikePrice_values":"0","stockDropdown_main":"NIFTY"}]
+
+
+              $(document).off('click', '.sell_exit').on('click', '.sell_exit', function(event) {
+
+            event.stopPropagation(); // Exclude event propagation
+
+            var All_positionTrade = []; // Initialize as an array
+
+            var sell_buy_indicator = "SELL";
+            console.log("sell_buy_indicator:", sell_buy_indicator);
+
+            var tradingsymbol = $(".trading_symbol").text();
+            console.log("tradingsymbol:", tradingsymbol);
+
+            var main_trading_symbol = $(".trading_symbol").text();
+            console.log("main_trading_symbol:", main_trading_symbol);
+
+            var Quantity = $("#order_qty").val();
+            console.log("Quantity:", Quantity);
+
+            var price = $("#order_price").val();
+            console.log("price:", price);
+
+            var isRadioChecked = $('input[name="market_limit"]:checked').val();
+            console.log("isRadioChecked:", isRadioChecked);
+
+            var mis_select = $('input[name="flexRadioDefault"]:checked').val();
+            console.log("mis_select:", mis_select);
+          var exchnage_nse_nfo = $(".exchnage_nse_nfo").text()
+            All_positionTrade.push({
+              exchnage_nse_nfo:exchnage_nse_nfo,
+                sell_buy_indicator: sell_buy_indicator,
+                tradingsymbol: tradingsymbol,
+                main_trading_symbol: main_trading_symbol,
+                Quantity: Quantity, // Corrected variable name
+                price: price, // Corrected variable name
+                isRadioChecked: isRadioChecked,
+                mis_select: mis_select,
+            });
+            exit_order_manager_main(All_positionTrade)
+
+$("#exampleModal").modal("hide")
+
+        });
+
+
+
+
+            });
+
+
+
+            function exit_order_manager_main(All_positionTrade) {
+            
+
+            $.ajax({
+                url: "/exit_zerodha_order", // Replace with the actual URL of your Django view
+                type: "POST",
+                data: JSON.stringify(All_positionTrade),
+                contentType: "application/json",
+                success: function (response) {
+                    console.log(response);
+
+                    
+                    response.order_details.forEach((order, index) => {
+                      var order_status_text = order.order_id;
+
+                      //////console.log(order_status_text);
+
+                      // Check if order_status_text is not an object
+                      if (typeof order_status_text === 'object') {
+                        // Run this code block if it's not an object
+                toastr.success(`<strong>Success</strong><br> Order Exited Successfully : Order Id - ${order_status_text.data.order_id}`)
+                      } else {
+                        // If it's an object, proceed with JSON parsing
+                        var orderObject = JSON.parse(order_status_text);
+
+                        if (orderObject.status === "error") {
+              
+
+                              toastr.error( `<strong>Error</strong><br> ${orderObject.message.replace(/\s*\[Read more.\].*$/, '')}`)
+                        }
+                      }
+                    });
+                }
+            });
+
+          }  
+          
+
+            
+                //     $('#positionsTable').DataTable({
+                //       order: [[6, 'asc']], // 6 is the column index for "Unrealised P&L"
+                //       drawCallback: function () {
+                //         if (!totalPLAdded) {
+                //           var totalUnrealised = response.all_position.net.reduce(function (sum, position) {
+                //             return sum + position.unrealised;
+                //           }, 0);
+
+                //           var totalPLDiv = $(`
+                // <div class="Total_p_l">
+                //   <div class="main_exit_positions">
+                //     <button class="exit_all_positions_zerodha">Exit Positions</button>
+                //   </div>
+                //   <div class="main_p_l_table">Total P&L: <span class="${totalUnrealised > 0 ? 'text-success' : 'text-danger'}">${totalUnrealised > 0 ? '+' : '-'}${totalUnrealised.toFixed(2)}</span></div>
+                // </div>`);
+
+                //           $('#positionsTable_wrapper').append(totalPLDiv);
+                //           totalPLAdded = true;
+                //         }
+                //       }
+                //     });
+
+
+              },
+              
+              
+              
+              
+              error: function (error) {
+                console.error("Error:", error);
+              }
+            });
+          }
 
 
       // Run the fetchData function every 1000 milliseconds (1 second)
@@ -636,10 +860,10 @@ $(this).text((main_p_n_l > 0 ? '+' : '') + main_p_n_l.toFixed(2)).removeClass("t
 
         // Add class based on the condition
         if (totalMainPNL < 0) {
-          totalPNLElement.addClass('text-danger');
-        } else {
-          totalPNLElement.addClass('text-success');
-        }
+                totalPNLElement.removeClass('text-danger text-success').addClass('text-danger');
+              } else {
+                totalPNLElement.removeClass('text-danger text-success').addClass('text-success');
+              }
 
 
 });

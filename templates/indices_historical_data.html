@@ -4,6 +4,8 @@
 {% load static %}
 {% block dashboard_body %}
 
+
+
 <style>
   .date_time_dropdown {
         display: none; /* Initially hide the dropdown */
@@ -491,7 +493,9 @@ percentChange = "-";
 
 
         var row = $("<tr>");
-            row.append($("<td>").text(formatDate(data.Date || "-")));
+ 
+            row.append($("<td>").text( changeDateFormat(data.Date || "-")).attr("data-order", formatDateWithTimestamp(data.Date) ));
+
 
         row.append($("<td>").html(formatNumber(data.Open)));
             row.append($("<td class='text-success'>").html(formatNumber(data.High)));
@@ -519,7 +523,15 @@ percentChange = "-";
         "language": {
         "search": '<div class="custom-search" style="position: relative"><i class="bi bi-search" style="position: absolute;right: 7px;top: 10px;"></i></i><input class="form-control" type="search" placeholder="Search" aria-controls="volume_shocker_table"></div>'
        },
-       "pageLength": 25
+       "pageLength": 25,
+       'columnDefs': [
+    				{ 'orderData':[1] },
+    				{
+        			'targets': [1],
+		        	'visible': false
+    				},
+				],
+     
     });
     $('#historical_data_table_filter input:eq(1)').hide();
     $('#historical_data_table_filter input[type="search"]').attr('placeholder', 'Search...');
@@ -533,6 +545,18 @@ error: function(xhr, status, error) {
 
 }
 
+function formatDateWithTimestamp(dateString) {
+    // Convert date string to a JavaScript Date object
+    var date = new Date(dateString);
+    
+    // Get the timestamp in seconds
+    var timestamp = Math.floor(date.getTime() / 1000);
+    
+ 
+    
+    return  timestamp
+
+}
 
 
 var from_date_input = $('#from_date');
@@ -562,9 +586,20 @@ function updateButtonDateText(fromDate, toDate) {
 
 // Function to format date as "MM/DD/YYYY"
 function formatDate(date) {
+
+    console.log(date)
     var mm = date.getMonth() + 1;
     var dd = date.getDate();
     return [(mm>9 ? '' : '0') + mm, (dd>9 ? '' : '0') + dd, date.getFullYear()].join('/');
+}
+function changeDateFormat(dateStr) {
+    // Split the date string into year, month, and day
+    var parts = dateStr.split("-");
+    
+    // Rearrange the parts to form the new date string
+    var formattedDateStr = parts[2] + "-" + parts[1] + "-" + parts[0];
+    
+    return formattedDateStr;
 }
 
 // Set initial date range and button text

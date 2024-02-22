@@ -2784,9 +2784,9 @@ box-shadow: 0 3px 16px 0 rgba(35,47,62,.15);
 
               // Add class based on the condition
               if (totalMainPNL < 0) {
-                totalPNLElement.addClass('text-danger');
+                totalPNLElement.removeClass('text-danger text-success').addClass('text-danger');
               } else {
-                totalPNLElement.addClass('text-success');
+                totalPNLElement.removeClass('text-danger text-success').addClass('text-success');
               }
 
 
@@ -20920,18 +20920,18 @@ console.log(formattedString);
               console.log('_result',_result);
               
               var currentDate = new Date();
-var currentDay = currentDate.getDay(); // 0 (Sunday) to 6 (Saturday)
-// Filter out Saturday (6) and Sunday (0) from _result
-_result = _result.filter(function(dayData) {
-    var day = Object.keys(dayData)[0];
-    if (!day.includes('Day')) return true; // Include entries not related to days
-    var dayNumber = parseInt(day.split('-')[1]);
-    var targetDate = new Date(currentDate);
-    targetDate.setDate(currentDate.getDate() + dayNumber - 1); // Calculate target date for the day
-    var targetDay = targetDate.getDay();
-    return targetDay !== 0 && targetDay !== 6; // Exclude Saturday (6) and Sunday (0)
-});
-console.log('_result2',_result);
+              var currentDay = currentDate.getDay(); // 0 (Sunday) to 6 (Saturday)
+              // Filter out Saturday (6) and Sunday (0) from _result
+              _result = _result.filter(function(dayData) {
+                  var day = Object.keys(dayData)[0];
+                  if (!day.includes('Day')) return true; // Include entries not related to days
+                  var dayNumber = parseInt(day.split('-')[1]);
+                  var targetDate = new Date(currentDate);
+                  targetDate.setDate(currentDate.getDate() + dayNumber - 1); // Calculate target date for the day
+                  var targetDay = targetDate.getDay();
+                  return targetDay !== 0 && targetDay !== 6; // Exclude Saturday (6) and Sunday (0)
+              });
+              console.log('_result2',_result);
 
 
             // Add header cells for each day
@@ -21212,12 +21212,13 @@ function payoff_atm_scroll() {
             //////console.log('Error:', error);
           }
         });
+console.log('MORE');
 
 
       }
       else {
 
-        //console.log("LESS");
+        console.log("LESS");
         var table = $(".payoff_table_main_table");
 
         // Clear any existing content, including the body
@@ -21236,7 +21237,7 @@ function payoff_atm_scroll() {
           var main_payoff_table_condition = item.value < 0 ? "text-danger" : "text-success";
           var row = $("<tr>");
 
-          var categoryCell = $("<td>").text(item.category);
+          var categoryCell = $("<td>").text(item.category).addClass("cell-container border_collapsed");
           var valueCell = $("<td>").text(item.value.toFixed(2)).addClass(main_payoff_table_condition);
 
           row.append(categoryCell);
@@ -21342,6 +21343,68 @@ function payoff_atm_scroll() {
         }
 
    
+var closestStrikePriceText = $("#closest_strike_price").text();
+
+function payoff_atm_scroll() {
+    var closestStrikePrice = parseInt(closestStrikePriceText);
+
+    console.log(closestStrikePriceText);
+
+    console.log('Function called');
+
+    $(".payoff_table_main_table tr").each(function() {
+        var $strikePrice = $(this).find("td:first-child");
+        var currentStrikePrice = parseInt($strikePrice.text());
+
+        // console.log(currentStrikePrice);
+        var $cellContainer = $(this).find(".cell-container");
+        var $firstChild = $cellContainer.first();
+        $firstChild.find('.atm-label-payoff-table').remove();
+
+        if (currentStrikePrice === closestStrikePrice) {
+            console.log('Current Strike Price:', currentStrikePrice);
+            var indexChangeValue = parseFloat($(".change_change_per").text());
+            var lastTradedPrice = $(".last_traded_price").text();
+            var mainBgAtmDynamic = indexChangeValue < 0 ? "index_atm_negative" : "index_atm_positive";
+            var mainBorderAtmDynamic = indexChangeValue < 0 ? "index_atm_negative_border" : "index_atm_positive_border";
+
+            $(this).addClass(`${mainBorderAtmDynamic} background_option_closest_payoff_table`);
+
+            if ($firstChild.length > 0) {
+                var spanElement = $("<span>").addClass("atm-label-payoff-table").addClass(mainBgAtmDynamic).text(`${lastTradedPrice}(+${indexChangeValue}%)`);
+                $firstChild.append(spanElement);
+                console.log("Span element appended successfully");
+            } else {
+                console.log("Error: $firstChild not found or selected incorrectly");
+            }
+
+            var container = $(".table_container");
+            var scrollTo = $(this).position().top - container.height() / 2 + $(this).height() / 2;
+
+            $(".table_container").stop().animate({
+                scrollTop: scrollTo
+            }, 1000, function() {
+                console.log("Scroll animation completed");
+                // You can add any additional actions to perform after scrolling here
+            });
+
+            // Exit the each loop once the closest strike price is found
+            return false;
+        }
+    });
+}
+
+  payoff_atm_scroll();
+
+  // Add click event listener to trigger the scrolling function
+  $(".payoff_table").click(function() {
+    payoff_atm_scroll();
+  });
+
+
+
+
+
 
       }
 
@@ -21352,12 +21415,7 @@ function payoff_atm_scroll() {
     // Select the elements
   });
 </script>
-<script>
-  $(document).ready(function () {
-    // Select the table and the first row inside the thead
 
-  });
-</script>
 
 <script>
 
