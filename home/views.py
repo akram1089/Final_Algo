@@ -17509,6 +17509,7 @@ def update_upstox_broker(request, data):
     trading_plateform = data.get("trading_platform")
     logging_id = data.get("logging_id")
     fa_pin = data.get('fa_pin', '')
+    advance_security = data.get('advance_security')
 
     USER_ID = logging_id
     API_KEY = api_key
@@ -17630,6 +17631,7 @@ def update_upstox_broker(request, data):
                 broker.app_name = app_name
                 broker.enctoken = access_token  # You may need to generate enctoken or adjust this field based on your requirements
                 broker.updated_at = timezone.now()
+                broker.advance_totp_security = advance_security
                 broker.save()
 
                 return JsonResponse({"message": "'Upstox' broker updated successfully"})
@@ -17844,6 +17846,7 @@ def update_angel_one_broker(request, data):
         clientId = data.get('logging_id')
         pwd = data.get('password')
         totp_token = data.get('totp_key')
+        advance_security = data.get('advance_security')
 
         smartApi = SmartConnect(api_key)
         totp = pyotp.TOTP(totp_token).now()
@@ -17876,6 +17879,7 @@ def update_angel_one_broker(request, data):
                 broker.app_name = app_name
                 broker.enctoken = feedToken  # You may need to adjust this field based on your requirements
                 broker.updated_at = timezone.now()
+                broker.advance_totp_security = advance_security
                 broker.save()
 
                 return JsonResponse({"message": "'smart_api' broker updated successfully"})
@@ -17980,6 +17984,7 @@ def update_zerodha_broker(request, data):
     api_key = data.get('api_key', '')
     api_secret = data.get('api_secret', '')
     app_name = data.get('app_name')
+    advance_security = data.get('advance_security')
 
     enctoken = get_enctoken_internal(logging_id, password, totp_key)
 
@@ -18002,6 +18007,7 @@ def update_zerodha_broker(request, data):
                 broker.api_secret = api_secret
                 broker.app_name = app_name
                 broker.enctoken = enctoken
+                broker.advance_totp_security = advance_security
                 broker.updated_at = timezone.now()
                 broker.save()
 
@@ -20673,6 +20679,7 @@ def exit_zerodha_order(request):
                     price = float(trade_data.get('price', 0))
                     mis_select = trade_data.get('mis_select', '').lower()  # Ensure it's lowercase
                     isRadioChecked = trade_data.get('isRadioChecked', '')  # assuming 'isRadioChecked' is present in each trade_data
+                    exchnage_nse_nfo = trade_data.get('exchnage_nse_nfo', '')  # assuming 'isRadioChecked' is present in each trade_data
 
                     # Map sell_buy_indicator to TRANSACTION_TYPE
                     if sell_buy_indicator == 'BUY':
@@ -20683,11 +20690,24 @@ def exit_zerodha_order(request):
                         print(f"Invalid sell_buy_indicator: {sell_buy_indicator}")
                         continue  # Skip processing this trade_data if the indicator is invalid
 
+                    # Map sell_buy_indicator to TRANSACTION_TYPE
+                    if exchnage_nse_nfo == 'NSE':
+                        nse_nfo_exchange = zerodha_api.EXCHANGE_NSE
+                    elif exchnage_nse_nfo == 'BSE':
+                        nse_nfo_exchange = zerodha_api.EXCHANGE_BSE
+                    elif exchnage_nse_nfo == 'NFO':
+                        nse_nfo_exchange = zerodha_api.EXCHANGE_NFO
+                    else:
+                        print(f"Invalid exchnage_nse_nfo: {exchnage_nse_nfo}")
+                        continue  # Skip processing this trade_data if the indicator is invalid
+
                     # Map mis_select to product type
                     if mis_select == 'overnight':
                         product_type = zerodha_api.PRODUCT_NRML
                     elif mis_select == 'intraday':
                         product_type = zerodha_api.PRODUCT_MIS
+                    elif mis_select == 'cnc':
+                        product_type = zerodha_api.PRODUCT_CNC
                     else:
                         print(f"Invalid mis_select: {mis_select}")
                         continue  # Skip processing this trade_data if the mis_select is invalid
@@ -20703,7 +20723,7 @@ def exit_zerodha_order(request):
 
                     order = zerodha_api.place_order(
                         variety=zerodha_api.VARIETY_REGULAR,
-                        exchange=zerodha_api.EXCHANGE_NFO,
+                        exchange=nse_nfo_exchange,
                         tradingsymbol=tradingsymbol,
                         transaction_type=transaction_type,
                         quantity=quantity,
@@ -20725,7 +20745,7 @@ def exit_zerodha_order(request):
                         'order_id': order,
                     })
 
-                    print(f"Order ID for {tradingsymbol} ({transaction_type}, {mis_select}, {order_type}): {order}")
+                    # print(f"Order ID for {tradingsymbol} ({transaction_type}, {mis_select}, {order_type}): {order}")
 
                     # Continue with your logic here, e.g., handling the order response
 
@@ -20738,3 +20758,50 @@ def exit_zerodha_order(request):
         return JsonResponse({"error": "An unexpected error occurred. Please try again later."})
 
 
+
+
+
+
+@csrf_exempt
+def get_zerodha_quote_order_manager(request):
+    if request.method == 'POST':
+        try:
+            user = request.user
+            broker_instance_zerodha = Broker.objects.filter(user=user, broker_name="zerodha", active_api=True).first()
+            broker_instance_angelone = Broker.objects.filter(user=user, broker_name="angelone", active_api=True).first()
+          
+
+            if broker_instance_zerodha:
+                enctoken = broker_instance_zerodha.enctoken
+                zerodha_api = ZerodhaPlaceOrder(enctoken)
+                all_profile = zerodha_api.get_user_profile()
+
+                if not all_profile:
+                    enctoken = get_enctoken_internal(
+                        broker_instance_zerodha.logging_id,
+                        broker_instance_zerodha.password,
+                        broker_instance_zerodha.totp_key
+                    )
+                    broker_instance_zerodha.enctoken = enctoken
+                    broker_instance_zerodha.save()
+
+                if enctoken:
+                    zerodha_api = ZerodhaPlaceOrder(enctoken)
+                    order_details = []
+
+                    trading_nse_nfo_quote = request.POST.get('trading_nse_nfo_quote', None)
+                    if trading_nse_nfo_quote:
+                        # print(trading_nse_nfo_quote)
+                        ohlc_market_indepth = zerodha_api.quote(trading_nse_nfo_quote)
+                        # print(ohlc_market_indepth)
+                        return JsonResponse({'message': 'Data received successfully', "ohlc_data": ohlc_market_indepth}, status=200)
+                    else:
+                        return JsonResponse({'error': 'No data received'}, status=400)
+                else:
+                    return JsonResponse({'error': 'Failed to authenticate with Zerodha API'}, status=500)
+            else:
+                return JsonResponse({'error': 'Zerodha API not configured for the user'}, status=400)
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
+    else:
+        return JsonResponse({'error': 'Method not allowed'}, status=405)

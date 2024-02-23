@@ -2821,15 +2821,18 @@ box-shadow: 0 3px 16px 0 rgba(35,47,62,.15);
         }
 
         $("#order_btn").click(function () {
-          fetchData();
-          $("#order_history").modal("show");
 
-          if (intervalId_order === null) {
-            // //////console.log('Show');
+          window.open("order_manager", "_blank");
 
-            // Run the fetchData function every 1000 milliseconds (1 second)
-            intervalId_order = setInterval(fetchData, 5000);
-          }
+          // fetchData();
+          // $("#order_history").modal("show");
+
+          // if (intervalId_order === null) {
+          //   // //////console.log('Show');
+
+          //   // Run the fetchData function every 1000 milliseconds (1 second)
+          //   intervalId_order = setInterval(fetchData, 5000);
+          // }
         });
 
         $("#order_history").on("hidden.bs.modal", function () {
@@ -4209,6 +4212,22 @@ color: #c50000 !important;
 
               <input type="text" class="form-control" id="update_zerodha_app_name" placeholder="Enter App Name" required />
             </div>
+            <div class="">
+              <label for="">TOTP Advance Security
+              </label>
+
+              <div class="checkbox-wrapper-4" style="
+                    display: flex;
+                    gap: 0.3rem;
+
+                    cursor: pointer;">
+
+   
+
+                <input type="checkbox" id="update_zerodha_advance_security" class="sc-gJwTLC ikxBAC" value="no" data-gtm-form-interact-field-id="0">
+                <label class="form-check-label" for="zerodha_advance_security" id="update_zerodha_advance_security_label">No</label>
+              </div>
+            </div>
 
           </div>
 
@@ -4238,6 +4257,26 @@ color: #c50000 !important;
             <label for="update_angelone_app_name">App name</label>
             <input type="text" class="form-control" id="update_angelone_app_name" name="update_angelone_app_name"
               placeholder="Enter App Name" required />
+              <label for="">TOTP Advance Security
+              </label>
+
+              <div class="checkbox-wrapper-4" style="
+              display: flex;
+              gap: 0.3rem;
+
+              cursor: pointer;">
+
+
+
+          <input type="checkbox" id="update_angelone_advance_security" class="sc-gJwTLC ikxBAC" value="no" data-gtm-form-interact-field-id="0">
+          <label class="form-check-label" for="angelone_advance_security" id="update_angelone_advance_security_label">No</label>
+        </div>
+
+
+
+
+
+
           </div>
           <div id="update_upstocksFields" style="display: none;">
 
@@ -4274,6 +4313,20 @@ color: #c50000 !important;
             <label for="update_upstocks_app_name">App name</label>
             <input type="text" class="form-control" id="update_upstocks_app_name" name="update_upstocks_app_name"
               placeholder="Enter App Name" required />
+
+              <label for="">TOTP Advance Security
+              </label>
+              <div class="checkbox-wrapper-4" style="
+              display: flex;
+              gap: 0.3rem;
+
+              cursor: pointer;">
+
+
+
+          <input type="checkbox" id="update_upstocks_advance_security" class="sc-gJwTLC ikxBAC" value="no" data-gtm-form-interact-field-id="0">
+          <label class="form-check-label" for="upstocks_advance_security" id="update_upstocks_advance_security_label">No</label>
+        </div>
           </div>
 
           <div class="updating_broker"></div>
@@ -4747,6 +4800,8 @@ color: #c50000 !important;
                         if (data.broker_data.broker_name ==="zerodha") {
                           $("#all_brokers").val("zerodha");
 
+                          console.log(data.broker_data);
+    
                                         // Trigger the change event to update the displayed fields
                           $("#all_brokers").change();
                           $("#update_zerodhaFields").show()
@@ -4759,6 +4814,21 @@ color: #c50000 !important;
                           $("#update_zerodha_totp_key").val(data.broker_data.totp_key)
                           $("#update_zerodha_app_name").val(data.broker_data.app_name)
                           $("#update_ID").val(data.broker_data.id)
+                     
+
+
+                          if (data.broker_data.advance_totp_security) {
+                            $("#update_zerodha_advance_security").attr("checked",true)
+                            $("#update_zerodha_advance_security_label").text("Yes")
+
+                            
+                          }else{
+                            $("#update_zerodha_advance_security").attr("checked",false)
+                            $("#update_zerodha_advance_security_label").text("No")
+                          }
+ 
+
+                                         
 
 
 
@@ -4779,6 +4849,18 @@ color: #c50000 !important;
                           $("#update_angelone_api_key").val(data.broker_data.api_key)
                           $("#update_angelone_app_name").val(data.broker_data.app_name)
                           $("#update_ID").val(data.broker_data.id)
+
+                          
+                          if (data.broker_data.advance_totp_security) {
+                            $("#update_angelone_advance_security").attr("checked",true)
+                            $("#update_angelone_advance_security_label").text("Yes")
+
+                            
+                          }else{
+                            $("#update_angelone_advance_security").attr("checked",false)
+                            $("#update_angelone_advance_security_label").text("No")
+                          }
+ 
                         
          
                         }else if (data.broker_data.broker_name ==="upstocks") {
@@ -4808,6 +4890,16 @@ color: #c50000 !important;
                           $("#update_upstocks_secret_key").val(data.broker_data.api_secret)
                           $("#update_upstocks_app_name").val(data.broker_data.app_name)
                           $("#update_ID").val(data.broker_data.id)
+
+                          if (data.broker_data.advance_totp_security) {
+                            $("#update_upstocks_advance_security").attr("checked",true)
+                            $("#update_upstocks_advance_security_label").text("Yes")
+
+                            
+                          }else{
+                            $("#update_upstocks_advance_security").attr("checked",false)
+                            $("#update_upstocks_advance_security_label").text("No")
+                          }
                         }
          
                         
@@ -5009,19 +5101,32 @@ async function updateActiveApi(brokerId, isActive) {
           // Remove undefined values
 
           var phone_number_val = $("#"+"update_" + selectedBroker + "_phone_number").val();
+
+          var isChecked = $("#"+"update_"+selectedBroker+"_advance_security").is(":checked");
+
+
+             var advance_security 
+                // Output the result
+                if(isChecked) {
+                  advance_security=true
+                    console.log("The checkbox is checked: " + isChecked);
+                } else {
+                  advance_security=false
+                    console.log("The checkbox is not checked: " + isChecked);
+                }
           // console.log(phone_number_val);
           //upstocks_phone_number
           const definedValues = [platform, loginId, password, totpKey, appName, apiKey, secret_key, phone_number_val].filter(val => val !== undefined);
 
           // Check if any of the remaining values is an empty string
-          if (definedValues.some(val => val.trim() === '')) {
-            // Display SweetAlert2 warning message
-            Swal.fire({
-              icon: 'warning',
-              title: 'Warning',
-              text: 'Please fill in all fields.',
-            });
-            return; // Stop execution if any field is an empty string
+                if (definedValues.some(val => val.trim() === '')) {
+                  // Display SweetAlert2 warning message
+                  Swal.fire({
+                    icon: 'warning',
+                    title: 'Warning',
+                    text: 'Please fill in all fields.',
+                  });
+                  return; // Stop execution if any field is an empty string
           }
 
 
@@ -5048,6 +5153,7 @@ async function updateActiveApi(brokerId, isActive) {
             'app_name': appName,
             'secret_key': secret_key,
             'phone_number_val': phone_number_val,
+            'advance_security': advance_security,
             // Add other fields as needed
           };
           data = Object.fromEntries(Object.entries(data).filter(([_, v]) => v !== undefined));
@@ -5487,6 +5593,8 @@ font-weight: 100 !important ;
   cursor: pointer;
 }
   </style>
+
+  
    <div class="main_all_strategy_nav_content" style="box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;     padding: 13px;
    margin: 11px 0 0 0;">
    <ul class="nav nav-tabs">
@@ -8818,12 +8926,20 @@ margin-bottom: 38px;
                 width: 50%;
               }
             }
+
+            .optionChain_title{
+              font-size: 17px;
+    font-weight: 500;
+            }
           </style>
         </div>
       </div>
       <div class="offcanvas offcanvas-start" tabindex="-1" id="optionChain_canvas"
         aria-labelledby="optionChain_canvasLabel" style="z-index: 9999;">
-        <div class="offcanvas-header justify-content-end">
+        <div class="offcanvas-header justify-content-between">
+          <div class="optionChain_title">
+            Option Chain
+          </div>
 
           <button type="button" class="btn-close option_chain_canvas" data-bs-dismiss="offcanvas"
             aria-label="Close"></button>
@@ -8849,7 +8965,8 @@ margin-bottom: 38px;
               style="overflow: auto; padding: 4px 4px;">
 
               <div class="main_indices_fut_opt_filter">
-                <select class="form-select w-auto stockDropdown">
+                <label for="stockDropdown_optionchain">Select Indices :</label>
+                <select class="form-select w-auto stockDropdown" id="stockDropdown_optionchain">
                   <optgroup label="Indices">
                     <option value="NIFTY">NIFTY</option>
                     <option value="BANKNIFTY">BANKNIFTY</option>
@@ -21485,10 +21602,20 @@ function payoff_atm_scroll() {
   
                               return `${displayHours}:${displayMinutes} ${meridiem}`;
                           }
-  
-                          const monthName = formatMonth(schedule.crontab_info.month_of_year);
-                          const dayName = formatDay(schedule.crontab_info.day_of_month);
-  
+                          function formatDay(dayOfMonth, monthOfYear) {
+                                    const daysInMonth = new Date(new Date().getFullYear(), monthOfYear, 0).getDate(); // Get the number of days in the specified month
+                                    if (dayOfMonth >= 1 && dayOfMonth <= daysInMonth) {
+                                        const dayNames = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
+                                        const dayIndex = new Date(new Date().getFullYear(), monthOfYear - 1, dayOfMonth).getDay();
+                                        return dayNames[dayIndex]; // Get the day name based on the date
+                                    } else {
+                                        return 'Invalid Day';
+                                    }
+                                }
+                                                          const monthName = formatMonth(schedule.crontab_info.month_of_year);
+                          const dayName = formatDay(schedule.crontab_info.day_of_month , schedule.crontab_info.month_of_year);
+                          console.log("dayName",schedule.crontab_info.day_of_month);
+                          
                           const displayYear = schedule.crontab_info.year || '*';
   
                           var schedulesPosition = `

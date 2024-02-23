@@ -1,6 +1,11 @@
 {% extends "base_dashboard.html" %} {% load static %} {% block dashboard_body %}
 
 <style>
+
+  .main_bids_table thead tr th , .main_bids_table tbody tr td ,.main_bids_table tfoot tr  td,
+  .main_offers_table thead tr th , .main_offers_table tbody tr td ,.main_offers_table tfoot tr  td{
+border-style: none !important;
+  }
   #all_broker,#individual_broker_user{
     width: 23rem;
   }
@@ -9,176 +14,1443 @@
     align-items: center;
   }
 
+
   .broker_position_icon{
     width: 40px;
   }
+  .position_names_user_details_upstox h5 ,
+.position_names_user_details_angelone h5,
   .position_names_user_details h5{
     font-size: 15px;
 
   }
+  .position_names_user_details_upstox p ,
+.position_names_user_details_angelone p,
   .position_names_user_details p{
     font-size: 12px;
 
   }
   .main_profile_broker_details{
+    padding-top: 1rem;
+    margin-bottom: 1rem;
     display: flex;
     align-items: center; 
     gap: 0.2rem;
+    justify-content: space-between;
+  }
+
+  .main_logo_and_id_angelone,
+  .main_logo_and_id_upstox,
+  .main_logo_and_id{
+    display: flex;
+    gap: 0.4rem;
+    align-items: center;
+  }
+  #exit_selected_positions{
+
+    background: linear-gradient(180deg, #4399eb, #5cadfb) !important;
+    color: #fff;
+    text-align: center;
+    font-size: 14px;
+    padding: 2px 11px;
+    font-weight: 500;
+    border-radius: 4px;
+    border: 1px solid #4399eb !important;
+    -webkit-box-shadow: none !important;
+    box-shadow: none !important;
+    outline: 0 !important;
+    cursor: pointer;
+    font-weight: 400 !important;
+  }
+.exit_order{
+  display: none;
+  padding: 1px 10px;
+    font-size: 12px;
+}
+  .order_leg_main:hover .exit_order{
+
+    display: block;
+  }
+
+  .disabled_row{
+    background: #ededed5e;
+  }
+
+  .tab-content {
+    border-left: 1px solid #dbdbdb;
+    border-bottom: 1px solid #dbdbdb;
+    border-right: 1px solid #dbdbdb;
+}
+
+.main_order_manager_body{
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+    padding: 13px;
+    border: 1px solid #d4d3d3;
+    border-radius: 10px;
+    margin: 0 17px;
+}
+.main_order_manager_title h5 {
+
+  padding: 13px 0 4px 17px !important;
+}
+
+.main_nav_tab_filter{
+
+  position: relative;
+}
+
+.main_nav_items{
+  display: flex;
+    flex-wrap: wrap;
+
+}
+
+.nav-tabs{
+  display: flex;
+    justify-content: space-between !important;
+}
+.main_logo_and_id_upstox,.main_logo_and_id_angelone{
+  display: none;
+}
+/* .main_logo_and_id{
+
+
+  position: absolute;
+    top: 4px;
+    right: 0;
+} */
+</style>
+
+<style>
+  .main_top_header_exit_window{
+
+    display: flex;
+  font-weight: 600;
+  border-radius: 7px;
+  gap: 0.3rem;
+  color: white;
+  background-color: rgb(200, 89, 89);
+  padding: 2px 4px;
+  }
+
+  .main_trading_symbol_ltp{flex-direction: column;
+}
+
+.main_exit_ltp{
+font-size: 12px;
+  font-weight:500;
+
+}
+
+.main_product_type{
+display: flex;
+  align-items: center;
+
+  gap: 0.3rem;
+}
+.main_qty_price{
+display: flex;
+  gap: 0.3rem;
+}
+
+.main_limit_market_btns{
+display: flex;
+  gap: 0.3rem;
+  
+}
+
+.sell_exit,.btn_danger_sell_top{
+color: white;
+border: 1px solid rgb(200, 89, 89);
+background-color: rgb(200, 89, 89);
+align-items: center;
+  gap: 0.5rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  letter-spacing: 0.015625rem;
+  font-weight: 500;
+  height: 2.5rem;
+  padding: 0 0.9rem;
+}
+
+.main_indepth_ohlc_data{
+display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+
+  padding: 7px 0;
+  border-bottom: 1px solid #e9e9e9;
+  border-top: 1px solid #e9e9e9;
+
+}
+
+
+.main_bids_table table thead tr,
+.main_offers_table table thead tr,
+.offers_price,
+.bids_price{
+color: rgb(111, 119, 134);
+  font-size: 12px;
+
+}
+
+.main_bids_table,.main_offers_table{
+width: -webkit-fill-available;
+}
+
+.bids_table_tbody tr td,
+.offers_table_tbody tr td{
+font-size: 12px;
+}
+
+.main_instraday_normal_buttons {
+justify-content: space-between;
+
+}
+
+.nav-tabs li a{
+  color: #ae0000 !important;
+    font-weight: 500 !important;
+    font-size: 15px !important;
+    border-left: 1px solid #8080802b !important;
+    border-top: 1px solid #8080802b !important;
+    border-right: 1px solid #8080802b !important;
+}
+
+
+.nav-link.active {
+    color: #009700 !important;
+    transform: scaleY(1.03); /* Scale only on the Y-axis (height) */
+}
+.main_upstox,.main_angelone{
+  display: none;
+}
+</style>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<style>
+  .checkbox-wrapper-28 {
+    --size: 18px;
+    position: relative;
+  }
+
+  .checkbox-wrapper-28 *,
+  .checkbox-wrapper-28 *:before,
+  .checkbox-wrapper-28 *:after {
+    box-sizing: border-box;
+  }
+
+  .checkbox-wrapper-28 .promoted-input-checkbox {
+    border: 0;
+    clip: rect(0 0 0 0);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    width: 1px;
+  }
+
+  .checkbox-wrapper-28 input:checked ~ svg {
+    height: calc(var(--size) * 0.6);
+    -webkit-animation: draw-checkbox-28 ease-in-out 0.2s forwards;
+            animation: draw-checkbox-28 ease-in-out 0.2s forwards;
+  }
+  .checkbox-wrapper-28 label:active::after {
+    background-color: #e6e6e6;
+  }
+  .checkbox-wrapper-28 label {
+    color: #0080d3;
+    line-height: var(--size);
+    cursor: pointer;
+    position: relative;
+  }
+  .checkbox-wrapper-28 label:after {
+    content: "";
+    height: var(--size);
+    width: var(--size);
+    margin-right: 8px;
+    float: left;
+    border: 2px solid #0080d3;
+    border-radius: 3px;
+    transition: 0.15s all ease-out;
+  }
+  .checkbox-wrapper-28 svg {
+    stroke: #0080d3;
+    stroke-width: 3px;
+    height: 0;
+    width: calc(var(--size) * 0.6);
+    position: absolute;
+    left: calc(var(--size) * 0.21);
+    top: calc(var(--size) * 0.2);
+    stroke-dasharray: 33;
+  }
+
+  @-webkit-keyframes draw-checkbox-28 {
+    0% {
+      stroke-dashoffset: 33;
+    }
+    100% {
+      stroke-dashoffset: 0;
+    }
+  }
+
+  @keyframes draw-checkbox-28 {
+    0% {
+      stroke-dashoffset: 33;
+    }
+    100% {
+      stroke-dashoffset: 0;
+    }
+  }
+</style>
+
+<style>
+  .checkbox-wrapper-27 {
+    --size: 18px;
+    position: relative;
+  }
+
+  .checkbox-wrapper-27 *,
+  .checkbox-wrapper-27 *:before,
+  .checkbox-wrapper-27 *:after {
+    box-sizing: border-box;
+  }
+
+  .checkbox-wrapper-27 .promoted-input-checkbox_27 {
+    border: 0;
+    clip: rect(0 0 0 0);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    width: 1px;
+  }
+
+  .checkbox-wrapper-27 input:checked ~ svg {
+    height: calc(var(--size) * 0.6);
+    -webkit-animation: draw-checkbox-28 ease-in-out 0.2s forwards;
+            animation: draw-checkbox-28 ease-in-out 0.2s forwards;
+  }
+  .checkbox-wrapper-27 label:active::after {
+    background-color: #e6e6e6;
+  }
+  .checkbox-wrapper-27 label {
+    color: #0080d3;
+    line-height: var(--size);
+    cursor: pointer;
+    position: relative;
+  }
+  .checkbox-wrapper-27 label:after {
+    content: "";
+    height: var(--size);
+    width: var(--size);
+    margin-right: 8px;
+    float: left;
+    border: 2px solid #0080d3;
+    border-radius: 3px;
+    transition: 0.15s all ease-out;
+  }
+  .checkbox-wrapper-27 svg {
+    stroke: #0080d3;
+    stroke-width: 3px;
+    height: 0;
+    width: calc(var(--size) * 0.6);
+    position: absolute;
+    left: calc(var(--size) * 0.21);
+    top: calc(var(--size) * 0.2);
+    stroke-dasharray: 33;
+  }
+
+  @-webkit-keyframes draw-checkbox-28 {
+    0% {
+      stroke-dashoffset: 33;
+    }
+    100% {
+      stroke-dashoffset: 0;
+    }
+  }
+
+  @keyframes draw-checkbox-28 {
+    0% {
+      stroke-dashoffset: 33;
+    }
+    100% {
+      stroke-dashoffset: 0;
+    }
   }
 </style>
 
 
-<div class="main_top_filters d-flex gap-3 my-3 px-2">
-  <label for="all_broker">Select Broker :</label>
-  <select name="" id="all_broker" class="form-select">
-    <option value="zerodha">zerodha</option>
-  </select>
 
-  <label for="individual_broker_user">Select User :</label>
-  <select name="" id="individual_broker_user" class="form-select">
-    <option value="XF1020">XF1020</option>
 
-  </select>
-  <button class="btn btn-success">Get All Positions</button>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ <div class="main_order_manager_title">
+  <h5>Order Manager</h5>
+ </div>
+
+ <div class="main_order_manager_body">
+
+<div class="main_nav_tab_filter ">
+
+
+
+ <ul class="nav nav-tabs">
+
+
+<div class="main_nav_items">
+  <li class="nav-item">
+    <a class="nav-link active" aria-current="page"   data-toggle="tab" data-broker_filter="zerodha" href="#">Naveen - Zerodha</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" aria-current="page" data-toggle="tab" data-broker_filter="angelone" href="#">Naveen - Angel one</a>
+  </li>
+
+  <li class="nav-item">
+    <a class="nav-link" aria-current="page" data-toggle="tab" data-broker_filter="upstox" href="#" >Naveen - Upstox</a>
+  </li>
+
 </div>
-
-<div class="main_profile_broker_details px-2">
+<div class="main_logo_and_id">
+  
   <div class="broker_position_icon"></div>
   <div class="position_names_user_details">
     <h5 class="m-0"></h5>
     <p class="m-0"></p>
   </div>
+
+</div>
+<div class="main_logo_and_id_upstox">
+  
+  <div class="broker_position_icon-upstocks">
+     <img src="{% static "img/upstox_new.webp" %}" alt="" width="30px" >
+          </div>
+  <div class="position_names_user_details_upstox">
+    <h5 class="m-0">Hemant Naveen</h5>
+    <p class="m-0">Client ID:HG3822</p>
+  </div>
+
+</div>
+<div class="main_logo_and_id_angelone">
+  
+  <div class="broker_position_icon-angelone">
+     <img src="{% static "img/angel_1_new.webp" %}" alt="" width="30px" >
+          </div>
+  <div class="position_names_user_details_angelone">
+    <h5 class="m-0">Hemant Laddha</h5>
+    <p class="m-0">Client ID:HG3822</p>
+  </div>
+
 </div>
 
-<div class="All_positions table-responsive">
-    <table id="positionsTable" class="display table">
-      <thead>
-        <tr>
-          <th>
-            <div class="form-check">
-              <input class="form-check-input  main_global_check_btn" type="checkbox" value="" id="flexCheckDefault">
+</ul>
 
+</div>
+
+<div class="tab-content"> 
+<div class="main_zerodha_dynamic">
+  <div class="main_top_filters d-none gap-3 my-3 px-2">
+    <label for="all_broker">Select Broker :</label>
+    <select name="" id="all_broker" class="form-select">
+      <option value="zerodha">zerodha</option>
+    </select>
+  
+    <label for="individual_broker_user">Select User :</label>
+    <select name="" id="individual_broker_user" class="form-select">
+      <option value="XF1020">XF1020</option>
+  
+    </select>
+    <button class="btn btn-success">Get All Positions</button>
+  </div>
+  
+  <div class="main_profile_broker_details px-2">
+  
+    <div class="main_all_positions_calc">
+      <div class="position_title">Positions</div>
+      <p class="positions_value_main"></p>
+    </div>
+  
+
+  
+  </div>
+  
+  <div class="All_positions table-responsive">
+      <table id="positionsTable" class="display table">
+        <thead>
+          <tr>
+            <th>
+
+
+
+
+
+              <div class="checkbox-wrapper-28">
+                <input id="tmp-28" type="checkbox" class="promoted-input-checkbox main_global_check_btn"/>
+                <svg><use xlink:href="#checkmark-28" /></svg>
+                <label for="tmp-28">
+        
+                </label>
+                <svg xmlns="http://www.w3.org/2000/svg" style="display: none">
+                  <symbol id="checkmark-28" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-miterlimit="10" fill="none"  d="M22.9 3.7l-15.2 16.6-6.6-7.1">
+                    </path>
+                  </symbol>
+                </svg>
+              </div>
+
+
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            </th>
+            <th>Products</th>
+            <th>Symbol</th>
+            <th>Status</th>
+            <th>Exchange</th>
+            <th>Quantity</th>
+            <th>Average Price</th>
+  
+            <th class="text-end" >Last Price</th>
+            <th class="text-end">P&L</th>
+  
+          </tr>
+        </thead>
+        <tbody class="All_positions_body">
+          <!-- DataTable will populate this tbody dynamically -->
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colspan="4" class="instant_exit_button_main">
+              
+              <button type="button" class="button-small button-blue" id="exit_selected_positions" fdprocessedid="x3nu1" style="display: none;">
+                Exit 1 position<!----> <!----></button></td>
+            <td colspan="3"></td>
+            <td class="text-end">Total</td>
+            <td class="text-end"><span class="main_all_pnl"></span>
+            </td>
+  
+          </tr>
+        </tfoot>
+      </table>
+  
+    </div>
+  
+  
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Exit position</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body exit_window_main">
+  
+          <div class="main_top_header_exit_window">
+  
+            <button class="btn_danger_sell_top"></button>
+            <div class="exchnage_nse_nfo">
+  
             </div>
-          </th>
-          <th>Products</th>
-          <th>Symbol</th>
-          <th>Status</th>
-          <th>Exchange</th>
-          <th>Quantity</th>
-          <th>Average Price</th>
+  
+            <div class="main_trading_symbol_ltp d-flex">
+              <div class="trading_symbol">
+              
+    
+              </div>
+  
+              <div class="main_exit_ltp">
+  
+              </div>
+            </div>
+  
+          </div>
+     
+  
+          <div class="main_instraday_normal_buttons d-flex gap-3 mt-3">
+  
+  
+            <div class="main_product_type">
+  
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" value="intraday">
+                <label class="form-check-label" for="flexRadioDefault1">
+                  Intraday MIS
+                </label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" value="overnight" checked>
+                <label class="form-check-label" for="flexRadioDefault2">
+                  Overnight NRML
+                </label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault3" value="cnc" checked>
+                <label class="form-check-label" for="flexRadioDefault3">
+                  Longterm CNC
+                </label>
+              </div>
+    
+  
+            </div>
+  
+          <div class="main_depth_info">
+  
+            <button class="toggleButton_ohlc_depth" id="toggleButton_ohlc_depth">
+              Depth & Info <i class='bx bx-chevron-down' id="up_down_depth_icon"></i>
+            </button>
+          </div>
+  
+  
+          </div>
+  
+          <style>
+  .main_Volume_title,.main_Open_title,.main_High_title,.main_Low_title,.main_Close_title{
+    font-weight: 600;
+  
+  
+  }
+  
+  .main_offer_bid_tables{
+    display: flex;
+    justify-content: center;
+  }
+  
+  .bids_qty,.bids_orders,.bids_table_tfoot{
+    font-size: 12px;
+    color: rgb(0, 108, 230);
+  }
+  
+  .offer_orders,.offer_qty,.offers_table_tfoot{
+  font-size: 12px;
+    color: rgb(194, 46, 0);
+  
+  }
+  #toggleButton_ohlc_depth{
+    
+  background-color: white;
+  color:#59aaf9 ;
+  border: none;
+      padding: 6px 9px;
+      border-radius: 5px
+  
+  }
+  #toggleButton_ohlc_depth:hover{
+    
+    background-color: #e7f3fe;
+      color: #59aaf9;
+      border: none;
+      padding: 6px 9px;
+      border-radius: 5px;
+  
+  }
+  
+  #toggleButton_ohlc_depth:active{
+    
+  background-color:#ffffff ;
+  color:#59aaf9 ;
+  
+  
+  }
+  .main_all_positions_calc{
+    display: flex;
+      gap: 0.2rem;
+      font-weight: 600;
+  }
+  
+  .exit_none{
+    display: none;
+  }
+  
+  .exit_block  {
+    display: block;
+  }
+  
+  .exit_button_trading_position{
+    position: relative;
+  }
+  
+  #exit_order{
+    position: absolute;
+      right: 34px;
+      top: 10px;
+      background: linear-gradient(180deg, #4399eb, #5cadfb) !important;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    font-size: 14px;
+    padding: 1px 20px;
+  }
+          </style>
+  
+          <div class="main_ohlc_bids_offers">
+  
+    
+  <div class="main_indepth_ohlc_data mt-3">
+  
+    <div class="main_ohlc_Volume">
+      <div class="main_Volume_title">
+        Volume
+      </div>
+      <div class="main_ohlc_Volume_value">
 
-          <th>Last Price</th>
-          <th>P&L</th>
+      </div>
+    </div>
+  
+  
+    <div class="main_ohlc_Open">
+      <div class="main_Open_title">
+        Open
+      </div>
+      <div class="main_ohlc_Open_value">
+        
 
-        </tr>
+      </div>
+    </div>
+  
+  
+    <div class="main_ohlc_High">
+      <div class="main_High_title">
+        High
+      </div>
+      <div class="main_ohlc_High_value">
+        
+
+      </div>
+    </div>
+  
+  
+  
+    
+    <div class="main_ohlc_Low">
+      <div class="main_Low_title">
+        Low
+      </div>
+      <div class="main_ohlc_Low_value">
+        
+  
+
+      </div>
+    </div>
+  
+  
+    <div class="main_ohlc_Close">
+      <div class="main_Close_title">
+        Close
+      </div>
+      <div class="main_ohlc_Close_value">
+        
+  
+
+      </div>
+    </div>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </div>
+  
+  <div class="main_offer_bid_tables">
+  
+  <div class="main_bids_table">
+    <table class="table">
+      <thead>
+        <th>BIDS</th>
+        <th class="text-end">ORDERS</th>
+        <th class="text-end">QTY</th>
       </thead>
-      <tbody class="All_positions_body">
-        <!-- DataTable will populate this tbody dynamically -->
-      </tbody>
-      <tfoot>
-        <tr>
-          <td colspan="4" class="instant_exit_button_main">
-            
-            <button type="button" class="button-small button-blue" id="exit_selected_positions" fdprocessedid="x3nu1" style="display: none;">
-              Exit 1 position<!----> <!----></button></td>
-          <td colspan="3"></td>
-          <td class="text-right">Total</td>
-          <td class="text-right"><span class="main_all_pnl"></span>
-          </td>
-
-        </tr>
+  
+      <tbody class="bids_table_tbody"></tbody>
+  
+      <tfoot class="bids_table_tfoot">
+  
       </tfoot>
     </table>
-
   </div>
-<!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5" id="exampleModalLabel">Exit position</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+  <div class="main_offers_table">
+    <table class="table">
+      <thead>
+        <th>OFFERS</th>
+        <th  class="text-end">ORDERS</th>
+        <th class="text-end">QTY</th>
+      </thead>
+  
+      <tbody class="offers_table_tbody"></tbody>
+  
+      <tfoot class="offers_table_tfoot">
+        
+      </tfoot>
+    </table>
+  
+  
+  </div>
+  
+  
+  
+  </div>
+  
+  </div>
+  <script>
+    // jQuery document ready function
+    $(document).ready(function(){
+
+      $(".nav-tabs li a").click(function () {
+
+            var filterType = $(this).data("broker_filter");
+
+            console.log(filterType);
+
+            if (filterType ==="zerodha") {
+
+              $(".main_zerodha_dynamic").show()
+              $(".main_logo_and_id").css("display", "flex");
+              $(".main_upstox,.main_angelone").hide()
+              $(".main_logo_and_id_angelone,.main_logo_and_id_upstox").hide()
+              
+            } else if (filterType ==="angelone")  {
+              $(".main_logo_and_id,.main_logo_and_id_upstox").hide()
+              $(".main_angelone").show()
+              $(".main_zerodha_dynamic,.main_upstox").hide()
+              $(".main_logo_and_id_angelone").css("display", "flex");
+            }
+            else if (filterType ==="upstox") {
+              $(".main_logo_and_id,.main_logo_and_id_angelone").hide()
+              $(".main_logo_and_id_upstox").css("display", "flex");
+            $(".main_upstox").show()
+              $(".main_zerodha_dynamic,.main_angelone").hide()
+            }
+            //
+            $(".nav-tabs li a").removeClass("active");
+            $(this).addClass("active");
+      });
+
+
+
+
+      // Click event handler for the button
+      $('#toggleButton_ohlc_depth').click(function(){
+        // Toggle the visibility of the content
+        $('.main_ohlc_bids_offers').toggle();
+        $('#up_down_depth_icon').toggleClass("bx-chevron-down bx-chevron-up");
+  
+  
+      });
+    });
+  </script>
+  <div class="main_qty_price">
+    <div class="form-group">
+      <label for="order_qty">Qty</label>
+      <input type="text" class="form-control" id="order_qty">
+  
+    </div>
+  
+    <div class="form-group">
+      <label for="order_price">Price</label>
+      <input type="text" class="form-control" id="order_price">
+  
+      <div class="main_limit_market_btns">
+        <div class="form-check">
+          <input class="form-check-input" type="radio" name="market_limit" id="market_order" value="market">
+          <label class="form-check-label" for="market_order">
+         Market
+          </label>
+        </div>
+        <div class="form-check">
+          <input class="form-check-input" type="radio" name="market_limit" id="limit_order" checked value="limit">
+          <label class="form-check-label" for="limit_order">
+          Limit
+          </label>
+        </div>
       </div>
-      <div class="modal-body exit_window_main">
-<div class="exchnage_nse_nfo">
+    </div>
+  
+  
+  </div>
+  
+  
+  
+  
+  
+  
+  
+  
+        </div>
+        <div class="modal-footer">
+  <div class="buy_sell_btn"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
 
 </div>
-        <div class="trading_symbol">
+
+ 
+
+ <div class="main_angelone">
+  <div class="main_profile_broker_details px-2">
+  
+    <div class="main_all_positions_calc">
+      <div class="position_title">Positions</div>
+      <p class="positions_value_main">(6)</p>
+    </div>
+  
+
+  </div>
+
+
+  <table class="table">
+    <thead>
+      <tr>
+        <th>
+                  <div class="checkbox-wrapper-28">
+                <input id="tmp-280" type="checkbox" class="promoted-input-checkbox main_global_check_btn"/>
+                <svg><use xlink:href="#checkmark-280" /></svg>
+                <label for="tmp-280">
+        
+                </label>
+                <svg xmlns="http://www.w3.org/2000/svg" style="display: none">
+                  <symbol id="checkmark-280" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-miterlimit="10" fill="none"  d="M22.9 3.7l-15.2 16.6-6.6-7.1">
+                    </path>
+                  </symbol>
+                </svg>
+              </div>
+        </th>
+        <th>Products</th>
+        <th>Symbol</th>
+        <th>Status</th>
+        <th>Exchange</th>
+        <th>Quantity</th>
+        <th>Average Price</th>
+
+        <th class="text-end">Last Price</th>
+        <th class="text-end">P&amp;L</th>
+
+      </tr>
+    </thead>
+
+    <tbody>
+
+
+
+      <tr>
+
+        <td>
           
-
-        </div>
-
-        <div class="main_instraday_normal_buttons d-flex gap-3">
-          <div class="form-check">
-            <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" value="intraday">
-            <label class="form-check-label" for="flexRadioDefault1">
-              Intraday MIS
+          <div class="checkbox-wrapper-28">
+            <input id="tmp-280" type="checkbox" class="promoted-input-checkbox main_global_check_btn"/>
+            <svg><use xlink:href="#checkmark-280" /></svg>
+            <label for="tmp-280">
+    
             </label>
+            <svg xmlns="http://www.w3.org/2000/svg" style="display: none">
+              <symbol id="checkmark-280" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-miterlimit="10" fill="none"  d="M22.9 3.7l-15.2 16.6-6.6-7.1">
+                </path>
+              </symbol>
+            </svg>
           </div>
-          <div class="form-check">
-            <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" value="overnight" checked>
-            <label class="form-check-label" for="flexRadioDefault2">
-              Overnight NRML
+      
+      
+      
+      </td>
+        <td>CNC</td>
+        <td>GMRINFRA</td>
+        <td>BUY</td>
+        <td>BSE</td>
+        <td>50</td>
+        <td>88.83</td>
+        <td class="text-end">88.34</td>
+        <td class="text-end">-24.50</td>
+      </tr>
+      <tr>
+
+        <td>
+          
+          
+          <div class="checkbox-wrapper-28">
+            <input id="tmp-280" type="checkbox" class="promoted-input-checkbox main_global_check_btn"/>
+            <svg><use xlink:href="#checkmark-280" /></svg>
+            <label for="tmp-280">
+    
             </label>
+            <svg xmlns="http://www.w3.org/2000/svg" style="display: none">
+              <symbol id="checkmark-280" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-miterlimit="10" fill="none"  d="M22.9 3.7l-15.2 16.6-6.6-7.1">
+                </path>
+              </symbol>
+            </svg>
           </div>
-          <div class="form-check">
-            <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault3" value="cnc" checked>
-            <label class="form-check-label" for="flexRadioDefault3">
-              Longterm CNC
+      
+      
+      </td>
+        <td>CNC</td>
+        <td>GMRINFRA</td>
+        <td>BUY</td>
+        <td>BSE</td>
+        <td>50</td>
+        <td>88.83</td>
+        <td class="text-end">88.34</td>
+        <td class="text-end">-24.50</td>
+      </tr>
+      <tr>
+
+        <td>
+          
+          
+          <div class="checkbox-wrapper-28">
+            <input id="tmp-280" type="checkbox" class="promoted-input-checkbox main_global_check_btn"/>
+            <svg><use xlink:href="#checkmark-280" /></svg>
+            <label for="tmp-280">
+    
             </label>
+            <svg xmlns="http://www.w3.org/2000/svg" style="display: none">
+              <symbol id="checkmark-280" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-miterlimit="10" fill="none"  d="M22.9 3.7l-15.2 16.6-6.6-7.1">
+                </path>
+              </symbol>
+            </svg>
           </div>
-        </div>
+      
+      
+      </td>
+        <td>CNC</td>
+        <td>GMRINFRA</td>
+        <td>BUY</td>
+        <td>BSE</td>
+        <td>50</td>
+        <td>88.83</td>
+        <td class="text-end">88.34</td>
+        <td class="text-end">-24.50</td>
+      </tr>
+      <tr>
+
+        <td>
+          
+          <div class="checkbox-wrapper-28">
+            <input id="tmp-280" type="checkbox" class="promoted-input-checkbox main_global_check_btn"/>
+            <svg><use xlink:href="#checkmark-280" /></svg>
+            <label for="tmp-280">
+    
+            </label>
+            <svg xmlns="http://www.w3.org/2000/svg" style="display: none">
+              <symbol id="checkmark-280" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-miterlimit="10" fill="none"  d="M22.9 3.7l-15.2 16.6-6.6-7.1">
+                </path>
+              </symbol>
+            </svg>
+          </div>
+      
+      
+      </td>
+        <td>CNC</td>
+        <td>GMRINFRA</td>
+        <td>BUY</td>
+        <td>BSE</td>
+        <td>50</td>
+        <td>88.83</td>
+        <td class="text-end">88.34</td>
+        <td class="text-end">-24.50</td>
+      </tr>
+      <tr>
+
+        <td>
+          
+          <div class="checkbox-wrapper-28">
+            <input id="tmp-280" type="checkbox" class="promoted-input-checkbox main_global_check_btn"/>
+            <svg><use xlink:href="#checkmark-280" /></svg>
+            <label for="tmp-280">
+    
+            </label>
+            <svg xmlns="http://www.w3.org/2000/svg" style="display: none">
+              <symbol id="checkmark-280" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-miterlimit="10" fill="none"  d="M22.9 3.7l-15.2 16.6-6.6-7.1">
+                </path>
+              </symbol>
+            </svg>
+          </div>
+      
+      </td>
+        <td>CNC</td>
+        <td>GMRINFRA</td>
+        <td>BUY</td>
+        <td>BSE</td>
+        <td>50</td>
+        <td>88.83</td>
+        <td class="text-end">88.34</td>
+        <td class="text-end">-24.50</td>
+      </tr>
+      <tr>
+
+        <td>
+          
+          <div class="checkbox-wrapper-28">
+            <input id="tmp-280" type="checkbox" class="promoted-input-checkbox main_global_check_btn"/>
+            <svg><use xlink:href="#checkmark-280" /></svg>
+            <label for="tmp-280">
+    
+            </label>
+            <svg xmlns="http://www.w3.org/2000/svg" style="display: none">
+              <symbol id="checkmark-280" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-miterlimit="10" fill="none"  d="M22.9 3.7l-15.2 16.6-6.6-7.1">
+                </path>
+              </symbol>
+            </svg>
+          </div>
+      
+      </td>
+        <td>CNC</td>
+        <td>GMRINFRA</td>
+        <td>BUY</td>
+        <td>BSE</td>
+        <td>50</td>
+        <td>88.83</td>
+        <td class="text-end">88.34</td>
+        <td class="text-end">-24.50</td>
+      </tr>
 
 
 
 
 
-<div class="main_qty_price">
-  <div class="form-group">
-    <label for="order_qty">Qty</label>
-    <input type="text" class="form-control" id="order_qty">
 
-  </div>
 
-  <div class="form-group">
-    <label for="order_price">Price</label>
-    <input type="text" class="form-control" id="order_price">
+    </tbody>
+    <tfoot>
+      <tr>
 
-    <div class="main_limit_market_btns">
-      <div class="form-check">
-        <input class="form-check-input" type="radio" name="market_limit" id="market_order" value="market">
-        <label class="form-check-label" for="market_order">
-       Market
-        </label>
-      </div>
-      <div class="form-check">
-        <input class="form-check-input" type="radio" name="market_limit" id="limit_order" checked value="limit">
-        <label class="form-check-label" for="limit_order">
-        Limit
-        </label>
-      </div>
+        <td colspan="7"></td>
+        <td class="text-end">Total</td>
+        <td class="text-end"><span class=" text-danger">Total P&amp;L: -4707.25</span>
+        </td>
+
+      </tr>
+    </tfoot>
+  </table>
+
+
+
+
+
+
+
+
+
+
+ </div>
+
+
+ <div class="main_upstox">
+  <div class="main_profile_broker_details px-2">
+  
+    <div class="main_all_positions_calc">
+      <div class="position_title">Positions</div>
+      <p class="positions_value_main">(6)</p>
     </div>
+  
+
+  
   </div>
+
+  <table class="table">
+    <thead>
+      <tr>
+        <th>
+                  <div class="checkbox-wrapper-28">
+                <input id="tmp-280" type="checkbox" class="promoted-input-checkbox main_global_check_btn"/>
+                <svg><use xlink:href="#checkmark-280" /></svg>
+                <label for="tmp-280">
+        
+                </label>
+                <svg xmlns="http://www.w3.org/2000/svg" style="display: none">
+                  <symbol id="checkmark-280" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-miterlimit="10" fill="none"  d="M22.9 3.7l-15.2 16.6-6.6-7.1">
+                    </path>
+                  </symbol>
+                </svg>
+              </div>
+        </th>
+        <th>Products</th>
+        <th>Symbol</th>
+        <th>Status</th>
+        <th>Exchange</th>
+        <th>Quantity</th>
+        <th>Average Price</th>
+
+        <th class="text-end">Last Price</th>
+        <th class="text-end">P&amp;L</th>
+
+      </tr>
+    </thead>
+
+    <tbody>
+
+
+
+      <tr>
+
+        <td>
+          <div class="checkbox-wrapper-28">
+            <input id="tmp-280" type="checkbox" class="promoted-input-checkbox main_global_check_btn"/>
+            <svg><use xlink:href="#checkmark-280" /></svg>
+            <label for="tmp-280">
+    
+            </label>
+            <svg xmlns="http://www.w3.org/2000/svg" style="display: none">
+              <symbol id="checkmark-280" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-miterlimit="10" fill="none"  d="M22.9 3.7l-15.2 16.6-6.6-7.1">
+                </path>
+              </symbol>
+            </svg>
+          </div>
+      
+      </td>
+        <td>CNC</td>
+        <td>GMRINFRA</td>
+        <td>BUY</td>
+        <td>BSE</td>
+        <td>50</td>
+        <td>88.83</td>
+        <td class="text-end">88.34</td>
+        <td class="text-end">-24.50</td>
+      </tr>
+      <tr>
+
+        <td>
+          
+          <div class="checkbox-wrapper-28">
+            <input id="tmp-280" type="checkbox" class="promoted-input-checkbox main_global_check_btn"/>
+            <svg><use xlink:href="#checkmark-280" /></svg>
+            <label for="tmp-280">
+    
+            </label>
+            <svg xmlns="http://www.w3.org/2000/svg" style="display: none">
+              <symbol id="checkmark-280" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-miterlimit="10" fill="none"  d="M22.9 3.7l-15.2 16.6-6.6-7.1">
+                </path>
+              </symbol>
+            </svg>
+          </div>
+      
+      
+      </td>
+        <td>CNC</td>
+        <td>GMRINFRA</td>
+        <td>BUY</td>
+        <td>BSE</td>
+        <td>50</td>
+        <td>88.83</td>
+        <td class="text-end">88.34</td>
+        <td class="text-end">-24.50</td>
+      </tr>
+      <tr>
+
+        <td>
+          
+          <div class="checkbox-wrapper-28">
+            <input id="tmp-280" type="checkbox" class="promoted-input-checkbox main_global_check_btn"/>
+            <svg><use xlink:href="#checkmark-280" /></svg>
+            <label for="tmp-280">
+    
+            </label>
+            <svg xmlns="http://www.w3.org/2000/svg" style="display: none">
+              <symbol id="checkmark-280" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-miterlimit="10" fill="none"  d="M22.9 3.7l-15.2 16.6-6.6-7.1">
+                </path>
+              </symbol>
+            </svg>
+          </div>
+      
+      
+      </td>
+        <td>CNC</td>
+        <td>GMRINFRA</td>
+        <td>BUY</td>
+        <td>BSE</td>
+        <td>50</td>
+        <td>88.83</td>
+        <td class="text-end">88.34</td>
+        <td class="text-end">-24.50</td>
+      </tr>
+      <tr>
+
+        <td>
+          
+          <div class="checkbox-wrapper-28">
+            <input id="tmp-280" type="checkbox" class="promoted-input-checkbox main_global_check_btn"/>
+            <svg><use xlink:href="#checkmark-280" /></svg>
+            <label for="tmp-280">
+    
+            </label>
+            <svg xmlns="http://www.w3.org/2000/svg" style="display: none">
+              <symbol id="checkmark-280" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-miterlimit="10" fill="none"  d="M22.9 3.7l-15.2 16.6-6.6-7.1">
+                </path>
+              </symbol>
+            </svg>
+          </div>
+      
+      
+      </td>
+        <td>CNC</td>
+        <td>GMRINFRA</td>
+        <td>BUY</td>
+        <td>BSE</td>
+        <td>50</td>
+        <td>88.83</td>
+        <td class="text-end">88.34</td>
+        <td class="text-end">-24.50</td>
+      </tr>
+      <tr>
+
+        <td>
+          <div class="checkbox-wrapper-28">
+            <input id="tmp-280" type="checkbox" class="promoted-input-checkbox main_global_check_btn"/>
+            <svg><use xlink:href="#checkmark-280" /></svg>
+            <label for="tmp-280">
+    
+            </label>
+            <svg xmlns="http://www.w3.org/2000/svg" style="display: none">
+              <symbol id="checkmark-280" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-miterlimit="10" fill="none"  d="M22.9 3.7l-15.2 16.6-6.6-7.1">
+                </path>
+              </symbol>
+            </svg>
+          </div>
+      
+      
+      </td>
+        <td>CNC</td>
+        <td>GMRINFRA</td>
+        <td>BUY</td>
+        <td>BSE</td>
+        <td>50</td>
+        <td>88.83</td>
+        <td class="text-end">88.34</td>
+        <td class="text-end">-24.50</td>
+      </tr>
+      <tr>
+
+        <td>
+          
+          <div class="checkbox-wrapper-28">
+            <input id="tmp-280" type="checkbox" class="promoted-input-checkbox main_global_check_btn"/>
+            <svg><use xlink:href="#checkmark-280" /></svg>
+            <label for="tmp-280">
+    
+            </label>
+            <svg xmlns="http://www.w3.org/2000/svg" style="display: none">
+              <symbol id="checkmark-280" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-miterlimit="10" fill="none"  d="M22.9 3.7l-15.2 16.6-6.6-7.1">
+                </path>
+              </symbol>
+            </svg>
+          </div>
+      </td>
+        <td>CNC</td>
+        <td>GMRINFRA</td>
+        <td>BUY</td>
+        <td>BSE</td>
+        <td>50</td>
+        <td>88.83</td>
+        <td class="text-end">88.34</td>
+        <td class="text-end">-24.50</td>
+      </tr>
+
+
+
+
+
+
+
+    </tbody>
+
+    <tfoot>
+      <tr>
+
+        <td colspan="7"></td>
+        <td class="text-end">Total</td>
+        <td class="text-end"><span class=" text-danger">Total P&amp;L: -4707.25</span>
+        </td>
+
+      </tr>
+    </tfoot>
+  </table>
+
+ </div>
+
 
 
 </div>
 
 
-
-
-
-
-
-
-      </div>
-      <div class="modal-footer">
-<div class="buy_sell_btn"></div>
-      </div>
-    </div>
-  </div>
 </div>
 
-       <script>
+
+<script>
 
 $(document).ready(function () {
   var intervalId_order = null; // Initialize the interval ID variable
@@ -204,7 +1476,7 @@ $(document).ready(function () {
           let lastPrice = mainNetOHLC[i][tradingsymbol].last_price;
 
           // Remove "NFO:" from the tradingsymbol
-                  tradingsymbol = tradingsymbol.replace(/NSE:|NFO:/g, '');
+                  tradingsymbol = tradingsymbol.replace(/NSE:|NFO:|BSE:/g, '');
 
 
           // Store lastPrice in the object
@@ -242,42 +1514,66 @@ $(document).ready(function () {
 
         $('#positionsTable tbody').empty();
 
-        const rowTemplate = (position, lastPrice, main_p_n_l) => `
-                          <tr class="selected order_leg_main" id="order_leg_main">
+        const rowTemplate = (position, lastPrice, main_p_n_l,index_position) => `
+                          <tr class="selected order_leg_main ${parseFloat(position.quantity) === 0 ? 'disabled_row' :""}" id="order_leg_main"   >
                             <td>
-                              <div class="form-check">
-                                <input class="form-check-input legs_instant_exit_check" type="checkbox" value="" id="flexCheckDefault" ${position.quantity===0?"disabled":""}>
-                              </div>
+                     
+
+
+
+
+                              <div class="checkbox-wrapper-27">
+                <input id="tmp-${index_position}" type="checkbox" id="flexCheckDefault" value="" class="promoted-input-checkbox_27 legs_instant_exit_check" ${position.quantity===0?"disabled":""} />
+                <svg><use xlink:href="#checkmark-${index_position}" /></svg>
+                <label for="tmp-${index_position}">
+        
+                </label>
+                <svg xmlns="http://www.w3.org/2000/svg" style="display: none">
+                  <symbol id="checkmark-${index_position}" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-miterlimit="10" fill="none"  d="M22.9 3.7l-15.2 16.6-6.6-7.1">
+                    </path>
+                  </symbol>
+                </svg>
+              </div>
+
+
+                              
                             </td>
                             <td>
                               <div class="${position.product === "NRML" ? 'normal_order_background' : 'normal_order_background'}">${position.product}</div>
                             </td>
-                            <td> <div class="main_tradingsymbol">${position.tradingsymbol}</div>
-                              <button type="button" class="btn btn-primary exit_order ${position.quantity===0?"d-none":"d-block"}" id="exit_order" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                            <td class="exit_button_trading_position"> <div class="main_tradingsymbol">${position.tradingsymbol}</div>
+                              <button type="button" class="exit_order ${position.quantity===0?"exit_none d-none":""}" id="exit_order" data-bs-toggle="modal" data-bs-target="#exampleModal">
                                     Exit
                                     </button>
                               </td>
-                              <td>${position.quantity < 0 ? "Sell" : position.quantity > 0 ? "Buy" : "Closed"}</td>
+                              <td class="buy_sell_close_status">${position.quantity < 0 ? "SELL" : position.quantity > 0 ? "BUY" : "CLOSED"}</td>
 
                             <td class="exchange_value">${position.exchange}</td>
-                            <td class="${parseFloat(position.exchange) > 0 ? 'text-success' : 'text-danger'} all_quantity">${position.quantity}</td>
+                            <td class="${parseFloat(position.quantity) > 0 ? 'text-primary' : (parseFloat(position.quantity) === 0 ? 'text-secondary' : 'text-danger')} all_quantity">${position.quantity}</td>
                             <td>${position.average_price.toFixed(2)}</td>
 
 
-                            <td class="lastPrice">${lastPrice}</td>
-                            <td class="${main_p_n_l > 0 ? 'text-success' : 'text-danger'} All_net_pl">${main_p_n_l > 0 ? '+' : ''}${(main_p_n_l).toFixed(2)}</td>
+                            <td class="lastPrice text-end">${lastPrice}</td>
+                            <td class="${main_p_n_l > 0 ? 'text-success' : 'text-danger'} All_net_pl text-end">${main_p_n_l > 0 ? '+' : ''}${(main_p_n_l).toFixed(2)}</td>
                           </tr>`;
 
         // Assuming 'tradingsymbol' is available in the position object
         // Initialize a variable to store the total P&L
         let totalMainPNL = 0;
 
-        response.all_position.net.forEach(function (position) {
+    var All_positions_index =0
+        response.all_position.net.forEach(function (position,index_position) {
+
+          console.log('index_position',index_position);
+          
+
+          All_positions_index=+index_position+1
           let tradingsymbol = position.tradingsymbol;
           // //////console.log(tradingsymbol);
 
           // Remove "NFO:" from the tradingsymbol
-                  tradingsymbol = tradingsymbol.replace(/NSE:|NFO:/g, '');
+                  tradingsymbol = tradingsymbol.replace(/NSE:|NFO:|BSE:/g, '');
 
 
           let lastPrice = lastPrices[tradingsymbol] || ''; // Retrieve lastPrice from the object
@@ -297,8 +1593,12 @@ $(document).ready(function () {
           totalMainPNL += main_p_n_l;
 
           // Use the modified row template with lastPrice
-          $('#positionsTable tbody').append(rowTemplate(position, lastPrice, main_p_n_l));
+          $('#positionsTable tbody').append(rowTemplate(position, lastPrice, main_p_n_l,index_position));
         });
+
+        console.log('All_positions_index',All_positions_index);
+        
+        $(".positions_value_main").text(`(${All_positions_index})`)
 
         // Display the total P&L in the element with the class .main_all_pnl
         let totalPNLElement = $('.main_all_pnl');
@@ -499,12 +1799,32 @@ function updateExitButton() {
 
 
                 $(".exit_order").click(function () {
+
+
                 console.log('Hi there');
                 var order_leg_main = $(this).closest(".order_leg_main");
                 var exchange_value = order_leg_main.find(".exchange_value").text();
 
-                $(".exchnage_nse_nfo").text(exchange_value)
+                var buy_sell_close_status = order_leg_main.find(".buy_sell_close_status").text();
 
+                var buy_sell_close_for_window
+
+                  if (buy_sell_close_status ==="BUY") {
+                    buy_sell_close_for_window ="SELL"
+
+                    
+                  } else if(buy_sell_close_status==='SELL'){
+
+                    buy_sell_close_for_window ="BUY"
+
+                  }  else{
+                    buy_sell_close_for_window ="CLOSED"
+                  }
+                    
+
+                $(".btn_danger_sell_top").text(buy_sell_close_for_window)
+                
+                $(".exchnage_nse_nfo").text(exchange_value)
                 console.log(exchange_value);
                 console.log(order_leg_main.find(".main_tradingsymbol").text());
 
@@ -536,27 +1856,19 @@ function updateExitButton() {
             console.log(`${exchange_value}:${order_leg_main.find(".main_tradingsymbol").text()}`);
 
             var trading_nse_nfo_quote =  `${exchange_value}:${order_leg_main.find(".main_tradingsymbol").text()}`
-            $.ajax({
-            url: "/get_zerodha_quote_order_manager",
-            type: "POST",
-            data: {
-                'trading_nse_nfo_quote': trading_nse_nfo_quote,
-                'csrfmiddlewaretoken': '{{ csrf_token }}' // Ensure CSRF token is included
-            },
-            success: function(response) {
-                console.log(response);
-            },
-            error: function(xhr, textStatus, errorThrown) {
-                console.error("Error:", errorThrown);
-            }
-        });
+
+            get_ohlc_data_exit_order_window(trading_nse_nfo_quote)
 
 
 
+           var intervalId_ohlc = setInterval(function() {
+              get_ohlc_data_exit_order_window(trading_nse_nfo_quote);
+            }, 1000); // Interval of 5 seconds
 
-
-
-
+          // Clear interval when modal is closed
+          $('#exampleModal').on('hidden.bs.modal', function (e) {
+            clearInterval(intervalId_ohlc);
+          });
 
 
 
@@ -599,8 +1911,8 @@ function updateExitButton() {
             event.stopPropagation(); // Exclude event propagation
 
             var All_positionTrade = []; // Initialize as an array
-
-            var sell_buy_indicator = "SELL";
+            
+            var sell_buy_indicator = $(".btn_danger_sell_top").text()
             console.log("sell_buy_indicator:", sell_buy_indicator);
 
             var tradingsymbol = $(".trading_symbol").text();
@@ -642,7 +1954,110 @@ $("#exampleModal").modal("hide")
 
             });
 
+   function get_ohlc_data_exit_order_window(trading_nse_nfo_quote) {
+    $.ajax({
+            url: "/get_zerodha_quote_order_manager",
+            type: "POST",
+            data: {
+                'trading_nse_nfo_quote': trading_nse_nfo_quote,
+                'csrfmiddlewaretoken': '{{ csrf_token }}' // Ensure CSRF token is included
+            },
+            success: function(response) {
+                console.log(response);
 
+                const values = Object.values(response.ohlc_data)[0];
+
+                console.log(values.volume);
+
+                $(".main_ohlc_Volume_value").text(values.volume)
+                $(".main_exit_ltp").text(`${values.last_price} ${values.net_change < 0 ? "-" : "+"}${values.net_change}%`)
+                
+
+                // ohlc
+                // : 
+                // close
+                // : 
+                // 303.05
+                // high
+                // : 
+                // 347
+                // low
+                // : 
+                // 305.7
+                // open
+                // : 
+                // 306
+                $(".main_ohlc_Close_value").text(values.ohlc.close)
+                $(".main_ohlc_High_value").text(values.ohlc.high)
+                $(".main_ohlc_Low_value").text(values.ohlc.low)
+                $(".main_ohlc_Open_value").text(values.ohlc.open)
+
+
+                var bidsTableBody = $('.bids_table_tbody');
+
+                var bidsTableFoot = $('.bids_table_tfoot');
+
+                        // Clear any existing rows
+                        bidsTableBody.empty();
+                        bidsTableFoot.empty();
+
+                        // Populate the table with buy orders
+                        var totalQuantity = 0;
+                        $.each(values.depth.buy, function(index, order) {
+                            var row = `
+                                <tr>
+                                    <td class="bids_price">${order.price}</td>
+                                    <td class="bids_orders text-end">${order.orders}</td>
+                                    <td class="bids_qty text-end">${order.quantity}</td>
+                                </tr>
+                            `;
+
+                            totalQuantity+=order.quantity
+                            bidsTableBody.append(row);
+                        });
+                        var totalRow = `
+                                  <tr>
+                                      <td colspan="2" class="fw-bold">Total</td>
+                                      <td class='text-end'>${totalQuantity}</td>
+                                  </tr>
+                              `;
+                              bidsTableFoot.append(totalRow);
+                var offersTableBody = $('.offers_table_tbody');
+                var offersTableFoot = $('.offers_table_tfoot');
+                        // Clear any existing rows
+                        offersTableBody.empty();
+                        offersTableFoot.empty();
+                              var totalQuantity_offers = 0
+                        // Populate the table with buy orders
+                        $.each(values.depth.sell, function(index, order) {
+                            var row = `
+                                <tr>
+                                    <td class="offers_price">${order.price}</td>
+                                    <td class="offer_orders text-end">${order.orders}</td>
+                                    <td class="offer_qty text-end">${order.quantity}</td>
+                                </tr>
+                            `;
+
+                            
+                            totalQuantity_offers+=order.quantity
+                            offersTableBody.append(row);
+                        });
+                        var totalRow_offers = `
+                                  <tr>
+                                      <td colspan="2" class="fw-bold">Total</td>
+                                      <td class='text-end'>${totalQuantity_offers}</td>
+                                  </tr>
+                              `;
+                              offersTableFoot.append(totalRow_offers);
+
+            },
+            error: function(xhr, textStatus, errorThrown) {
+                console.error("Error:", errorThrown);
+            }
+        });
+
+
+   }
 
             function exit_order_manager_main(All_positionTrade) {
             
@@ -753,7 +2168,7 @@ $("#exampleModal").modal("hide")
           let lastPrice = mainNetOHLC[i][tradingsymbol].last_price;
 
           // Remove "NFO:" from the tradingsymbol
-                  tradingsymbol = tradingsymbol.replace(/NSE:|NFO:/g, '');
+                  tradingsymbol = tradingsymbol.replace(/NSE:|NFO:|BSE:/g, '');
 
           // tradingsymbol = tradingsymbol.replace(`${ mainNetOHLC[i].exchange}:${ mainNetOHLC[i].tradingsymbol}`);
           // Store lastPrice in the object
@@ -812,7 +2227,7 @@ $("#exampleModal").modal("hide")
           // //////console.log(tradingsymbol);
 
           // Remove "NFO:" from the tradingsymbol
-                  tradingsymbol = tradingsymbol.replace(/NSE:|NFO:/g, '');
+                  tradingsymbol = tradingsymbol.replace(/NSE:|NFO:|BSE:/g, '');
 
 
           let lastPrice = lastPrices[tradingsymbol] || ''; // Retrieve lastPrice from the object
@@ -836,7 +2251,7 @@ let totalMainPNL = 0;
     // console.log("index",index);
     let tradingsymbol = get_net_positions[index].tradingsymbol;
           // Remove "NFO:" from the tradingsymbol
-                  tradingsymbol = tradingsymbol.replace(/NSE:|NFO:/g, '');
+                  tradingsymbol = tradingsymbol.replace(/NSE:|NFO:|BSE:/g, '');
 
 
           let lastPrice = lastPrices[tradingsymbol] || ''; // Retrieve lastPrice from the object
