@@ -301,6 +301,9 @@ width: 180px !important;
     color: white ;
     background-color: #0d6efd !important;
 }
+.date_active{
+    border: 1px solid #0f69ff !important;
+}
 </style>
 
 
@@ -331,10 +334,10 @@ width: 180px !important;
             <div class="mb-2"> 
                 <div class="buttons">
                     <div>
-                        <button value="6_M"><span>6M</span></button>
-                        <button value="1_Y">1Y</button>
-                        <button value="2_Y">2Y</button>
-                        <button value="5_Y">5Y</button>
+                        <button value="6_M" class="filter-btn">6M</button>
+                        <button value="1_Y" class="filter-btn">1Y</button>
+                        <button value="2_Y" class="filter-btn">2Y</button>
+                        <button value="5_Y" class="filter-btn">5Y</button>
                     </div>
                 </div>
             </div>
@@ -380,6 +383,7 @@ width: 180px !important;
                 <th><div>Close*</div></th>
     
                 <th><div>Change</div></th>
+                <th><div>Change %</div></th>
                 <th><div>Volume</div></th>
             </tr>
         </thead>
@@ -502,7 +506,7 @@ percentChange = "-";
                 row.append($("<td class='text-danger'>").html(formatNumber(data.Low)));
                     row.append($("<td>").html(formatNumber(data.Close)));
 
-                        var priceDifferenceTd = $("<td>").html(formatNumber(priceDifference || "-") + " (" + formatNumber(percentChange) + "%)");
+                        var priceDifferenceTd = $("<td>").html(formatNumber(priceDifference || "-"));
                             // Apply conditional formatting based on the value of priceDifference
                             if (!isNaN(priceDifference)) {
                                 if (priceDifference < 0) {
@@ -514,6 +518,7 @@ percentChange = "-";
                         
                             // Append the price difference <td> element to the row
                             row.append(priceDifferenceTd);
+                            row.append($("<td>").html(formatNumber(percentChange) + "<span>%</span>").addClass(percentChange < 0 ? 'text-danger' : 'text-success'));
                             row.append($("<td>").html(data.Volume || "<span style='color: red;'>-</span>"));
                             tbody.append(row);
     });
@@ -562,6 +567,69 @@ function formatDateWithTimestamp(dateString) {
 var from_date_input = $('#from_date');
 var to_date_input = $('#to_date');
 var date_filter_btn = $('.date_time_filter_btn');
+var filter_btns = $(".filter-btn")
+
+filter_btns.click(function() {
+    var period = $(this).val();
+    var toDate = new Date();
+    var fromDate = new Date();
+
+    filter_btns.removeClass('date_active');
+    
+    // Add active class to the clicked button
+    $(this).addClass('date_active');
+
+    switch (period) {
+        case "6_M":
+            // Set fromDate to six months ago from today
+            fromDate.setMonth(fromDate.getMonth() - 6);
+            break;
+        case "1_Y":
+            // Set fromDate to one year ago from today
+            fromDate.setFullYear(fromDate.getFullYear() - 1);
+            break;
+        case "2_Y":
+            // Set fromDate to two years ago from today
+            fromDate.setFullYear(fromDate.getFullYear() - 2);
+            break;
+        case "5_Y":
+            // Set fromDate to five years ago from today
+            fromDate.setFullYear(fromDate.getFullYear() - 5);
+            break;
+        default:
+            // Default to one month ago from today
+            fromDate.setMonth(fromDate.getMonth() - 1);
+    }
+
+    // Set toDate to today
+    toDate = new Date();
+    function formatDate(date) {
+        var mm = date.getMonth() + 1; // getMonth() is zero-based
+        var dd = date.getDate();
+    
+        return [
+            date.getFullYear(),
+            (mm > 9 ? '' : '0') + mm,
+            (dd > 9 ? '' : '0') + dd
+        ].join('-');
+    }
+
+   
+    // Update the input fields and button text with the selected dates
+    from_date_input.val(formatDate(fromDate));
+
+    function newformatDate(date) {
+        var mm = date.getMonth() + 1;
+        var dd = date.getDate();
+        return [(mm>9 ? '' : '0') + mm, (dd>9 ? '' : '0') + dd, date.getFullYear()].join('/');
+    }
+
+    var fromDateFormatted = newformatDate(fromDate);
+    var toDateFormatted = newformatDate(toDate);
+
+    $(".date_time_filter_btn").text(fromDateFormatted + " - " + toDateFormatted);
+  
+});
 
 // Function to set the initial date range and update button text
 function setInitialDateRange() {
@@ -610,6 +678,8 @@ setInitialDateRange();
 to_date_input.on('input', function () {
 
     console.log('Changing to_date');
+
+    filter_btns.removeClass('date_active');
     
 var from_date_input = $('#from_date');
 var inputDate = $(this).val();
@@ -649,7 +719,7 @@ updateButtonDateText(new Date(from_date_input.val()), selectedDate);
 from_date_input.on('input', function () {
 var inputDate = $(this).val();
 var existingValue = $(this).val();
-
+filter_btns.removeClass('date_active');
 // Check if the input date is empty
 if (!inputDate) {
 // If the input is empty, do not perform any further action
