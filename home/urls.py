@@ -578,6 +578,7 @@ urlpatterns = [
      path('toastr_ui_test', views.toastr_ui_test, name='toastr_ui_test'),
      path('draggle_modal', views.draggle_modal, name='draggle_modal'),
      path('exit_zerodha_order', views.exit_zerodha_order, name='exit_zerodha_order'),
+     path('get_zerodha_quote_order_manager', views.get_zerodha_quote_order_manager, name='get_zerodha_quote_order_manager'),
 
 
 
