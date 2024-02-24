@@ -913,6 +913,16 @@ border: 1px solid #4399eb !important;
     display: none;
     margin: 14px 0 0 0;
   }
+  #long_straddle_modal {
+    width: 23.4rem;
+    box-shadow: 0px 0px 1px 2px #4399eb3b;
+    position: absolute;
+    z-index: 9;
+    border-radius: 8px;
+    background-color: white;
+    display: none;
+    margin: 14px 0 0 0;
+  }
   #buy_call_modal {
     width: 23.4rem;
     box-shadow: 0px 0px 1px 2px #4399eb3b;
@@ -1130,6 +1140,7 @@ z-index:99;
     padding-top: 7px;
   }
 
+  #long_straddle_btn,
   #shortStraddle,
   #Buy_call,
   #shortStrangle,
@@ -1168,6 +1179,7 @@ z-index:99;
     transition: 0.1s;
   }
 
+  #long_straddle_btn:hover,
   #shortStraddle:hover,
   #Buy_call:hover,
   #shortStrangle:hover,
@@ -1185,6 +1197,7 @@ z-index:99;
     color: #dd0000;
   }
 
+  #long_straddle_btn:focus,
   #shortStraddle:focus,
   #Buy_call:focus,
   #shortStrangle:focus,
@@ -1202,7 +1215,8 @@ z-index:99;
     border: 1px solid #dd0000;
   }
 
-  .innerStraddle_lot_size {
+  .innerStraddle_lot_size ,
+  .innerlong_straddle_lot_size {
     display: flex;
     gap: 0.5rem;
   }
@@ -1609,6 +1623,7 @@ box-shadow: 0 3px 16px 0 rgba(35,47,62,.15);
               <style>
                 #main_future_qty,
                 .counter_straddle,
+                .counter_long_straddle ,
                 .counter_Buy_call ,
                 .counter_spread,
                 .counter_ironFly,
@@ -1635,6 +1650,7 @@ box-shadow: 0 3px 16px 0 rgba(35,47,62,.15);
                 #decrement_double_iron_condor,
                 #decrement_put_butterfly,
                 #decrement_call_butter_fly,
+                #long_straddle_decrement,
                 #decrement{
                   all: unset;
                   width: 26px !important;
@@ -1647,6 +1663,10 @@ box-shadow: 0 3px 16px 0 rgba(35,47,62,.15);
               }
 
           
+              #long_straddle_increment:hover,
+              #long_straddle_decrement:hover,
+
+
               #increment_buy_call:hover,
               #decrement_buy_call:hover,
 
@@ -1683,7 +1703,8 @@ box-shadow: 0 3px 16px 0 rgba(35,47,62,.15);
               }
 
 
-              
+              #long_straddle_increment:active,
+              #long_straddle_decrement:active,
               #increment_buy_call:active,
               #decrement_buy_call:active,
               #decrement_call_butter_fly:active,
@@ -1717,6 +1738,7 @@ box-shadow: 0 3px 16px 0 rgba(35,47,62,.15);
                 background: #80808042;
               }
 
+                  #long_straddle_counter_input,
                   #futures_counter_input,
                   #counter_input_buy_call,
                   #counter_input_strangle,
@@ -1739,6 +1761,7 @@ box-shadow: 0 3px 16px 0 rgba(35,47,62,.15);
                     display: flex;
     gap: 0.3rem
                   }
+                  #long_straddle_increment,
                   #future_increment,
                   #increment_buy_call,
                   #increment_strangle,
@@ -5593,7 +5616,87 @@ font-weight: 100 !important ;
   cursor: pointer;
 }
   </style>
+  <style>
+    .main_iron_fly_atm_indicator,
+    .main_short_long_straddle_atm_indicator,
+    .main_short_straddle_atm_indicator{
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      column-gap: 0.4rem;
+      margin-bottom: 0.5rem;
+    }
 
+    .decrease_straddle_value,.increase_straddle_value,
+    .decrease_long_straddle_value,.increase_long_straddle_value,
+    .decrease_ironfly_value,.increase_ironfly_value{
+      padding: 8px 8px 6px 8px;
+      background-color: white;
+    }
+
+    .decrease_long_straddle_value,
+    .decrease_straddle_value,
+    .decrease_ironfly_value{
+      border: none;
+      border-radius: 5px 0px 0px 5px;
+      border-right: 1px solid #8080803b;
+      transition: 0.2s;
+    }
+
+    .increase_long_straddle_value,
+    .increase_ironfly_value,
+    .increase_straddle_value{
+      border: none;
+      border-radius: 0px 5px 5px 0px;
+      border-left: 1px solid #8080803b;
+
+      transition: 0.2s;
+    }
+
+    .decrease_ironfly_value:hover,.increase_ironfly_value:hover,
+    .decrease_long_straddle_value:hover,.increase_long_straddle_value:hover,
+    .decrease_straddle_value:hover,.increase_straddle_value:hover{
+
+      background-color: rgb(232, 232, 232);
+    }
+    .decrease_long_straddle_value:active,.increase_long_straddle_value:active,
+    .decrease_ironfly_value:active,.increase_ironfly_value:active,
+    .decrease_straddle_value:active,.increase_straddle_value:active{
+
+      background-color: rgb(201, 201, 201);
+    }
+    .main_iron_fly ,
+    .main_short_long_straddle ,
+    .main_short_straddle {
+      border: 1px solid #8080803b;
+      border-radius: 5px 5px 5px 5px;
+    }
+    .staddle_strike_input,
+    .long_staddle_strike_input,
+    .ironfly_strike_input{
+      background-color: white;
+      border: none;
+      text-align: center;
+    }
+
+    .main_iron_fly_atm_indicator label,
+    .main_short_straddle_atm_indicator label,
+    .main_short_long_straddle_atm_indicator label{
+      font-weight: 400 !important;
+
+    }
+    .malipulation_text_ironfly,
+    .malipulation_text_long_straddle ,
+    .malipulation_text_straddle{
+      width: 40px;
+    }
+
+    .main_deploy_long_straddle_btn,
+    .main_deploy_straddle_btn{
+      display: flex;
+justify-content: center;
+    }
+  </style>
   
    <div class="main_all_strategy_nav_content" style="box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;     padding: 13px;
    margin: 11px 0 0 0;">
@@ -5693,6 +5796,115 @@ font-weight: 100 !important ;
           </div>
 
 
+          <div class="main_long_straddle">
+            
+            <button class="straddle" id="long_straddle" >
+  
+              <div class="main_strategy_img_title">
+                <div class="style__PresetStrategyCard-sc-1f57s5d-6 jyZMZN">
+
+
+
+
+
+
+
+                      <svg xmlns="http://www.w3.org/2000/svg" width="62" height="45" viewBox="0 0 62 45" class="SVGLoader__StyledComp-sc-1ak2cuz-1 jss619"><g fill="none" fill-rule="evenodd"><path stroke="var(--dividerColor)" stroke-linecap="square" d="M0.5 0L0.5 43.237" transform="translate(1 1)"></path><path stroke="var(--dividerColor)" stroke-dasharray="5 5" stroke-linecap="round" d="M0.462 23L60 23" transform="translate(1 1)"></path><g stroke-width="2"><path stroke="var(--profitColor)" d="M0 33L7.936 23.988 13.985 16.988" transform="translate(1 1) matrix(1 0 0 -1 0 39)"></path><path stroke="var(--lossColor)" d="M13.985 16.988L29 0" transform="translate(1 1) matrix(1 0 0 -1 0 39)"></path><g><path stroke="var(--profitColor)" d="M0 33L7.936 23.988 13.985 16.988" transform="translate(1 1) matrix(1 0 0 -1 0 39) matrix(-1 0 0 1 57 0)"></path><path stroke="var(--lossColor)" d="M13.985 16.988L29 0" transform="translate(1 1) matrix(1 0 0 -1 0 39) matrix(-1 0 0 1 57 0)"></path></g></g></g></svg>
+
+
+
+
+
+                      <div class="title">Long Straddle</div>
+                    
+                    </div>
+   
+  
+                  </button>
+  
+          
+            
+            </b>
+  
+            <div class="" id="long_straddle_modal">
+              <div class="dismiss">
+                <i class="bx bx-plus dismiss_icon"></i>
+                <div class="triangle-up"></div>
+              </div>
+              <div class="modal_dialog">
+                <div class="modal_content">
+                  <div class="modal_body" id="modal_body">
+                    <div class="main_long_straddle_inner">
+                      <h5 class="text-center">Long Straddle</h5>
+  
+                      <div class="main_body_fields_long_straddle">
+                        <div class="main_strikePrice mb-3">
+                          <div class="long_straddle_lot_size">
+                            <span id="put_call_long_straddle_lot_size">1</span><span>x</span>
+                          </div>
+                          <div class="strategy_inputs">
+                            <label for="strikePrice">Strike Price</label>
+                            <select class="strike_price_input form-select" id="strikeSelect_long_straddle"></select>
+                          </div>
+                          <p class="pe_ce">PE / CE</p>
+                        </div>
+                        <div class="strategy_inputs mb-3">
+                          <label for="expirydate">Expiry Date</label>
+                          <select class="expiry_date_input form-select" id="expiryDate_long_straddle"></select>
+                        </div>
+
+              
+
+                            <div class="main_short_long_straddle_atm_indicator">
+
+                              <label for="main_short_long_straddle" class="m-0">ATM:</label>
+
+
+                              <div class="main_short_long_straddle d-flex m-0" id="main_short_long_straddle">
+                                <button class="decrease_long_straddle_value"><i class="bx bx-minus"></i></button>
+                                <input type="text" style="width: 100px;" class="long_staddle_strike_input">
+                                <button class="increase_long_straddle_value"><i class="bx bx-plus"></i></button>
+                              </div>
+
+                              <div class="main_long_straddle_new_strike_price_malipulations">
+                                <p class="malipulation_text_long_straddle">0</p>
+                              </div>
+
+                            </div>
+
+
+                      
+  
+                        <div class="main_counter d-flex gap-3 mb-3">
+                          <div class="innerlong_straddle_lot_size">
+                            <p class="fs-6 lot_title">Qty:</p>
+                            <div class="counter_long_straddle d-flex justify-content-center gap-1">
+                              <button class="btn" id="long_straddle_decrement">
+                                <i class="bx bx-minus"></i>
+                              </button>
+                              <input type="text" name="" id="long_straddle_counter_input" min="1" disabled style="    width: 91px !important;" />
+                              <button class="btn" id="long_straddle_increment">
+                                <i class="bx bx-plus"></i>
+                              </button>
+                            </div>
+                          </div>
+                   
+                        </div>
+
+                        <div class="main_deploy_long_straddle_btn">
+                          <button class="" id="long_straddle_btn" style="width: 124px !important;">SELL</button>
+                        </div>
+                  
+                      </div>
+                    </div>
+  
+                    <div class="buy_sell_buttons d-flex gap-2 justify-content-center"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+  
           <div class="main_straddle">
             
             <button class="straddle" id="straddle" >
@@ -5743,75 +5955,7 @@ font-weight: 100 !important ;
                           <select class="expiry_date_input form-select" id="expiryDate_straddle"></select>
                         </div>
 
-                        <style>
-                          .main_iron_fly_atm_indicator,
-                          .main_short_straddle_atm_indicator{
-                            display: flex;
-                            align-items: center;
-                            justify-content: center;
-                            column-gap: 0.4rem;
-                            margin-bottom: 0.5rem;
-                          }
-
-                          .decrease_straddle_value,.increase_straddle_value,
-                          .decrease_ironfly_value,.increase_ironfly_value{
-                            padding: 8px 8px 6px 8px;
-                            background-color: white;
-                          }
-                  
-                          .decrease_straddle_value,
-                          .decrease_ironfly_value{
-                            border: none;
-                            border-radius: 5px 0px 0px 5px;
-                            border-right: 1px solid #8080803b;
-                            transition: 0.2s;
-                          }
-                          .increase_ironfly_value,
-                          .increase_straddle_value{
-                            border: none;
-                            border-radius: 0px 5px 5px 0px;
-                            border-left: 1px solid #8080803b;
-
-                            transition: 0.2s;
-                          }
-
-                          .decrease_ironfly_value:hover,.increase_ironfly_value:hover,
-                          .decrease_straddle_value:hover,.increase_straddle_value:hover{
-                      
-                            background-color: rgb(232, 232, 232);
-                          }
-                          .decrease_ironfly_value:active,.increase_ironfly_value:active,
-                          .decrease_straddle_value:active,.increase_straddle_value:active{
-                      
-                            background-color: rgb(201, 201, 201);
-                          }
-                          .main_iron_fly ,
-                          .main_short_straddle {
-                            border: 1px solid #8080803b;
-                            border-radius: 5px 5px 5px 5px;
-                          }
-                          .staddle_strike_input,
-                          .ironfly_strike_input{
-                            background-color: white;
-                            border: none;
-                            text-align: center;
-                          }
-
-                          .main_iron_fly_atm_indicator label,
-                          .main_short_straddle_atm_indicator label{
-                            font-weight: 400 !important;
-
-                          }
-                          .malipulation_text_ironfly,
-                          .malipulation_text_straddle{
-                            width: 40px;
-                          }
-
-                          .main_deploy_straddle_btn{
-                            display: flex;
-    justify-content: center;
-                          }
-                        </style>
+              
 
                             <div class="main_short_straddle_atm_indicator">
 
@@ -7174,7 +7318,7 @@ font-weight: 100 !important ;
 
   <script>
     $(document).ready(function(){
-      var $mainStrategies = $(".main_straddle, .main-stranggle, .main-ironfly, .main-ironCondor, .main-spread, .main-jaze_lizard, .main-double-iron-fly, .main-double-candor");
+      var $mainStrategies = $(".main_straddle,.main_long_straddle, .main-stranggle, .main-ironfly, .main-ironCondor, .main-spread, .main-jaze_lizard, .main-double-iron-fly, .main-double-candor");
   var $butterflyStrategies = $(".main-put-butterfly, .main-call-butterfly, .custom-strategy");
 
   // Show all strategies initially
@@ -7207,7 +7351,7 @@ font-weight: 100 !important ;
       $mainStrategies.hide();
   $butterflyStrategies.hide();
   $(".main_buy_call").hide()
-        $(".main_straddle, .main-stranggle, .main-ironfly, .main-ironCondor, .main-spread, .main-double-iron-fly, .main-double-candor, .custom-strategy").show();
+        $(".main_straddle,.main_long_straddle, .main-stranggle, .main-ironfly, .main-ironCondor, .main-spread, .main-double-iron-fly, .main-double-candor, .custom-strategy").show();
         break;
       case "hedge":
       $mainStrategies.hide();
@@ -13179,6 +13323,20 @@ $(".main_extented_status_liquidity").empty().append($errorParagraph);
     function hide_nifty_custom_strategy() {
       $("#custom_strategy_modal").hide();
     }
+    function hide_long_straddle_strategy() {
+      $("#long_straddle_modal").hide();
+    }
+
+    // Click event on the document body
+    $(document).on("click", function (e) {
+      // Check which modal to hide based on the click target
+      if (
+        !$(e.target).closest("#long_straddle_modal").length &&
+        !$(e.target).is("#long_straddle")
+      ) {
+        hide_long_straddle_strategy();
+      }
+    });
 
     // Click event on the document body
     $(document).on("click", function (e) {
@@ -13190,6 +13348,9 @@ $(".main_extented_status_liquidity").empty().append($errorParagraph);
         buy_call_modal();
       }
     });
+
+
+
     $(document).on("click", function (e) {
       // Check which modal to hide based on the click target
       if (
@@ -13361,6 +13522,7 @@ $(".main_extented_status_liquidity").empty().append($errorParagraph);
     });
 
     $(".dismiss_icon").click(function () {
+      $("#long_straddle_modal").hide();
       $("#buy_call_modal").hide();
       $("#straddle_modal").hide();
       $("#strangle_modal").hide();
@@ -13452,6 +13614,41 @@ $(".main_extented_status_liquidity").empty().append($errorParagraph);
         updateCounterInput();
       }
     });
+
+
+
+//long straddle click handler for lot size
+
+
+var counterValue_long_straddle = 1;
+
+// Function to update the input field with the current value
+function updateCounterInput_long_straddle() {
+  $("#long_straddle_counter_input").val(counterValue_long_straddle);
+  $("#put_call_long_straddle_lot_size").text(counterValue_long_straddle)
+}
+
+// Initialize the input field
+updateCounterInput_long_straddle();
+
+// Increment button click handler
+$("#long_straddle_increment").click(function () {
+  counterValue_long_straddle++;
+  updateCounterInput_long_straddle();
+});
+
+// Decrement button click handler
+$("#long_straddle_decrement").click(function () {
+  if (counterValue_long_straddle > 1) {
+    counterValue_long_straddle--;
+    updateCounterInput_long_straddle();
+  }
+});
+
+
+
+
+
         //BUY_CALL_COUNTER
     var counterValue_buyCall = 1;
 
@@ -15386,9 +15583,11 @@ $(".main_extented_status_liquidity").empty().append($errorParagraph);
 
           var lotSize_main_future_int=0
           var lotSize_main_iron_fly=0
+          var lotSize_main_long_straddle=0
 
           $(".malipulation_text_straddle").text(0)
           $(".malipulation_text_ironfly").text(0)
+          $(".malipulation_text_long_straddle").text(0)
           $(".counter_input").val(1)
 
                 // Convert the value to an integer
@@ -15396,9 +15595,171 @@ $(".main_extented_status_liquidity").empty().append($errorParagraph);
                 $(".increase_straddle_value").attr("disabled",false)
                 $(".decrease_ironfly_value").attr("disabled",false)
                 $(".increase_ironfly_value").attr("disabled",false)
+                $(".decrease_long_straddle_value").attr("disabled",false)
+                $(".increase_long_straddle_value").attr("disabled",false)
 
 
                   // Handle click event for increasing the value
+
+
+
+
+
+
+                  $(document).off("click", ".increase_long_straddle_value").on("click", ".increase_long_straddle_value", function () {
+
+var stockDropdown_symbol_main = localStorage.getItem('stockDropdown_symbol_main');
+
+
+  if (stockDropdown_symbol_main==="NIFTY") {
+    var currentValue_atm = parseInt($(".long_staddle_strike_input").val());
+    lotSize_main_long_straddle+=50
+  var newValue_atm = currentValue_atm +  50
+  $(".long_staddle_strike_input").val(newValue_atm);
+
+  var lotSize_main_iron_fly_class  = lotSize_main_long_straddle < 0 ? "text-danger":"text-success"
+  $(".malipulation_text_long_straddle").text(lotSize_main_long_straddle).removeClass("text-danger").addClass(lotSize_main_iron_fly_class);
+    // Call function to set the dynamic ATM
+    set_the_dynamic_atm_long_straddle(50);
+
+    $(this).attr("disabled", lotSize_main_long_straddle >= 300 ? true : false);
+    $(".decrease_long_straddle_value").attr("disabled", lotSize_main_long_straddle <= -300 ? true : false);
+  }
+  
+  else if (stockDropdown_symbol_main==="BANKNIFTY") {
+    var currentValue_atm = parseInt($(".long_staddle_strike_input").val());
+    lotSize_main_long_straddle+=100
+  var newValue_atm = currentValue_atm +  100
+  $(".long_staddle_strike_input").val(newValue_atm);
+    // Call function to set the dynamic ATM
+    var lotSize_main_iron_fly_class  = lotSize_main_long_straddle < 0 ? "text-danger":"text-success"
+  $(".malipulation_text_long_straddle").text(lotSize_main_long_straddle).removeClass("text-danger").addClass(lotSize_main_iron_fly_class);
+    // Call function to set the dynamic ATM
+    set_the_dynamic_atm_long_straddle(100);
+
+    $(this).attr("disabled", lotSize_main_long_straddle >= 500 ? true : false);
+    $(".decrease_long_straddle_value").attr("disabled", lotSize_main_long_straddle <= -500 ? true : false);
+
+
+
+
+
+
+
+  }
+  else if (stockDropdown_symbol_main==="FINNIFTY") {
+    var currentValue_atm = parseInt($(".long_staddle_strike_input").val());
+  var newValue_atm = currentValue_atm +  50
+  lotSize_main_long_straddle+=50
+  $(".long_staddle_strike_input").val(newValue_atm);
+
+
+    // Call function to set the dynamic ATM
+    var lotSize_main_iron_fly_class  = lotSize_main_long_straddle < 0 ? "text-danger":"text-success"
+  $(".malipulation_text_long_straddle").text(lotSize_main_long_straddle).removeClass("text-danger").addClass(lotSize_main_iron_fly_class);
+    // Call function to set the dynamic ATM
+    set_the_dynamic_atm_long_straddle(50);
+
+    $(this).attr("disabled", lotSize_main_long_straddle >= 300 ? true : false);
+    $(".decrease_long_straddle_value").attr("disabled", lotSize_main_long_straddle <= -300 ? true : false);
+
+
+  }
+
+
+
+});
+
+
+
+
+
+
+
+
+$(document).off("click", ".decrease_long_straddle_value").on("click", ".decrease_long_straddle_value", function () {
+
+var stockDropdown_symbol_main = localStorage.getItem('stockDropdown_symbol_main');
+
+
+  if (stockDropdown_symbol_main==="NIFTY") {
+    var currentValue_atm = parseInt($(".long_staddle_strike_input").val());
+    lotSize_main_long_straddle-=50
+  var newValue_atm = currentValue_atm -  50
+  $(".long_staddle_strike_input").val(newValue_atm);
+
+  var lotSize_main_iron_fly_class  = lotSize_main_long_straddle < 0 ? "text-danger":"text-success"
+  $(".malipulation_text_long_straddle").text(lotSize_main_long_straddle).removeClass("text-success").addClass(lotSize_main_iron_fly_class);
+    // Call function to set the dynamic ATM
+    set_the_dynamic_atm_long_straddle(-50);
+
+    $(this).attr("disabled", lotSize_main_long_straddle <= -300 ? true : false);
+    $(".increase_long_straddle_value").attr("disabled", lotSize_main_long_straddle >= 300 ? true : false);
+  }
+
+
+
+
+
+
+
+
+
+  
+  else if (stockDropdown_symbol_main==="BANKNIFTY") {
+    var currentValue_atm = parseInt($(".long_staddle_strike_input").val());
+    lotSize_main_long_straddle-=100
+  var newValue_atm = currentValue_atm -  100
+  $(".long_staddle_strike_input").val(newValue_atm);
+    // Call function to set the dynamic ATM
+    var lotSize_main_iron_fly_class  = lotSize_main_long_straddle < 0 ? "text-danger":"text-success"
+  $(".malipulation_text_long_straddle").text(lotSize_main_long_straddle).removeClass("text-success").addClass(lotSize_main_iron_fly_class);
+    // Call function to set the dynamic ATM
+    set_the_dynamic_atm_long_straddle(-100);
+
+    $(this).attr("disabled", lotSize_main_long_straddle <= -500 ? true : false);
+    $(".increase_long_straddle_value").attr("disabled", lotSize_main_long_straddle >= 500 ? true : false);
+
+
+
+
+
+
+  }
+  else if (stockDropdown_symbol_main==="FINNIFTY") {
+    var currentValue_atm = parseInt($(".long_staddle_strike_input").val());
+  var newValue_atm = currentValue_atm -  50
+  lotSize_main_long_straddle-=50
+  $(".long_staddle_strike_input").val(newValue_atm);
+
+
+    // Call function to set the dynamic ATM
+    var lotSize_main_iron_fly_class  = lotSize_main_long_straddle < 0 ? "text-danger":"text-success"
+  $(".malipulation_text_long_straddle").text(lotSize_main_long_straddle).removeClass("text-success").addClass(lotSize_main_iron_fly_class);
+    // Call function to set the dynamic ATM
+    set_the_dynamic_atm_long_straddle(-50);
+
+    $(this).attr("disabled", lotSize_main_long_straddle <= -300 ? true : false);
+    $(".increase_long_straddle_value").attr("disabled", lotSize_main_long_straddle >= 300 ? true : false);
+
+
+  }
+
+
+
+});
+
+
+
+
+
+
+
+
+
+
+
+
 
 
   $(document).off("click", ".increase_ironfly_value").on("click", ".increase_ironfly_value", function () {
@@ -15689,11 +16050,29 @@ $(this).attr("disabled", lotSize_main_iron_fly <= -300 ? true : false);
 });
 
 // Function to set the dynamic ATM
+function set_the_dynamic_atm_long_straddle(lotSize_main_long_straddle) {
+    console.log("New ATM Value:", lotSize_main_long_straddle);
+
+    // strikeSelect_long_straddle
+
+        var current_value = parseFloat($(".long_staddle_strike_input").val());
+        var result = current_value + lotSize_main_long_straddle;
+
+        console.log(current_value);
+ 
+
+        $("#strikeSelect_long_straddle").val(current_value);
+
+
+    // You can add your logic here to handle the new ATM value
+}
 function set_the_dynamic_atm_iron_fly(lotSize_main_iron_fly) {
     console.log("New ATM Value:", lotSize_main_iron_fly);
 
 
+    // strikeSelect_long_straddle
 
+  
 $("select[id$='_strikeSelect_ironFly']").each(function() {
         var current_value = parseFloat($(this).val());
         var result = current_value + lotSize_main_iron_fly;
@@ -15721,6 +16100,7 @@ function set_the_dynamic_atm(newValue_atm) {
 // Reset lot_size_value_main_new when updating closest strike price
 $("#closest_strike_price").text(closestStrikePrice);
 
+$(".long_staddle_strike_input").val(closestStrikePrice);
 $(".ironfly_strike_input").val(closestStrikePrice);
 $(".staddle_strike_input").val(closestStrikePrice);
 $(".staddle_strike_input").attr({
@@ -15907,6 +16287,8 @@ $(".right_side_top_strategies ,#buid_custom_strategy_btn,.oi_option,.greeks_opti
 
           function selectStrategy(filter_arg_strategy) {
             if (filter_arg_strategy === "straddle") {
+
+              
               var latestStrikePrice = $("#strikeSelect_straddle").val(); // Parse as a float
               // //////console.log(latestStrikePrice);
           
@@ -15981,6 +16363,93 @@ $(".right_side_top_strategies ,#buid_custom_strategy_btn,.oi_option,.greeks_opti
               // margin_calculations()
               $("#straddle_modal").hide();
             }
+            else if(filter_arg_strategy==="long_straddle"){
+
+              $("#long_straddle_modal").show()
+
+              
+              var closest_strike_price = $("#closest_strike_price").text();
+              $("#strikeSelect_long_straddle")
+                .find("option")
+                .each(function () {
+                  var optionValue = parseFloat($(this).val());
+
+                  if (optionValue === parseFloat(closest_strike_price)) {
+                    // //////console.log(optionValue, closest_strike_price);
+                    $(this).prop("selected", true);
+                  }
+                });
+
+                var expiryDate_long_straddle = $("#expiryDate_long_straddle");
+              var optionExpiryDropdown = $("#optionExpiryDropdown");
+
+              expiryDate_long_straddle.on("change", function () {
+                var selectedValue_straddle = $(this).val();
+                // //////console.log(selectedValue_straddle);
+
+                // Set the value of optionExpiryDropdown to match the selected value
+                optionExpiryDropdown.val(selectedValue_straddle).change();
+
+                // Trigger a click event on the selected option
+              });
+
+              $("#long_straddle_btn").click(function () {
+
+                             
+                $("#long_straddle").addClass("option_strategies_active");
+                $("#buy_call").removeClass("option_strategies_active");
+                $("#straddle").removeClass("option_strategies_active");
+                $("#strangle").removeClass("option_strategies_active");
+                $("#iron_fly").removeClass("option_strategies_active");
+                $("#spread").removeClass("option_strategies_active");
+                $("#iron_condor").removeClass("option_strategies_active");
+                $("#jaze_lizard").removeClass("option_strategies_active");
+                $("#double_iron_fly").removeClass("option_strategies_active");
+                $("#double_iron_condor").removeClass("option_strategies_active");
+                $("#call_butter_fly").removeClass("option_strategies_active");
+
+                $("#put_butter_fly").removeClass("option_strategies_active");
+
+                $(".data-display-table").empty();
+                $("#table-PL").empty();
+                $("#resultTable tbody").empty();
+                $(".inner_p_l_greeks").show();
+                $(".main_position").empty();
+                
+                var strikeSelect_long_straddle = $(
+                  "#strikeSelect_long_straddle"
+                ).val();
+
+                optionChainTable.find(".strike_price").each(function () {
+                  var rowStrikePrice = parseFloat($(this).text());
+                  if (
+                    rowStrikePrice === parseFloat(strikeSelect_long_straddle)
+                  ) {
+                    $(this)
+                      .closest(".call_put_tr")
+                  
+                      .find("#Auto_calls_long_click, #Auto_puts_long_click")
+                      .data("HI1", "HI1There")
+                      .click();
+                  }
+                });
+
+ // Click on #calculate after a longer delay
+ var counterInputValue = $("#long_straddle_counter_input").val();
+                $(".option_lot_size_input").text(counterInputValue);
+                localStorage.setItem("strategy_builder", "long_straddle");
+                calculate_data();
+                $("#long_straddle_modal").hide();
+                Table_chart_pyoff()
+                // margin_calculations()
+                localStorage.removeItem('main_row_instances');
+
+                $(".long_staddle_strike_input").val(parseInt($("#closest_strike_price").text()));
+
+                $(".malipulation_text_long_straddle").text(0);
+              })
+
+            }
 
             else if(filter_arg_strategy==="buy_call"){
 
@@ -16011,7 +16480,10 @@ $(".right_side_top_strategies ,#buid_custom_strategy_btn,.oi_option,.greeks_opti
                 // Trigger a click event on the selected option
               });
 
+       
               $("#Buy_call").click(function () {
+
+
                 $("#buy_call").addClass("option_strategies_active");
                 $("#straddle").removeClass("option_strategies_active");
                 $("#strangle").removeClass("option_strategies_active");
@@ -16052,7 +16524,7 @@ $(".right_side_top_strategies ,#buid_custom_strategy_btn,.oi_option,.greeks_opti
 
 
    // Click on #calculate after a longer delay
-   var counterInputValue = $("#counter_input_buy_call").val();
+                var counterInputValue = $("#counter_input_buy_call").val();
                 $(".option_lot_size_input").text(counterInputValue);
                 localStorage.setItem("strategy_builder", "buy_cal");
                 calculate_data();
@@ -18288,6 +18760,7 @@ $(".right_side_top_strategies ,#buid_custom_strategy_btn,.oi_option,.greeks_opti
           attachButtonClickEvent($("#call_butter_fly"), "call_butter_fly");
           attachButtonClickEvent($("#custom_strategy"), "custom_strategy");
           attachButtonClickEvent($("#buy_call"), "buy_call");
+          attachButtonClickEvent($("#long_straddle"), "long_straddle");
 
 
 
