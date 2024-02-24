@@ -14990,6 +14990,16 @@ $(".main_extented_status_liquidity").empty().append($errorParagraph);
 
 
 
+    loadSpotData("NIFTY").then(function() {
+        // Spot data loaded, now load expiry and option data synchronously
+        $.when(
+          loadExpiryData("NIFTY"),
+        
+        ).then(function() {
+          loadOptionData("NIFTY", "")
+        })
+        })
+
 
     // Handle stock dropdown change
     $(".stockDropdown").change(function () {
@@ -14997,6 +15007,8 @@ $(".main_extented_status_liquidity").empty().append($errorParagraph);
       var selectedExpiry = $("#optionExpiryDropdown").val();
 
       $(".stockDropdown").val(selectedOption);
+
+
 
 
 
@@ -19763,10 +19775,8 @@ $(".right_side_top_strategies ,#buid_custom_strategy_btn,.oi_option,.greeks_opti
 
     loadStocks();
 
-    loadExpiryData("NIFTY");
 
-    loadOptionData("NIFTY", "");
-    loadOptionData(selectedOption, selectedExpiry);
+ 
     function loadExpiryData(selectedOption) {
       // //////console.log("Hi there" + selectedOption);
       $.ajax({
