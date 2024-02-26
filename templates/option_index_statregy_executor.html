@@ -10,7 +10,7 @@
  {
     display: block;
   }
-.main_buy_call,.main_long_synthetic_future{
+.main_buy_call,.main_long_synthetic_future,.main_short_synthetic_future{
   display: none;
 }
 
@@ -933,6 +933,16 @@ border: 1px solid #4399eb !important;
     display: none;
     margin: 14px 0 0 0;
   }
+  #short_synthetic_modal {
+    width: 23.4rem;
+    box-shadow: 0px 0px 1px 2px #4399eb3b;
+    position: absolute;
+    z-index: 9;
+    border-radius: 8px;
+    background-color: white;
+    display: none;
+    margin: 14px 0 0 0;
+  }
   #buy_call_modal {
     width: 23.4rem;
     box-shadow: 0px 0px 1px 2px #4399eb3b;
@@ -1151,6 +1161,7 @@ z-index:99;
   }
 
   #long_straddle_btn,
+  #short_synthetic_modal_btn,
   #long_synthetic_modal_btn,
   #shortStraddle,
   #Buy_call,
@@ -1191,6 +1202,7 @@ z-index:99;
   }
 
   #long_straddle_btn:hover,
+  #short_synthetic_modal_btn:hover,
   #long_synthetic_modal_btn:hover,
   #shortStraddle:hover,
   #Buy_call:hover,
@@ -1210,6 +1222,7 @@ z-index:99;
   }
 
   #long_straddle_btn:focus,
+  #short_synthetic_modal_btn:focus,
   #long_synthetic_modal_btn:focus,
   #shortStraddle:focus,
   #Buy_call:focus,
@@ -1230,6 +1243,7 @@ z-index:99;
 
   .innerStraddle_lot_size ,
   .innerlong_synthetic_modal_lot_size ,
+  .innershort_synthetic_modal_lot_size ,
   .innerlong_straddle_lot_size {
     display: flex;
     gap: 0.5rem;
@@ -1637,6 +1651,7 @@ box-shadow: 0 3px 16px 0 rgba(35,47,62,.15);
               <style>
                 #main_future_qty,
                 .counter_straddle,
+                .counter_short_synthetic_modal ,
                 .counter_long_straddle ,
                 .counter_long_synthetic_modal  ,
                 .counter_Buy_call ,
@@ -1666,6 +1681,7 @@ box-shadow: 0 3px 16px 0 rgba(35,47,62,.15);
                 #decrement_put_butterfly,
                 #decrement_call_butter_fly,
                 #long_straddle_decrement,
+                #short_synthetic_modal_decrement,
                 #long_synthetic_modal_decrement,
                 #decrement{
                   all: unset;
@@ -1679,6 +1695,10 @@ box-shadow: 0 3px 16px 0 rgba(35,47,62,.15);
               }
 
           
+              #short_synthetic_modal_increment:hover,
+              #short_synthetic_modal_decrement:hover,
+
+
               #long_synthetic_modal_increment:hover,
               #long_synthetic_modal_decrement:hover,
 
@@ -1723,6 +1743,9 @@ box-shadow: 0 3px 16px 0 rgba(35,47,62,.15);
               }
 
  
+              #short_synthetic_modal_increment:active,
+              #short_synthetic_modal_decrement:active,
+
               #long_synthetic_modal_increment:active,
               #long_synthetic_modal_decrement:active,
               #long_straddle_increment:active,
@@ -1760,6 +1783,7 @@ box-shadow: 0 3px 16px 0 rgba(35,47,62,.15);
                 background: #80808042;
               }
 
+                  #short_synthetic_modal_counter_input,
                   #long_synthetic_modal_counter_input,
                   #long_straddle_counter_input,
                   #futures_counter_input,
@@ -1786,6 +1810,7 @@ box-shadow: 0 3px 16px 0 rgba(35,47,62,.15);
                   }
 
                   #long_synthetic_modal_increment,
+                  #short_synthetic_modal_increment,
 
                   #long_straddle_increment,
                   #future_increment,
@@ -5705,6 +5730,7 @@ font-weight: 100 !important ;
   <style>
     .main_iron_fly_atm_indicator,
     .main_short_long_straddle_atm_indicator,
+    .main_short_synthetic_modal_atm_indicator,
     .main_long_synthetic_modal_atm_indicator,
     .main_short_straddle_atm_indicator{
       display: flex;
@@ -5715,6 +5741,7 @@ font-weight: 100 !important ;
     }
 
     .decrease_straddle_value,.increase_straddle_value,
+    .decrease_short_synthetic_modal_value,.increase_short_synthetic_modal_value,
     .decrease_long_straddle_value,.increase_long_straddle_value,
     .decrease_long_synthetic_modal_value,.increase_long_synthetic_modal_value,
     .decrease_ironfly_value,.increase_ironfly_value{
@@ -5722,6 +5749,7 @@ font-weight: 100 !important ;
       background-color: white;
     }
 
+    .decrease_short_synthetic_modal_value,
     .decrease_long_straddle_value,
     .decrease_long_synthetic_modal_value,
     .decrease_straddle_value,
@@ -5732,6 +5760,7 @@ font-weight: 100 !important ;
       transition: 0.2s;
     }
 
+    .increase_short_synthetic_modal_value,
     .increase_long_straddle_value,
     .increase_long_synthetic_modal_value,
     .increase_ironfly_value,
@@ -5743,6 +5772,7 @@ font-weight: 100 !important ;
       transition: 0.2s;
     }
 
+    .decrease_short_synthetic_modal_value:hover,.increase_short_synthetic_modal_value:hover,
     .decrease_long_synthetic_modal_value:hover,.increase_long_synthetic_modal_value:hover,
     .decrease_ironfly_value:hover,.increase_ironfly_value:hover,
     .decrease_long_straddle_value:hover,.increase_long_straddle_value:hover,
@@ -5750,6 +5780,8 @@ font-weight: 100 !important ;
 
       background-color: rgb(232, 232, 232);
     }
+
+    .decrease_short_synthetic_modal_value:active,.increase_short_synthetic_modal_value:active,
     .decrease_long_synthetic_modal_value:active,.increase_long_synthetic_modal_value:active,
     .decrease_long_straddle_value:active,.increase_long_straddle_value:active,
     .decrease_ironfly_value:active,.increase_ironfly_value:active,
@@ -5760,12 +5792,14 @@ font-weight: 100 !important ;
     .main_iron_fly ,
     .main_short_long_straddle ,
     .main_long_synthetic_modal  ,
+    .main_short_synthetic_modal   ,
     .main_short_straddle {
       border: 1px solid #8080803b;
       border-radius: 5px 5px 5px 5px;
     }
     .staddle_strike_input,
     .long_staddle_strike_input,
+    .short_synthetic_modal_strike_input,
     .long_synthetic_modal_strike_input,
     .ironfly_strike_input{
       background-color: white;
@@ -5776,17 +5810,21 @@ font-weight: 100 !important ;
     .main_iron_fly_atm_indicator label,
     .main_short_straddle_atm_indicator label,
     .main_long_synthetic_modal_atm_indicator label,
+    .main_short_synthetic_modal_atm_indicator label,
     .main_short_long_straddle_atm_indicator label{
       font-weight: 400 !important;
 
     }
     .malipulation_text_ironfly,
     .malipulation_text_long_straddle ,
+    .malipulation_text_short_synthetic_modal  ,
+    .malipulation_text_long_synthetic_modal  ,
     .malipulation_text_straddle{
       width: 40px;
     }
 
     .main_deploy_long_straddle_btn,
+    .main_deploy_short_synthetic_modal_btn,
     .main_deploy_long_synthetic_modal_btn,
     .main_deploy_straddle_btn{
       display: flex;
@@ -5821,6 +5859,8 @@ justify-content: center;
         <div class="strategy_simu">
 
 <!-- /Long Synthetic Future -->
+
+
           <div class="main_long_synthetic_future">
             
             <button class="straddle" id="long_synthetic_future" >
@@ -5901,7 +5941,7 @@ justify-content: center;
 
                   
 
-                    <div class="main_counter d-flex gap-3 mb-3" style="    margin-left: 62px;">
+                    <div class="main_counter d-flex gap-3 mb-3" >
                       <div class="innerlong_synthetic_modal_lot_size">
                         <p class="fs-6 lot_title">Qty:</p>
                         <div class="counter_long_synthetic_modal d-flex justify-content-center gap-1">
@@ -5929,6 +5969,134 @@ justify-content: center;
               </div>
             </div>
           </div>
+
+
+
+<!-- Short Synthetic Future -->
+
+   <div class="main_short_synthetic_future">
+            
+            <button class="straddle" id="short_synthetic_future" >
+  
+              <div class="main_strategy_img_title">
+                <div class="style__PresetStrategyCard-sc-1f57s5d-6 jyZMZN">
+
+                  <svg xmlns="http://www.w3.org/2000/svg" width="62" height="45" viewBox="0 0 62 45" fill="none" class="SVGLoader__StyledComp-sc-1ak2cuz-1 jss619"><path d="M1.5 1V44.2366" stroke="var(--dividerColor)" stroke-linecap="square"></path><path d="M1.46154 24H61" stroke="var(--dividerColor)" stroke-linecap="round" stroke-dasharray="5 5"></path><path d="M1.5 16L31.5 24.25" stroke="var(--profitColor)" stroke-width="2"></path><path d="M61.5 32.5L31.5 24.25" stroke="var(--lossColor)" stroke-width="2"></path></svg>                   
+                  
+                  <div class="title">Short Synthetic <br> Future</div>
+                    
+                    </div>
+   
+  
+                  </button>
+  
+          
+            
+            </b>
+  
+            <div class="" id="short_synthetic_modal">
+              <div class="dismiss">
+                <i class="bx bx-plus dismiss_icon"></i>
+                <div class="triangle-up"></div>
+              </div>
+              <div class="modal_dialog">
+                <div class="modal_content">
+                  <div class="modal_body" id="modal_body">
+                    <div class="main_short_synthetic_inner">
+                      <h5 class="text-center mb-3">Short Synthetic Future </h5>
+  
+                      <div class="main_body_fields_short_synthetic">
+
+
+
+                        <div class="main_strikePrice mb-3">
+                          <div class="short_synthetic_lot_size">
+                            <span id="put_short_synthetic_lot_size">1</span><span>x</span>
+                          </div>
+                          <div class="strategy_inputs">
+                            <label for="strikePrice">Strike Price</label>
+                            <select class="strike_price_input form-select" id="put_strikeSelect_short_synthetic"></select>
+                          </div>
+                          <p class="pe_ce"> PE</p>
+                        </div>
+
+
+                        
+                        <div class="main_strikePrice mb-3">
+                          <div class="short_synthetic_lot_size">
+                            <span id="call_short_synthetic_lot_size">1</span><span>x</span>
+                          </div>
+                          <div class="strategy_inputs">
+                            <label for="strikePrice">Strike Price</label>
+                            <select class="strike_price_input form-select" id="call_strikeSelect_short_synthetic"></select>
+                          </div>
+                          <p class="pe_ce"> CE</p>
+                        </div>
+                        
+       
+
+                        <div class="strategy_inputs mb-3">
+                          <label for="expirydate">Expiry Date</label>
+                          <select class="expiry_date_input form-select" id="expiryDate_short_synthetic"></select>
+                        </div>
+  
+
+                        <div class="main_short_synthetic_modal_atm_indicator">
+
+                          <label for="main_short_synthetic_modal" class="m-0">ATM:</label>
+
+
+                          <div class="main_short_synthetic_modal d-flex m-0" id="main_short_synthetic_modal">
+                            <button class="decrease_short_synthetic_modal_value"><i class="bx bx-minus"></i></button>
+                            <input type="text" style="width: 100px;" class="short_synthetic_modal_strike_input">
+                            <button class="increase_short_synthetic_modal_value"><i class="bx bx-plus"></i></button>
+                          </div>
+
+                          <div class="main_short_synthetic_modal_new_strike_price_malipulations">
+                            <p class="malipulation_text_short_synthetic_modal">0</p>
+                          </div>
+
+                        </div>
+
+
+                  
+
+                    <div class="main_counter d-flex gap-3 mb-3" >
+                      <div class="innershort_synthetic_modal_lot_size">
+                        <p class="fs-6 lot_title">Qty:</p>
+                        <div class="counter_short_synthetic_modal d-flex justify-content-center gap-1">
+                          <button class="btn" id="short_synthetic_modal_decrement">
+                            <i class="bx bx-minus"></i>
+                          </button>
+                          <input type="text" name="" id="short_synthetic_modal_counter_input" min="1" disabled style="    width: 91px !important;" />
+                          <button class="btn" id="short_synthetic_modal_increment">
+                            <i class="bx bx-plus"></i>
+                          </button>
+                        </div>
+                      </div>
+               
+                    </div>
+
+                    <div class="main_deploy_short_synthetic_modal_btn">
+                      <button class="" id="short_synthetic_modal_btn" style="width: 124px !important;">SELL</button>
+                    </div>
+                      </div>
+                    </div>
+  
+                 
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+
+
+
+
+
+
 
 
 
@@ -7542,29 +7710,30 @@ justify-content: center;
       case "popular":
         $mainStrategies.show();
         $butterflyStrategies.show();
-        $(".main_buy_call,.main_long_synthetic_future").hide()
+        $(".main_buy_call,.main_long_synthetic_future,.main_short_synthetic_future").hide()
         break;
       case "bull":
       $mainStrategies.hide();
   $butterflyStrategies.hide();
+  $(".main-spread,.main_short_synthetic_future, .main-put-butterfly").hide();
         $(".main-jaze_lizard,.main_long_synthetic_future, .main-call-butterfly,.main_buy_call").show();
         break;
       case "bear":
       $mainStrategies.hide();
   $butterflyStrategies.hide();
   $(".main_buy_call,.main_long_synthetic_future").hide()
-        $(".main-spread, .main-put-butterfly").show();
+        $(".main-spread,.main_short_synthetic_future, .main-put-butterfly").show();
         break;
       case "neutral":
       $mainStrategies.hide();
   $butterflyStrategies.hide();
-  $(".main_buy_call,.main_long_synthetic_future").hide()
+  $(".main_buy_call,.main_long_synthetic_future,.main_short_synthetic_future").hide()
         $(".main_straddle,.main_long_straddle, .main-stranggle, .main-ironfly, .main-ironCondor, .main-spread, .main-double-iron-fly, .main-double-candor, .custom-strategy").show();
         break;
       case "hedge":
       $mainStrategies.hide();
   $butterflyStrategies.hide();
-  $(".main_buy_call,.main_long_synthetic_future").hide()
+  $(".main_buy_call,.main_long_synthetic_future,.main_short_synthetic_future").hide()
         $(".main-jaze_lizard").show();
         break;
     }
@@ -13539,6 +13708,20 @@ $(".main_extented_status_liquidity").empty().append($errorParagraph);
     function long_synthetic_straddle_strategy() {
       $("#long_synthetic_modal").hide();
     }
+    function short_synthetic_straddle_strategy() {
+      $("#short_synthetic_modal").hide();
+    }
+
+    // Click event on the document body
+    $(document).on("click", function (e) {
+      // Check which modal to hide based on the click target
+      if (
+        !$(e.target).closest("#short_synthetic_modal").length &&
+        !$(e.target).is("#short_synthetic_future")
+      ) {
+        short_synthetic_straddle_strategy();
+      }
+    });
 
     // Click event on the document body
     $(document).on("click", function (e) {
@@ -13745,6 +13928,7 @@ $(".main_extented_status_liquidity").empty().append($errorParagraph);
     });
 
     $(".dismiss_icon").click(function () {
+      $("#short_synthetic_modal").hide();
       $("#long_synthetic_modal").hide();
       $("#long_straddle_modal").hide();
       $("#buy_call_modal").hide();
@@ -13838,6 +14022,38 @@ $(".main_extented_status_liquidity").empty().append($errorParagraph);
         updateCounterInput();
       }
     });
+
+
+
+// short_synthetic_modal_decrement click handler for lot size
+
+
+var counterValue_short_synthetic = 1;
+
+// Function to update the input field with the current value
+function updateCounterInput_short_synthetic() {
+  $("#short_synthetic_modal_counter_input").val(counterValue_short_synthetic);
+  $("#call_short_synthetic_lot_size").text(counterValue_short_synthetic)
+  $("#put_short_synthetic_lot_size").text(counterValue_short_synthetic)
+}
+
+// Initialize the input field
+updateCounterInput_short_synthetic();
+
+// Increment button click handler
+
+  $("#short_synthetic_modal_increment").click(function () {
+  counterValue_short_synthetic++;
+  updateCounterInput_short_synthetic();
+});
+
+// Decrement button click handler
+$("#short_synthetic_modal_decrement").click(function () {
+  if (counterValue_short_synthetic > 1) {
+    counterValue_short_synthetic--;
+    updateCounterInput_short_synthetic();
+  }
+});
 
 
 
@@ -15840,13 +16056,18 @@ $("#long_straddle_decrement").click(function () {
           var lotSize_main_iron_fly=0
           var lotSize_main_long_straddle=0
           var lotSize_long_synthetic_future=0
+          var lotSize_short_synthetic_future=0
 
           $(".malipulation_text_straddle").text(0)
           $(".malipulation_text_ironfly").text(0)
           $(".malipulation_text_long_straddle").text(0)
           $(".malipulation_text_long_synthetic_modal").text(0)
+          $(".malipulation_text_short_synthetic_modal").text(0)
           $(".counter_input").val(1)
 
+                // Convert the value to an integer
+                $(".decrease_short_synthetic_modal_value").attr("disabled",false)
+                $(".increase_short_synthetic_modal_value").attr("disabled",false)
                 // Convert the value to an integer
                 $(".decrease_long_synthetic_modal_value").attr("disabled",false)
                 $(".increase_long_synthetic_modal_value").attr("disabled",false)
@@ -15862,41 +16083,206 @@ $("#long_straddle_decrement").click(function () {
                   // Handle click event for increasing the value
 
 
-         //long_synthetic_future
 
-         $(document).off("click", ".increase_long_synthetic_modal_value").on("click", ".increase_long_synthetic_modal_value", function () {
+
+
+
+
+                     //short_synthetic  
+                              //long_synthetic_future
+
+         $(document).off("click", ".increase_short_synthetic_modal_value").on("click", ".increase_short_synthetic_modal_value", function () {
+
+      var stockDropdown_symbol_main = localStorage.getItem('stockDropdown_symbol_main');
+
+
+        if (stockDropdown_symbol_main==="NIFTY") {
+          var currentValue_atm = parseInt($(".short_synthetic_modal_strike_input").val());
+          lotSize_short_synthetic_future+=50
+        var newValue_atm = currentValue_atm +  50
+        $(".short_synthetic_modal_strike_input").val(newValue_atm);
+
+        var lotSize_main_iron_fly_class  = lotSize_short_synthetic_future < 0 ? "text-danger":"text-success"
+        $(".malipulation_text_short_synthetic_modal").text(lotSize_short_synthetic_future).removeClass("text-danger").addClass(lotSize_main_iron_fly_class);
+          // Call function to set the dynamic ATM
+          set_the_dynamic_atm_short_synthetic_future(50);
+          
+          console.log(lotSize_short_synthetic_future);
+
+          $(this).attr("disabled", lotSize_short_synthetic_future >= 300 ? true : false);
+          $(".decrease_short_synthetic_modal_value").attr("disabled", lotSize_short_synthetic_future <= -300 ? true : false);
+        }
+  
+      else if (stockDropdown_symbol_main==="BANKNIFTY") {
+        var currentValue_atm = parseInt($(".short_synthetic_modal_strike_input").val());
+        lotSize_short_synthetic_future+=100
+      var newValue_atm = currentValue_atm +  100
+      $(".short_synthetic_modal_strike_input").val(newValue_atm);
+        // Call function to set the dynamic ATM
+        var lotSize_main_iron_fly_class  = lotSize_short_synthetic_future < 0 ? "text-danger":"text-success"
+      $(".malipulation_text_short_synthetic_modal").text(lotSize_short_synthetic_future).removeClass("text-danger").addClass(lotSize_main_iron_fly_class);
+        // Call function to set the dynamic ATM
+        set_the_dynamic_atm_short_synthetic_future(100);
+
+        $(this).attr("disabled", lotSize_short_synthetic_future >= 500 ? true : false);
+        $(".decrease_short_synthetic_modal_value").attr("disabled", lotSize_short_synthetic_future <= -500 ? true : false);
+
+
+
+
+
+
+
+      }
+      else if (stockDropdown_symbol_main==="FINNIFTY") {
+      var currentValue_atm = parseInt($(".short_synthetic_modal_strike_input").val());
+      var newValue_atm = currentValue_atm +  50
+      lotSize_short_synthetic_future+=50
+      $(".short_synthetic_modal_strike_input").val(newValue_atm);
+
+
+      // Call function to set the dynamic ATM
+      var lotSize_main_iron_fly_class  = lotSize_short_synthetic_future < 0 ? "text-danger":"text-success"
+      $(".malipulation_text_short_synthetic_modal").text(lotSize_short_synthetic_future).removeClass("text-danger").addClass(lotSize_main_iron_fly_class);
+      // Call function to set the dynamic ATM
+      set_the_dynamic_atm_short_synthetic_future(50);
+
+      $(this).attr("disabled", lotSize_short_synthetic_future >= 300 ? true : false);
+      $(".decrease_short_synthetic_modal_value").attr("disabled", lotSize_short_synthetic_future <= -300 ? true : false);
+
+
+      }
+
+
+
+});
+
+
+
+$(document).off("click", ".decrease_short_synthetic_modal_value").on("click", ".decrease_short_synthetic_modal_value", function () {
 
 var stockDropdown_symbol_main = localStorage.getItem('stockDropdown_symbol_main');
 
 
   if (stockDropdown_symbol_main==="NIFTY") {
-    var currentValue_atm = parseInt($(".long_synthetic_modal_strike_input").val());
-    lotSize_long_synthetic_future+=50
-  var newValue_atm = currentValue_atm +  50
-  $(".long_synthetic_modal_strike_input").val(newValue_atm);
+    var currentValue_atm = parseInt($(".short_synthetic_modal_strike_input").val());
+    lotSize_short_synthetic_future-=50
+  var newValue_atm = currentValue_atm -  50
+  $(".short_synthetic_modal_strike_input").val(newValue_atm);
 
-  var lotSize_main_iron_fly_class  = lotSize_long_synthetic_future < 0 ? "text-danger":"text-success"
-  $(".malipulation_text_long_synthetic_modal").text(lotSize_long_synthetic_future).removeClass("text-danger").addClass(lotSize_main_iron_fly_class);
+  var lotSize_main_iron_fly_class  = lotSize_short_synthetic_future < 0 ? "text-danger":"text-success"
+  $(".malipulation_text_short_synthetic_modal").text(lotSize_short_synthetic_future).removeClass("text-success").addClass(lotSize_main_iron_fly_class);
     // Call function to set the dynamic ATM
-    set_the_dynamic_atm_long_synthetic_future(50);
-
-    $(this).attr("disabled", lotSize_long_synthetic_future >= 300 ? true : false);
-    $(".decrease_long_synthetic_modal_value").attr("disabled", lotSize_long_synthetic_future <= -300 ? true : false);
+    set_the_dynamic_atm_short_synthetic_future(-50);
+    console.log(lotSize_short_synthetic_future);
+    $(this).attr("disabled", lotSize_short_synthetic_future <= -300 ? true : false);
+    $(".increase_short_synthetic_modal_value").attr("disabled", lotSize_short_synthetic_future >= 300 ? true : false);
   }
+
+
+
+
+
+
+
+
+
   
   else if (stockDropdown_symbol_main==="BANKNIFTY") {
-    var currentValue_atm = parseInt($(".long_synthetic_modal_strike_input").val());
-    lotSize_long_synthetic_future+=100
-  var newValue_atm = currentValue_atm +  100
-  $(".long_synthetic_modal_strike_input").val(newValue_atm);
+    var currentValue_atm = parseInt($(".short_synthetic_modal_strike_input").val());
+    lotSize_short_synthetic_future-=100
+  var newValue_atm = currentValue_atm -  100
+  $(".short_synthetic_modal_strike_input").val(newValue_atm);
     // Call function to set the dynamic ATM
-    var lotSize_main_iron_fly_class  = lotSize_long_synthetic_future < 0 ? "text-danger":"text-success"
-  $(".malipulation_text_long_synthetic_modal").text(lotSize_long_synthetic_future).removeClass("text-danger").addClass(lotSize_main_iron_fly_class);
+    var lotSize_main_iron_fly_class  = lotSize_short_synthetic_future < 0 ? "text-danger":"text-success"
+  $(".malipulation_text_short_synthetic_modal").text(lotSize_short_synthetic_future).removeClass("text-success").addClass(lotSize_main_iron_fly_class);
     // Call function to set the dynamic ATM
-    set_the_dynamic_atm_long_synthetic_future(100);
+    set_the_dynamic_atm_short_synthetic_future(-100);
 
-    $(this).attr("disabled", lotSize_long_synthetic_future >= 500 ? true : false);
-    $(".decrease_long_synthetic_modal_value").attr("disabled", lotSize_long_synthetic_future <= -500 ? true : false);
+    $(this).attr("disabled", lotSize_short_synthetic_future <= -500 ? true : false);
+    $(".increase_short_synthetic_modal_value").attr("disabled", lotSize_short_synthetic_future >= 500 ? true : false);
+
+
+
+
+
+
+  }
+  else if (stockDropdown_symbol_main==="FINNIFTY") {
+    var currentValue_atm = parseInt($(".short_synthetic_modal_strike_input").val());
+  var newValue_atm = currentValue_atm -  50
+  lotSize_short_synthetic_future-=50
+  $(".short_synthetic_modal_strike_input").val(newValue_atm);
+
+
+    // Call function to set the dynamic ATM
+    var lotSize_main_iron_fly_class  = lotSize_short_synthetic_future < 0 ? "text-danger":"text-success"
+  $(".malipulation_text_short_synthetic_modal").text(lotSize_short_synthetic_future).removeClass("text-success").addClass(lotSize_main_iron_fly_class);
+    // Call function to set the dynamic ATM
+    set_the_dynamic_atm_short_synthetic_future(-50);
+
+    $(this).attr("disabled", lotSize_short_synthetic_future <= -300 ? true : false);
+    $(".increase_short_synthetic_modal_value").attr("disabled", lotSize_short_synthetic_future >= 300 ? true : false);
+
+
+  }
+
+
+
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+         //long_synthetic_future
+
+         $(document).off("click", ".increase_long_synthetic_modal_value").on("click", ".increase_long_synthetic_modal_value", function () {
+
+          var stockDropdown_symbol_main = localStorage.getItem('stockDropdown_symbol_main');
+
+
+            if (stockDropdown_symbol_main==="NIFTY") {
+              var currentValue_atm = parseInt($(".long_synthetic_modal_strike_input").val());
+              lotSize_long_synthetic_future+=50
+            var newValue_atm = currentValue_atm +  50
+            $(".long_synthetic_modal_strike_input").val(newValue_atm);
+
+            var lotSize_main_iron_fly_class  = lotSize_long_synthetic_future < 0 ? "text-danger":"text-success"
+            $(".malipulation_text_long_synthetic_modal").text(lotSize_long_synthetic_future).removeClass("text-danger").addClass(lotSize_main_iron_fly_class);
+              // Call function to set the dynamic ATM
+              set_the_dynamic_atm_long_synthetic_future(50);
+
+              $(this).attr("disabled", lotSize_long_synthetic_future >= 300 ? true : false);
+              $(".decrease_long_synthetic_modal_value").attr("disabled", lotSize_long_synthetic_future <= -300 ? true : false);
+            }
+            
+            else if (stockDropdown_symbol_main==="BANKNIFTY") {
+              var currentValue_atm = parseInt($(".long_synthetic_modal_strike_input").val());
+              lotSize_long_synthetic_future+=100
+            var newValue_atm = currentValue_atm +  100
+            $(".long_synthetic_modal_strike_input").val(newValue_atm);
+              // Call function to set the dynamic ATM
+              var lotSize_main_iron_fly_class  = lotSize_long_synthetic_future < 0 ? "text-danger":"text-success"
+            $(".malipulation_text_long_synthetic_modal").text(lotSize_long_synthetic_future).removeClass("text-danger").addClass(lotSize_main_iron_fly_class);
+              // Call function to set the dynamic ATM
+              set_the_dynamic_atm_long_synthetic_future(100);
+
+              $(this).attr("disabled", lotSize_long_synthetic_future >= 500 ? true : false);
+              $(".decrease_long_synthetic_modal_value").attr("disabled", lotSize_long_synthetic_future <= -500 ? true : false);
 
 
 
@@ -16472,6 +16858,27 @@ function set_the_dynamic_atm_long_straddle(lotSize_main_long_straddle) {
 
     // You can add your logic here to handle the new ATM value
 }
+
+
+
+
+        function set_the_dynamic_atm_short_synthetic_future(lotSize_main_short_synthetic) {
+            console.log("New ATM Value:", lotSize_main_short_synthetic);
+
+
+            // strikeSelect_short_straddle
+
+              
+            $("select[id$='_strikeSelect_short_synthetic']").each(function() {
+                    var current_value = parseFloat($(this).val());
+                    var result = current_value + lotSize_main_short_synthetic;
+                    $(this).val(result);
+                });
+
+            // You can add your logic here to handle the new ATM value
+        }
+
+
 function set_the_dynamic_atm_long_synthetic_future(lotSize_main_long_synthetic) {
     console.log("New ATM Value:", lotSize_main_long_synthetic);
 
@@ -16487,6 +16894,9 @@ function set_the_dynamic_atm_long_synthetic_future(lotSize_main_long_synthetic) 
 
     // You can add your logic here to handle the new ATM value
 }
+
+
+
 function set_the_dynamic_atm_iron_fly(lotSize_main_iron_fly) {
     console.log("New ATM Value:", lotSize_main_iron_fly);
 
@@ -16521,6 +16931,7 @@ function set_the_dynamic_atm(newValue_atm) {
 // Reset lot_size_value_main_new when updating closest strike price
 $("#closest_strike_price").text(closestStrikePrice);
 
+$(".short_synthetic_modal_strike_input").val(closestStrikePrice);
 $(".long_synthetic_modal_strike_input").val(closestStrikePrice);
 $(".long_staddle_strike_input").val(closestStrikePrice);
 $(".ironfly_strike_input").val(closestStrikePrice);
@@ -16724,7 +17135,7 @@ $(".right_side_top_strategies ,#buid_custom_strategy_btn,.oi_option,.greeks_opti
                 // Log the value of the current option
                 // //////console.log($(this).val());
               });
-
+  $("#short_synthetic_future").removeClass("option_strategies_active");
               $("#long_straddle").removeClass("option_strategies_active");
               $("#buy_call").removeClass("option_strategies_active");
               $("#straddle").addClass("option_strategies_active");
@@ -16788,6 +17199,162 @@ $(".right_side_top_strategies ,#buid_custom_strategy_btn,.oi_option,.greeks_opti
               $("#straddle_modal").hide();
             }
 
+
+            else if(filter_arg_strategy==="short_synthetic_future"){
+                   $("#short_synthetic_modal").show()
+
+
+
+
+
+                   var closest_strike_price = $("#closest_strike_price").text();
+
+
+                $("#call_strikeSelect_short_synthetic")
+                  .find("option")
+                  .each(function () {
+                    var optionValue = parseFloat($(this).val());
+
+                    if (optionValue === parseFloat(closest_strike_price)) {
+                      // //////console.log(optionValue, closest_strike_price);
+                      $(this).prop("selected", true);
+                    }
+                  });
+
+
+                $("#put_strikeSelect_short_synthetic")
+                  .find("option")
+                  .each(function () {
+                    var optionValue = parseFloat($(this).val());
+
+                    if (optionValue === parseFloat(closest_strike_price)) {
+                      // //////console.log(optionValue, closest_strike_price);
+                      $(this).prop("selected", true);
+                    }
+                  });
+
+
+                  var expiryDate_short_synthetic = $("#expiryDate_short_synthetic");
+                var optionExpiryDropdown = $("#optionExpiryDropdown");
+
+                expiryDate_short_synthetic.on("change", function () {
+                  var selectedValue_straddle = $(this).val();
+                  // //////console.log(selectedValue_straddle);
+
+                  // Set the value of optionExpiryDropdown to match the selected value
+                  optionExpiryDropdown.val(selectedValue_straddle).change();
+
+                  // Trigger a click event on the selected option
+                });
+
+
+                
+              
+              $("#short_synthetic_modal_btn").click(function () {
+
+$("#long_straddle").removeClass("option_strategies_active");
+      $("#short_synthetic_future").addClass("option_strategies_active");
+      $("#long_synthetic_future").removeClass("option_strategies_active");
+      $("#long_straddle").removeClass("option_strategies_active");
+      $("#buy_call").removeClass("option_strategies_active");
+      $("#straddle").removeClass("option_strategies_active");
+      $("#strangle").removeClass("option_strategies_active");
+      $("#iron_fly").removeClass("option_strategies_active");
+      $("#spread").removeClass("option_strategies_active");
+      $("#iron_condor").removeClass("option_strategies_active");
+      $("#jaze_lizard").removeClass("option_strategies_active");
+      $("#double_iron_fly").removeClass("option_strategies_active");
+      $("#double_iron_condor").removeClass("option_strategies_active");
+      $("#call_butter_fly").removeClass("option_strategies_active");
+
+      $("#put_butter_fly").removeClass("option_strategies_active");
+
+      $(".data-display-table").empty();
+      $("#table-PL").empty();
+      $("#resultTable tbody").empty();
+      $(".inner_p_l_greeks").show();
+      $(".main_position").empty();
+
+
+
+      var call_strikeSelect_short_synthetic = $(
+        "#call_strikeSelect_short_synthetic"
+      ).val();
+      var put_strikeSelect_short_synthetic = $(
+        "#put_strikeSelect_short_synthetic"
+      ).val();
+
+      if (call_strikeSelect_short_synthetic) {
+        // Find the closest row for lastIndexPrev and click on Auto_puts_short_click
+
+
+        // Find the closest row for lastIndexForw and click on Auto_calls_short_click
+        var closestRowForw = optionChainTable
+          .find(
+            ".strike_price:contains(" +
+            put_strikeSelect_short_synthetic +
+            ")"
+          )
+          .closest(".call_put_tr");
+        if (closestRowForw.length) {
+          closestRowForw
+            .find("#Auto_calls_short_click")
+            .data("HI1", "HI1There")
+            .click();
+        }
+
+
+        var closestRowPrev = optionChainTable
+          .find(
+            ".strike_price:contains(" +
+            call_strikeSelect_short_synthetic +
+            ")"
+          )
+          .closest(".call_put_tr");
+        if (closestRowPrev.length) {
+          closestRowPrev
+            .find("#Auto_puts_long_click")
+            .data("HI1", "HI1There")
+            .click();
+        }
+
+
+
+      }
+
+      // Click on #calculate after a shorter delay
+      var counterInputValue = $("#short_synthetic_modal_counter_input").val();
+      $(".option_lot_size_input").text(counterInputValue);
+      localStorage.setItem("strategy_builder", "short_synthetic");
+      calculate_data();
+      $("#short_synthetic_modal").hide();
+      Table_chart_pyoff()
+      // margin_calculations()
+      localStorage.removeItem('main_row_instances');
+
+      $(".short_synthetic_modal_strike_input").val(parseInt($("#closest_strike_price").text()));
+           lotSize_short_synthetic_future=0
+      $(".malipulation_text_short_synthetic_modal").text(0);
+})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            }
             else if(filter_arg_strategy==="long_synthetic_future"){
 
               $("#long_synthetic_modal").show()
@@ -16844,6 +17411,8 @@ $(".right_side_top_strategies ,#buid_custom_strategy_btn,.oi_option,.greeks_opti
               $("#long_synthetic_modal_btn").click(function () {
 
                 $("#long_straddle").removeClass("option_strategies_active");
+
+                  $("#short_synthetic_future").removeClass("option_strategies_active");
                       $("#long_synthetic_future").addClass("option_strategies_active");
                       $("#long_straddle").removeClass("option_strategies_active");
                       $("#buy_call").removeClass("option_strategies_active");
@@ -16924,6 +17493,7 @@ $(".right_side_top_strategies ,#buid_custom_strategy_btn,.oi_option,.greeks_opti
 
                       $(".long_synthetic_modal_strike_input").val(parseInt($("#closest_strike_price").text()));
 
+                           lotSize_long_synthetic_future=0
                       $(".malipulation_text_long_synthetic_modal").text(0);
                 })
 
@@ -16984,7 +17554,7 @@ $(".right_side_top_strategies ,#buid_custom_strategy_btn,.oi_option,.greeks_opti
               });
 
               $("#long_straddle_btn").click(function () {
-
+  $("#short_synthetic_future").removeClass("option_strategies_active");
                 $("#long_synthetic_future").removeClass("option_strategies_active");
                 $("#long_straddle").addClass("option_strategies_active");
                 $("#buy_call").removeClass("option_strategies_active");
@@ -17035,7 +17605,7 @@ $(".right_side_top_strategies ,#buid_custom_strategy_btn,.oi_option,.greeks_opti
                 localStorage.removeItem('main_row_instances');
 
                 $(".long_staddle_strike_input").val(parseInt($("#closest_strike_price").text()));
-
+                     lotSize_main_long_straddle=0
                 $(".malipulation_text_long_straddle").text(0);
               })
 
@@ -17073,7 +17643,7 @@ $(".right_side_top_strategies ,#buid_custom_strategy_btn,.oi_option,.greeks_opti
        
               $("#Buy_call").click(function () {
 
-
+  $("#short_synthetic_future").removeClass("option_strategies_active");
                 $("#long_synthetic_future").removeClass("option_strategies_active");
                 $("#long_straddle").removeClass("option_strategies_active");
                 $("#buy_call").addClass("option_strategies_active");
@@ -17217,7 +17787,7 @@ $(".right_side_top_strategies ,#buid_custom_strategy_btn,.oi_option,.greeks_opti
 
               $("#shortStrangle").click(function () {
                 // Empty the specified elements before making any selection
-                
+                  $("#short_synthetic_future").removeClass("option_strategies_active");
                 $("#long_synthetic_future").removeClass("option_strategies_active");
                 $("#long_straddle").removeClass("option_strategies_active");
                 $("#buy_call").removeClass("option_strategies_active");
@@ -17374,6 +17944,7 @@ $(".right_side_top_strategies ,#buid_custom_strategy_btn,.oi_option,.greeks_opti
                 .get();
 
               $("#shortSpread").click(function () {
+                $("#short_synthetic_future").removeClass("option_strategies_active");
                 $("#long_straddle").removeClass("option_strategies_active");
                 $("#long_synthetic_future").removeClass("option_strategies_active");
                 $("#buy_call").removeClass("option_strategies_active");
@@ -17553,6 +18124,7 @@ $(".right_side_top_strategies ,#buid_custom_strategy_btn,.oi_option,.greeks_opti
 
               // Keep the existing logic for closestStrikePrice
               $("#shortironFly").click(function () {
+                $("#short_synthetic_future").removeClass("option_strategies_active");
                 $("#long_straddle").removeClass("option_strategies_active");
                 $("#long_synthetic_future").removeClass("option_strategies_active");
                 $("#buy_call").removeClass("option_strategies_active");
@@ -17766,6 +18338,8 @@ $(".right_side_top_strategies ,#buid_custom_strategy_btn,.oi_option,.greeks_opti
 
               // Find the closest row for lastIndexPrev and click on Auto_puts_short_click
               $("#short_ironCondor").click(function () {
+
+                $("#short_synthetic_future").removeClass("option_strategies_active");
                 $("#long_straddle").removeClass("option_strategies_active");
                 $("#long_synthetic_future").removeClass("option_strategies_active");
                 $("#straddle").removeClass("option_strategies_active");
@@ -17943,6 +18517,7 @@ $(".right_side_top_strategies ,#buid_custom_strategy_btn,.oi_option,.greeks_opti
                 // Trigger a click event on the selected option
               });
               $("#shortjaze_lizard").click(function () {
+                $("#short_synthetic_future").removeClass("option_strategies_active");
                 $("#long_straddle").removeClass("option_strategies_active");
                 $("#long_synthetic_future").removeClass("option_strategies_active");
                 $("#straddle").removeClass("option_strategies_active");
@@ -18179,6 +18754,7 @@ $(".right_side_top_strategies ,#buid_custom_strategy_btn,.oi_option,.greeks_opti
                 // Trigger a click event on the selected option
               });
               $("#shortdouble_iron_fly").click(function () {
+                $("#short_synthetic_future").removeClass("option_strategies_active");
                 $("#long_straddle").removeClass("option_strategies_active");
                 $("#long_synthetic_future").removeClass("option_strategies_active");
                 $("#straddle").removeClass("option_strategies_active");
@@ -18497,6 +19073,7 @@ $(".right_side_top_strategies ,#buid_custom_strategy_btn,.oi_option,.greeks_opti
                 // Trigger a click event on the selected option
               });
               $("#shortdouble_iron_condor").click(function () {
+                $("#short_synthetic_future").removeClass("option_strategies_active");
                 $("#long_straddle").removeClass("option_strategies_active");
                 $("#long_synthetic_future").removeClass("option_strategies_active");
                 $("#straddle").removeClass("option_strategies_active");
@@ -18748,6 +19325,7 @@ $(".right_side_top_strategies ,#buid_custom_strategy_btn,.oi_option,.greeks_opti
                 // Trigger a click event on the selected option
               });
               $("#shortput_butterfly").click(function () {
+                $("#short_synthetic_future").removeClass("option_strategies_active");
                 $("#long_straddle").removeClass("option_strategies_active");
                 $("#long_synthetic_future").removeClass("option_strategies_active");
                 $("#straddle").removeClass("option_strategies_active");
@@ -18934,6 +19512,7 @@ $(".right_side_top_strategies ,#buid_custom_strategy_btn,.oi_option,.greeks_opti
                 // Trigger a click event on the selected option
               });
               $("#shortcall_butter_fly").click(function () {
+                $("#short_synthetic_future").removeClass("option_strategies_active");
                 $("#long_straddle").removeClass("option_strategies_active");
                 $("#long_synthetic_future").removeClass("option_strategies_active");
                 $("#straddle").removeClass("option_strategies_active");
@@ -19204,6 +19783,7 @@ $(".right_side_top_strategies ,#buid_custom_strategy_btn,.oi_option,.greeks_opti
                 // Trigger a click event on the selected option
               });
               $("#shortcustom_strategy").click(function () {
+                $("#short_synthetic_future").removeClass("option_strategies_active");
                 $("#long_straddle").removeClass("option_strategies_active");
                 $("#straddle").removeClass("option_strategies_active");
                 $("#strangle").removeClass("option_strategies_active");
@@ -19376,6 +19956,7 @@ $(".right_side_top_strategies ,#buid_custom_strategy_btn,.oi_option,.greeks_opti
           attachButtonClickEvent($("#buy_call"), "buy_call");
           attachButtonClickEvent($("#long_straddle"), "long_straddle");
           attachButtonClickEvent($("#long_synthetic_future"), "long_synthetic_future");
+          attachButtonClickEvent($("#short_synthetic_future"), "short_synthetic_future");
 
 
 
