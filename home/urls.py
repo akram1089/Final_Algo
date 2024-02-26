@@ -579,6 +579,10 @@ urlpatterns = [
      path('draggle_modal', views.draggle_modal, name='draggle_modal'),
      path('exit_zerodha_order', views.exit_zerodha_order, name='exit_zerodha_order'),
      path('get_zerodha_quote_order_manager', views.get_zerodha_quote_order_manager, name='get_zerodha_quote_order_manager'),
+     path('main_stock_option_chart', views.main_stock_option_chart, name='main_stock_option_chart'),
+     path('new_stock_option_chart', views.new_stock_option_chart, name='new_stock_option_chart'),
+     path('get_api_config_data', views.get_api_config_data, name='get_api_config_data'),
+
 
 
 

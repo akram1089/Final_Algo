@@ -20805,3 +20805,42 @@ def get_zerodha_quote_order_manager(request):
             return JsonResponse({'error': str(e)}, status=500)
     else:
         return JsonResponse({'error': 'Method not allowed'}, status=405)
+    
+
+
+
+
+
+
+
+def main_stock_option_chart(request):
+    return render(request, "main_stock_option_chart.html")
+
+
+
+
+
+def new_stock_option_chart(request):
+    return render(request, "new_stock_option_chart.html")
+
+
+
+
+
+
+def get_api_config_data(request):
+    if request.method == 'GET':
+        user = request.user
+
+        # Ensure the user is logged in
+        if not user.is_authenticated:
+            return JsonResponse({'status': 'error', 'message': 'Please login first !'})
+
+        brokers = Broker.objects.filter(user=user).values()
+        brokers_json = list(brokers)
+        return JsonResponse({'brokers': brokers_json})
+
+    else:
+        return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
+
+
