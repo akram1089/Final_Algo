@@ -3068,7 +3068,7 @@ cursor: pointer;
               <input type="text" class="form-control zerodha_login_id" id="zerodha_login_id" placeholder="Enter Zerodha Login ID"
                 required />
             </div>
-            <div class="">
+            <div class="" style="position: relative;" >
         
               <div class="main_label_alert_add_broker d-flex align-items-center m-0">
                 <label for="zerodha_password" class="m-0">Password</label> 
@@ -3076,9 +3076,13 @@ cursor: pointer;
                <svg class="MuiSvgIcon-root tooltip-trigger" focusable="false" viewBox="0 0 24 24" aria-hidden="true" role="presentation" style="width: 13px; height: 13px; color: var(--textColor2); margin-left: 2px; vertical-align: text-bottom;"><path d="M11 18h2v-2h-2v2zm1-16C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-2.21 0-4 1.79-4 4h2c0-1.1.9-2 2-2s2 .9 2 2c0 2-3 1.75-3 5h2c0-2.25 3-2.5 3-5 0-2.21-1.79-4-4-4z"></path></svg>
                   <div class="tooltip">Your password is kept encypted for total security and privacy.</div>
                 </div>
-
+                <i class="bi bi-eye-slash toggle-password" aria-hidden="true" style="    position: absolute;
+                right: 10px;
+                top: 34px;"></i>
 
               </div>
+
+            
    <style>
     #secret_key_tuto_1{
       font-size: 18px;
@@ -3096,6 +3100,9 @@ cursor: pointer;
                 <div style="font-size: 12px; opacity: 65%;
                 font-weight: 500;" class="add_broker_note"></div>
             </div>
+
+
+
             <div class="">
 
               <div class="main_label_alert_add_broker d-flex align-items-center m-0 justify-content-between">
@@ -3269,6 +3276,8 @@ cursor: pointer;
             <input type="text" class="form-control angelone_login_id" id="angelone_login_id" name="angelone_login_id"
               placeholder="Enter Angel One Login ID" required />
 
+
+              <div class="" style="position: relative;" >
               <div class="main_label_alert_add_broker d-flex align-items-center m-0">
                 <label for="zerodha_password" class="m-0">Password</label> 
                 <div class="tooltip-container">
@@ -3278,10 +3287,18 @@ cursor: pointer;
         
 
               </div>
+
+              <i class="bi bi-eye-slash toggle-password-angel" aria-hidden="true" style="    position: absolute;
+              right: 10px;
+              top: 34px;"></i>
             <input type="password" class="form-control" id="angelone_password" name="angelone_password"
               placeholder="Enter Angel One MPIN" required />
+
+            </div>
         
- 
+
+
+             
               <div class="main_label_alert_add_broker d-flex align-items-center m-0 justify-content-between">
                 <div class="main_label_password_tooltips d-flex align-items-center m-0">
                   <label for="zerodha_totp_key" class="m-0">TOTP Secret key </label>
@@ -3398,6 +3415,8 @@ cursor: pointer;
                     $("#upstocks_app_name").val(value);
                 });
                 </script>
+
+                <div class="" style="position: relative;">
               <div class="main_label_alert_add_broker d-flex align-items-center m-0">
                 <label for="zerodha_password" class="m-0">Password</label> 
                 <div class="tooltip-container">
@@ -3407,8 +3426,52 @@ cursor: pointer;
 
 
               </div>
+              <i class="bi bi-eye-slash toggle-password-upstocks" aria-hidden="true" style="    position: absolute;
+              right: 10px;
+              top: 34px;"></i>
             <input type="password" class="form-control" id="upstocks_password" name="upstocks_password"
               placeholder="Enter Upstox 2FA pin" required />
+
+            </div>
+
+
+              <script>
+                $(document).ready(function(){
+
+
+                    $('.toggle-password').click(function(){
+                        $(this).toggleClass('bi-eye bi-eye-slash');
+                        var input = $("#zerodha_password")
+                        if (input.attr('type') === 'password') {
+                            input.attr('type', 'text');
+                        } else {
+                            input.attr('type', 'password');
+                        }
+                    });
+                    $('.toggle-password-angel').click(function(){
+                        $(this).toggleClass('bi-eye bi-eye-slash');
+                        var input = $("#angelone_password")
+                        if (input.attr('type') === 'password') {
+                            input.attr('type', 'text');
+                        } else {
+                            input.attr('type', 'password');
+                        }
+                    });
+                    $('.toggle-password-upstocks').click(function(){
+                        $(this).toggleClass('bi-eye bi-eye-slash');
+                        var input = $("#upstocks_password")
+                        if (input.attr('type') === 'password') {
+                            input.attr('type', 'text');
+                        } else {
+                            input.attr('type', 'password');
+                        }
+                    });
+
+
+
+                });
+                </script>
+ 
        
               <div class="main_label_alert_add_broker d-flex align-items-center m-0 justify-content-between">
                 <div class="main_label_password_tooltips d-flex align-items-center m-0">
@@ -4641,11 +4704,8 @@ color: #c50000 !important;
             },
             success: function (response) {
               if (response.status === "error") {
-                Swal.fire({
-                  icon: 'error',
-                  title: 'Error',
-                  text: response.message,
-                });
+                $("#add_api").offcanvas("hide")
+                $("#signinModal").modal("show");
                 return
               }
               //////console.log('Success:', response);
