@@ -250,6 +250,12 @@
                 <input type="text" disabled value="" id="end_date" class="form-control form-control-sm"
                     style="    width: 110px;">
             </div>
+            <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" role="switch" id="contributorAutoRefresh">
+                <label class="form-check-label" for="contributorAutoRefresh">Auto Refresh</label>
+              </div>
+              
+
         </div>
     </div>
     <!-- Other content related to the main contributor page -->
@@ -1117,7 +1123,7 @@
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         var allDates = JSON.parse('{{ all_dates|safe }}');
-        console.log(allDates); // Check if the data is received properly
+        // console.log(allDates); // Check if the data is received properly
         var start_indices_expiries = allDates.resultData.start_date
         var max_date = allDates.resultData.max_date
         var startDateDropdown = document.getElementById('dateDropdown');
@@ -1165,8 +1171,8 @@
 
                   // Fetch data based on selected date and filter
                   function fetchData(selectedDate_contrib,selectedFilter_contrib) {
-                    console.log(selectedDate_contrib);
-                    console.log(selectedFilter_contrib);
+                    // console.log(selectedDate_contrib);
+                    // console.log(selectedFilter_contrib);
                 // Show the placeholders
                 $(".placeholder-glow").removeClass("d-none");
 
@@ -1179,7 +1185,7 @@
                         filter: selectedFilter_contrib
                     },
                     success: function (response) {
-                        console.log(response);
+                        // console.log(response);
                         var All_stocks_data = {};
 
                         // Create an object to store all stock data
@@ -1199,14 +1205,14 @@
                             All_stocks_data[stock.symbol_name] = stock;
                         }
 
-                        console.log("All Stocks Data:", All_stocks_data);
+                        // console.log("All Stocks Data:", All_stocks_data);
 
                         // Split data into positive and negative priceDifference
                         var positiveData = [];
                         var negativeData = [];
 
                         for (var symbol in All_stocks_data) {
-                            console.log(symbol);
+                            // console.log(symbol);
                             if (All_stocks_data.hasOwnProperty(symbol)) {
                                 var stockData = All_stocks_data[symbol];
                                 if (stockData.points >= 0) {
@@ -1217,8 +1223,8 @@
                             }
                         }
 
-                        console.log("Positive Data:", positiveData);
-                        console.log("Negative Data:", negativeData);
+                        // console.log("Positive Data:", positiveData);
+                        // console.log("Negative Data:", negativeData);
 
 
                         displayPositiveData(positiveData);
@@ -1322,16 +1328,16 @@ function displayNegativeData(data) {
             // Set active filter on page load
             function net_contribution() {
                 var negative_badge = parseFloat($(".main_negative_contrib_value .badge").text());
-                console.log(negative_badge);
+                // console.log(negative_badge);
 
                 var poistive_badge = parseFloat($(".main_positive_contrib_value .badge").text());
-                console.log(poistive_badge);
+                // console.log(poistive_badge);
 
                 // Convert values to positive numbers using Math.abs()
                 negative_badge = Math.abs(negative_badge);
                 poistive_badge = Math.abs(poistive_badge);
                 main_badge = poistive_badge - negative_badge
-                console.log(main_badge);
+                // console.log(main_badge);
                 if (main_badge > 0) {
                     $("#net_contribution").addClass("text-success")
                     $("#net_contribution").removeClass("text-danger")
@@ -1353,6 +1359,29 @@ function displayNegativeData(data) {
                 localStorage.setItem('selectedFilter_contrib', selectedFilter_contrib);
           
             fetchData(selectedDate_contrib,selectedFilter_contrib);
+
+            function startAutoRefresh() {
+        // Fetch data initially
+        fetchData(selectedDate_contrib, selectedFilter_contrib);
+        // Start interval to fetch data every 1000 milliseconds (1 second)
+        autoRefreshInterval = setInterval(function() {
+            fetchData(selectedDate_contrib, selectedFilter_contrib);
+        }, 10000);
+    }
+
+    // Function to stop the interval
+    function stopAutoRefresh() {
+        clearInterval(autoRefreshInterval);
+    }
+
+    // Event listener for checkbox change
+    $("#contributorAutoRefresh").change(function() {
+        if ($(this).prop("checked")) {
+            startAutoRefresh();
+        } else {
+            stopAutoRefresh();
+        }
+    });
 
     });
 </script>
