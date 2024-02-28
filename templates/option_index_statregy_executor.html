@@ -17796,7 +17796,7 @@ $(".main_option_chain").each(function () {
 
       var main_bg_atm_dyanamic = index_change_value < 0 ? "index_atm_negative" : "index_atm_positive";
       var main_border_atm_dyanamic = index_change_value < 0 ? "index_atm_negative_border" : "index_atm_positive_border";
-
+      var main_border_atm_dyanamic_less_plus = index_change_value < 0 ? "" : "+";
 
 
       $(this).addClass(`background_opiton_closest ${main_border_atm_dyanamic} `)
@@ -17812,7 +17812,7 @@ $(".main_option_chain").each(function () {
 
      
             // Prepend atm-label only if it doesn't exist already
-            $strikePrice_main_bg.prepend(`<span class='atm-label ${main_bg_atm_dyanamic}'>${last_traded_price}(+${index_change_value}%)</span>`)
+            $strikePrice_main_bg.prepend(`<span class='atm-label ${main_bg_atm_dyanamic}'>${last_traded_price}(${main_border_atm_dyanamic_less_plus}${index_change_value}%)</span>`)
     }
   }
 });
@@ -17842,7 +17842,7 @@ function scrollToClosestStrikeOI() {
 
       var main_bg_atm_dyanamic = index_change_value < 0 ? "index_atm_negative" : "index_atm_positive";
       var main_border_atm_dyanamic = index_change_value < 0 ? "index_atm_negative_border" : "index_atm_positive_border";
-
+      var main_border_atm_dyanamic_less_plus = index_change_value < 0 ? "" : "+";
 
 
       $(this).addClass(`background_opiton_closest ${main_border_atm_dyanamic} `)
@@ -17859,7 +17859,7 @@ function scrollToClosestStrikeOI() {
        
         });
           // Prepend atm-label only if it doesn't exist already
-          $strikePrice_oi.prepend(`<span class='atm-label-oi ${main_bg_atm_dyanamic}'>${last_traded_price}(+${index_change_value}%)</span>`)
+          $strikePrice_oi.prepend(`<span class='atm-label-oi ${main_bg_atm_dyanamic}'>${last_traded_price}(${main_border_atm_dyanamic_less_plus}${index_change_value}%)</span>`)
 
       }
       }
@@ -17890,6 +17890,7 @@ function scrollToClosestStrikeGreeks() {
 
         var main_bg_atm_dyanamic = index_change_value < 0 ? "index_atm_negative" : "index_atm_positive";
         var main_border_atm_dyanamic = index_change_value < 0 ? "index_atm_negative_border" : "index_atm_positive_border";
+        var main_border_atm_dyanamic_less_plus = index_change_value < 0 ? "" : "+";
 
 
 
@@ -17905,7 +17906,7 @@ function scrollToClosestStrikeGreeks() {
 
         });
           // Prepend atm-label only if it doesn't exist already
-          $strikePrice_greek.prepend(`<span class='atm-label-greek ${main_bg_atm_dyanamic}'>${last_traded_price}(+${index_change_value}%)</span>`)
+          $strikePrice_greek.prepend(`<span class='atm-label-greek ${main_bg_atm_dyanamic}'>${last_traded_price}(${main_border_atm_dyanamic_less_plus}${index_change_value}%)</span>`)
 
       }
       }
@@ -24376,11 +24377,12 @@ function payoff_atm_scroll() {
             var lastTradedPrice = $(".last_traded_price").text();
             var mainBgAtmDynamic = indexChangeValue < 0 ? "index_atm_negative" : "index_atm_positive";
             var mainBorderAtmDynamic = indexChangeValue < 0 ? "index_atm_negative_border" : "index_atm_positive_border";
+            var main_border_atm_dyanamic_less_plus = indexChangeValue < 0 ? "" : "+";
 
             $(this).addClass(`${mainBorderAtmDynamic} background_option_closest_payoff_table`);
 
             if ($firstChild.length > 0) {
-                var spanElement = $("<span>").addClass("atm-label-payoff-table").addClass(mainBgAtmDynamic).text(`${lastTradedPrice}(+${indexChangeValue}%)`);
+                var spanElement = $("<span>").addClass("atm-label-payoff-table").addClass(mainBgAtmDynamic).text(`${lastTradedPrice}(${main_border_atm_dyanamic_less_plus}${indexChangeValue}%)`);
                 $firstChild.append(spanElement);
                 // console.log("Span element appended successfully");
             } else {
