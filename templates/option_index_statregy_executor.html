@@ -9989,21 +9989,51 @@ margin-bottom: 38px;
                     });
                   }
                   function populateExpiryDropdown(expiries, data) {
-                    var expiryDropdown = $(".futures_expiry");
+    var expiryDropdown = $(".futures_expiry");
 
-                    // Clear existing dropdown options
-                    expiryDropdown.empty();
+    // Clear existing dropdown options
+    expiryDropdown.empty();
 
-                    // Add an option for each expiry date
-                    expiries.forEach(function (expiry) {
-                      var formattedDate = formatFutureDate(expiry);
-                      var option = `<option value="${expiry}">${expiry}</option>`;
-                      expiryDropdown.append(option);
-                    });
+    // Get current date and time
+    var now = new Date();
+    var currentYear = now.getFullYear();
+    var currentMonth = now.getMonth() + 1; // Months are zero indexed
+    var currentDay = now.getDate();
+    var currentHour = now.getHours();
+    var currentMinute = now.getMinutes();
 
-                    ////console.log($(".futures_expiry").val());
-                    ////console.log(data);
-                  }
+    // Create a date object for today at 3:30 PM
+    var todayAt330PM = new Date(currentYear, currentMonth - 1, currentDay, 15, 30, 0);
+
+    // Add an option for each expiry date
+    expiries.forEach(function (expiry) {
+        var parsedDate = new Date(expiry);
+        var currentHour = parsedDate.getHours();
+        var currentMinute = parsedDate.getMinutes();
+
+        // Check if the expiry date is today and if it's after 3:30 PM
+        if (
+            parsedDate.getTime() === todayAt330PM.getTime() || // Check if it's today
+            parsedDate.getTime() < todayAt330PM.getTime() // Check if it's before today at 3:30 PM
+        ) {
+            // If it's today and after 3:30 PM or before today at 3:30 PM, skip adding this expiry date
+            return; // Skip to the next iteration of forEach
+        }
+
+
+    var month = parsedDate.getMonth() + 1; // Month is zero-based, so add 1
+    var day = parsedDate.getDate();
+    var year = parsedDate.getFullYear();
+    var formattedDate = `${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}-${year}`;
+
+        var option = `<option value="${expiry}">${formattedDate}</option>`;
+        expiryDropdown.append(option);
+    });
+
+    // Uncomment below lines if needed
+    // console.log($(".futures_expiry").val());
+    // console.log(data);
+}
 
                   // Function to calculate the difference in days
                   function calculateDaysDifference(expiryDate) {
