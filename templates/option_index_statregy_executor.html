@@ -831,7 +831,7 @@ border: 1px solid #4399eb !important;
 
   #counter_input,
   .counter_input_edit,
-  #counter_input_strangle,
+
   #counter_input_ironFly,
   #counter_input_spread,
   #counter_input_ironCondor,
@@ -5777,6 +5777,7 @@ font-weight: 100 !important ;
     .main_iron_fly_atm_indicator,
     .main_short_synthetic_modal_atm_indicator,
     .main_long_synthetic_modal_atm_indicator,
+    .main_strangle_modal_atm_indicator,
     .main_short_straddle_atm_indicator{
       display: flex;
       align-items: center;
@@ -5790,7 +5791,8 @@ font-weight: 100 !important ;
     .decrease_straddle_value,.increase_straddle_value,
     .decrease_short_synthetic_modal_value,.increase_short_synthetic_modal_value,
     .decrease_long_straddle_value,.increase_long_straddle_value,
-    .decrease_long_synthetic_modal_value,.increase_long_synthetic_modal_value,
+    .decrease_long_synthetic_modal_value,.increase_strangle_modal_value,
+    .decrease_strangle_modal_value,.increase_long_synthetic_modal_value,
     .decrease_ironfly_value,.increase_ironfly_value{
       padding: 8px 8px 6px 8px;
       background-color: white;
@@ -5801,6 +5803,7 @@ font-weight: 100 !important ;
     .decrease_short_synthetic_modal_value,
     .decrease_long_straddle_value,
     .decrease_long_synthetic_modal_value,
+    .decrease_strangle_modal_value,
     .decrease_straddle_value,
     .decrease_ironfly_value{
       border: none;
@@ -5814,6 +5817,7 @@ font-weight: 100 !important ;
     .increase_short_synthetic_modal_value,
     .increase_long_straddle_value,
     .increase_long_synthetic_modal_value,
+    .increase_strangle_modal_value,
     .increase_ironfly_value,
     .increase_straddle_value{
       border: none;
@@ -5827,6 +5831,7 @@ font-weight: 100 !important ;
     .decrease_put_butter_fly_value:hover,.increase_put_butter_fly_value:hover,
     .decrease_short_synthetic_modal_value:hover,.increase_short_synthetic_modal_value:hover,
     .decrease_long_synthetic_modal_value:hover,.increase_long_synthetic_modal_value:hover,
+    .decrease_strangle_modal_value:hover,.increase_strangle_modal_value:hover,
     .decrease_ironfly_value:hover,.increase_ironfly_value:hover,
     .decrease_long_straddle_value:hover,.increase_long_straddle_value:hover,
     .decrease_straddle_value:hover,.increase_straddle_value:hover{
@@ -5835,6 +5840,7 @@ font-weight: 100 !important ;
     }
     .decrease_call_butter_fly_value:active,.increase_call_butter_fly_value:active,
     .decrease_short_synthetic_modal_value:active,.increase_short_synthetic_modal_value:active,
+    .decrease_strangle_modal_value:active,.increase_strangle_modal_value:active,
     .decrease_long_synthetic_modal_value:active,.increase_long_synthetic_modal_value:active,
     .decrease_long_straddle_value:active,.increase_long_straddle_value:active,
     .decrease_ironfly_value:active,.increase_ironfly_value:active,
@@ -5846,6 +5852,7 @@ font-weight: 100 !important ;
     .main_short_long_straddle ,
     .main_iron_fly  ,
     .main_long_synthetic_modal  ,
+    .main_strangle_modal  ,
     .main_short_synthetic_modal   ,
     .main_short_straddle {
       border: 1px solid #8080803b;
@@ -5857,6 +5864,7 @@ font-weight: 100 !important ;
     .long_staddle_strike_input,
     .short_synthetic_modal_strike_input,
     .long_synthetic_modal_strike_input,
+    .strangle_modal_strike_input,
     .ironfly_strike_input{
       background-color: white;
       border: none;
@@ -5878,6 +5886,7 @@ font-weight: 100 !important ;
     .malipulation_text_long_straddle ,
     .malipulation_text_short_synthetic_modal  ,
     .malipulation_text_long_synthetic_modal  ,
+    .malipulation_text_strangle_modal  ,
     .malipulation_text_straddle{
       width: 40px;
     }
@@ -6494,23 +6503,42 @@ justify-content: center;
                           <label for="expirydate">Expiry Date</label>
                           <select class="expiry_date_input form-select" id="expiryDate_strangle"></select>
                         </div>
-  
-                        <div class="main_counter d-flex gap-2 mb-3">
+                        <div class="main_strangle_modal_atm_indicator">
+
+                          <label for="main_strangle_modal" class="m-0">ATM:</label>
+
+
+                          <div class="main_strangle_modal d-flex m-0" id="main_strangle_modal">
+                            <button class="decrease_strangle_modal_value"><i class="bx bx-minus"></i></button>
+                            <input type="text" style="width: 100px;" class="strangle_modal_strike_input">
+                            <button class="increase_strangle_modal_value"><i class="bx bx-plus"></i></button>
+                          </div>
+
+                          <div class="main_strangle_modal_new_strike_price_malipulations">
+                            <p class="malipulation_text_strangle_modal">0</p>
+                          </div>
+
+                        </div>
+                        <div class="main_counter d-flex gap-2 mb-3" style="    margin-left: 36px !important;">
                           <div class="innerStraddle_lot_size d-flex gap-2">
                             <p class="fs-5 lot_title">Qty:</p>
                             <div class="counter_strangle d-flex justify-content-center gap-1">
                               <button class="btn" id="decrement_strangle">
                                 <i class="bx bx-minus"></i>
                               </button>
-                              <input type="text" name="" id="counter_input_strangle" min="1" disabled />
+                              <input type="text" name="" id="counter_input_strangle" min="1" disabled style="width: 91px !important;" />
                               <button class="btn" id="increment_strangle">
                                 <i class="bx bx-plus"></i>
                               </button>
                             </div>
                           </div>
-                          <button class="" id="shortStrangle">SELL</button>
                         </div>
+                
                       </div>
+                    </div>
+                    <div class="main_deploy_straddle_btn">
+                      <button class="" id="shortStrangle" style="width: 124px !important;">SELL</button>
+
                     </div>
   
                     <!-- <div class="buy_sell_buttons d-flex gap-2 justify-content-center">
@@ -16507,9 +16535,16 @@ $("#long_straddle_decrement").click(function () {
           var lotSize_put_iron_fly=0
           var lotSize_call_iron_fly=0
 
+          // Strangle
+          var lotSize_strangle=0
+
           
 
+          $(".malipulation_text_strangle_modal").text(0)
+
+
           $(".malipulation_text_straddle").text(0)
+
           $(".malipulation_text_ironfly").text(0)
           $(".malipulation_text_long_straddle").text(0)
           $(".malipulation_text_long_synthetic_modal").text(0)
@@ -16518,6 +16553,9 @@ $("#long_straddle_decrement").click(function () {
           $(".malipulation_text_call_butter_fly").text(0)
           $(".counter_input").val(1)
 
+                // Convert the value to an integer
+                $(".decrease_strangle_modal_value").attr("disabled",false)
+                $(".increase_strangle_modal_value").attr("disabled",false)
                 // Convert the value to an integer
                 $(".decrease_call_butter_fly_value").attr("disabled",false)
                 $(".increase_call_butter_fly_value").attr("disabled",false)
@@ -16538,8 +16576,163 @@ $("#long_straddle_decrement").click(function () {
                 $(".decrease_long_straddle_value").attr("disabled",false)
                 $(".increase_long_straddle_value").attr("disabled",false)
 
-
+ 
                   // Handle click event for increasing the value
+
+                   //strangle
+                   $(document).off("click", ".increase_strangle_modal_value").on("click", ".increase_strangle_modal_value", function () {
+
+                      var stockDropdown_symbol_main = localStorage.getItem('stockDropdown_symbol_main');
+
+
+                        if (stockDropdown_symbol_main==="NIFTY") {
+
+                          var currentValue_atm = parseInt($(".strangle_modal_strike_input").val());
+                          lotSize_strangle+=50
+                        var newValue_atm = currentValue_atm +  50
+                        $(".strangle_modal_strike_input").val(newValue_atm);
+
+                        var lotSize_main_strangle_class  = lotSize_strangle < 0 ? "text-danger":"text-success"
+                        $(".malipulation_text_strangle_modal").text(lotSize_strangle).removeClass("text-danger").addClass(lotSize_main_strangle_class);
+                          // Call function to set the dynamic ATM
+
+                          set_the_dynamic_atm_strangle(50)
+                          
+                          // console.log(lotSize_strangle);
+
+                          $(this).attr("disabled", lotSize_strangle >= 300 ? true : false);
+                          $(".decrease_strangle_modal_value").attr("disabled", lotSize_strangle <= -300 ? true : false);
+                        }
+
+                      else if (stockDropdown_symbol_main==="BANKNIFTY") {
+                        var currentValue_atm = parseInt($(".strangle_modal_strike_input").val());
+                        lotSize_strangle+=100
+                      var newValue_atm = currentValue_atm +  100
+                      $(".strangle_modal_strike_input").val(newValue_atm);
+                        // Call function to set the dynamic ATM
+                        var lotSize_main_strangle_class  = lotSize_strangle < 0 ? "text-danger":"text-success"
+                      $(".malipulation_text_strangle_modal").text(lotSize_strangle).removeClass("text-danger").addClass(lotSize_main_strangle_class);
+                        // Call function to set the dynamic ATM
+                        
+                        set_the_dynamic_atm_strangle(100)
+
+                        $(this).attr("disabled", lotSize_strangle >= 500 ? true : false);
+                        $(".decrease_strangle_modal_value").attr("disabled", lotSize_strangle <= -500 ? true : false);
+
+
+
+
+
+
+
+                      }
+                      else if (stockDropdown_symbol_main==="FINNIFTY") {
+                      var currentValue_atm = parseInt($(".strangle_modal_strike_input").val());
+                      var newValue_atm = currentValue_atm +  50
+                      lotSize_strangle+=50
+                      $(".strangle_modal_strike_input").val(newValue_atm);
+
+
+                      // Call function to set the dynamic ATM
+                      var lotSize_main_strangle_class  = lotSize_strangle < 0 ? "text-danger":"text-success"
+                      $(".malipulation_text_strangle_modal").text(lotSize_strangle).removeClass("text-danger").addClass(lotSize_main_strangle_class);
+                      // Call function to set the dynamic ATM
+
+                      set_the_dynamic_atm_strangle(50)
+
+                      $(this).attr("disabled", lotSize_strangle >= 300 ? true : false);
+                      $(".decrease_strangle_modal_value").attr("disabled", lotSize_strangle <= -300 ? true : false);
+
+
+                      }
+
+
+
+                      });
+                            
+                      
+
+
+                      $(document).off("click", ".decrease_strangle_modal_value").on("click", ".decrease_strangle_modal_value", function () {
+
+              var stockDropdown_symbol_main = localStorage.getItem('stockDropdown_symbol_main');
+
+
+                if (stockDropdown_symbol_main==="NIFTY") {
+                  var currentValue_atm = parseInt($(".decrease_strangle_modal_value").val());
+                  lotSize_strangle-=50
+                var newValue_atm = currentValue_atm -  50
+                $(".decrease_strangle_modal_value").val(newValue_atm);
+
+                var lotSize_main_strangle_class  = lotSize_strangle < 0 ? "text-danger":"text-success"
+                $(".malipulation_text_strangle_modal").text(lotSize_strangle).removeClass("text-success").addClass(lotSize_main_strangle_class);
+                  // Call function to set the dynamic ATM
+                  set_the_dynamic_atm_strangle(-50);
+                  // console.log(lotSize_strangle);
+                  $(this).attr("disabled", lotSize_strangle <= -300 ? true : false);
+                  $(".increase_strangle_modal_value").attr("disabled", lotSize_strangle >= 300 ? true : false);
+                }
+
+
+
+
+
+
+
+
+
+                
+                else if (stockDropdown_symbol_main==="BANKNIFTY") {
+                  var currentValue_atm = parseInt($(".decrease_strangle_modal_value").val());
+                  lotSize_strangle-=100
+                var newValue_atm = currentValue_atm -  100
+                $(".decrease_strangle_modal_value").val(newValue_atm);
+                  // Call function to set the dynamic ATM
+                  var lotSize_main_strangle_class  = lotSize_strangle < 0 ? "text-danger":"text-success"
+                $(".malipulation_text_strangle_modal").text(lotSize_strangle).removeClass("text-success").addClass(lotSize_main_strangle_class);
+                  // Call function to set the dynamic ATM
+                  set_the_dynamic_atm_strangle(-100);
+
+                  $(this).attr("disabled", lotSize_strangle <= -500 ? true : false);
+                  $(".increase_strangle_modal_value").attr("disabled", lotSize_strangle >= 500 ? true : false);
+
+
+
+
+
+
+                }
+                else if (stockDropdown_symbol_main==="FINNIFTY") {
+                  var currentValue_atm = parseInt($(".decrease_strangle_modal_value").val());
+                var newValue_atm = currentValue_atm -  50
+                lotSize_strangle-=50
+                $(".decrease_strangle_modal_value").val(newValue_atm);
+
+
+                  // Call function to set the dynamic ATM
+                  var lotSize_main_strangle_class  = lotSize_strangle < 0 ? "text-danger":"text-success"
+                $(".malipulation_text_strangle_modal").text(lotSize_strangle).removeClass("text-success").addClass(lotSize_main_strangle_class);
+                  // Call function to set the dynamic ATM
+                  set_the_dynamic_atm_strangle(-50);
+
+                  $(this).attr("disabled", lotSize_strangle <= -300 ? true : false);
+                  $(".increase_strangle_modal_value").attr("disabled", lotSize_strangle >= 300 ? true : false);
+
+
+                }
+
+
+
+              });
+
+
+
+
+
+
+
+
+
 
 
                                       //call ironfly strike 
@@ -17631,6 +17824,31 @@ $(this).attr("disabled", lotSize_main_iron_fly <= -300 ? true : false);
    //iron Fly
 
      // Function to set the dynamic ATM
+     function set_the_dynamic_atm_strangle(lotSize_main_strangle) {
+    // console.log("New ATM Value:", lotSize_main_strangle);
+
+    // strikeSelect_strangle
+
+  
+
+
+        // console.log(current_value);
+ 
+        $("select[id$='_strikeSelect_strangle']").each(function() {
+                    var current_value = parseFloat($(this).val());
+                    var result = current_value + lotSize_main_strangle;
+                    $(this).val(result);
+                });
+  
+
+
+    // You can add your logic here to handle the new ATM value
+}
+
+
+   //iron Fly
+
+     // Function to set the dynamic ATM
      function set_the_dynamic_atm_call_iron_fly(lotSize_main_call_iron_fly) {
     // console.log("New ATM Value:", lotSize_main_call_iron_fly);
 
@@ -17783,6 +18001,7 @@ function set_the_dynamic_atm(newValue_atm) {
 // Reset lot_size_value_main_new when updating closest strike price
 $("#closest_strike_price").text(closestStrikePrice);
 
+$(".strangle_modal_strike_input").val(closestStrikePrice);
 $(".call_butter_fly_strike_input").val(closestStrikePrice);
 $(".put_butter_fly_strike_input").val(closestStrikePrice);
 $(".short_synthetic_modal_strike_input").val(closestStrikePrice);
@@ -18727,6 +18946,10 @@ $("#long_straddle").removeClass("option_strategies_active");
                   Table_chart_pyoff()
                   // margin_calculations()
                   localStorage.removeItem('main_row_instances');
+
+                  $(".strangle_modal_strike_input").val(parseInt($("#closest_strike_price").text()));
+                  $(".malipulation_text_strangle_modal").text(0);
+                   lotSize_main_strangle=0
                 }
               });
 
@@ -22943,25 +23166,47 @@ $("#long_straddle").removeClass("option_strategies_active");
       $(".expiry_date_input option").each(function () {
         addedExpiryDates.push(this.value);
       });
-
       expiryDates.forEach((expiry) => {
-        var inputDate = expiry.expiry_date.split("T")[0];
-        if (!addedExpiryDates.includes(inputDate)) {
-          addedExpiryDates.push(inputDate);
-          var parsedDate = new Date(inputDate);
-          var day = parsedDate.getDate().toString().padStart(2, "0");
-          var month = (parsedDate.getMonth() + 1).toString().padStart(2, "0");
-          var year = parsedDate.getFullYear();
-          var formattedDate = day + "-" + month + "-" + year;
+    var inputDate = expiry.expiry_date.split("T")[0];
+    var parsedDate = new Date(inputDate);
+    var currentHour = parsedDate.getHours();
+    var currentMinute = parsedDate.getMinutes();
 
-          $(".expiry_date_input").append(
-            $("<option>", {
-              value: inputDate, // You can keep the original value or use formattedDate if needed
-              text: formattedDate,
-            })
-          );
-        }
-      });
+    // Get current date and time
+    var now = new Date();
+    var currentYear = now.getFullYear();
+    var currentMonth = now.getMonth() + 1; // Months are zero indexed
+    var currentDay = now.getDate();
+    var currentHour = now.getHours();
+    var currentMinute = now.getMinutes();
+
+    // Create a date object for today at 3:30 PM
+    var todayAt330PM = new Date(currentYear, currentMonth - 1, currentDay, 15, 30, 0);
+
+    // Check if the expiry date is today and if it's after 3:30 PM
+    if (
+        parsedDate.getTime() === todayAt330PM.getTime() || // Check if it's today
+        parsedDate.getTime() < todayAt330PM.getTime() // Check if it's before today at 3:30 PM
+    ) {
+        // If it's today and after 3:30 PM or before today at 3:30 PM, skip adding this expiry date
+        return true; // Skip to the next iteration of forEach
+    }
+
+    // Add to the dropdown
+    var day = parsedDate.getDate().toString().padStart(2, "0");
+    var month = (parsedDate.getMonth() + 1).toString().padStart(2, "0");
+    var year = parsedDate.getFullYear();
+    var formattedDate = day + "-" + month + "-" + year;
+
+    $(".expiry_date_input").append(
+        $("<option>", {
+            value: inputDate,
+            text: formattedDate,
+        })
+    );
+});
+
+
 
       // Add each strike as an option without duplicates
       var addedStrikes = [];
