@@ -1913,7 +1913,7 @@ box-shadow: 0 3px 16px 0 rgba(35,47,62,.15);
 
 
 <style>
-  #add_future_position_main,.save_zerodha_btn{
+  #add_future_position_main,.save_zerodha_btn,.individual_order_place{
     background: #00a900;
     color: white;
     height: 37px;
@@ -1924,6 +1924,7 @@ box-shadow: 0 3px 16px 0 rgba(35,47,62,.15);
 
     border: none;
   }
+  .individual_order_place:active,
   #add_future_position_main:active,
   .save_zerodha_btn:active{
     background: rgb(0, 118, 0);
@@ -9006,11 +9007,13 @@ $(".all_strategy_filter").removeClass("main_all_strategy_active")
                     <div class="margin_footer">
                       <div class="form-group order_place_input">
                         <label for="expiryEdit">Margin Needed</label>
-                        <input type="number" value="4.1" class="margin_needed form-control" disabled />
+                        <input type="number" value="0" class="margin_needed form-control" disabled style="font-size: 13px;
+                        font-weight: 500;" />
                       </div>
                       <div class="form-group order_place_input">
                         <label for="expiryEdit">Margin Available</label>
-                        <input type="number" value="4.1" class="margin_available form-control" disabled />
+                        <input type="number" value="0" class="margin_available form-control" disabled style="font-size: 13px;
+                        font-weight: 500;" />
                       </div>
                     </div>
                     <div class="right_place_order_check_liquidity">
@@ -12161,7 +12164,7 @@ margin-bottom: 38px;
             </div>
             <div class='right_bottom_card_order'>
          
-            <button class="btn btn-primary">Place order</button> 
+            <button class="individual_order_place">Place order</button> 
                 
                 </div>
             </div>
@@ -12447,6 +12450,9 @@ margin-bottom: 38px;
 
     function send_quote_data(trading_quote, zerodha_trading_symbol, zerodha_lotSize, modal_open_dynamic) {
 
+      $(".margin_available").val(0);
+
+      $(".margin_needed").val(0)
 
       $.ajax({
         type: 'GET',
@@ -12518,20 +12524,20 @@ margin-bottom: 38px;
 
                       $(".check_liquidity").prop("disabled", true);
 
-// Create a new paragraph element
-var $errorParagraph = $("<p></p>");
+                      // Create a new paragraph element
+                      var $errorParagraph = $("<p></p>");
 
-// Set the text and class for the error message
-$errorParagraph.text("Invalid zerodha credentials !! Please check your Zerodha Login, password or TOTP secret key !!");
-$errorParagraph.addClass("text-danger");
-$errorParagraph.css({
-    "border": "1px solid red",
-    "padding": "5px",
-    "border-radius": "10px"
-});
+                      // Set the text and class for the error message
+                      $errorParagraph.text("Invalid zerodha credentials !! Please check your Zerodha Login, password or TOTP secret key !!");
+                      $errorParagraph.addClass("text-danger");
+                      $errorParagraph.css({
+                          "border": "1px solid red",
+                          "padding": "5px",
+                          "border-radius": "10px"
+                      });
 
-// Empty the .main_extented_status_liquidity element and append the error message
-$(".main_extented_status_liquidity").empty().append($errorParagraph);
+                      // Empty the .main_extented_status_liquidity element and append the error message
+                      $(".main_extented_status_liquidity").empty().append($errorParagraph);
 
                       return
                       
@@ -12563,10 +12569,12 @@ $(".main_extented_status_liquidity").empty().append($errorParagraph);
                       $(".names_user_details h5").text(zerodha_kite_profile.user_name);
                       $(".names_user_details p").text(`Client ID:${zerodha_kite_profile.user_id}`);
 
-                      var zerodha_margin = response.margin_info.data.commodity.available.cash
+                      var zerodha_margin = response.margin_info.data.equity.available.cash
                       //////console.log(zerodha_margin);
 
                       $(".margin_available").val(zerodha_margin);
+
+                      $(".margin_needed").val((response.order_response.data.final.total).toFixed(2))
 
                       if (
                         response &&
@@ -12797,7 +12805,9 @@ $(".main_extented_status_liquidity").empty().append($errorParagraph);
 
                     $(".names_user_details h5").text(response.all_profile.data.name);
                     $(".names_user_details p").text(`Client ID:${response.all_profile.data.clientcode}`);
+                    $(".margin_available").val(0);
 
+                    $(".margin_needed").val($("#margin_required").text())
                     $(".margin_available").val(response.margin_info.data.availablecash);
 
 
@@ -12808,7 +12818,7 @@ $(".main_extented_status_liquidity").empty().append($errorParagraph);
 
                     $(".names_user_details h5").text(response.all_profile.data.user_name);
                     $(".names_user_details p").text(`Client ID:${response.all_profile.data.user_id}`);
-
+                    $(".margin_needed").val($("#margin_required").text())
                     $(".margin_available").val(response.margin_info.data.commodity.available_margin);
                     // console.log(response);
                     // console.log(response.market_data.data);
@@ -16210,26 +16220,47 @@ $("#long_straddle_decrement").click(function () {
           //////console.log(response.option_data);
           var optionExpiryDropdown = $("#optionExpiryDropdown");
           optionExpiryDropdown.empty();
+
+
           $.each(
             response.option_data.resultData.opExpiryDates,
             function (index, expiryDate) {
-              // Split the date and format it
-              var dateParts = expiryDate.split("T")[0].split("-");
-              var formattedDate =
-                dateParts[2] + "-" + dateParts[1] + "-" + dateParts[0];
-
-              // Create the option element
-              var option = $("<option>")
-                .text(formattedDate)
-                .val(expiryDate.split("T")[0]);
-
-              // //////console.log(formattedDate);
-              // //////console.log(expiryDate.split("T")[0]);
-
-              // Append the option to the dropdown
-              optionExpiryDropdown.append(option);
+                // Split the expiry date and format it
+                var dateParts = expiryDate.split("T")[0].split("-");
+                var expiryYear = parseInt(dateParts[0]);
+                var expiryMonth = parseInt(dateParts[1]);
+                var expiryDay = parseInt(dateParts[2]);
+        
+                // Check if expiry date is today and if it's after 3:30 PM
+                var currentDate = new Date();
+                var currentYear = currentDate.getFullYear();
+                var currentMonth = currentDate.getMonth() + 1; // Months are zero indexed
+                var currentDay = currentDate.getDate();
+                var currentHour = currentDate.getHours();
+                var currentMinute = currentDate.getMinutes();
+        
+                if (
+                    currentYear === expiryYear &&
+                    currentMonth === expiryMonth &&
+                    currentDay === expiryDay &&
+                    (currentHour > 15 || (currentHour === 15 && currentMinute >= 30))
+                ) {
+                    // If it's passed 3:30 PM today, skip appending this expiry date
+                    return true; // Skip to the next iteration of $.each
+                }
+        
+                // Create the option element
+                var formattedDate = dateParts[2] + "-" + dateParts[1] + "-" + dateParts[0];
+                var option = $("<option>")
+                    .text(formattedDate)
+                    .val(expiryDate.split("T")[0]);
+        
+                // Append the option to the dropdown
+                optionExpiryDropdown.append(option);
             }
-          );
+        );
+        
+
 
           if (selectedExpiry) {
             $("#optionExpiryDropdown").val(selectedExpiry);
