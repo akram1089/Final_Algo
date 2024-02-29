@@ -18160,6 +18160,13 @@ class ZerodhaPlaceOrder:
         profile_url = f"{self.root_url}/user/profile/full"
         response = self.session.get(profile_url, headers=self.headers)
         return response.json() if response.status_code == 200 else None
+
+    def calc_margin(self, order_params):
+
+        print("order_params",order_params)
+        order_url = f"{self.root_url}/margins/basket?consider_positions=&mode=compact"
+        response = self.session.post(order_url, json=order_params, headers=self.headers)
+        return response.json() if response.status_code == 200 else None    
     def quote(self, instruments):
         data = self.session.get(f"{self.root_url}/quote", params={"i": instruments}, headers=self.headers).json()["data"]
         return data
@@ -18690,7 +18697,16 @@ def quote_data_from_broker(request):
 
     if request.method == 'POST':
         data = json.loads(request.body)
-        print("data  :"  ,  data)
+        print("data zerodha_lotSize  :"  ,  data["zerodha_lotSize"])
+        print("data trading_quote  :"  ,  data["trading_quote"])
+        merged_data = []
+        for zerodha_item in data["zerodha_lotSize"]:
+            for trading_item in data["trading_quote"]:
+                if zerodha_item["combinedString"] == trading_item["combinedString"]:
+                    merged_item = {**zerodha_item, **trading_item}
+                    merged_data.append(merged_item)
+                    break
+
 
         if broker_instance_zerodha:
             enctoken = broker_instance_zerodha.enctoken
@@ -18711,6 +18727,7 @@ def quote_data_from_broker(request):
             result_data = {'trading_quotes': [], 'closest_match': None, 'ohlc_market_indepth': []}
 
             if enctoken:
+                main_closest_symbols =[]
                 zerodha_api = ZerodhaPlaceOrder(enctoken)
                 all_profile = zerodha_api.get_user_profile()
                 margin_info = zerodha_api.margins()
@@ -18728,21 +18745,57 @@ def quote_data_from_broker(request):
                     if not tradingsymbols.empty:
                         closest_match = tradingsymbols.iloc[0]
                         quote['combinedString'] = f'NFO:{closest_match}'
+                        main_closest_symbols.append(closest_match)
+
+                     
                         result_data['closest_match'] = closest_match
                     else:
                         # Handle case where tradingsymbols is empty
                         quote['combinedString'] = None
-
+                    print("Merged Data:",merged_data)
                     ohlc_market_indepth = zerodha_api.quote(quote["combinedString"])
                     result_data['ohlc_market_indepth'].append(ohlc_market_indepth)
                     result_data['trading_quotes'].append(quote)
+                print(main_closest_symbols)
+                for i, item in enumerate(merged_data):
+                    item['main_trading_symbol'] = main_closest_symbols[i]
 
+                # Print updated merged_data
+                print("Updated merged_data:")
+                print(merged_data)
+
+                
+                # New variable to store order_params
+                order_params_list = []
+
+                # Loop through merged_data and create order_params
+                for item in merged_data:
+                    order_params = {
+                        "exchange": "NFO",
+                        "tradingsymbol": item["main_trading_symbol"],
+                        "transaction_type": item["sell_buy_indicator"],
+                        "variety": "regular",
+                        "product": "NRML",
+                        "order_type": "LIMIT",
+                        "quantity": item["final_lot_size_along_with_qty"],
+                        "price": float(item["entryPrice"]),
+                        "trigger_price": 0,
+                        "squareoff": 0,
+                        "stoploss": 0
+                    }
+                    order_params_list.append(order_params)
+                print("order_params_list",order_params_list)
+                order_response = zerodha_api.calc_margin(order_params_list)
+                print(order_response)
+
+        
                 response_data = {
                     'status': 'success',
                     'message': 'Data received successfully',
                     "broker_name": "zerodha",
                     'result_data': result_data,
                     'all_profile': all_profile,
+                    'order_response': order_response,
                     "margin_info": margin_info
                 }
                 return JsonResponse(response_data)
@@ -20828,6 +20881,9 @@ def new_stock_option_chart(request):
 
 
 
+
+
+
 def get_api_config_data(request):
     if request.method == 'GET':
         user = request.user
@@ -20844,3 +20900,63 @@ def get_api_config_data(request):
         return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
 
 
+import razorpay
+@csrf_exempt
+def checkout(request):
+    if request.method == 'POST':
+        client = razorpay.Client(auth=('rzp_test_RMsXXryucK4fix', 't8uOSGd1qS0i69zFagowv6LK'))
+        payment_amount = 50000  # Payment amount in paisa (e.g., 50000 for ₹500)
+        payment_data = {
+            
+            'amount': payment_amount,
+            'currency': 'INR',
+            'receipt': 'receipt_id_1',
+            'payment_capture': '1'  # Auto capture payment
+        }
+        payment = client.order.create(data=payment_data)
+
+        print(payment["id"])
+
+        return JsonResponse(payment)
+    return render(request, "checkout.html")
+
+
+
+
+
+
+
+
+@csrf_exempt
+def payment_order(request):
+    if request.method == 'POST':
+        first_name = request.POST.get('first_name')
+        last_name = request.POST.get('last_name')
+        country = request.POST.get('country')
+        phone_number = request.POST.get('phone_number')
+        amount = request.POST.get('amount')
+
+        print(first_name)
+        print(country)
+        client = razorpay.Client(auth=('rzp_test_RMsXXryucK4fix', 't8uOSGd1qS0i69zFagowv6LK'))
+        payment_amount = float(amount)*100  # Payment amount in paisa (e.g., 50000 for ₹500)
+        payment_data = {
+            
+            'amount': payment_amount,
+            'currency':str(country),
+            'receipt': 'receipt_id_1',
+            'payment_capture': '1'  # Auto capture payment
+        }
+        payment = client.order.create(data=payment_data)
+
+        # Process the received data as required
+        all_payment_data={
+            "full_name":f"{first_name} {last_name}",
+            "phone_number":phone_number,
+            "payment_details":payment,
+            "api_key":"rzp_test_RMsXXryucK4fix"
+        }
+
+        return JsonResponse({'message': 'Payment order received successfully.' ,"all_payment_required_data":all_payment_data })
+    else:
+        return JsonResponse({'error': 'Invalid request method.'}, status=400)

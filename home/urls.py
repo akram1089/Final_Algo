@@ -582,6 +582,8 @@ urlpatterns = [
      path('main_stock_option_chart', views.main_stock_option_chart, name='main_stock_option_chart'),
      path('new_stock_option_chart', views.new_stock_option_chart, name='new_stock_option_chart'),
      path('get_api_config_data', views.get_api_config_data, name='get_api_config_data'),
+     path('checkout', views.checkout, name='checkout'),
+     path('payment_order', views.payment_order, name='payment_order'),
 
 
 
