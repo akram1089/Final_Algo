@@ -584,6 +584,7 @@ urlpatterns = [
      path('get_api_config_data', views.get_api_config_data, name='get_api_config_data'),
      path('checkout', views.checkout, name='checkout'),
      path('payment_order', views.payment_order, name='payment_order'),
+     path('privacy_policy', views.privacy_policy, name='privacy_policy'),
 
 
 

@@ -20960,3 +20960,15 @@ def payment_order(request):
         return JsonResponse({'message': 'Payment order received successfully.' ,"all_payment_required_data":all_payment_data })
     else:
         return JsonResponse({'error': 'Invalid request method.'}, status=400)
+    
+
+
+
+
+def privacy_policy(request):
+    return render(request, "privacy_policy.html")
+
+
+
+
+
