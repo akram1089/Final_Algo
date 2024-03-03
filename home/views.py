@@ -38,6 +38,7 @@ from django.contrib.auth import get_user_model
 from .models import ChartData
 from home.helper import send_forget_password_mail
 from django.conf import settings
+
 User = get_user_model()
 
 
@@ -992,10 +993,7 @@ def email_template(request):
 
 
 
-def logout_user(request):
-    logout(request)
-    messages.success(request, 'You are successfully logout')
-    return redirect("/")
+
 
 
 def reset_password(request):
@@ -8279,7 +8277,7 @@ def run_selenium(API_KEY, MOBILE_NO, TOTP_KEY, PIN, RURL):
     otp_input_xpath = browser.find_element("xpath", "/html/body/main/div/div[3]/div/div/div[2]/div[1]/div/div/div[2]/form/div[1]/div/div[1]/div/div/div/input")
     totp = TOTP(TOTP_KEY)
     token = totp.now()
-    time.sleep(1)
+    time.sleep(2)
     # browser.save_screenshot("screenshot1-2.png")
 
     otp_input_xpath.send_keys(token)
@@ -17572,7 +17570,7 @@ def update_upstox_broker(request, data):
                                                "/html/body/main/div/div[3]/div/div/div[2]/div[1]/div/div/div[2]/form/div[1]/div/div[1]/div/div/div/input")
         totp = TOTP(TOTP_KEY)
         token = totp.now()
-        time.sleep(1)
+        time.sleep(2)
         # browser.save_screenshot("screenshot1-2.png")
 
         otp_input_xpath.send_keys(token)
@@ -17738,7 +17736,7 @@ def add_upstox_broker(request ,data):
         otp_input_xpath = browser.find_element("xpath", "/html/body/main/div/div[3]/div/div/div[2]/div[1]/div/div/div[2]/form/div[1]/div/div[1]/div/div/div/input")
         totp = TOTP(TOTP_KEY)
         token = totp.now()
-        time.sleep(1)
+        time.sleep(2)
         # browser.save_screenshot("screenshot1-2.png")
 
         otp_input_xpath.send_keys(token)
@@ -18921,7 +18919,7 @@ def run_selenium(API_KEY, MOBILE_NO, TOTP_KEY, PIN, RURL):
     otp_input_xpath = browser.find_element("xpath", "/html/body/main/div/div[3]/div/div/div[2]/div[1]/div/div/div[2]/form/div[1]/div/div[1]/div/div/div/input")
     totp = TOTP(TOTP_KEY)
     token = totp.now()
-    time.sleep(1)
+    time.sleep(2)
     # browser.save_screenshot("screenshot1-2.png")
 
     otp_input_xpath.send_keys(token)
