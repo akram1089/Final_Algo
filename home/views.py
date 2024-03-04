@@ -17570,10 +17570,11 @@ def update_upstox_broker(request, data):
                                                "/html/body/main/div/div[3]/div/div/div[2]/div[1]/div/div/div[2]/form/div[1]/div/div[1]/div/div/div/input")
         totp = TOTP(TOTP_KEY)
         token = totp.now()
-        time.sleep(3)
+        time.sleep(5)
         # browser.save_screenshot("screenshot1-2.png")
 
         otp_input_xpath.send_keys(token)
+        browser.implicitly_wait(10)
 
         browser.find_element("xpath",
                              "/html/body/main/div/div[3]/div/div/div[2]/div[1]/div/div/div[2]/form/div[2]/button").click()
