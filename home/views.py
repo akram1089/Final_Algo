@@ -8267,32 +8267,54 @@ def run_selenium(API_KEY, MOBILE_NO, TOTP_KEY, PIN, RURL):
     browser = webdriver.Chrome(service=Service(ChromeDriverManager().install()),options=chrome_options)
     browser.get(AUTH_URL)
     browser.implicitly_wait(10)
-    mobile_num_input_xpath = browser.find_element("xpath", "/html/body/main/div/div[3]/div/div/div[2]/div[1]/div/div/div[2]/form/div/div/div/div/div/div/input")
+# Wait for mobile number input field to be visible
+    mobile_num_input_xpath = WebDriverWait(browser, 10).until(
+        EC.visibility_of_element_located((By.XPATH, "/html/body/main/div/div[3]/div/div/div[2]/div[1]/div/div/div[2]/form/div/div/div/div/div/div/input"))
+    )
     mobile_num_input_xpath.send_keys(MOBILE_NO)
-    time.sleep(1)
 
-    browser.find_element("xpath", "/html/body/main/div/div[3]/div/div/div[2]/div[1]/div/div/div[2]/form/div/button").click()
-    time.sleep(1)
-    # browser.save_screenshot("screenshot1.png")
-    otp_input_xpath = browser.find_element("xpath", "/html/body/main/div/div[3]/div/div/div[2]/div[1]/div/div/div[2]/form/div[1]/div/div[1]/div/div/div/input")
+    # Click on the submit button after entering mobile number
+    submit_button = WebDriverWait(browser, 10).until(
+        EC.element_to_be_clickable((By.XPATH, "/html/body/main/div/div[3]/div/div/div[2]/div[1]/div/div/div[2]/form/div/button"))
+    )
+    submit_button.click()
+
+    time.sleep(1)  # Add a delay of 1 second
+
+    # Wait for OTP input field to be visible
+    otp_input_xpath = WebDriverWait(browser, 10).until(
+        EC.visibility_of_element_located((By.XPATH, "/html/body/main/div/div[3]/div/div/div[2]/div[1]/div/div/div[2]/form/div[1]/div/div[1]/div/div/div/input"))
+    )
     totp = TOTP(TOTP_KEY)
     token = totp.now()
-    time.sleep(2)
-    # browser.save_screenshot("screenshot1-2.png")
 
+    time.sleep(5)  # Add a delay of 1 second
+
+    # Enter OTP
     otp_input_xpath.send_keys(token)
 
-    browser.find_element("xpath","/html/body/main/div/div[3]/div/div/div[2]/div[1]/div/div/div[2]/form/div[2]/button").click()
-    time.sleep(1)
-    # browser.save_screenshot("screenshot2.png")
+    # Click on the verify OTP button
+    verify_button = WebDriverWait(browser, 30).until(
+        EC.element_to_be_clickable((By.XPATH, "/html/body/main/div/div[3]/div/div/div[2]/div[1]/div/div/div[2]/form/div[2]/button"))
+    )
+    verify_button.click()
 
-    twofa_input_xpath=browser.find_element("xpath","/html/body/main/div/div[3]/div/div[1]/div[2]/div[1]/div/div/div[2]/form/div/div/div/div/div/input")
+    time.sleep(3)  # Add a delay of 1 second
+
+    # Wait for 2FA input field to be visible
+    twofa_input_xpath = WebDriverWait(browser, 10).until(
+        EC.visibility_of_element_located((By.XPATH, "/html/body/main/div/div[3]/div/div[1]/div[2]/div[1]/div/div/div[2]/form/div/div/div/div/div/input"))
+    )
     twofa_input_xpath.send_keys(PIN)
-    browser.find_element("xpath","/html/body/main/div/div[3]/div/div[1]/div[2]/div[1]/div/div/div[2]/form/button").click()
-    time.sleep(1)
-    # browser.save_screenshot("screenshot3.png")
 
-    WebDriverWait(browser, 5).until(EC.url_contains(RURL))
+    # Click on the submit 2FA button
+    submit_2fa_button = WebDriverWait(browser, 10).until(
+        EC.element_to_be_clickable((By.XPATH, "/html/body/main/div/div[3]/div/div[1]/div[2]/div[1]/div/div/div[2]/form/button"))
+    )
+    submit_2fa_button.click()
+
+    # Wait for redirection to the specified URL
+    WebDriverWait(browser, 10).until(EC.url_contains(RURL))
     code = parse_qs(urlparse(browser.current_url).query)['code'][0]
 
     # Save screenshot
@@ -17742,38 +17764,61 @@ def add_upstox_broker(request ,data):
         browser = webdriver.Chrome(service=Service(ChromeDriverManager().install()),options=chrome_options)
         browser.get(AUTH_URL)
         browser.implicitly_wait(10)
-        mobile_num_input_xpath = browser.find_element("xpath", "/html/body/main/div/div[3]/div/div/div[2]/div[1]/div/div/div[2]/form/div/div/div/div/div/div/input")
+  # Wait for mobile number input field to be visible
+        mobile_num_input_xpath = WebDriverWait(browser, 10).until(
+            EC.visibility_of_element_located((By.XPATH, "/html/body/main/div/div[3]/div/div/div[2]/div[1]/div/div/div[2]/form/div/div/div/div/div/div/input"))
+        )
         mobile_num_input_xpath.send_keys(MOBILE_NO)
-        time.sleep(1)
 
-        browser.find_element("xpath", "/html/body/main/div/div[3]/div/div/div[2]/div[1]/div/div/div[2]/form/div/button").click()
-        time.sleep(1)
-        # browser.save_screenshot("screenshot1.png")
-        otp_input_xpath = browser.find_element("xpath", "/html/body/main/div/div[3]/div/div/div[2]/div[1]/div/div/div[2]/form/div[1]/div/div[1]/div/div/div/input")
+        # Click on the submit button after entering mobile number
+        submit_button = WebDriverWait(browser, 10).until(
+            EC.element_to_be_clickable((By.XPATH, "/html/body/main/div/div[3]/div/div/div[2]/div[1]/div/div/div[2]/form/div/button"))
+        )
+        submit_button.click()
+
+        time.sleep(1)  # Add a delay of 1 second
+
+        # Wait for OTP input field to be visible
+        otp_input_xpath = WebDriverWait(browser, 10).until(
+            EC.visibility_of_element_located((By.XPATH, "/html/body/main/div/div[3]/div/div/div[2]/div[1]/div/div/div[2]/form/div[1]/div/div[1]/div/div/div/input"))
+        )
         totp = TOTP(TOTP_KEY)
         token = totp.now()
-        time.sleep(2)
-        # browser.save_screenshot("screenshot1-2.png")
 
+        time.sleep(5)  # Add a delay of 1 second
+
+        # Enter OTP
         otp_input_xpath.send_keys(token)
 
-        browser.find_element("xpath","/html/body/main/div/div[3]/div/div/div[2]/div[1]/div/div/div[2]/form/div[2]/button").click()
-        time.sleep(1)
-        # browser.save_screenshot("screenshot2.png")
+        # Click on the verify OTP button
+        verify_button = WebDriverWait(browser, 30).until(
+            EC.element_to_be_clickable((By.XPATH, "/html/body/main/div/div[3]/div/div/div[2]/div[1]/div/div/div[2]/form/div[2]/button"))
+        )
+        verify_button.click()
 
-        twofa_input_xpath=browser.find_element("xpath","/html/body/main/div/div[3]/div/div[1]/div[2]/div[1]/div/div/div[2]/form/div/div/div/div/div/input")
+        time.sleep(3)  # Add a delay of 1 second
+
+        # Wait for 2FA input field to be visible
+        twofa_input_xpath = WebDriverWait(browser, 10).until(
+            EC.visibility_of_element_located((By.XPATH, "/html/body/main/div/div[3]/div/div[1]/div[2]/div[1]/div/div/div[2]/form/div/div/div/div/div/input"))
+        )
         twofa_input_xpath.send_keys(PIN)
-        browser.find_element("xpath","/html/body/main/div/div[3]/div/div[1]/div[2]/div[1]/div/div/div[2]/form/button").click()
-        time.sleep(1)
-        # browser.save_screenshot("screenshot3.png")
 
-        WebDriverWait(browser, 5).until(EC.url_contains(RURL))
+        # Click on the submit 2FA button
+        submit_2fa_button = WebDriverWait(browser, 10).until(
+            EC.element_to_be_clickable((By.XPATH, "/html/body/main/div/div[3]/div/div[1]/div[2]/div[1]/div/div/div[2]/form/button"))
+        )
+        submit_2fa_button.click()
+
+        # Wait for redirection to the specified URL
+        WebDriverWait(browser, 10).until(EC.url_contains(RURL))
         code = parse_qs(urlparse(browser.current_url).query)['code'][0]
 
         # Save screenshot
         # browser.save_screenshot("screenshot_final.png")
 
         return code
+
 
     # Run Selenium to get the code and then obtain the access token
     code = run_selenium()
@@ -18925,32 +18970,54 @@ def run_selenium(API_KEY, MOBILE_NO, TOTP_KEY, PIN, RURL):
     browser = webdriver.Chrome(service=Service(ChromeDriverManager().install()),options=chrome_options)
     browser.get(AUTH_URL)
     browser.implicitly_wait(10)
-    mobile_num_input_xpath = browser.find_element("xpath", "/html/body/main/div/div[3]/div/div/div[2]/div[1]/div/div/div[2]/form/div/div/div/div/div/div/input")
+# Wait for mobile number input field to be visible
+    mobile_num_input_xpath = WebDriverWait(browser, 10).until(
+        EC.visibility_of_element_located((By.XPATH, "/html/body/main/div/div[3]/div/div/div[2]/div[1]/div/div/div[2]/form/div/div/div/div/div/div/input"))
+    )
     mobile_num_input_xpath.send_keys(MOBILE_NO)
-    time.sleep(1)
 
-    browser.find_element("xpath", "/html/body/main/div/div[3]/div/div/div[2]/div[1]/div/div/div[2]/form/div/button").click()
-    time.sleep(1)
-    # browser.save_screenshot("screenshot1.png")
-    otp_input_xpath = browser.find_element("xpath", "/html/body/main/div/div[3]/div/div/div[2]/div[1]/div/div/div[2]/form/div[1]/div/div[1]/div/div/div/input")
+    # Click on the submit button after entering mobile number
+    submit_button = WebDriverWait(browser, 10).until(
+        EC.element_to_be_clickable((By.XPATH, "/html/body/main/div/div[3]/div/div/div[2]/div[1]/div/div/div[2]/form/div/button"))
+    )
+    submit_button.click()
+
+    time.sleep(1)  # Add a delay of 1 second
+
+    # Wait for OTP input field to be visible
+    otp_input_xpath = WebDriverWait(browser, 10).until(
+        EC.visibility_of_element_located((By.XPATH, "/html/body/main/div/div[3]/div/div/div[2]/div[1]/div/div/div[2]/form/div[1]/div/div[1]/div/div/div/input"))
+    )
     totp = TOTP(TOTP_KEY)
     token = totp.now()
-    time.sleep(2)
-    # browser.save_screenshot("screenshot1-2.png")
 
+    time.sleep(5)  # Add a delay of 1 second
+
+    # Enter OTP
     otp_input_xpath.send_keys(token)
 
-    browser.find_element("xpath","/html/body/main/div/div[3]/div/div/div[2]/div[1]/div/div/div[2]/form/div[2]/button").click()
-    time.sleep(1)
-    # browser.save_screenshot("screenshot2.png")
+    # Click on the verify OTP button
+    verify_button = WebDriverWait(browser, 30).until(
+        EC.element_to_be_clickable((By.XPATH, "/html/body/main/div/div[3]/div/div/div[2]/div[1]/div/div/div[2]/form/div[2]/button"))
+    )
+    verify_button.click()
 
-    twofa_input_xpath=browser.find_element("xpath","/html/body/main/div/div[3]/div/div[1]/div[2]/div[1]/div/div/div[2]/form/div/div/div/div/div/input")
+    time.sleep(3)  # Add a delay of 1 second
+
+    # Wait for 2FA input field to be visible
+    twofa_input_xpath = WebDriverWait(browser, 10).until(
+        EC.visibility_of_element_located((By.XPATH, "/html/body/main/div/div[3]/div/div[1]/div[2]/div[1]/div/div/div[2]/form/div/div/div/div/div/input"))
+    )
     twofa_input_xpath.send_keys(PIN)
-    browser.find_element("xpath","/html/body/main/div/div[3]/div/div[1]/div[2]/div[1]/div/div/div[2]/form/button").click()
-    time.sleep(1)
-    # browser.save_screenshot("screenshot3.png")
 
-    WebDriverWait(browser, 5).until(EC.url_contains(RURL))
+    # Click on the submit 2FA button
+    submit_2fa_button = WebDriverWait(browser, 10).until(
+        EC.element_to_be_clickable((By.XPATH, "/html/body/main/div/div[3]/div/div[1]/div[2]/div[1]/div/div/div[2]/form/button"))
+    )
+    submit_2fa_button.click()
+
+    # Wait for redirection to the specified URL
+    WebDriverWait(browser, 10).until(EC.url_contains(RURL))
     code = parse_qs(urlparse(browser.current_url).query)['code'][0]
 
     # Save screenshot
