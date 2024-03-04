@@ -29,6 +29,7 @@ def get_country_from_ip(ip_address):
     finally:
         # Close the reader to release resources
         geolite2.close()
+        return "Unkown"
 
 @receiver(user_logged_in)
 def user_login_handler(sender, request, user, **kwargs):
