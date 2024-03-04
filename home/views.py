@@ -8277,13 +8277,13 @@ def run_selenium(API_KEY, MOBILE_NO, TOTP_KEY, PIN, RURL):
     otp_input_xpath = browser.find_element("xpath", "/html/body/main/div/div[3]/div/div/div[2]/div[1]/div/div/div[2]/form/div[1]/div/div[1]/div/div/div/input")
     totp = TOTP(TOTP_KEY)
     token = totp.now()
-    time.sleep(2)
+    time.sleep(1)
     # browser.save_screenshot("screenshot1-2.png")
 
     otp_input_xpath.send_keys(token)
 
     browser.find_element("xpath","/html/body/main/div/div[3]/div/div/div[2]/div[1]/div/div/div[2]/form/div[2]/button").click()
-    time.sleep(1)
+    time.sleep(3)
     # browser.save_screenshot("screenshot2.png")
 
     twofa_input_xpath=browser.find_element("xpath","/html/body/main/div/div[3]/div/div[1]/div[2]/div[1]/div/div/div[2]/form/div/div/div/div/div/input")
@@ -17570,14 +17570,14 @@ def update_upstox_broker(request, data):
                                                "/html/body/main/div/div[3]/div/div/div[2]/div[1]/div/div/div[2]/form/div[1]/div/div[1]/div/div/div/input")
         totp = TOTP(TOTP_KEY)
         token = totp.now()
-        time.sleep(2)
+        time.sleep(1)
         # browser.save_screenshot("screenshot1-2.png")
 
         otp_input_xpath.send_keys(token)
 
         browser.find_element("xpath",
                              "/html/body/main/div/div[3]/div/div/div[2]/div[1]/div/div/div[2]/form/div[2]/button").click()
-        time.sleep(1)
+        time.sleep(3)
         # browser.save_screenshot("screenshot2.png")
 
         twofa_input_xpath = browser.find_element("xpath",
@@ -17736,13 +17736,13 @@ def add_upstox_broker(request ,data):
         otp_input_xpath = browser.find_element("xpath", "/html/body/main/div/div[3]/div/div/div[2]/div[1]/div/div/div[2]/form/div[1]/div/div[1]/div/div/div/input")
         totp = TOTP(TOTP_KEY)
         token = totp.now()
-        time.sleep(2)
+        time.sleep(1)
         # browser.save_screenshot("screenshot1-2.png")
 
         otp_input_xpath.send_keys(token)
 
         browser.find_element("xpath","/html/body/main/div/div[3]/div/div/div[2]/div[1]/div/div/div[2]/form/div[2]/button").click()
-        time.sleep(1)
+        time.sleep(3)
         # browser.save_screenshot("screenshot2.png")
 
         twofa_input_xpath=browser.find_element("xpath","/html/body/main/div/div[3]/div/div[1]/div[2]/div[1]/div/div/div[2]/form/div/div/div/div/div/input")
@@ -18919,13 +18919,13 @@ def run_selenium(API_KEY, MOBILE_NO, TOTP_KEY, PIN, RURL):
     otp_input_xpath = browser.find_element("xpath", "/html/body/main/div/div[3]/div/div/div[2]/div[1]/div/div/div[2]/form/div[1]/div/div[1]/div/div/div/input")
     totp = TOTP(TOTP_KEY)
     token = totp.now()
-    time.sleep(2)
+    time.sleep(1)
     # browser.save_screenshot("screenshot1-2.png")
 
     otp_input_xpath.send_keys(token)
 
     browser.find_element("xpath","/html/body/main/div/div[3]/div/div/div[2]/div[1]/div/div/div[2]/form/div[2]/button").click()
-    time.sleep(1)
+    time.sleep(3)
     # browser.save_screenshot("screenshot2.png")
 
     twofa_input_xpath=browser.find_element("xpath","/html/body/main/div/div[3]/div/div[1]/div[2]/div[1]/div/div/div[2]/form/div/div/div/div/div/input")
