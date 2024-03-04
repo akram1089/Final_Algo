@@ -17432,6 +17432,9 @@ def add_broker_api_main(request):
             return add_angel_one_broker(request, data)
         elif trading_platform == 'upstox_api':
             return add_upstox_broker(request, data)
+        elif trading_platform=="breeze_connect":
+            return add_breeze_connect(request,data)
+         
         else:
             return JsonResponse({"message": "Unsupported trading platform"}, status=400)
 
@@ -17448,6 +17451,141 @@ def add_broker_api_main(request):
 
     else:
         return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
+
+
+
+import time
+import urllib.parse
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+from pyotp import TOTP
+from breeze_connect import BreezeConnect
+
+
+def add_breeze_connect(request, data):
+    print("Broker Name:", data.get('broker_name'))
+    print("Trading Platform:", data.get('trading_platform'))
+    print("Logging ID:", data.get('logging_id'))
+    print("Password:", data.get('password'))
+    print("TOTP Key:", data.get('totp_key'))
+    print("API Key:", data.get('api_key'))
+    print("App Name:", data.get('app_name'))
+
+    api_key = data.get("api_key")
+    app_name = data.get("app_name")
+    broker_name = data.get("broker_name")
+    password = data.get("password")
+    phone_number_val = data.get("phone_number_val")
+    secret_key = data.get("secret_key")
+    totp_key = data.get("totp_key")
+    trading_plateform = data.get("trading_platform")
+    logging_id = data.get("logging_id")
+    fa_pin = data.get('fa_pin', '')
+    advance_security = data.get('advanceTotpSecurity')
+    api_key = api_key  # Replace with your actual API key
+    api_secret = secret_key  # Replace with your actual API secret
+    totp_secret = totp_key # Replace with your actual TOTP secret
+    user_id = logging_id  # Replace with your actual user ID
+    user_password = password # Replace with your actual user password
+
+    try:
+
+
+        chrome_options = Options()
+        chrome_options.add_argument("--disable-web-security")
+        chrome_options.add_argument("--disable-gpu")
+        chrome_options.add_argument('--log-level=1')
+        chrome_options.add_argument('--headless')
+        chrome_options.add_argument('--no-sandbox')
+        chrome_options.add_argument('--disable-dev-shm-usage')
+        chrome_options.add_argument('--ignore-certificate-errors')
+        chrome_options.add_argument("--disable-blink-features=AutomationControlled")
+        chrome_options.add_argument(
+            "user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36")
+        chrome_options.add_argument("--enable-logging")
+
+        browser = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
+  
+
+
+
+
+
+
+        browser.get(f"https://api.icicidirect.com/apiuser/login?api_key={urllib.parse.quote_plus(api_key)}")
+        browser.implicitly_wait(5)
+
+        username = browser.find_element("xpath", '/html/body/form/div[2]/div/div/div[1]/div[2]/div/div[1]/input')
+        password_ele = browser.find_element("xpath", '/html/body/form/div[2]/div/div/div[1]/div[2]/div/div[3]/div/input')
+
+        username.send_keys(user_id)
+        password_ele.send_keys(user_password)
+
+        # Checkbox
+        browser.find_element("xpath", '/html/body/form/div[2]/div/div/div[1]/div[2]/div/div[4]/div/input').click()
+
+        # Click Login Button
+        browser.find_element("xpath", '/html/body/form/div[2]/div/div/div[1]/div[2]/div/div[5]/input[1]').click()
+
+        time.sleep(2)
+
+        pin = browser.find_element("xpath", '/html/body/form/div[2]/div/div/div[2]/div/div[2]/div[2]/div[3]/div/div[1]/input')
+        totp = TOTP(totp_secret)
+        token = totp.now()
+
+        pin.send_keys(token)
+
+        browser.find_element("xpath", '/html/body/form/div[2]/div/div/div[2]/div/div[2]/div[2]/div[4]/input[1]').click()
+
+        time.sleep(1)
+
+        temp_token = browser.current_url.split('apisession=')[1][:8]
+
+        # Save in Database or text File
+        print('temp_token', temp_token)
+        breeze = BreezeConnect(api_key=api_key)
+        breeze.generate_session(api_secret, session_token=temp_token)
+        print(breeze.get_funds())
+        print(breeze.get_customer_details(api_session=temp_token))
+
+        
+        print("logged IN ")
+        if Broker.objects.filter(user=request.user, logging_id=user_id).exists():
+            return JsonResponse({"message": "You have already logged in with this login ID !!"}, status=400)
+
+        # Save the data to the Broker model
+        broker = Broker.objects.create(
+            user=request.user,
+            broker_name="ICICI",
+            trading_platform=trading_plateform,
+            logging_id=user_id,
+            password=password,
+            totp_key=totp_key,
+            fa_pin=fa_pin,
+
+            api_key=api_key,
+            api_secret=api_secret,
+            app_name=app_name,
+            enctoken=temp_token,  # You may need to generate enctoken or adjust this field based on your requirements
+            advance_totp_security=advance_security.lower()== 'yes',
+            added_at=timezone.now(),
+            updated_at=timezone.now()
+        )
+
+
+
+
+        return JsonResponse({"message": "ICICI Direct broker added successfully"})
+            # Your further actions using Selenium after successful login can go here
+
+    except Exception as e:
+        print("Exception occurred:", e)
+    finally:
+        browser.quit()
+
+
+
+
 
 
 
@@ -17472,6 +17610,8 @@ def update_broker_api_main(request):
             return update_angel_one_broker(request, data)
         elif trading_platform == 'upstocks':
             return update_upstox_broker(request, data)
+        elif trading_platform=="icicidirectbreeze":
+            return update_breeze_connect(request,data)
         else:
             return JsonResponse({"message": "Unsupported trading platform"}, status=400)
 
@@ -17481,6 +17621,112 @@ def update_broker_api_main(request):
         return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
 
 
+
+
+def update_breeze_connect(request , data):
+    print("Broker Name:", data.get('broker_name'))
+    print("Trading Platform:", data.get('trading_platform'))
+    print("Logging ID:", data.get('logging_id'))
+    print("Password:", data.get('password'))
+    print("TOTP Key:", data.get('totp_key'))
+    print("API Key:", data.get('api_key'))
+    print("App Name:", data.get('app_name'))
+
+    api_key = data.get("api_key")
+    app_name = data.get("app_name")
+    broker_name = data.get("broker_name")
+    password = data.get("password")
+    phone_number_val = data.get("phone_number_val")
+    secret_key = data.get("secret_key")
+    totp_key = data.get("totp_key")
+    trading_plateform = data.get("trading_platform")
+    logging_id = data.get("logging_id")
+    fa_pin = data.get('fa_pin', '')
+    advance_security = data.get('advance_security')
+    api_key = api_key  # Replace with your actual API key
+    api_secret = secret_key  # Replace with your actual API secret
+    totp_secret = totp_key # Replace with your actual TOTP secret
+    user_id = logging_id  # Replace with your actual user ID
+    user_password = password # Replace with your actual user password
+
+    try:
+
+        chrome_options = Options()
+        chrome_options.add_argument("--disable-web-security")
+        chrome_options.add_argument("--disable-gpu")
+        chrome_options.add_argument('--log-level=1')
+        chrome_options.add_argument('--headless')
+        chrome_options.add_argument('--no-sandbox')
+        chrome_options.add_argument('--disable-dev-shm-usage')
+        chrome_options.add_argument('--ignore-certificate-errors')
+        chrome_options.add_argument("--disable-blink-features=AutomationControlled")
+        chrome_options.add_argument(
+            "user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36")
+        chrome_options.add_argument("--enable-logging")
+
+        browser = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
+  
+
+        browser.get(f"https://api.icicidirect.com/apiuser/login?api_key={urllib.parse.quote_plus(api_key)}")
+        browser.implicitly_wait(5)
+
+        username = browser.find_element("xpath", '/html/body/form/div[2]/div/div/div[1]/div[2]/div/div[1]/input')
+        password_ele = browser.find_element("xpath", '/html/body/form/div[2]/div/div/div[1]/div[2]/div/div[3]/div/input')
+
+        username.send_keys(user_id)
+        password_ele.send_keys(user_password)
+
+        # Checkbox
+        browser.find_element("xpath", '/html/body/form/div[2]/div/div/div[1]/div[2]/div/div[4]/div/input').click()
+
+        # Click Login Button
+        browser.find_element("xpath", '/html/body/form/div[2]/div/div/div[1]/div[2]/div/div[5]/input[1]').click()
+
+        time.sleep(2)
+
+        pin = browser.find_element("xpath", '/html/body/form/div[2]/div/div/div[2]/div/div[2]/div[2]/div[3]/div/div[1]/input')
+        totp = TOTP(totp_secret)
+        token = totp.now()
+
+        pin.send_keys(token)
+
+        browser.find_element("xpath", '/html/body/form/div[2]/div/div/div[2]/div/div[2]/div[2]/div[4]/input[1]').click()
+
+        time.sleep(1)
+
+        temp_token = browser.current_url.split('apisession=')[1][:8]
+
+        # Save in Database or text File
+        print('temp_token', temp_token)
+        breeze = BreezeConnect(api_key=api_key)
+        breeze.generate_session(api_secret, session_token=temp_token)
+        print(breeze.get_funds())
+        print(breeze.get_customer_details(api_session=temp_token))
+
+        
+        print("logged IN ")
+
+
+    # Save the data to the Broker model
+        broker = Broker.objects.get(logging_id=user_id, user=request.user)
+        broker.broker_name = "ICICI"
+        broker.trading_platform = trading_plateform
+        broker.password = password
+        broker.totp_key = totp_key
+        broker.fa_pin = fa_pin
+        
+        broker.api_key = api_key
+        broker.api_secret = api_secret
+        broker.app_name = app_name
+        broker.enctoken = temp_token  # This the temp token for ICICI login
+        broker.updated_at = timezone.now()
+        broker.advance_totp_security = advance_security
+        broker.save()
+        return JsonResponse({"message": "'ICICI' broker updated successfully"})
+    except Exception as e:
+        print("Exception occurred:", e)
+    finally:
+        browser.quit()
 
 
 
@@ -17705,7 +17951,7 @@ def add_upstox_broker(request ,data):
     app_name= data.get("app_name")
     broker_name= data.get("broker_name")
     password= data.get("password")
-    phone_number_val= data.get("phone_number_val")
+    phone_number_val= data.get("phone_number_val","")
     secret_key= data.get("secret_key")
     totp_key= data.get("totp_key")
     trading_plateform= data.get("trading_platform")
