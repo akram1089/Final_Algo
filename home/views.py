@@ -17578,18 +17578,18 @@ def update_upstox_broker(request, data):
         totp = TOTP(TOTP_KEY)
         token = totp.now()
 
-        time.sleep(1)  # Add a delay of 1 second
+        time.sleep(5)  # Add a delay of 1 second
 
         # Enter OTP
         otp_input_xpath.send_keys(token)
 
         # Click on the verify OTP button
-        verify_button = WebDriverWait(browser, 10).until(
+        verify_button = WebDriverWait(browser, 30).until(
             EC.element_to_be_clickable((By.XPATH, "/html/body/main/div/div[3]/div/div/div[2]/div[1]/div/div/div[2]/form/div[2]/button"))
         )
         verify_button.click()
 
-        time.sleep(1)  # Add a delay of 1 second
+        time.sleep(3)  # Add a delay of 1 second
 
         # Wait for 2FA input field to be visible
         twofa_input_xpath = WebDriverWait(browser, 10).until(
