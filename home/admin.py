@@ -2,6 +2,7 @@ from django.contrib import admin
 
 # Register your models here.
 from.models import User
+
 from.models import ChartData
 
 from.models import Top_Gainer
@@ -31,11 +32,13 @@ from.models import Book
 from.models import BookCart
 from.models import AdditionTask_main_time
 from.models import WhatsAppTemplate
+from.models import Wallet
 
 # from.models import StockListing
 
 
 
+admin.site.register(Wallet)
 admin.site.register(ChartData)
 
 

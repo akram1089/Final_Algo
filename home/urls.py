@@ -585,6 +585,11 @@ urlpatterns = [
      path('checkout', views.checkout, name='checkout'),
      path('payment_order', views.payment_order, name='payment_order'),
      path('privacy_policy', views.privacy_policy, name='privacy_policy'),
+     path('api/wallet/', views.get_wallet, name='get_wallet'),
+     path('api/save_payment/', views.save_payment_details, name='save_payment_details'),
+     path('user_login_history', views.user_login_history, name='user_login_history'),
+     path('logout_all_devices', views.logout_all_devices, name='logout_all_devices'),
+
 
 
 

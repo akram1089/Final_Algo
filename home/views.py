@@ -17508,7 +17508,21 @@ def add_breeze_connect(request, data):
   
 
 
+        chrome_options = Options()
+        chrome_options.add_argument("--disable-web-security")
+        chrome_options.add_argument("--disable-gpu")
+        chrome_options.add_argument('--log-level=1')
+        chrome_options.add_argument('--headless')
+        chrome_options.add_argument('--no-sandbox')
+        chrome_options.add_argument('--disable-dev-shm-usage')
+        chrome_options.add_argument('--ignore-certificate-errors')
+        chrome_options.add_argument("--disable-blink-features=AutomationControlled")
+        chrome_options.add_argument(
+            "user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36")
+        chrome_options.add_argument("--enable-logging")
 
+        browser = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
+  
 
 
 
@@ -18999,6 +19013,7 @@ def quote_data_from_broker(request):
     broker_instance_zerodha = Broker.objects.filter(user=user, broker_name="zerodha", active_api=True).first()
     broker_instance_angelone = Broker.objects.filter(user=user, broker_name="angelone", active_api=True).first()
     broker_instance_upstocks = Broker.objects.filter(user=user, broker_name="upstocks", active_api=True).first()
+    broker_instance_icici = Broker.objects.filter(user=user, broker_name="ICICI", active_api=True).first()
 
     if request.method == 'POST':
         data = json.loads(request.body)
@@ -19136,7 +19151,22 @@ def quote_data_from_broker(request):
                 )
             # print(response_data)
             return JsonResponse(response_data)
-
+        elif broker_instance_icici:
+            data = json.loads(request.body)
+            trading_quotes = data.get('trading_quote')
+            response_data = get_icici_quote(
+                    trading_quotes=trading_quotes,
+                    logging_id=broker_instance_upstocks.logging_id,
+                    password=broker_instance_upstocks.password,
+                    phone_number=broker_instance_upstocks.phone_number,
+                    totp_key=broker_instance_upstocks.totp_key,
+                    api_key=broker_instance_upstocks.api_key,
+                    api_secret=broker_instance_upstocks.api_secret,
+                    broker_instance_upstocks=broker_instance_upstocks,
+                    access_token=broker_instance_upstocks.enctoken,
+                )
+            # print(response_data)
+            return JsonResponse(response_data)
            
 
       
@@ -19144,6 +19174,22 @@ def quote_data_from_broker(request):
             return JsonResponse({'status': 'error', 'message': 'No active API for the user'})
     else:
         return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
+
+
+
+
+def get_icici_quote(trading_quotes, logging_id, password, phone_number, totp_key, api_key, api_secret, broker_instance_upstocks, access_token):
+    pass
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -19270,7 +19316,6 @@ def run_selenium(API_KEY, MOBILE_NO, TOTP_KEY, PIN, RURL):
     # browser.save_screenshot("screenshot_final.png")
 
     return code
-
 
 
 
@@ -21299,3 +21344,104 @@ def privacy_policy(request):
 
 
 
+
+from .models import Wallet
+
+@login_required
+def get_wallet(request):
+    # Get the wallet for the logged-in user
+    wallet = Wallet.objects.get(user=request.user)
+    # Create a dictionary with wallet details
+    wallet_data = {
+        'balance': wallet.balance,
+      
+    }
+    # Return JSON response
+    return JsonResponse(wallet_data)
+
+
+
+
+
+from decimal import Decimal
+@csrf_exempt
+@login_required
+def save_payment_details(request):
+    if request.method == 'POST':
+        # Get payment details and amount from POST data
+        payment_id = request.POST.get('payment_id')
+        order_id = request.POST.get('order_id')
+        signature = request.POST.get('signature')
+        amount = Decimal(request.POST.get('amount'))  # Convert to float
+
+        # Get or create the wallet for the logged-in user
+        wallet, created = Wallet.objects.get_or_create(user=request.user)
+
+        # Update the balance in the wallet
+        wallet.balance += amount
+        # Save payment details
+        wallet.razorpay_payment_id = payment_id
+        wallet.razorpay_order_id = order_id
+        wallet.razorpay_signature = signature
+        wallet.save()
+
+        return JsonResponse({'message': 'Payment details saved successfully.'})
+    else:
+        return JsonResponse({'error': 'Invalid request method.'}, status=400)
+    
+
+
+
+
+
+from .models import UserLoginHistory
+
+def user_login_history(request):
+    user_login_history = UserLoginHistory.objects.filter(user=request.user, action="Login").order_by('-login_time')[:10]
+    
+    # Convert login history queryset to JSON format
+    login_history_data = []
+    for entry in user_login_history:
+        login_history_data.append({
+            'ip_address': entry.ip_address,
+            'login_time': entry.login_time,  # Format login time
+            'browser': entry.browser,
+            'browser_version': entry.browser_version,
+            'origin': entry.origin
+        })
+    
+    return JsonResponse(login_history_data, safe=False)
+
+
+
+from django.contrib.auth.signals import user_logged_in
+from django.dispatch import receiver
+from .models import UserSession
+from django.contrib.auth import logout
+from django.contrib.sessions.models import Session
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+
+@receiver(user_logged_in)
+def capture_session_key(sender, request, user, **kwargs):
+    # Store the session key associated with the login session
+    UserSession.objects.create(user=user, session_key=request.session.session_key)
+
+@csrf_exempt
+def logout_all_devices(request):
+    current_session_key = request.session.session_key
+    
+    # Get the user's active sessions excluding the current session
+    user_sessions = UserSession.objects.filter(user=request.user).exclude(session_key=current_session_key)
+    
+    # Iterate through the sessions and delete them, except for the current session
+    for user_session in user_sessions:
+        try:
+            # Find and delete the session associated with the session key
+            session = Session.objects.get(pk=user_session.session_key)
+            session.delete()
+        except Session.DoesNotExist:
+            pass  # Handle session not found
+    
+    # Return response without logging out the current device
+    return JsonResponse({'message': 'Logged out from all devices except current device'})

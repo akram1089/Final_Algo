@@ -478,3 +478,40 @@ class WhatsAppTemplate(models.Model):
     def __str__(self):
         return self.title
 
+
+
+
+class Wallet(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    balance = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    razorpay_payment_id = models.CharField(max_length=100, blank=True, null=True)
+    razorpay_order_id = models.CharField(max_length=100, blank=True, null=True)
+    razorpay_signature = models.CharField(max_length=100, blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    last_updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f'Wallet of {self.user.get_full_name()}'
+    
+
+
+
+
+
+
+
+
+class UserLoginHistory(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    login_time = models.DateTimeField(auto_now_add=True)
+    ip_address = models.CharField(max_length=100)
+    action = models.CharField(max_length=10)
+    browser = models.CharField(max_length=100)  # Add browser field
+    browser_version = models.CharField(max_length=100) 
+    origin = models.CharField(max_length=100)
+    def __str__(self):
+        return f"{self.user.username} - {self.login_time}"
+
+class UserSession(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    session_key = models.CharField(max_length=40, unique=True)

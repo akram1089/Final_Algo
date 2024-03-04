@@ -68,6 +68,17 @@
         cursor: pointer;
     }
 
+    .login_details{
+        /* box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px; */
+        padding: 20px;
+    }
+
+    .logout_button:hover {
+    color: #fff;
+    background-color: #bb2d3b;
+    border-color: #b02a37;
+}
+
 </style>
 <section>
     <div class="user_account_details p-5">
@@ -97,51 +108,74 @@
             </div>
 
             <div class="col-lg-9 users_data">
-                <div class="personal_information">
-                    <h5>Account Details</h5>
-                    <!-- <span>Profile information</span> -->
-                    <div class="user_field mt-4">
-                        <div class="row">
-                            <div class="col-lg-12">
-                                <div class="mb-3">
-                                    <label for="exampleFormControlInput1" class="form-label">Full Name</label>
-                                    <input type="text" class="form-control" id="full_name" placeholder="">
+                <div class="row personal_information">
+                    <div class="col-lg-6">
+                        <div class="">
+                            <h5>Account Details</h5>
+                            <!-- <span>Profile information</span> -->
+                            <div class="user_field mt-4">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <div class="mb-3">
+                                            <label for="exampleFormControlInput1" class="form-label">Full Name</label>
+                                            <input type="text" class="form-control" id="full_name" placeholder="">
+                                        </div>
+                                    </div>
                                 </div>
+                                <div class="row mt-3">
+                                    <div class="col-lg-6">
+                                        <div class="mb-3">
+                                            <label for="exampleFormControlInput1" class="form-label">Email address</label>
+                                            <input type="email" class="form-control" id="email" placeholder="name@example.com">
+                                        </div>
+        
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="mb-3">
+                                            <label for="exampleFormControlInput1" class="form-label">Mobile Number</label>
+                                            <input type="text" class="form-control" id="mobile_num" placeholder="">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mt-3">
+                                    <div class="col-lg-6">
+                                        <div class="mb-3">
+                                            <label for="exampleFormControlInput1" class="form-label">State</label>
+                                            <input type="text" class="form-control" id="state" placeholder="">
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="mb-3">
+                                            <label for="exampleFormControlInput1" class="form-label">Status</label>
+                                            <input type="text" class="form-control" id="status" placeholder="">
+                                        </div>
+                                    </div>
+                                </div>
+        
+                                <button class="profile_button">Update</button>
                             </div>
                         </div>
-                        <div class="row mt-3">
-                            <div class="col-lg-6">
-                                <div class="mb-3">
-                                    <label for="exampleFormControlInput1" class="form-label">Email address</label>
-                                    <input type="email" class="form-control" id="email" placeholder="name@example.com">
-                                </div>
-
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="login_details">
+                            <div class="d-flex justify-content-between align-items-center">
+                              <h5>Login History</h5>
+                              <button class="btn btn-danger logout_button">logout everywhere</button>
                             </div>
-                            <div class="col-lg-6">
-                                <div class="mb-3">
-                                    <label for="exampleFormControlInput1" class="form-label">Mobile Number</label>
-                                    <input type="text" class="form-control" id="mobile_num" placeholder="">
+                            <div id="login-history" class="d-flex justify-content-between" style="margin-top: 20px;">
+                                <div>
+                                   <h5 style="color: #5e5873; font-size: 1.1rem !important;">IP Addresses</h5>
+                                   <div class="ip_address"></div>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="row mt-3">
-                            <div class="col-lg-6">
-                                <div class="mb-3">
-                                    <label for="exampleFormControlInput1" class="form-label">State</label>
-                                    <input type="text" class="form-control" id="state" placeholder="">
+                                <div>
+                                   <h5 style="color: #5e5873; font-size: 1.1rem !important;">Time</h5>
+                                   <div class="time_duration"></div>
                                 </div>
                             </div>
-                            <div class="col-lg-6">
-                                <div class="mb-3">
-                                    <label for="exampleFormControlInput1" class="form-label">Status</label>
-                                    <input type="text" class="form-control" id="status" placeholder="">
-                                </div>
-                            </div>
-                        </div>
-
-                        <button class="profile_button">Update</button>
+                          </div>
                     </div>
                 </div>
+               
 
                 <div class="billing_payments" style="display: none;">
                     <h1>Billing</h1>
@@ -437,6 +471,9 @@
                 </div>
             </div>
         </div>
+        <div class="row mt-4">
+           
+        </div>
     </div>
 </section>
 
@@ -594,7 +631,94 @@
             }
         })
 
+        function get_ip_user() {
+            
+            $.ajax({
+              url: '/user_login_history',
+              type: 'GET',
+              success: function(data) {
+                console.log(data)
+              // Render login history data dynamically
+              $('.ip_address').empty();
+             $('.time_duration').empty();
+              data.forEach(function(history) {
+                // var loginTime = new Date(history.login_time);
+                // var formattedTime = loginTime.toLocaleString();
+                const loginTime = getHumanReadableTime(history.login_time);
+                var browserIcon = '';
+                if (history.browser.toLowerCase() === 'chrome') {
+                    browserIcon = '<img src="static/img/browser_logos/Google_Chrome_icon_(February_2022).svg.png" alt="Chrome" width="30px">';
+                } else if (history.browser.toLowerCase() === 'edge') {
+                    browserIcon = '<img src="static/img/browser_logos/Microsoft_Edge_logo_(2019).png" alt="Edge" width="30px">';
+                } else {
+                    browserIcon = '<span>N/A</span>';
+                }
+
+                var col = `<div class="boxes" style="margin: 23px 0;">
+                              <div>
+                                ${browserIcon} 
+                                <span class="ms-3" style="color: #5e5873 !important; font-size: 15px !important; font-weight: 500 !important;">${history.ip_address}- ${history.origin}</span>
+                              </div>
+                           </div>`
+                var col_two = `<div class="duration" style="margin: 25px 0; color: #5e5873 !important; font-size: 15px !important;"> ${loginTime}</div> `
+
+                 $('.ip_address').append(col);
+                 $('.time_duration').append(col_two);
+              });
+           },
+             error: function(xhr, status, error) {
+             console.error('Error fetching login history:', error);
+           }
+             });
+        }
+        get_ip_user() 
        
+        $(".logout_button").click(function(){
+            logoutAllDevices()
+        })
+
+
+        function getHumanReadableTime(loginTime) {
+    const now = new Date();
+    const loginDate = new Date(loginTime);
+    const timeDiff = now - loginDate;
+    
+    // Convert milliseconds to seconds, minutes, hours, days, and months
+    const seconds = Math.floor(timeDiff / 1000);
+    const minutes = Math.floor(seconds / 60);
+    const hours = Math.floor(minutes / 60);
+    const days = Math.floor(hours / 24);
+    const months = Math.floor(days / 30);
+    
+    // Return a human-readable string based on the time difference
+    if (months > 0) {
+        return months === 1 ? '1 month ago' : `${months} months ago`;
+    } else if (days > 0) {
+        return days === 1 ? '1 day ago' : `${days} days ago`;
+    } else if (hours > 0) {
+        return hours === 1 ? '1 hour ago' : `${hours} hours ago`;
+    } else if (minutes > 0) {
+        return minutes === 1 ? '1 minute ago' : `${minutes} minutes ago`;
+    } else {
+        return 'Just now';
+    }
+}
+
+        function logoutAllDevices() {
+    $.ajax({
+        url: '/logout_all_devices',
+        type: 'POST',
+        success: function(data) {
+            console.log(data.message);
+           
+           
+            // Redirect to login page or perform other actions after logout
+        },
+        error: function(xhr, status, error) {
+            console.error('Error logging out from all devices:', error);
+        }
+    });
+}
 
     });
 </script>

@@ -197,14 +197,42 @@ font-size: 23px;
      width: 280px !important;
      justify-content: center !important;
     }
+    .dynamic_input_field{
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        margin-top: 19px;
+    }
+    table.dataTable.display>tbody>tr.odd>* {
+        box-shadow: none !important;
+    }
+    table.dataTable.display>tbody>tr.even>* {
+        box-shadow: none !important;
+    }
+
+    table.dataTable.display>tbody>tr.odd>.sorting_1, table.dataTable.order-column.stripe>tbody>tr.odd>.sorting_1 {
+        box-shadow: none !important;
+    }
+    table.dataTable.display>tbody>tr.even>.sorting_1, table.dataTable.order-column.stripe>tbody>tr.even>.sorting_1 {
+        box-shadow: none !important;
+    }
+    .main_all_broker_table table thead tr th{
+        border-right: .1px solid white !important;
+    }
+    .main_all_broker_table table tbody tr{
+        border-bottom: 1px solid #80808000 !important;
+    }
+    .api_key p{
+        width: 300px !important;
+    }
 </style>
-<div class="main_broker_title mt-2">
+<div class="main_broker_title mt-2 ms-3">
     <h5>   Broker Details</h5>
 </div>
 <div class="main_all_broker_table table-responsive mt-3">
 
 
-    <table id="api_config_table" class="display table  table-bordered" style="width: -webkit-fill-available;">
+    <table id="api_config_table" class="display table cell-border" style="width: -webkit-fill-available;">
         <thead style="white-space: nowrap;">
             <tr>
                 <th>Broker</th>
@@ -226,88 +254,125 @@ font-size: 23px;
 </div>
 <script>
     $(document).ready(function() {
+        var sensitiveDataSpan;
 
         function fetchDataAndAppendToTable() {
             $.ajax({
-                url: 'get_api_config_data', // Replace with your backend endpoint URL
+                url: 'get_api_config_data',
                 type: 'GET',
                 dataType: 'json',
                 success: function(data) {
                     // Clear existing table rows
-                    var broker_detail = data.brokers
-                    console.log(data.brokers)
+                    var broker_detail = data.brokers;
+                    console.log(data.brokers);
                     $('#api_config_table tbody').empty();
                     // Append new rows with fetched data
                     data.brokers.forEach(function(broker) {
-                        var addedAt = new Date(broker.added_at); // Parse the timestamp
-                var dateString = addedAt.toLocaleDateString(); // Get the date portion
-                var timeString = addedAt.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }); // Get the time portion without seconds
-                var dateTimeString = dateString +' '+ timeString; // Combine date and time
+                        var addedAt = new Date(broker.added_at);
+                        var dateString = addedAt.toLocaleDateString();
+                        var timeString = addedAt.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                        var dateTimeString = dateString +' '+ timeString;
                         var status = broker.active_api ? 'Active' : 'Inactive';
                         var statusColor = broker.active_api ? 'text-success' : 'text-danger';
-                        var adv_totp = broker.advance_totp_security ? "Active" : "Inactive"
+                        var adv_totp = broker.advance_totp_security ? "Active" : "Inactive";
                         var adv_totp_color = broker.advance_totp_security ? 'text-success' : 'text-danger';
-
+        
                         function handleEmptyValue(value) {
-                            if (!value) return '-'; // Return placeholder if value is empty or null
-                        
-                            // Capitalize the first letter of the value
+                            if (!value) return '-';
                             value = value.charAt(0).toUpperCase() + value.slice(1);
-                        
-                            // Handle specific cases like "upstocks" to "upstox"
                             if (value.toLowerCase() === 'upstocks') {
                                 value = 'Upstox';
-                            }
-                            else if (value.toLowerCase() === 'angelone') {
+                            } else if (value.toLowerCase() === 'angelone') {
                                 value = 'Angel One';
                             } else if (value.toLowerCase() === 'zerodha') {
                                 value = 'Zerodha';
                             }
-                        
                             return value;
                         }
-
+        
                         function generateCellContent(value) {
                             if (value && value !== '-') {
-                                return `<div class="d-flex align-items-center"> <span class="sensitive-data" style="font-size: 12px;" data-original-value="${value}">************</span><i class="bi bi-eye-slash ms-2 show-data-icon"></i></div>`;
+                                return `<div class="d-flex align-items-center"> <input type="password" class="form-control sensitive-data" style="font-size: 12px; all: unset !important;" value="${value}"><i class="bi bi-eye-slash ms-2 show-data-icon"></i></div>`;
                             } else {
                                 return '-';
                             }
                         }
-
+        
                         var row = `<tr>
                             <td>${handleEmptyValue(broker.broker_name)}</td>
                             <td>${handleEmptyValue(broker.app_name)}</td>
                             <td>${handleEmptyValue(broker.phone_number)}</td>
                             <td>${handleEmptyValue(broker.logging_id)}</td>
                             <td>${handleEmptyValue(broker.password)}</td>
-                            <td><p> ${handleEmptyValue(broker.api_key)}</p></td>
+                            <td class="api_key"><p> ${handleEmptyValue(broker.api_key)}</p></td>
                             <td>${handleEmptyValue(broker.api_secret)}</td>
-                            <td id="totp_key">${generateCellContent(handleEmptyValue(broker.totp_key))}</td>
+                            <td id="totp_key">
+                                ${generateCellContent(handleEmptyValue(broker.totp_key))}
+                                <input type="hidden" class="form-control mt-2 hidden-input" value=${broker.id}>
+                                 <div class="dynamic_input_field"></div>
+                            </td>
+                            
                             <td class="${statusColor}">${status}</td>
                             <td class="${adv_totp_color}">${adv_totp}</td>
                             <td>${dateTimeString}</td>
-                          </tr>`;
-                        
+                        </tr>`;
+                                
                         $('#api_config_table tbody').append(row);
                     });
                     // Initialize DataTable after appending data
                     $('#api_config_table').DataTable({
                         "dom": '<"top"lf>rt<"bottom"ip><"clear">',
-                    "language": {
-                      "search": '<div class="custom-search" style="position: relative"><i class="bi bi-search" style="position: absolute;right: 7px;top: 10px;"></i></i><input class="form-control" type="search" placeholder="Search" aria-controls="volume_shocker_table"></div>'
-                    }
+                        "language": {
+                            "search": '<div class="custom-search" style="position: relative"><i class="bi bi-search" style="position: absolute;right: 7px;top: 10px;"></i></i><input class="form-control" type="search" placeholder="Search" aria-controls="volume_shocker_table"></div>'
+                        }
                     });
                     $('#api_config_table_filter input:eq(1)').hide();
                     $('#api_config_table_filter input[type="search"]').attr('placeholder', 'Search...');
                     $('#api_config_table').wrap('<div class="parent_table"></div>');
                     $('#api_config_table_length,#api_config_table_filter').wrapAll('<div class="parent_search_length"></div>');
-
+        
+                    // Event listener for toggling sensitive data visibility
                     $('.show-data-icon').click(function() {
-                        var sensitiveDataSpan = $(this).prev('.sensitive-data');
-                        var isHidden = sensitiveDataSpan.text() === '************';
-                        sensitiveDataSpan.text(isHidden ? sensitiveDataSpan.data('original-value') : '************');
-                        $(this).toggleClass('bi-eye bi-eye-slash');
+    var eyeIcon = $(this);
+    sensitiveDataSpan = $(this).prev('.sensitive-data');
+    var isHidden = sensitiveDataSpan.attr('type') === 'password';
+
+    $(this).toggleClass('bi-eye bi-eye-slash');
+    if (isHidden) {
+        // Remove any existing input fields
+        $('.dynamic_input_field').empty();
+
+        // Create an input field
+        var inputField = $('<div class="totp_input_fields d-flex align-items-center"> <label class="totp_label">Enter TOTP : </label> <div> <input type="text" class="form-control totp-input" style="width: 140px !important; box-shadow: none !important;"></div> <p class="varify_totp" style="cursor: pointer; color: blue; margin-bottom: 0 !important;">Verify</p>  <i class="bx bx-x delete_topt_input" style="cursor:pointer;"></i> </div>');
+
+        var td = eyeIcon.closest('td');
+        // Append the input field to the container
+        td.append(inputField);
+        td.closest('tr').find('.varify_totp').show();
+
+        inputField.find('.totp-input').focus();
+    } else {
+        // Change input type from text to password
+        sensitiveDataSpan.attr('type', 'password');
+
+        // Remove input field
+        $(this).closest('.totp_input_fields').remove();
+    }
+
+    // Event listener for delete icon
+    $(document).on('click', '.delete_topt_input', function() {
+        $(this).closest('.totp_input_fields').remove();
+    });
+});
+
+        
+                    // Event listener for verifying TOTP
+                    $(document).on('click', '.varify_totp', function() {
+                        // Get the values from the input fields
+                        var clickedElement = $(this);
+                        var totpValue = clickedElement.closest('td').find('.totp-input').val();
+                        var brokerId = clickedElement.closest('td').find('.hidden-input').val();
+                        varify_totp_fn(totpValue, brokerId, clickedElement);
                     });
                 },
                 error: function(xhr, status, error) {
@@ -315,9 +380,54 @@ font-size: 23px;
                 }
             });
         }
-
+        
         // Call the function to fetch data and append it to the table
         fetchDataAndAppendToTable();
+        
+        // Function to verify TOTP
+        function varify_totp_fn(totpValue, brokerId, clickedElement) {
+            console.log(totpValue);
+            console.log(brokerId);
+            $.ajax({
+                url: 'verify_totp_to_show_key',
+                method: 'POST',
+                data: {
+                    'totp_value': totpValue,
+                    'broker_id': brokerId
+                },
+                success: function(response) {
+                    
+                    console.log(response);
+                    if(response.otp_verify === "failed"){
+                        toastr.error('Incorrect OTP');
+                    }
+                    else{
+                        clickedElement.closest('.totp_input_fields').remove();
+                        clickedElement.closest('td').find('.totp_label').hide();
+                        clickedElement.closest('td').find('.delete_topt_input').hide();
+                        clickedElement.closest('td').find('.totp-input').hide();
+                        clickedElement.closest('td').find('.varify_totp').hide();
+                        console.log("Dynamic input field content after emptying:", clickedElement.closest('td').find('.dynamic_input_field').html());
+                        console.log("Verify TOTP button visibility after hiding:", clickedElement.closest('td').find('.varify_totp').is(':visible'));
+                
+                        sensitiveDataSpan.attr('type', 'text');
+
+                    }
+            
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error verifying TOTP:', error);
+                },
+                // complete: function() {
+                //     // Set input type back to password after completion, ensuring it's always hidden by default
+                //     setTimeout(function() {
+                //         sensitiveDataSpan.attr('type', 'password');
+                //     }, 8000); // You can adjust the delay (in milliseconds) according to your needs
+                // }
+            });
+        }
+        
+       
     });
 </script>
 
