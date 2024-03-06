@@ -604,6 +604,10 @@ border: 1px solid #4399eb !important;
   background-color: rgba(226, 226, 226, 0.197) !important; /* Use rgba for transparency */
 }
 
+.main_history_legs:nth-of-type(2n) {
+  background-color: rgba(226, 226, 226, 0.197) !important; /* Use rgba for transparency */
+}
+
 
   .table-striped-custom>tbody>tr:nth-child(2n)>td,
   .table-striped-custom>tbody>tr:nth-child(2n)>th {
@@ -1457,10 +1461,11 @@ box-shadow: 0 3px 16px 0 rgba(35,47,62,.15);
 
 
   .history_table {
-    display: flex;
+    /* display: flex; */
     justify-content: center;
-    height: 400px;
+    height: 500px;
     align-items: center;
+    overflow: auto;
 
   }
 
@@ -1968,6 +1973,13 @@ box-shadow: 0 3px 16px 0 rgba(35,47,62,.15);
 
 
       <style>
+                 .main_history_legs{
+                  font-size: 14px;
+    font-weight: 600;
+    padding: 11px 0;
+    border-bottom: 1px solid #e2e2e2;
+    white-space: nowrap;
+                    }
         .zerodha_add_api {
           display: flex;
           width: 11rem;
@@ -4981,7 +4993,7 @@ color: #c50000 !important;
 
        
 
-                    <input type="checkbox" id="update_icicidirectbreeze_advance_security" class="sc-gJwTLC ikxBAC" value="no">
+                    <input type="checkbox" id="update_icicidirectbreeze_advance_security" class="sc-gJwTLC ikxBAC" value="no" data-gtm-form-interact-field-id="0">
                     <label class="form-check-label" for="update_icicidirectbreeze_advance_security_label" id="update_icicidirectbreeze_advance_security_label">No</label>
                   </div>
   
@@ -6302,6 +6314,11 @@ font-weight: 100 !important ;
 }
   </style>
   <style>
+
+    .no-history-message{
+      display:flex;
+      justify-content:center
+    }
     .main_iron_fly_atm_indicator,
     .main_short_long_straddle_atm_indicator,
     .main_iron_fly_atm_indicator,
@@ -10688,14 +10705,7 @@ margin-bottom: 38px;
                               var currentMinute = parsedDate.getMinutes();
 
                               // Check if the expiry date is today and if it's after 3:30 PM
-                              if (
-                                  parsedDate.getTime() === todayAt330PM.getTime() || // Check if it's today
-                                  parsedDate.getTime() < todayAt330PM.getTime() // Check if it's before today at 3:30 PM
-                              ) {
-                                  // If it's today and after 3:30 PM or before today at 3:30 PM, skip adding this expiry date
-                                  return; // Skip to the next iteration of forEach
-                              }
-
+             
 
                           var month = parsedDate.getMonth() + 1; // Month is zero-based, so add 1
                           var day = parsedDate.getDate();
@@ -10945,8 +10955,8 @@ margin-bottom: 38px;
               <p class="greek_table">Greeks</p>
               <p class="oi_chart">OI Chart</p>
               <p class="adjustment">Adjustment </p>
-              <p class="targets">Target</p>
-              <p class="stoploss">Stoploss</p>
+              <p class="targets" style="display: none;">Target</p>
+              <p class="stoploss" style="display: none;">Stoploss</p>
               <p class="alerts">Alert</p>
               <p class="history">History</p>
             </div>
@@ -11540,11 +11550,23 @@ margin-bottom: 38px;
       </table>
 
 
-
+<style>
+  .main_history_table_inner{
+    padding: 0 8px;
+  }
+</style>
 
     </div>
     <div class="history_table">
-      <p class="text-danger" style="border-bottom:1px solid">History is under developements</p>
+      <div class="main_clear_history">
+
+        <Button class="clearHistory">Clear History</Button>
+    </div>
+
+      <div class="main_history_table_inner">
+
+      </div>
+
     </div>
 
   </div>
@@ -12126,6 +12148,21 @@ margin-bottom: 38px;
 
   .liquidity_text {
     font-size: 13px !important;
+  }
+
+  .clearHistory{
+    display: none;
+    color: red;
+    border: 1px solid;
+    background: transparent;
+    border-radius: 5px;
+    font-size: 13px;
+    cursor: pointer;
+  }
+  .main_clear_history{
+    display: flex;
+    justify-content: flex-end;
+    padding: 2px 0;
   }
 </style>
 </div>
@@ -16170,10 +16207,13 @@ $("#long_straddle_decrement").click(function () {
 
 
     function calculate_data() {
+
+      console.log('Multple time called');
+      
       var selectedOption = $(".stockDropdown").val();
       $("#spinner").show();
       // //////console.log("ca=" + selectedOption);
-      loadExpiryData(selectedOption,"calc");
+      // loadExpiryData(selectedOption,"calc");
 
       var All_positions = $(".main_position").find(
         ".main_add_position_actions"
@@ -16247,8 +16287,141 @@ $("#long_straddle_decrement").click(function () {
     }
 
 
+    $(".clearHistory").click(function () {
+                localStorage.removeItem('all_history_positions');
+
+                // Clear the displayed history
+                getHistory()
+            });
+
+    function getHistory() {
+                var tradingPositions = JSON.parse(localStorage.getItem('all_history_positions'));
+
+                // Display data in the custom format
+                var tradingPositionsDiv = $(".main_history_table_inner")
+                if (tradingPositionsDiv) {
+                  tradingPositionsDiv.empty()
+
+                    if (tradingPositions && tradingPositions.length > 0) {
+                        $(".clearHistory").show();
+                        tradingPositions.reverse(); // Reverse the array to display from latest to oldest
+
+                        function formatDate(dateString) {
+                          const months = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
+                          const [year, month, day] = dateString.split('-');
+                          const monthAbbreviation = months[parseInt(month) - 1];
+                          return `${day}${monthAbbreviation}${year}`;
+                      }function formatDatetime(datetimeString) {
+                          const date = new Date(datetimeString);
+                          const day = String(date.getDate()).padStart(2, '0');
+                          const month = String(date.getMonth() + 1).padStart(2, '0');
+                          const year = date.getFullYear();
+                          const hours = String(date.getHours()).padStart(2, '0');
+                          const minutes = String(date.getMinutes()).padStart(2, '0');
+                          const seconds = String(date.getSeconds()).padStart(2, '0');
+                          const meridiem = hours >= 12 ? 'PM' : 'AM';
+                          const formattedHours = hours % 12 || 12;
+
+                          return `${day}-${month}-${year}, ${formattedHours}:${minutes}:${seconds} ${meridiem}`;
+                      }
+
+                        tradingPositions.forEach(function (position,indexHistory) {
+                            var buy_sell_indicator = position.action === "Short" ? "S" : "B";
+                            console.log(
+                              buy_sell_indicator
+                            );
+                            var buy_sell_indicator_text = position.action === "Short" ? "bg_indicator_sell" : "bg_indicator_buy";
+                            var active_inactive = position.active_state === false ? "bg_indicator_sell" : "bg_indicator_buy";
+                            var active_delete_btn = position.active_state === false ? "d-block" : "d-none";
+                            var active_inactive_text = position.active_state === true ? "Active" : "Inactive";
+                            var active_inactive_main_text = position.active_state === false ? "color: gray;" : "color: #444444;";
+
+                            var main_history_positions = `
+                    <div class="d-flex justify-content-between main_history_legs" style="${active_inactive_main_text}">
+                        <div class="inner_history_left d-flex gap-1">
+                            <div class="${buy_sell_indicator_text}">${buy_sell_indicator}</div>
+                            <div class="d-flex ">
+                                <div>${position.quantity}x</div>
+                                <div class="ms-1">${position.selectedOption}${formatDate(position.expiryDate)}  ${position.strikePrice} ${position.optionSide === "Put" ? "PE" : position.optionSide === "Call" ? "CE" : "FUTURE"}</div>
+                                <div>- ₹ ${position.ltpValue}</div>
+                            </div>
+                        </div>
+                        <div class="inner_history_right d-flex gap-2">
+                            <div class="${active_inactive} rounded-pill"> ${active_inactive_text} </div>
+                            <div>${formatDatetime(position.created_datetime)}</div>
+                            <img src="{% static "img/delete_edit_btns/delete.png" %}" width="19px" class='cursor-pointer ${active_delete_btn} delete-button dlt-history-btn' id="delete-history-btn" data-history-id="${indexHistory}"></i>
+              
+
+                        </div>
+                    </div>
+              
+                `;
+
+                            tradingPositionsDiv.append(main_history_positions);
+                        });
+                    } else {
+                        $(".clearHistory").hide();
+                        var noHistoryDiv = document.createElement('div');
+                        noHistoryDiv.className = 'no-history-message';
+                        noHistoryDiv.textContent = 'No History Available';
+                        tradingPositionsDiv.append(noHistoryDiv);
+                    }
+                    $('.dlt-history-btn').click(function () {
+                        var historyId = $(this).data('history-id');
+
+                        console.log('historyId',historyId);
+                        
+                        deleteHistoryItem(historyId); // Call the delete function with the historyId
+                    });
+
+                    function deleteHistoryItem(historyId) {
+    var tradingPositions = JSON.parse(localStorage.getItem('all_history_positions'));
+    if (tradingPositions) {
+        // Ensure historyId is a valid index
+        if (historyId >= 0 && historyId < tradingPositions.length) {
+            // Adjust index for reversed array
+            var originalIndex = tradingPositions.length - 1 - historyId;
+            tradingPositions.splice(originalIndex, 1);
+            localStorage.setItem('all_history_positions', JSON.stringify(tradingPositions));
+            getHistory(); // Refresh the history display
+        } else {
+            console.error("Invalid historyId:", historyId);
+        }
+    }
+}
+
+
+
+                }
+            }
 
     function get_position_data_from_django(allData) {
+
+
+
+   // Retrieve existing data from local storage or initialize as an empty array
+   let allData_new = JSON.parse(localStorage.getItem('all_history_positions')) || [];
+
+// Set active state to false for existing data
+allData_new.forEach(data => {
+    data.active_state = false;
+});
+
+// Get current date and time
+let currentDate = new Date().toISOString();
+
+// Set active state for new data, add datetime key, and add it to the existing data
+allData.forEach(newData => {
+    newData.active_state = true;
+    newData.created_datetime = currentDate;
+    allData_new.push(newData);
+});
+
+// Push the combined data into local storage
+localStorage.setItem('all_history_positions', JSON.stringify(allData_new));
+
+getHistory(); // Assuming getHistory is a defined function
+      
       $("#spinner").show();
       $.ajax({
         type: "POST",
@@ -20143,7 +20316,7 @@ $(".right_side_top_strategies ,#buid_custom_strategy_btn,.oi_option,.greeks_opti
               var strikeSelect = $(".strike_price_input");
 
               // expirySelect.empty();
-              strikeSelect.empty();
+       
               var closest_strike_price = $("#closest_strike_price");
               strikeSelect.find("option").each(function () {
                 // Log the value of the current option
@@ -20265,8 +20438,8 @@ $(".right_side_top_strategies ,#buid_custom_strategy_btn,.oi_option,.greeks_opti
 
 
                 
-              
-              $("#short_synthetic_modal_btn").click(function () {
+      
+                $(document).off("click", "#short_synthetic_modal_btn").on("click", "#short_synthetic_modal_btn", function () {
                 $("#call_iron_fly").removeClass("option_strategies_active");
                 $("#put_iron_fly").removeClass("option_strategies_active");
 $("#long_straddle").removeClass("option_strategies_active");
@@ -20424,8 +20597,8 @@ $("#long_straddle").removeClass("option_strategies_active");
 
 
 
-              
-              $("#long_synthetic_modal_btn").click(function () {
+              $(document).off("click", "#long_synthetic_modal_btn").on("click", "#long_synthetic_modal_btn", function () {
+        
                 $("#put_iron_fly").removeClass("option_strategies_active");
                 $("#long_straddle").removeClass("option_strategies_active");
                 $("#call_iron_fly").removeClass("option_strategies_active");
@@ -20569,8 +20742,8 @@ $("#long_straddle").removeClass("option_strategies_active");
 
                 // Trigger a click event on the selected option
               });
-
-              $("#long_straddle_btn").click(function () {
+              $(document).off("click", "#long_straddle_btn").on("click", "#long_straddle_btn", function () {
+       
                 $("#call_iron_fly").removeClass("option_strategies_active");
                 $("#put_iron_fly").removeClass("option_strategies_active");
   $("#short_synthetic_future").removeClass("option_strategies_active");
@@ -20620,8 +20793,7 @@ $("#long_straddle").removeClass("option_strategies_active");
                 calculate_data();
                 $("#long_straddle_modal").hide();
                 Table_chart_pyoff()
-                // margin_calculations()
-                localStorage.removeItem('main_row_instances');
+      
 
                 $(".long_staddle_strike_input").val(parseInt($("#closest_strike_price").text()));
                      lotSize_main_long_straddle=0
@@ -20660,7 +20832,8 @@ $("#long_straddle").removeClass("option_strategies_active");
               });
 
        
-              $("#Buy_call").click(function () {
+      
+                $(document).off("click", "#Buy_call").on("click", "#Buy_call", function () {
                 $("#call_iron_fly").removeClass("option_strategies_active");
                 $("#put_iron_fly").removeClass("option_strategies_active");
   $("#short_synthetic_future").removeClass("option_strategies_active");
@@ -20807,7 +20980,8 @@ $("#long_straddle").removeClass("option_strategies_active");
               // //////console.log("Previous 5 Strike Prices:", prev5);
               // //////console.log("Next 5 Strike Prices:", forw5);
 
-              $("#shortStrangle").click(function () {
+ 
+                $(document).off("click", "#shortStrangle").on("click", "#shortStrangle", function () {
                 $("#put_iron_fly").removeClass("option_strategies_active");
                 // Empty the specified elements before making any selection
                 $("#call_iron_fly").removeClass("option_strategies_active");
@@ -20972,7 +21146,9 @@ $("#long_straddle").removeClass("option_strategies_active");
                 })
                 .get();
 
-              $("#shortSpread").click(function () {
+  
+                
+                $(document).off("click", "#shortSpread").on("click", "#shortSpread", function () {
                 $("#call_iron_fly").removeClass("option_strategies_active");
                 $("#put_iron_fly").removeClass("option_strategies_active");
                 $("#short_synthetic_future").removeClass("option_strategies_active");
@@ -21034,19 +21210,8 @@ $("#long_straddle").removeClass("option_strategies_active");
                   }
                 });
 
-                // Get the values of lastIndexPrev and lastIndexForw
-
-
-                // Find the closest row for lastIndexPrev and click on Auto_puts_short_click
-                var closestRowPrev = optionChainTable
-                  .find(".strike_price:contains(" + lastIndexPrev + ")")
-                  .closest(".call_put_tr");
-                if (closestRowPrev.length) {
-                  closestRowPrev
-                    .find("#Auto_puts_short_click")
-                    .data("HI1", "HI1There")
-                    .click();
-                }
+  
+ 
 
 
                 // Click on #calculate after a longer delay
@@ -21157,7 +21322,8 @@ $("#long_straddle").removeClass("option_strategies_active");
               // //////console.log("Next 4 Strike Prices:", forw4);
 
               // Keep the existing logic for closestStrikePrice
-              $("#shortironFly").click(function () {
+     
+                $(document).off("click", "#shortironFly").on("click", "#shortironFly", function () {
                 $("#call_iron_fly").removeClass("option_strategies_active");
                 $("#put_iron_fly").removeClass("option_strategies_active");
                 $("#short_synthetic_future").removeClass("option_strategies_active");
@@ -21374,7 +21540,8 @@ $("#long_straddle").removeClass("option_strategies_active");
        
 
               // Find the closest row for lastIndexPrev and click on Auto_puts_short_click
-              $("#short_ironCondor").click(function () {
+           
+                $(document).off("click", "#short_ironCondor").on("click", "#short_ironCondor", function () {
                 $("#call_iron_fly").removeClass("option_strategies_active");
                 $("#put_iron_fly").removeClass("option_strategies_active");
                 $("#short_synthetic_future").removeClass("option_strategies_active");
@@ -21566,7 +21733,8 @@ $("#long_straddle").removeClass("option_strategies_active");
 
                 // Trigger a click event on the selected option
               });
-              $("#shortjaze_lizard").click(function () {
+
+                $(document).off("click", "#shortjaze_lizard").on("click", "#shortjaze_lizard", function () {
                 $("#call_iron_fly").removeClass("option_strategies_active");
                 $("#put_iron_fly").removeClass("option_strategies_active");
                 $("#short_synthetic_future").removeClass("option_strategies_active");
@@ -21812,7 +21980,8 @@ $("#long_straddle").removeClass("option_strategies_active");
 
                 // Trigger a click event on the selected option
               });
-              $("#shortdouble_iron_fly").click(function () {
+   
+                $(document).off("click", "#shortdouble_iron_fly").on("click", "#shortdouble_iron_fly", function () {
                 $("#call_iron_fly").removeClass("option_strategies_active");
                 $("#put_iron_fly").removeClass("option_strategies_active");
                 $("#short_synthetic_future").removeClass("option_strategies_active");
@@ -22141,7 +22310,8 @@ $("#long_straddle").removeClass("option_strategies_active");
 
                 // Trigger a click event on the selected option
               });
-              $("#shortdouble_iron_condor").click(function () {
+
+                $(document).off("click", "#shortdouble_iron_condor").on("click", "#shortdouble_iron_condor", function () {
                 $("#call_iron_fly").removeClass("option_strategies_active");
                 $("#put_iron_fly").removeClass("option_strategies_active");
                 $("#short_synthetic_future").removeClass("option_strategies_active");
@@ -22395,7 +22565,8 @@ $("#long_straddle").removeClass("option_strategies_active");
 
                 // Trigger a click event on the selected option
               });
-              $("#shortput_butterfly").click(function () {
+      
+                $(document).off("click", "#shortput_butterfly").on("click", "#shortput_butterfly", function () {
                 $("#call_iron_fly").removeClass("option_strategies_active");
                 $("#put_iron_fly").removeClass("option_strategies_active");
                 $("#short_synthetic_future").removeClass("option_strategies_active");
@@ -22610,7 +22781,8 @@ $("#long_straddle").removeClass("option_strategies_active");
 
 
 
-              $("#shortput_butter_Fly").click(function () {
+   
+                $(document).off("click", "#shortput_butter_Fly").on("click", "#shortput_butter_Fly", function () {
                 $("#call_iron_fly").removeClass("option_strategies_active");
                 $("#put_iron_fly").addClass("option_strategies_active");
                 $("#short_synthetic_future").removeClass("option_strategies_active");
@@ -22889,7 +23061,7 @@ $("#long_straddle").removeClass("option_strategies_active");
 
 
 
-              $("#shortcall_butter_Fly").click(function () {
+                $(document).off("click", "#shortcall_butter_Fly").on("click", "#shortcall_butter_Fly", function () {
                 $("#call_iron_fly").addClass("option_strategies_active");
                 $("#put_iron_fly").removeClass("option_strategies_active");
                 $("#short_synthetic_future").removeClass("option_strategies_active");
@@ -23166,8 +23338,8 @@ $("#long_straddle").removeClass("option_strategies_active");
                 // Trigger a click event on the selected option
               });
 
-
-              $("#shortcall_butter_fly").click(function () {
+              $(document).off("click", "#shortcall_butter_fly").on("click", "#shortcall_butter_fly", function () {
+         
                 $("#call_iron_fly").removeClass("option_strategies_active");
                 $("#put_iron_fly").removeClass("option_strategies_active");
                 $("#short_synthetic_future").removeClass("option_strategies_active");
@@ -23447,7 +23619,8 @@ $("#long_straddle").removeClass("option_strategies_active");
 
                 // Trigger a click event on the selected option
               });
-              $("#shortcustom_strategy").click(function () {
+    
+                $(document).off("click", "#shortcustom_strategy").on("click", "#shortcustom_strategy", function () {
                 $("#call_iron_fly").removeClass("option_strategies_active");
                 $("#put_iron_fly").removeClass("option_strategies_active");
                 $("#short_synthetic_future").removeClass("option_strategies_active");
@@ -24431,7 +24604,6 @@ $("#long_straddle").removeClass("option_strategies_active");
             event.preventDefault(); // Prevent default behavior
 
             var selectedOption = $(".stockDropdown").val();
-            loadExpiryData(selectedOption,"");
 
             var newRow = $("<tr>").addClass("strategy_table_input");
 
@@ -24531,14 +24703,19 @@ $("#long_straddle").removeClass("option_strategies_active");
           ) {
 
 
-            // console.log("Option Side1:", option_side);
-            // console.log("Expiry Date:", expiry_date);
-            // console.log("Strike Price:", strike_price);
-            // console.log("Action:", action);
+            console.log("Option Side1:", option_side);
+            console.log("Expiry Date:", expiry_date);
+            console.log("Strike Price:", strike_price);
+            console.log("Action:", action);
 
-            // console.log("Option Lot Size:", option_lot_size);
-            // console.log("LTP Value:", ltpValue);
-            // console.log("opiton_selected:", opiton_selected);
+            console.log("Option Lot Size:", option_lot_size);
+            console.log("LTP Value:", ltpValue);
+            console.log("opiton_selected:", opiton_selected);
+
+  
+              
+
+
 
 
 
@@ -25131,32 +25308,21 @@ $("#long_straddle").removeClass("option_strategies_active");
           // Process the response from the server here
 
           var expiryDates = response.option_date.optionExpiryDate.filter(function(expiry) {
-    var inputDate = new Date(expiry.expiry_date);
-    var currentHour = inputDate.getHours();
-    var currentMinute = inputDate.getMinutes();
+            var inputDate = new Date(expiry.expiry_date);
+            var currentHour = inputDate.getHours();
+            var currentMinute = inputDate.getMinutes();
 
-    // Get current date and time
-    var now = new Date();
-    var currentYear = now.getFullYear();
-    var currentMonth = now.getMonth() + 1; // Months are zero indexed
-    var currentDay = now.getDate();
-    var currentHour = now.getHours();
-    var currentMinute = now.getMinutes();
+            // Get current date and time
+            var now = new Date();
+            var currentYear = now.getFullYear();
+            var currentMonth = now.getMonth() + 1; // Months are zero indexed
+            var currentDay = now.getDate();
+            var currentHour = now.getHours();
+            var currentMinute = now.getMinutes();
 
-    // Create a date object for today at 3:30 PM
-    var todayAt330PM = new Date(currentYear, currentMonth - 1, currentDay, 15, 30, 0);
 
-    // Check if the expiry date is today and if it's after 3:30 PM
-          if (
-              inputDate.getTime() === todayAt330PM.getTime() || // Check if it's today
-              inputDate.getTime() < todayAt330PM.getTime() // Check if it's before today at 3:30 PM
-          ) {
-              // If it's today and after 3:30 PM or before today at 3:30 PM, exclude this expiry date
-              return false; // Exclude this date from the filtered array
-          }
-
-          // Include this date in the filtered array
-          return true;
+                      // Include this date in the filtered array
+                      return true;
       });
 
 
@@ -25196,8 +25362,8 @@ $("#long_straddle").removeClass("option_strategies_active");
       // //////console.log('Log Expiry');
 
 
-  
-        if (!calc) {
+  if (!loadOptionDataCalled) {
+    if (!calc) {
                 // Add each expiry date as an option without duplicates
       var addedExpiryDates = [];
       $(".expiry_date_input option").each(function () {
@@ -25210,29 +25376,7 @@ $("#long_straddle").removeClass("option_strategies_active");
         if (!addedExpiryDates.includes(inputDate)) {
           addedExpiryDates.push(inputDate);
           var parsedDate = new Date(inputDate);
-          var day = parsedDate.getDate().toString().padStart(2, "0");
-          var month = (parsedDate.getMonth() + 1).toString().padStart(2, "0");
-          var year = parsedDate.getFullYear();
-          var formattedDate = day + "-" + month + "-" + year;
-    // Get current date and time
-    var now = new Date();
-    var currentYear = now.getFullYear();
-    var currentMonth = now.getMonth() + 1; // Months are zero indexed
-    var currentDay = now.getDate();
-    var currentHour = now.getHours();
-    var currentMinute = now.getMinutes();
 
-    // Create a date object for today at 3:30 PM
-    var todayAt330PM = new Date(currentYear, currentMonth - 1, currentDay, 15, 30, 0);
-
-    // Check if the expiry date is today and if it's after 3:30 PM
-    if (
-        parsedDate.getTime() === todayAt330PM.getTime() || // Check if it's today
-        parsedDate.getTime() < todayAt330PM.getTime() // Check if it's before today at 3:30 PM
-    ) {
-        // If it's today and after 3:30 PM or before today at 3:30 PM, skip adding this expiry date
-        return true; // Skip to the next iteration of forEach
-    }
 
     // Add to the dropdown
     var day = parsedDate.getDate().toString().padStart(2, "0");
@@ -25246,7 +25390,7 @@ $("#long_straddle").removeClass("option_strategies_active");
             })
           );
 
-    
+          // optionExpiryDropdown
           optionExpiryDropdown.append(
             $("<option>", {
               value: inputDate, // You can keep the original value or use formattedDate if needed
@@ -25282,6 +25426,8 @@ $("#long_straddle").removeClass("option_strategies_active");
 
 
 
+  }
+       
 
       
     }
