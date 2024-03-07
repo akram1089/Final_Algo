@@ -21302,13 +21302,11 @@ def checkout(request):
 @csrf_exempt
 def payment_order(request):
     if request.method == 'POST':
-        first_name = request.POST.get('first_name')
-        last_name = request.POST.get('last_name')
-        country = request.POST.get('country')
-        phone_number = request.POST.get('phone_number')
+  
+        country = request.POST.get('country','INR')
+
         amount = request.POST.get('amount')
 
-        print(first_name)
         print(country)
         client = razorpay.Client(auth=('rzp_test_RMsXXryucK4fix', 't8uOSGd1qS0i69zFagowv6LK'))
         payment_amount = float(amount)*100  # Payment amount in paisa (e.g., 50000 for ₹500)
@@ -21323,8 +21321,8 @@ def payment_order(request):
 
         # Process the received data as required
         all_payment_data={
-            "full_name":f"{first_name} {last_name}",
-            "phone_number":phone_number,
+   
+      
             "payment_details":payment,
             "api_key":"rzp_test_RMsXXryucK4fix"
         }
@@ -21445,3 +21443,50 @@ def logout_all_devices(request):
     
     # Return response without logging out the current device
     return JsonResponse({'message': 'Logged out from all devices except current device'})
+
+
+
+
+
+
+def subscriptions_plans(request):
+    return render(request, "subscriptions_plan.html")
+def contact_info(request):
+    return render(request, "contact_info.html")
+def refund_cancellations_policy(request):
+    return render(request, "refund_cancellations_policy.html")
+
+
+
+
+
+
+@csrf_exempt
+def verify_totp_to_show_key(request):
+    broker_id = request.POST.get('broker_id')
+    api_activation_otp = request.POST.get('totp_value')
+
+    print(broker_id)
+ 
+    # Get the user associated with the broker
+    user = request.user
+
+    # Set is_active to False for all brokers of this user
+
+    # Set is_active to True for the specified broker
+    broker = get_object_or_404(Broker, pk=broker_id, user=user)
+    print("broker.advance_totp_security",broker.advance_totp_security)
+    secret_key = broker.totp_key
+    otp = TOTP(secret_key)
+# Generate an OTP using TOTP after every 60 seconds
+
+    print(otp.now())
+    now_totp = otp.now()
+
+    if now_totp==api_activation_otp:
+        return JsonResponse({'otp_verify':"success"})
+       
+    else:
+        return JsonResponse({'otp_verify':"failed"})
+
+

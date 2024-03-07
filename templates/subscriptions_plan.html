@@ -1,0 +1,639 @@
+{% extends "base_dashboard.html" %}
+{% load static %}
+{% block dashboard_body %}
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<style>
+    .filter_cards {
+        row-gap: 0.5rem;
+    flex-wrap: wrap;
+    }
+    .subscription_card_section{
+        padding: 3rem ;
+    }
+    .credit_plans{
+        box-shadow: rgba(0, 0, 0, 0.16) 0px 10px 36px 0px, rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
+        border-radius: 10px;
+    }
+    .credit_plans div{
+        height: 40px;
+    display: flex;
+    font-weight: 600;
+    font-size: 14px;
+    width: 8rem;
+    align-items: center;
+    justify-content: center;
+        
+    }
+    .card_filter{
+     cursor: pointer;
+    }
+    .filter_active{
+        background: #59aaf9;
+        color: white !important;
+        border-radius: 10px;
+    }
+    .subscription__plan {
+    padding: 16px;
+    width: 100%;
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0px 0px 12px 7px #D3D3D340;
+    overflow: hidden;
+}
+
+.subscription__credit {
+    min-height: 60px;
+    margin: 20px 0 -10px 0;
+    font-weight: 600;
+    font-size: 25px;
+    line-height: 30px;
+    color: #000000;
+}
+
+.subscription__credit>span {
+    font-size: 14px;
+    line-height: 17px;
+    color: #727272;
+}
+
+.subscription__plandetails {
+    font-weight: 400;
+    font-size: 13px;
+    line-height: 20px;
+    color: #000000;
+    border-top: 1px solid #D9D9D9;
+    border-bottom: 1px solid #D9D9D9;
+    margin: 15px 0;
+    padding: 15px 0;
+}
+
+.subscription__price {
+    font-weight: 600;
+    color: #31A9C9;
+}
+.subscription__price div {
+    position: relative;
+    font-size: 40px;
+}
+.subscription__price span {
+    margin-left: 4px;
+    font-size: 17px;
+    text-decoration: line-through;
+    color: #999;
+    font-weight: 400;
+}
+.incl_gst {
+    color: #999 !important;
+    font-size: 13px !important;
+    font-weight: 400;
+    text-decoration: none !important;
+    position: absolute;
+    bottom: 12px;
+}
+
+.gst_breakup {
+    padding: 2px 4px 0px 4px;
+    width: max-content;
+    color: #4DA1C7 !important;
+    background-color: #DDF8FF !important;
+    border-radius: 2px;
+    font-size: 13px !important;
+    font-weight: 400;
+    text-decoration: none !important;
+}
+
+.subscription__buy__button {
+    width: 100%;
+    height: 47px;
+    text-transform: initial;
+    justify-content: center;
+}
+.subscription__select {
+    margin: 20px 0 0 0;
+    padding: 6px 8px 6px 12px;
+    color: #fff;
+    background: #59aaf9;
+    border-radius: 5px;
+    border: 1px solid #59aaf9;
+    font-size: 15px;
+    align-items: center;
+    transition: 0.3s;
+    cursor: pointer;
+    user-select: none;
+}
+
+.subscription__plandetails__text {
+    position: relative;
+    padding: 4px 0 4px 18px;
+    text-align: left;
+    display: flex;
+    align-items: center;
+}
+
+.subscription__plandetails__text .bx {
+    position: absolute;
+    left: 0;
+    top: 5px;
+    color: #193b79 !important;
+    /* color: #59aaf9 !important; */
+    font-size: 16px;
+}
+
+/* Second cards css */
+
+.subscription__planname {
+    font-weight: 700;
+    font-size: 25px;
+    line-height: 25px;
+    text-align: center;
+    color: #FFFFFF;
+    background: #59aaf9;
+    margin: -16px -16px 10px -16px;
+    padding: 20px 0 4px 0;
+}
+.subscription__planname div {
+    font-size: 13px;
+    font-weight: 400;
+}
+.subscription__credit>div>span {
+    color: #646464;
+    font-size: 16px;
+    line-height: 20px;
+    font-weight: 400;
+    text-decoration-line: line-through;
+}
+</style>
+
+<section  class="subscription_card_section">
+    <div class="heading_card">
+        <h2 style="font-weight: 700 !important;">Choose your right plan</h2>
+        
+    </div>
+
+    <div class="filter_cards d-flex justify-content-between align-items-center">
+      <p style="margin-bottom: 0 !important; font-weight: 600 !important;">Select from best plans, ensuring a perfect match, Need more or less ?</p>
+      <div class="credit_plans d-flex">
+        <div class="card_filter filter_active">Credit Plans</div> 
+        <div class="card_filter ms-2">Analytics Plans</div>
+     </div>
+    </div>
+
+    <div class="cards mt-5">
+       <div class="row">
+        <div class="col-lg-3 col-md-6 col-sm-12">
+            <div class="subscription__plan  ">
+                <div class="subscription__credit">
+                    <div>50 Credits</div>
+                    <span>Unused credits will expire in 1 Month</span>
+                </div>
+                <div class="subscription__plandetails">
+                    <div class="subscription__plandetails__text">
+                        <span class="bx bxs-check-circle"></span>
+                        <span>Approx</span>
+                        <span class="new_price"> ₹11.9</span>
+                        <span>/Credit</span>
+                    </div>
+                    <div class="subscription__plandetails__text">
+                        <span class="bx bxs-check-circle">
+
+                        </span>1 Credit per year Backtest **</div>
+                        <div class="subscription__plandetails__text">
+                            <span class="bx bxs-check-circle"></span>Paid Credits
+                        </div>
+                        <div class="subscription__plandetails__text">
+                            <span class="bx bxs-check-circle"></span>
+                            <div><span>Only for backtesting on</span><b> Home &amp; Basket Tab</b></div>
+                        </div>
+                    </div>
+                    <div class="subscription__price">
+                        <div class="plan_amount">₹700<span class="incl_gst">(Incl. 18% GST)</span></div>
+                    </div>
+                    <div class="gst_breakup">₹593 + ₹106 (18% GST)</div>
+                    <button class="subscription__select subscription__buy__button button_credit_plan">Buy Now</button>
+                </div>
+        </div>
+        <div class="col-lg-3 col-md-6 col-sm-12">
+            <div class="subscription__plan  ">
+                <div class="subscription__credit">
+                    <div>150 Credits</div>
+                    <span>Unused credits will expire in 1 Month</span>
+                </div>
+                <div class="subscription__plandetails">
+                    <div class="subscription__plandetails__text">
+                        <span class="bx bxs-check-circle"></span>
+                        <span>Approx</span>
+                        <span class="new_price"> ₹8.5</span>
+                        <span>/Credit</span>
+                    </div>
+                    <div class="subscription__plandetails__text">
+                        <span class="bx bxs-check-circle">
+
+                        </span>1 Credit per year Backtest **</div>
+                        <div class="subscription__plandetails__text">
+                            <span class="bx bxs-check-circle"></span>Paid Credits
+                        </div>
+                        <div class="subscription__plandetails__text">
+                            <span class="bx bxs-check-circle"></span>
+                            <div><span>Only for backtesting on</span><b> Home &amp; Basket Tab</b></div>
+                        </div>
+                    </div>
+                    <div class="subscription__price">
+                        <div class="plan_amount">₹1500<span class="incl_gst">(Incl. 18% GST)</span></div>
+                    </div>
+                    <div class="gst_breakup">₹1271 + ₹228 (18% GST)</div>
+                    <button class="subscription__select subscription__buy__button button_credit_plan">Buy Now</button>
+                </div>
+        </div>
+        <div class="col-lg-3 col-md-6 col-sm-12">
+            <div class="subscription__plan  ">
+                <div class="subscription__credit">
+                    <div>500 Credits</div>
+                    <span>Unused credits will expire in 1 Month</span>
+                </div>
+                <div class="subscription__plandetails">
+                    <div class="subscription__plandetails__text">
+                        <span class="bx bxs-check-circle"></span>
+                        <span>Approx</span>
+                        <span class="new_price"> ₹6.8</span>
+                        <span>/Credit</span>
+                    </div>
+                    <div class="subscription__plandetails__text">
+                        <span class="bx bxs-check-circle">
+
+                        </span>1 Credit per year Backtest **</div>
+                        <div class="subscription__plandetails__text">
+                            <span class="bx bxs-check-circle"></span>Paid Credits
+                        </div>
+                        <div class="subscription__plandetails__text">
+                            <span class="bx bxs-check-circle"></span>
+                            <div><span>Only for backtesting on</span><b> Home &amp; Basket Tab</b></div>
+                        </div>
+                    </div>
+                    <div class="subscription__price">
+                        <div class="plan_amount">₹4000<span class="incl_gst">(Incl. 18% GST)</span></div>
+                    </div>
+                    <div class="gst_breakup">₹3389 + ₹610 (18% GST)</div>
+                    <button class="subscription__select subscription__buy__button button_credit_plan">Buy Now</button>
+                </div>
+        </div>
+        <div class="col-lg-3 col-md-6 col-sm-12">
+            <div class="subscription__plan">
+                <div class="subscription__credit">
+                    <div>1400 Credits</div>
+                    <span>Unused credits will expire in 1 Month</span>
+                </div>
+                <div class="subscription__plandetails">
+                    <div class="subscription__plandetails__text">
+                        <span class="bx bxs-check-circle"></span>
+                        <span>Approx</span>
+                        <span class="new_price"> ₹4.2</span>
+                        <span>/Credit</span>
+                    </div>
+                    <div class="subscription__plandetails__text">
+                        <span class="bx bxs-check-circle">
+
+                        </span>1 Credit per year Backtest **</div>
+                        <div class="subscription__plandetails__text">
+                            <span class="bx bxs-check-circle"></span>Paid Credits
+                        </div>
+                        <div class="subscription__plandetails__text">
+                            <span class="bx bxs-check-circle"></span>
+                            <div><span>Only for backtesting on</span><b> Home &amp; Basket Tab</b></div>
+                        </div>
+                    </div>
+                    <div class="subscription__price">
+                        <div class="plan_amount">₹7000<span class="incl_gst">(Incl. 18% GST)</span></div>
+                    </div>
+                    <div class="gst_breakup">₹5932 + ₹1067 (18% GST)</div>
+                    <button class="subscription__select subscription__buy__button button_credit_plan">Buy Now</button>
+                </div>
+        </div>
+        
+       </div>
+    </div>
+
+    <div class="analytics_cards mt-5" style="display: none;">
+        <div class="row">
+            <div class="col-lg-3 col-md-3 col-sm-12">
+                <div class="subscription__plan">
+                    <div class="subscription__planname">1 Month<div>Simulator + Builder + Charts plan</div></div>
+                    <div class="subscription__credit">
+                        <div>
+                            <span>₹299</span> ₹99 <span class="incl_gst">(Incl. 18% GST)</span>
+                        </div>
+                        <span class="incl_gst"></span>
+                    </div>
+                    <div class="subscription__plandetails">
+                        <div class="subscription__plandetails__text">
+                            <span class="fa fa-check-circle"></span>Simulator + Builder + Charts
+                        </div>
+                        <div class="subscription__plandetails__text">
+                            <span class="fa fa-check-circle"></span>Builder &amp; Portfolio has all available expiries
+                        </div>
+                        <div class="subscription__plandetails__text">
+                            <span class="fa fa-check-circle"></span>Validity 30 days
+                        </div>
+                        <div class="subscription__plandetails__text">
+                            <span class="fa fa-check-circle"></span>Access unlimited times within Validity
+                        </div>
+                        <div class="subscription__plandetails__text">
+                            <span class="fa fa-check-circle"></span>Simulator Data available since 1st Jan’21
+                        </div>
+                        <div class="subscription__plandetails__text">
+                            <span class="fa fa-times-circle"></span>Not applicable for Backtesting on Home &amp; Basket Tab
+                        </div>
+                    </div>
+                    <button class="subscription__select subscription__buy__button button_analystics_plan"value="99">Pay ₹99</button>
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-md-3 col-sm-12">
+                <div class="subscription__plan">
+                    <div class="subscription__planname">3 Month<div>Simulator + Builder + Charts plan</div></div>
+                    <div class="subscription__credit">
+                        <div>
+                            <span>₹499</span> ₹299 <span class="incl_gst">(Incl. 18% GST)</span>
+                        </div>
+                        <span class="incl_gst"></span>
+                    </div>
+                    <div class="subscription__plandetails">
+                        <div class="subscription__plandetails__text">
+                            <span class="fa fa-check-circle"></span>Simulator + Builder + Charts
+                        </div>
+                        <div class="subscription__plandetails__text">
+                            <span class="fa fa-check-circle"></span>Builder &amp; Portfolio has all available expiries
+                        </div>
+                        <div class="subscription__plandetails__text">
+                            <span class="fa fa-check-circle"></span>Validity 90 days
+                        </div>
+                        <div class="subscription__plandetails__text">
+                            <span class="fa fa-check-circle"></span>Access unlimited times within Validity
+                        </div>
+                        <div class="subscription__plandetails__text">
+                            <span class="fa fa-check-circle"></span>Simulator Data available since 1st Jan’21
+                        </div>
+                        <div class="subscription__plandetails__text">
+                            <span class="fa fa-times-circle"></span>Not applicable for Backtesting on Home &amp; Basket Tab
+                        </div>
+                    </div>
+                    <button class="subscription__select subscription__buy__button button_analystics_plan" value="299">Pay ₹299</button>
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-md-3 col-sm-12">
+                <div class="subscription__plan">
+                    <div class="subscription__planname">6 Month<div>Simulator + Builder + Charts plan</div></div>
+                    <div class="subscription__credit">
+                        <div>
+                            <span>₹799</span> ₹599 <span class="incl_gst">(Incl. 18% GST)</span>
+                        </div>
+                        <span class="incl_gst"></span>
+                    </div>
+                    <div class="subscription__plandetails">
+                        <div class="subscription__plandetails__text">
+                            <span class="fa fa-check-circle"></span>Simulator + Builder + Charts
+                        </div>
+                        <div class="subscription__plandetails__text">
+                            <span class="fa fa-check-circle"></span>Builder &amp; Portfolio has all available expiries
+                        </div>
+                        <div class="subscription__plandetails__text">
+                            <span class="fa fa-check-circle"></span>Validity 180 days
+                        </div>
+                        <div class="subscription__plandetails__text">
+                            <span class="fa fa-check-circle"></span>Access unlimited times within Validity
+                        </div>
+                        <div class="subscription__plandetails__text">
+                            <span class="fa fa-check-circle"></span>Simulator Data available since 1st Jan’21
+                        </div>
+                        <div class="subscription__plandetails__text">
+                            <span class="fa fa-times-circle"></span>Not applicable for Backtesting on Home &amp; Basket Tab
+                        </div>
+                    </div>
+                    <button class="subscription__select subscription__buy__button button_analystics_plan" value="599">Pay ₹599</button>
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-md-3 col-sm-12">
+                <div class="subscription__plan">
+                    <div class="subscription__planname">12 Month<div>Simulator + Builder + Charts plan</div></div>
+                    <div class="subscription__credit">
+                        <div>
+                            <span>₹1399</span> ₹1199 <span class="incl_gst">(Incl. 18% GST)</span>
+                        </div>
+                        <span class="incl_gst"></span>
+                    </div>
+                    <div class="subscription__plandetails">
+                        <div class="subscription__plandetails__text">
+                            <span class="fa fa-check-circle"></span>Simulator + Builder + Charts
+                        </div>
+                        <div class="subscription__plandetails__text">
+                            <span class="fa fa-check-circle"></span>Builder &amp; Portfolio has all available expiries
+                        </div>
+                        <div class="subscription__plandetails__text">
+                            <span class="fa fa-check-circle"></span>Validity 360 days
+                        </div>
+                        <div class="subscription__plandetails__text">
+                            <span class="fa fa-check-circle"></span>Access unlimited times within Validity
+                        </div>
+                        <div class="subscription__plandetails__text">
+                            <span class="fa fa-check-circle"></span>Simulator Data available since 1st Jan’21
+                        </div>
+                        <div class="subscription__plandetails__text">
+                            <span class="fa fa-times-circle"></span>Not applicable for Backtesting on Home &amp; Basket Tab
+                        </div>
+                    </div>
+                    <button class="subscription__select subscription__buy__button button_analystics_plan" value="1199">Pay ₹1199</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</section>
+
+<script>
+    $(document).ready(function () {
+
+        $(".card_filter").click(function () {
+            $(".card_filter").removeClass("filter_active")
+            $(this).addClass("filter_active")
+
+            var filterType = $(this).text().trim();
+            console.log(filterType)
+
+            // Hide all filter content divs
+             $(".cards, .analytics_cards").hide();
+
+            // Show the corresponding filter content div based on the filter type
+           if (filterType === "Credit Plans") {
+                $(".cards").show();
+            } else if (filterType === "Analytics Plans") {
+               $(".analytics_cards").show();
+            }
+        })
+    });
+</script>
+<script>
+
+    $(".button_analystics_plan").click(function (e) {
+        var text = $(this).val()
+
+        console.log(text);
+
+
+        razor_pay_amount(e,text)
+    })
+
+
+$(".button_credit_plan").click(function (e) {
+        var text = $(this).closest(".col-lg-3").find(".plan_amount").text().trim();
+        var planAmount = text.match(/₹(\d+)/)[1];
+        console.log(planAmount);
+        razor_pay_amount(e,planAmount)
+    });
+
+        function razor_pay_amount(e,planAmount) {
+
+
+            
+
+
+        var firstName = $('#first_name').val();
+        var lastName = $('#last_name').val();
+        var country = $('#country').val();
+        var phoneNumber = $('#phone_number').val();
+        var amount = $('#paying_amount').val();
+    
+            $.ajax({
+                url: '/payment_order',
+                type: 'POST',
+                data: {
+           
+                    'country': country,
+     
+                    'amount': planAmount
+                },
+                success: function(response) {
+                    // Handle success response
+                    console.log(response);
+    
+    
+
+                    var options = {
+        "key": response.all_payment_required_data.api_key
+    , // Enter the Key ID generated from the Dashboard
+        "amount":  response.all_payment_required_data.payment_details.amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+        "currency":  response.all_payment_required_data.payment_details.currency,
+        "name": "OptionPerks",
+            "description": "Test Transaction",
+            "image": "https://optionperks.com/static/img/fevicon_perks.jpg",
+        "order_id": response.all_payment_required_data.payment_details.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+        "handler": function (response){
+            console.log(response.razorpay_payment_id);
+            console.log(response.razorpay_order_id);
+            console.log(response.razorpay_signature)
+               // Log the amount of the payment
+               console.log(response)
+               var amount = planAmount
+        
+               var amountInRupees = amount; // Convert amount from paise to rupees
+               console.log("Amount paid: " + amountInRupees + " INR");
+    
+               var paymentId = response.razorpay_payment_id;
+               var orderId = response.razorpay_order_id;
+               var signature = response.razorpay_signature;
+          
+           
+               // Create an object to send via AJAX
+               var requestData = {
+                   'payment_id': paymentId,
+                   'order_id': orderId,
+                   'signature': signature,
+                   'amount': amount
+               };
+           
+               // Send data to Django backend via AJAX
+               $.ajax({
+                   url: '/api/save_payment/',
+                   type: 'POST',
+                   data: requestData,
+                   success: function(response){
+                       console.log("Payment details saved successfully.");
+    
+                       $.ajax({
+                        url: '/api/wallet/',
+                        type: 'GET',
+                        success: function(data){
+                            // Log the amount
+                            console.log("Balance:", data.balance);
+              
+                            $(".site_user_current_amount").text(parseInt(data.balance).toFixed(0))
+                       
+                        },
+                        error: function(xhr, status, error){
+                            console.error("Error:", error);
+                        }
+                    });
+                   },
+                   error: function(xhr, status, error){
+                       console.error("Error saving payment details:", error);
+                   }
+               });
+        },
+    
+        "notes": {
+            "address": "Razorpay Corporate Office"
+        },
+        "theme": {
+            "color": "#4399eb"
+        }
+    };
+    var rzp1 = new Razorpay(options);
+    rzp1.on('payment.failed', function (response){
+            alert(response.error.code);
+            alert(response.error.description);
+            alert(response.error.source);
+            alert(response.error.step);
+            alert(response.error.reason);
+            alert(response.error.metadata.order_id);
+            alert(response.error.metadata.payment_id);
+    });
+    
+    
+    
+    
+    
+    
+    
+    
+                    
+    rzp1.open();
+                    e.preventDefault();
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+                },
+                error: function(xhr, errmsg, err) {
+                    // Handle error
+                    console.log(xhr.status + ": " + xhr.responseText);
+                }
+            });
+        }
+
+    
+    
+    
+    </script>
+{% endblock dashboard_body %}

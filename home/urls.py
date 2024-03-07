@@ -589,6 +589,11 @@ urlpatterns = [
      path('api/save_payment/', views.save_payment_details, name='save_payment_details'),
      path('user_login_history', views.user_login_history, name='user_login_history'),
      path('logout_all_devices', views.logout_all_devices, name='logout_all_devices'),
+     path('subscriptions_plans', views.subscriptions_plans, name='subscriptions_plans'),
+     path('verify_totp_to_show_key', views.verify_totp_to_show_key, name='verify_totp_to_show_key'),
+     path('contact_info', views.contact_info, name='contact_info'),
+     path('refund_cancellations_policy', views.refund_cancellations_policy, name='refund_cancellations_policy'),
+
 
 
 

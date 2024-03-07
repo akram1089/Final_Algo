@@ -107,6 +107,7 @@
     <script src="dashboard.js"></script>
 
     <script typ src=" {% static './js/main.js' %} "></script>
+    
     <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"
       integrity="sha256-IMCPPZxtLvdt9tam8RJ8ABMzn+Mq3SQiInbDmMYwjDg=" crossorigin="anonymous"></script>
@@ -894,8 +895,9 @@ z-index: 9;
     <div class="header shadow_header" style="transition: all 0.2s ease-in-out 0s; box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;">
       <a href="{% url 'home' %}">
 
-
-  <img src="{% static 'img/OptionPerksLogo-2-14-24.png' %}" alt="OptionPerks Logo" width="180px">
+        <img src="{% static 'img/fevicon_perks.jpg' %}" alt="OptionPerks mobile Logo" width="68px" class="d-md-none d-sm-block d-lg-block d-xl-none">
+        <img src="{% static 'img/OptionPerksLogo-2-14-24.png' %}" alt="OptionPerks Logo" width="180px" class=" d-none d-md-block d-sm-none d-lg-none d-xl-block">
+        
 
 </a>
 <style>
@@ -2605,6 +2607,29 @@ height: 8rem;
           .notification-icon{
             transform: translate(0, -8px) !important;
           }
+
+          .nontab_only{
+            display: flex;
+    background: #efefef;
+    padding: 4px 6px;
+    border-radius: 3px;
+          }
+          .button_donate_button{
+            text-decoration: none;
+    background: linear-gradient(180deg, #4399eb, #5cadfb) !important;
+    color: white;
+    font-size: 13px;
+    padding: 4px 5px;
+    font-weight: 600;
+    border-radius: 3px;
+          }
+
+          .site_user_current_amount{
+            color: rgb(177, 177, 177);
+    font-size: 13px;
+    font-family: sans-serif;
+    font-weight: 700;
+          }
         </style>
 
       </nav>
@@ -2613,10 +2638,19 @@ height: 8rem;
  
 <div class="main_notifications_users_dropdown"  >
 
-  <div class="dropdown mobile_menu_bar d-md-block ">
-    <i class='bx bx-menu text-dark'  style="font-weight: 500; cursor:pointer;    padding: 25px 0;
-    font-size: 25px;" data-bs-toggle="offcanvas" data-bs-target="#Algo_trade_mobile_nav" role="button" aria-controls="Algo_trade_mobile_nav" ></i>
-  </div>
+  <div class="nontab_only" style="
+  display: flex;
+"><div class="credit__button" style="
+  display: flex; align-items: center;     column-gap: 0.5rem;
+"><div style="
+  display: flex;
+  flex-direction: column;
+"><div style="
+  display: flex;
+  gap: 0.1rem;
+"><img src="https://www.stockmock.in/images/credit.svg" style="filter: grayscale(1);"><span class="pl-2 pr-2 site_user_current_amount"></span></div><div class="credit_type" style="color: rgb(177, 177, 177);font-size: 10px; font-weight: 600;">Free Credits</div></div><a href="{% url 'subscriptions_plans' %}" class="button_donate_button"><span>Buy Plans</span></a></div></div>
+
+
   <div class="dropdown d-md-none">
     <i type="button" class="bx bx-bell position-relative text-dark" id="notification_bell" data-bs-toggle="dropdown" aria-expanded="false"
       style="font-weight: 500; cursor:pointer;font-size: 22px;     padding: 25px 0;">
@@ -2633,7 +2667,25 @@ height: 8rem;
     style="max-height: 473px;">
   <!-- Result data will be dynamically added here -->
 </ul>
+<script>
+  $(document).ready(function(){
+      // Fetch wallet details using AJAX
+      $.ajax({
+          url: '/api/wallet/',
+          type: 'GET',
+          success: function(data){
+              // Log the amount
+              console.log("Balance:", data.balance);
 
+              $(".site_user_current_amount").text(parseInt(data.balance).toFixed(0))
+         
+          },
+          error: function(xhr, status, error){
+              console.error("Error:", error);
+          }
+      });
+  });
+</script>
 <script>
   $(document).ready(function() {
     // Flag to track if the AJAX request has been made
@@ -2678,6 +2730,7 @@ height: 8rem;
   });
   </script>
   </div>
+  
   <div class="dropdown">
     <a class="btn-secondary-user" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"
       id="dashboard_nav_dropdown_user" style="display: flex; gap: 0.5rem; align-items: center; padding: 17px 0;">
@@ -2742,6 +2795,12 @@ background-color: #f1eded !important;
       <li><a class="dropdown-item" href="{% url 'logout_user' %}">Logout </a></li>
 
     </ul>
+  </div>
+  <div class="dropdown mobile_menu_bar d-md-block ">
+    <i class="bx bx-menu text-dark" style="    font-weight: 500;
+    cursor: pointer;
+    padding: 10px 0;
+    font-size: 33px;" data-bs-toggle="offcanvas" data-bs-target="#Algo_trade_mobile_nav" role="button" aria-controls="Algo_trade_mobile_nav"></i>
   </div>
 </div>
     
@@ -4132,8 +4191,12 @@ display: none !important;
    
                  
    
-           <!-- "Or" option -->
-           <div class="dotted-line-text">
+          
+          
+                 <!-- "Or" option -->
+           
+           
+                 <div class="dotted-line-text">
              OR
          </div>
 
@@ -5197,8 +5260,9 @@ font-weight: 400 !important;
                       <li><a href=" {% url "privacy_policy" %} ">Privacy Policy</a></li>
                       <li><a href="">Disclaimers</a></li>
                       <li><a href="">Limitation of liability</a></li>
-                      <li><a href="">Refund &amp; cancellation policy</a></li>
-                      <li><a href="/contact_us">Contact us</a></li>
+                      <li><a href="{% url "refund_cancellations_policy" %}">Refund &amp; cancellation policy</a></li>
+                      <li><a href="/contact_us">Get in touch</a></li>
+                      <li><a href="/contact_info">Contact us</a></li>
                      </ul>
               </div>
           </div>
