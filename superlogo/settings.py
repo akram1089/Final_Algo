@@ -88,6 +88,7 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'corsheaders.middleware.CorsMiddleware',
+    
 
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
@@ -101,7 +102,7 @@ MIDDLEWARE = [
     
 ]
 CSRF_TRUSTED_ORIGINS = ['https://*.algotrde.com', 'https://*.127.0.0.1' ,'https://*.optionperks.com',"http://*.34.100.183.27"]
-
+SECURE_CROSS_ORIGIN_OPENER_POLICY = "same-origin-allow-popups"
 
 CORS_ORIGIN_WHITELIST = ["*"]
 CROS_ORIGIN_ALLOW_ALL = True
@@ -241,11 +242,21 @@ SITE_ID = 1
 SOCIALACCOUNT_LOGIN_ON_GET = True
 
 # settings.py
-
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
-        'SCOPE': ['profile', 'email', 'phone'],
-        'AUTH_PARAMS': {'access_type': 'online'},
+        'SCOPE': [
+            'profile',
+            'email',
+        ],
+        'AUTH_PARAMS': {
+            'access_type': 'online',
+        },
+        'APP': {
+            'client_id': '929504800861-v6oo02qf7lvuch3sps866n1c1ktl78k2.apps.googleusercontent.com',
+            'secret': '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',
+            'key': '',
+        },
+        'AUTH_REDIRECT_URI': 'https://optionperks.com/accounts/google/login/callback/',
     }
 }
 
@@ -286,7 +297,3 @@ CELERY_IMPORTS = [
 
 ACCOUNT_DEFAULT_HTTP_PROTOCOL='http'
 
-# settings.py
-SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '929504800861-oqbeonla23fuovi1scmm4hp9opo7lemg.apps.googleusercontent.com'
-SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = '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'
-SOCIAL_AUTH_GOOGLE_OAUTH2_REDIRECT_URI = 'http://optionperks.com/accounts/google/login/callback/'
