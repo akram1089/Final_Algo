@@ -9986,9 +9986,19 @@ $(".all_strategy_filter").removeClass("main_all_strategy_active")
               <p class="fs-14 fw-500 label-color-6">Approx Brokerage:</p>
               <p class="fs-14 fw-500 label-color-6" id="brokrage_fees">40</p>
             </div>
+            <div class="d-flex align-items-center justify-content-between mt-2" id="brokrage_needed">
+              <p class="fs-14 fw-500 label-color-6">Platform Free :</p>
+              <p class="fs-14 fw-500 label-color-6" id="brokrage_fees">1</p>
+            </div>
+
+
             <div class="d-flex align-items-center justify-content-between mt-2" id="margin_needed">
               <p class="fs-14 fw-500 label-color-6">Margin required:</p>
               <p class="fs-14 fw-500 label-color-6" id="margin_required">null</p>
+            </div>
+            <div class="d-flex align-items-center justify-content-between mt-2" id="margin_needed">
+              <p class="fs-14 fw-500 label-color-6">Actual profit:</p>
+              <p class="fs-14 fw-500 label-color-6 text-success d-none" id="margin_required">279</p>
             </div>
 
 
@@ -11079,55 +11089,18 @@ margin-bottom: 38px;
 
                 <tr>
                   <td style="text-transform: capitalize;">Strategy</td>
+                  <td style="text-transform: capitalize;">Position</td>
                   <td style="text-transform: capitalize;">Breakevens</td>
-                  <td style="text-transform: capitalize;">Strike Price</td>
-                  <td style="text-transform: capitalize;">Option Price</td>
+                  <td style="text-transform: capitalize;">Option side</td>
+                  <td style="text-transform: capitalize;">Quantity</td>
+     
                   <td style="text-transform: capitalize;">Action</td>
                   
 
                 </tr>
               </thead>
               <tbody class="real_adjustment_table_body">
-                <tr>
-                  <td>
-                    <div style="text-transform: capitalize;">Adjustments 1</div>
-                </td>
-                <td>
-                    <div style="text-transform: capitalize;">19318.75</div>
-                </td>
-                <td>
-                    <div style="text-transform: capitalize;">19200</div>
-                </td>
-                <td>
-                    <div style="text-transform: capitalize;">65.2</div>
-                </td>
-                <td>
-                    <div><button class="adjust">Adjust</button></div>
-                </td>
-                
-
-                </tr>
-                <tr>
-
-                  <td>
-                    <div style="text-transform: capitalize;">Adjustments 2</div>
-                </td>
-                <td>
-                    <div style="text-transform: capitalize;">19781.25</div>
-                </td>
-                <td>
-                    <div style="text-transform: capitalize;">19200</div>
-                </td>
-                <td>
-                    <div style="text-transform: capitalize;">65.2</div>
-                </td>
-                <td>
-                    <div><button class="adjust">Adjust</button></div>
-                </td>
-                
-
-                </tr>
-
+      
               </tbody>
 
             </table>
@@ -11507,10 +11480,10 @@ margin-bottom: 38px;
 
           </tr>
         </thead>
-        <tbody class="real_adjustment_table_body">
+        <tbody class="real_alert_table_body" >
           <tr>
             <td>
-              <div>ALerts 1</div>
+              <div>Alerts 1</div>
             </td>
             <td>
               <div>19318.75</div>
@@ -11528,7 +11501,7 @@ margin-bottom: 38px;
           </tr>
           <tr>
             <td>
-              <div>Alerts 1</div>
+              <div>Alerts 2</div>
             </td>
             <td>
               <div> 19781.25</div>
@@ -12062,6 +12035,15 @@ margin-bottom: 38px;
     border-radius: 2px;
 
   }
+  .bg_indicator_sell_disabled {
+    background-color: #ffe2e5 !important;
+    border-color: #ffcdd2 !important;
+    color: #820300 !important;
+    caret-color: #ffc9c8 !important;
+    padding: 1px 10px;
+    border-radius: 2px;
+
+  }
 
   .bg_indicator_buy {
     color: #43a047 !important;
@@ -12071,6 +12053,14 @@ margin-bottom: 38px;
     padding: 1px 10px;
     border-radius: 2px;
 
+  }
+  .bg_indicator_buy_disabled {
+    color: #008506 !important;
+    caret-color: #43a047 !important;
+    background-color: #e1ffe2 !important;
+    border-color: #c8e6c9 !important;
+    padding: 1px 10px;
+    border-radius: 2px;
   }
 
   .box_shadow_order_execution_success {
@@ -16335,9 +16325,10 @@ $("#long_straddle_decrement").click(function () {
                             var active_delete_btn = position.active_state === false ? "d-block" : "d-none";
                             var active_inactive_text = position.active_state === true ? "Active" : "Inactive";
                             var active_inactive_main_text = position.active_state === false ? "color: gray;" : "color: #444444;";
+                            var active_inactive_main_separator = position.active_state === false ? "" : "active_positions";
 
                             var main_history_positions = `
-                    <div class="d-flex justify-content-between main_history_legs" style="${active_inactive_main_text}">
+                    <div class="d-flex justify-content-between main_history_legs ${active_inactive_main_separator}" style="${active_inactive_main_text}">
                         <div class="inner_history_left d-flex gap-1">
                             <div class="${buy_sell_indicator_text}">${buy_sell_indicator}</div>
                             <div class="d-flex ">
@@ -16356,7 +16347,7 @@ $("#long_straddle_decrement").click(function () {
                     </div>
               
                 `;
-
+    
                             tradingPositionsDiv.append(main_history_positions);
                         });
                     } else {
@@ -16366,6 +16357,7 @@ $("#long_straddle_decrement").click(function () {
                         noHistoryDiv.textContent = 'No History Available';
                         tradingPositionsDiv.append(noHistoryDiv);
                     }
+                    $('.active_positions:last').css('border-bottom', '2px solid #b0b0b0');
                     $('.dlt-history-btn').click(function () {
                         var historyId = $(this).data('history-id');
 
@@ -16434,6 +16426,7 @@ getHistory(); // Assuming getHistory is a defined function
 
           // Clear previous table data
           $("#table-PL").empty();
+          $(".real_adjustment_table_body").empty();
 
           $("#resultTable tbody").empty();
 
@@ -16447,6 +16440,8 @@ getHistory(); // Assuming getHistory is a defined function
           let leg = 1;
           var greeks = 1;
           var p_l = 1;
+          var adjusmentsIndex = 1;
+          var table_adjusment_index =1;
 
 
 
@@ -16553,6 +16548,7 @@ getHistory(); // Assuming getHistory is a defined function
                         `;
 
             $("#resultTable tbody").append(tableRow);
+     
 
             // Calculate positional Greeks
             totalDelta += parseFloat(delta) || 0;
@@ -16674,6 +16670,9 @@ getHistory(); // Assuming getHistory is a defined function
             for (let i = 0; i < data.length; i++) {
               const item = data[i];
 
+              console.log('item',item);
+              
+
               // //////console.log(item.ltpValue);
               var All_positions = $(".main_position").find(
                 ".main_add_position_actions"
@@ -16747,7 +16746,7 @@ getHistory(); // Assuming getHistory is a defined function
               var stockDropdown = $(".stockDropdown").val();
 
               const legRow = `
-                                                                <tr id=${p_l++}>
+                                                         <tr id=${p_l++}>
                                                                     <td>
                                                                     <div class="p_l_position d-flex gap-1">
                                             <div class="main_short_long_lot_size">
@@ -16773,8 +16772,62 @@ getHistory(); // Assuming getHistory is a defined function
                   2
                 )}</div></td>
                                                                     <td class="text-center"><div class="final_P_L">${final_P_L}</div></td>
-                                                                </tr>
+                                                                </tr>   
                                                             `;
+
+
+
+
+// Get the text from the paragraph element
+const breakEvens = document.getElementById('break_evens').textContent.trim();
+  
+  // Split the text by '~' and trim whitespace from each part
+  const [minValue, maxValue] = breakEvens.split('~').map(value => parseInt(value.trim()));
+
+// Construct legRow_adjustments with class added to middle CE and PE
+const legRow_adjustments = `
+<tr id=${adjusmentsIndex++}>
+    <td style="vertical-align: middle;">
+        <div class="fw-semibold" style="color:#666;"> Adjustments ${table_adjusment_index++} </div>
+    </td>
+    <td>
+        <div class="p_l_position d-flex gap-1">
+            <div class="main_short_long_lot_size">
+                <div class="short_long"><span class="long_short_inner">${item.position === "Long" ? "+" : "-"}</span></div> 
+                <div class="option_lot_size_input">${absoluteQuantity}</div>x
+            </div>
+            <div class="symbol_expiry">
+                <span class="symbol">${stockDropdown}</span>
+                <span class="expiry">${formattedDate}</span>
+            </div>
+            <div class="strike_price_call_put"> 
+                <span class="strikePrice">${parseFloat(item.strikePrice)}</span>
+            </div> 
+        </div>
+    </td>
+
+    <td style="vertical-align: middle;">
+      <div class="${item.optionType === "Call" ? "text-success" : "text-danger" } ">${item.optionType === "Call" ? maxValue : minValue } </div>
+      </td>
+    <td style="vertical-align: middle;">
+        <div class="${item.optionType === "Call" ? 'CE' : (item.optionType === "Put" ? 'PE' : 'FUTURE')}">
+            ${item.optionType === "Call" ? "CE" : (item.optionType === "Put" ? "PE" : "FUTURE")}
+        </div>
+    </td>
+    <td style="vertical-align: middle;"><div>${absoluteQuantity * parseInt($("#lot_size_value").text())}</div></td>
+    <td style="vertical-align: middle;" class="adjustButtonColumn">
+        <div><button class="adjust">Adjust</button></div>
+    </td>
+</tr>
+`;
+
+
+
+// Append legRow_adjustments to the table body
+$(".real_adjustment_table_body").append(legRow_adjustments);
+
+
+
               const $exitPriceElements = $(".exit_price");
               if ($exitPriceElements.length > i) {
                 $($exitPriceElements[i]).empty().text(final_P_L);
@@ -16788,6 +16841,13 @@ getHistory(); // Assuming getHistory is a defined function
               itemCount++;
               premiumPain += parseFloat(item.unitPrice);
             }
+
+
+
+            
+
+
+
 
             // //////console.log(totalStrikePrice);
             const averageStrikePrice = totalStrikePrice / itemCount;

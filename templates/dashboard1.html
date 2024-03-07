@@ -195,7 +195,7 @@
   .ban_security,
   .ban_entry,
   .ban_exits {
-    width: 22rem;
+    width: 100%;
   }
 </style>
 <style>
@@ -997,20 +997,26 @@ $("#spinner").show()
     });
 
     function populateTable(data, tableId) {
-      var tableBody = $(tableId + " tbody");
-      tableBody.empty();
+    var tableBody = $(tableId + " tbody");
+    tableBody.empty();
 
-      data.forEach(function (item) {
-        console.log(item)
-        var row = $("<tr></tr>");
-        row.append($("<td></td>").text(item.symbol_name));
-        row.append($("<td></td>").text(item.previous_percent));
-        row.append($("<td></td>").text(item.current_percent));
-        // Add more columns as needed
+    if (data.length === 0) {
+        // If no data is available, display a message in the table
+        var messageRow = $("<tr></tr>").append($("<td colspan='3'>No record found</td>"));
+        tableBody.append(messageRow);
+    } else {
+        // If data is available, populate the table with the data
+        data.forEach(function (item) {
+            var row = $("<tr></tr>");
+            row.append($("<td></td>").text(item.symbol_name));
+            row.append($("<td></td>").text(item.previous_percent));
+            row.append($("<td></td>").text(item.current_percent));
+            // Add more columns as needed
 
-        tableBody.append(row);
-      });
+            tableBody.append(row);
+        });
     }
+}
   });
 </script>
 <!-- <script>
@@ -1112,14 +1118,16 @@ right: 0;">
       <div class="container mt-5">
 
 
-
-  <h4 class="my-3">MARKETS</h4>
-  <div class="nitfy_fin_bank_main">
+  <div class="d-flex gap-4">
+    <h4 class="my-3 filterBtn active" data-target="market" style="cursor: pointer; font-size: 1.4rem !important; color: #5a6167;">MARKETS</h4>
+    <h4 class="my-3 filterBtn" data-target="globalMarket" style="cursor: pointer; font-size: 1.4rem !important; color: #5a6167;">GLOBAL MARKETS</h4>
+  </div>
+   <div class="nitfy_fin_bank_main contentDiv" id="marketDiv" style="margin-top: 20px;">
     <div class="nifty_main shadow"
       style="box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;">
 
       <div class="title_nifty  " style="display: flex;gap: 1rem;">
-        <h5 style="    font-size: 1rem;" id="nifty_50_symbol"></h5>
+        <h5 style="font-size: 1rem;" id="nifty_50_symbol"></h5>
         <h5 style="    font-size: 1rem;" class="" id="nifty_50_value"></h5>
       </div>
 
@@ -1155,6 +1163,12 @@ right: 0;">
       </div>
     </div>
 
+    <style>
+      .active{
+        color: #59aaf9 !important;
+      }
+    </style>
+
     <script>
 $(document).ready(function () {
   $(".nifty_50_contributor").click(function () {
@@ -1172,6 +1186,26 @@ $(document).ready(function () {
 
 
 
+$('#marketDiv').show();
+    $('#tables-container').hide();
+
+    // Event listener for filter buttons
+    $('.filterBtn').click(function() {
+      var target = $(this).data('target');
+      $('.contentDiv').hide(); // Hide all content divs
+      $('#' + target + 'Div').show(); // Show the selected content div
+
+      // Toggle visibility of the globalMarketDiv
+      if (target === 'market') {
+          $('#tables-container').hide();
+      } else if (target === 'globalMarket') {
+          $('#tables-container').show();
+      }
+
+      // Remove active class from all filter buttons and add it to the clicked button
+      $('.filterBtn').removeClass('active');
+      $(this).addClass('active');
+  });
 
 
 
@@ -1289,11 +1323,11 @@ $(document).ready(function () {
 
   </div>
 
-  <h4 class="my-3">GLOBAL MARKETS</h4>
+  <!-- <h4 class="my-3">GLOBAL MARKETS</h4> -->
 
 
-  <div id="tables-container" class="d-flex"
-    style="    row-gap: 1rem;  column-gap: 6rem;
+  <div id="tables-container" class="contentDiv"
+    style=" display: flex;   row-gap: 1rem;  column-gap: 6rem;
     justify-content: center;   flex-wrap: wrap;"></div>
 
   <style>
@@ -1547,13 +1581,43 @@ $(document).ready(function () {
     fill: none;
     width: 20px !important;
 }
+.main_stocks_filter h4{
+  color: #59aaf9;
+  cursor: pointer;
+  font-size: 1.1rem !important;
+  border: 1px solid #59aaf9 !important;
+  padding: 10px 12px;
+  border-radius: 8px;
+ 
+}
+.market_action_active{
+  background-color: #59aaf9 !important;
+  color: #fff !important;
+}
+
+@media screen and (max-width: 768px) {
+  .main_stocks_filter h4 {
+    width: 100%;
+    border-radius: 5px;
+  }
+  .main_stocks_filter{
+    display: flex;
+    gap: 0 !important;
+    flex-wrap: wrap !important;
+  }
+}
+
   </style>
 
   <div class="main_stocks_details my-4"
     style="box-shadow: rgba(0, 0, 0, 0.16) 0px 10px 36px 0px, rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;padding: 25px;">
 
-
-    <h4 class="my-3">MARKET ACTION</h4>
+  <div class="main_stocks_filter d-flex gap-4">
+    <h4 class="my-3 market_action_active">MARKET ACTION</h4>
+    <h4 class="my-3">FUTURE OPEN INTEREST SCANS</h4>
+    <h4 class="my-3">NEW 52 WEEK HIGH/LOW</h4>
+    <h4 class="my-3">BAN LIST</h4>
+  </div>
     <div class="description_usage my-4 container">
       <div class="head_desc_usage d-flex justify-content-center">
         <div class="inner_head_desc_usage border-bottom" style="display: flex;
@@ -1725,187 +1789,82 @@ $(document).ready(function () {
         <button class="btn btn-primary">Search Stocks</button>
       </div> {% endcomment %}
     </div>
-  </div>
-
-  <style>
-    .main_future_tables table tbody td{
-      font-size: 15px !important;
-      font-weight: 500 !important;
-    }
-  </style>
-  <div class="main_future_tables my-4"
-    style="box-shadow: rgba(0, 0, 0, 0.16) 0px 10px 36px 0px, rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;padding: 25px;">
-    <h4 class="my-3"> FUTURE OPEN INTEREST SCANS </h4>
-
-    <div class="main_future_open d-flex gap-4 container" style="    justify-content: center;
-    
-      border-bottom: 1px solid lightgray;
-      white-space: nowrap;">
-      <div class="inner_future_open" style="display: flex;gap: 1rem; overflow: auto;">
-        <div id="OI_gainer" onclick="future_filter('OI_gainer')"> OI Gainer</div>
-        <div id="OI_loser" onclick="future_filter('OI_loser')">OI Loser</div>
-        <div id="OI_volume_buzzers" onclick="future_filter('OI_volume_buzzers')">Volume Buzzers</div>
-        <!-- <div id="OI_volume_1" onclick="future_filter('OI_volume_1')">Volume Buzzers 1 </div>
-        <div id="OI_volume_2" onclick="future_filter('OI_volume_2')"> Volume Buzzers 2 </div>
- -->
+    <div class="future_open_in_scan my-4" style="display: none;">
+      <div class="main_future_open d-flex gap-4 container" style="    justify-content: center;
+      
+        border-bottom: 1px solid lightgray;
+        white-space: nowrap;">
+        <div class="inner_future_open" style="display: flex;gap: 1rem; overflow: auto;">
+          <div id="OI_gainer" onclick="future_filter('OI_gainer')"> OI Gainer</div>
+          <div id="OI_loser" onclick="future_filter('OI_loser')">OI Loser</div>
+          <div id="OI_volume_buzzers" onclick="future_filter('OI_volume_buzzers')">Volume Buzzers</div>
+          <!-- <div id="OI_volume_1" onclick="future_filter('OI_volume_1')">Volume Buzzers 1 </div>
+          <div id="OI_volume_2" onclick="future_filter('OI_volume_2')"> Volume Buzzers 2 </div>
+   -->
+        </div>
       </div>
+  
+  
+      <div id="OI_gainer_table" style="display: block;overflow: auto;">
+  
+  
+        <table id="Oi_gainer_data" class="table  table-hover">
+          <thead style="background: #f1f5fa;border-bottom: 1px solid black !important;" class="">
+  
+            <tr id="columnHeaders">
+            </tr>
+          </thead>
+          <tbody>
+          </tbody>
+        </table>
+  
+  
+  
+  
+      </div>
+      <div id="OI_loser_table" style="display: block;overflow: auto;">
+  
+        <table id="Oi_loser_data_table_data_table" class="table  table-hover">
+          <thead style="background: #f1f5fa;border-bottom: 1px solid black !important;" class="">
+  
+            <tr id="columnHeaders_loser">
+            </tr>
+          </thead>
+          <tbody>
+          </tbody>
+        </table>
+  
+  
+  
+      </div>
+      <div id="OI_volume_buzzers_table">
+        <table id="volumeShockerTable" class="table  table-hover">
+          <thead style="background: #f1f5fa;border-bottom: 1px solid black !important;" class="">
+  
+            <tr>
+  
+              <th>Company Name</th>
+  
+              <th>Volume</th>
+              <th>Volume Percentage Change</th>
+              <th>Exchange</th>
+            </tr>
+          </thead>
+          <tbody>
+          </tbody>
+        </table>
+      </div>
+      <div id="OI_volume_1_table">
+        <table id="OI_volume_1_table_data"></table>
+      </div>
+  
+      <div id="OI_volume_2_table">
+        <table id="OI_volume_2_table_data"></table>
+      </div>
+     
     </div>
-
-
-    <div id="OI_gainer_table" style="display: block;overflow: auto;">
-
-
-      <table id="Oi_gainer_data" class="table  table-hover">
-        <thead style="background: #f1f5fa;border-bottom: 1px solid black !important;" class="">
-
-          <tr id="columnHeaders">
-          </tr>
-        </thead>
-        <tbody>
-        </tbody>
-      </table>
-
-
-
-
-    </div>
-    <div id="OI_loser_table" style="display: block;overflow: auto;">
-
-      <table id="Oi_loser_data_table_data_table" class="table  table-hover">
-        <thead style="background: #f1f5fa;border-bottom: 1px solid black !important;" class="">
-
-          <tr id="columnHeaders_loser">
-          </tr>
-        </thead>
-        <tbody>
-        </tbody>
-      </table>
-
-
-
-    </div>
-    <div id="OI_volume_buzzers_table">
-      <table id="volumeShockerTable" class="table  table-hover">
-        <thead style="background: #f1f5fa;border-bottom: 1px solid black !important;" class="">
-
-          <tr>
-
-            <th>Company Name</th>
-
-            <th>Volume</th>
-            <th>Volume Percentage Change</th>
-            <th>Exchange</th>
-          </tr>
-        </thead>
-        <tbody>
-        </tbody>
-      </table>
-    </div>
-    <div id="OI_volume_1_table">
-      <table id="OI_volume_1_table_data"></table>
-    </div>
-
-    <div id="OI_volume_2_table">
-      <table id="OI_volume_2_table_data"></table>
-    </div>
-
-
-
-  </div>
-
-
-  <div class="maket_52_week my-4"
-    style="box-shadow: rgba(0, 0, 0, 0.16) 0px 10px 36px 0px, rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;padding: 25px;">
-    <h4 class="my-3">NEW 52 WEEK HIGH/LOW</h4>
-    <style>
-      #week_52_high,
-      #week_52_low,
-      #only_buyers,
-      #only_sellers {
-        cursor: pointer;
-        transition: 0.3s;
-        font-size: 21px;
-      }
-
-      .active_52_week {
-        color: #4399eb;
-        text-align: center;
-        border-bottom: 2px solid #4399eb;
-        font-size: 21px;
-        font-weight: 600;
-      }
-
-      #security_select {
-        display: flex;
-        position: relative;
-        gap: 1rem;
-        white-space: nowrap;
-        align-items: center;
-        width: fit-content;
-
-      }
-      #data-dropdown,#data-dropdown-low,#data-dropdown-upper,#data-dropdown-lower{
-        outline: none;
-    height: 40px;
-    padding: 0 12px !important;
-    width: 163px !important;
-    box-shadow: none;
-    border-radius: 6px;
-    border: 1px solid hsl(0deg 0% 68.36%);
-    background-color: #fff;
-      }
-      .chart-header{
-        padding: 0 10px !important;
-      }
-
-      .maket_52_week table tbody td {
-        font-size: 15px !important;
-        font-weight: 500 !important;
-      }
-    .custom-div {
-    background-color: #fff;
-    border: 1px solid #ddd;
-    padding: 10px;
-    position: absolute;
-    top: 4% !important;
-    left: 50% !important;
-    transform: translate(-50%, -50%);
-    z-index: 0;
-}
-
-.week_52_high,.week_52_low,.only_buyers,.only_sellers{
-  display: flex;
-    flex-direction: column;
-    position: relative;
-}
-
-#security_select label{
-  font-size: 14px !important;
-  margin-top: 0px !important;
-  padding-bottom: 0 !important;
-}
-
-.security_main{
-  position: absolute;
-    top: 3%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 9 !important;
-}
-
-@media (max-width: 768px) { /* Adjust the max-width as needed */
-    .security_main {
-        position: static;
-        left: auto;
-        transform: none;
-        z-index: auto;
-    }
-}
-    </style>
-    <div class="main_upper_future_open d-flex gap-4 container" style="    justify-content: center;
-    
-border-bottom: 1px solid lightgray;
-white-space: nowrap;">
+    <div class="new_52_weeks_data my-4" style="display: none;">
+    <div class="main_upper_future_open d-flex gap-4 container" style="justify-content: center; border-bottom: 1px solid lightgray; white-space: nowrap;">
       <div class="main_future_open d-flex  " style="  
 
       display: flex;gap: 1rem; overflow: auto;
@@ -2075,7 +2034,438 @@ white-space: nowrap;">
         </table>
       </div>
     </div>
+    </div>
+    <div class="main_ban my-4" style="display: none;">
+      <div class="ban_filter d-flex gap-4 mt-4">
+        <h5 class="ban_active">Securities In Ban </h5>
+        <h5>Possible Entrants </h5>
+        <h5>Possible Exits </h5>
+      </div>
+      <div class="ban_security mt-3">
+        
+        <table class="table  table-hover " id="securities_ban_table">
+          <thead style="background: #f1f5fa;border-bottom: 1px solid black !important;" class="">
 
+            <tr>
+              <th>SYMBOL</th>
+              <th>PREVIOUS MWPL %</th>
+              <th>CURRENT MWPL %</th>
+              <!-- Add more columns as needed -->
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <div class="ban_entry mt-3" style="display: none;">
+        
+        <table class="table  table-hover " id="possible_entrants_table">
+          <thead style="background: #f1f5fa;border-bottom: 1px solid black !important;" class="">
+
+            <tr>
+              <th>SYMBOL</th>
+              <th>PREVIOUS MWPL %</th>
+              <th>CURRENT MWPL %</th>
+              <!-- Add more columns as needed -->
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <div class="ban_exits mt-3" style="display: none;">
+        
+        <table class="table  table-hover " id="possible_exits_table">
+          <thead style="background: #f1f5fa;border-bottom: 1px solid black !important;" class="">
+
+            <tr>
+              <th>SYMBOL</th>
+              <th>PREVIOUS MWPL %</th>
+              <th>CURRENT MWPL %</th>
+              <!-- Add more columns as needed -->
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <style>
+    .main_future_tables table tbody td{
+      font-size: 15px !important;
+      font-weight: 500 !important;
+    }
+  </style>
+
+  <script>
+    $(".main_stocks_filter h4").click(function () {
+    // Remove 'market_action_active' class from all h4 elements
+    $(".main_stocks_filter h4").removeClass("market_action_active");
+
+    // Add 'market_action_active' class to the clicked h4 element
+    $(this).addClass("market_action_active");
+
+    // Get the text of the clicked h4 element
+    var filterType = $(this).text().trim();
+
+    // Hide all divs related to filtering
+    $(".description_usage, .future_open_in_scan, .new_52_weeks_data,.main_ban").hide();
+
+    // Show the corresponding div based on the clicked filter type
+    if (filterType === "MARKET ACTION") {
+        $(".description_usage").show();
+    } else if (filterType === "FUTURE OPEN INTEREST SCANS") {
+        $(".future_open_in_scan").show();
+    } else if (filterType === "NEW 52 WEEK HIGH/LOW") {
+        $(".new_52_weeks_data").show();
+    } else if(filterType === "BAN LIST"){
+        $(".main_ban").show()
+    }
+});
+
+  </script>
+  <!-- Hidden divs -->
+  <div class="main_future_tables d-none my-4"
+    style="box-shadow: rgba(0, 0, 0, 0.16) 0px 10px 36px 0px, rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;padding: 25px;">
+    <h4 class="my-3"> FUTURE OPEN INTEREST SCANS </h4>
+  <div class="future_open_in_scan">
+    <div class="main_future_open d-flex gap-4 container" style="    justify-content: center;
+    
+      border-bottom: 1px solid lightgray;
+      white-space: nowrap;">
+      <div class="inner_future_open" style="display: flex;gap: 1rem; overflow: auto;">
+        <div id="OI_gainer" onclick="future_filter('OI_gainer')"> OI Gainer</div>
+        <div id="OI_loser" onclick="future_filter('OI_loser')">OI Loser</div>
+        <div id="OI_volume_buzzers" onclick="future_filter('OI_volume_buzzers')">Volume Buzzers</div>
+        <!-- <div id="OI_volume_1" onclick="future_filter('OI_volume_1')">Volume Buzzers 1 </div>
+        <div id="OI_volume_2" onclick="future_filter('OI_volume_2')"> Volume Buzzers 2 </div>
+ -->
+      </div>
+    </div>
+
+
+    <div id="OI_gainer_table" style="display: block;overflow: auto;">
+
+
+      <table id="Oi_gainer_data" class="table  table-hover">
+        <thead style="background: #f1f5fa;border-bottom: 1px solid black !important;" class="">
+
+          <tr id="columnHeaders">
+          </tr>
+        </thead>
+        <tbody>
+        </tbody>
+      </table>
+
+
+
+
+    </div>
+    <div id="OI_loser_table" style="display: block;overflow: auto;">
+
+      <table id="Oi_loser_data_table_data_table" class="table  table-hover">
+        <thead style="background: #f1f5fa;border-bottom: 1px solid black !important;" class="">
+
+          <tr id="columnHeaders_loser">
+          </tr>
+        </thead>
+        <tbody>
+        </tbody>
+      </table>
+
+
+
+    </div>
+    <div id="OI_volume_buzzers_table">
+      <table id="volumeShockerTable" class="table  table-hover">
+        <thead style="background: #f1f5fa;border-bottom: 1px solid black !important;" class="">
+
+          <tr>
+
+            <th>Company Name</th>
+
+            <th>Volume</th>
+            <th>Volume Percentage Change</th>
+            <th>Exchange</th>
+          </tr>
+        </thead>
+        <tbody>
+        </tbody>
+      </table>
+    </div>
+    <div id="OI_volume_1_table">
+      <table id="OI_volume_1_table_data"></table>
+    </div>
+
+    <div id="OI_volume_2_table">
+      <table id="OI_volume_2_table_data"></table>
+    </div>
+   
+  </div>
+
+
+  </div>
+
+<!-- Hidden divs -->
+  <div class="maket_52_week my-4 d-none"
+    style="box-shadow: rgba(0, 0, 0, 0.16) 0px 10px 36px 0px, rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;padding: 25px;">
+    <h4 class="my-3">NEW 52 WEEK HIGH/LOW</h4>
+    <style>
+      #week_52_high,
+      #week_52_low,
+      #only_buyers,
+      #only_sellers {
+        cursor: pointer;
+        transition: 0.3s;
+        font-size: 21px;
+      }
+
+      .active_52_week {
+        color: #4399eb;
+        text-align: center;
+        border-bottom: 2px solid #4399eb;
+        font-size: 21px;
+        font-weight: 600;
+      }
+
+      #security_select {
+        display: flex;
+        position: relative;
+        gap: 1rem;
+        white-space: nowrap;
+        align-items: center;
+        width: fit-content;
+
+      }
+      #data-dropdown,#data-dropdown-low,#data-dropdown-upper,#data-dropdown-lower{
+        outline: none;
+    height: 40px;
+    padding: 0 12px !important;
+    width: 163px !important;
+    box-shadow: none;
+    border-radius: 6px;
+    border: 1px solid hsl(0deg 0% 68.36%);
+    background-color: #fff;
+      }
+      .chart-header{
+        padding: 0 10px !important;
+      }
+
+      .maket_52_week table tbody td {
+        font-size: 15px !important;
+        font-weight: 500 !important;
+      }
+    .custom-div {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    padding: 10px;
+    position: absolute;
+    top: 4% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%);
+    z-index: 0;
+}
+
+.week_52_high,.week_52_low,.only_buyers,.only_sellers{
+  display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+#security_select label{
+  font-size: 14px !important;
+  margin-top: 0px !important;
+  padding-bottom: 0 !important;
+}
+
+.security_main{
+  position: absolute;
+    top: 3%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 9 !important;
+}
+
+@media (max-width: 768px) { /* Adjust the max-width as needed */
+    .security_main {
+        position: static;
+        left: auto;
+        transform: none;
+        z-index: auto;
+    }
+}
+    </style>
+  <div class="new_52_weeks_data">
+    <div class="main_upper_future_open d-flex gap-4 container" style="justify-content: center; border-bottom: 1px solid lightgray; white-space: nowrap;">
+      <div class="main_future_open d-flex  " style="  
+
+      display: flex;gap: 1rem; overflow: auto;
+      border-bottom: 1px solid lightgray;">
+
+        <div id="week_52_high" onclick="week_52filter('week_52_high')">52 Week High </div>
+        <div id="week_52_low" onclick="week_52filter('week_52_low')">52 Week Low</div>
+        <div id="only_buyers" onclick="week_52filter('only_buyers')">Only Buyers</div>
+        <div id="only_sellers" onclick="week_52filter('only_sellers')">Only Sellers</div>
+
+
+
+      </div>
+    </div>
+    <div class="week_52_high">
+      <div class="security_main d-flex justify-content-end mt-3">
+        <div class="form-group" id="security_select">
+          <label for="data-dropdown">Select Securities:</label>
+          <select id="data-dropdown" class="form-select">
+            <option value="dataLtpGreater20">Securities > 20</option>
+            <option value="dataLtpLess20">Securities < 20</option>
+          </select>
+        </div>
+      </div>
+
+      
+
+      <div class="main_table_52 table-responsive">
+       
+        <table id="stock_table_52_high" class="mt-3 table table-hover">
+          <thead style="background: #f1f5fa;border-bottom: 1px solid black !important;">
+            <tr>
+              <th>SYMBOL</th>
+              <th>SECURITY</th>
+              <th> 52W/H
+                PRICE</th>
+              <th>PREV.
+                HIGH</th>
+              <th> HIGH
+                DATE</th>
+              <th>LTP</th>
+              <th>PREV. CLOSE</th>
+              <th>CHNG</th>
+              <th>%CHNG</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Table rows will be populated dynamically using JavaScript -->
+          </tbody>
+        </table>
+        
+      </div>
+    </div>
+    <div class="week_52_low table-responsive">
+
+
+
+      <div class="security_main d-flex justify-content-end mt-3">
+        <div class="form-group" id="security_select">
+          <label for="data-dropdown-low">Select Securities:</label>
+          <select id="data-dropdown-low" class="form-select">
+            <option value="dataLtpGreater20">Securities > 20</option>
+            <option value="dataLtpLess20">Securities < 20</option>
+          </select>
+        </div>
+      </div>
+
+      <table id="stock_table_52_low" class="mt-3 table table-hover ">
+        <thead style="background: #f1f5fa;border-bottom: 1px solid black !important;">
+          <tr>
+            <th>SYMBOL</th>
+            <th>SECURITY</th>
+            <th> 52W/H
+              PRICE</th>
+            <th>PREV.
+              HIGH</th>
+            <th> HIGH
+              DATE</th>
+            <th>LTP</th>
+            <th>PREV. CLOSE</th>
+            <th>CHNG</th>
+            <th>%CHNG</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Table rows will be populated dynamically using JavaScript -->
+        </tbody>
+      </table>
+
+    </div>
+    <div class="only_buyers table-responsive">
+
+
+
+      <div class="security_main d-flex justify-content-end mt-3">
+        <div class="form-group d-flex" style="    align-items: center;
+        gap: 1rem;">
+          <label for="data-dropdown-upper">View securities :  </label>
+          <select id="data-dropdown-upper" class="form-select">
+            <option value="AllSec">All</option>
+            <option value="SecGtr20">Securities > 20</option>
+            <option value="SecLwr20">Securities < 20</option>
+          </select>
+        </div>
+      </div>
+
+
+      <table id="stock_table_upper" class="table table-hover">
+        <thead style="background: #f1f5fa;border-bottom: 1px solid black !important;">
+          <th>Symbol</th>
+          <th>Series</th>
+          <th>LTP</th>
+          <th>Change</th>
+          <th>PChange</th>
+          <th>PriceBand</th>
+          <th>HighPrice</th>
+          <th>LowPrice</th>
+          <th>YearHigh</th>
+          <th>YearLow</th>
+          <th>TotalTradedVol</th>
+          <th>Turnover</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+
+<style>
+  .bottom_card a{
+    font-weight: 600;
+  }
+</style>
+
+    </div>
+    <div class="only_sellers table-responsive">
+
+      <div class="only_sellers">
+        <div class="security_main d-flex justify-content-end mt-3">
+          <div class="form-group d-flex" style="    align-items: center;
+            gap: 1rem;">
+            <label for="data-dropdown-lower ">View securities :</label>
+            <select id="data-dropdown-lower" class="form-select">
+              <option value="AllSec">All</option>
+              <option value="SecGtr20">Securities > 20</option>
+              <option value="SecLwr20">Securities < 20</option>
+            </select>
+          </div>
+        </div>
+
+        <table id="stock_table_lower" class="table table-hover">
+          <thead style="background: #f1f5fa;border-bottom: 1px solid black !important;">
+            <tr>
+              <th>Symbol</th>
+              <th>Series</th>
+              <th>LTP</th>
+              <th>Change</th>
+              <th>PChange</th>
+              <th>PriceBand</th>
+              <th>HighPrice</th>
+              <th>LowPrice</th>
+              <th>YearHigh</th>
+              <th>YearLow</th>
+              <th>TotalTradedVol</th>
+              <th>Turnover</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
     <script>
       $(document).ready(function () {
 
@@ -2922,17 +3312,26 @@ background-color: #f1eded !important;
     font-size: 15px !important;
     font-weight: 500 !important;
   }
+  .ban_active{
+    color: #59aaf9 !important;
+    border-bottom: 2px solid #59aaf9;
+  }
+  .ban_filter h5{
+    cursor: pointer;
+  }
 </style>
 
-  <section class="ban_list_main" id="ban-lists" style="box-shadow: rgba(0, 0, 0, 0.16) 0px 10px 36px 0px, rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
+  <section class="ban_list_main d-none" id="ban-lists" style="box-shadow: rgba(0, 0, 0, 0.16) 0px 10px 36px 0px, rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
   padding: 25px; margin-top: 50px;">
     <h4 class="my-3">BAN LIST </h4>
-    <div class="main_ban" style="    display: flex;
-    justify-content: center; 
-    gap: 2rem;
-    ">
-      <div class="ban_security">
-        <h5>Securities In Ban </h5>
+    <div class="main_ban">
+      <div class="ban_filter d-flex gap-4 mt-4">
+        <h5 class="ban_active">Securities In Ban </h5>
+        <h5>Possible Entrants </h5>
+        <h5>Possible Exits </h5>
+      </div>
+      <div class="ban_security mt-3">
+        
         <table class="table  table-hover " id="securities_ban_table">
           <thead style="background: #f1f5fa;border-bottom: 1px solid black !important;" class="">
 
@@ -2946,8 +3345,8 @@ background-color: #f1eded !important;
           <tbody></tbody>
         </table>
       </div>
-      <div class="ban_entry">
-        <h5>Possible Entrants </h5>
+      <div class="ban_entry mt-3" style="display: none;">
+        
         <table class="table  table-hover " id="possible_entrants_table">
           <thead style="background: #f1f5fa;border-bottom: 1px solid black !important;" class="">
 
@@ -2961,8 +3360,8 @@ background-color: #f1eded !important;
           <tbody></tbody>
         </table>
       </div>
-      <div class="ban_exits">
-        <h5>Possible Exits </h5>
+      <div class="ban_exits mt-3" style="display: none;">
+        
         <table class="table  table-hover " id="possible_exits_table">
           <thead style="background: #f1f5fa;border-bottom: 1px solid black !important;" class="">
 
@@ -2979,6 +3378,30 @@ background-color: #f1eded !important;
     </div>
   </section>
 
+  <script>
+    $(".ban_filter h5").click(function () {
+   // Remove 'ban_active' class from all h5 elements
+   $(".ban_filter h5").removeClass("ban_active");
+
+   // Add 'ban_active' class to the clicked h5 element
+   $(this).addClass("ban_active");
+
+   // Get the text of the clicked h5 element
+   var filterType = $(this).text().trim();
+
+   // Hide all divs related to filtering
+   $(".ban_security, .ban_entry, .ban_exits").hide();
+
+   // Show the corresponding div based on the clicked filter type
+   if (filterType === "Securities In Ban") {
+       $(".ban_security").show();
+   } else if (filterType === "Possible Entrants") {
+       $(".ban_entry").show();
+   } else if (filterType === "Possible Exits") {
+       $(".ban_exits").show();
+   }
+});
+ </script>
 
   <style>
     .content-grid-3 {
@@ -3172,6 +3595,8 @@ background-color: #f1eded !important;
 
   </style>
 
+
+
 <section class="dashboard_blog mt-5" style="position: relative;">
   <h2 style="margin-bottom: 1rem !important;">BLOG</h2>
   <div class="swiper_blog_container content-grid-3">
@@ -3192,6 +3617,7 @@ background-color: #f1eded !important;
 
 <script>
   $(document).ready(function () {
+
 
     function toCamelCase(input) {
   return input.toLowerCase().replace(/_/g, ' ').replace(/(^|\s)([a-z])/g, function(match, group1, group2) {
