@@ -31,6 +31,7 @@ def user_login_handler(sender, request, user, **kwargs):
      
 
     country = get_country_from_ip(ip_address)
+    print("country Ipv4",country["IPv4"])
     # Save login history
 
     user_agent = request.META.get('HTTP_USER_AGENT', '')
