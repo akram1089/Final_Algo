@@ -78,7 +78,12 @@
     background-color: #bb2d3b;
     border-color: #b02a37;
 }
+.main_ip_address{
 
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
 </style>
 <section>
     <div class="user_account_details p-5">
@@ -103,13 +108,14 @@
                         <li data-id="order" id="order_history">Order History</li>
                         <li data-id="billing" id="billing_pay">Billing & Payments</li>
                         <li data-id="subscription" id="subscript">Subscriptions</li>
+                        <li data-id="login_history" id="log_history">Login History</li>
                     </ul>
                 </div>
             </div>
 
             <div class="col-lg-9 users_data">
                 <div class="row personal_information">
-                    <div class="col-lg-6">
+                    <div class="col-lg-12">
                         <div class="">
                             <h5>Account Details</h5>
                             <!-- <span>Profile information</span> -->
@@ -156,24 +162,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-6">
-                        <div class="login_details">
-                            <div class="d-flex justify-content-between align-items-center">
-                              <h5>Login History</h5>
-                              <button class="btn btn-danger logout_button">Logout Everywhere</button>
-                            </div>
-                            <div id="login-history" class="d-flex justify-content-between" style="margin-top: 20px;">
-                                <div>
-                                   <h5 style="color: #5e5873; font-size: 1.1rem !important;">IP Addresses</h5>
-                                   <div class="ip_address"></div>
-                                </div>
-                                <div>
-                                   <h5 style="color: #5e5873; font-size: 1.1rem !important;">Time</h5>
-                                   <div class="time_duration"></div>
-                                </div>
-                            </div>
-                          </div>
-                    </div>
+         
                 </div>
                
 
@@ -469,6 +458,24 @@
                 <div class="subscriptions" style="display: none;">
                     <h1>Subscriptions Coming Soon</h1>
                 </div>
+                <div class="login_history_section" style="display: none;">
+                    <div class="col-lg-12">
+                        <div class="login_details">
+                            <div class="d-flex justify-content-between align-items-center">
+                              <h5>Login History</h5>
+                              <button class="btn btn-danger logout_button">Logout Everywhere</button>
+                            </div>
+                     
+                     
+                                <div>
+                                   <div class="ip_address"></div>
+                            
+                                </div>
+                    
+              
+                          </div>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="row mt-4">
@@ -491,20 +498,25 @@
         // Display the appropriate section based on filter_init_id
         if (filter_init_id == "personal") {
             $(".personal_information").show();
-            $(".billing_payments, .order_history, .subscriptions").hide();
+            $(".billing_payments, .order_history, .subscriptions,.login_history_section").hide();
             $(".profile_photo").show();
         } else if (filter_init_id == "billing") {
-            $(".personal_information, .order_history, .subscriptions").hide();
+            $(".personal_information, .order_history, .subscriptions,.login_history_section").hide();
             $(".billing_payments").show();
-            $(".profile_photo").hide();
+              
         } else if (filter_init_id == "order") {
-            $(".personal_information, .billing_payments, .subscriptions").hide();
+            $(".personal_information, .billing_payments, .subscriptions,.login_history_section").hide();
             $(".order_history").show();
-            $(".profile_photo").hide();
+              
         } else if (filter_init_id == "subscription") {
-            $(".personal_information, .billing_payments, .order_history").hide();
+            $(".personal_information, .billing_payments, .order_history,.login_history_section").hide();
             $(".subscriptions").show();
-            $(".profile_photo").hide();
+              
+        
+        } else if (filter_init_id == "login_history") {
+            $(".personal_information, .billing_payments, .order_history,.subscriptions").hide();
+            $(".login_history_section").show();
+              
         }
 
         $(".user_options li").click(function () {
@@ -518,21 +530,27 @@
             // Update the view based on the selected filter_init_id
             if (filter_init_id == "personal") {
                 $(".personal_information").show();
-                $(".billing_payments, .order_history, .subscriptions").hide();
+                $(".billing_payments, .order_history, .subscriptions,.login_history_section").hide();
                 $(".profile_photo").show();
             } else if (filter_init_id == "billing") {
-                $(".personal_information, .order_history, .subscriptions").hide();
+                $(".personal_information, .order_history, .subscriptions,.login_history_section").hide();
                 $(".billing_payments").show();
-                $(".profile_photo").hide();
+                 
             } else if (filter_init_id == "order") {
-                $(".personal_information, .billing_payments, .subscriptions").hide();
+                $(".personal_information, .billing_payments, .subscriptions,.login_history_section").hide();
                 $(".order_history").show();
-                $(".profile_photo").hide();
+                 
             } else if (filter_init_id == "subscription") {
-                $(".personal_information, .billing_payments, .order_history").hide();
+                $(".personal_information, .billing_payments, .order_history,.login_history_section").hide();
                 $(".subscriptions").show();
-                $(".profile_photo").hide();
+                 
             }
+            else if (filter_init_id == "login_history") {
+                $(".personal_information, .billing_payments, .order_history,.subscriptions").hide();
+                $(".login_history_section").show();
+                 
+            }
+    
         });
 
         function get_data() {
@@ -654,16 +672,22 @@
                     browserIcon = '<span>N/A</span>';
                 }
 
-                var col = `<div class="boxes" style="margin: 23px 0;">
+    
+                var col = `
+                <div class="main_ip_address">
+                <div class="boxes" style="margin: 23px 0;">
                               <div>
                                 ${browserIcon} 
-                                <span class="ms-3" style="color: #5e5873 !important; font-size: 15px !important; font-weight: 500 !important;">${history.ip_address}- ${history.origin}</span>
+                                <span class="ms-3" style="color: #5e5873 !important; font-size: 15px !important; font-weight: 500 !important;">${history.ip_address} - ${history.origin}</span>
                               </div>
-                           </div>`
-                var col_two = `<div class="duration" style="margin: 25px 0; color: #5e5873 !important; font-size: 15px !important;"> ${loginTime}</div> `
+                           </div>
+                           <div class="duration" style="margin: 25px 0; color: #5e5873 !important; font-size: 15px !important;"> ${loginTime}</div> 
+                        </div>
+                           `
+              
 
                  $('.ip_address').append(col);
-                 $('.time_duration').append(col_two);
+             
               });
            },
              error: function(xhr, status, error) {
