@@ -84,6 +84,16 @@
     justify-content: space-between;
     align-items: center;
 }
+div:where(.swal2-container) button:where(.swal2-styled).swal2-confirm{
+    background: linear-gradient(180deg, #4399eb, #5cadfb) !important;
+    color: white !important;
+}
+div:where(.swal2-container) button:where(.swal2-styled).swal2-confirm:focus{
+
+    box-shadow: none;
+    background:  #5cadfb!important;
+    color: white !important;
+}
 </style>
 <section>
     <div class="user_account_details p-5">
@@ -698,7 +708,68 @@
         get_ip_user() 
        
         $(".logout_button").click(function(){
-            logoutAllDevices()
+
+
+  Swal.fire({
+            title: 'Are you sure?',
+            text: 'You will be logged out from other devices',
+            input: 'password',
+            inputLabel: 'Enter your password',
+            inputAttributes: {
+                autocapitalize: 'off',
+                autocorrect: 'off'
+            },
+            inputPlaceholder: 'Enter your password',
+            showCancelButton: true,
+            confirmButtonText: 'Logout',
+            cancelButtonText: 'Cancel',
+            showLoaderOnConfirm: true,
+            preConfirm: (password) => {
+                return new Promise((resolve, reject) => {
+                    if (!password) {
+                        reject('Password cannot be empty');
+                    } else {
+                        $.ajax({
+                            url: '/verify_password/',
+                            type: 'POST',
+                            data: {
+                                'password': password,
+                                'csrfmiddlewaretoken': '{{ csrf_token }}'  // Include CSRF token for Django
+                            },
+                            dataType: 'json',
+                            success: function(response) {
+                                if (response.success) {
+                                    resolve();
+                                } else {
+                                    reject('Incorrect password');
+                                }
+                            },
+                            error: function(xhr, status, error) {
+                                reject('AJAX request failed');
+                            }
+                        });
+                    }
+                });
+            },
+            allowOutsideClick: () => !Swal.isLoading()
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Handle confirmed action
+                logoutAllDevices();
+                Swal.fire({
+                    title: 'LogOut Complete!',
+                    text: 'You have been successfully logged out from other devices.',
+                    icon: 'success'
+                });
+            }
+        }).catch((error) => {
+            Swal.fire({
+                title: 'Error!',
+                text: error,
+                icon: 'error'
+            });
+        });
+   
         })
 
 

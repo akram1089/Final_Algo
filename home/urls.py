@@ -593,6 +593,7 @@ urlpatterns = [
      path('verify_totp_to_show_key', views.verify_totp_to_show_key, name='verify_totp_to_show_key'),
      path('contact_info', views.contact_info, name='contact_info'),
      path('refund_cancellations_policy', views.refund_cancellations_policy, name='refund_cancellations_policy'),
+     path('verify_password', views.verify_password, name='verify_password'),
 
 
 

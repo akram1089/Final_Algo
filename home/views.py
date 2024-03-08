@@ -21445,7 +21445,18 @@ def logout_all_devices(request):
     return JsonResponse({'message': 'Logged out from all devices except current device'})
 
 
-
+@require_POST
+@login_required
+def verify_password(request):
+    password = request.POST.get('password')
+    user = request.user
+    if user.check_password(password):
+        # Password is correct
+        # Add your logout logic here
+        return JsonResponse({'success': True})
+    else:
+        # Password is incorrect
+        return JsonResponse({'success': False})
 
 
 
