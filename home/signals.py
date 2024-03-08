@@ -18,7 +18,7 @@ def get_country_from_ip(ip_address):
         return response.country_name
     except Exception as e:
         print(f"An error occurred: {e}")
-        return None
+        return "Unkown"
 
 @receiver(user_logged_in)
 def user_login_handler(sender, request, user, **kwargs):
