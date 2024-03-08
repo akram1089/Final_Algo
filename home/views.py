@@ -4362,6 +4362,25 @@ def option_strategies_expiry(request):
 
 
     # Do something with the selected_option, process the data, and prepare a response
+
+    # Do something with the selected_option, process the data, and prepare a response
+
+    main_filtered_optionExpirydate = final_expiry_json["optionExpiryDate"]
+    # print(main_filtered_optionExpirydate)
+    # print(final_expiry_json)
+
+    cutoff_time = datetime.datetime.strptime('15:30', '%H:%M')
+
+    filtered_expiry_dates = []
+
+    for expiry in main_filtered_optionExpirydate:
+        expiry_date = datetime.datetime.strptime(expiry['expiry_date'], '%Y-%m-%dT%H:%M:%S')
+        if expiry_date.date() >= datetime.datetime.today().date() and (expiry_date.date() != datetime.datetime.today().date() or expiry_date.time() <= cutoff_time.time()):
+            filtered_expiry_dates.append(expiry)
+
+    # print(filtered_expiry_dates)
+    final_expiry_json['optionExpiryDate'] = filtered_expiry_dates
+
     response_date = {
         'option_date': final_expiry_json,
         'option_strike': final_strike_json,
@@ -14307,6 +14326,7 @@ def get_option_strategy_optimizer_option_data(request):
         # Add more data as needed
     }
     return Response(response_data)
+
 @api_view(['GET'])
 def option_strategies_expiry(request):
     # selected_option = request.GET.get('selected_option',"NIFTY")
@@ -14333,13 +14353,31 @@ def option_strategies_expiry(request):
 
 
     # Do something with the selected_option, process the data, and prepare a response
+
+    # Do something with the selected_option, process the data, and prepare a response
+
+    main_filtered_optionExpirydate = final_expiry_json["optionExpiryDate"]
+    # print(main_filtered_optionExpirydate)
+    # print(final_expiry_json)
+
+    cutoff_time = datetime.datetime.strptime('15:30', '%H:%M')
+
+    filtered_expiry_dates = []
+
+    for expiry in main_filtered_optionExpirydate:
+        expiry_date = datetime.datetime.strptime(expiry['expiry_date'], '%Y-%m-%dT%H:%M:%S')
+        if expiry_date.date() >= datetime.datetime.today().date() and (expiry_date.date() != datetime.datetime.today().date() or expiry_date.time() <= cutoff_time.time()):
+            filtered_expiry_dates.append(expiry)
+
+    # print(filtered_expiry_dates)
+    final_expiry_json['optionExpiryDate'] = filtered_expiry_dates
+
     response_date = {
         'option_date': final_expiry_json,
         'option_strike': final_strike_json,
         # Add more data as needed
     }
     return Response(response_date)
-
 
 
 import numpy as np
