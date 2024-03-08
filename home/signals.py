@@ -18,7 +18,7 @@ def get_country_from_ip(ip_address):
         response = requests.get(f"https://geolocation-db.com/json/{ip_address}&position=true").json()
         # response = requests.get("https://geolocation-db.com/json/117.221.170.145&position=true").json()
         # print(response["country_name"])
-        return response["country_name"]
+        return response
     except Exception as e:
         print(f"An error occurred: {e}")
         return "Unkown"
@@ -43,7 +43,7 @@ def user_login_handler(sender, request, user, **kwargs):
     
 
     print(f"User {user.username} logged in from IP address {ip_address}")
-    UserLoginHistory.objects.create(user=user, ip_address=ip_address, action='Login',  browser=browser, browser_version=browser_version, origin=country)
+    UserLoginHistory.objects.create(user=user, ip_address=country["IPv4"], action='Login',  browser=browser, browser_version=browser_version, origin=country["country_name"])
 
 
 
