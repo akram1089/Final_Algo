@@ -331,50 +331,46 @@ font-size: 23px;
                     $('#api_config_table').wrap('<div class="parent_table"></div>');
                     $('#api_config_table_length,#api_config_table_filter').wrapAll('<div class="parent_search_length"></div>');
         
-                    $('.show-data-icon').click(function () {
+                    $(document).on('click', '.show-data-icon', function() {
                         var eyeIcon = $(this);
-                        sensitiveDataSpan = $(this).prev('.sensitive-data');
-                        var isHidden = sensitiveDataSpan.attr('type') === 'password';
+                        var inputField = eyeIcon.closest('td').find('.sensitive-data');
+                        var inputFieldContainer = inputField.next('.totp_input_fields');
+                        $('.totp_input_fields').remove();
+                        if (inputField.attr('type') === 'password') {
+                            // Remove any existing input fields
+                           
                     
-                        $(this).toggleClass('bi-eye bi-eye-slash');
-                        if (isHidden) {
-                            // Check if input field already exists
-                            if (!$(this).closest('td').find('.totp_input_fields').length) {
-                                // Remove any existing input fields
-                                $('.dynamic_input_field').empty();
+                            // Create an input field
+                            var inputFieldContainer = $('<div class="totp_input_fields d-flex align-items-center"> <label class="totp_label">Enter TOTP : </label> <div> <input type="text" class="form-control totp-input" style="width: 140px !important; box-shadow: none !important;"></div> <p class="varify_totp" style="cursor: pointer; color: blue; margin-bottom: 0 !important;">Verify</p>  <i class="bx bx-x delete_topt_input" style="cursor:pointer;"></i> </div>');
                     
-                                // Create an input field
-                                var inputField = $('<div class="totp_input_fields d-flex align-items-center"> <label class="totp_label">Enter TOTP : </label> <div> <input type="text" class="form-control totp-input" style="width: 140px !important; box-shadow: none !important;"></div> <p class="varify_totp" style="cursor: pointer; color: blue; margin-bottom: 0 !important;">Verify</p>  <i class="bx bx-x delete_topt_input" style="cursor:pointer;"></i> </div>');
+                            var td = eyeIcon.closest('td');
+                            // Append the input field to the container
+                            td.append(inputFieldContainer);
+                            td.closest('tr').find('.varify_totp').show();
                     
-                                var td = eyeIcon.closest('td');
-                                // Append the input field to the container
-                                td.append(inputField);
-                                td.closest('tr').find('.varify_totp').show();
-                    
-                                inputField.find('.totp-input').focus();
-                            }
+                            inputFieldContainer.find('.totp-input').focus();
                         } else {
                             // Change input type from text to password
-                            sensitiveDataSpan.attr('type', 'password');
+                            inputField.attr('type', 'password');
                     
                             // Remove input field
-                            $(this).closest('.totp_input_fields').remove();
+                            inputFieldContainer.remove();
                         }
-                    
-                        // Event listener for delete icon
-                        $(document).on('click', '.delete_topt_input', function () {
-                            $(this).closest('.totp_input_fields').remove();
-                        });
                     });
-
-        
-                    // Event listener for verifying TOTP
+                    
+                    // Click event listener for delete icon
+                    $(document).on('click', '.delete_topt_input', function() {
+                        $(this).closest('.totp_input_fields').remove();
+                    });
+                    
+                    // Click event listener for verifying TOTP
                     $(document).on('click', '.varify_totp', function() {
-                        // Get the values from the input fields
-                        var clickedElement = $(this);
-                        var totpValue = clickedElement.closest('td').find('.totp-input').val();
-                        var brokerId = clickedElement.closest('td').find('.hidden-input').val();
-                        varify_totp_fn(totpValue, brokerId, clickedElement);
+                        var clickedElement = $(this)
+                        var inputField = clickedElement.closest('td').find('.totp-input');
+                        var totpValue = inputField.val();
+                        var brokerId =clickedElement.closest('td').find('.hidden-input').val();
+                        var sensitiveDataSpan = clickedElement.closest('tr').find('.sensitive-data');
+                        varify_totp_fn(totpValue, brokerId, clickedElement, sensitiveDataSpan);
                     });
                 },
                 error: function(xhr, status, error) {
@@ -387,7 +383,7 @@ font-size: 23px;
         fetchDataAndAppendToTable();
         
         // Function to verify TOTP
-        function varify_totp_fn(totpValue, brokerId, clickedElement) {
+        function varify_totp_fn(totpValue, brokerId, clickedElement, sensitiveDataSpan) {
             console.log(totpValue);
             console.log(brokerId);
             $.ajax({
