@@ -34,7 +34,8 @@ def get_country_from_ip(ip_address):
 @receiver(user_logged_in)
 def user_login_handler(sender, request, user, **kwargs):
     # Get the user's IP address
-    ip_address = request.META.get('REMOTE_ADDR')
+    ip_address = get_client_ip(request)
+     
 
     country = get_country_from_ip(ip_address)
     # Save login history
@@ -50,6 +51,19 @@ def user_login_handler(sender, request, user, **kwargs):
 
     print(f"User {user.username} logged in from IP address {ip_address}")
     UserLoginHistory.objects.create(user=user, ip_address=ip_address, action='Login',  browser=browser, browser_version=browser_version, origin=country)
+
+
+
+def get_client_ip(request):
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    print(x_forwarded_for)
+    if x_forwarded_for:
+        ip = x_forwarded_for.split(',')[0]
+        print("ipmain",ip)
+    else:
+        ip = request.META.get('REMOTE_ADDR')
+        print("ipmain",ip)
+    return ip
 
 @receiver(user_logged_out)
 def user_logout_handler(sender, request, user, **kwargs):
