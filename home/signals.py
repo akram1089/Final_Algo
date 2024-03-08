@@ -13,12 +13,16 @@ from geolite2 import geolite2
 import json
 import requests
 def get_country_from_ip(ip_address):
+    print("ip_address1",ip_address)
     try:
         response = requests.get(f"https://geolocation-db.com/json/{ip_address}&position=true").json()
-        return response.country_name
+        # response = requests.get("https://geolocation-db.com/json/117.221.170.145&position=true").json()
+        # print(response["country_name"])
+        return response["country_name"]
     except Exception as e:
         print(f"An error occurred: {e}")
         return "Unkown"
+
 
 @receiver(user_logged_in)
 def user_login_handler(sender, request, user, **kwargs):
