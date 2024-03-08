@@ -33,11 +33,15 @@ from.models import BookCart
 from.models import AdditionTask_main_time
 from.models import WhatsAppTemplate
 from.models import Wallet
+from.models import UserLoginHistory
+from.models import UserSession
 
 # from.models import StockListing
 
 
 
+admin.site.register(UserSession)
+admin.site.register(UserLoginHistory)
 admin.site.register(Wallet)
 admin.site.register(ChartData)
 

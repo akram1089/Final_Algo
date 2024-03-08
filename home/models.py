@@ -509,8 +509,9 @@ class UserLoginHistory(models.Model):
     browser = models.CharField(max_length=100)  # Add browser field
     browser_version = models.CharField(max_length=100) 
     origin = models.CharField(max_length=100)
+    cash_status = models.BooleanField(default=False)
     def __str__(self):
-        return f"{self.user.username} - {self.login_time}"
+        return f"{self.user.Mobile_number} - {self.login_time}"
 
 class UserSession(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
