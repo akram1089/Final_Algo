@@ -94,6 +94,21 @@ div:where(.swal2-container) button:where(.swal2-styled).swal2-confirm:focus{
     background:  #5cadfb!important;
     color: white !important;
 }
+
+.user_login_history_table_main table thead th{
+    padding: 12px 15px !important;
+    font-size: 12px !important;
+    text-transform: uppercase !important;
+    background: #4399eb !important;
+    color: #fff !important;
+
+}
+
+.user_login_history_table_main {
+    border-radius: 10px;
+
+    overflow: auto;
+}
 </style>
 <section>
     <div class="user_account_details p-5">
@@ -475,10 +490,26 @@ div:where(.swal2-container) button:where(.swal2-styled).swal2-confirm:focus{
                               <h5>Login History</h5>
                               <button class="btn btn-danger logout_button">Logout Everywhere</button>
                             </div>
+
+                              <div class="user_login_history_table_main mt-2">
+
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <th>Browser</th>
+                                        <th>IP Address</th>
+                                        <th>Country</th>
+                                        <th>Login Time</th>
+                                    </thead>
+
+                                    <tbody class="user_history_table_body">
+                                        
+                                    </tbody>
+                                </table>
+                              </div>
                      
                      
                                 <div>
-                                   <div class="ip_address"></div>
+          
                             
                                 </div>
                     
@@ -667,8 +698,8 @@ div:where(.swal2-container) button:where(.swal2-styled).swal2-confirm:focus{
               success: function(data) {
                 console.log(data)
               // Render login history data dynamically
-              $('.ip_address').empty();
-             $('.time_duration').empty();
+       
+             $('.user_history_table_body').empty()
               data.forEach(function(history) {
                 // var loginTime = new Date(history.login_time);
                 // var formattedTime = loginTime.toLocaleString();
@@ -682,21 +713,35 @@ div:where(.swal2-container) button:where(.swal2-styled).swal2-confirm:focus{
                     browserIcon = '<span>N/A</span>';
                 }
 
-    
-                var col = `
-                <div class="main_ip_address">
-                <div class="boxes" style="margin: 23px 0;">
-                              <div>
-                                ${browserIcon} 
-                                <span class="ms-3" style="color: #5e5873 !important; font-size: 15px !important; font-weight: 500 !important;">${history.ip_address} - ${history.origin}</span>
-                              </div>
-                           </div>
-                           <div class="duration" style="margin: 25px 0; color: #5e5873 !important; font-size: 15px !important;"> ${loginTime}</div> 
-                        </div>
-                           `
-              
 
-                 $('.ip_address').append(col);
+                           var tbodyUserTable =`
+
+                           <tr>
+                           <td><div>
+                            ${browserIcon} 
+                            </div></td>
+
+
+                           <td><div>
+                            ${history.ip_address}
+                            </div></td>
+
+
+
+                           <td><div>
+                            ${history.origin}
+                            </div></td>
+
+
+
+                           <td><div>
+                            ${loginTime}
+                            </div></td>
+                            </tr>
+                           
+                           `
+
+                 $('.user_history_table_body').append(tbodyUserTable);
              
               });
            },
