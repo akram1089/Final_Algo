@@ -427,13 +427,23 @@ tr:hover .symbol_name_watchlist {
 </style>
 <h4 class="ms-4 mt-4">Bulk Deal Data </h4>
 <div class="main_bulk_table">
-  <div class="date_filter">
-    <label for="date" style="white-space: nowrap;">Select Date:</label>
-    <select id="date" name="date" class='form-select'>
 
-    </select>
+  <div class="main_buy_sell_date_filters d-flex justify-content-between align-items-center">
 
+    <div class="main_buy_sell_inner_filter">
+      <button id="allBtn" class="main_active-all-buy-sell">ALL</button>
+      <button id="buyBtn">BUY</button>
+      <button id="sellBtn">SELL</button>
+    </div>
+    <div class="date_filter">
+      <label for="date" style="white-space: nowrap;">Select Date:</label>
+      <select id="date" name="date" class='form-select'>
+  
+      </select>
+  
+    </div>
   </div>
+
   <div class="table-container">
   <div class="table_data">
     <table id="bulk_data" class="display table-striped-custom " style="width:100%">
@@ -480,20 +490,41 @@ tr:hover .symbol_name_watchlist {
     background-color: white !important;
     background: white !important;
   }
+
+  .main_active-all-buy-sell{
+    border: 1px solid #4399eb !important;
+    -webkit-box-shadow: none !important;
+    box-shadow: none !important;
+    outline: 0 !important;
+    -webkit-transition: all .2s ease-in-out !important;
+    -moz-transition: all .2s ease-in-out !important;
+    transition: all .2s ease-in-out !important;
+    background: -webkit-gradient(linear, left top, left bottom, from(#4399eb), to(#5cadfb)) !important;
+    background: -moz-linear-gradient(top, #4399eb 0, #5cadfb 100%) !important;
+    background: linear-gradient(180deg, #4399eb, #5cadfb) !important;
+    color: #fff !important;
+  }
+
+  .main_buy_sell_inner_filter button{
+    border: 1px solid #4399eb !important;
+    background-color: #fff;
+    font-family: Roboto, sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    color: #4399eb;
+    line-height: 2.3;
+    margin-right: 6px;
+    font-weight: 600;
+    min-width: 80px;
+    border-radius: 9px;
+    max-width: 148px;
+    text-align: center;
+  }
 </style>
 <script>
   $(document).ready(function () {
    
-    // Initialize DataTable with options
-    var dataTable = $('#bulk_data').DataTable({
-      "pageLength": 25,
-      "dom": '<"top"lf>rt<"bottom"ip><"clear">',
-      "language": {
-      "search": '<div class="custom-search" style="position: relative"><i class="bi bi-search" style="position: absolute;right: 7px;top: 10px;"></i></i><input class="form-control" type="search" placeholder="Search" aria-controls="volume_shocker_table"></div>'
-      }
-    });
-    $('#bulk_data_filter input:eq(1)').hide();
-    $('#bulk_data_filter input[type="search"]').attr('placeholder', 'Search...');
+
 
   //   var customDateFilter = '<div class="date_filter">' +
   //                        '<label for="date" style="white-space: nowrap;">Select Date:</label>' +
@@ -565,22 +596,13 @@ tr:hover .symbol_name_watchlist {
         options += "<option value='" + dates[i] + "'>" + dates[i] + "</option>";
       }
       $('#date').html((options));
-      
+      var selectedDate = $("#date").val();
+      get_bulkDeal_data(selectedDate)
     }
 
     $('#date').change(function () {
       var selectedDate = $(this).val();
-      $.ajax({
-        url: '/bulk_deal_data',
-        type: 'GET',
-        data: { date: selectedDate },
-        dataType: 'json',
-        success: function (response) {
-          var dealData = response.deal_data;
-          var tableRows = generateTableRows(dealData);
-          dataTable.clear().rows.add($(tableRows)).draw(); // Clear existing data and add new data
-        }
-      });
+      get_bulkDeal_data(selectedDate)
     });
 
     // Retrieve initial data on page load
@@ -589,17 +611,77 @@ tr:hover .symbol_name_watchlist {
       type: 'GET',
       dataType: 'json',
       success: function (response) {
-        var dealData = response.deal_data;
-        var tableRows = generateTableRows(dealData);
-        dataTable.clear().rows.add($(tableRows)).draw(); // Add initial data
+    
 
         var dealDates = response.deal_dates;
         populateDateOptions(dealDates);
       }
     });
- 
+
+
+    function get_bulkDeal_data(expiry_data) {
+
+      $("#spinner").show()
+      $.ajax({
+        url: '/bulk_deal_data',
+        type: 'GET',
+        data: { date: expiry_data },
+        dataType: 'json',
+        success: function (response) {
+                    // Initialize DataTable with options
+    var dataTable = $('#bulk_data').DataTable({
+      "pageLength": 25,
+      "dom": '<"top"lf>rt<"bottom"ip><"clear">',
+      "language": {
+      "search": '<div class="custom-search" style="position: relative"><i class="bi bi-search" style="position: absolute;right: 7px;top: 10px;"></i></i><input class="form-control" type="search" placeholder="Search" aria-controls="volume_shocker_table"></div>'
+      }
+    });
+    $('#bulk_data_filter input:eq(1)').hide();
+    $('#bulk_data_filter input[type="search"]').attr('placeholder', 'Search...');
+     
     $('#bulk_data_length, #bulk_data_filter').wrapAll('<div class="parent_search_length"></div>');
     $('#bulk_data').wrapAll('<div class="parent_table"></div>');
+          var dealData = response.deal_data;
+        var tableRows 
+
+        console.log(dealData);
+        $("#allBtn").click(function() {
+
+          $(".main_buy_sell_inner_filter button").removeClass("main_active-all-buy-sell")
+          $(this).addClass("main_active-all-buy-sell")
+       tableRows = generateTableRows(dealData);
+       console.log(dealData);
+       dataTable.clear().rows.add($(tableRows)).draw(); // Add initial data
+    });
+        $("#buyBtn").click(function() {
+          $(".main_buy_sell_inner_filter button").removeClass("main_active-all-buy-sell")
+          $(this).addClass("main_active-all-buy-sell")
+      const buyData = dealData.filter(deal => deal.type === "BUY");
+      console.log(buyData);
+   tableRows = generateTableRows(buyData);
+   dataTable.clear().rows.add($(tableRows)).draw(); // Add initial data
+    });
+
+    $("#sellBtn").click(function() {
+      $(".main_buy_sell_inner_filter button").removeClass("main_active-all-buy-sell")
+      $(this).addClass("main_active-all-buy-sell")
+      const sellData = dealData.filter(deal => deal.type === "SELL");
+      console.log(sellData);
+   tableRows = generateTableRows(sellData);
+   dataTable.clear().rows.add($(tableRows)).draw(); // Add initial data
+    });
+    tableRows = generateTableRows(dealData);
+
+        dataTable.clear().rows.add($(tableRows)).draw(); // Add initial data
+
+        $("#spinner").hide()
+        }
+      });
+
+
+    }
+
+
 
 
  });
