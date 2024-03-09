@@ -876,9 +876,7 @@ border: 1px solid #4399eb !important;
     border-bottom: none !important;
   }
 
-  #edit_modal {
-    width: fit-content !important;
-  }
+
 
   .main_strikePrice {
     display: flex;
@@ -1846,6 +1844,8 @@ box-shadow: 0 3px 16px 0 rgba(35,47,62,.15);
               #increment_strangle:active,
               #decrement_strangle:active,
               #future_decrement:active,
+              .decrement_edit:active,
+.increment_edit:active,
               #future_increment:active{
                 background: #80808042;
               }
@@ -9972,33 +9972,33 @@ $(".all_strategy_filter").removeClass("main_all_strategy_active")
             </div>
 
             <div class="d-flex align-items-center justify-content-between mt-2">
-              <p class="fs-14 fw-500 label-color-6">Reward Risk:</p>
+              <p class="fs-14 fw-500 label-color-6">Reward Risk</p>
               <p class="fs-14 fw-500 label-color-6" id="ratio">No Defined</p>
             </div>
 
             <div class="d-flex align-items-center justify-content-between mt-2" id="margin_needed">
-              <p class="fs-14 fw-500 label-color-6">Net Credit:</p>
+              <p class="fs-14 fw-500 label-color-6">Net Credit</p>
               <p class="fs-14 fw-500 label-color-6" id="net_credit">null</p>
             </div>
 
 
             <div class="d-flex align-items-center justify-content-between mt-2" id="brokrage_needed">
-              <p class="fs-14 fw-500 label-color-6">Approx Brokerage:</p>
+              <p class="fs-14 fw-500 label-color-6">Approx Brokerage</p>
               <p class="fs-14 fw-500 label-color-6" id="brokrage_fees">40</p>
             </div>
             <div class="d-flex align-items-center justify-content-between mt-2" id="brokrage_needed">
-              <p class="fs-14 fw-500 label-color-6">Platform Free :</p>
+              <p class="fs-14 fw-500 label-color-6">Platform Free </p>
               <p class="fs-14 fw-500 label-color-6" id="brokrage_fees">1</p>
             </div>
 
 
             <div class="d-flex align-items-center justify-content-between mt-2" id="margin_needed">
-              <p class="fs-14 fw-500 label-color-6">Margin required:</p>
+              <p class="fs-14 fw-500 label-color-6">Margin required</p>
               <p class="fs-14 fw-500 label-color-6" id="margin_required">null</p>
             </div>
-            <div class="d-flex align-items-center justify-content-between mt-2" id="margin_needed">
+            <div class="d-flex align-items-center justify-content-between mt-2  d-none" id="margin_needed">
               <p class="fs-14 fw-500 label-color-6">Actual profit:</p>
-              <p class="fs-14 fw-500 label-color-6 text-success d-none" id="margin_required">279</p>
+              <p class="fs-14 fw-500 label-color-6 text-success" id="margin_required">279</p>
             </div>
 
 
@@ -12154,69 +12154,136 @@ margin-bottom: 38px;
     justify-content: flex-end;
     padding: 2px 0;
   }
+  .counter_straddle{
+    border: 1px solid #8080803b !important;
+    border-radius: 4px !important;
+  }
+
+  .increment_edit{
+    all: unset;
+    width: 26px !important;
+    text-align: center;
+    border-left: 1px solid #8080803b !important;
+    height: 37px;
+    padding: 0px 3px 0px 4px;
+    cursor: pointer;
+    transition: 0.2s;
+  }
+  .increment_edit:hover{
+    background: #80808029;
+  }
+  .decrement_edit{
+    all: unset;
+    width: 26px !important;
+    text-align: center;
+    border-right: 1px solid #8080803b !important;
+    height: 37px;
+    padding: 0px 3px 0px 4px;
+    cursor: pointer;
+    transition: 0.2s;
+  }
+  .decrement_edit:hover{
+    background: #80808029;
+    
+  }
+  .decrement_edit:active,
+.increment_edit:active{
+  background: #80808042;
+}
+  .counter_input_edit{
+    all: unset !important;
+    width: 30px !important;
+    text-align: center !important;
+  }
+
+  @media only screen and (max-width: 786px) {
+    .expiry_div{
+      flex-wrap: wrap !important;
+    }
+    .option_edit_div{
+      flex-wrap: wrap !important;
+    }
+    .entry_price_div{
+      flex-wrap: wrap !important;
+    }
+  }
+.textOnInput_edit{
+  width: 223px !important;
+}
 </style>
 </div>
+
+
 <div class="modal fade" id="editPositionModal">
   <div class="modal-dialog modal-dialog-centered" id="edit_modal">
     <div class="modal-content">
-      <div class="modal-header" id="modal_header_edit">
+      <div class="modal-header" id="modal_header_edit" style="padding: 11px 23px; background: #f3f3f3; border: none !important; outline: none !important;">
         <h5 class="modal-title" id="modal_title_edit">Edit Position</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="font-size: 0.8rem !important;"></button>
       </div>
       <input type="text" id="options_futures_uniques" style="display: none;">
 
       <div class="modal-body options_edit" id="modal_body">
-        <div class="form-group textOnInput_edit">
-          <label for="expiryEdit">Select Expiry</label>
-          <select name="selectExpiry" class="expiry_date_input" id="selectExpiry"></select>
-        </div>
-        <div class="form-group textOnInput_edit">
-          <label for="strikeEdit">Select Strike Price</label>
-          <select name="selectStrikePrice" class="strike_price_input" id="selectStrikePrice"></select>
-        </div>
-        <div class="form-group textOnInput_edit">
-          <label for="optionType">Select Option Type</label>
-          <select name="optionType" id="optionType">
-            <option value="CE">CE</option>
-            <option value="PE">PE</option>
-            <!-- <option value="FUTURE">FUTURE</option> -->
-          </select>
-        </div>
-
-        <div class="Long_short">
-          <div class="form-check">
-            <input class="form-check-input long_radio" type="radio" name="long_short" id="" value="Long" checked />
-            <label class="form-check-label" for="long_radio"> Buy </label>
+        <div class="d-flex gap-3">
+          <div class="form-group textOnInput_edit mt-3">
+            <label for="expiryEdit">Select Expiry</label>
+            <select name="selectExpiry" class="expiry_date_input" id="selectExpiry"></select>
           </div>
-          <div class="form-check">
-            <input class="form-check-input short_radio" type="radio" name="long_short" id="" value="Short" />
-            <label class="form-check-label" for="short_radio"> Sell </label>
+          <div class="form-group textOnInput_edit mt-3">
+            <label for="strikeEdit">Select Strike Price</label>
+            <select name="selectStrikePrice" class="strike_price_input" id="selectStrikePrice"></select>
           </div>
         </div>
+        <div class="d-flex gap-3 align-items-center">
 
-        <div class="main_counter d-flex gap-3 mb-3">
+          <div class="form-group textOnInput_edit mt-3">
+            <label for="optionType">Select Option Type</label>
+            <select name="optionType" id="optionType">
+              <option value="CE">CE</option>
+              <option value="PE">PE</option>
+              <!-- <option value="FUTURE">FUTURE</option> -->
+            </select>
+          </div>
+          <div class="Long_short mt-3">
+            <div class="form-check">
+              <input class="form-check-input long_radio" type="radio" name="long_short" id="" value="Long" checked />
+              <label class="form-check-label" for="long_radio"> Buy </label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input short_radio" type="radio" name="long_short" id="" value="Short" />
+              <label class="form-check-label" for="short_radio"> Sell </label>
+            </div>
+          </div>
+        </div>
+
+
+       
+
+       <div class="d-flex gap-3 align-items-center">
+         <div class="form-group textOnInput_edit mt-3">
+           <label for="entryEdit">Entry Price</label>
+           <input type="text" class="edit_entry form-control" />
+         </div>
+         <div class="form-group textOnInput_edit mt-3 d-none">
+           <label for="exitPrice">Exit Price</label>
+           <input type="number" class="exit_price form-control" />
+         </div>
+         <div class="main_counter d-flex gap-3" style="margin-left: 0 !important;">
           <div class="innerStraddle_lot_size">
             <p class="fs-6 lot_title">Qty:</p>
             <div class="counter_straddle d-flex justify-content-center gap-1">
               <button class="decrement_edit">
                 <i class="bx bx-minus"></i>
               </button>
-              <input type="text" name="" class="counter_input_edit" min="1" disabled />
+              <input type="text" name="" class="counter_input_edit" min="1" disabled  style="width: 80px !important;"/>
               <button class="increment_edit">
                 <i class="bx bx-plus"></i>
               </button>
             </div>
           </div>
         </div>
+       </div>
 
-        <div class="form-group textOnInput_edit">
-          <label for="entryEdit">Entry Price</label>
-          <input type="text" class="edit_entry form-control" />
-        </div>
-        <div class="form-group textOnInput_edit">
-          <label for="exitPrice">Exit Price</label>
-          <input type="number" class="exit_price form-control" />
-        </div>
       </div>
 
 
@@ -12279,6 +12346,7 @@ margin-bottom: 38px;
     </div>
   </div>
 </div>
+
 <style>
   .main_spot_order {
     display: flex;
