@@ -4,7 +4,9 @@
 {% load static %}
 {% block dashboard_body %}
 
+<script>
 
+</script>
 
 <style>
   .date_time_dropdown {
@@ -310,20 +312,17 @@ width: 180px !important;
 
 <div class="container mt-4" style="margin-bottom:200px ;">
 
-    <h5 class="pb-2">Index Historical Data</h5>
+    <h5 class="pb-2">Stock Historical Data</h5>
 
 <div class="main_all_index_historical_table_header">
 <div class="main_top_filter_historical_data"> 
 
     <div class="main_index_symbol_filter">
-        <label for="symbol_filter">Select Index :</label>
+        <label for="symbol_filter">Select Stock :</label>
    <select name="" id="symbol_filter" class="form-select">
 
 
-    <option value="%5ENSEI">Nifty</option>
-    <option value="%5ENSEBANK">Bank Nifty</option>
-    <option value="NIFTY_FIN_SERVICE.NS">Fin Nifty</option>
-    <option value="ACC.NS">ACC Limited</option>
+
 </select>
     </div>
 
@@ -430,6 +429,35 @@ $(".apply_button").click(function () {
 get_all_filtered_historical_data()
 
 });
+
+$.ajax({
+    url:"/get_stock_symbol",
+    type:'GET',
+    success: function (symbols) {
+        console.log(symbols);
+
+
+            var stocksOptgroup = $("#symbol_filter");
+                stocksOptgroup.empty();
+
+                for (let entry of symbols) {
+                entry.symbol_name_value = entry.symbol_name.replace("&", "_");
+
+                
+                var option = $(`<option value="${entry.symbol_name}.NS">${entry.symbol_name}</option>`);
+
+            console.log(option);
+
+            stocksOptgroup.append(option);
+                }
+        get_all_filtered_historical_data()
+        
+    },
+    error: function (error) {
+        console.log(error);
+        
+    }
+})
 function get_all_filtered_historical_data() {
 
 
@@ -452,6 +480,8 @@ var requestData = {
 };
 
 // Make AJAX request to Django backend
+
+
 $.ajax({
 url: '/get_index_historical_data', // URL of the Django backend endpoint
 type: 'POST', // You can change this to 'POST' if needed
@@ -752,7 +782,7 @@ date_filter_btn.click(function () {
  
     // Perform some action with selected date range
 });
-get_all_filtered_historical_data()
+
 });
 
 </script>

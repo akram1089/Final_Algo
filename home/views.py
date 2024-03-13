@@ -21565,3 +21565,5 @@ def verify_totp_to_show_key(request):
 
 def option_stock_strategy_executor(request):
     return render(request, "option_stock_strategy_executor.html")
+def stock_historical(request):
+    return render(request, "stock_historical.html")
