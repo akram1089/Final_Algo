@@ -13325,6 +13325,8 @@ console.log(sortedData);
           .empty()
           .append(`<p>Note: Please check the liquidity of all trades !!</p>`)
           .removeClass("passed_liquidity failed_liquidity");
+           // Reset the select option to "Market"
+        $("#limit_select").val("market");
       }
     });
 
@@ -13977,14 +13979,13 @@ console.log(sortedData);
       //////console.log(selectedOption);
       // Loop through each .inner_position element
       $(".left_bottom_card_order").each(function (index) {
-        var card = $(this);
+   
+        var card = $(this).closest('.left_bottom_card_order');
 
-        // Find the radio buttons inside this .inner_position
-        var limitRadio = card.find(`#limitOrder${index}`);
-        var marketRadio = card.find(`#marketOrder${index}`);
-        //////console.log(limitRadio);
-        //////console.log(marketRadio);
-
+// Find the radio buttons inside the current .left_bottom_card_order
+ // Find the radio buttons inside the current .left_bottom_card_order
+ var limitRadio = card.find('input[id^="limitOrder"]');
+    var marketRadio = card.find('input[id^="marketOrder"]');
         // Depending on the selected option, check/uncheck the radio buttons
         if (selectedOption === "limit") {
           limitRadio.prop("checked", true);
