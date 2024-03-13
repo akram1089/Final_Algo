@@ -18784,7 +18784,7 @@ def kite_order_zerodha(request):
                     access_token=broker_instance_upstocks.enctoken,
                 )
             print("response_data",response_data)
-            order_details = [order.to_dict() for order in response_data]
+            order_details =  response_data
             return JsonResponse({'status': 'success','broker':'upstocks', 'message': 'Orders placed successfully', 'order_details': order_details})
 
         else:
@@ -18891,26 +18891,27 @@ def upstocks_place_order(access_token,data_trade):
 
     
     try:
+        all_filtered_orders = []
         all_placed_orders = []
 
         # Place orders in a loop
         for i, order_request in enumerate(orders_to_place):
-            try:
-                # Place order
-                api_response = api_instance.place_order(order_request, api_version)
-                order_id = api_response.data.order_id
-                pprint(f"Placed order {i + 1} with ID: {order_id}")
 
-                # Append the placed order to the list
-                all_placed_orders.append(order_id)
+            # Place order
+            api_response = api_instance.place_order(order_request, api_version)
+            order_id = api_response.data.order_id
+            print(f"Placed order {i + 1} with ID: {order_id}")
 
-            except ApiException as e:
-                print(f"Exception when placing order {i + 1}: {e}\n")
-            order_book_response = api_instance.get_order_book(api_version)
-            last_order = order_book_response.data[-1]
-            # pprint(last_order)
+            # Append the placed order to the list
+            all_placed_orders.append(order_id)
 
-        all_filtered_orders = []
+
+    
+        order_book_response = api_instance.get_order_book(api_version)
+        last_order = order_book_response.data[-1]
+        # pprint(last_order)
+
+        
         for i, order in enumerate(order_book_response.data):
             # print(f"order{i}", order.order_id)
 
@@ -18919,12 +18920,28 @@ def upstocks_place_order(access_token,data_trade):
                 all_filtered_orders.append(order)
 
         # print(all_filtered_orders)
-        return all_filtered_orders
+                order_details = [order.to_dict() for order in all_filtered_orders]
+        return order_details
 
 
 
     except ApiException as e:
+        output = str(e)
+        print(f"Exception when placing order {i + 1}: {e}\n")
+        start_index = output.find('HTTP response body:')
+
+        if start_index != -1:
+            # Extract the JSON portion after "HTTP response body:"
+            json_string = output[start_index + len('HTTP response body:'):].strip()
+            # Remove the 'b' prefix if present and convert bytes to string
+            if json_string.startswith('b\''):
+                json_string = json_string[2:-1]
+            error_data = json.loads(json_string)
+            # Extract the error message
+            error_message = error_data['errors'][0]['message']
+            print("error_message", error_message)
         print("Exception when calling OrderApi->place_order: %s\n" % e)
+        return error_message
 
 
 
@@ -19690,6 +19707,10 @@ def get_angel_one_quote(trading_quotes, logging_id, password, totp_key, api_key)
     ]
 
     # print("Modified Strikes:", modified_strikes)
+    main_angel_one_strikePrice=[]
+    for strikePrice in trading_quotes:
+        main_angel_one_strikePrice.append(strikePrice["strikePrice"])
+
 
     api_key = api_key
     client_id = logging_id
@@ -19798,7 +19819,8 @@ def get_angel_one_quote(trading_quotes, logging_id, password, totp_key, api_key)
         "market_data": market_data if 'market_data' in locals() else None,
         "margin_info": margin_info,
         "broker_name": "angelone",
-        'all_profile': all_profile
+        'all_profile': all_profile,
+        'main_angel_one_strikePrice': main_angel_one_strikePrice,
     }
 
     return result_data
@@ -21539,3 +21561,7 @@ def verify_totp_to_show_key(request):
         return JsonResponse({'otp_verify':"failed"})
 
 
+
+
+def option_stock_strategy_executor(request):
+    return render(request, "option_stock_strategy_executor.html")

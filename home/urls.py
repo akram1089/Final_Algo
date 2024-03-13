@@ -594,6 +594,7 @@ urlpatterns = [
      path('contact_info', views.contact_info, name='contact_info'),
      path('refund_cancellations_policy', views.refund_cancellations_policy, name='refund_cancellations_policy'),
      path('verify_password', views.verify_password, name='verify_password'),
+     path('option_stock_strategy_executor', views.option_stock_strategy_executor, name='option_stock_strategy_executor'),
 
 
 
