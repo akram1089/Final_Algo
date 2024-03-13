@@ -323,7 +323,7 @@ width: 180px !important;
     <option value="%5ENSEI">Nifty</option>
     <option value="%5ENSEBANK">Bank Nifty</option>
     <option value="NIFTY_FIN_SERVICE.NS">Fin Nifty</option>
-    <option value="ACC.NS">ACC Limited</option>
+  
 </select>
     </div>
 
@@ -482,6 +482,8 @@ return `${parseInt(day, 10)}-${months[monthIndex]}-${year}`;
     // Iterate through the historical data and append rows to the table body
     response.historical_data.forEach(function(data) {
 
+        console.log(data);
+
 
 
 var closePrice = parseFloat(data.Close);
@@ -497,31 +499,32 @@ percentChange = "-";
 
 
 
-        var row = $("<tr>");
+       
+var row = $("<tr>");
  
-            row.append($("<td>").text( changeDateFormat(data.Date || "-")).attr("data-order", formatDateWithTimestamp(data.Date) ));
+ row.append($("<td>").text( changeDateFormat(data.Date || "-")).attr("data-order", formatDateWithTimestamp(data.Date) ));
 
 
-        row.append($("<td>").html(formatNumber(data.Open)));
-            row.append($("<td class='text-success'>").html(formatNumber(data.High)));
-                row.append($("<td class='text-danger'>").html(formatNumber(data.Low)));
-                    row.append($("<td>").html(formatNumber(data.Close)));
+row.append($("<td>").html(formatNumber(data.Open)));
+ row.append($("<td class='text-success'>").html(formatNumber(data.High)));
+     row.append($("<td class='text-danger'>").html(formatNumber(data.Low)));
+         row.append($("<td>").html(formatNumber(data.Close)));
 
-                        var priceDifferenceTd = $("<td>").html(formatNumber(priceDifference || "-"));
-                            // Apply conditional formatting based on the value of priceDifference
-                            if (!isNaN(priceDifference)) {
-                                if (priceDifference < 0) {
-                                    priceDifferenceTd.addClass("text-danger");
-                                } else if (priceDifference > 0) {
-                                    priceDifferenceTd.addClass("text-success");
-                                }
-                            }
-                        
-                            // Append the price difference <td> element to the row
-                            row.append(priceDifferenceTd);
-                            row.append($("<td>").html(formatNumber(percentChange) + "<span>%</span>").addClass(percentChange < 0 ? 'text-danger' : 'text-success'));
-                            row.append($("<td>").html(data.Volume || "<span style='color: red;'>-</span>"));
-                            tbody.append(row);
+             var priceDifferenceTd = $("<td>").html((priceDifference.toFixed(2) || "0"));
+                 // Apply conditional formatting based on the value of priceDifference
+                 if (!isNaN(priceDifference)) {
+                     if (priceDifference < 0) {
+                         priceDifferenceTd.addClass("text-danger");
+                     } else if (priceDifference > 0) {
+                         priceDifferenceTd.addClass("text-success");
+                     }
+                 }
+             
+                 // Append the price difference <td> element to the row
+                 row.append(priceDifferenceTd);
+                 row.append($("<td>").html(formatNumber(percentChange) + "<span>%</span>").addClass(percentChange < 0 ? 'text-danger' : percentChange > 0 ? 'text-success' : 'text-secondary'));
+                 row.append($("<td>").html(data.Volume || "<span style='color: red;'>-</span>"));
+                 tbody.append(row);
     });
 
     table.DataTable({
@@ -530,13 +533,7 @@ percentChange = "-";
         "search": '<div class="custom-search" style="position: relative"><i class="bi bi-search" style="position: absolute;right: 7px;top: 10px;"></i></i><input class="form-control" type="search" placeholder="Search" aria-controls="volume_shocker_table"></div>'
        },
        "pageLength": 25,
-       'columnDefs': [
-    				{ 'orderData':[1] },
-    				{
-        			'targets': [1],
-		        	'visible': false
-    				},
-				],
+ 
      
     });
     $('#historical_data_table_filter input:eq(1)').hide();

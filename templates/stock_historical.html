@@ -4,9 +4,7 @@
 {% load static %}
 {% block dashboard_body %}
 
-<script>
 
-</script>
 
 <style>
   .date_time_dropdown {
@@ -319,7 +317,12 @@ width: 180px !important;
 
     <div class="main_index_symbol_filter">
         <label for="symbol_filter">Select Stock :</label>
-   <select name="" id="symbol_filter" class="form-select">
+   <select name="" id="symbol_filter_main" class="form-select">
+
+
+
+    <optgroup id="symbol_filter" label="Stocks"></optgroup>
+
 
 
 
@@ -462,7 +465,7 @@ function get_all_filtered_historical_data() {
 
 
 var frequency = $("#frequency_filter").val();
-var symbol = $("#symbol_filter").val();
+var symbol = $("#symbol_filter_main").val();
 
 // Get the text content of the button
 var dateRangeText = $("#range_date_btn").text();
@@ -537,7 +540,7 @@ percentChange = "-";
                 row.append($("<td class='text-danger'>").html(formatNumber(data.Low)));
                     row.append($("<td>").html(formatNumber(data.Close)));
 
-                        var priceDifferenceTd = $("<td>").html(formatNumber(priceDifference || "-"));
+                        var priceDifferenceTd = $("<td>").html((priceDifference.toFixed(2) || "0"));
                             // Apply conditional formatting based on the value of priceDifference
                             if (!isNaN(priceDifference)) {
                                 if (priceDifference < 0) {
@@ -549,7 +552,7 @@ percentChange = "-";
                         
                             // Append the price difference <td> element to the row
                             row.append(priceDifferenceTd);
-                            row.append($("<td>").html(formatNumber(percentChange) + "<span>%</span>").addClass(percentChange < 0 ? 'text-danger' : 'text-success'));
+                            row.append($("<td>").html(formatNumber(percentChange) + "<span>%</span>").addClass(percentChange < 0 ? 'text-danger' : percentChange > 0 ? 'text-success' : 'text-secondary'));
                             row.append($("<td>").html(data.Volume || "<span style='color: red;'>-</span>"));
                             tbody.append(row);
     });
@@ -560,14 +563,7 @@ percentChange = "-";
         "search": '<div class="custom-search" style="position: relative"><i class="bi bi-search" style="position: absolute;right: 7px;top: 10px;"></i></i><input class="form-control" type="search" placeholder="Search" aria-controls="volume_shocker_table"></div>'
        },
        "pageLength": 25,
-       'columnDefs': [
-    				{ 'orderData':[1] },
-    				{
-        			'targets': [1],
-		        	'visible': false
-    				},
-				],
-     
+
     });
     $('#historical_data_table_filter input:eq(1)').hide();
     $('#historical_data_table_filter input[type="search"]').attr('placeholder', 'Search...');
