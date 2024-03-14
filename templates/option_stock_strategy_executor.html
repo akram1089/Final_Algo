@@ -9728,14 +9728,18 @@ $(".all_strategy_filter").removeClass("main_all_strategy_active")
                   </div>
                   <div class="modal-footer justify-content-between align-items-end">
                     <div class="margin_footer">
-                      <div class="form-group order_place_input">
-                        <label for="expiryEdit">Margin Needed</label>
+                      <div class="form-group" style="display: flex;
+                      align-items: center;
+                      column-gap: 0.3rem;">
+                        <label for="expiryEdit" style="padding-bottom: 0 !important; margin: 0 !important;">Margin Needed :</label>
                         <input type="number" value="0" class="margin_needed form-control" disabled style="font-size: 13px;
                         font-weight: 500;" />
                       </div>
-                      <div class="form-group order_place_input">
-                        <label for="expiryEdit">Margin Available</label>
-                        <input type="number" value="0" class="margin_available form-control" disabled style="font-size: 13px;
+                      <div class="form-group" style="display: flex;
+                      align-items: center;
+                      column-gap: 0.3rem;">
+                        <label for="expiryEdit"style="padding-bottom: 0 !important;  margin: 0 !important;">Margin Available :</label>
+                        <input type="number" value="0" class="margin_available form-control" disabled style="font-size: 13px;     width: 120px;
                         font-weight: 500;" />
                       </div>
                     </div>
@@ -13075,6 +13079,84 @@ console.log(sortedData);
         $(".order_modal").append(sortedContent.content);
       });
 
+     $(".individual_order_place").click(function () {
+
+              var inner_order_modal  = $(this).closest(".inner_order_modal")
+              var index = inner_order_modal.index();
+    console.log("Index of .inner_order_modal:", index);
+    localStorage.setItem("inner_order_modal_index", index);
+
+
+              
+
+
+
+    var All_positionTrade = [];
+
+      var mis_select = $(".mis_select").val()
+    
+     
+        var sell_buy_indicator = inner_order_modal.find(".sell_buy_indicator").text();
+        var tradingsymbol = inner_order_modal.find(".tradingsymbol").text();
+        var main_trading_symbol = inner_order_modal.find(".main_trading_symbol").text();
+        var main_instrument_token = inner_order_modal.find(".main_instrument_token").text();
+        var priceTrade = inner_order_modal.find(".priceTrade").val();
+        var quantityTrade = inner_order_modal.find(".quantityTrade").val();
+        var strikePrice_order_window = inner_order_modal.find(".strikePrice_order_window").text();
+        var main_strikePrice_values = inner_order_modal.find(".main_strikePrice_values").text();
+        var stockDropdown_main = inner_order_modal.find(".stockDropdown_main").text();
+        //////console.log(strikePrice_order_window);
+
+
+        // Check if the radio button is checked
+        var isRadioChecked = $("input[name^='orderTypeLimit']:checked").val();
+
+
+        //////console.log(isRadioChecked);
+
+        All_positionTrade.push({
+          orderNumber: OrderId++,
+          sell_buy_indicator: sell_buy_indicator,
+          tradingsymbol: tradingsymbol,
+          main_trading_symbol: main_trading_symbol,
+          strikePrice_order_window: strikePrice_order_window,
+          Quantity: quantityTrade,
+          price: priceTrade,
+          isRadioChecked: isRadioChecked, // Add this property to the object
+          mis_select: mis_select,
+          main_instrument_token: main_instrument_token,
+          main_strikePrice_values: main_strikePrice_values,
+          stockDropdown_main: stockDropdown_main,
+        });
+   
+
+      //////console.log(All_positionTrade);
+      All_positionTrade.sort((a, b) => parseInt(a.strikePrice_order_window) - parseInt(b.strikePrice_order_window));
+
+      // Sort based on sell_buy_indicator, putting "CE" first
+      All_positionTrade.sort((a, b) => a.sell_buy_indicator === "BUY" ? -1 : 1);
+
+      console.log(All_positionTrade);
+
+      PlaceOrderMain_individual(All_positionTrade)
+
+
+
+
+
+
+
+
+
+
+
+      console.log('HI');
+
+
+
+
+      });
+
 
 
       //////console.log(trading_quote);
@@ -14736,7 +14818,181 @@ console.log(sortedData);
 
 
     });
+    function PlaceOrderMain_individual(All_positionTrade) {
+      $.ajax({
+          url: "/kite_order_zerodha", // Replace with the actual URL of your Django view
+          type: "POST",
+          data: JSON.stringify(All_positionTrade),
+          contentType: "application/json",
+          success: function (response) {
+            console.log(response);
+            var storedIndex = localStorage.getItem("inner_order_modal_index");
+            if (response.broker === "zerodha") {
+  
+              var order_status = $(".order_status p")
+              var inner_order_modal = $(".inner_order_modal")
+  
+              var individual_order_place = $(".individual_order_place")
+              //////console.log(response.order_details);
+  
+  
+              // Assuming the format is consistent (NIFTY23NOV20050CE)
+  
+  
+              response.order_details.sort((a, b) => {
+                // Extract the numeric part before "CE" or "PE"
+                let partsA = a.tradingsymbol.match(/(\d+)(CE|PE)/);
+                let partsB = b.tradingsymbol.match(/(\d+)(CE|PE)/);
+  
+                // Extracted numeric parts for comparison
+                let numericPartA = partsA ? parseInt(partsA[1]) : 0;
+                let numericPartB = partsB ? parseInt(partsB[1]) : 0;
+  
+                // First, sort by the extracted numeric part
+                const numericPartComparison = numericPartB - numericPartA;
+  
+                if (numericPartComparison !== 0) {
+                  return numericPartComparison;
+                }
+  
+                // If numeric parts are equal, sort by strikeprice
+                const strikePriceComparison = parseInt(b.strikeprice) - parseInt(a.strikeprice);
+  
+                if (strikePriceComparison !== 0) {
+                  return strikePriceComparison;
+                }
+  
+                // If strike prices are equal, sort by transaction type
+                return a.transaction_type === "BUY" ? -1 : 1;
+              });
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+              response.order_details.forEach((order) => {
+                var order_status_text = order.order_id;
+  
+                //////console.log(order_status_text);
+  
+                // Check if order_status_text is not an object
+                if (typeof order_status_text === 'object') {
+                  // Run this code block if it's not an object
+                  inner_order_modal.eq(storedIndex).addClass("box_shadow_order_execution_success");
+                  individual_order_place.eq(storedIndex).attr("disabled" , true)
+                  order_status.eq(storedIndex).text(`Order Placed Successfully : Order Id - ${order_status_text.data.order_id}`).addClass("order_success_text");
+                } else {
+                  // If it's an object, proceed with JSON parsing
+                  var orderObject = JSON.parse(order_status_text);
+  
+                  if (orderObject.status === "error") {
+                    inner_order_modal.eq(storedIndex).addClass("box_shadow_order_execution_error");
+                    individual_order_place.eq(storedIndex).attr("disabled" , false)
+  
+                    order_status.eq(storedIndex).text(orderObject.message.replace(/\s*\[Read more.\].*$/, '')).addClass("order_error_text");
+                  }
+                }
+              });
+            }
+            else if (response.broker === "angel_one") {
+              var order_status = $(".order_status p");
+              var inner_order_modal = $(".inner_order_modal");
+  
+              response.order_details.sort((a, b) => {
+                // First, sort by strikeprice
+                const strikePriceComparison = parseInt(b.strikeprice) - parseInt(a.strikeprice);
+  
+                // If strike prices are equal, sort by transaction type
+                if (strikePriceComparison === 0) {
+                  return a.transactiontype === "BUY" ? -1 : 1;
+                }
+  
+                return strikePriceComparison;
+              });
+  
+              response.order_details.forEach((order) => {
+                //////console.log(order);
+  
+                // Check if order_status_text is not an object
+                if (order.orderstatus === "rejected") {
+                  // Run this code block if it's not an object
+                  inner_order_modal.eq(storedIndex).addClass("box_shadow_order_execution_error");
+                  order_status.eq(storedIndex).text(` Order Id - ${order.orderid} ${order.text}`).addClass("order_error_text");
+                } else {
+                  // If it's an object, proceed with JSON parsing
+                  inner_order_modal.eq(storedIndex).addClass("box_shadow_order_execution_success");
+                  order_status.eq(storedIndex).text(`Order Placed Successfully : Order Id - ${order.orderid}`).addClass("order_success_text");
+                }
+              });
+            } 
+            
+            else if (response.broker === "upstocks") {
+  
+              var order_status = $(".order_status p");
+              var inner_order_modal = $(".inner_order_modal");
+              // console.log("Upstocks");
+  
+// Check if order_details is not an array
+if (Array.isArray(response.order_details)) {
+    // If it's an array, iterate over it
+    response.order_details.forEach((order) => {
+        // Check if order_status_text is not an object
+        if (order.status === "rejected") {
+            // Run this code block if it's not an object
+            inner_order_modal.eq(storedIndex).addClass("box_shadow_order_execution_error");
+            order_status.eq(storedIndex).text(` Order Id - ${order.order_id} ${order.status_message_raw}`).addClass("order_error_text");
+        } else {
+            // If it's an object, proceed with JSON parsing
+            inner_order_modal.eq(storedIndex).addClass("box_shadow_order_execution_success");
+            order_status.eq(storedIndex).text(`Order Placed Successfully : Order Id - ${order.order_id}`).addClass("order_success_text");
+        }
+    });
+} else {
+    // If it's not an array, handle it accordingly
+    inner_order_modal.eq(storedIndex).addClass("box_shadow_order_execution_error");
+    order_status.eq(storedIndex).text(`Error: ${response.order_details}`).addClass("order_error_text");
+}
 
+            }
+  
+            // Handle the response from the Django view if needed
+  
+  
+            // Check if there's a success message in the response
+            // if (response.message) {
+            //   displayAlert(response.message, "success");
+            // } else if (response.error) {
+            //   // Check if there's an error message in the response
+            //   displayAlert(response.error, "error");
+            // }
+  
+            All_positionTrade = [];
+          },
+          error: function (error) {
+            console.error(error);
+  
+            // Display a generic error alert
+            displayAlert(
+              "An error occurred while processing your request.",
+              "error"
+            );
+          },
+        });
+  
+  
+    }
+      
+  
     // function sendPosition_to_kite(All_positionTrade) {
     //   //////console.log(All_positionTrade);
 
