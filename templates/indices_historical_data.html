@@ -306,26 +306,102 @@ width: 180px !important;
 }
 </style>
 
+<style>
 
+    #dropdown-basic{
+      border: 1px solid rgb(201, 201, 201);
+    }
+    .active_stock_dropdown{
+      border: 1px solid #59aaf9 !important;
+  
+  
+    }
+  
+    .stocks-search-dropdown{
+      position: absolute;
+      inset: 0px auto auto 0px;
+      overflow-y: auto;
+      max-height: 350px;
+      margin-top: 7px;
+      transform: translate3d(0px, 34.4px, 0px);
+  
+  
+    }
+  
+    .active_selected_stocks{
+      background-color: #59aaf9 !important;
+      color: white !important;
+    }
+    .stocks-item:hover{
+      color: unset !important;
+    }
+    #main_stock_dropdowns:hover .dropdown-menu{
+   display: none ;
+ margin-top: auto
+  }
 
+  </style>
+<script>
+    $(document).ready(function(){
+        $(document).on("click", function (e) {
+      // Check which modal to hide based on the click target
+      if (
+        !$(e.target).closest("#main_stock_dropdowns").length &&
+        !$(e.target).is(".stocks-search-dropdown")
+      ) {
+        $(".stocks-search-dropdown").hide();
+        $("#dropdown-basic").removeClass('active_stock_dropdown')
+      }
+    });
+    });
+    </script>
 <div class="container mt-4" style="margin-bottom:200px ;">
 
-    <h5 class="pb-2">Index Historical Data</h5>
+    <h5 class="pb-2">Stock Historical Data</h5>
 
 <div class="main_all_index_historical_table_header">
 <div class="main_top_filter_historical_data"> 
-
-    <div class="main_index_symbol_filter">
-        <label for="symbol_filter">Select Index :</label>
-   <select name="" id="symbol_filter" class="form-select">
-
-
-    <option value="%5ENSEI">Nifty</option>
-    <option value="%5ENSEBANK">Bank Nifty</option>
-    <option value="NIFTY_FIN_SERVICE.NS">Fin Nifty</option>
-  
-</select>
-    </div>
+    <div class="form-group position-relative">
+        <span class="text-grey fs-12">Select Stocks :</span>
+        <div class="nse-dropdown dropdown" id="main_stock_dropdowns">
+          <button aria-haspopup="true" aria-expanded="true" id="dropdown-basic" type="button" class="form-control bg-white d-flex justify-content-between align-items-center dropdown-toggle btn btn-none" style="width: 200px;     font-weight: 500;">
+            <span class="fs-14 text-truncate label-color-4">NIFTY</span>
+          </button>
+          <div x-placement="bottom-start" aria-labelledby="dropdown-basic" class="w-100 card-border stocks-search-dropdown label-color-4 bg-white border-0 dropdown-menu " style="
+             position: absolute;
+    inset: 0px auto auto 0px;
+    padding-top: 0px;
+    margin-top: 12px;
+    transform: translate3d(0px, 34.4px, 0px);
+    z-index: 9;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+          " data-popper-reference-hidden="false" data-popper-escaped="false" data-popper-placement="bottom-start">
+            <div class="px-2 mb-2" style="    position: sticky;
+            top: 0;
+            padding: 6px 0;
+            background: white;">
+              <input id="searchInput" type="search" placeholder="Search.." class="form-control label-color-4 shadow-none card-border fs-14 p-1 hight-50 bg-white">
+            </div>
+            <div class="stocks-search-items label-color-4">
+      
+              <h6 class="ms-2 fs-14 fw-bold py-0 pt-1 my-0 indices-heading">Indices</h6>
+      
+              <div class="main_all_stocks">
+                <a href="#" class="fs-14 my-0 py-0 label-color-4 lh-lg active_selected_stocks dropdown-item indices-item " role="button">NIFTY</a>
+                <a href="#" class="fs-14 my-0 py-0 label-color-4 lh-lg dropdown-item indices-item" role="button">BANKNIFTY</a>
+                <a href="#" class="fs-14 my-0 py-0 label-color-4 lh-lg dropdown-item indices-item" role="button">FINNIFTY</a>
+       
+              </div>
+      
+        
+      
+            </div>
+            <div id="noMatchMessage" class="ms-2 fs-14  py-0 pt-1 my-0" style="display: none; color: gray;
+            font-weight: 500 !important;">No match found</div>
+      
+          </div>
+        </div>
+      </div>
 
     <div class="main_date_range_filter">
     <label for="range_date_btn">Date Range :</label>
@@ -430,12 +506,104 @@ $(".apply_button").click(function () {
 get_all_filtered_historical_data()
 
 });
+$('#dropdown-basic').on('click', function() {
+    // Toggle visibility of stocks-search-dropdown
+    $('.stocks-search-dropdown').toggle();
+    $(this).toggleClass('active_stock_dropdown')
+
+
+  });
+
+
+
+  $('.indices-item').on('click', function() {
+  
+  $(".indices-item").removeClass("active_selected_stocks")
+  $(this).addClass("active_selected_stocks")
+
+console.log('Hii');
+
+var newValue = $(this).text();
+$('.text-truncate').text(newValue);
+
+$(".stocks-search-dropdown").hide()
+});
+
+      // Add event listener for input change
+      $('#searchInput').on('input', function() {
+        var filter = $(this).val().toUpperCase();
+        var indicesGroup = $('.indices-heading');
+        var stocksGroup = $('.stocks-heading');
+        var indicesItems = $('.indices-item');
+        var stocksItems = $('.stocks-item');
+        var indicesVisible = false;
+        var stocksVisible = false;
+        var noMatchMessage = $('#noMatchMessage');
+    
+        // Loop through all items and hide those that don't match the search query
+        indicesItems.each(function() {
+          var text = $(this).text().toUpperCase();
+          if (text.indexOf(filter) > -1) {
+            indicesVisible = true;
+            $(this).show();
+          } else {
+            $(this).hide();
+          }
+        });
+    
+        stocksItems.each(function() {
+          var text = $(this).text().toUpperCase();
+          if (text.indexOf(filter) > -1) {
+            stocksVisible = true;
+            $(this).show();
+          } else {
+            $(this).hide();
+          }
+        });
+        
+        // Show/hide Indices group based on visibility of its items
+        if (indicesVisible) {
+          indicesGroup.show();
+        } else {
+          indicesGroup.hide();
+        }
+        
+        // Show/hide Stocks group based on visibility of its items
+        if (stocksVisible) {
+          stocksGroup.show();
+        } else {
+          stocksGroup.hide();
+        }
+        
+        // Show or hide "No match found" message
+        if (!indicesVisible && !stocksVisible) {
+          noMatchMessage.show();
+        } else {
+          noMatchMessage.hide();
+        }
+      });
+  
+
+
 function get_all_filtered_historical_data() {
 
 
 var frequency = $("#frequency_filter").val();
-var symbol = $("#symbol_filter").val();
 
+   var main_symbol_indices = $(".text-truncate").text()
+   var symbol 
+   if (main_symbol_indices==="NIFTY") {
+    symbol="%5ENSEI"
+   }
+  else if (main_symbol_indices==="BANKNIFTY") {
+    symbol="%5ENSEBANK"
+   }
+  else if (main_symbol_indices==="FINNIFTY") {
+    symbol="NIFTY_FIN_SERVICE.NS"
+   }
+
+
+console.log(symbol);
 // Get the text content of the button
 var dateRangeText = $("#range_date_btn").text();
 // Split the text to get start and end dates
@@ -452,6 +620,8 @@ var requestData = {
 };
 
 // Make AJAX request to Django backend
+
+
 $.ajax({
 url: '/get_index_historical_data', // URL of the Django backend endpoint
 type: 'POST', // You can change this to 'POST' if needed
@@ -482,8 +652,6 @@ return `${parseInt(day, 10)}-${months[monthIndex]}-${year}`;
     // Iterate through the historical data and append rows to the table body
     response.historical_data.forEach(function(data) {
 
-        console.log(data);
-
 
 
 var closePrice = parseFloat(data.Close);
@@ -499,32 +667,31 @@ percentChange = "-";
 
 
 
-       
-var row = $("<tr>");
+        var row = $("<tr>");
  
- row.append($("<td>").text( changeDateFormat(data.Date || "-")).attr("data-order", formatDateWithTimestamp(data.Date) ));
+            row.append($("<td>").text( changeDateFormat(data.Date || "-")).attr("data-order", formatDateWithTimestamp(data.Date) ));
 
 
-row.append($("<td>").html(formatNumber(data.Open)));
- row.append($("<td class='text-success'>").html(formatNumber(data.High)));
-     row.append($("<td class='text-danger'>").html(formatNumber(data.Low)));
-         row.append($("<td>").html(formatNumber(data.Close)));
+        row.append($("<td>").html(formatNumber(data.Open)));
+            row.append($("<td class='text-success'>").html(formatNumber(data.High)));
+                row.append($("<td class='text-danger'>").html(formatNumber(data.Low)));
+                    row.append($("<td>").html(formatNumber(data.Close)));
 
-             var priceDifferenceTd = $("<td>").html((priceDifference.toFixed(2) || "0"));
-                 // Apply conditional formatting based on the value of priceDifference
-                 if (!isNaN(priceDifference)) {
-                     if (priceDifference < 0) {
-                         priceDifferenceTd.addClass("text-danger");
-                     } else if (priceDifference > 0) {
-                         priceDifferenceTd.addClass("text-success");
-                     }
-                 }
-             
-                 // Append the price difference <td> element to the row
-                 row.append(priceDifferenceTd);
-                 row.append($("<td>").html(formatNumber(percentChange) + "<span>%</span>").addClass(percentChange < 0 ? 'text-danger' : percentChange > 0 ? 'text-success' : 'text-secondary'));
-                 row.append($("<td>").html(data.Volume || "<span style='color: red;'>-</span>"));
-                 tbody.append(row);
+                        var priceDifferenceTd = $("<td>").html((priceDifference.toFixed(2) || "0"));
+                            // Apply conditional formatting based on the value of priceDifference
+                            if (!isNaN(priceDifference)) {
+                                if (priceDifference < 0) {
+                                    priceDifferenceTd.addClass("text-danger");
+                                } else if (priceDifference > 0) {
+                                    priceDifferenceTd.addClass("text-success");
+                                }
+                            }
+                        
+                            // Append the price difference <td> element to the row
+                            row.append(priceDifferenceTd);
+                            row.append($("<td>").html(formatNumber(percentChange) + "<span>%</span>").addClass(percentChange < 0 ? 'text-danger' : percentChange > 0 ? 'text-success' : 'text-secondary'));
+                            row.append($("<td>").html(data.Volume || "<span style='color: red;'>-</span>"));
+                            tbody.append(row);
     });
 
     table.DataTable({
@@ -533,8 +700,7 @@ row.append($("<td>").html(formatNumber(data.Open)));
         "search": '<div class="custom-search" style="position: relative"><i class="bi bi-search" style="position: absolute;right: 7px;top: 10px;"></i></i><input class="form-control" type="search" placeholder="Search" aria-controls="volume_shocker_table"></div>'
        },
        "pageLength": 25,
- 
-     
+
     });
     $('#historical_data_table_filter input:eq(1)').hide();
     $('#historical_data_table_filter input[type="search"]').attr('placeholder', 'Search...');
@@ -547,6 +713,7 @@ error: function(xhr, status, error) {
 });
 
 }
+
 
 function formatDateWithTimestamp(dateString) {
     // Convert date string to a JavaScript Date object
