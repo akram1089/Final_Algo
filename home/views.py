@@ -20854,7 +20854,10 @@ def delete_scheduler(request):
 
 
 
-@csrf_exempt  # Use this decorator for simplicity, handle CSRF in a better way in production
+from django.utils import timezone
+import pytz
+
+@csrf_exempt
 def get_user_strategy_results(request):
     # Assuming the authenticated user is available in request.user
     current_user = request.user
@@ -20862,12 +20865,15 @@ def get_user_strategy_results(request):
     # Retrieve data for the current user
     user_results = StrategyScheduleTaskResult.objects.filter(user=current_user)
 
+    # Convert scheduled_time to Asia/Kolkata timezone
+    for result in user_results:
+        result.scheduled_time = result.scheduled_time.astimezone(pytz.timezone('Asia/Kolkata'))
+
     # Serialize the data to JSON
     serialized_results = [
         {
             'strategy_name': result.strategy_name,
             'broker_name': result.broker_name,
-        
             'result_data': result.result_data,
             'scheduled_time': result.scheduled_time.strftime('%Y-%m-%d %H:%M:%S'),
         }
