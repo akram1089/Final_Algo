@@ -2504,7 +2504,96 @@ height: 8rem;
     font-weight: 700;
           }
         </style>
+<style>
+  
 
+  .bs-tooltip-auto[data-popper-placement^=bottom] .tooltip-arrow::before, .bs-tooltip-bottom .tooltip-arrow::before {
+    border-bottom-color: white !important;
+  }
+
+  .tooltip-inner{
+    max-width: 334px !important;
+    width: 334px !important;
+    
+    background:  #ffffff !important;
+    color: black !important;
+    margin-left: -270px !important;
+    text-align: left !important;
+    border-radius: 11px !important;
+    
+  }
+
+  
+
+.tooltip.tooltip-arrow .tooltip-arrow {
+  /* Adjust the width and height of the arrow as needed */
+  display: block;
+  width: 1.4rem !important;
+  height: 0.7rem !important;
+}
+
+.notifiction_div::-webkit-scrollbar {
+    width: 3px;
+}
+
+.notifiction_div::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+.notifiction_div::-webkit-scrollbar-thumb {
+    background: #59aaf9;
+}
+
+.notifiction_div::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+  .notifiactions{
+    border-bottom: 1px solid #00000014 !important;
+    padding: 16px 5px;
+  }
+
+  .notifiactions h5{
+    font-size: 1rem !important;
+    color: #59aaf9 !important;
+    font-weight: 400 !important;
+  }
+  .notifiactions p{
+    font-size: 13px !important;
+    color: #000000b3  !important;
+    font-weight: 400 !important;
+    padding-bottom: 10px !important;
+  }
+  .notifiactions a{
+    padding: 3px 8px;
+    border: 1px solid #59aaf9 !important;
+    color: #59aaf9 !important;
+    border-radius: 30px;
+    font-size: 11px !important;
+    cursor: pointer;
+  }
+
+  .notifiction_div{
+    padding: 0px 20px;
+    max-width: 300px !important;
+    width: 300px !important;
+    height: 300px !important;
+    overflow-y: auto;
+  }
+
+  .close-tooltip{
+    cursor: pointer;
+    font-size: 34px !important;
+    color: #59aaf9 !important;
+    margin-right: 3px !important;
+    font-weight: 300 !important;
+  }
+
+  .tooltip.show {
+     opacity: 1 !important; 
+}
+
+</style>
       </nav>
 
       {% if user.is_authenticated %}
@@ -2525,21 +2614,27 @@ height: 8rem;
 
 
   <div class="dropdown d-md-none">
-    <i type="button" class="bx bx-bell position-relative text-dark" id="notification_bell" data-bs-toggle="dropdown" aria-expanded="false"
-      style="font-weight: 500; cursor:pointer;font-size: 22px;     padding: 25px 0;">
 
-      <span
-        class="position-absolute top-0 start-100 translate-middle  bg-danger border border-light rounded-circle" style="    width: 7px;
-        height: 7px;">
-        <span class="visually-hidden"></span>
-      </span>
-    </i>
+    <i type="button" class="bx bx-bell position-relative text-dark notification_bell" id="notification_bell" data-toggle="tooltip" data-html="true"  data-bs-placement="bottom" title="Loading..."
+    style="font-weight: 500; cursor:pointer;font-size: 22px;     padding: 25px 0;">
+
+    <span
+      class="position-absolute top-0 start-100 translate-middle  bg-danger border border-light rounded-circle" style="    width: 7px;
+      height: 7px;">
+      <span class="visually-hidden"></span>
+    </span>
+  </i>
+
 
 
     <ul class="dropdown-menu user-mega-menu mt-1 notification-icon overflow-auto" id="notification_dropdown" aria-labelledby="navbarDropdown"
     style="max-height: 473px;">
   <!-- Result data will be dynamically added here -->
 </ul>
+
+
+
+
 <script>
   $(document).ready(function(){
       // Fetch wallet details using AJAX
@@ -2565,7 +2660,7 @@ height: 8rem;
     var ajaxRequested = false;
   
     // Hover event using one() to ensure it triggers only once
-    $('#notification_bell').one('mouseenter', function() {
+    $('.notification_bell').one('mouseenter', function() {
       if (!ajaxRequested) {
         // Make AJAX request to get user_results data
         $.ajax({
@@ -2600,6 +2695,35 @@ height: 8rem;
         });
       }
     });
+    $('#notification_bell').tooltip({
+      html: true,
+      // Use a function to dynamically set the content of the tooltip
+      title: function () {
+          // Retrieve the content of the hidden div and return it
+          return $('#notificationContent').html();
+      },
+      // Trigger tooltip manually
+      trigger: 'manual'
+  });
+
+  $('#notification_bell').on('click', function() {
+    // Show the tooltip manually
+    $(this).tooltip('show');
+});
+
+
+  // Show tooltip content on click
+  $(document).on('click', '.close-tooltip', function() {
+    $('#notification_bell').tooltip('hide');
+});
+
+// Hide tooltip content when clicking anywhere on the document
+$(document).on('click', function(event) {
+    // Check if the clicked element is not the notification bell or its tooltip content
+    if (!$(event.target).closest('#notification_bell').length && !$(event.target).closest('.tooltip').length) {
+        $('#notification_bell').tooltip('hide');
+    }
+});
   });
   </script>
   </div>
