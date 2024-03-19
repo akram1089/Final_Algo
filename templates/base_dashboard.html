@@ -1186,7 +1186,7 @@ height: 126px !important;
           <a href="#" role="button" data-bs-toggle="dropdown" class="option_dropdown" aria-expanded="false"
             id="dashboard_nav_dropdown">Options <span><i class='bx bx-chevron-down'></i></span>
           </a>
-          <ul class="dropdown-menu animate slideIn megamenu" id="options_dropdown" style="overflow: auto;     inset: auto !impo;          ">
+          <ul class="dropdown-menu animate slideIn megamenu" id="options_dropdown" style="overflow: auto;     inset: auto !important;          ">
       
 
 
@@ -2553,12 +2553,21 @@ height: 8rem;
     padding: 16px 5px;
   }
 
-  .notifiactions h5{
-    font-size: 1rem !important;
+  .noti_header h5 {
+    font-size: 14px !important;
     color: #59aaf9 !important;
     font-weight: 400 !important;
+
+ 
   }
-  .notifiactions p{
+  .noti_header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+ 
+  }
+  .noti_desc{
     font-size: 13px !important;
     color: #000000b3  !important;
     font-weight: 400 !important;
@@ -2574,10 +2583,10 @@ height: 8rem;
   }
 
   .notifiction_div{
-    padding: 0px 20px;
+    margin: 0px 20px;
     max-width: 300px !important;
     width: 300px !important;
-    height: 300px !important;
+    max-height: 250px !important;
     overflow-y: auto;
   }
 
@@ -2627,9 +2636,20 @@ height: 8rem;
 
 
 
-    <ul class="dropdown-menu user-mega-menu mt-1 notification-icon overflow-auto" id="notification_dropdown" aria-labelledby="navbarDropdown"
+    <ul class="dropdown-menu user-mega-menu mt-1 notification-icon overflow-auto notification_dropdown" id="notification_dropdown" aria-labelledby="navbarDropdown"
     style="max-height: 473px;">
   <!-- Result data will be dynamically added here -->
+  
+  <div id="notificationContent_new" >
+    <div class="d-flex justify-content-end">
+      <i class='bx bx-x close-tooltip' style=""></i>
+    </div>
+    <!-- Your externally defined div content goes here -->
+    <div class="notifiction_div">
+
+    </div>
+    <!-- Add more divs as needed -->
+  </div>
 </ul>
 
 
@@ -2660,7 +2680,10 @@ height: 8rem;
     var ajaxRequested = false;
   
     // Hover event using one() to ensure it triggers only once
-    $('.notification_bell').one('mouseenter', function() {
+    $('.notification_bell').on('mouseenter', function() {
+      // console.log('Hover in Bell');
+      
+      $('#notification_dropdown').show()
       if (!ajaxRequested) {
         // Make AJAX request to get user_results data
         $.ajax({
@@ -2668,23 +2691,36 @@ height: 8rem;
           method: 'GET',
           dataType: 'json',
           success: function(response) {
-            // Iterate through user_results and display each result_data.message
-            var resultsContainer = $('#notification_dropdown');
-            $.each(response.user_results, function(index, result) {
-              $.each(result.result_data, function(_, message) {
-                // Remove content after [Read more.](...) including the link
-                var cleanedMessage = JSON.parse(message).message.replace(/\[Read more\..*?\]\([^)]+\)/g, '');
-  
-                // Create and append HTML for each result_data.message
-                var listItem = $('<li>').addClass('dropdown-item py-2 cursor-pointer');
-                listItem.append('<div class="d-flex justify-content-between"><span class="pe-5 label-color-4 fw-600" style="font-size: 16px; font-weight: 600;">' +
-                  result.strategy_name + '</span><span class="ps-3 label-color-5" style="font-size: 15px;">' +
-                  result.scheduled_time + '</span></div><span class="label-color-4 text-wrap" style="font-size: 14px;">' +
-                  cleanedMessage.trim() + '</span>');
-                resultsContainer.append(listItem);
-              });
-            });
-          },
+    var resultsContainer = $('.notifiction_div');
+    resultsContainer.empty()
+    $.each(response.user_results, function(index, result) {
+        $.each(result.result_data, function(_, message) {
+            console.log(message);
+            // Check if cleanedMessage exists and is a string before applying trim
+            var cleanedMessage = message.message && typeof message.message === 'string' ? message.message.replace(/\[Read more\..*?\]\([^)]+\)/g, '') : message.message;
+
+            var listItem = $('<li>').addClass('dropdown-item py-2 cursor-pointer');
+            var strategyName =result.strategy_name
+            var scheduledTime = result.scheduled_time
+            var messageText =cleanedMessage && cleanedMessage.trim()
+            var statusMessage = `<div class="noti_desc"> Order Status :${message.status} </br> Order ID : ${message.data.order_id}   </div>`
+
+            var messageToShow = cleanedMessage ? messageText : statusMessage;
+
+     
+            resultsContainer.append(`
+            <div class="notifiactions">
+          <div class="noti_header"> <h5>  ${strategyName.toUpperCase()}</h5>  <h5>${scheduledTime}</h5></div>
+          <p>${messageToShow}</p>
+          <a>Know More</a>
+        </div>
+            
+            `);
+        });
+    });
+},
+
+
           error: function(error) {
             console.error('Error fetching data:', error);
           },
@@ -2695,35 +2731,15 @@ height: 8rem;
         });
       }
     });
-    $('#notification_bell').tooltip({
-      html: true,
-      // Use a function to dynamically set the content of the tooltip
-      title: function () {
-          // Retrieve the content of the hidden div and return it
-          return $('#notificationContent').html();
-      },
-      // Trigger tooltip manually
-      trigger: 'manual'
-  });
 
-  $('#notification_bell').on('click', function() {
-    // Show the tooltip manually
-    $(this).tooltip('show');
-});
 
 
   // Show tooltip content on click
   $(document).on('click', '.close-tooltip', function() {
-    $('#notification_bell').tooltip('hide');
+    $('#notification_dropdown').hide()
 });
 
-// Hide tooltip content when clicking anywhere on the document
-$(document).on('click', function(event) {
-    // Check if the clicked element is not the notification bell or its tooltip content
-    if (!$(event.target).closest('#notification_bell').length && !$(event.target).closest('.tooltip').length) {
-        $('#notification_bell').tooltip('hide');
-    }
-});
+
   });
   </script>
   </div>
