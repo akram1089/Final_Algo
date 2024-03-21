@@ -195,9 +195,7 @@ class Customer_feedback(models.Model):
 
 
 
-class Subscriber(models.Model):
-    email = models.EmailField(max_length=254)
-    subscribed_at = models.DateTimeField()
+
 
 from django.db import models
 
