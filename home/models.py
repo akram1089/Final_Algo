@@ -522,6 +522,7 @@ class Subscriber(models.Model):
     subscribed_at = models.DateTimeField()
     active = models.BooleanField(default=True)
 
+
 class PromotionalEmail(models.Model):
     title = models.CharField(max_length=100)
     image = models.ImageField(upload_to='promotional_images/')
