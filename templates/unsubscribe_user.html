@@ -77,6 +77,7 @@
                 
                 // Get form data
                 var formData = $(this).serialize();
+                console.log(formData);
                 
                 // Send AJAX request
                 $.ajax({
@@ -91,7 +92,15 @@
                             icon: 'success',
                             title: 'Unsubscribe Successful!',
                             text: response.message
-                        }); // Show success message
+                            
+              
+                        }).then((result) => {
+        if (result.isConfirmed) {
+            window.location.href = "https://optionperks.com/";
+        }
+    }); // Show success message and redirect
+
+                        
                     },
                     error: function(xhr, status, error) {
                         Swal.fire({
