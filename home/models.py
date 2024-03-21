@@ -516,3 +516,20 @@ class UserLoginHistory(models.Model):
 class UserSession(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     session_key = models.CharField(max_length=40, unique=True)
+
+
+
+class Subscriber(models.Model):
+    email = models.EmailField(max_length=254)
+    subscribed_at = models.DateTimeField()
+    active = models.BooleanField(default=True)
+
+class PromotionalEmail(models.Model):
+    title = models.CharField(max_length=100)
+    image = models.ImageField(upload_to='promotional_images/')
+    img_url = models.CharField(max_length=200, blank=True, null=True)
+    content = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.title

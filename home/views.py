@@ -14358,7 +14358,7 @@ def option_strategies_expiry(request):
 
     main_filtered_optionExpirydate = final_expiry_json["optionExpiryDate"]
     # print(main_filtered_optionExpirydate)
-    # print(final_expiry_json)
+    print(final_expiry_json)
 
     cutoff_time = datetime.datetime.strptime('15:30', '%H:%M')
 
@@ -14366,10 +14366,10 @@ def option_strategies_expiry(request):
 
     for expiry in main_filtered_optionExpirydate:
         expiry_date = datetime.datetime.strptime(expiry['expiry_date'], '%Y-%m-%dT%H:%M:%S')
-        if expiry_date.date() >= datetime.datetime.today().date() and (expiry_date.date() != datetime.datetime.today().date() or expiry_date.time() <= cutoff_time.time()):
+        if expiry_date.date() >= datetime.datetime.today().date() and (expiry_date.date() != datetime.datetime.today().date() or expiry_date.time() >= cutoff_time.time()):
             filtered_expiry_dates.append(expiry)
 
-    # print(filtered_expiry_dates)
+    print("filtered_expiry_dates",filtered_expiry_dates)
     final_expiry_json['optionExpiryDate'] = filtered_expiry_dates
 
     response_date = {
@@ -21573,3 +21573,174 @@ def option_stock_strategy_executor(request):
     return render(request, "option_stock_strategy_executor.html")
 def stock_historical(request):
     return render(request, "stock_historical.html")
+
+
+
+
+
+from django.template.loader import render_to_string
+from .models import PromotionalEmail
+import css_inline
+from .models import Subscriber
+from django.core.mail import send_mail
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+import datetime 
+from django.utils.html import strip_tags
+
+
+                            
+
+
+@csrf_exempt
+def subscribe_to_newsletter(request):
+    if request.method == "POST":
+        email = request.POST.get("send_email")
+        # print(email)
+        if email:
+            if Subscriber.objects.filter(email=email).exists():
+                return JsonResponse({'message_already': 'You are already subscribed.'})
+            else:
+                new_subscriber = Subscriber(email=email)
+                new_subscriber.subscribed_at = datetime.datetime.now()
+             
+   
+                new_subscriber.save()
+                
+                subject = 'Subscription Confirmation'
+                html_message = render_to_string('newsletter_template.html')
+                plain_message = strip_tags(html_message)  # Generate plain text version
+                from_email = 'optionperks@gmail.com'
+                recipient_list = [email]
+                send_mail(subject, plain_message, from_email, recipient_list, html_message=html_message)
+                
+                return JsonResponse({'message': 'You have successfully subscribed to our newsletter!'})
+        else:
+            return JsonResponse({'error': 'Invalid email address.'})
+    else:
+        return JsonResponse({'error': 'Invalid request method.'})
+
+
+def promotional_email(request):
+    return render(request, "promotional_email.html")
+
+from django.http import JsonResponse
+from .models import Subscriber
+
+def get_subscribers(request):
+    subscribers = Subscriber.objects.all().values('email', 'subscribed_at', 'active')
+    subscribers_list = list(subscribers)
+    return JsonResponse({'subscribers': subscribers_list})
+
+def send_promotional_emails(request):
+    subscribers = Subscriber.objects.filter(active=True)
+    promotional_email = PromotionalEmail.objects.last()
+    
+    if promotional_email:
+        for subscriber in subscribers:
+            subject = 'New Promotions from YourCompany'
+            # Pass the promotional email object and image URL to the email template
+            html_content = render_to_string('promotional_email.html', {'promotional_email': promotional_email, 'image_url': promotional_email.img_url})
+            send_mail(subject, '', None, [subscriber.email], html_message=html_content)
+
+        return JsonResponse({'message': 'Promotional emails sent successfully!'})
+    else:
+        return JsonResponse({'error': 'No PromotionalEmail object found.'}, status=404)
+
+def send_newsletter_emails(request):
+    subscribers = Subscriber.objects.filter(active=True)
+    
+    # Define API endpoints
+    api_endpoints = {
+        'stock_index': 'https://webapi.niftytrader.in/webapi/symbol/stock-index-data',
+        'global_market': 'https://webapi.niftytrader.in/webapi/usstock/global-market',
+        'top_gainers': 'https://webapi.niftytrader.in/webapi/Symbol/top-gainers-historical-data?range_type=gainers&range_days=1day',
+        'top_losers': 'https://webapi.niftytrader.in/webapi/Symbol/top-gainers-historical-data?range_type=loosers&range_days=1day',
+        'world_news': 'https://webapi.niftytrader.in/webapi/Other/rss-feeds-data?NewsType=WorldNews&lanType=English',
+        # Add more API endpoints as needed
+    }
+    
+    collected_data = {}
+    
+    for key, endpoint in api_endpoints.items():
+        response = requests.get(endpoint)
+        
+        if response.status_code == 200:
+            data = response.json().get('resultData', [])
+            collected_data[key] = data
+        else:
+            return JsonResponse({'error': f'Failed to fetch data from {endpoint}.'}, status=500)
+        
+    # Pass the collected data to the email template
+    subject = 'New Promotions from YourCompany'
+    html_content = render_to_string('news_letter_data_template.html', {'collected_data': collected_data})
+    
+    html_content_inline =css_inline.inline(html_content)
+
+    for subscriber in subscribers:
+        # Send email to each subscriber
+        send_mail(subject, '', None, [subscriber.email], html_message=html_content_inline)
+
+    return JsonResponse({'message': 'Promotional emails sent successfully!'})
+    
+
+
+    
+def news_letter_data_template(request):
+    api_endpoints = {
+        'stock_index': 'https://webapi.niftytrader.in/webapi/symbol/stock-index-data',
+        'global_market': 'https://webapi.niftytrader.in/webapi/usstock/global-market',
+        'top_gainers': 'https://webapi.niftytrader.in/webapi/Symbol/top-gainers-historical-data?range_type=gainers&range_days=1day',
+        'top_losers': 'https://webapi.niftytrader.in/webapi/Symbol/top-gainers-historical-data?range_type=loosers&range_days=1day',
+        'world_news': 'https://webapi.niftytrader.in/webapi/Other/rss-feeds-data?NewsType=WorldNews&lanType=English',
+        # Add more API endpoints as needed
+    }
+    
+    collected_data = {}
+    
+    for key, endpoint in api_endpoints.items():
+        response = requests.get(endpoint)
+        
+        if response.status_code == 200:
+            data = response.json().get('resultData', [])
+            collected_data[key] = data
+        else:
+            return JsonResponse({'error': f'Failed to fetch data from {endpoint}.'}, status=500)
+        
+    return render(request, "news_letter_data_template.html", {'collected_data': collected_data})
+
+def unsubscribes_mail(request):
+    return render(request, 'unsubscribe_user.html')
+
+def unsubscribe(request):
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        try:
+            subscriber = Subscriber.objects.get(email=email, active=True)
+            # Deactivate the subscriber
+            subscriber.active = False
+            subscriber.save()
+            return JsonResponse({'message': 'You have successfully unsubscribed from our newsletter.'})
+        except Subscriber.DoesNotExist:
+            # If the subscriber is not found or already inactive, return an error message
+            return JsonResponse({'error': 'Subscriber not found or already unsubscribed.'}, status=400)
+    return JsonResponse({'error': 'Invalid request method.'}, status=405)
+
+
+
+@csrf_exempt
+def add_newsletter_data(request):
+    if request.method == 'POST':
+        title = request.POST.get('title')
+        img_url = request.POST.get('img_url')
+        image = request.FILES.get('img')
+        
+        if title and image:
+            # Create a new PromotionalEmail object
+            new_email = PromotionalEmail(title=title, image=image, img_url=img_url)
+            new_email.save()
+            return JsonResponse({'message': 'Promotional email added successfully.'})
+        else:
+            return JsonResponse({'error': 'Title and image are required.'}, status=400)
+    else:
+        return JsonResponse({'error': 'Invalid request method.'}, status=405)

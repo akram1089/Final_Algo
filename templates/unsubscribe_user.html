@@ -1,0 +1,110 @@
+<!-- unsubscribe.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unsubscribe</title>
+    
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            text-align: center;
+            color: #007bff;
+        }
+        p {
+            text-align: center;
+        }
+        form {
+            text-align: center;
+            margin-top: 20px;
+        }
+        input[type="email"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        input[type="submit"] {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="form_div">
+        <h2>Unsubscribe</h2>
+        <p>Please enter your email address to unsubscribe from our newsletter:</p>
+        <form id="unsubscribeForm">
+            {% csrf_token %}
+            <input type="email" id="email" name="email" placeholder="Enter your email" required>
+            <br>
+            <input type="submit" value="Unsubscribe">
+        </form>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Prevent default form submission
+            $('#unsubscribeForm').submit(function(event) {
+                event.preventDefault();
+                
+                // Get form data
+                var formData = $(this).serialize();
+                
+                // Send AJAX request
+                $.ajax({
+                    type: 'POST',
+                    url: '/unsubscribe',  // Update with your backend endpoint
+                    data: formData,
+                    success: function(response) {
+                        
+                        $("#email").val("")
+                        $("#form_div").hide()
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Unsubscribe Successful!',
+                            text: response.message
+                        }); // Show success message
+                    },
+                    error: function(xhr, status, error) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Unsubscribe Failed!',
+                            text: 'An error occurred while processing your request. Please try again later.'
+                        });
+                        console.error(xhr.responseText);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
+    

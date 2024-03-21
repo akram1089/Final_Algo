@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Newsletter</title>
+<style>
+  /* Add your CSS styles here */
+  body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+  }
+  
+  .container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+
+  }
+  
+
+  
+  h1 {
+    font-size: 24px;
+    color: #333;
+    margin-bottom: 20px;
+  }
+  
+  h2 {
+    font-size: 20px;
+    color: #333;
+    margin-top: 30px;
+    margin-bottom: 10px;
+  }
+  
+
+  
+  
+  
+  ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  ul li {
+    margin-bottom: 10px;
+  }
+  
+  ul li a {
+    color: #333;
+    text-decoration: none;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+    <table width="100%" cellspacing="0" cellpadding="0" border="0">
+        <tr>
+            <td style="vertical-align: middle; text-align: center; padding-right: 20px;">
+                <h2 style="color: #007bff; margin: 0;">Daily Pointer</h2>
+            </td>
+            <td style="vertical-align: middle; text-align: center;">
+                <img src="https://optionperks.com/static/img/OptionPerksLogo-2-14-24.png" alt="Company Logo" style="max-width: 150px;">
+            </td>
+        </tr>
+    </table>
+    <table cellpadding="0" cellspacing="0" border="0" width="100%">
+        <tr>
+            <!-- Left column -->
+            <td valign="top" width="30%">
+                <table cellpadding="0" cellspacing="0" border="0" width="100%">
+                    <tr>
+                        <td>
+                            <table class="table" style="width: 100%; border-collapse: collapse; font-size: 9px;">
+                                <thead>
+                                    <tr>
+                                        <th colspan="6" style="background-color: #59aaf9; color: #fff; padding: 10px; border: 1px solid #ddd; text-align: center;">Domestic Indices</th>
+                                    </tr>
+                                    <tr style="background-color: #e9e9e9; color: black;">
+                                        <th style="padding: 8px; border: 1px solid #ddd;">Symbol Name</th>
+                                        {% comment %} <th style="padding: 8px; border: 1px solid #ddd;">Close</th> {% endcomment %}
+                                        <th style="padding: 8px; border: 1px solid #ddd;">Previous Price</th>
+                                        {% comment %} <th style="padding: 8px; border: 1px solid #ddd;">Last Trade Price</th> {% endcomment %}
+                                        <th style="padding: 8px; border: 1px solid #ddd;">High</th>
+                                        <th style="padding: 8px; border: 1px solid #ddd;">Low</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Render stock index data from the first API endpoint -->
+                                    {% for symbol, data in collected_data.stock_index.items %}
+                                        <tr>
+                                            <td style="border: 1px solid #ddd;  padding: 6px;">{{ data.symbol_name }}</td>
+                                            {% comment %} <td style="border: 1px solid #ddd;  padding: 6px;">{{ data.close }}</td> {% endcomment %}
+                                            <td style="border: 1px solid #ddd;  padding: 6px;">{{ data.prev_price }}</td>
+                                            {% comment %} <td style="border: 1px solid #ddd;  padding: 6px;">{{ data.last_trade_price }}</td> {% endcomment %}
+                                            <td style="border: 1px solid #ddd;  padding: 6px;">{{ data.high }}</td>
+                                            <td style="border: 1px solid #ddd;  padding: 6px;">{{ data.low }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                    
+                            <!-- Table for global market data -->
+                            <table class="table" style="width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 9px;">
+                                <thead>
+                                    <tr>
+                                        <th colspan="5" style="background-color: #59aaf9; color: #fff; padding: 10px; border: 1px solid #ddd; text-align: center;">Global Indices</th>
+                                    </tr>
+                                    <tr style="background-color: #e9e9e9; color: black;">
+                                        
+                                        <th style="padding: 8px; border: 1px solid #ddd;">Symbol</th>
+                                        <th style="padding: 8px; border: 1px solid #ddd;">Current Price</th>
+                                        <th style="padding: 8px; border: 1px solid #ddd;">Chg</th>
+                                        <th style="padding: 8px; border: 1px solid #ddd;">Chg(%)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Render global market data from the second API endpoint -->
+                                    {% for item in collected_data.global_market %}
+                                        <tr>
+                                           
+                                            <td style="border: 1px solid #ddd;  padding: 6px;">{{ item.symbol }}</td>
+                                            <td style="border: 1px solid #ddd;  padding: 6px;">{{ item.current_price }}</td>
+                                            <td style="border: 1px solid #ddd;  padding: 6px; {% if item.change_value < 0 %}color: red;{% elif item.change_value > 0 %}color: green;{% endif %}">{{ item.change_value }}</td>
+                                            <td style="border: 1px solid #ddd;  padding: 6px; {% if item.change_per < 0 %}color: red;{% elif item.change_per > 0 %}color: green;{% endif %}">{{ item.change_per }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+    
+                            <table class="table" style="width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 9px;">
+                                <thead>
+                                    <tr>
+                                        <th colspan="5" style="background-color: #59aaf9; color: #fff; padding: 10px; border: 1px solid #ddd; text-align: center;">Top Gainers</th>
+                                    </tr>
+                                    <tr style="background-color: #e9e9e9; color: black;">
+                                        
+                                        <th style="padding: 8px; border: 1px solid #ddd;">Symbol</th>
+                                        <th style="padding: 8px; border: 1px solid #ddd;">Close Price</th>
+                                        <th style="padding: 8px; border: 1px solid #ddd;">Chg</th>
+                                        <th style="padding: 8px; border: 1px solid #ddd;">Chg(%)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for item in collected_data.top_gainers|slice:":5" %}
+                                     <tr>
+                                      <td style="border: 1px solid #ddd; padding: 6px;">{{ item.symbol_name }}</td>
+                                      <td style="border: 1px solid #ddd;  padding: 6px;">{{ item.today_close }}</td>
+                                      <td style="color: green; border: 1px solid #ddd;  padding: 6px;">{{ item.change_value }}</td>
+                                      <td style="color: green; border: 1px solid #ddd;  padding: 6px;">{{ item.change_percent }}</td>
+                                     </tr>
+                                   {% endfor %}
+                                  
+                                </tbody>
+                            </table>
+                            
+                            <table class="table" style="width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 9px;">
+                                <thead>
+                                    <tr>
+                                        <th colspan="5" style="background-color: #59aaf9; color: #fff; padding: 10px; border: 1px solid #ddd; text-align: center;">Top losers</th>
+                                    </tr>
+                                    <tr style="background-color: #e9e9e9; color: black;">
+                                        
+                                        <th style="padding: 8px; border: 1px solid #ddd;">Symbol</th>
+                                        <th style="padding: 8px; border: 1px solid #ddd;">Close Price</th>
+                                        <th style="padding: 8px; border: 1px solid #ddd;">Chg</th>
+                                        <th style="padding: 8px; border: 1px solid #ddd;">Chg(%)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for item in collected_data.top_losers|slice:":5" %}
+                                    <tr>
+                                        <td style="border: 1px solid #ddd;  padding: 6px;">{{ item.symbol_name }}</td>
+                                        <td style="border: 1px solid #ddd;  padding: 6px;">{{ item.today_close }}</td>
+                                        <td style="color: {% if item.change_value < 0 %}red{% endif %}; border: 1px solid #ddd;  padding: 6px;">{{ item.change_value }}</td>
+                                        <td style="color: {% if item.change_percent < 0 %}red{% endif %}; border: 1px solid #ddd;  padding: 6px;">{{ item.change_percent }}</td>
+                                    </tr>
+                                  {% endfor %}
+                                  
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+            <!-- Right column -->
+            <td valign="top" width="50%">
+                <div style="width: 96%; background-color: #e9e9e9; color: black; text-align: center; padding: 10px;">
+                    <strong>Explore Our Functionality</strong>
+                </div>
+                <table cellspacing="3" width="100%">
+                    <tr>
+                      <td style="width: 100px; height: 50px; background-color: #E8F7E4; text-align: center;"><a href="https://optionperks.com/option_index_statregy_executor" target="_blank" style="text-decoration: none; color: black;">Strategy Executor</a> </td>
+                      <td style="width: 200px; height: 100px; background-color: #F7E4E6; text-align: center;"><a href="https://optionperks.com/mutual_funds" target="_blank" style="text-decoration: none; color: black;"> Mutual Funds</a></td>
+                      <td style="width: 120px; height: 70px; background-color: #E4F2FD; text-align: center;"><a href="https://optionperks.com/nifty_tracker" target="_blank" style="text-decoration: none; color: black;">Nifty Tracker</a> </td>
+                    </tr>
+                    <tr>
+                      <td style="width: 150px; height: 80px; background-color: #EEEDFB; text-align: center;"><a href="https://optionperks.com/volume_socker" target="_blank" style="text-decoration: none; color: black;">Volume Shocker</a> </td>
+                      <td style="width: 90px; height: 120px; background-color: #E4F3EF; text-align: center;"><a href="https://optionperks.com/stock_historical" target="_blank" style="text-decoration: none; color: black;">Stock Historical Data</a> </td>
+                      <td style="width: 110px; height: 60px; background-color: #F6EDEB; text-align: center;"><a href="https://optionperks.com/event_tracker" target="_blank" style="text-decoration: none; color: black;">Event Tracker</a></td>
+                    </tr>
+                   
+                  </table>
+
+                <div style="width: 96%; background-color: #e9e9e9; color: black; padding: 10px; text-align: center;">
+                    <strong>News Analysis</strong>
+                </div>
+                <!-- Render world news data -->
+                {% for item in collected_data.world_news|slice:":5" %}
+                    <div style="border: 1px solid #ddd; padding: 10px; margin-top: 10px;">
+                        <strong style="color: #59aaf9;"><a href="{{item.url}}" style="text-decoration: none; color: #59aaf9;">{{ item.title }}</a></strong><br>
+                        {{ item.description }}
+                    </div>
+                {% endfor %}
+
+                
+            </td>
+        </tr>
+    </table>
+    <p style="text-align: center; color: #888;">This email was sent to you because you subscribed to our Trading and Stocks Newsletter. If you no longer wish to receive these emails, you can <a href="{% url 'unsubscribes_mail' %}" style="color: #007bff;">unsubscribe here</a>.</p>
+</div>
+
+</body>
+</html>

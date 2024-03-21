@@ -596,6 +596,15 @@ urlpatterns = [
      path('verify_password', views.verify_password, name='verify_password'),
      path('option_stock_strategy_executor', views.option_stock_strategy_executor, name='option_stock_strategy_executor'),
      path('stock_historical', views.stock_historical, name='stock_historical'),
+     path('send_promotional_emails', views.send_promotional_emails, name='send_promotional_emails'),
+     path('send_newsletter_emails', views.send_newsletter_emails, name='send_newsletter_emails'),
+     path('unsubscribes_mail', views.unsubscribes_mail, name='unsubscribes_mail'),
+     path('unsubscribe', views.unsubscribe, name='unsubscribe'),
+     path('add_newsletter_data', views.add_newsletter_data, name='add_newsletter_data'),
+     path('promotional_email', views.promotional_email, name='promotional_email'),
+
+     path('news_letter_data_template', views.news_letter_data_template, name='news_letter_data_template'),
+
 
 
 
