@@ -20,6 +20,11 @@ app.conf.beat_schedule = {
         'args': (2, 3),  # Provide the arguments for your task here
     }
 }
+app.conf.beat_schedule['send-newsletter-emails-daily'] = {
+    'task': 'home.tasks.send_newsletter_emails',
+    'schedule': crontab(hour=16, minute=30),  # Daily at 4 PM
+}
+
 app.autodiscover_tasks(['home'])  # Add the app name where your tasks are defined
 
 @app.task(bind=True)

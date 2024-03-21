@@ -415,3 +415,56 @@ def perform_addition_task(self, user_id, all_strategy_values,custom_field_value,
 
 
     # return f"Addition Task for {user.username} completed: {number1} + {number2} = {result}"
+
+from django.template.loader import render_to_string
+from .models import PromotionalEmail
+import css_inline
+from .models import Subscriber
+from django.core.mail import send_mail
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+import datetime 
+from django.utils.html import strip_tags
+
+
+@shared_task
+def send_newsletter_emails():
+    subscribers = Subscriber.objects.filter(active=True)
+    
+    # Define API endpoints
+    api_endpoints = {
+        'stock_index': 'https://webapi.niftytrader.in/webapi/symbol/stock-index-data',
+        'global_market': 'https://webapi.niftytrader.in/webapi/usstock/global-market',
+        'top_gainers': 'https://webapi.niftytrader.in/webapi/Symbol/top-gainers-historical-data?range_type=gainers&range_days=1day',
+        'top_losers': 'https://webapi.niftytrader.in/webapi/Symbol/top-gainers-historical-data?range_type=loosers&range_days=1day',
+        'world_news': 'https://webapi.niftytrader.in/webapi/Other/rss-feeds-data?NewsType=WorldNews&lanType=English',
+        # Add more API endpoints as needed
+    }
+    
+    collected_data = {}
+    
+    for key, endpoint in api_endpoints.items():
+        response = requests.get(endpoint)
+        
+        if response.status_code == 200:
+            data = response.json().get('resultData', [])
+            collected_data[key] = data
+        else:
+            return {'error': f'Failed to fetch data from {endpoint}.'}
+        
+    # Pass the collected data to the email template
+    # Get today's date
+    today_date = datetime.datetime.now().strftime('%d %B, %Y')
+    
+    # Construct subject with today's date
+    subject = f'Fwd: Daily Pointer - {today_date}'
+    html_content = render_to_string('news_letter_data_template.html', {'collected_data': collected_data})
+    
+    html_content_inline =css_inline.inline(html_content)
+
+    for subscriber in subscribers:
+        # Send email to each subscriber
+        send_mail(subject, '', None, [subscriber.email], html_message=html_content_inline)
+  
+
+    return ({'message': 'Promotional emails sent successfully!'})
