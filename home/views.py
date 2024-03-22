@@ -4315,27 +4315,8 @@ def get_option_strategy_optimizer_spot_data(request):
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-@api_view(['GET'])
-def get_option_strategy_optimizer_option_data(request):
-    selected_option = request.GET.get('selected_option',"NIFTY")
-    selected_option_date = request.GET.get('selected_expiry')
-    print(selected_option,selected_option_date)
-    strategy_option_url=f"https://webapi.niftytrader.in/webapi/option/fatch-option-chain?symbol={selected_option}&expiryDate={selected_option_date}"
-    headers = {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
-        "Accept-Language": "en-US,en;q=0.9",
-        "Accept-Encoding": "gzip, deflate, br",
-        "Connection": "keep-alive"
-    }
 
-    stock_data = requests.get(strategy_option_url, headers=headers)
-    stock_json = stock_data.json()
-    # Do something with the selected_option, process the data, and prepare a response
-    response_data = {
-        'option_data': stock_json,
-        # Add more data as needed
-    }
-    return Response(response_data)
+
 @api_view(['GET'])
 def option_strategies_expiry(request):
     # selected_option = request.GET.get('selected_option',"NIFTY")
@@ -14309,7 +14290,9 @@ from rest_framework.response import Response
 def get_option_strategy_optimizer_option_data(request):
     selected_option = request.GET.get('selected_option',"NIFTY")
     selected_option_date = request.GET.get('selected_expiry')
+    selected_option = selected_option.lower()
     print(selected_option,selected_option_date)
+    # https://webapi.niftytrader.in/webapi/option/fatch-option-chain?symbol=nifty&expiryDate=2024-04-04
     strategy_option_url=f"https://webapi.niftytrader.in/webapi/option/fatch-option-chain?symbol={selected_option}&expiryDate={selected_option_date}"
     headers = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
@@ -21672,7 +21655,12 @@ def send_newsletter_emails(request):
             return JsonResponse({'error': f'Failed to fetch data from {endpoint}.'}, status=500)
         
     # Pass the collected data to the email template
-    subject = 'New Promotions from YourCompany'
+    # Fwd: Daily Pointer - 05 March,2024
+    # Get today's date
+    today_date = datetime.datetime.now().strftime('%d %B, %Y')
+    
+    # Construct subject with today's date
+    subject = f'Fwd: Daily Pointer - {today_date}'
     html_content = render_to_string('news_letter_data_template.html', {'collected_data': collected_data})
     
     html_content_inline =css_inline.inline(html_content)
