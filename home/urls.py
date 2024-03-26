@@ -604,6 +604,8 @@ urlpatterns = [
      path('promotional_email', views.promotional_email, name='promotional_email'),
 
      path('news_letter_data_template', views.news_letter_data_template, name='news_letter_data_template'),
+     path('webhook/', views.webhook_view, name='webhook'),
+
 
 
 

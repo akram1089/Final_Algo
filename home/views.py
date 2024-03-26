@@ -21732,3 +21732,28 @@ def add_newsletter_data(request):
             return JsonResponse({'error': 'Title and image are required.'}, status=400)
     else:
         return JsonResponse({'error': 'Invalid request method.'}, status=405)
+
+
+
+
+
+@csrf_exempt  # Disable CSRF protection for simplicity. Add proper CSRF handling in production.
+def webhook_view(request):
+    if request.method == 'POST':
+        # Assuming the data is sent as JSON
+        data = request.POST  # Use request.POST to access form data or request.body for raw data
+        
+        # Process the data as needed
+        # For testing purposes, let's just print the received data
+        print("Received data:", data)
+        
+        # Respond with a success message
+        return JsonResponse({"message": "Webhook received successfully"})
+    else:
+        return JsonResponse({"error": "Unsupported method"}, status=405)
+
+
+
+
+
+
