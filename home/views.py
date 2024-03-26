@@ -21738,7 +21738,7 @@ def add_newsletter_data(request):
 
 
 @csrf_exempt  
-def webhook_view(request):
+def webhook_view(request, user_id, url_type):
     if request.method == 'POST':
         try:
             # Parse the JSON data from the request body
@@ -21746,7 +21746,8 @@ def webhook_view(request):
             
             # Process the data as needed
             # For testing purposes, let's just print the received data
-            print("Received data:", data)
+            print(f"Received data for user {user_id} ({url_type}):", data)
+            order_zerodha_webwooks(data)
             
             # Respond with a success message
             return JsonResponse({"message": "Webhook received successfully"})
@@ -21757,5 +21758,110 @@ def webhook_view(request):
         return JsonResponse({"error": "Unsupported method"}, status=405)
 
 
+def webhook_urls(request):
+    user = request.user
+    print(user)
 
 
+    
+    webhook_series_url = f"http://localhost:8000/webhook/series/{user.id}/"
+    webhook_chartlink_url = f"http://localhost:8000/webhook/chartlink/{user.id}/"
+    
+    data = {
+        "series_webhook_url": webhook_series_url,
+        "chartlink_webhook_url": webhook_chartlink_url
+    }
+    
+    return JsonResponse(data)
+
+
+
+
+
+
+def order_zerodha_webwooks(data):
+        data_trade = data
+        # print("data_trade", data_trade)
+
+
+        logging_id = "THC219"
+        password = "Naveen321#"
+        totp_key = "MWL2UU2GOOX2L4PNZJW6KLAVS6R6V7NH"
+        
+        enctoken = get_enctoken_internal(logging_id, password, totp_key)
+        print(enctoken)
+
+        # Check if login was successful
+        if enctoken:
+            zerodha_api = ZerodhaPlaceOrder(enctoken)
+            order_details = []
+
+            for trade_data in data_trade:
+                tradingsymbol = trade_data.get('main_trading_symbol', '')
+                sell_buy_indicator = trade_data.get('sell_buy_indicator', '').upper()  # Ensure it's uppercase
+                quantity = int(trade_data.get('Quantity', 0))
+                price = float(trade_data.get('price', 0))
+                mis_select = trade_data.get('mis_select', '').lower()  # Ensure it's lowercase
+                isRadioChecked = trade_data.get('isRadioChecked', '')  # assuming 'isRadioChecked' is present in each trade_data
+
+                # Map sell_buy_indicator to TRANSACTION_TYPE
+                if sell_buy_indicator == 'BUY':
+                    transaction_type = zerodha_api.TRANSACTION_TYPE_BUY
+                elif sell_buy_indicator == 'SELL':
+                    transaction_type = zerodha_api.TRANSACTION_TYPE_SELL
+                else:
+                    print(f"Invalid sell_buy_indicator: {sell_buy_indicator}")
+                    continue  # Skip processing this trade_data if the indicator is invalid
+
+                # Map mis_select to product type
+                if mis_select == 'overnight':
+                    product_type = zerodha_api.PRODUCT_NRML
+                elif mis_select == 'intraday':
+                    product_type = zerodha_api.PRODUCT_MIS
+                else:
+                    print(f"Invalid mis_select: {mis_select}")
+                    continue  # Skip processing this trade_data if the mis_select is invalid
+
+                # Map isRadioChecked to order type
+                if isRadioChecked == 'market':
+                    order_type = zerodha_api.ORDER_TYPE_MARKET
+                elif isRadioChecked == 'limit':
+                    order_type = zerodha_api.ORDER_TYPE_LIMIT
+                else:
+                    print(f"Invalid isRadioChecked: {isRadioChecked}")
+                    continue  # Skip processing this trade_data if the isRadioChecked is invalid
+
+                order = zerodha_api.place_order(
+                    variety=zerodha_api.VARIETY_REGULAR,
+                    exchange=zerodha_api.EXCHANGE_NFO,
+                    tradingsymbol=tradingsymbol,
+                    transaction_type=transaction_type,
+                    quantity=quantity,
+                    product=product_type,
+                    order_type=order_type,
+                    price=price,
+                    validity=zerodha_api.VALIDITY_DAY,
+                    disclosed_quantity=0,
+                    trigger_price=0,
+                    squareoff=0,
+                    stoploss=0,
+                    trailing_stoploss=0,
+                )
+                order_details.append({
+                    'tradingsymbol': tradingsymbol,
+                    'transaction_type': transaction_type,
+                    'mis_select': mis_select,
+                    'order_type': order_type,
+                    'order_id': order,
+                })
+
+                print(f"Order ID for {tradingsymbol} ({transaction_type}, {mis_select}, {order_type}): {order}")
+
+                # Continue with your logic here, e.g., handling the order response
+
+            return JsonResponse({'status': 'success','broker':'zerodha', 'message': 'Orders placed successfully', 'order_details': order_details})
+
+
+
+def webhooks_url (request):
+    return render(request, "webhook/webhooks_url.html")
