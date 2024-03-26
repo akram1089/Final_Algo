@@ -21737,22 +21737,24 @@ def add_newsletter_data(request):
 
 
 
-@csrf_exempt  # Disable CSRF protection for simplicity. Add proper CSRF handling in production.
+@csrf_exempt  
 def webhook_view(request):
     if request.method == 'POST':
-        # Assuming the data is sent as JSON
-        data = request.POST  # Use request.POST to access form data or request.body for raw data
-        
-        # Process the data as needed
-        # For testing purposes, let's just print the received data
-        print("Received data:", data)
-        
-        # Respond with a success message
-        return JsonResponse({"message": "Webhook received successfully"})
+        try:
+            # Parse the JSON data from the request body
+            data = json.loads(request.body.decode('utf-8'))
+            
+            # Process the data as needed
+            # For testing purposes, let's just print the received data
+            print("Received data:", data)
+            
+            # Respond with a success message
+            return JsonResponse({"message": "Webhook received successfully"})
+        except json.JSONDecodeError as e:
+            # Return an error response if JSON decoding fails
+            return JsonResponse({"error": "Invalid JSON format"}, status=400)
     else:
         return JsonResponse({"error": "Unsupported method"}, status=405)
-
-
 
 
 
