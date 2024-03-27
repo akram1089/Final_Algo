@@ -24,28 +24,66 @@ def get_country_from_ip(ip_address):
         return "Unkown"
 
 
+# @receiver(user_logged_in)
+# def user_login_handler(sender, request, user, **kwargs):
+#     # Get the user's IP address
+#     ip_address = get_client_ip(request)
+     
+
+#     country = get_country_from_ip(ip_address)
+#     # Save login history
+
+#     user_agent = request.META.get('HTTP_USER_AGENT', '')
+#     user_agent_info = parse(user_agent)
+    
+#     # Extract browser name and version
+#     browser = user_agent_info.browser.family
+#     browser_version = user_agent_info.browser.version_string
+
+    
+
+#     print(f"User {user.username} logged in from IP address {ip_address}")
+#     UserLoginHistory.objects.create(user=user, ip_address=ip_address, action='Login',  browser=browser, browser_version=browser_version, origin=country)
+
+
+
+
 @receiver(user_logged_in)
 def user_login_handler(sender, request, user, **kwargs):
     # Get the user's IP address
     ip_address = get_client_ip(request)
      
-
+    # Get country from IP address
     country = get_country_from_ip(ip_address)
-    # Save login history
-
+    
+    # Parse user agent
     user_agent = request.META.get('HTTP_USER_AGENT', '')
-    user_agent_info = parse(user_agent)
-    
-    # Extract browser name and version
-    browser = user_agent_info.browser.family
-    browser_version = user_agent_info.browser.version_string
+    print("User Agent:", user_agent)
+    try:
+        user_agent_info = parse(user_agent)
+        print("Parsed User Agent Info:", user_agent_info)
+        
+        # Extract browser information
+        browser_family = user_agent_info.browser.family
+        browser = browser_family.split()[0]  # Extract only the browser name
 
-    
+        print("Browser Family:", browser)
+        browser_version = user_agent_info.browser.version_string
+        print("Browser Version:", browser_version)
 
-    print(f"User {user.username} logged in from IP address {ip_address}")
-    UserLoginHistory.objects.create(user=user, ip_address=ip_address, action='Login',  browser=browser, browser_version=browser_version, origin=country)
-
-
+        print(f"User {user.username} logged in from IP address {ip_address}")
+        
+        # Create login history record
+        UserLoginHistory.objects.create(
+            user=user,
+            ip_address=ip_address,
+            action='Login',
+            browser=browser,
+            browser_version=browser_version,
+            origin=country
+        )
+    except Exception as e:
+        print("Error occurred while parsing user agent:", e)
 
 def get_client_ip(request):
     x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
