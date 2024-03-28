@@ -8,7 +8,7 @@ from .models import UserLoginHistory
 
 import socket
 
-
+from geolite2 import geolite2
 
 import json
 import requests

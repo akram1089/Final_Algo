@@ -1,6 +1,7 @@
-# serializers.py
 from rest_framework import serializers
+from .models import Book
 
-class WebhookPayloadSerializer(serializers.Serializer):
-    orderNumber = serializers.IntegerField()
-    sell_buy_indicator = serializers.CharField(max_length=10)
+class BookSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Book
+        fields = '__all__'
