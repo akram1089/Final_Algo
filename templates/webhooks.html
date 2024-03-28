@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% load static %}
+{% block dashboard_body %}
+
+
+<div class="container">
+
+    <h1>Webhooks</h1>
+    <div id="response"></div>
+
+    <input type="text" id="response_web_hooks" class="form-control my-3">
+    <button id="copyButton" class="mb-3">Copy to Clipboard</button>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var copyButton = document.getElementById('copyButton');
+
+            copyButton.addEventListener('click', function() {
+                var responseText = $("#response_web_hooks").val()
+
+                navigator.clipboard.writeText(responseText)
+                .then(function() {
+                    alert('Copied to clipboard!');
+                })
+                .catch(function() {
+                    alert('Failed to copy to clipboard!');
+                });
+            });
+
+            fetch('/webhook_urls')
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+                // document.getElementById('response').textContent = data.webhook_api;
+       
+
+                $("#response_web_hooks").val(data.webhook_api)
+            })
+            .catch(error => console.error('Error:', error));
+        });
+    </script>
+
+</div>
+
+
+
+{% endblock dashboard_body %}
