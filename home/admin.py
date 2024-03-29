@@ -36,11 +36,13 @@ from.models import Wallet
 from.models import UserLoginHistory
 from.models import UserSession
 from.models import PromotionalEmail
+from.models import Post
 
 # from.models import StockListing
 
 
 
+admin.site.register(Post)
 admin.site.register(PromotionalEmail)
 admin.site.register(UserSession)
 admin.site.register(UserLoginHistory)

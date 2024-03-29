@@ -32,7 +32,7 @@ SECRET_KEY = 'django-insecure-bni-q+a&4eggvue+&l%__^n#q%-hlti_=sc-u1ff0joram2yb@
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['www.algotrde.com', '127.0.0.1', 'localhost','algotrde.com','https://algotrde.com','http://algotrde.com','34.100.183.27','optionperks.com','www.optionperks.com','0.0.0.0','34.100.184.223','35.200.212.177']
+ALLOWED_HOSTS = ['172.31.128.1','192.168.101.10', '[::1]','www.algotrde.com','testserver', '127.0.0.1', 'http://localhost/','localhost','algotrde.com','https://algotrde.com','http://algotrde.com','34.100.183.27','optionperks.com','www.optionperks.com','0.0.0.0','34.100.184.223','35.200.212.177']
 
 TIME_ZONE = 'Asia/Kolkata'
 USE_TZ = True
@@ -59,6 +59,11 @@ INSTALLED_APPS = [
     'django_celery_results',
     'django_celery_beat',
     'celery',
+    "django_check_seo",
+    'cms',
+    'menus',
+    'treebeard',
+    'django.contrib.sitemaps'
 
     
 ]
@@ -182,6 +187,22 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
+
+from django.utils.translation import gettext_lazy as _
+
+# Adjust LANGUAGE_CODE to match one of the entries in LANGUAGES
+
+
+# Define LANGUAGES with proper language code and verbose name
+LANGUAGES = (
+        ('en-us', u'English (US)'),
+        ('de', u'Deutsch'),
+        ('en-gb', u'English (UK)'),
+        ('es', u'Español'),
+        ('fr', u'Français'),
+        ('pt', u'Português'),
+    )    
+
 
 LANGUAGE_CODE = 'en-us'
 

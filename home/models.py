@@ -532,3 +532,22 @@ class PromotionalEmail(models.Model):
 
     def __str__(self):
         return self.title
+
+
+
+
+from django.db import models
+from django.urls import reverse  # Import reverse function
+
+class Post(models.Model):
+    title = models.CharField(max_length=100)
+    content = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    last_modified_at = models.DateTimeField(auto_now=True)
+    
+    def __str__(self):
+        return self.title
+
+    def get_absolute_url(self):
+        # Define the URL pattern name for the post detail view
+        return reverse('post_detail', args=[str(self.pk)])
