@@ -4736,32 +4736,6 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import datetime 
 
-@csrf_exempt
-def subscribe_to_newsletter(request):
-    if request.method == "POST":
-        email = request.POST.get("send_email")
-        # print(email)
-        if email:
-            if Subscriber.objects.filter(email=email).exists():
-                return JsonResponse({'message_already': 'You are already subscribed.'})
-            else:
-                new_subscriber = Subscriber(email=email)
-                new_subscriber.subscribed_at = datetime.datetime.now()
-             
-   
-                new_subscriber.save()
-                
-                subject = 'Subscription Confirmation'
-                message = 'Thank you for subscribing to our newsletter!'
-                from_email = 'optionperks@gmail.com'
-                recipient_list = [email]
-                send_mail(subject, message, from_email, recipient_list)
-                
-                return JsonResponse({'message': 'You have successfully subscribed to our newsletter!'})
-        else:
-            return JsonResponse({'error': 'Invalid email address.'})
-    else:
-        return JsonResponse({'error': 'Invalid request method.'})
 
 from django.http import JsonResponse
 from .models import Subscriber
@@ -14728,32 +14702,63 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import datetime 
 
+
+
+
+
+
+
+
+
 @csrf_exempt
 def subscribe_to_newsletter(request):
     if request.method == "POST":
         email = request.POST.get("send_email")
-        # print(email)
         if email:
-            if Subscriber.objects.filter(email=email).exists():
-                return JsonResponse({'message_already': 'You are already subscribed.'})
+            # Check if email already exists
+            existing_subscriber = Subscriber.objects.filter(email=email).first()
+            if existing_subscriber:
+                if existing_subscriber.active:
+                    return JsonResponse({'message_already': 'You are already subscribed.'})
+                else:
+                    # If the existing subscriber is inactive, make it active
+                    existing_subscriber.active = True
+                    existing_subscriber.subscribed_at = timezone.now()
+                    existing_subscriber.save()
+                    return JsonResponse({'message': 'You have successfully subscribed to our newsletter!'})
             else:
-                new_subscriber = Subscriber(email=email)
-                new_subscriber.subscribed_at = datetime.datetime.now()
-             
-   
+                # Create a new subscriber
+                new_subscriber = Subscriber(email=email, active=True, subscribed_at=timezone.now())
                 new_subscriber.save()
                 
+                # Send subscription confirmation email
                 subject = 'Subscription Confirmation'
-                message = 'Thank you for subscribing to our newsletter!'
+                html_message = render_to_string('newsletter_template.html')
+                plain_message = strip_tags(html_message)  # Generate plain text version
                 from_email = 'optionperks@gmail.com'
                 recipient_list = [email]
-                send_mail(subject, message, from_email, recipient_list)
+                send_mail(subject, plain_message, from_email, recipient_list, html_message=html_message)
                 
                 return JsonResponse({'message': 'You have successfully subscribed to our newsletter!'})
         else:
             return JsonResponse({'error': 'Invalid email address.'})
     else:
         return JsonResponse({'error': 'Invalid request method.'})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 from django.http import JsonResponse
 from .models import Subscriber
@@ -21575,37 +21580,12 @@ from django.utils.html import strip_tags
                             
 
 
-@csrf_exempt
-def subscribe_to_newsletter(request):
-    if request.method == "POST":
-        email = request.POST.get("send_email")
-        # print(email)
-        if email:
-            if Subscriber.objects.filter(email=email).exists():
-                return JsonResponse({'message_already': 'You are already subscribed.'})
-            else:
-                new_subscriber = Subscriber(email=email)
-                new_subscriber.subscribed_at = datetime.datetime.now()
-             
-   
-                new_subscriber.save()
-                
-                subject = 'Subscription Confirmation'
-                html_message = render_to_string('newsletter_template.html')
-                plain_message = strip_tags(html_message)  # Generate plain text version
-                from_email = 'optionperks@gmail.com'
-                recipient_list = [email]
-                send_mail(subject, plain_message, from_email, recipient_list, html_message=html_message)
-                
-                return JsonResponse({'message': 'You have successfully subscribed to our newsletter!'})
-        else:
-            return JsonResponse({'error': 'Invalid email address.'})
-    else:
-        return JsonResponse({'error': 'Invalid request method.'})
-
 
 def promotional_email(request):
-    return render(request, "promotional_email.html")
+    subscribers = Subscriber.objects.filter(active=True)
+    promotional_email = PromotionalEmail.objects.last()
+    
+    return render(request, "promotional_email.html", {'promotional_email': promotional_email, 'image_url': promotional_email.img_url} )
 
 from django.http import JsonResponse
 from .models import Subscriber
@@ -21629,6 +21609,7 @@ def send_promotional_emails(request):
         return JsonResponse({'message': 'Promotional emails sent successfully!'})
     else:
         return JsonResponse({'error': 'No PromotionalEmail object found.'}, status=404)
+
 
 def send_newsletter_emails(request):
     subscribers = Subscriber.objects.filter(active=True)
