@@ -220,6 +220,7 @@
       <input type="text" name="title" id="title" class="form-control mb-3" placeholder="Title">
       <input type="file" name="img" id="img" class="form-control mb-3" placeholder="Upload image here">
       <input type="text" name="img_url" id="img_url" class="form-control mb-3" placeholder="Image URL">
+      <textarea name="" id="mytextarea" cols="30" rows="8" class="form-control" required></textarea>
       <button id="form_submit_btn">Save</button>
       <div id="validation_feedback" class="invalid-feedback" style="display: none;">Please fill out all required fields.</div>
     </div>
@@ -246,6 +247,18 @@
 </div>
 <script type="text/javascript">
   $(document).ready(function () {
+
+
+    tinymce.init({
+      selector: '#mytextarea',
+      plugins: [
+      'advlist', 'autolink', 'link', 'image', 'lists', 'charmap', 'preview', 'anchor', 'pagebreak',
+      'searchreplace', 'wordcount', 'visualblocks', 'code', 'fullscreen', 'insertdatetime', 'media',
+      'table', 'emoticons', 'template', 'help'
+    ],
+    toolbar: "undo redo  h2 h3 bold italic underline  blockquote bullist numlist  hr",
+  });
+
     // Fetch data via AJAX
 
 
@@ -271,6 +284,7 @@
       var title = $('#title').val();
       var img_url = $('#img_url').val();
       var image = $('#img').prop('files')[0];
+      var description = tinymce.get('mytextarea').getContent();
 
       if (title.trim() === '' || (!image && img_url.trim() === '')) {
         $('#validation_feedback').show();
@@ -281,6 +295,7 @@
       formData.append('title', title);
       formData.append('img_url', img_url);
       formData.append('img', image);
+      formData.append('description', description);
       
       $.ajax({
           type: 'POST',
@@ -294,7 +309,7 @@
               $('#title').val('');
               $('#img_url').val('');
               $('#img').val('');
-
+              tinymce.get('mytextarea').setContent('');
               $('#image_preview').attr('src', '');
                 $('#validation_feedback').hide();
           },
@@ -307,7 +322,7 @@
 
     $('#sendPromotionalEmailsBtn').click(function() {
       $.ajax({
-          url: '/send_newsletter_emails',
+          url: '/send_promotional_emails',
           type: 'GET',
           success: function(response) {
             Swal.fire(

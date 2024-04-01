@@ -1,5 +1,25 @@
 {% extends "base_dashboard.html" %}
 {% load static %}
+
+{% block title %} 
+
+Derivative Summary
+
+{% endblock title %}
+
+
+{% block description_keywords %}  
+
+<meta name="description" content="Get a comprehensive overview of derivatives trading with Derivative Summary. Stay informed about derivative instruments, including options, futures, and swaps. Access key metrics, market trends, and trading insights to make informed decisions. Whether you're an experienced trader or new to derivatives, Derivative Summary provides valuable information and analysis to help you navigate the derivatives market effectively.">
+
+
+<meta name="keywords" content="Derivative Summary, derivatives trading, options, futures, swaps, derivative instruments, market trends, trading insights">
+
+<meta name="generator" content="Python,Django,Javascript,Jquery,Ajax">
+<meta name="author" content="Option perks">
+
+{% endblock description_keywords %}
+
 {% block dashboard_body %}
 <style>
     .text-success {
@@ -926,6 +946,22 @@ table.dataTable thead>tr>td.sorting_desc:before, table.dataTable thead>tr>td.sor
                                     build_class = ""; // Set default class or use "build_class = null" if needed
                                 }
 
+                                function formatDate(dateString) {
+                                    // Extract the date part from the date string
+                                    var datePart = dateString.split('T')[0];
+                                
+                                    // Split the date into year, month, and day
+                                    var dateParts = datePart.split('-');
+                                    var year = dateParts[0];
+                                    var month = dateParts[1];
+                                    var day = dateParts[2];
+                                
+                                    // Format the date as DD-MM-YYYY
+                                    var formattedDate = day + '-' + month + '-' + year;
+                                
+                                    return formattedDate;
+                                }
+
                                 var row = `<tr>
                     <td>
                         <div>
@@ -933,7 +969,7 @@ table.dataTable thead>tr>td.sorting_desc:before, table.dataTable thead>tr>td.sor
                         </div>
                     </td>
                     <td>
-                        <div>${item.expiry}</div>
+                        <div>${formatDate(item.expiry)}</div>
                     </td>
                     <td>
                         <div>${item.oi}</div>
