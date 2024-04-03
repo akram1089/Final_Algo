@@ -39,7 +39,18 @@ Option Strategy Builder
     display: block;
   }
 
-  .main_buy_call,
+.main_call_ratio_back_spread,
+.main_bull_put_spread,
+.main_bull_call_spread,
+
+.main_put_ratio_spread,
+.main_call_ratio_spread,
+
+.main_put_ratio_back_spread,
+.main_bear_put_spread,
+.main-spread,
+
+
   .main_strap,.main_strip,
   .main_long_synthetic_future,
   .main_reverse_jaze_lizard,
@@ -52,6 +63,7 @@ Option Strategy Builder
   .main-double-candor,
 
   .main-jaze_lizard,
+  .main_buy_call,
   .main-double-iron-fly,
   .main-put-butterfly,
   .main-call-butterfly,
@@ -987,6 +999,76 @@ Option Strategy Builder
     display: none;
     margin: 14px 0 0 0;
   }
+  #bear_put_spread_modal {
+    width: 23.4rem;
+    box-shadow: 0px 0px 1px 2px #4399eb3b;
+    position: absolute;
+    z-index: 9;
+    border-radius: 8px;
+    background-color: white;
+    display: none;
+    margin: 14px 0 0 0;
+  }
+  #bull_call_spread_modal {
+    width: 23.4rem;
+    box-shadow: 0px 0px 1px 2px #4399eb3b;
+    position: absolute;
+    z-index: 9;
+    border-radius: 8px;
+    background-color: white;
+    display: none;
+    margin: 14px 0 0 0;
+  }
+  #bull_put_spread_modal {
+    width: 23.4rem;
+    box-shadow: 0px 0px 1px 2px #4399eb3b;
+    position: absolute;
+    z-index: 9;
+    border-radius: 8px;
+    background-color: white;
+    display: none;
+    margin: 14px 0 0 0;
+  }
+  #call_ratio_spread_modal {
+    width: 23.4rem;
+    box-shadow: 0px 0px 1px 2px #4399eb3b;
+    position: absolute;
+    z-index: 9;
+    border-radius: 8px;
+    background-color: white;
+    display: none;
+    margin: 14px 0 0 0;
+  }
+  #put_ratio_spread_modal {
+    width: 23.4rem;
+    box-shadow: 0px 0px 1px 2px #4399eb3b;
+    position: absolute;
+    z-index: 9;
+    border-radius: 8px;
+    background-color: white;
+    display: none;
+    margin: 14px 0 0 0;
+  }
+  #put_ratio_back_spread_modal {
+    width: 23.4rem;
+    box-shadow: 0px 0px 1px 2px #4399eb3b;
+    position: absolute;
+    z-index: 9;
+    border-radius: 8px;
+    background-color: white;
+    display: none;
+    margin: 14px 0 0 0;
+  }
+  #call_ratio_back_spread_modal {
+    width: 23.4rem;
+    box-shadow: 0px 0px 1px 2px #4399eb3b;
+    position: absolute;
+    z-index: 9;
+    border-radius: 8px;
+    background-color: white;
+    display: none;
+    margin: 14px 0 0 0;
+  }
   #reverse_jaze_lizard_modal {
     width: 23.4rem;
     box-shadow: 0px 0px 1px 2px #4399eb3b;
@@ -1264,6 +1346,7 @@ Option Strategy Builder
     padding-top: 7px;
   }
 
+  .main_startegy_execute_btn,
   #long_straddle_btn,
   #short_synthetic_modal_btn,
   #long_synthetic_modal_btn,
@@ -1309,7 +1392,7 @@ Option Strategy Builder
     border-radius: 5px;
     transition: 0.1s;
   }
-
+  .main_startegy_execute_btn:hover,
   #long_straddle_btn:hover,
   #short_synthetic_modal_btn:hover,
   #long_synthetic_modal_btn:hover,
@@ -1334,7 +1417,7 @@ Option Strategy Builder
     border: 1px solid #dd0000;
     color: #dd0000;
   }
-
+  .main_startegy_execute_btn:focus,
   #long_straddle_btn:focus,
   #short_synthetic_modal_btn:focus,
   #long_synthetic_modal_btn:focus,
@@ -1798,12 +1881,14 @@ Option Strategy Builder
                 .counter_double_iron_condor,
                 .counter_put_butterfly,
                 .counter_call_butter_fly,
+                .main_qty_counter,
                 .counter_strangle {
 
                   border: 1px solid #8080803b !important;
                   border-radius: 4px !important;
                 }
 
+                .minus_qty_btn,
                 #reverse_jaze_lizard_modal_decrement,
                 #decrement_call_butter_Fly,
                 #decrement_put_butter_Fly,
@@ -1835,6 +1920,8 @@ Option Strategy Builder
                 }
 
 
+                .plus_qty_btn:hover,
+                .minus_qty_btn:hover,
                 #reverse_jaze_lizard_modal_increment:hover,
                 #reverse_jaze_lizard_modal_decrement:hover,
                 #strap_modal_increment:hover,
@@ -1897,7 +1984,8 @@ Option Strategy Builder
                 #future_increment:hover {
                   background: #80808029;
                 }
-
+                .plus_qty_btn:active,
+                .minus_qty_btn:active,
                 #reverse_jaze_lizard_modal_increment:active,
                 #reverse_jaze_lizard_modal_decrement:active,
                 #strap_modal_increment:active,
@@ -1973,6 +2061,7 @@ Option Strategy Builder
                 #counter_input_double_iron_condor,
                 #counter_input_put_butterfly,
                 #counter_input_call_butter_fly,
+                .main_qty_input,
                 #counter_input {
                   all: unset !important;
                   width: 30px !important;
@@ -1992,6 +2081,7 @@ Option Strategy Builder
                 #increment_put_butter_Fly,
                 #long_synthetic_modal_increment,
                 #short_synthetic_modal_increment,
+                .plus_qty_btn,
 
                 #long_straddle_increment,
                 #future_increment,
@@ -6814,6 +6904,25 @@ Option Strategy Builder
       display: flex;
       justify-content: center;
     }
+    .strategy_simu > div {
+    position: relative;
+  }
+  .lmSamt {
+    height: 16px;
+    border-radius: 3px;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 10px;
+    line-height: 16px;
+    letter-spacing: 0.25px;
+    padding: 0px 4px;
+    position: absolute;
+    top: 0;
+    background: #FFE178;
+    color: #231B00;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
   </style>
 
   <div class="main_all_strategy_nav_content" style="box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;     padding: 13px;
@@ -6840,28 +6949,6 @@ Option Strategy Builder
           </div>
 
           <div class="strategy_simu">
-
-<style>
-  .strategy_simu > div {
-    position: relative;
-  }
-  .lmSamt {
-    height: 16px;
-    border-radius: 3px;
-    font-style: normal;
-    font-weight: 500;
-    font-size: 10px;
-    line-height: 16px;
-    letter-spacing: 0.25px;
-    padding: 0px 4px;
-    position: absolute;
-    top: 0;
-    background: #FFE178;
-    color: #231B00;
-    left: 50%;
-    transform: translate(-50%, -50%);
-}
-</style>
 
                
 
@@ -7921,27 +8008,1027 @@ Option Strategy Builder
               </div>
             </div>
 
+
+       <!-- /Call Radio Back Spread -->
+
+
+       <div class="main_call_ratio_back_spread" >
+
+        <button class="straddle" id="call_ratio_back_spread">
+
+          <div class="main_strategy_img_title">
+            <div class="style__PresetStrategyCard-sc-1f57s5d-6 jyZMZN">
+             
+              <svg xmlns="http://www.w3.org/2000/svg" width="62" height="45" viewBox="0 0 62 45" class="sc-gsTCUz dFfFa-d jss619"><g fill="none" fill-rule="evenodd"><path stroke="var(--dividerColor)" stroke-linecap="square" d="M0.5 0L0.5 43.237" transform="translate(1 1)"></path><path stroke="var(--dividerColor)" stroke-dasharray="5 5" stroke-linecap="round" d="M0.462 23L60 23" transform="translate(1 1)"></path><g stroke-width="2"><path stroke="var(--lossColor)" d="M0 20L27 20 31.798 25 40 16" transform="translate(1 1) translate(1 8)"></path><path stroke="var(--profitColor)" d="M40 16L54 0.5" transform="translate(1 1) translate(1 8)"></path></g></g></svg>
+              <div class="title">Call Ratio <br> Back Spread</div>
+            
+            </div>
+
+
+        </button>
+
+        <div class="sc-jxTFzB lmSamt">New</div>
+
+        </b>
+
+        <div class="" id="call_ratio_back_spread_modal">
+          <div class="dismiss">
+            <i class="bx bx-plus dismiss_icon"></i>
+            <div class="triangle-up"></div>
+          </div>
+          <div class="modal_dialog">
+            <div class="modal_content">
+              <div class="modal_body" id="modal_body">
+                <div class="main_call_ratio_back_spread_inner">
+                  <h5 class="text-center mb-3">Call Ratio Back Spread</h5>
+
+                  <div class="main_body_fields_call_ratio_back_spread">
+                    <div class="main_strikePrice mb-3">
+                      <div class="call_ratio_back_spread_lot_size">
+                        <span id="call_1st_ratio_back_spread_lot_size">1</span><span>x</span>
+                      </div>
+                      <div class="strategy_inputs">
+                        <label for="strikePrice">Strike Price</label>
+                        <select class="strike_price_input form-select" data-optionside="CE"
+                          id="call_strikeSelect_1st_ratio_back_spread"></select>
+                      </div>
+                      <p class="pe_ce"> CE</p>
+                    </div>
+
+
+                    <div class="main_strikePrice mb-3">
+                      <div class="call_ratio_back_spread_lot_size">
+                        <span id="call_2nd_ratio_back_spread_lot_size">2</span><span>x</span>
+                      </div>
+                      <div class="strategy_inputs">
+                        <label for="strikePrice">Strike Price</label>
+                        <select class="strike_price_input form-select" data-optionside="CE"
+                          id="call_strikeSelect_2nd_ratio_back_spread"></select>
+                      </div>
+                      <p class="pe_ce"> CE</p>
+                    </div>
+         
+
+                    <div class="strategy_inputs mb-3">
+                      <label for="expirydate">Expiry Date</label>
+                      <select class="expiry_date_input form-select" id="expiryDate_call_ratio_back_spread"></select>
+                    </div>
+                    <div class="main_leg_config d-flex align-items-center">
+
+                      <label for="main_iron_fly" class="m-0"> Config:</label>
+
+                      <div class="main_leg_button_input d-flex">
+                        <button class="decrease_main  main_leg_config_minus"><i class="bx bx-minus"></i></button>
+                   
+                      <input type="text" class="form-control " min="0" value="0">
+            
+                      <button class="increase_main main_leg_config_plus"><i class="bx bx-plus"></i></button>
+                      </div>
+
+
+
+
+                    </div>
+                              <style>
+                                .call_ratio_back_spread_modal_atm_indicator{
+                                  display: flex;
+                      align-items: center;
+                      justify-content: center;
+                      column-gap: 0.4rem;
+                      margin-bottom: 0.5rem;
+                                }
+                              </style>
+                    <div class="call_ratio_back_spread_modal_atm_indicator">
+
+                      <label for="call_ratio_back_spread_modal_atm_counter" class="m-0">ATM:</label>
+
+
+                      <div class="main_strangle_modal  d-flex m-0" id="call_ratio_back_spread_modal_atm_counter">
+                        <button class="decrease_main" id="decrease_call_ratio_back_spread_modal_value"><i class="bx bx-minus"></i></button>
+                        <input type="text" style="width: 100px;" class="main_modal_strike_input" id="call_ratio_back_spread_strike_input">
+                        <button class="increase_main" id="increase_call_ratio_back_spread_modal_value"><i class="bx bx-plus"></i></button>
+                      </div>
+
+                      <div class="call_ratio_back_spread_modal_new_strike_price_malipulations">
+                        <p class="malipulation_text_main_modal" id="manipulation_text_atm_call_ratio_back_spread">0</p>
+                      </div>
+
+                    </div>
+
+
+
+
+                    <div class="main_counter d-flex gap-3 mb-3">
+                      <div class="innercall_ratio_back_spread_modal_lot_size d-flex gap-2">
+                        <p class="fs-6 lot_title">Qty:</p>
+                        <div class="counter_call_ratio_back_spread_modal main_qty_counter d-flex justify-content-center gap-1">
+                          <button class="btn minus_qty_btn" id="call_ratio_back_spread_modal_decrement">
+                            <i class="bx bx-minus"></i>
+                          </button>
+                          <input type="text" name="" value="1" class="main_qty_input" id="call_ratio_back_spread_modal_counter_input" min="1" disabled
+                            style="    width: 91px !important;" />
+                          <button class="btn plus_qty_btn" id="call_ratio_back_spread_modal_increment">
+                            <i class="bx bx-plus"></i>
+                          </button>
+                        </div>
+                      </div>
+
+                    </div>
+
+                    <div class="main_deploy_call_ratio_back_spread_modal_btn d-flex justify-content-center">
+                      <button class="main_startegy_execute_btn" id="call_ratio_back_spread_modal_btn"
+                        style="width: 124px !important;">SELL</button>
+                    </div>
+                  </div>
+                </div>
+
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+                     <!-- /Put Radio Back Spread -->
+
+
+                     <div class="main_put_ratio_back_spread" >
+
+                      <button class="straddle" id="put_ratio_back_spread">
+        
+                        <div class="main_strategy_img_title">
+                          <div class="style__PresetStrategyCard-sc-1f57s5d-6 jyZMZN">
+                           
+                            <svg xmlns="http://www.w3.org/2000/svg" width="62" height="45" viewBox="0 0 62 45" class="sc-gsTCUz dFfFa-d jss619"><g fill="none" fill-rule="evenodd"><path stroke="var(--dividerColor)" stroke-linecap="square" d="M0.5 0L0.5 43.237" transform="translate(1 1)"></path><path stroke="var(--dividerColor)" stroke-dasharray="5 5" stroke-linecap="round" d="M0.462 23L60 23" transform="translate(1 1)"></path><g stroke-width="2"><path stroke="var(--lossColor)" d="M0 20L27 20 31.798 25 40 16" transform="translate(1 1) matrix(-1 0 0 1 55 7)"></path><path stroke="var(--profitColor)" d="M40 16L54 0.5" transform="translate(1 1) matrix(-1 0 0 1 55 7)"></path></g></g></svg>
+                            <div class="title">Put Ratio <br> Back Spread</div>
+                          
+                          </div>
+        
+              
+                      </button>
+        
+                      <div class="sc-jxTFzB lmSamt">New</div>
+        
+                      </b>
+        
+                      <div class="" id="put_ratio_back_spread_modal">
+                        <div class="dismiss">
+                          <i class="bx bx-plus dismiss_icon"></i>
+                          <div class="triangle-up"></div>
+                        </div>
+                        <div class="modal_dialog">
+                          <div class="modal_content">
+                            <div class="modal_body" id="modal_body">
+                              <div class="main_put_ratio_back_spread_inner">
+                                <h5 class="text-center mb-3">Put Ratio Back Spread</h5>
+        
+                                <div class="main_body_fields_put_ratio_back_spread">
+                                  <div class="main_strikePrice mb-3">
+                                    <div class="put_ratio_back_spread_lot_size">
+                                      <span id="put_1st_ratio_back_spread_lot_size">1</span><span>x</span>
+                                    </div>
+                                    <div class="strategy_inputs">
+                                      <label for="strikePrice">Strike Price</label>
+                                      <select class="strike_price_input form-select" data-optionside="PE"
+                                        id="put_strikeSelect_1st_ratio_back_spread"></select>
+                                    </div>
+                                    <p class="pe_ce"> PE</p>
+                                  </div>
+        
+        
+                                  <div class="main_strikePrice mb-3">
+                                    <div class="put_ratio_back_spread_lot_size">
+                                      <span id="put_2nd_ratio_back_spread_lot_size">2</span><span>x</span>
+                                    </div>
+                                    <div class="strategy_inputs">
+                                      <label for="strikePrice">Strike Price</label>
+                                      <select class="strike_price_input form-select" data-optionside="PE"
+                                        id="put_strikeSelect_2nd_ratio_back_spread"></select>
+                                    </div>
+                                    <p class="pe_ce"> PE</p>
+                                  </div>
+                       
+        
+                                  <div class="strategy_inputs mb-3">
+                                    <label for="expirydate">Expiry Date</label>
+                                    <select class="expiry_date_input form-select" id="expiryDate_put_ratio_back_spread"></select>
+                                  </div>
+                                  <div class="main_leg_config d-flex align-items-center">
+    
+                                    <label for="main_iron_fly" class="m-0"> Config:</label>
+        
+                                    <div class="main_leg_button_input d-flex">
+                                      <button class="decrease_main  main_leg_config_minus"><i class="bx bx-minus"></i></button>
+                                 
+                                    <input type="text" class="form-control " min="0" value="0">
+                          
+                                    <button class="increase_main main_leg_config_plus"><i class="bx bx-plus"></i></button>
+                                    </div>
+        
+        
+        
+        
+                                  </div>
+                                            <style>
+                                              .put_ratio_back_spread_modal_atm_indicator{
+                                                display: flex;
+                                    align-items: center;
+                                    justify-content: center;
+                                    column-gap: 0.4rem;
+                                    margin-bottom: 0.5rem;
+                                              }
+                                            </style>
+                                  <div class="put_ratio_back_spread_modal_atm_indicator">
+    
+                                    <label for="put_ratio_back_spread_modal_atm_counter" class="m-0">ATM:</label>
+          
+          
+                                    <div class="main_strangle_modal  d-flex m-0" id="put_ratio_back_spread_modal_atm_counter">
+                                      <button class="decrease_main" id="decrease_put_ratio_back_spread_modal_value"><i class="bx bx-minus"></i></button>
+                                      <input type="text" style="width: 100px;" class="main_modal_strike_input" id="put_ratio_back_spread_strike_input">
+                                      <button class="increase_main" id="increase_put_ratio_back_spread_modal_value"><i class="bx bx-plus"></i></button>
+                                    </div>
+          
+                                    <div class="put_ratio_back_spread_modal_new_strike_price_malipulations">
+                                      <p class="malipulation_text_main_modal" id="manipulation_text_atm_put_ratio_back_spread">0</p>
+                                    </div>
+          
+                                  </div>
+        
+        
+        
+        
+                                  <div class="main_counter d-flex gap-3 mb-3">
+                                    <div class="innerput_ratio_back_spread_modal_lot_size d-flex gap-2">
+                                      <p class="fs-6 lot_title">Qty:</p>
+                                      <div class="counter_put_ratio_back_spread_modal main_qty_counter d-flex justify-content-center gap-1">
+                                        <button class="btn minus_qty_btn" id="put_ratio_back_spread_modal_decrement">
+                                          <i class="bx bx-minus"></i>
+                                        </button>
+                                        <input type="text" name="" value="1" class="main_qty_input" id="put_ratio_back_spread_modal_counter_input" min="1" disabled
+                                          style="    width: 91px !important;" />
+                                        <button class="btn plus_qty_btn" id="put_ratio_back_spread_modal_increment">
+                                          <i class="bx bx-plus"></i>
+                                        </button>
+                                      </div>
+                                    </div>
+        
+                                  </div>
+        
+                                  <div class="main_deploy_put_ratio_back_spread_modal_btn d-flex justify-content-center">
+                                    <button class="main_startegy_execute_btn" id="put_ratio_back_spread_modal_btn"
+                                      style="width: 124px !important;">SELL</button>
+                                  </div>
+                                </div>
+                              </div>
+        
+        
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+    
+
+                     <!-- /Put Radio Spread -->
+
+
+                     <div class="main_put_ratio_spread" >
+
+                      <button class="straddle" id="put_ratio_spread">
+        
+                        <div class="main_strategy_img_title">
+                          <div class="style__PresetStrategyCard-sc-1f57s5d-6 jyZMZN">
+                           
+                            <svg xmlns="http://www.w3.org/2000/svg" width="62" height="45" viewBox="0 0 62 45" class="sc-gsTCUz dFfFa-d jss619"><g fill="none" fill-rule="evenodd"><path stroke="var(--dividerColor)" stroke-linecap="square" d="M0.5 0L0.5 43.237" transform="translate(1 1)"></path><path stroke="var(--dividerColor)" stroke-dasharray="5 5" stroke-linecap="round" d="M0.462 23L60 23" transform="translate(1 1)"></path><g stroke-width="2"><path stroke="var(--profitColor)" d="M0 20L27 20 31.798 25 40 16" transform="translate(1 1) rotate(180 27.5 19.5)"></path><path stroke="var(--lossColor)" d="M40 16L54 0.5" transform="translate(1 1) rotate(180 27.5 19.5)"></path></g></g></svg>
+                            <div class="title">Put Ratio Spread</div>
+                          
+                          </div>
+        
+              
+                      </button>
+        
+                      <div class="sc-jxTFzB lmSamt">New</div>
+        
+                      </b>
+        
+                      <div class="" id="put_ratio_spread_modal">
+                        <div class="dismiss">
+                          <i class="bx bx-plus dismiss_icon"></i>
+                          <div class="triangle-up"></div>
+                        </div>
+                        <div class="modal_dialog">
+                          <div class="modal_content">
+                            <div class="modal_body" id="modal_body">
+                              <div class="main_put_ratio_spread_inner">
+                                <h5 class="text-center mb-3">Put Ratio Spread</h5>
+        
+                                <div class="main_body_fields_put_ratio_spread">
+                                  <div class="main_strikePrice mb-3">
+                                    <div class="put_ratio_spread_lot_size">
+                                      <span id="put_1st_ratio_spread_lot_size">1</span><span>x</span>
+                                    </div>
+                                    <div class="strategy_inputs">
+                                      <label for="strikePrice">Strike Price</label>
+                                      <select class="strike_price_input form-select" data-optionside="PE"
+                                        id="put_strikeSelect_1st_ratio_spread"></select>
+                                    </div>
+                                    <p class="pe_ce"> PE</p>
+                                  </div>
+        
+        
+                                  <div class="main_strikePrice mb-3">
+                                    <div class="put_ratio_spread_lot_size">
+                                      <span id="put_2nd_ratio_spread_lot_size">2</span><span>x</span>
+                                    </div>
+                                    <div class="strategy_inputs">
+                                      <label for="strikePrice">Strike Price</label>
+                                      <select class="strike_price_input form-select" data-optionside="PE"
+                                        id="put_strikeSelect_2nd_ratio_spread"></select>
+                                    </div>
+                                    <p class="pe_ce"> PE</p>
+                                  </div>
+                       
+        
+                                  <div class="strategy_inputs mb-3">
+                                    <label for="expirydate">Expiry Date</label>
+                                    <select class="expiry_date_input form-select" id="expiryDate_put_ratio_spread"></select>
+                                  </div>
+                                  <div class="main_leg_config d-flex align-items-center">
+    
+                                    <label for="main_iron_fly" class="m-0"> Config:</label>
+        
+                                    <div class="main_leg_button_input d-flex">
+                                      <button class="decrease_main  main_leg_config_minus"><i class="bx bx-minus"></i></button>
+                                 
+                                    <input type="text" class="form-control " min="0" value="0">
+                          
+                                    <button class="increase_main main_leg_config_plus"><i class="bx bx-plus"></i></button>
+                                    </div>
+        
+        
+        
+        
+                                  </div>
+                                            <style>
+                                              .put_ratio_spread_modal_atm_indicator{
+                                                display: flex;
+                                    align-items: center;
+                                    justify-content: center;
+                                    column-gap: 0.4rem;
+                                    margin-bottom: 0.5rem;
+                                              }
+                                            </style>
+                                  <div class="put_ratio_spread_modal_atm_indicator">
+    
+                                    <label for="put_ratio_spread_modal_atm_counter" class="m-0">ATM:</label>
+          
+          
+                                    <div class="main_strangle_modal  d-flex m-0" id="put_ratio_spread_modal_atm_counter">
+                                      <button class="decrease_main" id="decrease_put_ratio_spread_modal_value"><i class="bx bx-minus"></i></button>
+                                      <input type="text" style="width: 100px;" class="main_modal_strike_input" id="put_ratio_spread_strike_input">
+                                      <button class="increase_main" id="increase_put_ratio_spread_modal_value"><i class="bx bx-plus"></i></button>
+                                    </div>
+          
+                                    <div class="put_ratio_spread_modal_new_strike_price_malipulations">
+                                      <p class="malipulation_text_main_modal" id="manipulation_text_atm_put_ratio_spread">0</p>
+                                    </div>
+          
+                                  </div>
+        
+        
+        
+        
+                                  <div class="main_counter d-flex gap-3 mb-3">
+                                    <div class="innerput_ratio_spread_modal_lot_size d-flex gap-2">
+                                      <p class="fs-6 lot_title">Qty:</p>
+                                      <div class="counter_put_ratio_spread_modal main_qty_counter d-flex justify-content-center gap-1">
+                                        <button class="btn minus_qty_btn" id="put_ratio_spread_modal_decrement">
+                                          <i class="bx bx-minus"></i>
+                                        </button>
+                                        <input type="text" name="" value="1" class="main_qty_input" id="put_ratio_spread_modal_counter_input" min="1" disabled
+                                          style="    width: 91px !important;" />
+                                        <button class="btn plus_qty_btn" id="put_ratio_spread_modal_increment">
+                                          <i class="bx bx-plus"></i>
+                                        </button>
+                                      </div>
+                                    </div>
+        
+                                  </div>
+        
+                                  <div class="main_deploy_put_ratio_spread_modal_btn d-flex justify-content-center">
+                                    <button class="main_startegy_execute_btn" id="put_ratio_spread_modal_btn"
+                                      style="width: 124px !important;">SELL</button>
+                                  </div>
+                                </div>
+                              </div>
+        
+        
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+    
+
+                                        <!-- /Call Radio Spread -->
+
+
+                                        <div class="main_call_ratio_spread" >
+
+                                          <button class="straddle" id="call_ratio_spread">
+                            
+                                            <div class="main_strategy_img_title">
+                                              <div class="style__PresetStrategyCard-sc-1f57s5d-6 jyZMZN">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="62" height="45" viewBox="0 0 62 45" class="sc-gsTCUz dFfFa-d jss619"><g fill="none" fill-rule="evenodd"><path stroke="var(--dividerColor)" stroke-linecap="square" d="M0.5 0L0.5 43.237" transform="translate(1 1)"></path><path stroke="var(--dividerColor)" stroke-dasharray="5 5" stroke-linecap="round" d="M0.462 23L60 23" transform="translate(1 1)"></path><g stroke-width="2"><path stroke="var(--profitColor)" d="M0 20L27 20 31.798 25 40 16" transform="translate(1 1) matrix(1 0 0 -1 1 39)"></path><path stroke="var(--lossColor)" d="M40 16L54 0.5" transform="translate(1 1) matrix(1 0 0 -1 1 39)"></path></g></g></svg>
+
+                                                <div class="title">Call Ratio Spread</div>
+                                              
+                                              </div>
+                            
+                                  
+                                          </button>
+                            
+                                          <div class="sc-jxTFzB lmSamt">New</div>
+                            
+                                          </b>
+                            
+                                          <div class="" id="call_ratio_spread_modal">
+                                            <div class="dismiss">
+                                              <i class="bx bx-plus dismiss_icon"></i>
+                                              <div class="triangle-up"></div>
+                                            </div>
+                                            <div class="modal_dialog">
+                                              <div class="modal_content">
+                                                <div class="modal_body" id="modal_body">
+                                                  <div class="main_call_ratio_spread_inner">
+                                                    <h5 class="text-center mb-3">Call Ratio Spread</h5>
+                            
+                                                    <div class="main_body_fields_call_ratio_spread">
+                                                      <div class="main_strikePrice mb-3">
+                                                        <div class="call_ratio_spread_lot_size">
+                                                          <span id="put_call_ratio_spread_lot_size">1</span><span>x</span>
+                                                        </div>
+                                                        <div class="strategy_inputs">
+                                                          <label for="strikePrice">Strike Price</label>
+                                                          <select class="strike_price_input form-select" data-optionside="CE"
+                                                            id="put_strikeSelect_call_ratio_spread"></select>
+                                                        </div>
+                                                        <p class="pe_ce"> CE</p>
+                                                      </div>
+                            
+                            
+                                                      <div class="main_strikePrice mb-3">
+                                                        <div class="call_ratio_spread_lot_size">
+                                                          <span id="call_call_ratio_spread_lot_size">2</span><span>x</span>
+                                                        </div>
+                                                        <div class="strategy_inputs">
+                                                          <label for="strikePrice">Strike Price</label>
+                                                          <select class="strike_price_input form-select" data-optionside="CE"
+                                                            id="call_strikeSelect_call_ratio_spread"></select>
+                                                        </div>
+                                                        <p class="pe_ce"> CE</p>
+                                                      </div>
+                                           
+                            
+                                                      <div class="strategy_inputs mb-3">
+                                                        <label for="expirydate">Expiry Date</label>
+                                                        <select class="expiry_date_input form-select" id="expiryDate_call_ratio_spread"></select>
+                                                      </div>
+                                                      <div class="main_leg_config d-flex align-items-center">
+                        
+                                                        <label for="main_iron_fly" class="m-0"> Config:</label>
+                            
+                                                        <div class="main_leg_button_input d-flex">
+                                                          <button class="decrease_main  main_leg_config_minus"><i class="bx bx-minus"></i></button>
+                                                     
+                                                        <input type="text" class="form-control " min="0" value="0">
+                                              
+                                                        <button class="increase_main main_leg_config_plus"><i class="bx bx-plus"></i></button>
+                                                        </div>
+                            
+                            
+                            
+                            
+                                                      </div>
+                                                                <style>
+                                                                  .call_ratio_spread_modal_atm_indicator{
+                                                                    display: flex;
+                                                        align-items: center;
+                                                        justify-content: center;
+                                                        column-gap: 0.4rem;
+                                                        margin-bottom: 0.5rem;
+                                                                  }
+                                                                </style>
+                                                      <div class="call_ratio_spread_modal_atm_indicator">
+                        
+                                                        <label for="call_ratio_spread_modal_atm_counter" class="m-0">ATM:</label>
+                              
+                              
+                                                        <div class="main_strangle_modal  d-flex m-0" id="call_ratio_spread_modal_atm_counter">
+                                                          <button class="decrease_main" id="decrease_call_ratio_spread_modal_value"><i class="bx bx-minus"></i></button>
+                                                          <input type="text" style="width: 100px;" class="main_modal_strike_input" id="call_ratio_spread_strike_input">
+                                                          <button class="increase_main" id="increase_call_ratio_spread_modal_value"><i class="bx bx-plus"></i></button>
+                                                        </div>
+                              
+                                                        <div class="call_ratio_spread_modal_new_strike_price_malipulations">
+                                                          <p class="malipulation_text_main_modal" id="manipulation_text_atm_call_ratio_spread">0</p>
+                                                        </div>
+                              
+                                                      </div>
+                            
+                            
+                            
+                            
+                                                      <div class="main_counter d-flex gap-3 mb-3">
+                                                        <div class="innercall_ratio_spread_modal_lot_size d-flex gap-2">
+                                                          <p class="fs-6 lot_title">Qty:</p>
+                                                          <div class="counter_call_ratio_spread_modal main_qty_counter d-flex justify-content-center gap-1">
+                                                            <button class="btn minus_qty_btn" id="call_ratio_spread_modal_decrement">
+                                                              <i class="bx bx-minus"></i>
+                                                            </button>
+                                                            <input type="text" name="" value="1" class="main_qty_input" id="call_ratio_spread_modal_counter_input" min="1" disabled
+                                                              style="    width: 91px !important;" />
+                                                            <button class="btn plus_qty_btn" id="call_ratio_spread_modal_increment">
+                                                              <i class="bx bx-plus"></i>
+                                                            </button>
+                                                          </div>
+                                                        </div>
+                            
+                                                      </div>
+                            
+                                                      <div class="main_deploy_call_ratio_spread_modal_btn d-flex justify-content-center">
+                                                        <button class="main_startegy_execute_btn" id="call_ratio_spread_modal_btn"
+                                                          style="width: 124px !important;">SELL</button>
+                                                      </div>
+                                                    </div>
+                                                  </div>
+                            
+                            
+                                                </div>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
+                        
+
+                            <!-- /Bull Put Spread -->
+
+
+                            <div class="main_bull_put_spread" >
+
+                              <button class="straddle" id="bull_put_spread">
+                
+                                <div class="main_strategy_img_title">
+                                  <div class="style__PresetStrategyCard-sc-1f57s5d-6 jyZMZN">
+                                   
+                                    
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="62" height="45" viewBox="0 0 62 45" class="sc-gsTCUz dFfFa-d jss619"><g fill="none" fill-rule="evenodd"><path stroke="var(--dividerColor)" stroke-linecap="square" d="M0.5 0L0.5 43.237" transform="translate(1 1)"></path><path stroke="var(--dividerColor)" stroke-dasharray="5 5" stroke-linecap="round" d="M0.462 23L60 23" transform="translate(1 1)"></path><path stroke="var(--lossColor)" stroke-width="2" d="M1 38.988L13.009 38.988 31 23" transform="translate(1 1)"></path><path stroke="var(--profitColor)" stroke-width="2" d="M31 23L38.618 16 55.967 16" transform="translate(1 1)"></path></g></svg>
+                                    <div class="title">Bull Put Spread</div>
+                                  
+                                  </div>
+                
+                      
+                              </button>
+                
+                              <div class="sc-jxTFzB lmSamt">New</div>
+                
+                              </b>
+                
+                              <div class="" id="bull_put_spread_modal">
+                                <div class="dismiss">
+                                  <i class="bx bx-plus dismiss_icon"></i>
+                                  <div class="triangle-up"></div>
+                                </div>
+                                <div class="modal_dialog">
+                                  <div class="modal_content">
+                                    <div class="modal_body" id="modal_body">
+                                      <div class="main_bull_put_spread_inner">
+                                        <h5 class="text-center mb-3">Bull Put Spread</h5>
+                
+                                        <div class="main_body_fields_bull_put_spread">
+                                          <div class="main_strikePrice mb-3">
+                                            <div class="bull_put_spread_lot_size">
+                                              <span id="put_bull_put_spread_lot_size">1</span><span>x</span>
+                                            </div>
+                                            <div class="strategy_inputs">
+                                              <label for="strikePrice">Strike Price</label>
+                                              <select class="strike_price_input form-select" data-optionside="PE"
+                                                id="put_strikeSelect_bull_put_spread"></select>
+                                            </div>
+                                            <p class="pe_ce"> PE</p>
+                                          </div>
+                
+                
+                                          <div class="main_strikePrice mb-3">
+                                            <div class="bull_put_spread_lot_size">
+                                              <span id="call_bull_put_spread_lot_size">1</span><span>x</span>
+                                            </div>
+                                            <div class="strategy_inputs">
+                                              <label for="strikePrice">Strike Price</label>
+                                              <select class="strike_price_input form-select" data-optionside="PE"
+                                                id="call_strikeSelect_bull_put_spread"></select>
+                                            </div>
+                                            <p class="pe_ce"> PE</p>
+                                          </div>
+                               
+                
+                                          <div class="strategy_inputs mb-3">
+                                            <label for="expirydate">Expiry Date</label>
+                                            <select class="expiry_date_input form-select" id="expiryDate_bull_put_spread"></select>
+                                          </div>
+                                          <div class="main_leg_config d-flex align-items-center">
+            
+                                            <label for="main_iron_fly" class="m-0"> Config:</label>
+                
+                                            <div class="main_leg_button_input d-flex">
+                                              <button class="decrease_main  main_leg_config_minus"><i class="bx bx-minus"></i></button>
+                                         
+                                            <input type="text" class="form-control " min="0" value="0">
+                                  
+                                            <button class="increase_main main_leg_config_plus"><i class="bx bx-plus"></i></button>
+                                            </div>
+                
+                
+                
+                
+                                          </div>
+                                                    <style>
+                                                      .bull_put_spread_modal_atm_indicator{
+                                                        display: flex;
+                                            align-items: center;
+                                            justify-content: center;
+                                            column-gap: 0.4rem;
+                                            margin-bottom: 0.5rem;
+                                                      }
+                                                    </style>
+                                          <div class="bull_put_spread_modal_atm_indicator">
+            
+                                            <label for="bull_put_spread_modal_atm_counter" class="m-0">ATM:</label>
+                  
+                  
+                                            <div class="main_strangle_modal  d-flex m-0" id="bull_put_spread_modal_atm_counter">
+                                              <button class="decrease_main" id="decrease_bull_put_spread_modal_value"><i class="bx bx-minus"></i></button>
+                                              <input type="text" style="width: 100px;" class="main_modal_strike_input" id="bull_put_spread_strike_input">
+                                              <button class="increase_main" id="increase_bull_put_spread_modal_value"><i class="bx bx-plus"></i></button>
+                                            </div>
+                  
+                                            <div class="bull_put_spread_modal_new_strike_price_malipulations">
+                                              <p class="malipulation_text_main_modal" id="manipulation_text_atm_bull_put_spread">0</p>
+                                            </div>
+                  
+                                          </div>
+                
+                
+                
+                
+                                          <div class="main_counter d-flex gap-3 mb-3">
+                                            <div class="innerbull_put_spread_modal_lot_size d-flex gap-2">
+                                              <p class="fs-6 lot_title">Qty:</p>
+                                              <div class="counter_bull_put_spread_modal main_qty_counter d-flex justify-content-center gap-1">
+                                                <button class="btn minus_qty_btn" id="bull_put_spread_modal_decrement">
+                                                  <i class="bx bx-minus"></i>
+                                                </button>
+                                                <input type="text" name="" value="1" class="main_qty_input" id="bull_put_spread_modal_counter_input" min="1" disabled
+                                                  style="    width: 91px !important;" />
+                                                <button class="btn plus_qty_btn" id="bull_put_spread_modal_increment">
+                                                  <i class="bx bx-plus"></i>
+                                                </button>
+                                              </div>
+                                            </div>
+                
+                                          </div>
+                
+                                          <div class="main_deploy_bull_put_spread_modal_btn d-flex justify-content-center">
+                                            <button class="main_startegy_execute_btn" id="bull_put_spread_modal_btn"
+                                              style="width: 124px !important;">SELL</button>
+                                          </div>
+                                        </div>
+                                      </div>
+                
+                
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+            
+
+                <!-- /Bull Put Spread -->
+
+
+                <div class="main_bull_call_spread" >
+
+                  <button class="straddle" id="bull_call_spread">
+    
+                    <div class="main_strategy_img_title">
+                      <div class="style__PresetStrategyCard-sc-1f57s5d-6 jyZMZN">
+                       
+                        
+                        <svg xmlns="http://www.w3.org/2000/svg" width="62" height="45" viewBox="0 0 62 45" class="sc-gsTCUz dFfFa-d jss619"><g fill="none" fill-rule="evenodd"><path stroke="var(--dividerColor)" stroke-linecap="square" d="M0.5 0L0.5 43.237" transform="translate(1 1)"></path><path stroke="var(--dividerColor)" stroke-dasharray="5 5" stroke-linecap="round" d="M0.462 23L60 23" transform="translate(1 1)"></path><path stroke="var(--lossColor)" stroke-width="2" d="M0 31L14.968 31 25.095 23" transform="translate(1 1)"></path><path stroke="var(--profitColor)" stroke-width="2" d="M25.095 23L45.049 6 60 6" transform="translate(1 1)"></path></g></svg>
+                        
+                        <div class="title">Bull Call Spread</div>
+                      
+                      </div>
+    
+          
+                  </button>
+    
+                  <div class="sc-jxTFzB lmSamt">New</div>
+    
+                  </b>
+    
+                  <div class="" id="bull_call_spread_modal">
+                    <div class="dismiss">
+                      <i class="bx bx-plus dismiss_icon"></i>
+                      <div class="triangle-up"></div>
+                    </div>
+                    <div class="modal_dialog">
+                      <div class="modal_content">
+                        <div class="modal_body" id="modal_body">
+                          <div class="main_bull_call_spread_inner">
+                            <h5 class="text-center mb-3">Bull Call Spread</h5>
+    
+                            <div class="main_body_fields_bull_call_spread">
+                              <div class="main_strikePrice mb-3">
+                                <div class="bull_call_spread_lot_size">
+                                  <span id="put_bull_call_spread_lot_size">1</span><span>x</span>
+                                </div>
+                                <div class="strategy_inputs">
+                                  <label for="strikePrice">Strike Price</label>
+                                  <select class="strike_price_input form-select" data-optionside="CE"
+                                    id="put_strikeSelect_bull_call_spread"></select>
+                                </div>
+                                <p class="pe_ce"> CE</p>
+                              </div>
+    
+    
+                              <div class="main_strikePrice mb-3">
+                                <div class="bull_call_spread_lot_size">
+                                  <span id="call_bull_call_spread_lot_size">1</span><span>x</span>
+                                </div>
+                                <div class="strategy_inputs">
+                                  <label for="strikePrice">Strike Price</label>
+                                  <select class="strike_price_input form-select" data-optionside="CE"
+                                    id="call_strikeSelect_bull_call_spread"></select>
+                                </div>
+                                <p class="pe_ce"> CE</p>
+                              </div>
+                   
+    
+                              <div class="strategy_inputs mb-3">
+                                <label for="expirydate">Expiry Date</label>
+                                <select class="expiry_date_input form-select" id="expiryDate_bull_call_spread"></select>
+                              </div>
+                              <div class="main_leg_config d-flex align-items-center">
+
+                                <label for="main_iron_fly" class="m-0"> Config:</label>
+    
+                                <div class="main_leg_button_input d-flex">
+                                  <button class="decrease_main  main_leg_config_minus"><i class="bx bx-minus"></i></button>
+                             
+                                <input type="text" class="form-control " min="0" value="0">
+                      
+                                <button class="increase_main main_leg_config_plus"><i class="bx bx-plus"></i></button>
+                                </div>
+    
+    
+    
+    
+                              </div>
+                                        <style>
+                                          .bull_call_spread_modal_atm_indicator{
+                                            display: flex;
+                                align-items: center;
+                                justify-content: center;
+                                column-gap: 0.4rem;
+                                margin-bottom: 0.5rem;
+                                          }
+                                        </style>
+                              <div class="bull_call_spread_modal_atm_indicator">
+
+                                <label for="bull_call_spread_modal_atm_counter" class="m-0">ATM:</label>
+      
+      
+                                <div class="main_strangle_modal  d-flex m-0" id="bull_call_spread_modal_atm_counter">
+                                  <button class="decrease_main" id="decrease_bull_call_spread_modal_value"><i class="bx bx-minus"></i></button>
+                                  <input type="text" style="width: 100px;" class="main_modal_strike_input" id="bull_call_spread_strike_input">
+                                  <button class="increase_main" id="increase_bull_call_spread_modal_value"><i class="bx bx-plus"></i></button>
+                                </div>
+      
+                                <div class="bull_call_spread_modal_new_strike_price_malipulations">
+                                  <p class="malipulation_text_main_modal" id="manipulation_text_atm_bull_call_spread">0</p>
+                                </div>
+      
+                              </div>
+    
+    
+    
+    
+                              <div class="main_counter d-flex gap-3 mb-3">
+                                <div class="innerbull_call_spread_modal_lot_size d-flex gap-2">
+                                  <p class="fs-6 lot_title">Qty:</p>
+                                  <div class="counter_bull_call_spread_modal main_qty_counter d-flex justify-content-center gap-1">
+                                    <button class="btn minus_qty_btn" id="bull_call_spread_modal_decrement">
+                                      <i class="bx bx-minus"></i>
+                                    </button>
+                                    <input type="text" name="" value="1" class="main_qty_input" id="bull_call_spread_modal_counter_input" min="1" disabled
+                                      style="    width: 91px !important;" />
+                                    <button class="btn plus_qty_btn" id="bull_call_spread_modal_increment">
+                                      <i class="bx bx-plus"></i>
+                                    </button>
+                                  </div>
+                                </div>
+    
+                              </div>
+    
+                              <div class="main_deploy_bull_call_spread_modal_btn d-flex justify-content-center">
+                                <button class="main_startegy_execute_btn" id="bull_call_spread_modal_btn"
+                                  style="width: 124px !important;">SELL</button>
+                              </div>
+                            </div>
+                          </div>
+    
+    
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+
+
+                        <!-- /Bear Put Spread -->
+
+
+                        <div class="main_bear_put_spread" >
+
+                          <button class="straddle" id="bear_put_spread">
+            
+                            <div class="main_strategy_img_title">
+                              <div class="style__PresetStrategyCard-sc-1f57s5d-6 jyZMZN">
+                               
+                                
+                                <svg xmlns="http://www.w3.org/2000/svg" width="62" height="45" viewBox="0 0 62 45" class="sc-gsTCUz dFfFa-d jss619"><g fill="none" fill-rule="evenodd"><path stroke="var(--dividerColor)" stroke-linecap="square" d="M0.5 0L0.5 43.237" transform="translate(1 1)"></path><path stroke="var(--dividerColor)" stroke-dasharray="5 5" stroke-linecap="round" d="M0.462 23L60 23" transform="translate(1 1)"></path><g stroke-width="2"><path stroke="var(--profitColor)" d="M0 22.988L12.009 22.988 30 7" transform="translate(1 1) matrix(1 0 0 -1 1 30)"></path><path stroke="var(--lossColor)" d="M30 7L37.618 0 54.967 0" transform="translate(1 1) matrix(1 0 0 -1 1 30)"></path></g></g></svg>
+                                
+                                
+                                <div class="title">Bear Put Spread</div>
+                              
+                              </div>
+            
+                  
+                          </button>
+            
+                          <div class="sc-jxTFzB lmSamt">New</div>
+            
+                          </b>
+            
+                          <div class="" id="bear_put_spread_modal">
+                            <div class="dismiss">
+                              <i class="bx bx-plus dismiss_icon"></i>
+                              <div class="triangle-up"></div>
+                            </div>
+                            <div class="modal_dialog">
+                              <div class="modal_content">
+                                <div class="modal_body" id="modal_body">
+                                  <div class="main_bear_put_spread_inner">
+                                    <h5 class="text-center mb-3">Bear Put Spread</h5>
+            
+                                    <div class="main_body_fields_bear_put_spread">
+                                      <div class="main_strikePrice mb-3">
+                                        <div class="bear_put_spread_lot_size">
+                                          <span id="put_bear_put_spread_lot_size">1</span><span>x</span>
+                                        </div>
+                                        <div class="strategy_inputs">
+                                          <label for="strikePrice">Strike Price</label>
+                                          <select class="strike_price_input form-select" data-optionside="PE"
+                                            id="put_strikeSelect_bear_put_spread"></select>
+                                        </div>
+                                        <p class="pe_ce"> PE</p>
+                                      </div>
+            
+            
+                                      <div class="main_strikePrice mb-3">
+                                        <div class="bear_put_spread_lot_size">
+                                          <span id="call_bear_put_spread_lot_size">1</span><span>x</span>
+                                        </div>
+                                        <div class="strategy_inputs">
+                                          <label for="strikePrice">Strike Price</label>
+                                          <select class="strike_price_input form-select" data-optionside="PE"
+                                            id="call_strikeSelect_bear_put_spread"></select>
+                                        </div>
+                                        <p class="pe_ce"> PE</p>
+                                      </div>
+                           
+            
+                                      <div class="strategy_inputs mb-3">
+                                        <label for="expirydate">Expiry Date</label>
+                                        <select class="expiry_date_input form-select" id="expiryDate_bear_put_spread"></select>
+                                      </div>
+                                      <div class="main_leg_config d-flex align-items-center">
+
+                                        <label for="main_iron_fly" class="m-0"> Config:</label>
+            
+                                        <div class="main_leg_button_input d-flex">
+                                          <button class="decrease_main  main_leg_config_minus"><i class="bx bx-minus"></i></button>
+                                     
+                                        <input type="text" class="form-control " min="0" value="0">
+                              
+                                        <button class="increase_main main_leg_config_plus"><i class="bx bx-plus"></i></button>
+                                        </div>
+            
+            
+            
+            
+                                      </div>
+                                                <style>
+                                                  .bear_put_spread_modal_atm_indicator{
+                                                    display: flex;
+                                        align-items: center;
+                                        justify-content: center;
+                                        column-gap: 0.4rem;
+                                        margin-bottom: 0.5rem;
+                                                  }
+                                                </style>
+                                      <div class="bear_put_spread_modal_atm_indicator">
+
+                                        <label for="bear_put_spread_modal_atm_counter" class="m-0">ATM:</label>
+              
+              
+                                        <div class="main_strangle_modal  d-flex m-0" id="bear_put_spread_modal_atm_counter">
+                                          <button class="decrease_main" id="decrease_bear_put_spread_modal_value"><i class="bx bx-minus"></i></button>
+                                          <input type="text" style="width: 100px;" class="main_modal_strike_input" id="bear_put_spread_strike_input">
+                                          <button class="increase_main" id="increase_bear_put_spread_modal_value"><i class="bx bx-plus"></i></button>
+                                        </div>
+              
+                                        <div class="bear_put_spread_modal_new_strike_price_malipulations">
+                                          <p class="malipulation_text_main_modal" id="manipulation_text_atm_bear_put_spread">0</p>
+                                        </div>
+              
+                                      </div>
+            
+            
+            
+            
+                                      <div class="main_counter d-flex gap-3 mb-3">
+                                        <div class="innerbear_put_spread_modal_lot_size d-flex gap-2">
+                                          <p class="fs-6 lot_title">Qty:</p>
+                                          <div class="counter_bear_put_spread_modal main_qty_counter d-flex justify-content-center gap-1">
+                                            <button class="btn minus_qty_btn" id="bear_put_spread_modal_decrement">
+                                              <i class="bx bx-minus"></i>
+                                            </button>
+                                            <input type="text" name="" value="1" class="main_qty_input" id="bear_put_spread_modal_counter_input" min="1" disabled
+                                              style="    width: 91px !important;" />
+                                            <button class="btn plus_qty_btn" id="bear_put_spread_modal_increment">
+                                              <i class="bx bx-plus"></i>
+                                            </button>
+                                          </div>
+                                        </div>
+            
+                                      </div>
+            
+                                      <div class="main_deploy_bear_put_spread_modal_btn d-flex justify-content-center">
+                                        <button class="main_startegy_execute_btn" id="bear_put_spread_modal_btn"
+                                          style="width: 124px !important;">SELL</button>
+                                      </div>
+                                    </div>
+                                  </div>
+            
+            
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
             <div class="main-spread">
               <div class="straddle" id="spread">
 
                 <div class="main_strategy_img_title">
                   <div class="style__PresetStrategyCard-sc-1f57s5d-6 jyZMZN">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="62" height="45" viewBox="0 0 62 45"
-                      class="SVGLoader__StyledComp-sc-1ak2cuz-1 jss619">
-                      <g fill="none" fill-rule="evenodd">
-                        <path stroke="var(--dividerColor)" stroke-linecap="square" d="M0.5 0L0.5 43.237"
-                          transform="translate(1 1)"></path>
-                        <path stroke="var(--dividerColor)" stroke-dasharray="5 5" stroke-linecap="round"
-                          d="M0.462 23L60 23" transform="translate(1 1)"></path>
-                        <g stroke-width="2">
-                          <path stroke="var(--profitColor)" d="M0 22.988L12.009 22.988 30 7"
-                            transform="translate(1 1) matrix(1 0 0 -1 1 30)"></path>
-                          <path stroke="var(--lossColor)" d="M30 7L37.618 0 54.967 0"
-                            transform="translate(1 1) matrix(1 0 0 -1 1 30)"></path>
-                        </g>
-                      </g>
-                    </svg>
-                    <div class="title">Bear Put Spread</div>
+
+
+   
+
+                    <svg xmlns="http://www.w3.org/2000/svg" width="62" height="45" viewBox="0 0 62 45" class="sc-gsTCUz dFfFa-d jss619"><g fill="none" fill-rule="evenodd"><path stroke="var(--dividerColor)" stroke-linecap="square" d="M0.5 0L0.5 43.237" transform="translate(1 1)"></path><path stroke="var(--dividerColor)" stroke-dasharray="5 5" stroke-linecap="round" d="M0.462 14L60 14" transform="translate(1 1)"></path><g stroke-width="2"><path stroke="var(--profitColor)" d="M0 22.988L12.009 22.988 19.491 16.031" transform="translate(1 1) matrix(1 0 0 -1 1 30)"></path><path stroke="var(--lossColor)" d="M19.491 16.031L37.618 0 54.967 0" transform="translate(1 1) matrix(1 0 0 -1 1 30)"></path></g></g></svg>
+
+                    <div class="title">Bear Call Spread</div>
 
                   </div>
 
@@ -7961,7 +9048,7 @@ Option Strategy Builder
                   <div class="modal_content">
                     <div class="modal_body" id="modal_body">
                       <div class="main_spread">
-                        <h5 class="text-center">Spread</h5>
+                        <h5 class="text-center">Bear Call Spread</h5>
 
                         <div class="main_body_fields_spread">
                           <div class="main_strikePrice mb-3">
@@ -10027,7 +11114,7 @@ Option Strategy Builder
 
   <script>
     $(document).ready(function () {
-      var $mainStrategies = $(".main_straddle,.main_long_straddle, .main-stranggle, .main-ironfly, .main-ironCondor, .main-spread, .main-jaze_lizard, .main-double-iron-fly, .main-double-candor");
+      var $mainStrategies = $(".main_buy_call,.main_straddle,.main_long_straddle, .main-stranggle, .main-ironfly, .main-ironCondor, .main-double-iron-fly, .main-double-candor");
       var $butterflyStrategies = $(".main-put-butterfly, .main-call-butterfly, .custom-strategy");
 
       // Show all strategies initially
@@ -10043,25 +11130,25 @@ Option Strategy Builder
           case "popular":
             $mainStrategies.show();
             $butterflyStrategies.show();
-            $(".main_buy_call,.main_long_synthetic_future,.main_short_synthetic_future,.main_put_butterfly,.main_strap,.main_strip,.main_call_butterfly,.main_reverse_jaze_lizard").hide()
+            $(".main_long_synthetic_future,.main_short_synthetic_future,.main_put_butterfly,.main_strap,.main_strip,.main_call_butterfly,.main_reverse_jaze_lizard,.main_call_ratio_back_spread,.main_bull_put_spread,.main_bull_call_spread,.main_put_ratio_back_spread,.main_bear_put_spread,.main-spread,.main_put_ratio_spread,.main_call_ratio_spread").hide()
             break;
           case "bull":
             $mainStrategies.hide();
             $butterflyStrategies.hide();
-            $(".main-spread,.main_short_synthetic_future, .main-put-butterfly,.main_put_butterfly,.main_strap,.main_strip,.main_call_butterfly,.main_reverse_jaze_lizard").hide();
-            $(".main-jaze_lizard,.main_long_synthetic_future, .main-call-butterfly,.main_buy_call").show();
+            $(".main-spread,.main_short_synthetic_future, .main-put-butterfly,.main_put_butterfly,.main_strap,.main_strip,.main_call_butterfly,.main_reverse_jaze_lizard,.main_put_ratio_back_spread,.main_bear_put_spread,.main-spread,.main_put_ratio_spread,.main_call_ratio_spread").hide();
+            $(".main-jaze_lizard,.main_long_synthetic_future, .main-call-butterfly,.main_buy_call,.main_call_ratio_back_spread,.main_bull_put_spread,.main_bull_call_spread").show();
             break;
           case "bear":
             $mainStrategies.hide();
             $butterflyStrategies.hide();
-            $(".main_buy_call,.main_long_synthetic_future,.main_put_butterfly,.main_strap,.main_strip,.main_call_butterfly,.main_reverse_jaze_lizard").hide()
-            $(".main-spread,.main_short_synthetic_future, .main-put-butterfly").show();
+            $(".main_buy_call,.main_long_synthetic_future,.main_put_butterfly,.main_strap,.main_strip,.main_call_butterfly,.main_reverse_jaze_lizard,.main_call_ratio_back_spread,.main_bull_put_spread,.main_bull_call_spread,.main_put_ratio_spread,.main_call_ratio_spread").hide()
+            $(".main-spread,.main_short_synthetic_future, .main-put-butterfly,.main_put_ratio_back_spread,.main_bear_put_spread,.main-spread").show();
             break;
           case "neutral":
             $mainStrategies.hide();
             $butterflyStrategies.hide();
-            $(".main_buy_call,.main_long_synthetic_future,.main_short_synthetic_future").hide()
-            $(".main_straddle,.main_long_straddle, .main-stranggle, .main-ironfly, .main-ironCondor, .main_strap,.main_strip, .main-double-iron-fly, .main-double-candor, .custom-strategy,.main_put_butterfly,.main_call_butterfly,.main_reverse_jaze_lizard").show();
+            $(".main_buy_call,.main_long_synthetic_future,.main_short_synthetic_future,.main_call_ratio_back_spread,.main_bull_put_spread,.main_bull_call_spread,.main_put_ratio_back_spread,.main_bear_put_spread,.main-spread").hide()
+            $(".main_straddle,.main_long_straddle, .main-stranggle, .main-ironfly, .main-ironCondor, .main_strap,.main_strip, .main-double-iron-fly, .main-double-candor, .custom-strategy,.main_put_butterfly,.main_call_butterfly,.main_reverse_jaze_lizard,.main_put_ratio_spread,.main_call_ratio_spread").show();
             break;
           case "hedge":
             $mainStrategies.hide();
@@ -10138,8 +11225,8 @@ Option Strategy Builder
       $(".main-stranggle").show()
       $(".main-ironfly").show()
       $(".main-ironCondor").show()
-      $(".main-spread").show()
-      $(".main-jaze_lizard").show()
+
+
       $(".main-double-iron-fly").show()
       $(".main-double-candor").show()
 
@@ -10158,7 +11245,7 @@ Option Strategy Builder
           $(".main-ironfly").show()
           $(".main-ironCondor").show()
           $(".main-spread").show()
-          $(".main-jaze_lizard").show()
+     
           $(".main-double-iron-fly").show()
           $(".main-double-candor").show()
 
@@ -10172,7 +11259,7 @@ Option Strategy Builder
           $(".main-ironfly").hide()
           $(".main-ironCondor").hide()
           $(".main-spread").hide()
-          $(".main-jaze_lizard").show()
+
           $(".main-double-iron-fly").hide()
           $(".main-double-candor").hide()
 
@@ -10188,7 +11275,7 @@ Option Strategy Builder
           $(".main-ironfly").hide()
           $(".main-ironCondor").hide()
           $(".main-spread").show()
-          $(".main-jaze_lizard").hide()
+ 
           $(".main-double-iron-fly").hide()
           $(".main-double-candor").hide()
 
@@ -10203,7 +11290,7 @@ Option Strategy Builder
           $(".main-ironfly").show()
           $(".main-ironCondor").show()
           $(".main-spread").show()
-          $(".main-jaze_lizard").hide()
+    
           $(".main-double-iron-fly").show()
           $(".main-double-candor").show()
 
@@ -10218,7 +11305,7 @@ Option Strategy Builder
           $(".main-ironfly").hide()
           $(".main-ironCondor").hide()
           $(".main-spread").hide()
-          $(".main-jaze_lizard").show()
+     
           $(".main-double-iron-fly").hide()
           $(".main-double-candor").hide()
 
@@ -16486,6 +17573,27 @@ Option Strategy Builder
     function reverse_jaze_lizard_strategy() {
       $("#reverse_jaze_lizard_modal").hide();
     }
+    function bear_put_spread_strategy() {
+      $("#bear_put_spread_modal").hide();
+    }
+    function bull_call_spread_strategy() {
+      $("#bull_call_spread_modal").hide();
+    }
+    function bull_put_spread_strategy() {
+      $("#bull_put_spread_modal").hide();
+    }
+    function call_ratio_spread_strategy() {
+      $("#call_ratio_spread_modal").hide();
+    }
+    function put_ratio_spread_strategy() {
+      $("#put_ratio_spread_modal").hide();
+    }
+    function put_ratio_back_spread_strategy() {
+      $("#put_ratio_back_spread_modal").hide();
+    }
+    function call_ratio_back_spread_strategy() {
+      $("#call_ratio_back_spread_modal").hide();
+    }
 
 
 
@@ -16493,12 +17601,78 @@ Option Strategy Builder
     $(document).on("click", function (e) {
       // Check which modal to hide based on the click target
       if (
-        !$(e.target).closest("#reverse_jaze_lizard_modal").length &&
-        !$(e.target).is("#reverse_jaze_lizard")
+        !$(e.target).closest("#call_ratio_back_spread_modal").length &&
+        !$(e.target).is("#call_ratio_back_spread")
       ) {
-        reverse_jaze_lizard_strategy();
+        call_ratio_back_spread_strategy();
       }
     });
+    // Click event on the document body
+    $(document).on("click", function (e) {
+      // Check which modal to hide based on the click target
+      if (
+        !$(e.target).closest("#put_ratio_back_spread_modal").length &&
+        !$(e.target).is("#put_ratio_back_spread")
+      ) {
+        put_ratio_back_spread_strategy();
+      }
+    });
+    // Click event on the document body
+    $(document).on("click", function (e) {
+      // Check which modal to hide based on the click target
+      if (
+        !$(e.target).closest("#put_ratio_spread_modal").length &&
+        !$(e.target).is("#put_ratio_spread")
+      ) {
+        put_ratio_spread_strategy();
+      }
+    });
+    // Click event on the document body
+    $(document).on("click", function (e) {
+      // Check which modal to hide based on the click target
+      if (
+        !$(e.target).closest("#call_ratio_spread_modal").length &&
+        !$(e.target).is("#call_ratio_spread")
+      ) {
+        call_ratio_spread_strategy();
+      }
+    });
+
+    // Click event on the document body
+    $(document).on("click", function (e) {
+      // Check which modal to hide based on the click target
+      if (
+        !$(e.target).closest("#bull_put_spread_modal").length &&
+        !$(e.target).is("#bull_put_spread")
+      ) {
+        bull_put_spread_strategy();
+      }
+    });
+
+    // Click event on the document body
+    $(document).on("click", function (e) {
+      // Check which modal to hide based on the click target
+      if (
+        !$(e.target).closest("#bull_call_spread_modal").length &&
+        !$(e.target).is("#bull_call_spread")
+      ) {
+        bull_call_spread_strategy();
+      }
+    });
+    // Click event on the document body
+    $(document).on("click", function (e) {
+      // Check which modal to hide based on the click target
+      if (
+        !$(e.target).closest("#bear_put_spread_modal").length &&
+        !$(e.target).is("#bear_put_spread")
+      ) {
+        bear_put_spread_strategy();
+      }
+    });
+
+
+
+
     // Click event on the document body
     $(document).on("click", function (e) {
       // Check which modal to hide based on the click target
@@ -16760,6 +17934,13 @@ Option Strategy Builder
     });
 
     $(".dismiss_icon").click(function () {
+      $("#call_ratio_back_spread_modal").hide();
+      $("#put_ratio_back_spread_modal").hide();
+      $("#put_ratio_spread_modal").hide();
+      $("#call_ratio_spread_modal").hide();
+      $("#bull_put_spread_modal").hide();
+      $("#bull_call_spread_modal").hide();
+      $("#bear_put_spread_modal").hide();
       $("#reverse_jaze_lizard_modal").hide();
       $("#strap_modal").hide();
       $("#strip_modal").hide();
@@ -16925,6 +18106,148 @@ Option Strategy Builder
         updateCounterInput();
       }
     });
+
+       // Put ration Spread strategy
+
+             
+
+
+       var counterValue_put_ration_spread = 1;
+
+// Function to update the input field with the current value
+function updateCounterInput_put_ration_spread() {
+
+  $("#put_ratio_spread_modal_counter_input").val(counterValue_put_ration_spread);
+  $("#put_2nd_ratio_spread_lot_size").text(2*counterValue_put_ration_spread)
+  $("#put_1st_ratio_spread_lot_size").text(counterValue_put_ration_spread)
+}
+
+// Initialize the input field
+updateCounterInput_put_ration_spread();
+
+// Increment button click handler
+
+$("#put_ratio_spread_modal_increment").click(function () {
+
+
+  
+  counterValue_put_ration_spread++;
+  updateCounterInput_put_ration_spread();
+});
+
+// Decrement button click handler
+$("#put_ratio_spread_modal_decrement").click(function () {
+  if (counterValue_put_ration_spread > 1) {
+    counterValue_put_ration_spread--;
+    updateCounterInput_put_ration_spread();
+  }
+});
+
+
+       // Csll ration back Spread strategy
+
+             
+
+
+       var counterValue_call_ration_back_spread = 1;
+
+// Function to update the input field with the current value
+function updateCounterInput_call_ration_back_spread() {
+
+  $("#call_ratio_back_spread_modal_counter_input").val(counterValue_call_ration_back_spread);
+  $("#call_2nd_ratio_back_spread_lot_size").text(2*counterValue_call_ration_back_spread)
+  $("#call_1st_ratio_back_spread_lot_size").text(counterValue_call_ration_back_spread)
+}
+
+// Initialize the input field
+updateCounterInput_call_ration_back_spread();
+
+// Increment button click handler
+
+$("#call_ratio_back_spread_modal_increment").click(function () {
+
+
+  
+  counterValue_call_ration_back_spread++;
+  updateCounterInput_call_ration_back_spread();
+});
+
+// Decrement button click handler
+$("#call_ratio_back_spread_modal_decrement").click(function () {
+  if (counterValue_call_ration_back_spread > 1) {
+    counterValue_call_ration_back_spread--;
+    updateCounterInput_call_ration_back_spread();
+  }
+});
+       // Put ration back Spread strategy
+
+             
+
+
+       var counterValue_put_ration_back_spread = 1;
+
+// Function to update the input field with the current value
+function updateCounterInput_put_ration_back_spread() {
+
+  $("#put_ratio_back_spread_modal_counter_input").val(counterValue_put_ration_back_spread);
+  $("#put_2nd_ratio_back_spread_lot_size").text(2*counterValue_put_ration_back_spread)
+  $("#put_1st_ratio_back_spread_lot_size").text(counterValue_put_ration_back_spread)
+}
+
+// Initialize the input field
+updateCounterInput_put_ration_back_spread();
+
+// Increment button click handler
+
+$("#put_ratio_back_spread_modal_increment").click(function () {
+
+
+  
+  counterValue_put_ration_back_spread++;
+  updateCounterInput_put_ration_back_spread();
+});
+
+// Decrement button click handler
+$("#put_ratio_back_spread_modal_decrement").click(function () {
+  if (counterValue_put_ration_back_spread > 1) {
+    counterValue_put_ration_back_spread--;
+    updateCounterInput_put_ration_back_spread();
+  }
+});
+
+
+
+       // Call ratio Spread strategy
+
+             
+
+
+               var counterValue_call_ration_spread = 1;
+
+// Function to update the input field with the current value
+function updateCounterInput_call_ration_spread() {
+  $("#call_ratio_spread_modal_counter_input").val(counterValue_call_ration_spread);
+  $("#call_call_ratio_spread_lot_size").text(2*counterValue_call_ration_spread)
+  $("#put_call_ratio_spread_lot_size").text(counterValue_call_ration_spread)
+}
+
+// Initialize the input field
+updateCounterInput_call_ration_spread();
+
+// Increment button click handler
+
+$("#call_ratio_spread_modal_increment").click(function () {
+  counterValue_call_ration_spread++;
+  updateCounterInput_call_ration_spread();
+});
+
+// Decrement button click handler
+$("#call_ratio_spread_modal_decrement").click(function () {
+  if (counterValue_call_ration_spread > 1) {
+    counterValue_call_ration_spread--;
+    updateCounterInput_call_ration_spread();
+  }
+});
 
         // strap click handler for lot size
 
@@ -17140,6 +18463,80 @@ $("#strap_modal_decrement").click(function () {
     });
 
     // -----End Strangle Counter----
+
+
+        //----------Bull Call Spread Counter-------------
+
+        var counterValue_spread_bull_call = 1;
+
+// Function to update the input field with the current value
+function updateCounterInput_spread_bull_call() {
+  $("#bull_call_spread_modal_counter_input").val(counterValue_spread_bull_call);
+  $("#put_bull_call_spread_lot_size").text(counterValue_spread_bull_call);
+  $("#call_bull_call_spread_lot_size").text(counterValue_spread_bull_call);
+}
+
+// Initialize the input field
+updateCounterInput_spread_bull_call();
+
+// Increment button click handler
+$("#bull_call_spread_modal_increment").click(function () {
+  counterValue_spread_bull_call++;
+  updateCounterInput_spread_bull_call();
+});
+
+// Decrement button click handler
+$("#bull_call_spread_modal_decrement").click(function () {
+  if (counterValue_spread_bull_call > 1) {
+    counterValue_spread_bull_call--;
+    updateCounterInput_spread_bull_call();
+  }
+});
+
+//----------End Bull Call Spread Counter-------------
+
+
+
+        //----------Bear Put Spread Counter-------------
+
+        var counterValue_spread_bear_put = 1;
+
+// Function to update the input field with the current value
+function updateCounterInput_spread_bear_put() {
+  $("#bear_put_spread_modal_counter_input").val(counterValue_spread_bear_put);
+  $("#put_bear_put_spread_lot_size").text(counterValue_spread_bear_put);
+  $("#call_bear_put_spread_lot_size").text(counterValue_spread_bear_put);
+}
+
+// Initialize the input field
+updateCounterInput_spread_bear_put();
+
+// Increment button click handler
+$("#bear_put_spread_modal_increment").click(function () {
+  counterValue_spread_bear_put++;
+  updateCounterInput_spread_bear_put();
+});
+
+// Decrement button click handler
+$("#bear_put_spread_modal_decrement").click(function () {
+  if (counterValue_spread_bear_put > 1) {
+    counterValue_spread_bear_put--;
+    updateCounterInput_spread_bear_put();
+  }
+});
+
+//----------End Bear Put Spread Counter-------------
+
+
+
+
+
+
+
+
+
+
+
 
     //----------Spread Counter-------------
 
@@ -20830,6 +22227,9 @@ if (plusButtonClicks < strategycounterValue) {
               });
 
             }
+
+
+
             else if (filter_arg_strategy === "spread") {
               $("#straddle_modal").hide();
               $("#strangle_modal").hide();
@@ -20865,7 +22265,7 @@ if (plusButtonClicks < strategycounterValue) {
               var forw3 = [];
               for (
                 var j = currentIndex + 1;
-                j < strikePrices.length && forw3.length < 3;
+                j < strikePrices.length && forw3.length < 4;
                 j++
               ) {
                 var rowStrikePrice = strikePrices[j];
@@ -20990,6 +22390,1249 @@ if (plusButtonClicks < strategycounterValue) {
                 lotSize_put_bear_spread = 0
               });
             }
+                                                            
+            else if (filter_arg_strategy === "bull_put_spread") {
+              $("#straddle_modal").hide();
+              $("#strangle_modal").hide();
+              $("#ironFly_modal").hide();
+              $("#bull_put_spread_modal").show();
+              $("#ironCondor_modal").hide();
+              $("#jaze_lizard_modal").hide();
+
+              var closest_strike_price = $("#closest_strike_price").text();
+              $("#put_strikeSelect_bull_put_spread")
+                .find("option")
+                .each(function () {
+                  var optionValue = parseFloat($(this).val());
+
+                  if (optionValue === parseFloat(closest_strike_price)) {
+                    // //////console.log(optionValue, closest_strike_price);
+                    $(this).prop("selected", true);
+                  }
+                });
+
+              // Ensure you are selecting the correct elements with .strike_price
+              var strikePrices = optionChainTable
+                .find(".strike_price")
+                .map(function () {
+                  return parseFloat($(this).text());
+                })
+                .get();
+
+              // Find the index of the row where strikePrice is closestStrikePrice
+              var currentIndex = strikePrices.indexOf(closestStrikePrice);
+
+     
+  // Calculate the previous 4 and forward 4 strike prices
+  var prev4 = [];
+            
+
+            for (var i = currentIndex - 1; i >= 0 && prev4.length < 4; i--) {
+              var rowStrikePrice = strikePrices[i];
+              if (!isNaN(rowStrikePrice)) {
+                prev4.push(rowStrikePrice);
+              }
+            }
+
+            $("#call_strikeSelect_bull_put_spread")
+              .find("option")
+              .each(function () {
+                var optionValue = parseFloat($(this).val());
+
+                if (optionValue === parseFloat(prev4[prev4.length - 1])) {
+                  // //////console.log(optionValue, closest_strike_price);
+                  $(this).prop("selected", true);
+                }
+              });
+
+
+ 
+
+              var expiryDate_bull_put_spread = $("#expiryDate_bull_put_spread");
+              var optionExpiryDropdown = $("#optionExpiryDropdown");
+
+              expiryDate_bull_put_spread.on("change", function () {
+                var selectedValue_straddle = $(this).val();
+                // //////console.log(selectedValue_straddle);
+
+                // Set the value of optionExpiryDropdown to match the selected value
+                optionExpiryDropdown.val(selectedValue_straddle).change();
+
+                // Trigger a click event on the selected option
+              });
+
+              var strikePrices = optionChainTable
+                .find(".strike_price")
+                .map(function () {
+                  return parseFloat($(this).text());
+                })
+                .get();
+
+
+
+              $(document).off("click", "#bull_put_spread_modal_btn").on("click", "#bull_put_spread_modal_btn", function () {
+                $("#strip").removeClass("option_strategies_active");
+                $("#strap").removeClass("option_strategies_active");
+                $("#call_iron_fly").removeClass("option_strategies_active");
+                $("#put_iron_fly").removeClass("option_strategies_active");
+                $("#short_synthetic_future").removeClass("option_strategies_active");
+                $("#long_straddle").removeClass("option_strategies_active");
+                $("#long_synthetic_future").removeClass("option_strategies_active");
+                $("#buy_call").removeClass("option_strategies_active");
+                $("#straddle").removeClass("option_strategies_active");
+                $("#strangle").removeClass("option_strategies_active");
+                $("#iron_fly").removeClass("option_strategies_active");
+                $("#bull_put_spread").addClass("option_strategies_active");
+                $("#bull_call_spread").removeClass("option_strategies_active");
+                $("#bear_put_spread").removeClass("option_strategies_active");
+                $("#spread").removeClass("option_strategies_active");
+                $("#iron_condor").removeClass("option_strategies_active");
+                $("#jaze_lizard").removeClass("option_strategies_active");
+                $("#double_iron_fly").removeClass("option_strategies_active");
+                $("#double_iron_condor").removeClass("option_strategies_active");
+                $("#call_butter_fly").removeClass("option_strategies_active");
+
+                $("#put_butter_fly").removeClass("option_strategies_active");
+
+                $(".inner_p_l_greeks").show();
+                $(".main_position").empty();
+                $(".data-display-table").empty();
+                $("#table-PL").empty();
+                $("#resultTable tbody").empty();
+
+                var put_strikeSelect_spread = parseFloat(
+                  $("#put_strikeSelect_bull_put_spread").val()
+                ); // Convert to a number
+                strikePrices.forEach(function (rowStrikePrice) {
+                  if (rowStrikePrice === put_strikeSelect_spread) {
+                    // //////console.log(rowStrikePrice, put_strikeSelect_spread);
+
+                    // Find the closest row and click on Auto_calls_short_click
+                    var closestRow = optionChainTable
+                      .find(".strike_price:contains(" + rowStrikePrice + ")")
+                      .closest(".call_put_tr");
+                    if (closestRow.length) {
+                      closestRow
+                        .find("#Auto_puts_short_click")
+                        .data("HI1", "HI1There")
+                        .click();
+
+                      // Delay before clicking on #calculate (adjust as needed)
+                    }
+                  }
+                });
+                var lastIndexForw = $("#call_strikeSelect_bull_put_spread").val();
+
+
+                // Find the closest row for lastIndexForw and click on Auto_calls_short_click
+                var closestRowForw = optionChainTable
+                  .find(".strike_price:contains(" + lastIndexForw + ")")
+                  .closest(".call_put_tr");
+                if (closestRowForw.length) {
+                  closestRowForw
+                    .find("#Auto_puts_long_click")
+                    .data("HI1", "HI1There")
+                    .click();
+                }
+
+            
+
+
+
+
+
+                // Click on #calculate after a longer delay
+                var bull_put_spread_modal_counter_input = $("#bull_put_spread_modal_counter_input").val();
+                $(".option_lot_size_input").text(bull_put_spread_modal_counter_input);
+                localStorage.setItem("strategy_builder", "btll put spread");
+                calculate_data();
+
+                $("#bull_put_spread_modal").hide();
+                Table_chart_pyoff()
+                // margin_calculations()
+                localStorage.removeItem('main_row_instances');
+                $("#put_spread_strike_input").val(parseInt($("#closest_strike_price").text()));
+                $("#manipulation_text_atm_spread").text(0);
+                lotSize_put_bear_spread = 0
+              });
+            }
+          
+            else if (filter_arg_strategy === "bull_call_spread") {
+              $("#straddle_modal").hide();
+              $("#strangle_modal").hide();
+              $("#ironFly_modal").hide();
+              $("#bull_call_spread_modal").show();
+              $("#ironCondor_modal").hide();
+              $("#jaze_lizard_modal").hide();
+
+              var closest_strike_price = $("#closest_strike_price").text();
+              $("#put_strikeSelect_bull_call_spread")
+                .find("option")
+                .each(function () {
+                  var optionValue = parseFloat($(this).val());
+
+                  if (optionValue === parseFloat(closest_strike_price)) {
+                    // //////console.log(optionValue, closest_strike_price);
+                    $(this).prop("selected", true);
+                  }
+                });
+
+              // Ensure you are selecting the correct elements with .strike_price
+              var strikePrices = optionChainTable
+                .find(".strike_price")
+                .map(function () {
+                  return parseFloat($(this).text());
+                })
+                .get();
+
+              // Find the index of the row where strikePrice is closestStrikePrice
+              var currentIndex = strikePrices.indexOf(closestStrikePrice);
+
+     
+   // Calculate the next 5 strike prices
+   var forw4 = [];
+              for (
+                var j = currentIndex + 1;
+                j < strikePrices.length && forw4.length < 4;
+                j++
+              ) {
+                var rowStrikePrice = strikePrices[j];
+                if (!isNaN(rowStrikePrice)) {
+                  forw4.push(rowStrikePrice);
+                }
+              }
+
+              $("#call_strikeSelect_bull_call_spread")
+                .find("option")
+                .each(function () {
+                  var optionValue = parseFloat($(this).val());
+
+                  if (optionValue === parseFloat(forw4[forw4.length - 1])) {
+                    // //////console.log(optionValue, closest_strike_price);
+                    $(this).prop("selected", true);
+                  }
+                });
+
+
+ 
+
+              var expiryDate_bull_call_spread = $("#expiryDate_bull_call_spread");
+              var optionExpiryDropdown = $("#optionExpiryDropdown");
+
+              expiryDate_bull_call_spread.on("change", function () {
+                var selectedValue_straddle = $(this).val();
+                // //////console.log(selectedValue_straddle);
+
+                // Set the value of optionExpiryDropdown to match the selected value
+                optionExpiryDropdown.val(selectedValue_straddle).change();
+
+                // Trigger a click event on the selected option
+              });
+
+              var strikePrices = optionChainTable
+                .find(".strike_price")
+                .map(function () {
+                  return parseFloat($(this).text());
+                })
+                .get();
+
+
+
+              $(document).off("click", "#bull_call_spread_modal_btn").on("click", "#bull_call_spread_modal_btn", function () {
+                $("#strip").removeClass("option_strategies_active");
+                $("#strap").removeClass("option_strategies_active");
+                $("#call_iron_fly").removeClass("option_strategies_active");
+                $("#put_iron_fly").removeClass("option_strategies_active");
+                $("#short_synthetic_future").removeClass("option_strategies_active");
+                $("#long_straddle").removeClass("option_strategies_active");
+                $("#long_synthetic_future").removeClass("option_strategies_active");
+                $("#buy_call").removeClass("option_strategies_active");
+                $("#straddle").removeClass("option_strategies_active");
+                $("#strangle").removeClass("option_strategies_active");
+                $("#iron_fly").removeClass("option_strategies_active");
+                $("#bull_call_spread").addClass("option_strategies_active");
+                $("#bear_put_spread").removeClass("option_strategies_active");
+                $("#spread").removeClass("option_strategies_active");
+                $("#iron_condor").removeClass("option_strategies_active");
+                $("#jaze_lizard").removeClass("option_strategies_active");
+                $("#double_iron_fly").removeClass("option_strategies_active");
+                $("#double_iron_condor").removeClass("option_strategies_active");
+                $("#call_butter_fly").removeClass("option_strategies_active");
+
+                $("#put_butter_fly").removeClass("option_strategies_active");
+
+                $(".inner_p_l_greeks").show();
+                $(".main_position").empty();
+                $(".data-display-table").empty();
+                $("#table-PL").empty();
+                $("#resultTable tbody").empty();
+
+                var put_strikeSelect_spread = parseFloat(
+                  $("#put_strikeSelect_bull_call_spread").val()
+                ); // Convert to a number
+                strikePrices.forEach(function (rowStrikePrice) {
+                  if (rowStrikePrice === put_strikeSelect_spread) {
+                    // //////console.log(rowStrikePrice, put_strikeSelect_spread);
+
+                    // Find the closest row and click on Auto_calls_short_click
+                    var closestRow = optionChainTable
+                      .find(".strike_price:contains(" + rowStrikePrice + ")")
+                      .closest(".call_put_tr");
+                    if (closestRow.length) {
+                      closestRow
+                        .find("#Auto_calls_long_click")
+                        .data("HI1", "HI1There")
+                        .click();
+
+                      // Delay before clicking on #calculate (adjust as needed)
+                    }
+                  }
+                });
+                var lastIndexForw = $("#call_strikeSelect_bull_call_spread").val();
+
+
+                // Find the closest row for lastIndexForw and click on Auto_calls_short_click
+                var closestRowForw = optionChainTable
+                  .find(".strike_price:contains(" + lastIndexForw + ")")
+                  .closest(".call_put_tr");
+                if (closestRowForw.length) {
+                  closestRowForw
+                    .find("#Auto_calls_short_click")
+                    .data("HI1", "HI1There")
+                    .click();
+                }
+
+            
+
+
+
+
+
+                // Click on #calculate after a longer delay
+                var bull_call_spread_modal_counter_input = $("#bull_call_spread_modal_counter_input").val();
+                $(".option_lot_size_input").text(bull_call_spread_modal_counter_input);
+                localStorage.setItem("strategy_builder", "bear put spread");
+                calculate_data();
+
+                $("#bull_call_spread_modal").hide();
+                Table_chart_pyoff()
+                // margin_calculations()
+                localStorage.removeItem('main_row_instances');
+                $("#put_spread_strike_input").val(parseInt($("#closest_strike_price").text()));
+                $("#manipulation_text_atm_spread").text(0);
+                lotSize_put_bear_spread = 0
+              });
+            }
+          
+   
+            else if (filter_arg_strategy === "call_ratio_back_spread") {
+              $("#straddle_modal").hide();
+              $("#strangle_modal").hide();
+              $("#ironFly_modal").hide();
+              $("#call_ratio_back_spread_modal").show();
+              $("#ironCondor_modal").hide();
+              $("#jaze_lizard_modal").hide();
+
+              var closest_strike_price = $("#closest_strike_price").text();
+              $("#call_strikeSelect_1st_ratio_back_spread")
+              
+                .find("option")
+                .each(function () {
+                  var optionValue = parseFloat($(this).val());
+
+                  if (optionValue === parseFloat(closest_strike_price)) {
+                    // //////console.log(optionValue, closest_strike_price);
+                    $(this).prop("selected", true);
+                  }
+                });
+
+              // Ensure you are selecting the correct elements with .strike_price
+              var strikePrices = optionChainTable
+                .find(".strike_price")
+                .map(function () {
+                  return parseFloat($(this).text());
+                })
+                .get();
+
+              // Find the index of the row where strikePrice is closestStrikePrice
+              var currentIndex = strikePrices.indexOf(closestStrikePrice);
+
+     
+   // Calculate the next 5 strike prices
+   var forw4 = [];
+              for (
+                var j = currentIndex + 1;
+                j < strikePrices.length && forw4.length < 4;
+                j++
+              ) {
+                var rowStrikePrice = strikePrices[j];
+                if (!isNaN(rowStrikePrice)) {
+                  forw4.push(rowStrikePrice);
+                }
+              }
+
+              $("#call_strikeSelect_2nd_ratio_back_spread")
+                .find("option")
+                .each(function () {
+                  var optionValue = parseFloat($(this).val());
+
+                  if (optionValue === parseFloat(forw4[forw4.length - 1])) {
+                    // //////console.log(optionValue, closest_strike_price);
+                    $(this).prop("selected", true);
+                  }
+                });
+
+
+
+
+ 
+
+              var expiryDate_put_ratio_spread = $("#expiryDate_call_ratio_back_spread");
+              var optionExpiryDropdown = $("#optionExpiryDropdown");
+
+              expiryDate_put_ratio_spread.on("change", function () {
+                var selectedValue_straddle = $(this).val();
+                // //////console.log(selectedValue_straddle);
+
+                // Set the value of optionExpiryDropdown to match the selected value
+                optionExpiryDropdown.val(selectedValue_straddle).change();
+
+                // Trigger a click event on the selected option
+              });
+
+              var strikePrices = optionChainTable
+                .find(".strike_price")
+                .map(function () {
+                  return parseFloat($(this).text());
+                })
+                .get();
+
+
+
+              $(document).off("click", "#call_ratio_back_spread_modal_btn").on("click", "#call_ratio_back_spread_modal_btn", function () {
+                $("#strip").removeClass("option_strategies_active");
+                $("#strap").removeClass("option_strategies_active");
+                $("#call_iron_fly").removeClass("option_strategies_active");
+                $("#put_iron_fly").removeClass("option_strategies_active");
+                $("#short_synthetic_future").removeClass("option_strategies_active");
+                $("#long_straddle").removeClass("option_strategies_active");
+                $("#long_synthetic_future").removeClass("option_strategies_active");
+                $("#buy_call").removeClass("option_strategies_active");
+                $("#straddle").removeClass("option_strategies_active");
+                $("#strangle").removeClass("option_strategies_active");
+                $("#iron_fly").removeClass("option_strategies_active");
+                $("#call_ratio_back_spread").addClass("option_strategies_active");
+                $("#put_ratio_back_spread").removeClass("option_strategies_active");
+                $("#put_ratio_spread").removeClass("option_strategies_active");
+                $("#call_ratio_spread").removeClass("option_strategies_active");
+                $("#bull_call_spread").removeClass("option_strategies_active");
+                $("#bear_put_spread").removeClass("option_strategies_active");
+                $("#spread").removeClass("option_strategies_active");
+                $("#iron_condor").removeClass("option_strategies_active");
+                $("#jaze_lizard").removeClass("option_strategies_active");
+                $("#double_iron_fly").removeClass("option_strategies_active");
+                $("#double_iron_condor").removeClass("option_strategies_active");
+                $("#call_butter_fly").removeClass("option_strategies_active");
+
+                $("#put_butter_fly").removeClass("option_strategies_active");
+
+                $(".inner_p_l_greeks").show();
+                $(".main_position").empty();
+                $(".data-display-table").empty();
+                $("#table-PL").empty();
+                $("#resultTable tbody").empty();
+
+                var call_strikeSelect_spread = parseFloat(
+                  $("#call_strikeSelect_1st_ratio_back_spread").val()
+                ); // Convert to a number
+                strikePrices.forEach(function (rowStrikePrice) {
+                  if (rowStrikePrice === call_strikeSelect_spread) {
+                    // //////console.log(rowStrikePrice, put_strikeSelect_spread);
+
+                    // Find the closest row and click on Auto_calls_short_click
+                    var closestRow = optionChainTable
+                      .find(".strike_price:contains(" + rowStrikePrice + ")")
+                      .closest(".call_put_tr");
+                    if (closestRow.length) {
+                      closestRow
+                        .find("#Auto_calls_short_click")
+                        .data("HI1", "HI1There")
+                        .click();
+
+                      // Delay before clicking on #calculate (adjust as needed)
+                    }
+                  }
+                });
+                var lastIndexForw = $("#call_strikeSelect_2nd_ratio_back_spread").val();
+
+
+                // Find the closest row for lastIndexForw and click on Auto_calls_short_click
+                var closestRowForw = optionChainTable
+                  .find(".strike_price:contains(" + lastIndexForw + ")")
+                  .closest(".call_put_tr");
+                if (closestRowForw.length) {
+                  closestRowForw
+                    .find("#Auto_calls_long_click")
+                    .data("HI1", "HI1There")
+                    .click();
+                }
+
+            
+
+
+
+
+
+                var atmStripCall = $("#call_1st_ratio_back_spread_lot_size").text();
+                        var atmStripPut = $("#call_2nd_ratio_back_spread_lot_size").text();
+
+                        $(".option_lot_size_input").each(function (i) {
+                            console.log('Index_input', i);
+                            switch (i) {
+                                case 0:
+                                    $(this).text(atmStripCall);
+                                    break;
+                                case 1:
+                                    $(this).text( atmStripPut);
+                                    break;
+                           
+                                default:
+                                    break;
+                            }
+                        });
+                localStorage.setItem("strategy_builder", "call ratio back spread");
+                calculate_data();
+
+                $("#call_ratio_back_spread_modal").hide();
+                Table_chart_pyoff()
+                // margin_calculations()
+                localStorage.removeItem('main_row_instances');
+                $("#put_spread_strike_input").val(parseInt($("#closest_strike_price").text()));
+                $("#manipulation_text_atm_spread").text(0);
+                lotSize_put_bear_spread = 0
+              });
+            }
+          
+   
+            else if (filter_arg_strategy === "put_ratio_back_spread") {
+              $("#straddle_modal").hide();
+              $("#strangle_modal").hide();
+              $("#ironFly_modal").hide();
+              $("#put_ratio_back_spread_modal").show();
+              $("#ironCondor_modal").hide();
+              $("#jaze_lizard_modal").hide();
+
+              var closest_strike_price = $("#closest_strike_price").text();
+              $("#put_strikeSelect_1st_ratio_back_spread")
+              
+                .find("option")
+                .each(function () {
+                  var optionValue = parseFloat($(this).val());
+
+                  if (optionValue === parseFloat(closest_strike_price)) {
+                    // //////console.log(optionValue, closest_strike_price);
+                    $(this).prop("selected", true);
+                  }
+                });
+
+              // Ensure you are selecting the correct elements with .strike_price
+              var strikePrices = optionChainTable
+                .find(".strike_price")
+                .map(function () {
+                  return parseFloat($(this).text());
+                })
+                .get();
+
+              // Find the index of the row where strikePrice is closestStrikePrice
+              var currentIndex = strikePrices.indexOf(closestStrikePrice);
+
+     
+    // Calculate the previous 4 and forward 4 strike prices
+    var prev4 = [];
+            
+
+            for (var i = currentIndex - 1; i >= 0 && prev4.length < 4; i--) {
+              var rowStrikePrice = strikePrices[i];
+              if (!isNaN(rowStrikePrice)) {
+                prev4.push(rowStrikePrice);
+              }
+            }
+
+            $("#put_strikeSelect_2nd_ratio_back_spread")
+              .find("option")
+              .each(function () {
+                var optionValue = parseFloat($(this).val());
+
+                if (optionValue === parseFloat(prev4[prev4.length - 1])) {
+                  // //////console.log(optionValue, closest_strike_price);
+                  $(this).prop("selected", true);
+                }
+              });
+
+
+
+
+
+ 
+
+              var expiryDate_put_ratio_spread = $("#expiryDate_put_ratio_back_spread");
+              var optionExpiryDropdown = $("#optionExpiryDropdown");
+
+              expiryDate_put_ratio_spread.on("change", function () {
+                var selectedValue_straddle = $(this).val();
+                // //////console.log(selectedValue_straddle);
+
+                // Set the value of optionExpiryDropdown to match the selected value
+                optionExpiryDropdown.val(selectedValue_straddle).change();
+
+                // Trigger a click event on the selected option
+              });
+
+              var strikePrices = optionChainTable
+                .find(".strike_price")
+                .map(function () {
+                  return parseFloat($(this).text());
+                })
+                .get();
+
+
+
+              $(document).off("click", "#put_ratio_back_spread_modal_btn").on("click", "#put_ratio_back_spread_modal_btn", function () {
+                $("#strip").removeClass("option_strategies_active");
+                $("#strap").removeClass("option_strategies_active");
+                $("#call_iron_fly").removeClass("option_strategies_active");
+                $("#put_iron_fly").removeClass("option_strategies_active");
+                $("#short_synthetic_future").removeClass("option_strategies_active");
+                $("#long_straddle").removeClass("option_strategies_active");
+                $("#long_synthetic_future").removeClass("option_strategies_active");
+                $("#buy_call").removeClass("option_strategies_active");
+                $("#straddle").removeClass("option_strategies_active");
+                $("#strangle").removeClass("option_strategies_active");
+                $("#iron_fly").removeClass("option_strategies_active");
+                $("#put_ratio_back_spread").addClass("option_strategies_active");
+                $("#put_ratio_spread").removeClass("option_strategies_active");
+                $("#call_ratio_spread").removeClass("option_strategies_active");
+                $("#bull_call_spread").removeClass("option_strategies_active");
+                $("#bear_put_spread").removeClass("option_strategies_active");
+                $("#spread").removeClass("option_strategies_active");
+                $("#iron_condor").removeClass("option_strategies_active");
+                $("#jaze_lizard").removeClass("option_strategies_active");
+                $("#double_iron_fly").removeClass("option_strategies_active");
+                $("#double_iron_condor").removeClass("option_strategies_active");
+                $("#call_butter_fly").removeClass("option_strategies_active");
+
+                $("#put_butter_fly").removeClass("option_strategies_active");
+
+                $(".inner_p_l_greeks").show();
+                $(".main_position").empty();
+                $(".data-display-table").empty();
+                $("#table-PL").empty();
+                $("#resultTable tbody").empty();
+
+                var put_strikeSelect_spread = parseFloat(
+                  $("#put_strikeSelect_1st_ratio_back_spread").val()
+                ); // Convert to a number
+                strikePrices.forEach(function (rowStrikePrice) {
+                  if (rowStrikePrice === put_strikeSelect_spread) {
+                    // //////console.log(rowStrikePrice, put_strikeSelect_spread);
+
+                    // Find the closest row and click on Auto_calls_short_click
+                    var closestRow = optionChainTable
+                      .find(".strike_price:contains(" + rowStrikePrice + ")")
+                      .closest(".call_put_tr");
+                    if (closestRow.length) {
+                      closestRow
+                        .find("#Auto_puts_short_click")
+                        .data("HI1", "HI1There")
+                        .click();
+
+                      // Delay before clicking on #calculate (adjust as needed)
+                    }
+                  }
+                });
+                var lastIndexForw = $("#put_strikeSelect_2nd_ratio_back_spread").val();
+
+
+                // Find the closest row for lastIndexForw and click on Auto_calls_short_click
+                var closestRowForw = optionChainTable
+                  .find(".strike_price:contains(" + lastIndexForw + ")")
+                  .closest(".call_put_tr");
+                if (closestRowForw.length) {
+                  closestRowForw
+                    .find("#Auto_puts_long_click")
+                    .data("HI1", "HI1There")
+                    .click();
+                }
+
+            
+
+
+
+
+
+                var atmStripCall = $("#put_1st_ratio_back_spread_lot_size").text();
+                        var atmStripPut = $("#put_2nd_ratio_back_spread_lot_size").text();
+
+                        $(".option_lot_size_input").each(function (i) {
+                            console.log('Index_input', i);
+                            switch (i) {
+                                case 0:
+                                    $(this).text(atmStripCall);
+                                    break;
+                                case 1:
+                                    $(this).text( atmStripPut);
+                                    break;
+                           
+                                default:
+                                    break;
+                            }
+                        });
+                localStorage.setItem("strategy_builder", "put ratio back spread");
+                calculate_data();
+
+                $("#put_ratio_back_spread_modal").hide();
+                Table_chart_pyoff()
+                // margin_calculations()
+                localStorage.removeItem('main_row_instances');
+                $("#put_spread_strike_input").val(parseInt($("#closest_strike_price").text()));
+                $("#manipulation_text_atm_spread").text(0);
+                lotSize_put_bear_spread = 0
+              });
+            }
+          
+   
+            else if (filter_arg_strategy === "put_ratio_spread") {
+              $("#straddle_modal").hide();
+              $("#strangle_modal").hide();
+              $("#ironFly_modal").hide();
+              $("#put_ratio_spread_modal").show();
+              $("#ironCondor_modal").hide();
+              $("#jaze_lizard_modal").hide();
+
+              var closest_strike_price = $("#closest_strike_price").text();
+              $("#put_strikeSelect_1st_ratio_spread")
+              
+                .find("option")
+                .each(function () {
+                  var optionValue = parseFloat($(this).val());
+
+                  if (optionValue === parseFloat(closest_strike_price)) {
+                    // //////console.log(optionValue, closest_strike_price);
+                    $(this).prop("selected", true);
+                  }
+                });
+
+              // Ensure you are selecting the correct elements with .strike_price
+              var strikePrices = optionChainTable
+                .find(".strike_price")
+                .map(function () {
+                  return parseFloat($(this).text());
+                })
+                .get();
+
+              // Find the index of the row where strikePrice is closestStrikePrice
+              var currentIndex = strikePrices.indexOf(closestStrikePrice);
+
+     
+    // Calculate the previous 4 and forward 4 strike prices
+    var prev4 = [];
+            
+
+            for (var i = currentIndex - 1; i >= 0 && prev4.length < 4; i--) {
+              var rowStrikePrice = strikePrices[i];
+              if (!isNaN(rowStrikePrice)) {
+                prev4.push(rowStrikePrice);
+              }
+            }
+
+            $("#put_strikeSelect_2nd_ratio_spread")
+              .find("option")
+              .each(function () {
+                var optionValue = parseFloat($(this).val());
+
+                if (optionValue === parseFloat(prev4[prev4.length - 1])) {
+                  // //////console.log(optionValue, closest_strike_price);
+                  $(this).prop("selected", true);
+                }
+              });
+
+
+
+
+
+ 
+
+              var expiryDate_put_ratio_spread = $("#expiryDate_put_ratio_spread");
+              var optionExpiryDropdown = $("#optionExpiryDropdown");
+
+              expiryDate_put_ratio_spread.on("change", function () {
+                var selectedValue_straddle = $(this).val();
+                // //////console.log(selectedValue_straddle);
+
+                // Set the value of optionExpiryDropdown to match the selected value
+                optionExpiryDropdown.val(selectedValue_straddle).change();
+
+                // Trigger a click event on the selected option
+              });
+
+              var strikePrices = optionChainTable
+                .find(".strike_price")
+                .map(function () {
+                  return parseFloat($(this).text());
+                })
+                .get();
+
+
+
+              $(document).off("click", "#put_ratio_spread_modal_btn").on("click", "#put_ratio_spread_modal_btn", function () {
+                $("#strip").removeClass("option_strategies_active");
+                $("#strap").removeClass("option_strategies_active");
+                $("#call_iron_fly").removeClass("option_strategies_active");
+                $("#put_iron_fly").removeClass("option_strategies_active");
+                $("#short_synthetic_future").removeClass("option_strategies_active");
+                $("#long_straddle").removeClass("option_strategies_active");
+                $("#long_synthetic_future").removeClass("option_strategies_active");
+                $("#buy_call").removeClass("option_strategies_active");
+                $("#straddle").removeClass("option_strategies_active");
+                $("#strangle").removeClass("option_strategies_active");
+                $("#iron_fly").removeClass("option_strategies_active");
+                $("#put_ratio_spread").addClass("option_strategies_active");
+                $("#call_ratio_spread").removeClass("option_strategies_active");
+                $("#bull_call_spread").removeClass("option_strategies_active");
+                $("#bear_put_spread").removeClass("option_strategies_active");
+                $("#spread").removeClass("option_strategies_active");
+                $("#iron_condor").removeClass("option_strategies_active");
+                $("#jaze_lizard").removeClass("option_strategies_active");
+                $("#double_iron_fly").removeClass("option_strategies_active");
+                $("#double_iron_condor").removeClass("option_strategies_active");
+                $("#call_butter_fly").removeClass("option_strategies_active");
+
+                $("#put_butter_fly").removeClass("option_strategies_active");
+
+                $(".inner_p_l_greeks").show();
+                $(".main_position").empty();
+                $(".data-display-table").empty();
+                $("#table-PL").empty();
+                $("#resultTable tbody").empty();
+
+                var put_strikeSelect_spread = parseFloat(
+                  $("#put_strikeSelect_1st_ratio_spread").val()
+                ); // Convert to a number
+                strikePrices.forEach(function (rowStrikePrice) {
+                  if (rowStrikePrice === put_strikeSelect_spread) {
+                    // //////console.log(rowStrikePrice, put_strikeSelect_spread);
+
+                    // Find the closest row and click on Auto_calls_short_click
+                    var closestRow = optionChainTable
+                      .find(".strike_price:contains(" + rowStrikePrice + ")")
+                      .closest(".call_put_tr");
+                    if (closestRow.length) {
+                      closestRow
+                        .find("#Auto_puts_long_click")
+                        .data("HI1", "HI1There")
+                        .click();
+
+                      // Delay before clicking on #calculate (adjust as needed)
+                    }
+                  }
+                });
+                var lastIndexForw = $("#put_strikeSelect_2nd_ratio_spread").val();
+
+
+                // Find the closest row for lastIndexForw and click on Auto_calls_short_click
+                var closestRowForw = optionChainTable
+                  .find(".strike_price:contains(" + lastIndexForw + ")")
+                  .closest(".call_put_tr");
+                if (closestRowForw.length) {
+                  closestRowForw
+                    .find("#Auto_puts_short_click")
+                    .data("HI1", "HI1There")
+                    .click();
+                }
+
+            
+
+
+
+
+
+                var atmStripCall = $("#put_1st_ratio_spread_lot_size").text();
+                        var atmStripPut = $("#put_2nd_ratio_spread_lot_size").text();
+
+                        $(".option_lot_size_input").each(function (i) {
+                            console.log('Index_input', i);
+                            switch (i) {
+                                case 0:
+                                    $(this).text(atmStripCall);
+                                    break;
+                                case 1:
+                                    $(this).text( atmStripPut);
+                                    break;
+                           
+                                default:
+                                    break;
+                            }
+                        });
+                localStorage.setItem("strategy_builder", "put ratio spread");
+                calculate_data();
+
+                $("#put_ratio_spread_modal").hide();
+                Table_chart_pyoff()
+                // margin_calculations()
+                localStorage.removeItem('main_row_instances');
+                $("#put_spread_strike_input").val(parseInt($("#closest_strike_price").text()));
+                $("#manipulation_text_atm_spread").text(0);
+                lotSize_put_bear_spread = 0
+              });
+            }
+          
+
+            else if (filter_arg_strategy === "call_ratio_spread") {
+              $("#straddle_modal").hide();
+              $("#strangle_modal").hide();
+              $("#ironFly_modal").hide();
+              $("#call_ratio_spread_modal").show();
+              $("#ironCondor_modal").hide();
+              $("#jaze_lizard_modal").hide();
+
+              var closest_strike_price = $("#closest_strike_price").text();
+              $("#put_strikeSelect_call_ratio_spread")
+                .find("option")
+                .each(function () {
+                  var optionValue = parseFloat($(this).val());
+
+                  if (optionValue === parseFloat(closest_strike_price)) {
+                    // //////console.log(optionValue, closest_strike_price);
+                    $(this).prop("selected", true);
+                  }
+                });
+
+              // Ensure you are selecting the correct elements with .strike_price
+              var strikePrices = optionChainTable
+                .find(".strike_price")
+                .map(function () {
+                  return parseFloat($(this).text());
+                })
+                .get();
+
+              // Find the index of the row where strikePrice is closestStrikePrice
+              var currentIndex = strikePrices.indexOf(closestStrikePrice);
+
+     
+   // Calculate the next 5 strike prices
+   var forw4 = [];
+              for (
+                var j = currentIndex + 1;
+                j < strikePrices.length && forw4.length < 4;
+                j++
+              ) {
+                var rowStrikePrice = strikePrices[j];
+                if (!isNaN(rowStrikePrice)) {
+                  forw4.push(rowStrikePrice);
+                }
+              }
+
+              $("#call_strikeSelect_call_ratio_spread")
+                .find("option")
+                .each(function () {
+                  var optionValue = parseFloat($(this).val());
+
+                  if (optionValue === parseFloat(forw4[forw4.length - 1])) {
+                    // //////console.log(optionValue, closest_strike_price);
+                    $(this).prop("selected", true);
+                  }
+                });
+
+
+ 
+
+              var expiryDate_call_ratio_spread = $("#expiryDate_call_ratio_spread");
+              var optionExpiryDropdown = $("#optionExpiryDropdown");
+
+              expiryDate_call_ratio_spread.on("change", function () {
+                var selectedValue_straddle = $(this).val();
+                // //////console.log(selectedValue_straddle);
+
+                // Set the value of optionExpiryDropdown to match the selected value
+                optionExpiryDropdown.val(selectedValue_straddle).change();
+
+                // Trigger a click event on the selected option
+              });
+
+              var strikePrices = optionChainTable
+                .find(".strike_price")
+                .map(function () {
+                  return parseFloat($(this).text());
+                })
+                .get();
+
+
+
+              $(document).off("click", "#call_ratio_spread_modal_btn").on("click", "#call_ratio_spread_modal_btn", function () {
+                $("#strip").removeClass("option_strategies_active");
+                $("#strap").removeClass("option_strategies_active");
+                $("#call_iron_fly").removeClass("option_strategies_active");
+                $("#put_iron_fly").removeClass("option_strategies_active");
+                $("#short_synthetic_future").removeClass("option_strategies_active");
+                $("#long_straddle").removeClass("option_strategies_active");
+                $("#long_synthetic_future").removeClass("option_strategies_active");
+                $("#buy_call").removeClass("option_strategies_active");
+                $("#straddle").removeClass("option_strategies_active");
+                $("#strangle").removeClass("option_strategies_active");
+                $("#iron_fly").removeClass("option_strategies_active");
+                $("#call_ratio_spread").addClass("option_strategies_active");
+                $("#bull_call_spread").removeClass("option_strategies_active");
+                $("#bear_put_spread").removeClass("option_strategies_active");
+                $("#spread").removeClass("option_strategies_active");
+                $("#iron_condor").removeClass("option_strategies_active");
+                $("#jaze_lizard").removeClass("option_strategies_active");
+                $("#double_iron_fly").removeClass("option_strategies_active");
+                $("#double_iron_condor").removeClass("option_strategies_active");
+                $("#call_butter_fly").removeClass("option_strategies_active");
+
+                $("#put_butter_fly").removeClass("option_strategies_active");
+
+                $(".inner_p_l_greeks").show();
+                $(".main_position").empty();
+                $(".data-display-table").empty();
+                $("#table-PL").empty();
+                $("#resultTable tbody").empty();
+
+                var put_strikeSelect_spread = parseFloat(
+                  $("#put_strikeSelect_call_ratio_spread").val()
+                ); // Convert to a number
+                strikePrices.forEach(function (rowStrikePrice) {
+                  if (rowStrikePrice === put_strikeSelect_spread) {
+                    // //////console.log(rowStrikePrice, put_strikeSelect_spread);
+
+                    // Find the closest row and click on Auto_calls_short_click
+                    var closestRow = optionChainTable
+                      .find(".strike_price:contains(" + rowStrikePrice + ")")
+                      .closest(".call_put_tr");
+                    if (closestRow.length) {
+                      closestRow
+                        .find("#Auto_calls_long_click")
+                        .data("HI1", "HI1There")
+                        .click();
+
+                      // Delay before clicking on #calculate (adjust as needed)
+                    }
+                  }
+                });
+                var lastIndexForw = $("#call_strikeSelect_call_ratio_spread").val();
+
+
+                // Find the closest row for lastIndexForw and click on Auto_calls_short_click
+                var closestRowForw = optionChainTable
+                  .find(".strike_price:contains(" + lastIndexForw + ")")
+                  .closest(".call_put_tr");
+                if (closestRowForw.length) {
+                  closestRowForw
+                    .find("#Auto_calls_short_click")
+                    .data("HI1", "HI1There")
+                    .click();
+                }
+
+            
+
+
+
+
+
+                var atmStripCall = $("#put_call_ratio_spread_lot_size").text();
+                        var atmStripPut = $("#call_call_ratio_spread_lot_size").text();
+
+                        $(".option_lot_size_input").each(function (i) {
+                            console.log('Index_input', i);
+                            switch (i) {
+                                case 0:
+                                    $(this).text(atmStripCall);
+                                    break;
+                                case 1:
+                                    $(this).text( atmStripPut);
+                                    break;
+                           
+                                default:
+                                    break;
+                            }
+                        });
+                localStorage.setItem("strategy_builder", "call ratio spread");
+                calculate_data();
+
+                $("#call_ratio_spread_modal").hide();
+                Table_chart_pyoff()
+                // margin_calculations()
+                localStorage.removeItem('main_row_instances');
+                $("#put_spread_strike_input").val(parseInt($("#closest_strike_price").text()));
+                $("#manipulation_text_atm_spread").text(0);
+                lotSize_put_bear_spread = 0
+              });
+            }
+          
+                      
+            else if (filter_arg_strategy === "bear_put_spread") {
+              $("#straddle_modal").hide();
+              $("#strangle_modal").hide();
+              $("#ironFly_modal").hide();
+              $("#bear_put_spread_modal").show();
+              $("#ironCondor_modal").hide();
+              $("#jaze_lizard_modal").hide();
+
+              var closest_strike_price = $("#closest_strike_price").text();
+              $("#put_strikeSelect_bear_put_spread")
+                .find("option")
+                .each(function () {
+                  var optionValue = parseFloat($(this).val());
+
+                  if (optionValue === parseFloat(closest_strike_price)) {
+                    // //////console.log(optionValue, closest_strike_price);
+                    $(this).prop("selected", true);
+                  }
+                });
+
+              // Ensure you are selecting the correct elements with .strike_price
+              var strikePrices = optionChainTable
+                .find(".strike_price")
+                .map(function () {
+                  return parseFloat($(this).text());
+                })
+                .get();
+
+              // Find the index of the row where strikePrice is closestStrikePrice
+              var currentIndex = strikePrices.indexOf(closestStrikePrice);
+
+                  // Calculate the previous 4 and forward 4 strike prices
+                  var prev4 = [];
+            
+
+              for (var i = currentIndex - 1; i >= 0 && prev4.length < 4; i--) {
+                var rowStrikePrice = strikePrices[i];
+                if (!isNaN(rowStrikePrice)) {
+                  prev4.push(rowStrikePrice);
+                }
+              }
+
+              $("#call_strikeSelect_bear_put_spread")
+                .find("option")
+                .each(function () {
+                  var optionValue = parseFloat($(this).val());
+
+                  if (optionValue === parseFloat(prev4[prev4.length - 1])) {
+                    // //////console.log(optionValue, closest_strike_price);
+                    $(this).prop("selected", true);
+                  }
+                });
+
+
+ 
+
+              var expiryDate_bear_put_spread = $("#expiryDate_bear_put_spread");
+              var optionExpiryDropdown = $("#optionExpiryDropdown");
+
+              expiryDate_bear_put_spread.on("change", function () {
+                var selectedValue_straddle = $(this).val();
+                // //////console.log(selectedValue_straddle);
+
+                // Set the value of optionExpiryDropdown to match the selected value
+                optionExpiryDropdown.val(selectedValue_straddle).change();
+
+                // Trigger a click event on the selected option
+              });
+
+              var strikePrices = optionChainTable
+                .find(".strike_price")
+                .map(function () {
+                  return parseFloat($(this).text());
+                })
+                .get();
+
+
+
+              $(document).off("click", "#bear_put_spread_modal_btn").on("click", "#bear_put_spread_modal_btn", function () {
+                $("#strip").removeClass("option_strategies_active");
+                $("#strap").removeClass("option_strategies_active");
+                $("#call_iron_fly").removeClass("option_strategies_active");
+                $("#put_iron_fly").removeClass("option_strategies_active");
+                $("#short_synthetic_future").removeClass("option_strategies_active");
+                $("#long_straddle").removeClass("option_strategies_active");
+                $("#long_synthetic_future").removeClass("option_strategies_active");
+                $("#buy_call").removeClass("option_strategies_active");
+                $("#straddle").removeClass("option_strategies_active");
+                $("#strangle").removeClass("option_strategies_active");
+                $("#iron_fly").removeClass("option_strategies_active");
+                $("#bear_put_spread").addClass("option_strategies_active");
+                $("#spread").removeClass("option_strategies_active");
+                $("#iron_condor").removeClass("option_strategies_active");
+                $("#jaze_lizard").removeClass("option_strategies_active");
+                $("#double_iron_fly").removeClass("option_strategies_active");
+                $("#double_iron_condor").removeClass("option_strategies_active");
+                $("#call_butter_fly").removeClass("option_strategies_active");
+
+                $("#put_butter_fly").removeClass("option_strategies_active");
+
+                $(".inner_p_l_greeks").show();
+                $(".main_position").empty();
+                $(".data-display-table").empty();
+                $("#table-PL").empty();
+                $("#resultTable tbody").empty();
+
+                var put_strikeSelect_spread = parseFloat(
+                  $("#put_strikeSelect_bear_put_spread").val()
+                ); // Convert to a number
+                strikePrices.forEach(function (rowStrikePrice) {
+                  if (rowStrikePrice === put_strikeSelect_spread) {
+                    // //////console.log(rowStrikePrice, put_strikeSelect_spread);
+
+                    // Find the closest row and click on Auto_calls_short_click
+                    var closestRow = optionChainTable
+                      .find(".strike_price:contains(" + rowStrikePrice + ")")
+                      .closest(".call_put_tr");
+                    if (closestRow.length) {
+                      closestRow
+                        .find("#Auto_puts_long_click")
+                        .data("HI1", "HI1There")
+                        .click();
+
+                      // Delay before clicking on #calculate (adjust as needed)
+                    }
+                  }
+                });
+                var lastIndexForw = $("#call_strikeSelect_bear_put_spread").val();
+
+
+                // Find the closest row for lastIndexForw and click on Auto_calls_short_click
+                var closestRowForw = optionChainTable
+                  .find(".strike_price:contains(" + lastIndexForw + ")")
+                  .closest(".call_put_tr");
+                if (closestRowForw.length) {
+                  closestRowForw
+                    .find("#Auto_puts_short_click")
+                    .data("HI1", "HI1There")
+                    .click();
+                }
+
+            
+
+
+
+
+
+                // Click on #calculate after a longer delay
+                var bear_put_spread_modal_counter_input = $("#bear_put_spread_modal_counter_input").val();
+                $(".option_lot_size_input").text(bear_put_spread_modal_counter_input);
+                localStorage.setItem("strategy_builder", "bear put spread");
+                calculate_data();
+
+                $("#bear_put_spread_modal").hide();
+                Table_chart_pyoff()
+                // margin_calculations()
+                localStorage.removeItem('main_row_instances');
+                $("#put_spread_strike_input").val(parseInt($("#closest_strike_price").text()));
+                $("#manipulation_text_atm_spread").text(0);
+                lotSize_put_bear_spread = 0
+              });
+            }
+          
             else if (filter_arg_strategy === "iron_fly") {
               $(".ironfly_strike_input").val(parseInt($("#closest_strike_price").text()));
                 $(".malipulation_text_ironfly").text(0);
@@ -23792,6 +26435,13 @@ if (plusButtonClicks < strategycounterValue) {
           attachButtonClickEvent($("#strip"), "strip");
           attachButtonClickEvent($("#strap"), "strap");
           attachButtonClickEvent($("#reverse_jaze_lizard"), "reverse_jaze_lizard");
+          attachButtonClickEvent($("#bear_put_spread"), "bear_put_spread");
+          attachButtonClickEvent($("#bull_call_spread"), "bull_call_spread");
+          attachButtonClickEvent($("#bull_put_spread"), "bull_put_spread");
+          attachButtonClickEvent($("#call_ratio_spread"), "call_ratio_spread");
+          attachButtonClickEvent($("#put_ratio_spread"), "put_ratio_spread");
+          attachButtonClickEvent($("#put_ratio_back_spread"), "put_ratio_back_spread");
+          attachButtonClickEvent($("#call_ratio_back_spread"), "call_ratio_back_spread");
 
 
 
@@ -25453,6 +28103,8 @@ if (plusButtonClicks < strategycounterValue) {
       var main_strike_price_dynamic = []
 
       var all_premium_sum = 0;
+
+      var main_strikePrice_leg = []
       $(".main_add_position_actions").each(function () {
 
         var lot_size_value = $("#lot_size_value").text()
@@ -25467,6 +28119,7 @@ if (plusButtonClicks < strategycounterValue) {
 
         var requiredStringValue = $(this).find(".call_put_entrance").text()
         var final_strikePrice_edit = parseFloat(strikePrice_edit)
+        main_strikePrice_leg.push(strikePrice_edit)
         var final_premiums = parseFloat(premiums)
         var final_lot_size = parseFloat(option_lot_size_input)
         var final_lot_premium = parseFloat(premiums)
@@ -25623,8 +28276,8 @@ if (plusButtonClicks < strategycounterValue) {
       var positiveValues = sumArray.filter(value => value > 0);
       var negativeValues = sumArray.filter(value => value < 0);
 
-      // console.log("Positive Values:", positiveValues);
-      // console.log("Negative Values:", negativeValues);
+      console.log("Positive Values:", positiveValues);
+      console.log("Negative Values:", negativeValues);
 
       // Find the maximum value in positiveValues
       var maxPositive = Math.max(...positiveValues);
@@ -25660,7 +28313,13 @@ if (plusButtonClicks < strategycounterValue) {
 
 
 
-      //////console.log('main_strike_price_dynamic', main_strike_price_dynamic);
+      // console.log('main_strike_price_dynamic', main_strike_price_dynamic);
+      console.log("sumArray",sumArray);
+
+      const payoffTables =  sumArray
+const strikePrices_leg =main_strikePrice_leg
+
+
 
       var plusCount = main_strike_price_dynamic.filter(obj => obj.long_shorts === '+').length;
       var minusCount = main_strike_price_dynamic.filter(obj => obj.long_shorts === '-').length;
@@ -25729,32 +28388,51 @@ if (plusButtonClicks < strategycounterValue) {
 
       } else {
         //////console.log("'+' and '-' appear the same number of times");
+        function checkRepeats(sumArray) {
+  let negative_repeats = false;
+  let positive_repeats = false;
+
+  const counts = {};
+  for (let num of sumArray) {
+    counts[num] = (counts[num] || 0) + 1;
+    if (counts[num] == 2) {
+      if (num < 0) {
+        negative_repeats = true;
+      } else if (num > 0) {
+        positive_repeats = true;
+      }
+    }
+  }
+
+  return {
+    negative_repeats: negative_repeats,
+    positive_repeats: positive_repeats
+  };
+}
+
+const repeatsInfo = checkRepeats(sumArray);
+
+console.log(repeatsInfo);
+console.log("Negative Repeats:", repeatsInfo.negative_repeats);
+console.log("Positive Repeats:", repeatsInfo.positive_repeats);
+if (repeatsInfo.negative_repeats && repeatsInfo.positive_repeats) {
+      $("#max_profit").text(maxProfit.toFixed(2));
+      $("#max_loss").text(maxLoss.toFixed(2));
+      const ratio = Math.max(...sumArray) / Math.min(...sumArray);
+      $("#ratio").text(ratio.toFixed(2));
+    } else if (repeatsInfo.negative_repeats && !repeatsInfo.positive_repeats) {
+      $("#max_profit").text(maxProfit.toFixed(2));
+      $("#max_loss").text("Unlimited");
+    } else if (!repeatsInfo.negative_repeats && repeatsInfo.positive_repeats) {
+      $("#max_profit").text("Unlimited");
+      $("#max_loss").text(maxLoss.toFixed(2));
+    } else if(!repeatsInfo.negative_repeats && !repeatsInfo.positive_repeats){
+      $("#max_profit").text("Unlimited");
+      $("#max_loss").text("Unlimited");
+      $("#ratio").text("NAF");
+    }
 
 
-
-        function checkRepeats(arr) {
-          const counts = {};
-          for (let num of arr) {
-            counts[num] = (counts[num] || 0) + 1;
-            if (counts[num] > 2) {
-
-              $("#max_profit").text((maxProfit).toFixed(2));
-              $("#max_loss").text((maxLoss).toFixed(2));
-              var ratio = Math.max(...sumArray) / Math.min(...sumArray);
-              $("#ratio").text(ratio.toFixed(2));
-              return true;
-            } else {
-
-            }
-          }
-          var ratio = Math.max(...sumArray) / Math.min(...sumArray);
-          $("#ratio").text("NA");
-          $("#max_profit").text("Unlimited");
-          $("#max_loss").text("Unlimited");
-          return false;
-        }
-        checkRepeats(positiveValues);
-        checkRepeats(negativeValues);
 
       }
 
