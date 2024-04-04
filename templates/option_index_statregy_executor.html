@@ -28415,23 +28415,75 @@ const repeatsInfo = checkRepeats(sumArray);
 console.log(repeatsInfo);
 console.log("Negative Repeats:", repeatsInfo.negative_repeats);
 console.log("Positive Repeats:", repeatsInfo.positive_repeats);
-if (repeatsInfo.negative_repeats && repeatsInfo.positive_repeats) {
+
+
+
+    function sumArray_final(sumArray) {
+    const negativeValues = sumArray.filter(num => num < 0);
+    const positiveValues = sumArray.filter(num => num >= 0);
+
+    const roundedNegativeValues = negativeValues.map(num => Math.ceil(num)); // Round up for negative numbers
+    const roundedPositiveValues = positiveValues.map(num => Math.floor(num)); // Round down for positive numbers
+
+    roundedNegativeValues.sort((a, b) => a - b);
+    roundedPositiveValues.sort((a, b) => a - b);
+
+    console.log(roundedNegativeValues); 
+    console.log(roundedPositiveValues); 
+
+    let lastNegativeRepeating, lastPositiveRepeating;
+    if (roundedNegativeValues.length > roundedPositiveValues.length) {
+    // Sort the negative values in ascending order and then reverse it to get descending order
+    roundedNegativeValues.sort((a, b) => b - a);
+    lastNegativeRepeating = checkLastRepeating(roundedNegativeValues, 5);
+}else {
+  lastNegativeRepeating = checkLastRepeating(roundedNegativeValues, 5);
+}
+
+    lastPositiveRepeating = checkLastRepeating(roundedPositiveValues, 5);
+
+    const final_values = {
+        lastNegativeRepeating,
+        lastPositiveRepeating
+    };
+
+    if (lastPositiveRepeating && lastNegativeRepeating) {
       $("#max_profit").text(maxProfit.toFixed(2));
       $("#max_loss").text(maxLoss.toFixed(2));
       const ratio = Math.max(...sumArray) / Math.min(...sumArray);
       $("#ratio").text(ratio.toFixed(2));
-    } else if (repeatsInfo.negative_repeats && !repeatsInfo.positive_repeats) {
+    } else if (!lastNegativeRepeating && lastPositiveRepeating) {
       $("#max_profit").text(maxProfit.toFixed(2));
       $("#max_loss").text("Unlimited");
-    } else if (!repeatsInfo.negative_repeats && repeatsInfo.positive_repeats) {
+    } else if (lastNegativeRepeating && !lastPositiveRepeating) {
       $("#max_profit").text("Unlimited");
       $("#max_loss").text(maxLoss.toFixed(2));
-    } else if(!repeatsInfo.negative_repeats && !repeatsInfo.positive_repeats){
+    } else if(!lastNegativeRepeating && !lastPositiveRepeating){
       $("#max_profit").text("Unlimited");
       $("#max_loss").text("Unlimited");
       $("#ratio").text("NAF");
     }
 
+
+    console.log(final_values);
+
+    return final_values;
+}
+
+
+function checkLastRepeating(arr, lastCount) {
+    const lastElements = arr.slice(-lastCount); // Get the last 'lastCount' elements of the array
+    const uniqueValues = new Set(lastElements); // Create a set to store unique values
+
+    // If the length of the set is less than the lastCount, it means there are repeating values
+    if (uniqueValues.size < lastCount) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+sumArray_final(sumArray);
 
 
       }
