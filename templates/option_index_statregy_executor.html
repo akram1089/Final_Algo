@@ -38,10 +38,17 @@ Option Strategy Builder
   .main-ironfly {
     display: block;
   }
+.main_range_forward,
+.main_risk_reversal,
+.main_long_strangle,
 
 .main_call_ratio_back_spread,
 .main_bull_put_spread,
 .main_bull_call_spread,
+
+.main_put_buy,
+.main_put_sell,
+.main_call_sell,
 
 .main_put_ratio_spread,
 .main_call_ratio_spread,
@@ -1102,6 +1109,66 @@ Option Strategy Builder
   }
 
   #buy_call_modal {
+    width: 23.4rem;
+    box-shadow: 0px 0px 1px 2px #4399eb3b;
+    position: absolute;
+    z-index: 9;
+    border-radius: 8px;
+    background-color: white;
+    display: none;
+    margin: 14px 0 0 0;
+  }
+  #put_sell_modal {
+    width: 23.4rem;
+    box-shadow: 0px 0px 1px 2px #4399eb3b;
+    position: absolute;
+    z-index: 9;
+    border-radius: 8px;
+    background-color: white;
+    display: none;
+    margin: 14px 0 0 0;
+  }
+  #put_buy_modal {
+    width: 23.4rem;
+    box-shadow: 0px 0px 1px 2px #4399eb3b;
+    position: absolute;
+    z-index: 9;
+    border-radius: 8px;
+    background-color: white;
+    display: none;
+    margin: 14px 0 0 0;
+  }
+  #call_sell_modal {
+    width: 23.4rem;
+    box-shadow: 0px 0px 1px 2px #4399eb3b;
+    position: absolute;
+    z-index: 9;
+    border-radius: 8px;
+    background-color: white;
+    display: none;
+    margin: 14px 0 0 0;
+  }
+  #long_strangle_modal {
+    width: 23.4rem;
+    box-shadow: 0px 0px 1px 2px #4399eb3b;
+    position: absolute;
+    z-index: 9;
+    border-radius: 8px;
+    background-color: white;
+    display: none;
+    margin: 14px 0 0 0;
+  }
+  #range_forward_modal {
+    width: 23.4rem;
+    box-shadow: 0px 0px 1px 2px #4399eb3b;
+    position: absolute;
+    z-index: 9;
+    border-radius: 8px;
+    background-color: white;
+    display: none;
+    margin: 14px 0 0 0;
+  }
+  #risk_reversal_modal {
     width: 23.4rem;
     box-shadow: 0px 0px 1px 2px #4399eb3b;
     position: absolute;
@@ -7515,7 +7582,7 @@ Option Strategy Builder
 
 
 
-
+<!-- BUY CALL -->
 
             <div class="main_buy_call">
 
@@ -7618,6 +7685,409 @@ Option Strategy Builder
                 </div>
               </div>
             </div>
+
+              <!-- /Buy  Put  -->
+
+
+            <div class="main_put_buy" >
+
+                <button class="straddle" id="put_buy">
+  
+                  <div class="main_strategy_img_title">
+                    <div class="style__PresetStrategyCard-sc-1f57s5d-6 jyZMZN">
+                     
+                      <svg xmlns="http://www.w3.org/2000/svg" width="62" height="45" viewBox="0 0 62 45" class="sc-gsTCUz dFfFa-d jss619"><g fill="none" fill-rule="evenodd"><path stroke="var(--dividerColor)" stroke-linecap="square" d="M0.5 0L0.5 43.237" transform="translate(1 1)"></path><path stroke="var(--dividerColor)" stroke-dasharray="5 5" stroke-linecap="round" d="M0.462 23L60 23" transform="translate(1 1)"></path><g stroke-width="2"><path stroke="var(--lossColor)" d="M0 22.988L28.955 22.988 36.745 15.988" transform="translate(1 1) matrix(-1 0 0 1 56 7)"></path><path stroke="var(--profitColor)" d="M36.988 15.988L54.564 0" transform="translate(1 1) matrix(-1 0 0 1 56 7)"></path></g></g></svg>
+                      <div class="title"> Buy Put</div>
+                    
+                    </div>
+  
+        
+                </button>
+  
+                <div class="sc-jxTFzB lmSamt">New</div>
+  
+                </b>
+  
+                <div class="" id="put_buy_modal">
+                  <div class="dismiss">
+                    <i class="bx bx-plus dismiss_icon"></i>
+                    <div class="triangle-up"></div>
+                  </div>
+                  <div class="modal_dialog">
+                    <div class="modal_content">
+                      <div class="modal_body" id="modal_body">
+                        <div class="main_put_buy_inner">
+                          <h5 class="text-center mb-3">Buy Put </h5>
+  
+                          <div class="main_body_fields_put_buy">
+                            <div class="main_strikePrice mb-3">
+                              <div class="put_buy_lot_size">
+                                <span id="put_put_buy_lot_size">1</span><span>x</span>
+                              </div>
+                              <div class="strategy_inputs">
+                                <label for="strikePrice">Strike Price</label>
+                                <select class="strike_price_input form-select" data-optionside="PE"
+                                  id="put_strikeSelect_put_buy"></select>
+                              </div>
+                              <p class="pe_ce"> PE</p>
+                            </div>
+  
+
+  
+                            <div class="strategy_inputs mb-3">
+                              <label for="expirydate">Expiry Date</label>
+                              <select class="expiry_date_input form-select" id="expiryDate_put_buy"></select>
+                            </div>
+                            <div class="main_leg_config d-flex align-items-center">
+
+                              <label for="main_iron_fly" class="m-0"> Config:</label>
+  
+                              <div class="main_leg_button_input d-flex">
+                                <button class="decrease_main  main_leg_config_minus"><i class="bx bx-minus"></i></button>
+                           
+                              <input type="text" class="form-control " min="0" value="0">
+                    
+                              <button class="increase_main main_leg_config_plus"><i class="bx bx-plus"></i></button>
+                              </div>
+  
+  
+  
+  
+                            </div>
+                                      <style>
+                                        .put_buy_modal_atm_indicator{
+                                          display: flex;
+                              align-items: center;
+                              justify-content: center;
+                              column-gap: 0.4rem;
+                              margin-bottom: 0.5rem;
+                                        }
+                                      </style>
+                            <div class="put_buy_modal_atm_indicator">
+
+                              <label for="put_buy_modal_atm_counter" class="m-0">ATM:</label>
+    
+    
+                              <div class="main_strangle_modal  d-flex m-0" id="put_buy_modal_atm_counter">
+                                <button class="decrease_main" id="decrease_put_buy_modal_value"><i class="bx bx-minus"></i></button>
+                                <input type="text" style="width: 100px;" class="main_modal_strike_input" id="put_buy_strike_input">
+                                <button class="increase_main" id="increase_put_buy_modal_value"><i class="bx bx-plus"></i></button>
+                              </div>
+    
+                              <div class="put_buy_modal_new_strike_price_malipulations">
+                                <p class="malipulation_text_main_modal" id="manipulation_text_atm_put_buy">0</p>
+                              </div>
+    
+                            </div>
+  
+  
+  
+  
+                            <div class="main_counter d-flex gap-3 mb-3">
+                              <div class="innerput_buy_modal_lot_size d-flex gap-2">
+                                <p class="fs-6 lot_title">Qty:</p>
+                                <div class="counter_put_buy_modal main_qty_counter d-flex justify-content-center gap-1">
+                                  <button class="btn minus_qty_btn" id="put_buy_modal_decrement">
+                                    <i class="bx bx-minus"></i>
+                                  </button>
+                                  <input type="text" name="" value="1" class="main_qty_input" id="put_buy_modal_counter_input" min="1" disabled
+                                    style="    width: 91px !important;" />
+                                  <button class="btn plus_qty_btn" id="put_buy_modal_increment">
+                                    <i class="bx bx-plus"></i>
+                                  </button>
+                                </div>
+                              </div>
+  
+                            </div>
+  
+                            <div class="main_deploy_put_buy_modal_btn d-flex justify-content-center">
+                              <button class="main_startegy_execute_btn" id="put_buy_modal_btn"
+                                style="width: 124px !important;">SELL</button>
+                            </div>
+                          </div>
+                        </div>
+  
+  
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+
+            
+                            <!-- /Sell  Put  -->
+
+
+                            <div class="main_put_sell" >
+
+                              <button class="straddle" id="put_sell">
+                
+                                <div class="main_strategy_img_title">
+                                  <div class="style__PresetStrategyCard-sc-1f57s5d-6 jyZMZN">
+                                   
+                                    
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="62" height="45" viewBox="0 0 62 45" class="sc-gsTCUz dFfFa-d jss619"><g fill="none" fill-rule="evenodd"><path stroke="var(--dividerColor)" stroke-linecap="square" d="M0.5 0L0.5 43.237" transform="translate(1 1)"></path><path stroke="var(--dividerColor)" stroke-dasharray="5 5" stroke-linecap="round" d="M0.462 23L60 23" transform="translate(1 1)"></path><path stroke="var(--lossColor)" stroke-width="2" d="M0.968 37L15 23" transform="translate(1 1)"></path><path stroke="var(--profitColor)" stroke-width="2" d="M15 23L31.049 6 56.712 6" transform="translate(1 1)"></path></g></svg>                
+                                                        <div class="title"> Sell Put</div>
+                                  
+                                  </div>
+                
+                      
+                              </button>
+                
+                              <div class="sc-jxTFzB lmSamt">New</div>
+                
+                              </b>
+                
+                              <div class="" id="put_sell_modal">
+                                <div class="dismiss">
+                                  <i class="bx bx-plus dismiss_icon"></i>
+                                  <div class="triangle-up"></div>
+                                </div>
+                                <div class="modal_dialog">
+                                  <div class="modal_content">
+                                    <div class="modal_body" id="modal_body">
+                                      <div class="main_put_sell_inner">
+                                        <h5 class="text-center mb-3">Sell Put </h5>
+                
+                                        <div class="main_body_fields_put_sell">
+                                          <div class="main_strikePrice mb-3">
+                                            <div class="put_sell_lot_size">
+                                              <span id="put_put_sell_lot_size">1</span><span>x</span>
+                                            </div>
+                                            <div class="strategy_inputs">
+                                              <label for="strikePrice">Strike Price</label>
+                                              <select class="strike_price_input form-select" data-optionside="PE"
+                                                id="put_strikeSelect_put_sell"></select>
+                                            </div>
+                                            <p class="pe_ce"> PE</p>
+                                          </div>
+                
+     
+                
+                                          <div class="strategy_inputs mb-3">
+                                            <label for="expirydate">Expiry Date</label>
+                                            <select class="expiry_date_input form-select" id="expiryDate_put_sell"></select>
+                                          </div>
+                                          <div class="main_leg_config d-flex align-items-center">
+            
+                                            <label for="main_iron_fly" class="m-0"> Config:</label>
+                
+                                            <div class="main_leg_button_input d-flex">
+                                              <button class="decrease_main  main_leg_config_minus"><i class="bx bx-minus"></i></button>
+                                         
+                                            <input type="text" class="form-control " min="0" value="0">
+                                  
+                                            <button class="increase_main main_leg_config_plus"><i class="bx bx-plus"></i></button>
+                                            </div>
+                
+                
+                
+                
+                                          </div>
+                                                    <style>
+                                                      .put_sell_modal_atm_indicator{
+                                                        display: flex;
+                                            align-items: center;
+                                            justify-content: center;
+                                            column-gap: 0.4rem;
+                                            margin-bottom: 0.5rem;
+                                                      }
+                                                    </style>
+                                          <div class="put_sell_modal_atm_indicator">
+            
+                                            <label for="put_sell_modal_atm_counter" class="m-0">ATM:</label>
+                  
+                  
+                                            <div class="main_strangle_modal  d-flex m-0" id="put_sell_modal_atm_counter">
+                                              <button class="decrease_main" id="decrease_put_sell_modal_value"><i class="bx bx-minus"></i></button>
+                                              <input type="text" style="width: 100px;" class="main_modal_strike_input" id="put_sell_strike_input">
+                                              <button class="increase_main" id="increase_put_sell_modal_value"><i class="bx bx-plus"></i></button>
+                                            </div>
+                  
+                                            <div class="put_sell_modal_new_strike_price_malipulations">
+                                              <p class="malipulation_text_main_modal" id="manipulation_text_atm_put_sell">0</p>
+                                            </div>
+                  
+                                          </div>
+                
+                
+                
+                
+                                          <div class="main_counter d-flex gap-3 mb-3">
+                                            <div class="innerput_sell_modal_lot_size d-flex gap-2">
+                                              <p class="fs-6 lot_title">Qty:</p>
+                                              <div class="counter_put_sell_modal main_qty_counter d-flex justify-content-center gap-1">
+                                                <button class="btn minus_qty_btn" id="put_sell_modal_decrement">
+                                                  <i class="bx bx-minus"></i>
+                                                </button>
+                                                <input type="text" name="" value="1" class="main_qty_input" id="put_sell_modal_counter_input" min="1" disabled
+                                                  style="    width: 91px !important;" />
+                                                <button class="btn plus_qty_btn" id="put_sell_modal_increment">
+                                                  <i class="bx bx-plus"></i>
+                                                </button>
+                                              </div>
+                                            </div>
+                
+                                          </div>
+                
+                                          <div class="main_deploy_put_sell_modal_btn d-flex justify-content-center">
+                                            <button class="main_startegy_execute_btn" id="put_sell_modal_btn"
+                                              style="width: 124px !important;">SELL</button>
+                                          </div>
+                                        </div>
+                                      </div>
+                
+                
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+            
+
+
+
+
+                            <!-- /Sell  Call  -->
+
+
+                            <div class="main_call_sell" >
+
+                              <button class="straddle" id="call_sell">
+                
+                                <div class="main_strategy_img_title">
+                                  <div class="style__PresetStrategyCard-sc-1f57s5d-6 jyZMZN">
+                                   
+                                    
+                                                      
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="62" height="45" viewBox="0 0 62 45" class="sc-gsTCUz dFfFa-d jss619"><g fill="none" fill-rule="evenodd"><path stroke="var(--dividerColor)" stroke-linecap="square" d="M0.5 0L0.5 43.237" transform="translate(1 1)"></path><path stroke="var(--dividerColor)" stroke-dasharray="5 5" stroke-linecap="round" d="M0.462 23L60 23" transform="translate(1 1)"></path><g stroke-width="2"><path stroke="var(--profitColor)" d="M0 23L26.955 22.988 34.745 15.988" transform="translate(1 1) matrix(1 0 0 -1 1 39)"></path><path stroke="var(--lossColor)" d="M34.988 15.988L52.564 0" transform="translate(1 1) matrix(1 0 0 -1 1 39)"></path></g></g></svg>
+                                    
+                                    <div class="title"> Sell Call</div>
+                                  
+                                  </div>
+                
+                      
+                              </button>
+                
+                              <div class="sc-jxTFzB lmSamt">New</div>
+                
+                              </b>
+                
+                              <div class="" id="call_sell_modal">
+                                <div class="dismiss">
+                                  <i class="bx bx-plus dismiss_icon"></i>
+                                  <div class="triangle-up"></div>
+                                </div>
+                                <div class="modal_dialog">
+                                  <div class="modal_content">
+                                    <div class="modal_body" id="modal_body">
+                                      <div class="main_call_sell_inner">
+                                        <h5 class="text-center mb-3">Sell Call </h5>
+                
+                                        <div class="main_body_fields_call_sell">
+                                          <div class="main_strikePrice mb-3">
+                                            <div class="call_sell_lot_size">
+                                              <span id="put_call_sell_lot_size">1</span><span>x</span>
+                                            </div>
+                                            <div class="strategy_inputs">
+                                              <label for="strikePrice">Strike Price</label>
+                                              <select class="strike_price_input form-select" data-optionside="PE"
+                                                id="put_strikeSelect_call_sell"></select>
+                                            </div>
+                                            <p class="pe_ce"> PE</p>
+                                          </div>
+                
+     
+                
+                                          <div class="strategy_inputs mb-3">
+                                            <label for="expirydate">Expiry Date</label>
+                                            <select class="expiry_date_input form-select" id="expiryDate_call_sell"></select>
+                                          </div>
+                                          <div class="main_leg_config d-flex align-items-center">
+            
+                                            <label for="main_iron_fly" class="m-0"> Config:</label>
+                
+                                            <div class="main_leg_button_input d-flex">
+                                              <button class="decrease_main  main_leg_config_minus"><i class="bx bx-minus"></i></button>
+                                         
+                                            <input type="text" class="form-control " min="0" value="0">
+                                  
+                                            <button class="increase_main main_leg_config_plus"><i class="bx bx-plus"></i></button>
+                                            </div>
+                
+                
+                
+                
+                                          </div>
+                                                    <style>
+                                                      .call_sell_modal_atm_indicator{
+                                                        display: flex;
+                                            align-items: center;
+                                            justify-content: center;
+                                            column-gap: 0.4rem;
+                                            margin-bottom: 0.5rem;
+                                                      }
+                                                    </style>
+                                          <div class="call_sell_modal_atm_indicator">
+            
+                                            <label for="call_sell_modal_atm_counter" class="m-0">ATM:</label>
+                  
+                  
+                                            <div class="main_strangle_modal  d-flex m-0" id="call_sell_modal_atm_counter">
+                                              <button class="decrease_main" id="decrease_call_sell_modal_value"><i class="bx bx-minus"></i></button>
+                                              <input type="text" style="width: 100px;" class="main_modal_strike_input" id="call_sell_strike_input">
+                                              <button class="increase_main" id="increase_call_sell_modal_value"><i class="bx bx-plus"></i></button>
+                                            </div>
+                  
+                                            <div class="call_sell_modal_new_strike_price_malipulations">
+                                              <p class="malipulation_text_main_modal" id="manipulation_text_atm_call_sell">0</p>
+                                            </div>
+                  
+                                          </div>
+                
+                
+                
+                
+                                          <div class="main_counter d-flex gap-3 mb-3">
+                                            <div class="innercall_sell_modal_lot_size d-flex gap-2">
+                                              <p class="fs-6 lot_title">Qty:</p>
+                                              <div class="counter_call_sell_modal main_qty_counter d-flex justify-content-center gap-1">
+                                                <button class="btn minus_qty_btn" id="call_sell_modal_decrement">
+                                                  <i class="bx bx-minus"></i>
+                                                </button>
+                                                <input type="text" name="" value="1" class="main_qty_input" id="call_sell_modal_counter_input" min="1" disabled
+                                                  style="    width: 91px !important;" />
+                                                <button class="btn plus_qty_btn" id="call_sell_modal_increment">
+                                                  <i class="bx bx-plus"></i>
+                                                </button>
+                                              </div>
+                                            </div>
+                
+                                          </div>
+                
+                                          <div class="main_deploy_call_sell_modal_btn d-flex justify-content-center">
+                                            <button class="main_startegy_execute_btn" id="call_sell_modal_btn"
+                                              style="width: 124px !important;">SELL</button>
+                                          </div>
+                                        </div>
+                                      </div>
+                
+                
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+            
+
+
+
+
+
+
+
+
 
 
             <div class="main_long_straddle">
@@ -7867,6 +8337,492 @@ Option Strategy Builder
                 </div>
               </div>
             </div>
+
+
+
+
+
+ <!-- Range Forward -->
+
+     
+
+                  
+
+
+ <div class="main_range_forward" >
+
+  <button class="straddle" id="range_forward">
+
+    <div class="main_strategy_img_title">
+      <div class="style__PresetStrategyCard-sc-1f57s5d-6 jyZMZN">
+       
+        
+                          
+        
+        <svg width="62" height="45" viewBox="0 0 62 45" fill="none" xmlns="http://www.w3.org/2000/svg" class="sc-gsTCUz dFfFa-d jss619"><path d="M1.5 1V44.2366" stroke="var(--dividerColor)" stroke-linecap="square"></path><path d="M1.46154 24H61" stroke="var(--dividerColor)" stroke-linecap="round" stroke-dasharray="5 5"></path><path d="M2 31.9999L23 24" stroke="var(--lossColor)" stroke-width="2"></path><path d="M61 15L40.7146 22.7638H26.1304L23 24" stroke="var(--profitColor)" stroke-width="2"></path></svg>
+        
+        <div class="title"> Range Forward</div>
+      
+      </div>
+
+
+  </button>
+
+  <div class="sc-jxTFzB lmSamt">New</div>
+
+  </b>
+
+  <div class="" id="range_forward_modal">
+    <div class="dismiss">
+      <i class="bx bx-plus dismiss_icon"></i>
+      <div class="triangle-up"></div>
+    </div>
+    <div class="modal_dialog">
+      <div class="modal_content">
+        <div class="modal_body" id="modal_body">
+          <div class="main_range_forward_inner">
+            <h5 class="text-center mb-3">Range Forward</h5>
+
+            <div class="main_body_fields_range_forward">
+              <div class="main_strikePrice mb-3">
+                <div class="range_forward_lot_size">
+                  <span id="call_range_forward_lot_size">1</span><span>x</span>
+                </div>
+                <div class="strategy_inputs">
+                  <label for="strikePrice">Strike Price</label>
+                  <select class="strike_price_input form-select" data-optionside="CE"
+                    id="call_strikeSelect_range_forward"></select>
+                </div>
+                <p class="pe_ce"> CE</p>
+              </div>
+
+              <div class="main_strikePrice mb-3">
+                <div class="range_forward_lot_size">
+                  <span id="put_range_forward_lot_size">1</span><span>x</span>
+                </div>
+                <div class="strategy_inputs">
+                  <label for="strikePrice">Strike Price</label>
+                  <select class="strike_price_input form-select" data-optionside="PE"
+                    id="put_strikeSelect_range_forward"></select>
+                </div>
+                <p class="pe_ce"> PE</p>
+              </div>
+
+
+
+              <div class="strategy_inputs mb-3">
+                <label for="expirydate">Expiry Date</label>
+                <select class="expiry_date_input form-select" id="expiryDate_range_forward"></select>
+              </div>
+              <div class="main_leg_config d-flex align-items-center">
+
+                <label for="main_iron_fly" class="m-0"> Config:</label>
+
+                <div class="main_leg_button_input d-flex">
+                  <button class="decrease_main  main_leg_config_minus"><i class="bx bx-minus"></i></button>
+             
+                <input type="text" class="form-control " min="0" value="0">
+      
+                <button class="increase_main main_leg_config_plus"><i class="bx bx-plus"></i></button>
+                </div>
+
+
+
+
+              </div>
+                        <style>
+                          .range_forward_modal_atm_indicator{
+                            display: flex;
+                align-items: center;
+                justify-content: center;
+                column-gap: 0.4rem;
+                margin-bottom: 0.5rem;
+                          }
+                        </style>
+              <div class="range_forward_modal_atm_indicator">
+
+                <label for="range_forward_modal_atm_counter" class="m-0">ATM:</label>
+
+
+                <div class="main_strangle_modal  d-flex m-0" id="range_forward_modal_atm_counter">
+                  <button class="decrease_main" id="decrease_range_forward_modal_value"><i class="bx bx-minus"></i></button>
+                  <input type="text" style="width: 100px;" class="main_modal_strike_input" id="range_forward_strike_input">
+                  <button class="increase_main" id="increase_range_forward_modal_value"><i class="bx bx-plus"></i></button>
+                </div>
+
+                <div class="range_forward_modal_new_strike_price_malipulations">
+                  <p class="malipulation_text_main_modal" id="manipulation_text_atm_range_forward">0</p>
+                </div>
+
+              </div>
+
+
+
+
+              <div class="main_counter d-flex gap-3 mb-3">
+                <div class="innerrange_forward_modal_lot_size d-flex gap-2">
+                  <p class="fs-6 lot_title">Qty:</p>
+                  <div class="counter_range_forward_modal main_qty_counter d-flex justify-content-center gap-1">
+                    <button class="btn minus_qty_btn" id="range_forward_modal_decrement">
+                      <i class="bx bx-minus"></i>
+                    </button>
+                    <input type="text" name="" value="1" class="main_qty_input" id="range_forward_modal_counter_input" min="1" disabled
+                      style="    width: 91px !important;" />
+                    <button class="btn plus_qty_btn" id="range_forward_modal_increment">
+                      <i class="bx bx-plus"></i>
+                    </button>
+                  </div>
+                </div>
+
+              </div>
+
+              <div class="main_deploy_range_forward_modal_btn d-flex justify-content-center">
+                <button class="main_startegy_execute_btn" id="range_forward_modal_btn"
+                  style="width: 124px !important;">SELL</button>
+              </div>
+            </div>
+          </div>
+
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+ <!-- Risk Reversal -->
+
+     
+
+                  
+
+
+ <div class="main_risk_reversal" >
+
+  <button class="straddle" id="risk_reversal">
+
+    <div class="main_strategy_img_title">
+      <div class="style__PresetStrategyCard-sc-1f57s5d-6 jyZMZN">
+       
+        
+                          
+        
+        <svg width="62" height="45" viewBox="0 0 62 45" fill="none" xmlns="http://www.w3.org/2000/svg" class="sc-gsTCUz dFfFa-d jss619"><path d="M1.5 1V44.2366" stroke="var(--dividerColor)" stroke-linecap="square"></path><path d="M1.46154 24H61" stroke="var(--dividerColor)" stroke-linecap="round" stroke-dasharray="5 5"></path><path d="M60.0001 32L39.5058 25.4454H28.0024L23.5522 24" stroke="var(--lossColor)" stroke-width="2"></path><path d="M2 17L23.5521 24" stroke="var(--profitColor)" stroke-width="2"></path></svg>
+        <div class="title"> Risk Reversal</div>
+      
+      </div>
+
+
+  </button>
+
+  <div class="sc-jxTFzB lmSamt">New</div>
+
+  </b>
+
+  <div class="" id="risk_reversal_modal">
+    <div class="dismiss">
+      <i class="bx bx-plus dismiss_icon"></i>
+      <div class="triangle-up"></div>
+    </div>
+    <div class="modal_dialog">
+      <div class="modal_content">
+        <div class="modal_body" id="modal_body">
+          <div class="main_risk_reversal_inner">
+            <h5 class="text-center mb-3">Risk Reversal</h5>
+
+            <div class="main_body_fields_risk_reversal">
+              <div class="main_strikePrice mb-3">
+                <div class="risk_reversal_lot_size">
+                  <span id="call_risk_reversal_lot_size">1</span><span>x</span>
+                </div>
+                <div class="strategy_inputs">
+                  <label for="strikePrice">Strike Price</label>
+                  <select class="strike_price_input form-select" data-optionside="CE"
+                    id="call_strikeSelect_risk_reversal"></select>
+                </div>
+                <p class="pe_ce"> CE</p>
+              </div>
+
+              <div class="main_strikePrice mb-3">
+                <div class="risk_reversal_lot_size">
+                  <span id="put_risk_reversal_lot_size">1</span><span>x</span>
+                </div>
+                <div class="strategy_inputs">
+                  <label for="strikePrice">Strike Price</label>
+                  <select class="strike_price_input form-select" data-optionside="PE"
+                    id="put_strikeSelect_risk_reversal"></select>
+                </div>
+                <p class="pe_ce"> PE</p>
+              </div>
+
+
+
+              <div class="strategy_inputs mb-3">
+                <label for="expirydate">Expiry Date</label>
+                <select class="expiry_date_input form-select" id="expiryDate_risk_reversal"></select>
+              </div>
+              <div class="main_leg_config d-flex align-items-center">
+
+                <label for="main_iron_fly" class="m-0"> Config:</label>
+
+                <div class="main_leg_button_input d-flex">
+                  <button class="decrease_main  main_leg_config_minus"><i class="bx bx-minus"></i></button>
+             
+                <input type="text" class="form-control " min="0" value="0">
+      
+                <button class="increase_main main_leg_config_plus"><i class="bx bx-plus"></i></button>
+                </div>
+
+
+
+
+              </div>
+                        <style>
+                          .risk_reversal_modal_atm_indicator{
+                            display: flex;
+                align-items: center;
+                justify-content: center;
+                column-gap: 0.4rem;
+                margin-bottom: 0.5rem;
+                          }
+                        </style>
+              <div class="risk_reversal_modal_atm_indicator">
+
+                <label for="risk_reversal_modal_atm_counter" class="m-0">ATM:</label>
+
+
+                <div class="main_strangle_modal  d-flex m-0" id="risk_reversal_modal_atm_counter">
+                  <button class="decrease_main" id="decrease_risk_reversal_modal_value"><i class="bx bx-minus"></i></button>
+                  <input type="text" style="width: 100px;" class="main_modal_strike_input" id="risk_reversal_strike_input">
+                  <button class="increase_main" id="increase_risk_reversal_modal_value"><i class="bx bx-plus"></i></button>
+                </div>
+
+                <div class="risk_reversal_modal_new_strike_price_malipulations">
+                  <p class="malipulation_text_main_modal" id="manipulation_text_atm_risk_reversal">0</p>
+                </div>
+
+              </div>
+
+
+
+
+              <div class="main_counter d-flex gap-3 mb-3">
+                <div class="innerrisk_reversal_modal_lot_size d-flex gap-2">
+                  <p class="fs-6 lot_title">Qty:</p>
+                  <div class="counter_risk_reversal_modal main_qty_counter d-flex justify-content-center gap-1">
+                    <button class="btn minus_qty_btn" id="risk_reversal_modal_decrement">
+                      <i class="bx bx-minus"></i>
+                    </button>
+                    <input type="text" name="" value="1" class="main_qty_input" id="risk_reversal_modal_counter_input" min="1" disabled
+                      style="    width: 91px !important;" />
+                    <button class="btn plus_qty_btn" id="risk_reversal_modal_increment">
+                      <i class="bx bx-plus"></i>
+                    </button>
+                  </div>
+                </div>
+
+              </div>
+
+              <div class="main_deploy_risk_reversal_modal_btn d-flex justify-content-center">
+                <button class="main_startegy_execute_btn" id="risk_reversal_modal_btn"
+                  style="width: 124px !important;">SELL</button>
+              </div>
+            </div>
+          </div>
+
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            <!-- Long Strangle -->
+
+     
+
+                  
+
+
+                            <div class="main_long_strangle" >
+
+                              <button class="straddle" id="long_strangle">
+                
+                                <div class="main_strategy_img_title">
+                                  <div class="style__PresetStrategyCard-sc-1f57s5d-6 jyZMZN">
+                                   
+                                    
+                                                      
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="62" height="45" viewBox="0 0 62 45" class="sc-gsTCUz dFfFa-d jss619"><g fill="none" fill-rule="evenodd"><path stroke="var(--dividerColor)" stroke-linecap="square" d="M0.5 0L0.5 43.237" transform="translate(1 1)"></path><path stroke="var(--dividerColor)" stroke-dasharray="5 5" stroke-linecap="round" d="M0.462 23L60 23" transform="translate(1 1)"></path><g stroke-width="2"><path stroke="var(--profitColor)" d="M0 28.5L5.75 13" transform="translate(1 1) matrix(1 0 0 -1 1.918 36)"></path><path stroke="var(--profitColor)" d="M47.521 28.5L52.534 13" transform="translate(1 1) matrix(1 0 0 -1 1.918 36) matrix(-1 0 0 1 100.055 0)"></path><path stroke="var(--lossColor)" d="M5.75 13L10.325 0 43.61 0 47.521 13" transform="translate(1 1) matrix(1 0 0 -1 1.918 36)"></path></g></g></svg>
+                                    <div class="title"> Long Strangle</div>
+                                  
+                                  </div>
+                
+                      
+                              </button>
+                
+                              <div class="sc-jxTFzB lmSamt">New</div>
+                
+                              </b>
+                
+                              <div class="" id="long_strangle_modal">
+                                <div class="dismiss">
+                                  <i class="bx bx-plus dismiss_icon"></i>
+                                  <div class="triangle-up"></div>
+                                </div>
+                                <div class="modal_dialog">
+                                  <div class="modal_content">
+                                    <div class="modal_body" id="modal_body">
+                                      <div class="main_long_strangle_inner">
+                                        <h5 class="text-center mb-3">Long Strangle </h5>
+                
+                                        <div class="main_body_fields_long_strangle">
+                                          <div class="main_strikePrice mb-3">
+                                            <div class="long_strangle_lot_size">
+                                              <span id="call_long_strangle_lot_size">1</span><span>x</span>
+                                            </div>
+                                            <div class="strategy_inputs">
+                                              <label for="strikePrice">Strike Price</label>
+                                              <select class="strike_price_input form-select" data-optionside="CE"
+                                                id="call_strikeSelect_long_strangle"></select>
+                                            </div>
+                                            <p class="pe_ce"> CE</p>
+                                          </div>
+                
+                                          <div class="main_strikePrice mb-3">
+                                            <div class="long_strangle_lot_size">
+                                              <span id="put_long_strangle_lot_size">1</span><span>x</span>
+                                            </div>
+                                            <div class="strategy_inputs">
+                                              <label for="strikePrice">Strike Price</label>
+                                              <select class="strike_price_input form-select" data-optionside="PE"
+                                                id="put_strikeSelect_long_strangle"></select>
+                                            </div>
+                                            <p class="pe_ce"> PE</p>
+                                          </div>
+                
+     
+                
+                                          <div class="strategy_inputs mb-3">
+                                            <label for="expirydate">Expiry Date</label>
+                                            <select class="expiry_date_input form-select" id="expiryDate_long_strangle"></select>
+                                          </div>
+                                          <div class="main_leg_config d-flex align-items-center">
+            
+                                            <label for="main_iron_fly" class="m-0"> Config:</label>
+                
+                                            <div class="main_leg_button_input d-flex">
+                                              <button class="decrease_main  main_leg_config_minus"><i class="bx bx-minus"></i></button>
+                                         
+                                            <input type="text" class="form-control " min="0" value="0">
+                                  
+                                            <button class="increase_main main_leg_config_plus"><i class="bx bx-plus"></i></button>
+                                            </div>
+                
+                
+                
+                
+                                          </div>
+                                                    <style>
+                                                      .long_strangle_modal_atm_indicator{
+                                                        display: flex;
+                                            align-items: center;
+                                            justify-content: center;
+                                            column-gap: 0.4rem;
+                                            margin-bottom: 0.5rem;
+                                                      }
+                                                    </style>
+                                          <div class="long_strangle_modal_atm_indicator">
+            
+                                            <label for="long_strangle_modal_atm_counter" class="m-0">ATM:</label>
+                  
+                  
+                                            <div class="main_strangle_modal  d-flex m-0" id="long_strangle_modal_atm_counter">
+                                              <button class="decrease_main" id="decrease_long_strangle_modal_value"><i class="bx bx-minus"></i></button>
+                                              <input type="text" style="width: 100px;" class="main_modal_strike_input" id="long_strangle_strike_input">
+                                              <button class="increase_main" id="increase_long_strangle_modal_value"><i class="bx bx-plus"></i></button>
+                                            </div>
+                  
+                                            <div class="long_strangle_modal_new_strike_price_malipulations">
+                                              <p class="malipulation_text_main_modal" id="manipulation_text_atm_long_strangle">0</p>
+                                            </div>
+                  
+                                          </div>
+                
+                
+                
+                
+                                          <div class="main_counter d-flex gap-3 mb-3">
+                                            <div class="innerlong_strangle_modal_lot_size d-flex gap-2">
+                                              <p class="fs-6 lot_title">Qty:</p>
+                                              <div class="counter_long_strangle_modal main_qty_counter d-flex justify-content-center gap-1">
+                                                <button class="btn minus_qty_btn" id="long_strangle_modal_decrement">
+                                                  <i class="bx bx-minus"></i>
+                                                </button>
+                                                <input type="text" name="" value="1" class="main_qty_input" id="long_strangle_modal_counter_input" min="1" disabled
+                                                  style="    width: 91px !important;" />
+                                                <button class="btn plus_qty_btn" id="long_strangle_modal_increment">
+                                                  <i class="bx bx-plus"></i>
+                                                </button>
+                                              </div>
+                                            </div>
+                
+                                          </div>
+                
+                                          <div class="main_deploy_long_strangle_modal_btn d-flex justify-content-center">
+                                            <button class="main_startegy_execute_btn" id="long_strangle_modal_btn"
+                                              style="width: 124px !important;">SELL</button>
+                                          </div>
+                                        </div>
+                                      </div>
+                
+                
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+            
+
+
+
+
+
+
+
 
             <div class="main-stranggle">
               <div class="straddle" id="strangle">
@@ -11130,25 +12086,25 @@ Option Strategy Builder
           case "popular":
             $mainStrategies.show();
             $butterflyStrategies.show();
-            $(".main_long_synthetic_future,.main_short_synthetic_future,.main_put_butterfly,.main_strap,.main_strip,.main_call_butterfly,.main_reverse_jaze_lizard,.main_call_ratio_back_spread,.main_bull_put_spread,.main_bull_call_spread,.main_put_ratio_back_spread,.main_bear_put_spread,.main-spread,.main_put_ratio_spread,.main_call_ratio_spread").hide()
+            $(".main_long_synthetic_future,.main_short_synthetic_future,.main_put_butterfly,.main_strap,.main_strip,.main_call_butterfly,.main_reverse_jaze_lizard,.main_call_ratio_back_spread,.main_bull_put_spread,.main_bull_call_spread,.main_put_ratio_back_spread,.main_bear_put_spread,.main-spread,.main_put_ratio_spread,.main_call_ratio_spread,.main_put_sell,.main_put_buy,.main_call_sell,.main_range_forward,.main_risk_reversal,.main_long_strangle").hide()
             break;
           case "bull":
             $mainStrategies.hide();
             $butterflyStrategies.hide();
-            $(".main-spread,.main_short_synthetic_future, .main-put-butterfly,.main_put_butterfly,.main_strap,.main_strip,.main_call_butterfly,.main_reverse_jaze_lizard,.main_put_ratio_back_spread,.main_bear_put_spread,.main-spread,.main_put_ratio_spread,.main_call_ratio_spread").hide();
-            $(".main-jaze_lizard,.main_long_synthetic_future, .main-call-butterfly,.main_buy_call,.main_call_ratio_back_spread,.main_bull_put_spread,.main_bull_call_spread").show();
+            $(".main-spread,.main_short_synthetic_future, .main-put-butterfly,.main_put_butterfly,.main_strap,.main_strip,.main_call_butterfly,.main_reverse_jaze_lizard,.main_put_ratio_back_spread,.main_bear_put_spread,.main-spread,.main_put_ratio_spread,.main_call_ratio_spread,.main_put_buy,.main_call_sell,main_risk_reversal,.main_long_strangle").hide();
+            $(".main-jaze_lizard,.main_long_synthetic_future, .main-call-butterfly,.main_buy_call,.main_call_ratio_back_spread,.main_bull_put_spread,.main_bull_call_spread,.main_put_sell,.main_range_forward").show();
             break;
           case "bear":
             $mainStrategies.hide();
             $butterflyStrategies.hide();
-            $(".main_buy_call,.main_long_synthetic_future,.main_put_butterfly,.main_strap,.main_strip,.main_call_butterfly,.main_reverse_jaze_lizard,.main_call_ratio_back_spread,.main_bull_put_spread,.main_bull_call_spread,.main_put_ratio_spread,.main_call_ratio_spread").hide()
-            $(".main-spread,.main_short_synthetic_future, .main-put-butterfly,.main_put_ratio_back_spread,.main_bear_put_spread,.main-spread").show();
+            $(".main_buy_call,.main_long_synthetic_future,.main_put_butterfly,.main_strap,.main_strip,.main_call_butterfly,.main_reverse_jaze_lizard,.main_call_ratio_back_spread,.main_bull_put_spread,.main_bull_call_spread,.main_put_ratio_spread,.main_call_ratio_spread,.main_put_sell,.main_range_forward,.main_long_strangle").hide()
+            $(".main-spread,.main_short_synthetic_future, .main-put-butterfly,.main_put_ratio_back_spread,.main_bear_put_spread,.main-spread,.main_put_buy,.main_call_sell,.main_risk_reversal").show();
             break;
           case "neutral":
             $mainStrategies.hide();
             $butterflyStrategies.hide();
-            $(".main_buy_call,.main_long_synthetic_future,.main_short_synthetic_future,.main_call_ratio_back_spread,.main_bull_put_spread,.main_bull_call_spread,.main_put_ratio_back_spread,.main_bear_put_spread,.main-spread").hide()
-            $(".main_straddle,.main_long_straddle, .main-stranggle, .main-ironfly, .main-ironCondor, .main_strap,.main_strip, .main-double-iron-fly, .main-double-candor, .custom-strategy,.main_put_butterfly,.main_call_butterfly,.main_reverse_jaze_lizard,.main_put_ratio_spread,.main_call_ratio_spread").show();
+            $(".main_buy_call,.main_long_synthetic_future,.main_short_synthetic_future,.main_call_ratio_back_spread,.main_bull_put_spread,.main_bull_call_spread,.main_put_ratio_back_spread,.main_bear_put_spread,.main-spread,.main_put_sell,.main_put_buy,.main_call_sell,.main_range_forward,.main_risk_reversal").hide()
+            $(".main_straddle,.main_long_straddle, .main-stranggle, .main-ironfly, .main-ironCondor, .main_strap,.main_strip, .main-double-iron-fly, .main-double-candor, .custom-strategy,.main_put_butterfly,.main_call_butterfly,.main_reverse_jaze_lizard,.main_put_ratio_spread,.main_call_ratio_spread,.main_long_strangle").show();
             break;
           case "hedge":
             $mainStrategies.hide();
@@ -17570,9 +18526,7 @@ Option Strategy Builder
     function strap_strategy() {
       $("#strap_modal").hide();
     }
-    function reverse_jaze_lizard_strategy() {
-      $("#reverse_jaze_lizard_modal").hide();
-    }
+
     function bear_put_spread_strategy() {
       $("#bear_put_spread_modal").hide();
     }
@@ -17594,9 +18548,102 @@ Option Strategy Builder
     function call_ratio_back_spread_strategy() {
       $("#call_ratio_back_spread_modal").hide();
     }
+    function put_sell_strategy() {
+      $("#put_sell_modal").hide();
+    }
+    function put_buy_strategy() {
+      $("#put_buy_modal").hide();
+    }
+    function call_sell_strategy() {
+      $("#call_sell_modal").hide();
+    }
+
+    function long_strangle_strategy() {
+      $("#long_strangle_modal").hide();
+    }
+    function range_forward_strategy() {
+      $("#range_forward_modal").hide();
+    }
+    function risk_reversal_strategy() {
+      $("#risk_reversal_modal").hide();
+    }
+
+    function reverse_jaze_lizard_strategy() {
+      $("#reverse_jaze_lizard_modal").hide();
+    }
 
 
+    // Click event on the document body
+    $(document).on("click", function (e) {
+      // Check which modal to hide based on the click target
+      if (
+        !$(e.target).closest("#reverse_jaze_lizard_modal").length &&
+        !$(e.target).is("#reverse_jaze_lizard")
+      ) {
+        reverse_jaze_lizard_strategy();
+      }
+    });
+    // Click event on the document body
+    $(document).on("click", function (e) {
+      // Check which modal to hide based on the click target
+      if (
+        !$(e.target).closest("#risk_reversal_modal").length &&
+        !$(e.target).is("#risk_reversal")
+      ) {
+        risk_reversal_strategy();
+      }
+    });
+    // Click event on the document body
+    $(document).on("click", function (e) {
+      // Check which modal to hide based on the click target
+      if (
+        !$(e.target).closest("#range_forward_modal").length &&
+        !$(e.target).is("#range_forward")
+      ) {
+        range_forward_strategy();
+      }
+    });
 
+    // Click event on the document body
+    $(document).on("click", function (e) {
+      // Check which modal to hide based on the click target
+      if (
+        !$(e.target).closest("#long_strangle_modal").length &&
+        !$(e.target).is("#long_strangle")
+      ) {
+        long_strangle_strategy();
+      }
+    });
+    // Click event on the document body
+    $(document).on("click", function (e) {
+      // Check which modal to hide based on the click target
+      if (
+        !$(e.target).closest("#call_sell_modal").length &&
+        !$(e.target).is("#call_sell")
+      ) {
+        call_sell_strategy();
+      }
+    });
+    // Click event on the document body
+    $(document).on("click", function (e) {
+      // Check which modal to hide based on the click target
+      if (
+        !$(e.target).closest("#put_buy_modal").length &&
+        !$(e.target).is("#put_buy")
+      ) {
+        put_buy_strategy();
+      }
+    });
+    // Click event on the document body
+    $(document).on("click", function (e) {
+      // Check which modal to hide based on the click target
+      if (
+        !$(e.target).closest("#put_sell_modal").length &&
+        !$(e.target).is("#put_sell")
+      ) {
+        put_sell_strategy();
+      }
+    });
     // Click event on the document body
     $(document).on("click", function (e) {
       // Check which modal to hide based on the click target
@@ -17934,6 +18981,12 @@ Option Strategy Builder
     });
 
     $(".dismiss_icon").click(function () {
+      $("#risk_reversal_modal").hide();
+      $("#range_forward_modal").hide();
+      $("#long_strangle_modal").hide();
+      $("#put_buy_modal").hide();
+      $("#call_sell_modal").hide();
+      $("#put_sell_modal").hide();
       $("#call_ratio_back_spread_modal").hide();
       $("#put_ratio_back_spread_modal").hide();
       $("#put_ratio_spread_modal").hide();
@@ -18432,6 +19485,84 @@ $("#strap_modal_decrement").click(function () {
       }
     });
 
+    //Put_sell counter
+    var counterValue_sellPut = 1;
+
+    // Function to update the input field with the current value
+    function updateCounterInput_sellPut() {
+      $("#put_sell_modal_counter_input").val(counterValue_sellPut);
+      $("#put_put_sell_lot_size").text(counterValue_sellPut)
+    }
+
+    // Initialize the input field
+    updateCounterInput_sellPut();
+
+    // Increment button click handler
+    $("#put_sell_modal_increment").click(function () {
+      counterValue_sellPut++;
+      updateCounterInput_sellPut();
+    });
+
+    // Decrement button click handler
+    $("#put_sell_modal_decrement").click(function () {
+      if (counterValue_sellPut > 1) {
+        counterValue_sellPut--;
+        updateCounterInput_sellPut();
+      }
+    });
+
+    //Put_buy counter
+    var counterValue_buyPut = 1;
+
+    // Function to update the input field with the current value
+    function updateCounterInput_buyPut() {
+      $("#put_buy_modal_counter_input").val(counterValue_buyPut);
+      $("#put_put_buy_lot_size").text(counterValue_buyPut)
+    }
+
+    // Initialize the input field
+    updateCounterInput_buyPut();
+
+    // Increment button click handler
+    $("#put_buy_modal_increment").click(function () {
+      counterValue_buyPut++;
+      updateCounterInput_buyPut();
+    });
+
+    // Decrement button click handler
+    $("#put_buy_modal_decrement").click(function () {
+      if (counterValue_buyPut > 1) {
+        counterValue_buyPut--;
+        updateCounterInput_buyPut();
+      }
+    });
+
+
+    //call_sell counter
+    var counterValue_callSell = 1;
+
+    // Function to update the input field with the current value
+    function updateCounterInput_callSell() {
+      $("#call_sell_modal_counter_input").val(counterValue_callSell);
+      $("#put_call_sell_lot_size").text(counterValue_callSell)
+    }
+
+    // Initialize the input field
+    updateCounterInput_callSell();
+
+    // Increment button click handler
+    $("#call_sell_modal_increment").click(function () {
+      counterValue_callSell++;
+      updateCounterInput_callSell();
+    });
+
+    // Decrement button click handler
+    $("#call_sell_modal_decrement").click(function () {
+      if (counterValue_callSell > 1) {
+        counterValue_callSell--;
+        updateCounterInput_callSell();
+      }
+    });
 
 
     // -----Strangle Counter----
@@ -18464,6 +19595,99 @@ $("#strap_modal_decrement").click(function () {
 
     // -----End Strangle Counter----
 
+    // ----- Long Strangle Counter----
+
+    var counterValue_long_strangle = 1;
+
+    // Function to update the input field with the current value
+    function updateCounterInput_long_strangle() {
+      $("#long_strangle_modal_counter_input").val(counterValue_long_strangle);
+      $("#call_long_strangle_lot_size").text(counterValue_long_strangle);
+      $("#put_long_strangle_lot_size").text(counterValue_long_strangle);
+    }
+
+    // Initialize the input field
+    updateCounterInput_long_strangle();
+
+    // Increment button click handler
+    $("#long_strangle_modal_increment").click(function () {
+      counterValue_long_strangle++;
+      updateCounterInput_long_strangle();
+    });
+
+    // Decrement button click handler
+    $("#long_strangle_modal_decrement").click(function () {
+      if (counterValue_long_strangle > 1) {
+        counterValue_long_strangle--;
+        updateCounterInput_long_strangle();
+      }
+    });
+
+    // -----End Long Strangle Counter----
+
+
+
+
+        // ----- Range Forward Counter----
+
+        var counterValue_rangeForward = 1;
+
+// Function to update the input field with the current value
+function updateCounterInput_rangeForward() {
+  $("#range_forward_modal_counter_input").val(counterValue_rangeForward);
+  $("#call_range_forward_lot_size").text(counterValue_rangeForward);
+  $("#put_range_forward_lot_size").text(counterValue_rangeForward);
+}
+
+// Initialize the input field
+updateCounterInput_rangeForward();
+
+// Increment button click handler
+$("#range_forward_modal_increment").click(function () {
+  counterValue_rangeForward++;
+  updateCounterInput_rangeForward();
+});
+
+// Decrement button click handler
+$("#range_forward_modal_decrement").click(function () {
+  if (counterValue_rangeForward > 1) {
+    counterValue_rangeForward--;
+    updateCounterInput_rangeForward();
+  }
+});
+
+// -----End Range Forward Counter----
+
+
+        // ----- Risk Reversal Counter----
+
+        var counterValue_risk_reversal = 1;
+
+// Function to update the input field with the current value
+function updateCounterInput_risk_reversal() {
+  $("#risk_reversal_modal_counter_input").val(counterValue_risk_reversal);
+  $("#call_risk_reversal_lot_size").text(counterValue_risk_reversal);
+  $("#put_risk_reversal_lot_size").text(counterValue_risk_reversal);
+}
+
+// Initialize the input field
+updateCounterInput_risk_reversal();
+
+// Increment button click handler
+$("#risk_reversal_modal_increment").click(function () {
+  counterValue_risk_reversal++;
+  updateCounterInput_risk_reversal();
+});
+
+// Decrement button click handler
+$("#risk_reversal_modal_decrement").click(function () {
+  if (counterValue_risk_reversal > 1) {
+    counterValue_risk_reversal--;
+    updateCounterInput_risk_reversal();
+  }
+});
+
+// -----End Risk Reversal Counter----
 
         //----------Bull Call Spread Counter-------------
 
@@ -21106,24 +22330,20 @@ if (plusButtonClicks < strategycounterValue) {
                 // Log the value of the current option
                 // //////console.log($(this).val());
               });
-              $("#strip").removeClass("option_strategies_active");
-                $("#strap").removeClass("option_strategies_active");
-              $("#call_iron_fly").removeClass("option_strategies_active");
-              $("#put_iron_fly").removeClass("option_strategies_active");
-              $("#short_synthetic_future").removeClass("option_strategies_active");
-              $("#long_straddle").removeClass("option_strategies_active");
-              $("#buy_call").removeClass("option_strategies_active");
-              $("#straddle").addClass("option_strategies_active");
-              $("#strangle").removeClass("option_strategies_active");
-              $("#iron_fly").removeClass("option_strategies_active");
-              $("#spread").removeClass("option_strategies_active");
-              $("#iron_condor").removeClass("option_strategies_active");
-              $("#jaze_lizard").removeClass("option_strategies_active");
-              $("#double_iron_fly").removeClass("option_strategies_active");
-              $("#double_iron_condor").removeClass("option_strategies_active");
-              $("#call_butter_fly").removeClass("option_strategies_active");
+// Remove the option_strategies_active class from all elements
+$(".straddle").removeClass("option_strategies_active");
+ // Find the closest ancestor with the class .modal_body
+ var closestParent = $(this).closest('.modal_body');
+    
+    // Find the closest parent with the class .straddle
+    var closestDiv_main = closestParent.parents().filter(function() {
+        return $(this).find('.straddle').length > 0;
+    }).first();
+    
+    console.log("closestDiv_main", closestDiv_main);
 
-              $("#put_butter_fly").removeClass("option_strategies_active");
+    // Add the class .option_strategies_active to the parent div
+    closestDiv_main.find(".straddle").addClass("option_strategies_active");
 
 
               $(".data-display-table").empty();
@@ -21224,26 +22444,20 @@ if (plusButtonClicks < strategycounterValue) {
 
 
               $(document).off("click", "#strap_modal_btn").on("click", "#strap_modal_btn", function () {
-                $("#call_iron_fly").removeClass("option_strategies_active");
-                $("#put_iron_fly").removeClass("option_strategies_active");
-                $("#long_straddle").removeClass("option_strategies_active");
-                $("#strip").removeClass("option_strategies_active");
-                $("#strap").addClass("option_strategies_active");
-                $("#short_synthetic_future").removeClass("option_strategies_active");
-                $("#long_synthetic_future").removeClass("option_strategies_active");
-                $("#long_straddle").removeClass("option_strategies_active");
-                $("#buy_call").removeClass("option_strategies_active");
-                $("#straddle").removeClass("option_strategies_active");
-                $("#strangle").removeClass("option_strategies_active");
-                $("#iron_fly").removeClass("option_strategies_active");
-                $("#spread").removeClass("option_strategies_active");
-                $("#iron_condor").removeClass("option_strategies_active");
-                $("#jaze_lizard").removeClass("option_strategies_active");
-                $("#double_iron_fly").removeClass("option_strategies_active");
-                $("#double_iron_condor").removeClass("option_strategies_active");
-                $("#call_butter_fly").removeClass("option_strategies_active");
+// Remove the option_strategies_active class from all elements
+$(".straddle").removeClass("option_strategies_active");
+ // Find the closest ancestor with the class .modal_body
+ var closestParent = $(this).closest('.modal_body');
+    
+    // Find the closest parent with the class .straddle
+    var closestDiv_main = closestParent.parents().filter(function() {
+        return $(this).find('.straddle').length > 0;
+    }).first();
+    
+    console.log("closestDiv_main", closestDiv_main);
 
-                $("#put_butter_fly").removeClass("option_strategies_active");
+    // Add the class .option_strategies_active to the parent div
+    closestDiv_main.find(".straddle").addClass("option_strategies_active");
 
                 $(".data-display-table").empty();
                 $("#table-PL").empty();
@@ -21407,25 +22621,20 @@ if (plusButtonClicks < strategycounterValue) {
 
               $(document).off("click", "#strip_modal_btn").on("click", "#strip_modal_btn", function () {
                 $("#call_iron_fly").removeClass("option_strategies_active");
-                $("#put_iron_fly").removeClass("option_strategies_active");
-                $("#long_straddle").removeClass("option_strategies_active");
-                $("#strip").addClass("option_strategies_active");
-                $("#strap").removeClass("option_strategies_active");
-                $("#short_synthetic_future").removeClass("option_strategies_active");
-                $("#long_synthetic_future").removeClass("option_strategies_active");
-                $("#long_straddle").removeClass("option_strategies_active");
-                $("#buy_call").removeClass("option_strategies_active");
-                $("#straddle").removeClass("option_strategies_active");
-                $("#strangle").removeClass("option_strategies_active");
-                $("#iron_fly").removeClass("option_strategies_active");
-                $("#spread").removeClass("option_strategies_active");
-                $("#iron_condor").removeClass("option_strategies_active");
-                $("#jaze_lizard").removeClass("option_strategies_active");
-                $("#double_iron_fly").removeClass("option_strategies_active");
-                $("#double_iron_condor").removeClass("option_strategies_active");
-                $("#call_butter_fly").removeClass("option_strategies_active");
+// Remove the option_strategies_active class from all elements
+$(".straddle").removeClass("option_strategies_active");
+ // Find the closest ancestor with the class .modal_body
+ var closestParent = $(this).closest('.modal_body');
+    
+    // Find the closest parent with the class .straddle
+    var closestDiv_main = closestParent.parents().filter(function() {
+        return $(this).find('.straddle').length > 0;
+    }).first();
+    
+    console.log("closestDiv_main", closestDiv_main);
 
-                $("#put_butter_fly").removeClass("option_strategies_active");
+    // Add the class .option_strategies_active to the parent div
+    closestDiv_main.find(".straddle").addClass("option_strategies_active");
 
                 $(".data-display-table").empty();
                 $("#table-PL").empty();
@@ -21587,26 +22796,20 @@ if (plusButtonClicks < strategycounterValue) {
 
 
               $(document).off("click", "#short_synthetic_modal_btn").on("click", "#short_synthetic_modal_btn", function () {
-                $("#strip").removeClass("option_strategies_active");
-                $("#strap").removeClass("option_strategies_active");
-                $("#call_iron_fly").removeClass("option_strategies_active");
-                $("#put_iron_fly").removeClass("option_strategies_active");
-                $("#long_straddle").removeClass("option_strategies_active");
-                $("#short_synthetic_future").addClass("option_strategies_active");
-                $("#long_synthetic_future").removeClass("option_strategies_active");
-                $("#long_straddle").removeClass("option_strategies_active");
-                $("#buy_call").removeClass("option_strategies_active");
-                $("#straddle").removeClass("option_strategies_active");
-                $("#strangle").removeClass("option_strategies_active");
-                $("#iron_fly").removeClass("option_strategies_active");
-                $("#spread").removeClass("option_strategies_active");
-                $("#iron_condor").removeClass("option_strategies_active");
-                $("#jaze_lizard").removeClass("option_strategies_active");
-                $("#double_iron_fly").removeClass("option_strategies_active");
-                $("#double_iron_condor").removeClass("option_strategies_active");
-                $("#call_butter_fly").removeClass("option_strategies_active");
+// Remove the option_strategies_active class from all elements
+$(".straddle").removeClass("option_strategies_active");
+ // Find the closest ancestor with the class .modal_body
+ var closestParent = $(this).closest('.modal_body');
+    
+    // Find the closest parent with the class .straddle
+    var closestDiv_main = closestParent.parents().filter(function() {
+        return $(this).find('.straddle').length > 0;
+    }).first();
+    
+    console.log("closestDiv_main", closestDiv_main);
 
-                $("#put_butter_fly").removeClass("option_strategies_active");
+    // Add the class .option_strategies_active to the parent div
+    closestDiv_main.find(".straddle").addClass("option_strategies_active");
 
                 $(".data-display-table").empty();
                 $("#table-PL").empty();
@@ -21748,26 +22951,20 @@ if (plusButtonClicks < strategycounterValue) {
 
 
               $(document).off("click", "#long_synthetic_modal_btn").on("click", "#long_synthetic_modal_btn", function () {
-                $("#strip").removeClass("option_strategies_active");
-                $("#strap").removeClass("option_strategies_active");
-                $("#put_iron_fly").removeClass("option_strategies_active");
-                $("#long_straddle").removeClass("option_strategies_active");
-                $("#call_iron_fly").removeClass("option_strategies_active");
-                $("#short_synthetic_future").removeClass("option_strategies_active");
-                $("#long_synthetic_future").addClass("option_strategies_active");
-                $("#long_straddle").removeClass("option_strategies_active");
-                $("#buy_call").removeClass("option_strategies_active");
-                $("#straddle").removeClass("option_strategies_active");
-                $("#strangle").removeClass("option_strategies_active");
-                $("#iron_fly").removeClass("option_strategies_active");
-                $("#spread").removeClass("option_strategies_active");
-                $("#iron_condor").removeClass("option_strategies_active");
-                $("#jaze_lizard").removeClass("option_strategies_active");
-                $("#double_iron_fly").removeClass("option_strategies_active");
-                $("#double_iron_condor").removeClass("option_strategies_active");
-                $("#call_butter_fly").removeClass("option_strategies_active");
+// Remove the option_strategies_active class from all elements
+$(".straddle").removeClass("option_strategies_active");
+ // Find the closest ancestor with the class .modal_body
+ var closestParent = $(this).closest('.modal_body');
+    
+    // Find the closest parent with the class .straddle
+    var closestDiv_main = closestParent.parents().filter(function() {
+        return $(this).find('.straddle').length > 0;
+    }).first();
+    
+    console.log("closestDiv_main", closestDiv_main);
 
-                $("#put_butter_fly").removeClass("option_strategies_active");
+    // Add the class .option_strategies_active to the parent div
+    closestDiv_main.find(".straddle").addClass("option_strategies_active");
 
                 $(".data-display-table").empty();
                 $("#table-PL").empty();
@@ -21894,25 +23091,20 @@ if (plusButtonClicks < strategycounterValue) {
                 // Trigger a click event on the selected option
               });
               $(document).off("click", "#long_straddle_btn").on("click", "#long_straddle_btn", function () {
-                $("#strip").removeClass("option_strategies_active");
-                $("#strap").removeClass("option_strategies_active");
-                $("#call_iron_fly").removeClass("option_strategies_active");
-                $("#put_iron_fly").removeClass("option_strategies_active");
-                $("#short_synthetic_future").removeClass("option_strategies_active");
-                $("#long_synthetic_future").removeClass("option_strategies_active");
-                $("#long_straddle").addClass("option_strategies_active");
-                $("#buy_call").removeClass("option_strategies_active");
-                $("#straddle").removeClass("option_strategies_active");
-                $("#strangle").removeClass("option_strategies_active");
-                $("#iron_fly").removeClass("option_strategies_active");
-                $("#spread").removeClass("option_strategies_active");
-                $("#iron_condor").removeClass("option_strategies_active");
-                $("#jaze_lizard").removeClass("option_strategies_active");
-                $("#double_iron_fly").removeClass("option_strategies_active");
-                $("#double_iron_condor").removeClass("option_strategies_active");
-                $("#call_butter_fly").removeClass("option_strategies_active");
+// Remove the option_strategies_active class from all elements
+$(".straddle").removeClass("option_strategies_active");
+ // Find the closest ancestor with the class .modal_body
+ var closestParent = $(this).closest('.modal_body');
+    
+    // Find the closest parent with the class .straddle
+    var closestDiv_main = closestParent.parents().filter(function() {
+        return $(this).find('.straddle').length > 0;
+    }).first();
+    
+    console.log("closestDiv_main", closestDiv_main);
 
-                $("#put_butter_fly").removeClass("option_strategies_active");
+    // Add the class .option_strategies_active to the parent div
+    closestDiv_main.find(".straddle").addClass("option_strategies_active");
 
                 $(".data-display-table").empty();
                 $("#table-PL").empty();
@@ -21986,25 +23178,20 @@ if (plusButtonClicks < strategycounterValue) {
 
 
               $(document).off("click", "#Buy_call").on("click", "#Buy_call", function () {
-                $("#strip").removeClass("option_strategies_active");
-                $("#strap").removeClass("option_strategies_active");
-                $("#call_iron_fly").removeClass("option_strategies_active");
-                $("#put_iron_fly").removeClass("option_strategies_active");
-                $("#short_synthetic_future").removeClass("option_strategies_active");
-                $("#long_synthetic_future").removeClass("option_strategies_active");
-                $("#long_straddle").removeClass("option_strategies_active");
-                $("#buy_call").addClass("option_strategies_active");
-                $("#straddle").removeClass("option_strategies_active");
-                $("#strangle").removeClass("option_strategies_active");
-                $("#iron_fly").removeClass("option_strategies_active");
-                $("#spread").removeClass("option_strategies_active");
-                $("#iron_condor").removeClass("option_strategies_active");
-                $("#jaze_lizard").removeClass("option_strategies_active");
-                $("#double_iron_fly").removeClass("option_strategies_active");
-                $("#double_iron_condor").removeClass("option_strategies_active");
-                $("#call_butter_fly").removeClass("option_strategies_active");
+// Remove the option_strategies_active class from all elements
+$(".straddle").removeClass("option_strategies_active");
+ // Find the closest ancestor with the class .modal_body
+ var closestParent = $(this).closest('.modal_body');
+    
+    // Find the closest parent with the class .straddle
+    var closestDiv_main = closestParent.parents().filter(function() {
+        return $(this).find('.straddle').length > 0;
+    }).first();
+    
+    console.log("closestDiv_main", closestDiv_main);
 
-                $("#put_butter_fly").removeClass("option_strategies_active");
+    // Add the class .option_strategies_active to the parent div
+    closestDiv_main.find(".straddle").addClass("option_strategies_active");
 
                 $(".data-display-table").empty();
                 $("#table-PL").empty();
@@ -22050,8 +23237,283 @@ if (plusButtonClicks < strategycounterValue) {
 
             }
 
+            else if (filter_arg_strategy === "put_sell") {
 
-            else if (filter_arg_strategy === "strangle") {
+$("#put_sell_modal").show()
+
+var closest_strike_price = $("#closest_strike_price").text();
+$("#put_strikeSelect_put_sell")
+  .find("option")
+  .each(function () {
+    var optionValue = parseFloat($(this).val());
+
+    if (optionValue === parseFloat(closest_strike_price)) {
+      // //////console.log(optionValue, closest_strike_price);
+      $(this).prop("selected", true);
+    }
+  });
+
+var expiryDate_put_sell = $("#expiryDate_put_sell");
+var optionExpiryDropdown = $("#optionExpiryDropdown");
+
+expiryDate_put_sell.on("change", function () {
+  var selectedValue_straddle = $(this).val();
+  // //////console.log(selectedValue_straddle);
+
+  // Set the value of optionExpiryDropdown to match the selected value
+  optionExpiryDropdown.val(selectedValue_straddle).change();
+
+  // Trigger a click event on the selected option
+});
+
+
+
+$(document).off("click", "#put_sell_modal_btn").on("click", "#put_sell_modal_btn", function () {
+// Remove the option_strategies_active class from all elements
+$(".straddle").removeClass("option_strategies_active");
+ // Find the closest ancestor with the class .modal_body
+ var closestParent = $(this).closest('.modal_body');
+    
+    // Find the closest parent with the class .straddle
+    var closestDiv_main = closestParent.parents().filter(function() {
+        return $(this).find('.straddle').length > 0;
+    }).first();
+    
+    console.log("closestDiv_main", closestDiv_main);
+
+    // Add the class .option_strategies_active to the parent div
+    closestDiv_main.find(".straddle").addClass("option_strategies_active");
+
+  $(".data-display-table").empty();
+  $("#table-PL").empty();
+  $("#resultTable tbody").empty();
+  $(".inner_p_l_greeks").show();
+  $(".main_position").empty();
+
+  var put_call_strikeSelect = $(
+    "#put_strikeSelect_put_sell"
+  ).val();
+
+
+  optionChainTable.find(".strike_price").each(function () {
+    var rowStrikePrice = parseFloat($(this).text());
+    if (
+      rowStrikePrice === parseFloat(put_call_strikeSelect)
+    ) {
+      $(this)
+        .closest(".call_put_tr")
+        .find("#Auto_puts_short_click")
+        .data("HI1", "HI1There")
+        .click();
+    }
+  });
+
+
+
+  // Click on #calculate after a longer delay
+  var counterInputValue = $("#put_sell_modal_counter_input").val();
+  $(".option_lot_size_input").text(counterInputValue);
+  localStorage.setItem("strategy_builder", "sell_puts");
+  calculate_data();
+  $("#put_sell_modal").hide();
+  Table_chart_pyoff()
+  // margin_calculations()
+  localStorage.removeItem('main_row_instances');
+  $("#buy_call_strike_input").val(parseInt($("#closest_strike_price").text()));
+  $("#manipulation_text_atm_buy_call").text(0);
+  lotSize_buyCall = 0
+
+})
+
+
+}
+
+
+            else if (filter_arg_strategy === "call_sell") {
+
+$("#call_sell_modal").show()
+
+var closest_strike_price = $("#closest_strike_price").text();
+$("#put_strikeSelect_call_sell")
+  .find("option")
+  .each(function () {
+    var optionValue = parseFloat($(this).val());
+
+    if (optionValue === parseFloat(closest_strike_price)) {
+      // //////console.log(optionValue, closest_strike_price);
+      $(this).prop("selected", true);
+    }
+  });
+
+var expiryDate_call_sell = $("#expiryDate_call_sell");
+var optionExpiryDropdown = $("#optionExpiryDropdown");
+
+expiryDate_call_sell.on("change", function () {
+  var selectedValue_straddle = $(this).val();
+  // //////console.log(selectedValue_straddle);
+
+  // Set the value of optionExpiryDropdown to match the selected value
+  optionExpiryDropdown.val(selectedValue_straddle).change();
+
+  // Trigger a click event on the selected option
+});
+
+
+
+$(document).off("click", "#call_sell_modal_btn").on("click", "#call_sell_modal_btn", function () {
+// Remove the option_strategies_active class from all elements
+$(".straddle").removeClass("option_strategies_active");
+ // Find the closest ancestor with the class .modal_body
+ var closestParent = $(this).closest('.modal_body');
+    
+    // Find the closest parent with the class .straddle
+    var closestDiv_main = closestParent.parents().filter(function() {
+        return $(this).find('.straddle').length > 0;
+    }).first();
+    
+    console.log("closestDiv_main", closestDiv_main);
+
+    // Add the class .option_strategies_active to the parent div
+    closestDiv_main.find(".straddle").addClass("option_strategies_active");
+
+  $(".data-display-table").empty();
+  $("#table-PL").empty();
+  $("#resultTable tbody").empty();
+  $(".inner_p_l_greeks").show();
+  $(".main_position").empty();
+
+  var put_call_strikeSelect = $(
+    "#put_strikeSelect_call_sell"
+  ).val();
+
+
+  optionChainTable.find(".strike_price").each(function () {
+    var rowStrikePrice = parseFloat($(this).text());
+    if (
+      rowStrikePrice === parseFloat(put_call_strikeSelect)
+    ) {
+      $(this)
+        .closest(".call_put_tr")
+        .find("#Auto_calls_short_click")
+        .data("HI1", "HI1There")
+        .click();
+    }
+  });
+
+
+
+  // Click on #calculate after a longer delay
+  var counterInputValue = $("#call_sell_modal_counter_input").val();
+  $(".option_lot_size_input").text(counterInputValue);
+  localStorage.setItem("strategy_builder", "sell_puts");
+  calculate_data();
+  $("#call_sell_modal").hide();
+  Table_chart_pyoff()
+  // margin_calculations()
+  localStorage.removeItem('main_row_instances');
+  $("#buy_call_strike_input").val(parseInt($("#closest_strike_price").text()));
+  $("#manipulation_text_atm_buy_call").text(0);
+  lotSize_buyCall = 0
+
+})
+
+
+}
+
+
+                  else if (filter_arg_strategy === "put_buy") {
+
+                  $("#put_buy_modal").show()
+
+                  var closest_strike_price = $("#closest_strike_price").text();
+                  $("#put_strikeSelect_put_buy")
+                    .find("option")
+                    .each(function () {
+                      var optionValue = parseFloat($(this).val());
+
+                      if (optionValue === parseFloat(closest_strike_price)) {
+                        // //////console.log(optionValue, closest_strike_price);
+                        $(this).prop("selected", true);
+                      }
+                    });
+
+                  var expiryDate_put_buy = $("#expiryDate_put_buy");
+                  var optionExpiryDropdown = $("#optionExpiryDropdown");
+
+                  expiryDate_put_buy.on("change", function () {
+                    var selectedValue_straddle = $(this).val();
+                    // //////console.log(selectedValue_straddle);
+
+                    // Set the value of optionExpiryDropdown to match the selected value
+                    optionExpiryDropdown.val(selectedValue_straddle).change();
+
+                    // Trigger a click event on the selected option
+                  });
+
+
+
+                  $(document).off("click", "#put_buy_modal_btn").on("click", "#put_buy_modal_btn", function () {
+// Remove the option_strategies_active class from all elements
+$(".straddle").removeClass("option_strategies_active");
+ // Find the closest ancestor with the class .modal_body
+ var closestParent = $(this).closest('.modal_body');
+    
+    // Find the closest parent with the class .straddle
+    var closestDiv_main = closestParent.parents().filter(function() {
+        return $(this).find('.straddle').length > 0;
+    }).first();
+    
+    console.log("closestDiv_main", closestDiv_main);
+
+    // Add the class .option_strategies_active to the parent div
+    closestDiv_main.find(".straddle").addClass("option_strategies_active");
+
+                    $(".data-display-table").empty();
+                    $("#table-PL").empty();
+                    $("#resultTable tbody").empty();
+                    $(".inner_p_l_greeks").show();
+                    $(".main_position").empty();
+
+                    var put_call_strikeSelect = $(
+                      "#put_strikeSelect_put_buy"
+                    ).val();
+
+
+                    optionChainTable.find(".strike_price").each(function () {
+                      var rowStrikePrice = parseFloat($(this).text());
+                      if (
+                        rowStrikePrice === parseFloat(put_call_strikeSelect)
+                      ) {
+                        $(this)
+                          .closest(".call_put_tr")
+                          .find("#Auto_puts_long_click")
+                          .data("HI1", "HI1There")
+                          .click();
+                      }
+                    });
+
+
+
+                    // Click on #calculate after a longer delay
+                    var counterInputValue = $("#put_buy_modal_counter_input").val();
+                    $(".option_lot_size_input").text(counterInputValue);
+                    localStorage.setItem("strategy_builder", "buy_puts");
+                    calculate_data();
+                    $("#put_buy_modal").hide();
+                    Table_chart_pyoff()
+                    // margin_calculations()
+                    localStorage.removeItem('main_row_instances');
+                    $("#buy_call_strike_input").val(parseInt($("#closest_strike_price").text()));
+                    $("#manipulation_text_atm_buy_call").text(0);
+                    lotSize_buyCall = 0
+
+                  })
+
+
+                  }
+
+
+                  else if (filter_arg_strategy === "strangle") {
               $("#straddle_modal").hide();
               $("#strangle_modal").show();
               $("#spread_modal").hide();
@@ -22136,26 +23598,20 @@ if (plusButtonClicks < strategycounterValue) {
 
 
               $(document).off("click", "#shortStrangle").on("click", "#shortStrangle", function () {
-                $("#strip").removeClass("option_strategies_active");
-                $("#strap").removeClass("option_strategies_active");
-                $("#put_iron_fly").removeClass("option_strategies_active");
-                // Empty the specified elements before making any selection
-                $("#call_iron_fly").removeClass("option_strategies_active");
-                $("#short_synthetic_future").removeClass("option_strategies_active");
-                $("#long_synthetic_future").removeClass("option_strategies_active");
-                $("#long_straddle").removeClass("option_strategies_active");
-                $("#buy_call").removeClass("option_strategies_active");
-                $("#straddle").removeClass("option_strategies_active");
-                $("#strangle").addClass("option_strategies_active");
-                $("#iron_fly").removeClass("option_strategies_active");
-                $("#spread").removeClass("option_strategies_active");
-                $("#iron_condor").removeClass("option_strategies_active");
-                $("#jaze_lizard").removeClass("option_strategies_active");
-                $("#double_iron_fly").removeClass("option_strategies_active");
-                $("#double_iron_condor").removeClass("option_strategies_active");
-                $("#call_butter_fly").removeClass("option_strategies_active");
+// Remove the option_strategies_active class from all elements
+$(".straddle").removeClass("option_strategies_active");
+ // Find the closest ancestor with the class .modal_body
+ var closestParent = $(this).closest('.modal_body');
+    
+    // Find the closest parent with the class .straddle
+    var closestDiv_main = closestParent.parents().filter(function() {
+        return $(this).find('.straddle').length > 0;
+    }).first();
+    
+    console.log("closestDiv_main", closestDiv_main);
 
-                $("#put_butter_fly").removeClass("option_strategies_active");
+    // Add the class .option_strategies_active to the parent div
+    closestDiv_main.find(".straddle").addClass("option_strategies_active");
 
                 $(".data-display-table").empty();
                 $("#table-PL").empty();
@@ -22215,6 +23671,525 @@ if (plusButtonClicks < strategycounterValue) {
                   localStorage.setItem("strategy_builder", "strangle");
 
                   $("#strangle_modal").hide();
+                  Table_chart_pyoff()
+                  // margin_calculations()
+                  localStorage.removeItem('main_row_instances');
+
+                  $(".strangle_modal_strike_input").val(parseInt($("#closest_strike_price").text()));
+                  $(".malipulation_text_strangle_modal").text(0);
+                  lotSize_main_strangle = 0
+
+                }
+              });
+
+            }
+
+
+            else if (filter_arg_strategy === "long_strangle") {
+              $("#straddle_modal").hide();
+              $("#long_strangle_modal").show();
+              $("#spread_modal").hide();
+              $("#ironFly_modal").hide();
+              $("#ironCondor_modal").hide();
+              $("#jaze_lizard_modal").hide();
+
+              // Ensure you are selecting the correct elements with .strike_price
+              var strikePrices = optionChainTable
+                .find(".strike_price")
+                .map(function () {
+                  return parseFloat($(this).text());
+                })
+                .get();
+
+              // Find the index of the row where strikePrice is closestStrikePrice
+              var currentIndex = strikePrices.indexOf(closestStrikePrice);
+
+              // Calculate the previous 5 strike prices
+              var prev5 = [];
+              for (var i = currentIndex - 1; i >= 0 && prev5.length < 5; i--) {
+                var rowStrikePrice = strikePrices[i];
+                if (!isNaN(rowStrikePrice)) {
+                  prev5.push(rowStrikePrice);
+                }
+              }
+
+
+              // Calculate the next 5 strike prices
+              var forw5 = [];
+              for (
+                var j = currentIndex + 1;
+                j < strikePrices.length && forw5.length < 5;
+                j++
+              ) {
+                var rowStrikePrice = strikePrices[j];
+                if (!isNaN(rowStrikePrice)) {
+                  forw5.push(rowStrikePrice);
+                }
+              }
+
+              $("#call_strikeSelect_long_strangle")
+                .find("option")
+                .each(function () {
+                  var optionValue_call = parseFloat($(this).val());
+                  var lastPrevValue_call = parseFloat(forw5[forw5.length - 1]);
+
+                  if (optionValue_call === lastPrevValue_call) {
+                    // //////console.log(optionValue_call, lastPrevValue_call);
+                    $(this).prop("selected", true);
+                  }
+                });
+
+              $("#put_strikeSelect_long_strangle")
+                .find("option")
+                .each(function () {
+                  var optionValue = parseFloat($(this).val());
+                  var lastPrevValue = parseFloat(prev5[prev5.length - 1]);
+
+                  if (optionValue === lastPrevValue) {
+                    // //////console.log(optionValue, lastPrevValue);
+                    $(this).prop("selected", true);
+                  }
+                });
+
+
+              var expiryDate_long_strangle = $("#expiryDate_long_strangle");
+              var optionExpiryDropdown = $("#optionExpiryDropdown");
+
+              expiryDate_long_strangle.on("change", function () {
+                var selectedValue_straddle = $(this).val();
+                // //////console.log(selectedValue_straddle);
+
+                // Set the value of optionExpiryDropdown to match the selected value
+                optionExpiryDropdown.val(selectedValue_straddle).change();
+
+                // Trigger a click event on the selected option
+              });
+
+              // //////console.log("Previous 5 Strike Prices:", prev5);
+              // //////console.log("Next 5 Strike Prices:", forw5);
+
+
+              $(document).off("click", "#long_strangle_modal_btn").on("click", "#long_strangle_modal_btn", function () {
+        // Remove the option_strategies_active class from all elements
+$(".straddle").removeClass("option_strategies_active");
+ // Find the closest ancestor with the class .modal_body
+ var closestParent = $(this).closest('.modal_body');
+    
+    // Find the closest parent with the class .straddle
+    var closestDiv_main = closestParent.parents().filter(function() {
+        return $(this).find('.straddle').length > 0;
+    }).first();
+    
+    console.log("closestDiv_main", closestDiv_main);
+
+    // Add the class .option_strategies_active to the parent div
+    closestDiv_main.find(".straddle").addClass("option_strategies_active");
+
+
+                $(".data-display-table").empty();
+                $("#table-PL").empty();
+                $("#resultTable tbody").empty();
+                $(".inner_p_l_greeks").show();
+                $(".main_position").empty();
+
+                // Delay the rest of the code execution for a brief moment to ensure elements are fully emptied
+
+                var put_strikeSelect_strangle = $(
+                  "#put_strikeSelect_long_strangle"
+                ).val();
+                var call_strikeSelect_strangle = $(
+                  "#call_strikeSelect_long_strangle"
+                ).val();
+
+                if (put_strikeSelect_strangle) {
+                  // Find the closest row for lastIndexPrev and click on Auto_puts_short_click
+
+
+                  // Find the closest row for lastIndexForw and click on Auto_calls_short_click
+                  var closestRowForw = optionChainTable
+                    .find(
+                      ".strike_price:contains(" +
+                      call_strikeSelect_strangle +
+                      ")"
+                    )
+                    .closest(".call_put_tr");
+                  if (closestRowForw.length) {
+                    closestRowForw
+                      .find("#Auto_calls_long_click")
+                      .data("HI1", "HI1There")
+                      .click();
+                  }
+
+
+                  var closestRowPrev = optionChainTable
+                    .find(
+                      ".strike_price:contains(" +
+                      put_strikeSelect_strangle +
+                      ")"
+                    )
+                    .closest(".call_put_tr");
+                  if (closestRowPrev.length) {
+                    closestRowPrev
+                      .find("#Auto_puts_long_click")
+                      .data("HI1", "HI1There")
+                      .click();
+                  }
+
+                  var counterInputValue = $("#long_strangle_modal_counter_input").val();
+                  $(".option_lot_size_input").val(counterInputValue);
+                  $(".option_lot_size_input").text(counterInputValue);
+                  // Click on #calculate after a longer delay
+
+                  calculate_data();
+                  localStorage.setItem("strategy_builder", "long strangle");
+
+                  $("#long_strangle_modal").hide();
+                  Table_chart_pyoff()
+                  // margin_calculations()
+                  localStorage.removeItem('main_row_instances');
+
+                  $(".strangle_modal_strike_input").val(parseInt($("#closest_strike_price").text()));
+                  $(".malipulation_text_strangle_modal").text(0);
+                  lotSize_main_strangle = 0
+
+                }
+              });
+
+            }
+
+            
+            else if (filter_arg_strategy === "range_forward") {
+              $("#straddle_modal").hide();
+              $("#range_forward_modal").show();
+              $("#spread_modal").hide();
+              $("#ironFly_modal").hide();
+              $("#ironCondor_modal").hide();
+              $("#jaze_lizard_modal").hide();
+
+              // Ensure you are selecting the correct elements with .strike_price
+              var strikePrices = optionChainTable
+                .find(".strike_price")
+                .map(function () {
+                  return parseFloat($(this).text());
+                })
+                .get();
+
+              // Find the index of the row where strikePrice is closestStrikePrice
+              var currentIndex = strikePrices.indexOf(closestStrikePrice);
+
+              // Calculate the previous 5 strike prices
+              var prev5 = [];
+              for (var i = currentIndex - 1; i >= 0 && prev5.length < 5; i--) {
+                var rowStrikePrice = strikePrices[i];
+                if (!isNaN(rowStrikePrice)) {
+                  prev5.push(rowStrikePrice);
+                }
+              }
+
+
+              // Calculate the next 5 strike prices
+              var forw5 = [];
+              for (
+                var j = currentIndex + 1;
+                j < strikePrices.length && forw5.length < 5;
+                j++
+              ) {
+                var rowStrikePrice = strikePrices[j];
+                if (!isNaN(rowStrikePrice)) {
+                  forw5.push(rowStrikePrice);
+                }
+              }
+
+              $("#call_strikeSelect_range_forward")
+                .find("option")
+                .each(function () {
+                  var optionValue_call = parseFloat($(this).val());
+                  var lastPrevValue_call = parseFloat(forw5[forw5.length - 1]);
+
+                  if (optionValue_call === lastPrevValue_call) {
+                    // //////console.log(optionValue_call, lastPrevValue_call);
+                    $(this).prop("selected", true);
+                  }
+                });
+
+              $("#put_strikeSelect_range_forward")
+                .find("option")
+                .each(function () {
+                  var optionValue = parseFloat($(this).val());
+                  var lastPrevValue = parseFloat(prev5[prev5.length - 1]);
+
+                  if (optionValue === lastPrevValue) {
+                    // //////console.log(optionValue, lastPrevValue);
+                    $(this).prop("selected", true);
+                  }
+                });
+
+
+              var expiryDate_range_forward = $("#expiryDate_range_forward");
+              var optionExpiryDropdown = $("#optionExpiryDropdown");
+
+              expiryDate_range_forward.on("change", function () {
+                var selectedValue_straddle = $(this).val();
+                // //////console.log(selectedValue_straddle);
+
+                // Set the value of optionExpiryDropdown to match the selected value
+                optionExpiryDropdown.val(selectedValue_straddle).change();
+
+                // Trigger a click event on the selected option
+              });
+
+              // //////console.log("Previous 5 Strike Prices:", prev5);
+              // //////console.log("Next 5 Strike Prices:", forw5);
+
+
+              $(document).off("click", "#range_forward_modal_btn").on("click", "#range_forward_modal_btn", function () {
+  // Remove the option_strategies_active class from all elements
+$(".straddle").removeClass("option_strategies_active");
+ // Find the closest ancestor with the class .modal_body
+ var closestParent = $(this).closest('.modal_body');
+    
+    // Find the closest parent with the class .straddle
+    var closestDiv_main = closestParent.parents().filter(function() {
+        return $(this).find('.straddle').length > 0;
+    }).first();
+    
+    console.log("closestDiv_main", closestDiv_main);
+
+    // Add the class .option_strategies_active to the parent div
+    closestDiv_main.find(".straddle").addClass("option_strategies_active");
+
+
+                $(".data-display-table").empty();
+                $("#table-PL").empty();
+                $("#resultTable tbody").empty();
+                $(".inner_p_l_greeks").show();
+                $(".main_position").empty();
+
+                // Delay the rest of the code execution for a brief moment to ensure elements are fully emptied
+
+                var put_strikeSelect_strangle = $(
+                  "#put_strikeSelect_range_forward"
+                ).val();
+                var call_strikeSelect_strangle = $(
+                  "#call_strikeSelect_range_forward"
+                ).val();
+
+                if (put_strikeSelect_strangle) {
+                  // Find the closest row for lastIndexPrev and click on Auto_puts_short_click
+
+
+                  // Find the closest row for lastIndexForw and click on Auto_calls_short_click
+                  var closestRowForw = optionChainTable
+                    .find(
+                      ".strike_price:contains(" +
+                      call_strikeSelect_strangle +
+                      ")"
+                    )
+                    .closest(".call_put_tr");
+                  if (closestRowForw.length) {
+                    closestRowForw
+                      .find("#Auto_calls_long_click")
+                      .data("HI1", "HI1There")
+                      .click();
+                  }
+
+
+                  var closestRowPrev = optionChainTable
+                    .find(
+                      ".strike_price:contains(" +
+                      put_strikeSelect_strangle +
+                      ")"
+                    )
+                    .closest(".call_put_tr");
+                  if (closestRowPrev.length) {
+                    closestRowPrev
+                      .find("#Auto_puts_short_click")
+                      .data("HI1", "HI1There")
+                      .click();
+                  }
+
+                  var counterInputValue = $("#range_forward_modal_counter_input").val();
+                  $(".option_lot_size_input").val(counterInputValue);
+                  $(".option_lot_size_input").text(counterInputValue);
+                  // Click on #calculate after a longer delay
+
+                  calculate_data();
+                  localStorage.setItem("strategy_builder", "range forward");
+
+                  $("#range_forward_modal").hide();
+                  Table_chart_pyoff()
+                  // margin_calculations()
+                  localStorage.removeItem('main_row_instances');
+
+                  $(".strangle_modal_strike_input").val(parseInt($("#closest_strike_price").text()));
+                  $(".malipulation_text_strangle_modal").text(0);
+                  lotSize_main_strangle = 0
+
+                }
+              });
+
+            }
+
+            else if (filter_arg_strategy === "risk_reversal") {
+              $("#straddle_modal").hide();
+              $("#risk_reversal_modal").show();
+              $("#spread_modal").hide();
+              $("#ironFly_modal").hide();
+              $("#ironCondor_modal").hide();
+              $("#jaze_lizard_modal").hide();
+
+              // Ensure you are selecting the correct elements with .strike_price
+              var strikePrices = optionChainTable
+                .find(".strike_price")
+                .map(function () {
+                  return parseFloat($(this).text());
+                })
+                .get();
+
+              // Find the index of the row where strikePrice is closestStrikePrice
+              var currentIndex = strikePrices.indexOf(closestStrikePrice);
+
+              // Calculate the previous 5 strike prices
+              var prev5 = [];
+              for (var i = currentIndex - 1; i >= 0 && prev5.length < 5; i--) {
+                var rowStrikePrice = strikePrices[i];
+                if (!isNaN(rowStrikePrice)) {
+                  prev5.push(rowStrikePrice);
+                }
+              }
+
+
+              // Calculate the next 5 strike prices
+              var forw5 = [];
+              for (
+                var j = currentIndex + 1;
+                j < strikePrices.length && forw5.length < 5;
+                j++
+              ) {
+                var rowStrikePrice = strikePrices[j];
+                if (!isNaN(rowStrikePrice)) {
+                  forw5.push(rowStrikePrice);
+                }
+              }
+
+              $("#call_strikeSelect_risk_reversal")
+                .find("option")
+                .each(function () {
+                  var optionValue_call = parseFloat($(this).val());
+                  var lastPrevValue_call = parseFloat(forw5[forw5.length - 1]);
+
+                  if (optionValue_call === lastPrevValue_call) {
+                    // //////console.log(optionValue_call, lastPrevValue_call);
+                    $(this).prop("selected", true);
+                  }
+                });
+
+              $("#put_strikeSelect_risk_reversal")
+                .find("option")
+                .each(function () {
+                  var optionValue = parseFloat($(this).val());
+                  var lastPrevValue = parseFloat(prev5[prev5.length - 1]);
+
+                  if (optionValue === lastPrevValue) {
+                    // //////console.log(optionValue, lastPrevValue);
+                    $(this).prop("selected", true);
+                  }
+                });
+
+
+              var expiryDate_risk_reversal = $("#expiryDate_risk_reversal");
+              var optionExpiryDropdown = $("#optionExpiryDropdown");
+
+              expiryDate_risk_reversal.on("change", function () {
+                var selectedValue_straddle = $(this).val();
+                // //////console.log(selectedValue_straddle);
+
+                // Set the value of optionExpiryDropdown to match the selected value
+                optionExpiryDropdown.val(selectedValue_straddle).change();
+
+                // Trigger a click event on the selected option
+              });
+
+              // //////console.log("Previous 5 Strike Prices:", prev5);
+              // //////console.log("Next 5 Strike Prices:", forw5);
+
+
+              $(document).off("click", "#risk_reversal_modal_btn").on("click", "#risk_reversal_modal_btn", function () {
+
+// Remove the option_strategies_active class from all elements
+$(".straddle").removeClass("option_strategies_active");
+ // Find the closest ancestor with the class .modal_body
+ var closestParent = $(this).closest('.modal_body');
+    
+    // Find the closest parent with the class .straddle
+    var closestDiv_main = closestParent.parents().filter(function() {
+        return $(this).find('.straddle').length > 0;
+    }).first();
+    
+    console.log("closestDiv_main", closestDiv_main);
+
+    // Add the class .option_strategies_active to the parent div
+    closestDiv_main.find(".straddle").addClass("option_strategies_active");
+
+
+                $(".data-display-table").empty();
+                $("#table-PL").empty();
+                $("#resultTable tbody").empty();
+                $(".inner_p_l_greeks").show();
+                $(".main_position").empty();
+
+                // Delay the rest of the code execution for a brief moment to ensure elements are fully emptied
+
+                var put_strikeSelect_strangle = $(
+                  "#put_strikeSelect_risk_reversal"
+                ).val();
+                var call_strikeSelect_strangle = $(
+                  "#call_strikeSelect_risk_reversal"
+                ).val();
+
+                if (put_strikeSelect_strangle) {
+                  // Find the closest row for lastIndexPrev and click on Auto_puts_short_click
+
+
+                  // Find the closest row for lastIndexForw and click on Auto_calls_short_click
+                  var closestRowForw = optionChainTable
+                    .find(
+                      ".strike_price:contains(" +
+                      call_strikeSelect_strangle +
+                      ")"
+                    )
+                    .closest(".call_put_tr");
+                  if (closestRowForw.length) {
+                    closestRowForw
+                      .find("#Auto_calls_short_click")
+                      .data("HI1", "HI1There")
+                      .click();
+                  }
+
+
+                  var closestRowPrev = optionChainTable
+                    .find(
+                      ".strike_price:contains(" +
+                      put_strikeSelect_strangle +
+                      ")"
+                    )
+                    .closest(".call_put_tr");
+                  if (closestRowPrev.length) {
+                    closestRowPrev
+                      .find("#Auto_puts_long_click")
+                      .data("HI1", "HI1There")
+                      .click();
+                  }
+
+                  var counterInputValue = $("#risk_reversal_modal_counter_input").val();
+                  $(".option_lot_size_input").val(counterInputValue);
+                  $(".option_lot_size_input").text(counterInputValue);
+                  // Click on #calculate after a longer delay
+
+                  calculate_data();
+                  localStorage.setItem("strategy_builder", "range forward");
+
+                  $("#risk_reversal_modal").hide();
                   Table_chart_pyoff()
                   // margin_calculations()
                   localStorage.removeItem('main_row_instances');
@@ -22308,25 +24283,21 @@ if (plusButtonClicks < strategycounterValue) {
 
 
               $(document).off("click", "#shortSpread").on("click", "#shortSpread", function () {
-                $("#strip").removeClass("option_strategies_active");
-                $("#strap").removeClass("option_strategies_active");
-                $("#call_iron_fly").removeClass("option_strategies_active");
-                $("#put_iron_fly").removeClass("option_strategies_active");
-                $("#short_synthetic_future").removeClass("option_strategies_active");
-                $("#long_straddle").removeClass("option_strategies_active");
-                $("#long_synthetic_future").removeClass("option_strategies_active");
-                $("#buy_call").removeClass("option_strategies_active");
-                $("#straddle").removeClass("option_strategies_active");
-                $("#strangle").removeClass("option_strategies_active");
-                $("#iron_fly").removeClass("option_strategies_active");
-                $("#spread").addClass("option_strategies_active");
-                $("#iron_condor").removeClass("option_strategies_active");
-                $("#jaze_lizard").removeClass("option_strategies_active");
-                $("#double_iron_fly").removeClass("option_strategies_active");
-                $("#double_iron_condor").removeClass("option_strategies_active");
-                $("#call_butter_fly").removeClass("option_strategies_active");
+                // Remove the option_strategies_active class from all elements
+$(".straddle").removeClass("option_strategies_active");
+         // Find the closest ancestor with the class .modal_body
+ var closestParent = $(this).closest('.modal_body');
+    
+    // Find the closest parent with the class .straddle
+    var closestDiv_main = closestParent.parents().filter(function() {
+        return $(this).find('.straddle').length > 0;
+    }).first();
+    
+    console.log("closestDiv_main", closestDiv_main);
 
-                $("#put_butter_fly").removeClass("option_strategies_active");
+    // Add the class .option_strategies_active to the parent div
+    closestDiv_main.find(".straddle").addClass("option_strategies_active");
+
 
                 $(".inner_p_l_greeks").show();
                 $(".main_position").empty();
@@ -22471,41 +24442,21 @@ if (plusButtonClicks < strategycounterValue) {
 
 
               $(document).off("click", "#bull_put_spread_modal_btn").on("click", "#bull_put_spread_modal_btn", function () {
-                $("#strip").removeClass("option_strategies_active");
-                $("#strap").removeClass("option_strategies_active");
-                $("#call_iron_fly").removeClass("option_strategies_active");
-                $("#put_iron_fly").removeClass("option_strategies_active");
-                $("#short_synthetic_future").removeClass("option_strategies_active");
-                $("#long_straddle").removeClass("option_strategies_active");
-                $("#long_synthetic_future").removeClass("option_strategies_active");
-                $("#buy_call").removeClass("option_strategies_active");
-                $("#straddle").removeClass("option_strategies_active");
-                $("#strangle").removeClass("option_strategies_active");
-                $("#iron_fly").removeClass("option_strategies_active");
+                // Remove the option_strategies_active class from all elements
+$(".straddle").removeClass("option_strategies_active");
+     // Find the closest ancestor with the class .modal_body
+ var closestParent = $(this).closest('.modal_body');
+    
+    // Find the closest parent with the class .straddle
+    var closestDiv_main = closestParent.parents().filter(function() {
+        return $(this).find('.straddle').length > 0;
+    }).first();
+    
+    console.log("closestDiv_main", closestDiv_main);
 
-                $("#bull_put_spread").addClass("option_strategies_active");
-                $("#bull_call_spread").removeClass("option_strategies_active");
-                $("#bear_put_spread").removeClass("option_strategies_active");
+    // Add the class .option_strategies_active to the parent div
+    closestDiv_main.find(".straddle").addClass("option_strategies_active");
 
-                $("#call_ratio_back_spread").removeClass("option_strategies_active");
-                $("#put_ratio_back_spread").removeClass("option_strategies_active");
-      
-                $("#put_ratio_spread").removeClass("option_strategies_active");
-                $("#call_ratio_spread").removeClass("option_strategies_active");
-         
-  
-
-
-
-
-                $("#spread").removeClass("option_strategies_active");
-                $("#iron_condor").removeClass("option_strategies_active");
-                $("#jaze_lizard").removeClass("option_strategies_active");
-                $("#double_iron_fly").removeClass("option_strategies_active");
-                $("#double_iron_condor").removeClass("option_strategies_active");
-                $("#call_butter_fly").removeClass("option_strategies_active");
-
-                $("#put_butter_fly").removeClass("option_strategies_active");
 
                 $(".inner_p_l_greeks").show();
                 $(".main_position").empty();
@@ -22652,41 +24603,20 @@ if (plusButtonClicks < strategycounterValue) {
 
 
               $(document).off("click", "#bull_call_spread_modal_btn").on("click", "#bull_call_spread_modal_btn", function () {
-                $("#strip").removeClass("option_strategies_active");
-                $("#strap").removeClass("option_strategies_active");
-                $("#call_iron_fly").removeClass("option_strategies_active");
-                $("#put_iron_fly").removeClass("option_strategies_active");
-                $("#short_synthetic_future").removeClass("option_strategies_active");
-                $("#long_straddle").removeClass("option_strategies_active");
-                $("#long_synthetic_future").removeClass("option_strategies_active");
-                $("#buy_call").removeClass("option_strategies_active");
-                $("#straddle").removeClass("option_strategies_active");
-                $("#strangle").removeClass("option_strategies_active");
-                $("#iron_fly").removeClass("option_strategies_active");
+                // Remove the option_strategies_active class from all elements
+$(".straddle").removeClass("option_strategies_active");
+        // Find the closest ancestor with the class .modal_body
+ var closestParent = $(this).closest('.modal_body');
+    
+    // Find the closest parent with the class .straddle
+    var closestDiv_main = closestParent.parents().filter(function() {
+        return $(this).find('.straddle').length > 0;
+    }).first();
+    
+    console.log("closestDiv_main", closestDiv_main);
 
-
-                $("#bull_call_spread").addClass("option_strategies_active");
-                $("#bear_put_spread").removeClass("option_strategies_active");
-
-                $("#bull_put_spread").removeClass("option_strategies_active");
-      
-                $("#bear_put_spread").removeClass("option_strategies_active");
-
-                $("#call_ratio_back_spread").removeClass("option_strategies_active");
-                $("#put_ratio_back_spread").removeClass("option_strategies_active");
-      
-                $("#put_ratio_spread").removeClass("option_strategies_active");
-                $("#call_ratio_spread").removeClass("option_strategies_active");
-
-
-                $("#spread").removeClass("option_strategies_active");
-                $("#iron_condor").removeClass("option_strategies_active");
-                $("#jaze_lizard").removeClass("option_strategies_active");
-                $("#double_iron_fly").removeClass("option_strategies_active");
-                $("#double_iron_condor").removeClass("option_strategies_active");
-                $("#call_butter_fly").removeClass("option_strategies_active");
-
-                $("#put_butter_fly").removeClass("option_strategies_active");
+    // Add the class .option_strategies_active to the parent div
+    closestDiv_main.find(".straddle").addClass("option_strategies_active");
 
                 $(".inner_p_l_greeks").show();
                 $(".main_position").empty();
@@ -22837,34 +24767,21 @@ if (plusButtonClicks < strategycounterValue) {
 
 
               $(document).off("click", "#call_ratio_back_spread_modal_btn").on("click", "#call_ratio_back_spread_modal_btn", function () {
-                $("#strip").removeClass("option_strategies_active");
-                $("#strap").removeClass("option_strategies_active");
-                $("#call_iron_fly").removeClass("option_strategies_active");
-                $("#put_iron_fly").removeClass("option_strategies_active");
-                $("#short_synthetic_future").removeClass("option_strategies_active");
-                $("#long_straddle").removeClass("option_strategies_active");
-                $("#long_synthetic_future").removeClass("option_strategies_active");
-                $("#buy_call").removeClass("option_strategies_active");
-                $("#straddle").removeClass("option_strategies_active");
-                $("#strangle").removeClass("option_strategies_active");
-                $("#iron_fly").removeClass("option_strategies_active");
+                // Remove the option_strategies_active class from all elements
+$(".straddle").removeClass("option_strategies_active");
+     // Find the closest ancestor with the class .modal_body
+ var closestParent = $(this).closest('.modal_body');
+    
+    // Find the closest parent with the class .straddle
+    var closestDiv_main = closestParent.parents().filter(function() {
+        return $(this).find('.straddle').length > 0;
+    }).first();
+    
+    console.log("closestDiv_main", closestDiv_main);
 
-                $("#call_ratio_back_spread").addClass("option_strategies_active");
-                $("#put_ratio_back_spread").removeClass("option_strategies_active");
-                $("#bull_put_spread").removeClass("option_strategies_active");
-                $("#put_ratio_spread").removeClass("option_strategies_active");
-                $("#call_ratio_spread").removeClass("option_strategies_active");
-                $("#bull_call_spread").removeClass("option_strategies_active");
-                $("#bear_put_spread").removeClass("option_strategies_active");
+    // Add the class .option_strategies_active to the parent div
+    closestDiv_main.find(".straddle").addClass("option_strategies_active");
 
-                $("#spread").removeClass("option_strategies_active");
-                $("#iron_condor").removeClass("option_strategies_active");
-                $("#jaze_lizard").removeClass("option_strategies_active");
-                $("#double_iron_fly").removeClass("option_strategies_active");
-                $("#double_iron_condor").removeClass("option_strategies_active");
-                $("#call_butter_fly").removeClass("option_strategies_active");
-
-                $("#put_butter_fly").removeClass("option_strategies_active");
 
                 $(".inner_p_l_greeks").show();
                 $(".main_position").empty();
@@ -23028,41 +24945,21 @@ if (plusButtonClicks < strategycounterValue) {
 
 
               $(document).off("click", "#put_ratio_back_spread_modal_btn").on("click", "#put_ratio_back_spread_modal_btn", function () {
-                $("#strip").removeClass("option_strategies_active");
-                $("#strap").removeClass("option_strategies_active");
-                $("#call_iron_fly").removeClass("option_strategies_active");
-                $("#put_iron_fly").removeClass("option_strategies_active");
-                $("#short_synthetic_future").removeClass("option_strategies_active");
-                $("#long_straddle").removeClass("option_strategies_active");
-                $("#long_synthetic_future").removeClass("option_strategies_active");
-                $("#buy_call").removeClass("option_strategies_active");
-                $("#straddle").removeClass("option_strategies_active");
-                $("#strangle").removeClass("option_strategies_active");
-                $("#iron_fly").removeClass("option_strategies_active");
-
-
-                $("#put_ratio_back_spread").addClass("option_strategies_active");
-       
-
-
-                $("#bull_put_spread").removeClass("option_strategies_active");
-                $("#bull_call_spread").removeClass("option_strategies_active");
-                $("#bear_put_spread").removeClass("option_strategies_active");
-
-                $("#call_ratio_back_spread").removeClass("option_strategies_active");
+                // Remove the option_strategies_active class from all elements
+$(".straddle").removeClass("option_strategies_active");
+         // Find the closest ancestor with the class .modal_body
+ var closestParent = $(this).closest('.modal_body');
     
-      
-                $("#put_ratio_spread").removeClass("option_strategies_active");
-                $("#call_ratio_spread").removeClass("option_strategies_active");
+    // Find the closest parent with the class .straddle
+    var closestDiv_main = closestParent.parents().filter(function() {
+        return $(this).find('.straddle').length > 0;
+    }).first();
+    
+    console.log("closestDiv_main", closestDiv_main);
 
-                $("#spread").removeClass("option_strategies_active");
-                $("#iron_condor").removeClass("option_strategies_active");
-                $("#jaze_lizard").removeClass("option_strategies_active");
-                $("#double_iron_fly").removeClass("option_strategies_active");
-                $("#double_iron_condor").removeClass("option_strategies_active");
-                $("#call_butter_fly").removeClass("option_strategies_active");
+    // Add the class .option_strategies_active to the parent div
+    closestDiv_main.find(".straddle").addClass("option_strategies_active");
 
-                $("#put_butter_fly").removeClass("option_strategies_active");
 
                 $(".inner_p_l_greeks").show();
                 $(".main_position").empty();
@@ -23226,40 +25123,20 @@ if (plusButtonClicks < strategycounterValue) {
 
 
               $(document).off("click", "#put_ratio_spread_modal_btn").on("click", "#put_ratio_spread_modal_btn", function () {
-                $("#strip").removeClass("option_strategies_active");
-                $("#strap").removeClass("option_strategies_active");
-                $("#call_iron_fly").removeClass("option_strategies_active");
-                $("#put_iron_fly").removeClass("option_strategies_active");
-                $("#short_synthetic_future").removeClass("option_strategies_active");
-                $("#long_straddle").removeClass("option_strategies_active");
-                $("#long_synthetic_future").removeClass("option_strategies_active");
-                $("#buy_call").removeClass("option_strategies_active");
-                $("#straddle").removeClass("option_strategies_active");
-                $("#strangle").removeClass("option_strategies_active");
-                $("#iron_fly").removeClass("option_strategies_active");
+                // Remove the option_strategies_active class from all elements
+$(".straddle").removeClass("option_strategies_active");
+             // Find the closest ancestor with the class .modal_body
+ var closestParent = $(this).closest('.modal_body');
+    
+    // Find the closest parent with the class .straddle
+    var closestDiv_main = closestParent.parents().filter(function() {
+        return $(this).find('.straddle').length > 0;
+    }).first();
+    
+    console.log("closestDiv_main", closestDiv_main);
 
-
-                $("#put_ratio_spread").addClass("option_strategies_active");
-                $("#call_ratio_spread").removeClass("option_strategies_active");
-                $("#bull_call_spread").removeClass("option_strategies_active");
-                $("#bear_put_spread").removeClass("option_strategies_active");
-
-                $("#bull_put_spread").removeClass("option_strategies_active");
-
-                $("#call_ratio_back_spread").removeClass("option_strategies_active");
-                $("#put_ratio_back_spread").removeClass("option_strategies_active");
-      
-   
-
-
-                $("#spread").removeClass("option_strategies_active");
-                $("#iron_condor").removeClass("option_strategies_active");
-                $("#jaze_lizard").removeClass("option_strategies_active");
-                $("#double_iron_fly").removeClass("option_strategies_active");
-                $("#double_iron_condor").removeClass("option_strategies_active");
-                $("#call_butter_fly").removeClass("option_strategies_active");
-
-                $("#put_butter_fly").removeClass("option_strategies_active");
+    // Add the class .option_strategies_active to the parent div
+    closestDiv_main.find(".straddle").addClass("option_strategies_active");
 
                 $(".inner_p_l_greeks").show();
                 $(".main_position").empty();
@@ -23421,38 +25298,21 @@ if (plusButtonClicks < strategycounterValue) {
 
 
               $(document).off("click", "#call_ratio_spread_modal_btn").on("click", "#call_ratio_spread_modal_btn", function () {
-                $("#strip").removeClass("option_strategies_active");
-                $("#strap").removeClass("option_strategies_active");
-                $("#call_iron_fly").removeClass("option_strategies_active");
-                $("#put_iron_fly").removeClass("option_strategies_active");
-                $("#short_synthetic_future").removeClass("option_strategies_active");
-                $("#long_straddle").removeClass("option_strategies_active");
-                $("#long_synthetic_future").removeClass("option_strategies_active");
-                $("#buy_call").removeClass("option_strategies_active");
-                $("#straddle").removeClass("option_strategies_active");
-                $("#strangle").removeClass("option_strategies_active");
-                $("#iron_fly").removeClass("option_strategies_active");
+                // Remove the option_strategies_active class from all elements
+$(".straddle").removeClass("option_strategies_active");
+ // Find the closest ancestor with the class .modal_body
+ var closestParent = $(this).closest('.modal_body');
+    
+    // Find the closest parent with the class .straddle
+    var closestDiv_main = closestParent.parents().filter(function() {
+        return $(this).find('.straddle').length > 0;
+    }).first();
+    
+    console.log("closestDiv_main", closestDiv_main);
 
-                $("#call_ratio_spread").addClass("option_strategies_active");
-        
-                $("#bull_put_spread").removeClass("option_strategies_active");
-                $("#bull_call_spread").removeClass("option_strategies_active");
-                $("#bear_put_spread").removeClass("option_strategies_active");
+    // Add the class .option_strategies_active to the parent div
+    closestDiv_main.find(".straddle").addClass("option_strategies_active");
 
-                $("#call_ratio_back_spread").removeClass("option_strategies_active");
-                $("#put_ratio_back_spread").removeClass("option_strategies_active");
-      
-                $("#put_ratio_spread").removeClass("option_strategies_active");
-     
-
-                $("#spread").removeClass("option_strategies_active");
-                $("#iron_condor").removeClass("option_strategies_active");
-                $("#jaze_lizard").removeClass("option_strategies_active");
-                $("#double_iron_fly").removeClass("option_strategies_active");
-                $("#double_iron_condor").removeClass("option_strategies_active");
-                $("#call_butter_fly").removeClass("option_strategies_active");
-
-                $("#put_butter_fly").removeClass("option_strategies_active");
 
                 $(".inner_p_l_greeks").show();
                 $(".main_position").empty();
@@ -23611,40 +25471,21 @@ if (plusButtonClicks < strategycounterValue) {
 
 
               $(document).off("click", "#bear_put_spread_modal_btn").on("click", "#bear_put_spread_modal_btn", function () {
-                $("#strip").removeClass("option_strategies_active");
-                $("#strap").removeClass("option_strategies_active");
-                $("#call_iron_fly").removeClass("option_strategies_active");
-                $("#put_iron_fly").removeClass("option_strategies_active");
-                $("#short_synthetic_future").removeClass("option_strategies_active");
-                $("#long_straddle").removeClass("option_strategies_active");
-                $("#long_synthetic_future").removeClass("option_strategies_active");
-                $("#buy_call").removeClass("option_strategies_active");
-                $("#straddle").removeClass("option_strategies_active");
-                $("#strangle").removeClass("option_strategies_active");
-                $("#iron_fly").removeClass("option_strategies_active");
+                // Remove the option_strategies_active class from all elements
+$(".straddle").removeClass("option_strategies_active");
+ // Find the closest ancestor with the class .modal_body
+ var closestParent = $(this).closest('.modal_body');
+    
+    // Find the closest parent with the class .straddle
+    var closestDiv_main = closestParent.parents().filter(function() {
+        return $(this).find('.straddle').length > 0;
+    }).first();
+    
+    console.log("closestDiv_main", closestDiv_main);
 
-                $("#bear_put_spread").addClass("option_strategies_active");
+    // Add the class .option_strategies_active to the parent div
+    closestDiv_main.find(".straddle").addClass("option_strategies_active");
 
-                $("#bull_put_spread").removeClass("option_strategies_active");
-                $("#bull_call_spread").removeClass("option_strategies_active");
-
-
-                $("#call_ratio_back_spread").removeClass("option_strategies_active");
-                $("#put_ratio_back_spread").removeClass("option_strategies_active");
-      
-                $("#put_ratio_spread").removeClass("option_strategies_active");
-                $("#call_ratio_spread").removeClass("option_strategies_active");
-
-
-
-                $("#spread").removeClass("option_strategies_active");
-                $("#iron_condor").removeClass("option_strategies_active");
-                $("#jaze_lizard").removeClass("option_strategies_active");
-                $("#double_iron_fly").removeClass("option_strategies_active");
-                $("#double_iron_condor").removeClass("option_strategies_active");
-                $("#call_butter_fly").removeClass("option_strategies_active");
-
-                $("#put_butter_fly").removeClass("option_strategies_active");
 
                 $(".inner_p_l_greeks").show();
                 $(".main_position").empty();
@@ -23807,26 +25648,21 @@ if (plusButtonClicks < strategycounterValue) {
               // Keep the existing logic for closestStrikePrice
 
               $(document).off("click", "#shortironFly").on("click", "#shortironFly", function () {
-                $("#strip").removeClass("option_strategies_active");
-                $("#strap").removeClass("option_strategies_active");
-                $("#call_iron_fly").removeClass("option_strategies_active");
-                $("#put_iron_fly").removeClass("option_strategies_active");
-                $("#short_synthetic_future").removeClass("option_strategies_active");
-                $("#long_straddle").removeClass("option_strategies_active");
-                $("#long_synthetic_future").removeClass("option_strategies_active");
-                $("#buy_call").removeClass("option_strategies_active");
-                $("#straddle").removeClass("option_strategies_active");
-                $("#strangle").removeClass("option_strategies_active");
-                $("#iron_fly").addClass("option_strategies_active");
-                $("#spread").removeClass("option_strategies_active");
-                $("#iron_condor").removeClass("option_strategies_active");
-                $("#jaze_lizard").removeClass("option_strategies_active");
-                $("#double_iron_fly").removeClass("option_strategies_active");
-                $("#double_iron_condor").removeClass("option_strategies_active");
-                $("#call_butter_fly").removeClass("option_strategies_active");
-                $("#custom_strategy").removeClass("option_strategies_active");
+                // Remove the option_strategies_active class from all elements
+$(".straddle").removeClass("option_strategies_active");
+      // Find the closest ancestor with the class .modal_body
+ var closestParent = $(this).closest('.modal_body');
+    
+    // Find the closest parent with the class .straddle
+    var closestDiv_main = closestParent.parents().filter(function() {
+        return $(this).find('.straddle').length > 0;
+    }).first();
+    
+    console.log("closestDiv_main", closestDiv_main);
 
-                $("#put_butter_fly").removeClass("option_strategies_active");
+    // Add the class .option_strategies_active to the parent div
+    closestDiv_main.find(".straddle").addClass("option_strategies_active");
+
 
                 $(".data-display-table").empty();
                 $("#table-PL").empty();
@@ -24027,24 +25863,21 @@ if (plusButtonClicks < strategycounterValue) {
               // Find the closest row for lastIndexPrev and click on Auto_puts_short_click
 
               $(document).off("click", "#short_ironCondor").on("click", "#short_ironCondor", function () {
-                $("#strip").removeClass("option_strategies_active");
-                $("#strap").removeClass("option_strategies_active");
-                $("#call_iron_fly").removeClass("option_strategies_active");
-                $("#put_iron_fly").removeClass("option_strategies_active");
-                $("#short_synthetic_future").removeClass("option_strategies_active");
-                $("#long_straddle").removeClass("option_strategies_active");
-                $("#long_synthetic_future").removeClass("option_strategies_active");
-                $("#straddle").removeClass("option_strategies_active");
-                $("#strangle").removeClass("option_strategies_active");
-                $("#iron_fly").removeClass("option_strategies_active");
-                $("#spread").removeClass("option_strategies_active");
-                $("#iron_condor").addClass("option_strategies_active");
-                $("#jaze_lizard").removeClass("option_strategies_active");
-                $("#double_iron_fly").removeClass("option_strategies_active");
-                $("#double_iron_condor").removeClass("option_strategies_active");
-                $("#call_butter_fly").removeClass("option_strategies_active");
-                $("#buy_call").removeClass("option_strategies_active");
-                $("#put_butter_fly").removeClass("option_strategies_active");
+                // Remove the option_strategies_active class from all elements
+$(".straddle").removeClass("option_strategies_active");
+ // Find the closest ancestor with the class .modal_body
+ var closestParent = $(this).closest('.modal_body');
+    
+    // Find the closest parent with the class .straddle
+    var closestDiv_main = closestParent.parents().filter(function() {
+        return $(this).find('.straddle').length > 0;
+    }).first();
+    
+    console.log("closestDiv_main", closestDiv_main);
+
+    // Add the class .option_strategies_active to the parent div
+    closestDiv_main.find(".straddle").addClass("option_strategies_active");
+
 
                 $(".data-display-table").empty();
                 $("#table-PL").empty();
@@ -24124,12 +25957,13 @@ if (plusButtonClicks < strategycounterValue) {
 
 
             else if (filter_arg_strategy === "reverse_jaze_lizard") {
+              $("#reverse_jaze_lizard_modal").show();
+       
               $("#straddle_modal").hide();
               $("#strangle_modal").hide();
               $("#spread_modal").hide();
               $("#ironFly_modal").hide();
               $("#ironCondor_modal").hide();
-              $("#reverse_jaze_lizard_modal").show();
 
               // Ensure you are selecting the correct elements with .strike_price
               var strikePrices = optionChainTable
@@ -24224,24 +26058,21 @@ if (plusButtonClicks < strategycounterValue) {
               });
 
               $(document).off("click", "#reverse_jaze_lizard_modal_btn").on("click", "#reverse_jaze_lizard_modal_btn", function () {
-                $("#strip").removeClass("option_strategies_active");
-                $("#strap").removeClass("option_strategies_active");
-                $("#call_iron_fly").removeClass("option_strategies_active");
-                $("#put_iron_fly").removeClass("option_strategies_active");
-                $("#short_synthetic_future").removeClass("option_strategies_active");
-                $("#long_straddle").removeClass("option_strategies_active");
-                $("#long_synthetic_future").removeClass("option_strategies_active");
-                $("#straddle").removeClass("option_strategies_active");
-                $("#strangle").removeClass("option_strategies_active");
-                $("#iron_fly").removeClass("option_strategies_active");
-                $("#spread").removeClass("option_strategies_active");
-                $("#iron_condor").removeClass("option_strategies_active");
-                $("#jaze_lizard").addClass("option_strategies_active");
-                $("#double_iron_fly").removeClass("option_strategies_active");
-                $("#double_iron_condor").removeClass("option_strategies_active");
-                $("#call_butter_fly").removeClass("option_strategies_active");
-                $("#buy_call").removeClass("option_strategies_active");
-                $("#put_butter_fly").removeClass("option_strategies_active");
+                // Remove the option_strategies_active class from all elements
+$(".straddle").removeClass("option_strategies_active");
+ // Find the closest ancestor with the class .modal_body
+ var closestParent = $(this).closest('.modal_body');
+    
+    // Find the closest parent with the class .straddle
+    var closestDiv_main = closestParent.parents().filter(function() {
+        return $(this).find('.straddle').length > 0;
+    }).first();
+    
+    console.log("closestDiv_main", closestDiv_main);
+
+    // Add the class .option_strategies_active to the parent div
+    closestDiv_main.find(".straddle").addClass("option_strategies_active");
+
 
                 $(".data-display-table").empty();
                 $("#table-PL").empty();
@@ -24411,24 +26242,21 @@ if (plusButtonClicks < strategycounterValue) {
               });
 
               $(document).off("click", "#shortjaze_lizard").on("click", "#shortjaze_lizard", function () {
-                $("#strip").removeClass("option_strategies_active");
-                $("#strap").removeClass("option_strategies_active");
-                $("#call_iron_fly").removeClass("option_strategies_active");
-                $("#put_iron_fly").removeClass("option_strategies_active");
-                $("#short_synthetic_future").removeClass("option_strategies_active");
-                $("#long_straddle").removeClass("option_strategies_active");
-                $("#long_synthetic_future").removeClass("option_strategies_active");
-                $("#straddle").removeClass("option_strategies_active");
-                $("#strangle").removeClass("option_strategies_active");
-                $("#iron_fly").removeClass("option_strategies_active");
-                $("#spread").removeClass("option_strategies_active");
-                $("#iron_condor").removeClass("option_strategies_active");
-                $("#jaze_lizard").addClass("option_strategies_active");
-                $("#double_iron_fly").removeClass("option_strategies_active");
-                $("#double_iron_condor").removeClass("option_strategies_active");
-                $("#call_butter_fly").removeClass("option_strategies_active");
-                $("#buy_call").removeClass("option_strategies_active");
-                $("#put_butter_fly").removeClass("option_strategies_active");
+                // Remove the option_strategies_active class from all elements
+$(".straddle").removeClass("option_strategies_active");
+ // Find the closest ancestor with the class .modal_body
+ var closestParent = $(this).closest('.modal_body');
+    
+    // Find the closest parent with the class .straddle
+    var closestDiv_main = closestParent.parents().filter(function() {
+        return $(this).find('.straddle').length > 0;
+    }).first();
+    
+    console.log("closestDiv_main", closestDiv_main);
+
+    // Add the class .option_strategies_active to the parent div
+    closestDiv_main.find(".straddle").addClass("option_strategies_active");
+
 
                 $(".data-display-table").empty();
                 $("#table-PL").empty();
@@ -24660,24 +26488,21 @@ if (plusButtonClicks < strategycounterValue) {
               });
 
               $(document).off("click", "#shortdouble_iron_fly").on("click", "#shortdouble_iron_fly", function () {
-                $("#strip").removeClass("option_strategies_active");
-                $("#strap").removeClass("option_strategies_active");
-                $("#call_iron_fly").removeClass("option_strategies_active");
-                $("#put_iron_fly").removeClass("option_strategies_active");
-                $("#short_synthetic_future").removeClass("option_strategies_active");
-                $("#long_straddle").removeClass("option_strategies_active");
-                $("#long_synthetic_future").removeClass("option_strategies_active");
-                $("#straddle").removeClass("option_strategies_active");
-                $("#strangle").removeClass("option_strategies_active");
-                $("#iron_fly").removeClass("option_strategies_active");
-                $("#spread").removeClass("option_strategies_active");
-                $("#iron_condor").removeClass("option_strategies_active");
-                $("#jaze_lizard").removeClass("option_strategies_active");
-                $("#double_iron_fly").addClass("option_strategies_active");
-                $("#double_iron_condor").removeClass("option_strategies_active");
-                $("#call_butter_fly").removeClass("option_strategies_active");
-                $("#buy_call").removeClass("option_strategies_active");
-                $("#put_butter_fly").removeClass("option_strategies_active");
+// Remove the option_strategies_active class from all elements
+$(".straddle").removeClass("option_strategies_active");
+
+// Find the closest ancestor with the class .modal_body
+var closestParent = $(this).closest('.modal_body');
+
+// Find the closest parent with the class .straddle
+var closestDiv_main = closestParent.parents().filter(function() {
+    return $(this).find('.straddle').length > 0;
+}).first();
+
+console.log("closestDiv_main", closestDiv_main);
+
+// Add the class .option_strategies_active to the parent div
+closestDiv_main.find(".straddle").addClass("option_strategies_active");
 
 
                 $(".data-display-table").empty();
@@ -24992,24 +26817,22 @@ if (plusButtonClicks < strategycounterValue) {
               });
 
               $(document).off("click", "#shortdouble_iron_condor").on("click", "#shortdouble_iron_condor", function () {
-                $("#strip").removeClass("option_strategies_active");
-                $("#strap").removeClass("option_strategies_active");
-                $("#call_iron_fly").removeClass("option_strategies_active");
-                $("#put_iron_fly").removeClass("option_strategies_active");
-                $("#short_synthetic_future").removeClass("option_strategies_active");
-                $("#long_straddle").removeClass("option_strategies_active");
-                $("#long_synthetic_future").removeClass("option_strategies_active");
-                $("#straddle").removeClass("option_strategies_active");
-                $("#strangle").removeClass("option_strategies_active");
-                $("#iron_fly").removeClass("option_strategies_active");
-                $("#spread").removeClass("option_strategies_active");
-                $("#iron_condor").removeClass("option_strategies_active");
-                $("#jaze_lizard").removeClass("option_strategies_active");
-                $("#double_iron_fly").removeClass("option_strategies_active");
-                $("#double_iron_condor").addClass("option_strategies_active");
-                $("#call_butter_fly").removeClass("option_strategies_active");
-                $("#buy_call").removeClass("option_strategies_active");
-                $("#put_butter_fly").removeClass("option_strategies_active");
+
+
+// Remove the option_strategies_active class from all elements
+$(".straddle").removeClass("option_strategies_active");
+ // Find the closest ancestor with the class .modal_body
+ var closestParent = $(this).closest('.modal_body');
+    
+    // Find the closest parent with the class .straddle
+    var closestDiv_main = closestParent.parents().filter(function() {
+        return $(this).find('.straddle').length > 0;
+    }).first();
+    
+    console.log("closestDiv_main", closestDiv_main);
+
+    // Add the class .option_strategies_active to the parent div
+    closestDiv_main.find(".straddle").addClass("option_strategies_active");
 
 
                 $(".data-display-table").empty();
@@ -25249,25 +27072,21 @@ if (plusButtonClicks < strategycounterValue) {
               });
 
               $(document).off("click", "#shortput_butterfly").on("click", "#shortput_butterfly", function () {
-                $("#strip").removeClass("option_strategies_active");
-                $("#strap").removeClass("option_strategies_active");
-                $("#call_iron_fly").removeClass("option_strategies_active");
-                $("#put_iron_fly").removeClass("option_strategies_active");
-                $("#short_synthetic_future").removeClass("option_strategies_active");
-                $("#long_straddle").removeClass("option_strategies_active");
-                $("#long_synthetic_future").removeClass("option_strategies_active");
-                $("#straddle").removeClass("option_strategies_active");
-                $("#strangle").removeClass("option_strategies_active");
-                $("#iron_fly").removeClass("option_strategies_active");
-                $("#spread").removeClass("option_strategies_active");
-                $("#iron_condor").removeClass("option_strategies_active");
-                $("#jaze_lizard").removeClass("option_strategies_active");
-                $("#double_iron_fly").removeClass("option_strategies_active");
-                $("#double_iron_condor").removeClass("option_strategies_active");
-                $("#call_butter_fly").removeClass("option_strategies_active");
-                $("#buy_call").removeClass("option_strategies_active");
-                $("#put_butter_fly").addClass("option_strategies_active");
 
+// Remove the option_strategies_active class from all elements
+$(".straddle").removeClass("option_strategies_active");
+ // Find the closest ancestor with the class .modal_body
+ var closestParent = $(this).closest('.modal_body');
+    
+    // Find the closest parent with the class .straddle
+    var closestDiv_main = closestParent.parents().filter(function() {
+        return $(this).find('.straddle').length > 0;
+    }).first();
+    
+    console.log("closestDiv_main", closestDiv_main);
+
+    // Add the class .option_strategies_active to the parent div
+    closestDiv_main.find(".straddle").addClass("option_strategies_active");
                 $(".data-display-table").empty();
                 $("#table-PL").empty();
                 $("#resultTable tbody").empty();
@@ -25467,24 +27286,24 @@ if (plusButtonClicks < strategycounterValue) {
 
 
               $(document).off("click", "#shortput_butter_Fly").on("click", "#shortput_butter_Fly", function () {
-                $("#strip").removeClass("option_strategies_active");
-                $("#strap").removeClass("option_strategies_active");
-                $("#call_iron_fly").removeClass("option_strategies_active");
-                $("#put_iron_fly").addClass("option_strategies_active");
-                $("#short_synthetic_future").removeClass("option_strategies_active");
-                $("#long_straddle").removeClass("option_strategies_active");
-                $("#long_synthetic_future").removeClass("option_strategies_active");
-                $("#straddle").removeClass("option_strategies_active");
-                $("#strangle").removeClass("option_strategies_active");
-                $("#iron_fly").removeClass("option_strategies_active");
-                $("#spread").removeClass("option_strategies_active");
-                $("#iron_condor").removeClass("option_strategies_active");
-                $("#jaze_lizard").removeClass("option_strategies_active");
-                $("#double_iron_fly").removeClass("option_strategies_active");
-                $("#double_iron_condor").removeClass("option_strategies_active");
-                $("#put_butter_fly").removeClass("option_strategies_active");
-                $("#call_butter_fly").removeClass("option_strategies_active");
-                $("#buy_call").removeClass("option_strategies_active");
+
+
+// Remove the option_strategies_active class from all elements
+$(".straddle").removeClass("option_strategies_active");
+ // Find the closest ancestor with the class .modal_body
+ var closestParent = $(this).closest('.modal_body');
+    
+    // Find the closest parent with the class .straddle
+    var closestDiv_main = closestParent.parents().filter(function() {
+        return $(this).find('.straddle').length > 0;
+    }).first();
+    
+    console.log("closestDiv_main", closestDiv_main);
+
+    // Add the class .option_strategies_active to the parent div
+    closestDiv_main.find(".straddle").addClass("option_strategies_active");
+
+
                 $(".data-display-table").empty();
                 $("#table-PL").empty();
                 $("#resultTable tbody").empty();
@@ -25748,24 +27567,20 @@ if (plusButtonClicks < strategycounterValue) {
 
 
               $(document).off("click", "#shortcall_butter_Fly").on("click", "#shortcall_butter_Fly", function () {
-                $("#call_iron_fly").addClass("option_strategies_active");
-                $("#strip").removeClass("option_strategies_active");
-                $("#strap").removeClass("option_strategies_active");
-                $("#put_iron_fly").removeClass("option_strategies_active");
-                $("#short_synthetic_future").removeClass("option_strategies_active");
-                $("#long_straddle").removeClass("option_strategies_active");
-                $("#long_synthetic_future").removeClass("option_strategies_active");
-                $("#straddle").removeClass("option_strategies_active");
-                $("#strangle").removeClass("option_strategies_active");
-                $("#iron_fly").removeClass("option_strategies_active");
-                $("#spread").removeClass("option_strategies_active");
-                $("#iron_condor").removeClass("option_strategies_active");
-                $("#jaze_lizard").removeClass("option_strategies_active");
-                $("#double_iron_fly").removeClass("option_strategies_active");
-                $("#double_iron_condor").removeClass("option_strategies_active");
-                $("#put_butter_fly").removeClass("option_strategies_active");
-                $("#call_butter_fly").removeClass("option_strategies_active");
-                $("#buy_call").removeClass("option_strategies_active");
+// Remove the option_strategies_active class from all elements
+$(".straddle").removeClass("option_strategies_active");
+ // Find the closest ancestor with the class .modal_body
+ var closestParent = $(this).closest('.modal_body');
+    
+    // Find the closest parent with the class .straddle
+    var closestDiv_main = closestParent.parents().filter(function() {
+        return $(this).find('.straddle').length > 0;
+    }).first();
+    
+    console.log("closestDiv_main", closestDiv_main);
+
+    // Add the class .option_strategies_active to the parent div
+    closestDiv_main.find(".straddle").addClass("option_strategies_active");
                 $(".data-display-table").empty();
                 $("#table-PL").empty();
                 $("#resultTable tbody").empty();
@@ -26027,24 +27842,23 @@ if (plusButtonClicks < strategycounterValue) {
               });
 
               $(document).off("click", "#shortcall_butter_fly").on("click", "#shortcall_butter_fly", function () {
-                $("#strip").removeClass("option_strategies_active");
-                $("#strap").removeClass("option_strategies_active");
-                $("#call_iron_fly").removeClass("option_strategies_active");
-                $("#put_iron_fly").removeClass("option_strategies_active");
-                $("#short_synthetic_future").removeClass("option_strategies_active");
-                $("#long_straddle").removeClass("option_strategies_active");
-                $("#long_synthetic_future").removeClass("option_strategies_active");
-                $("#straddle").removeClass("option_strategies_active");
-                $("#strangle").removeClass("option_strategies_active");
-                $("#iron_fly").removeClass("option_strategies_active");
-                $("#spread").removeClass("option_strategies_active");
-                $("#iron_condor").removeClass("option_strategies_active");
-                $("#jaze_lizard").removeClass("option_strategies_active");
-                $("#double_iron_fly").removeClass("option_strategies_active");
-                $("#double_iron_condor").removeClass("option_strategies_active");
-                $("#put_butter_fly").removeClass("option_strategies_active");
-                $("#call_butter_fly").addClass("option_strategies_active");
-                $("#buy_call").removeClass("option_strategies_active");
+
+
+// Remove the option_strategies_active class from all elements
+$(".straddle").removeClass("option_strategies_active");
+ // Find the closest ancestor with the class .modal_body
+ var closestParent = $(this).closest('.modal_body');
+    
+    // Find the closest parent with the class .straddle
+    var closestDiv_main = closestParent.parents().filter(function() {
+        return $(this).find('.straddle').length > 0;
+    }).first();
+    
+    console.log("closestDiv_main", closestDiv_main);
+
+    // Add the class .option_strategies_active to the parent div
+    closestDiv_main.find(".straddle").addClass("option_strategies_active");
+
                 $(".data-display-table").empty();
                 $("#table-PL").empty();
                 $("#resultTable tbody").empty();
@@ -26310,24 +28124,24 @@ if (plusButtonClicks < strategycounterValue) {
               });
 
               $(document).off("click", "#shortcustom_strategy").on("click", "#shortcustom_strategy", function () {
-                $("#strip").removeClass("option_strategies_active");
-                $("#strap").removeClass("option_strategies_active");
-                $("#call_iron_fly").removeClass("option_strategies_active");
-                $("#put_iron_fly").removeClass("option_strategies_active");
-                $("#short_synthetic_future").removeClass("option_strategies_active");
-                $("#long_straddle").removeClass("option_strategies_active");
-                $("#straddle").removeClass("option_strategies_active");
-                $("#strangle").removeClass("option_strategies_active");
-                $("#iron_fly").removeClass("option_strategies_active");
-                $("#spread").removeClass("option_strategies_active");
-                $("#iron_condor").removeClass("option_strategies_active");
-                $("#jaze_lizard").removeClass("option_strategies_active");
-                $("#double_iron_fly").removeClass("option_strategies_active");
-                $("#double_iron_condor").removeClass("option_strategies_active");
-                $("#put_butter_fly").removeClass("option_strategies_active");
-                $("#call_butter_fly").removeClass("option_strategies_active");
-                $("#custom_strategy").addClass("option_strategies_active");
-                $("#buy_call").removeClass("option_strategies_active");
+
+
+// Remove the option_strategies_active class from all elements
+$(".straddle").removeClass("option_strategies_active");
+ // Find the closest ancestor with the class .modal_body
+ var closestParent = $(this).closest('.modal_body');
+    
+    // Find the closest parent with the class .straddle
+    var closestDiv_main = closestParent.parents().filter(function() {
+        return $(this).find('.straddle').length > 0;
+    }).first();
+    
+    console.log("closestDiv_main", closestDiv_main);
+
+    // Add the class .option_strategies_active to the parent div
+    closestDiv_main.find(".straddle").addClass("option_strategies_active");
+
+
                 $(".data-display-table").empty();
                 $("#table-PL").empty();
                 $("#resultTable tbody").empty();
@@ -26493,6 +28307,9 @@ if (plusButtonClicks < strategycounterValue) {
           // Attach click event handlers to strategy buttons
           attachButtonClickEvent($("#shortStraddle"), "straddle");
           attachButtonClickEvent($("#strangle"), "strangle");
+          attachButtonClickEvent($("#long_strangle"), "long_strangle");
+          attachButtonClickEvent($("#range_forward"), "range_forward");
+          attachButtonClickEvent($("#risk_reversal"), "risk_reversal");
           attachButtonClickEvent($("#iron_fly"), "iron_fly");
           attachButtonClickEvent($("#spread"), "spread");
           attachButtonClickEvent($("#iron_condor"), "iron_condor");
@@ -26518,6 +28335,9 @@ if (plusButtonClicks < strategycounterValue) {
           attachButtonClickEvent($("#put_ratio_spread"), "put_ratio_spread");
           attachButtonClickEvent($("#put_ratio_back_spread"), "put_ratio_back_spread");
           attachButtonClickEvent($("#call_ratio_back_spread"), "call_ratio_back_spread");
+          attachButtonClickEvent($("#put_sell"), "put_sell");
+          attachButtonClickEvent($("#put_buy"), "put_buy");
+          attachButtonClickEvent($("#call_sell"), "call_sell");
 
 
 
@@ -28399,70 +30219,6 @@ const strikePrices_leg =main_strikePrice_leg
 
       var plusCount = main_strike_price_dynamic.filter(obj => obj.long_shorts === '+').length;
       var minusCount = main_strike_price_dynamic.filter(obj => obj.long_shorts === '-').length;
-
-      if (plusCount > minusCount) {
-        // console.log("'+' appears more");
-        // Check if sumArray contains only positive values
-
-
-
-
-
-        function checkRepeats(arr) {
-          const counts = {};
-          for (let num of arr) {
-            counts[num] = (counts[num] || 0) + 1;
-            if (counts[num] > 2) {
-
-              $("#max_profit").text((maxProfit).toFixed(2));
-              $("#max_loss").text((maxLoss).toFixed(2));
-              var ratio = Math.max(...sumArray) / Math.min(...sumArray);
-              $("#ratio").text(ratio.toFixed(2));
-              return false;
-            }
-          }
-          var ratio = Math.max(...sumArray) / Math.min(...sumArray);
-          $("#ratio").text("NA");
-          $("#max_profit").text("Unlimited");
-          $("#max_loss").text((maxLoss).toFixed(2));
-          return false;
-        }
-        checkRepeats(positiveValues);
-        checkRepeats(negativeValues);
-
-
-
-
-
-
-
-
-
-        // var positiveDuplicates = positiveValues.filter(value => value === maxPositive);
-        // if (positiveDuplicates.length > 1) {
-        //   //////console.log("Max Positive Value has Duplicates in Positive Values:", positiveDuplicates);
-        //   $("#max_profit").text((maxProfit).toFixed(2));
-        // } else {
-        //   console.log("Max Positive Value does not have Duplicates in Positive Values");
-        //   $("#max_profit").text("Unlimited");
-        // }
-
-      } else if (minusCount > plusCount) {
-        //////console.log("'-' appears more");
-
-        $("#max_profit").text((maxProfit).toFixed(2));
-        $("#max_loss").text("Unlimited");
-
-        var negativeDuplicates = negativeValues.filter(value => value === minNegative);
-        if (negativeDuplicates.length > 1) {
-          //////console.log("Min Negative Value has Duplicates in Negative Values:", negativeDuplicates);
-          $("#max_loss").text((maxLoss).toFixed(2));
-        } else {
-          //////console.log("Min Negative Value does not have Duplicates in Negative Values");
-          $("#max_loss").text("Unlimited");
-        }
-
-      } else {
         //////console.log("'+' and '-' appear the same number of times");
         function checkRepeats(sumArray) {
   let negative_repeats = false;
@@ -28537,7 +30293,7 @@ console.log("Positive Repeats:", repeatsInfo.positive_repeats);
     } else if(!lastNegativeRepeating && !lastPositiveRepeating){
       $("#max_profit").text("Unlimited");
       $("#max_loss").text("Unlimited");
-      $("#ratio").text("NAF");
+      $("#ratio").text("NA");
     }
 
 
@@ -28560,13 +30316,6 @@ function checkLastRepeating(arr, lastCount) {
 }
 
 sumArray_final(sumArray);
-
-
-      }
-
-
-
-
 
 
 
