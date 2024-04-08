@@ -1276,7 +1276,14 @@ Option Strategy Builder
   }
 
   #ironFly_modal {
-    width: 24rem;
+
+    --modal-width: 24rem;
+    --modal-top: 1;
+    --modal-left: 50%;
+    --transform-origin-x: 0;
+    --transform-origin-y: 0;
+
+    width: var(--modal-width);
     box-shadow: 0px 0px 1px 2px #4399eb3b;
     position: absolute;
     z-index: 99;
@@ -1284,6 +1291,12 @@ Option Strategy Builder
     display: none;
     border-radius: 8px;
     background-color: white;
+    top: var(--modal-top);
+    left: var(--modal-left);
+    transform: translate(-72%);
+    transform-origin: var(--transform-origin-x) var(--transform-origin-y);
+
+
   }
 
   #put_butter_Fly_modal {
@@ -1309,7 +1322,13 @@ Option Strategy Builder
   }
 
   #ironCondor_modal {
-    width: 24rem;
+    --modal-width: 24rem;
+    --modal-top: 1;
+    --modal-left: 50%;
+    --transform-origin-x: 0;
+    --transform-origin-y: 0;
+
+    width: var(--modal-width);
     box-shadow: 0px 0px 1px 2px #4399eb3b;
     position: absolute;
     z-index: 99;
@@ -1317,7 +1336,11 @@ Option Strategy Builder
     display: none;
     border-radius: 8px;
     background-color: white;
-  }
+    top: var(--modal-top);
+    left: var(--modal-left);
+    transform: translate(-72%);
+    transform-origin: var(--transform-origin-x) var(--transform-origin-y);
+}
 
   #jaze_lizard_modal {
     width: 24rem;
@@ -10421,7 +10444,12 @@ Option Strategy Builder
               <div class="" id="ironFly_modal">
                 <div class="dismiss">
                   <i class="bx bx-plus dismiss_icon"></i>
-                  <div class="triangle-up"></div>
+                  <div class="triangle-up" style="width: 0;
+                  top: 4px;
+              height: 0;
+              right: 85px;
+              left: auto;
+              position: absolute;"></div>
                 </div>
                 <div class="modal_dialog">
                   <div class="modal_content">
@@ -10640,8 +10668,13 @@ Option Strategy Builder
               <div class="" id="ironCondor_modal">
                 <div class="dismiss">
                   <i class="bx bx-plus dismiss_icon"></i>
-                  <div class="triangle-up"></div>
                 </div>
+                <div class="triangle-up" style="width: 0;
+                    top: 4px;
+                height: 0;
+                right: 41px;
+                left: auto;
+                position: absolute;"></div>
                 <div class="modal_dialog">
                   <div class="modal_content">
                     <div class="modal_body" id="modal_body">
@@ -12091,7 +12124,7 @@ Option Strategy Builder
           case "bull":
             $mainStrategies.hide();
             $butterflyStrategies.hide();
-            $(".main-spread,.main_short_synthetic_future, .main-put-butterfly,.main_put_butterfly,.main_strap,.main_strip,.main_call_butterfly,.main_reverse_jaze_lizard,.main_put_ratio_back_spread,.main_bear_put_spread,.main-spread,.main_put_ratio_spread,.main_call_ratio_spread,.main_put_buy,.main_call_sell,main_risk_reversal,.main_long_strangle").hide();
+            $(".main-spread,.main_short_synthetic_future, .main-put-butterfly,.main_put_butterfly,.main_strap,.main_strip,.main_call_butterfly,.main_reverse_jaze_lizard,.main_put_ratio_back_spread,.main_bear_put_spread,.main-spread,.main_put_ratio_spread,.main_call_ratio_spread,.main_put_buy,.main_call_sell,main_risk_reversal,.main_long_strangle,.main_risk_reversal").hide();
             $(".main-jaze_lizard,.main_long_synthetic_future, .main-call-butterfly,.main_buy_call,.main_call_ratio_back_spread,.main_bull_put_spread,.main_bull_call_spread,.main_put_sell,.main_range_forward").show();
             break;
           case "bear":
@@ -28292,7 +28325,8 @@ $(".straddle").removeClass("option_strategies_active");
        targetParagraph.text("0");
        console.log(targetParagraph.text());
 
-
+$(".main_leg_button_input input").val(0)
+console.log($(".main_leg_button_input input").val());
 
 
              strategycounterValue = 6;
