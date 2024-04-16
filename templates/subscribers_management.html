@@ -239,6 +239,7 @@
             <th>Date</th>
             <th>Time</th>
             <th>Status</th>
+            <th>Active</th>
         </tr>
     </thead>
     <tbody>
@@ -337,11 +338,15 @@
       });
   });
 
-
-    $.ajax({
+function get_all_subs() {
+  console.log('Run the function');
+  
+  $.ajax({
         url: '/get_subscribers/', // Replace with your URL
         method: 'GET',
         success: function (data) {
+          $('#subscriberTable').DataTable().destroy();
+          $('#subscriberTable tbody').empty()
             // Append data to the table
             data.subscribers.forEach(function (subscriber) {
               const subscribedTime = new Date(subscriber.subscribed_at); // Convert subscribed time to Date object
@@ -352,9 +357,18 @@
                       <td>${new Date(subscriber.subscribed_at).toLocaleDateString()}</td>
                       <td>${subscribedTime.toLocaleTimeString()}</td> <!-- Display subscribed time -->
                       <td class="${subscribe_status == "Active" ? 'text-success':'text-danger'}">${subscribe_status}</td>
+                      <td><button data-id="${subscriber.id}" class="delete_subs">Delete</button></td>
                   </tr>
               `);
             });
+
+            $(".delete_subs").click(function() {
+              var subscriberId = $(this).data("id");
+     delete_subs_back(subscriberId)
+          });
+    
+
+
 
             // Initialize DataTables
             $('#subscriberTable').DataTable({
@@ -371,6 +385,33 @@
             alert("Error fetching subscribers.");
         }
     });
+
+}
+get_all_subs()
+function delete_subs_back(subscriberId) {
+  $.ajax({
+                  url: '/delete_subscriber',
+                  type: 'POST',
+                  data: {
+                      'subscriber_id': subscriberId,
+                      'csrfmiddlewaretoken': '{{ csrf_token }}'
+                  },
+                  dataType: 'json',
+                  success: function(data) {
+                      if (data.success) {
+                          console.log('Subscriber deleted successfully');
+                          get_all_subs()
+                          // Optionally, you can remove the deleted subscriber from the UI
+                      } else {
+                          console.error('Failed to delete subscriber: ' + data.error);
+                      }
+                  },
+                  error: function(xhr, textStatus, errorThrown) {
+                      console.error('Error deleting subscriber: ' + errorThrown);
+                  }
+              });
+}
+
 });
     
 </script>
