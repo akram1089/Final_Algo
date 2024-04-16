@@ -21591,12 +21591,12 @@ from django.http import JsonResponse
 from .models import Subscriber
 
 def get_subscribers(request):
-    subscribers = Subscriber.objects.all().values('email', 'subscribed_at', 'active')
+    subscribers = Subscriber.objects.values('email', 'subscribed_at', 'active','id').distinct()
     subscribers_list = list(subscribers)
     return JsonResponse({'subscribers': subscribers_list})
 
 def send_promotional_emails(request):
-    subscribers = Subscriber.objects.filter(active=True)
+    subscribers = Subscriber.objects.filter(active=True).distinct()
     promotional_email = PromotionalEmail.objects.last()
     
     if promotional_email:
@@ -21609,7 +21609,15 @@ def send_promotional_emails(request):
         return JsonResponse({'message': 'Promotional emails sent successfully!'})
     else:
         return JsonResponse({'error': 'No PromotionalEmail object found.'}, status=404)
-
+@require_POST
+def delete_subscriber(request):
+    subscriber_id = request.POST.get('subscriber_id')
+    try:
+        subscriber = Subscriber.objects.get(pk=subscriber_id)
+        subscriber.delete()
+        return JsonResponse({'success': True})
+    except Subscriber.DoesNotExist:
+        return JsonResponse
 
 def send_newsletter_emails(request):
     subscribers = Subscriber.objects.filter(active=True)
@@ -22013,7 +22021,11 @@ def save_emails_from_csv(request, file_name):
     for index, row in df.iterrows():
         # Get the email value from the 'E-mail 1 - Value' column
         email = row['E-mail 1 - Value']
-        
+
+        # Check if the email already exists in the Subscriber model
+        if Subscriber.objects.filter(email=email).exists():
+            continue
+
         # Save the email to the Subscriber model
         subscriber = Subscriber(email=email, subscribed_at=datetime.datetime.now(), active=True)
         subscriber.save()

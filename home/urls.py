@@ -598,6 +598,7 @@ urlpatterns = [
      path('stock_historical', views.stock_historical, name='stock_historical'),
      path('send_promotional_emails', views.send_promotional_emails, name='send_promotional_emails'),
      path('send_newsletter_emails', views.send_newsletter_emails, name='send_newsletter_emails'),
+     path('delete_subscriber', views.delete_subscriber, name='delete_subscriber'),
      path('unsubscribes_mail', views.unsubscribes_mail, name='unsubscribes_mail'),
      path('unsubscribe', views.unsubscribe, name='unsubscribe'),
      path('add_newsletter_data', views.add_newsletter_data, name='add_newsletter_data'),
