@@ -611,6 +611,7 @@ urlpatterns = [
      path('customer_contact', views.customer_contact, name='customer_contact'),
      path('google_analytics', views.google_analytics, name='google_analytics'),
      path('google_analytics_data', views.google_analytics_data, name='google_analytics_data'),
+     path('save_emails_from_csv/<str:file_name>', views.save_emails_from_csv, name='save_emails_from_csv'),
 
 
 

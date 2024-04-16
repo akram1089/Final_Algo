@@ -521,6 +521,8 @@ class Subscriber(models.Model):
     email = models.EmailField(max_length=254)
     subscribed_at = models.DateTimeField()
     active = models.BooleanField(default=True)
+    def __str__(self):
+        return f"{self.email} - {self.subscribed_at}"
 
 
 class PromotionalEmail(models.Model):

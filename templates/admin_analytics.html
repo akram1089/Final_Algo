@@ -176,7 +176,68 @@
     }
 </style>
     <div class="container-fluid mt-3">
+
         <div class="row">
+
+            <div class="col-md-2">
+<p>Bounce Rate</p>
+
+<h5 class="fw-bold" id="bounce_value">32.54%</h5>
+
+            </div>
+
+
+            <div class="col-md-2">
+<p>Active Users</p>
+
+<h5 class="fw-bold" id="activeUsers">32.54%</h5>
+
+            </div>
+
+            <div class="col-md-2">
+                <p>New Users</p>
+                
+                <h5 class="fw-bold" id="newUsers">32.54%</h5>
+                
+                            </div>
+                
+
+
+            <div class="col-md-2">
+<p>Avg. Time on Site</p>
+
+<h5 class="fw-bold" id="averageSessionDuration">32.54%</h5>
+
+            </div>
+            <div class="col-md-2">
+
+
+
+<p>Page Views</p>
+
+<h5 class="fw-bold" id="screenPageViews">32.54%</h5>
+
+            </div>
+
+
+
+            <div class="col-md-2">
+<p>Sessions</p>
+
+<h5 class="fw-bold" id="sessions">32.54%</h5>
+
+            </div>
+
+        </div>
+        
+
+
+
+
+
+
+
+        <div class="row mt-3">
           <div class="col-md-8">
             <div id="user_chart"></div>
           </div>
@@ -188,14 +249,44 @@
     
 
     <script>
-        $("#export_admin").daterangepicker();
+   
+
+var start = moment().subtract(29, 'days');
+var end = moment();
+
+function cb(start, end) {
+    $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+}
+
+$('#export_admin').daterangepicker({
+    startDate: start,
+    endDate: end,
+    ranges: {
+       'Today': [moment(), moment()],
+       'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+       'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+       'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+       'This Month': [moment().startOf('month'), moment().endOf('month')],
+       'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+    }
+}, cb);
+
+cb(start, end);
+
+
+
         $(document).ready(function () {
             // Initialize date range picker
     
             // Add click event listener to Apply button
             $("#applyBtn").click(function () {
-                // Retrieve selected date range
-                var selectedRange = $("#export_admin").val();
+           
+                get_initialData()
+            });
+            get_initialData()
+        function get_initialData() {
+                 // Retrieve selected date range
+                 var selectedRange = $("#export_admin").val();
                 // Log the selected date range
                 console.log("Selected Date Range: " + selectedRange);
                 var dates = selectedRange.split(" - ");
@@ -206,7 +297,13 @@
 
                 var main_analytics_metrics_dimensions_unique = [
                 {
-                "metrics" : ["totalUsers", "engagedSessions", "sessions","newUsers"],
+                "metrics" : ["newUsers","activeUsers","bounceRate","sessions","sessionsPerUser","screenPageViews","averageSessionDuration"],
+                "dimensions" : [],
+                "analytics_name":"all_user"
+
+            },    
+                {
+                "metrics" : ["totalUsers", "engagedSessions", "sessions","newUsers","activeUsers"],
                 "dimensions" : ["date"],
                 "analytics_name":"user_date_wise"
 
@@ -234,6 +331,9 @@
         drawDevice_category(output_analytics)
        } else if (output_analytics.analytics_name==="user_date_wise") {
         drawUserchart(output_analytics)
+       
+       } else if (output_analytics.analytics_name==="all_user") {
+        drawtopoverViews(output_analytics)
        }
         // Proceed to the next call
         getAnalyticsSequentially(index + 1);
@@ -242,8 +342,34 @@
 
 // Start the sequential process
 getAnalyticsSequentially(0);
+        }
+   
+        function drawtopoverViews(output_analytics) {
+    // Get the bounce rate from the output_analytics object
+    var bounceRate = parseFloat(output_analytics.bounceRate[0]);
 
-            });
+    // Convert bounce rate to percentage format
+    var bounceRatePercentage = (bounceRate * 100).toFixed(2) + '%';
+
+    // Update the text of the corresponding HTML element with the bounce rate percentage
+    $("#bounce_value").text(bounceRatePercentage);
+
+    // Set the values to the text of the other corresponding HTML elements with the specified IDs
+    $("#activeUsers").text(output_analytics.activeUsers[0] || "");
+    $("#newUsers").text(output_analytics.newUsers[0] || "");
+    var durationSeconds = parseFloat(output_analytics.averageSessionDuration[0]);
+    var minutes = Math.floor(durationSeconds / 60);
+    var seconds = Math.floor(durationSeconds % 60);
+
+    // Format the minutes and seconds
+    var durationFormatted = minutes + "m:" + seconds + "s";
+
+    // Update the text of the corresponding HTML element with the formatted duration
+    $("#averageSessionDuration").text(durationFormatted);
+    $("#screenPageViews").text(output_analytics.screenPageViews[0] || "");
+    $("#sessions").text(output_analytics.sessions[0] || "");
+}
+
 
 
             function drawUserchart(All_users) {
@@ -254,9 +380,11 @@ getAnalyticsSequentially(0);
 
     // Convert the provided JSON data into arrays
     var dates = Object.values(All_users.date);
-    var totalUsers = Object.values(All_users.totalUsers).map(Number);
+    var activeUsers = Object.values(All_users.activeUsers).map(Number);
     var newUsers = Object.values(All_users.newUsers).map(Number);
-
+    console.log('activeUsers',activeUsers);
+    console.log('newUsers',newUsers);
+    
     // Create chart instance
     var chart = am4core.create("user_chart", am4charts.XYChart);
 
@@ -265,7 +393,7 @@ getAnalyticsSequentially(0);
     for (var i = 0; i < dates.length; i++) {
         chart.data.push({
             "date":dates[i],
-            "totalUsers": totalUsers[i],
+            "activeUsers": activeUsers[i],
             "newUsers": newUsers[i]
         });
     }
@@ -278,7 +406,11 @@ chart.data.sort(function(a, b) {
     return new Date(a.date) - new Date(b.date);
 });
 console.log(chart.data);
-                
+                  // Calculate total users and new users
+    var totalactiveUsers = activeUsers.reduce((acc, cur) => acc + cur, 0);
+    var totalNewUsers = newUsers.reduce((acc, cur) => acc + cur, 0);
+
+    console.log(totalactiveUsers,totalNewUsers);
     // Create axes
     var dateAxis = chart.xAxes.push(new am4charts.DateAxis());
     dateAxis.renderer.minGridDistance = 50; // Set minimum grid distance
@@ -288,12 +420,12 @@ console.log(chart.data);
     valueAxis.title.text = "Users";
 
     // Create series
-    var totalUsersSeries = chart.series.push(new am4charts.LineSeries());
-    totalUsersSeries.dataFields.dateX = "date";
-    totalUsersSeries.dataFields.valueY = "totalUsers";
-    totalUsersSeries.name = "Total Users";
-    totalUsersSeries.tooltipText = "{name}: [bold]{valueY}[/]";
-    totalUsersSeries.strokeWidth = 2; // Set line thickness
+    var activeUsersSeries = chart.series.push(new am4charts.LineSeries());
+    activeUsersSeries.dataFields.dateX = "date";
+    activeUsersSeries.dataFields.valueY = "activeUsers";
+    activeUsersSeries.name = "Total Users";
+    activeUsersSeries.tooltipText = "{name}: [bold]{valueY}[/]";
+    activeUsersSeries.strokeWidth = 2; // Set line thickness
 
 
     var newUsersSeries = chart.series.push(new am4charts.LineSeries());
@@ -304,6 +436,7 @@ console.log(chart.data);
     newUsersSeries.strokeWidth = 2; // Set line thickness
   
 
+    chart.logo.disabled = true;
     // Add chart cursor
     chart.cursor = new am4charts.XYCursor();
 
@@ -365,14 +498,14 @@ if (device_category_chart) {
         var pieSeries = chart.series.push(new am4charts.PieSeries());
         pieSeries.dataFields.value = "totalUsers";
         pieSeries.dataFields.category = "deviceCategory";
-        pieSeries.labels.template.disabled = true; // Disable default labels
+        pieSeries.labels.template.disabled = false; // Disable default labels
 
 // Enable labels inside the chart
-pieSeries.labels.template.text = "{category}\n{value.percent.formatNumber('#.#')}%";
+pieSeries.labels.template.text = "{category} - \n{value.percent.formatNumber('#.#')}%";
 pieSeries.labels.template.fontSize = 12; // Set label font size
+pieSeries.alignLabels = false;
+pieSeries.labels.template.bent = true;
 
-// Set label position inside the donut chart
-pieSeries.labels.template.radius = am4core.percent(-40);
         // Add a title
 
         chart.logo.disabled = true;
@@ -424,6 +557,7 @@ pieSeries.labels.template.radius = am4core.percent(-40);
                             'analytics_name': analyticsName
                         },
                         success: function (data) {
+                            console.log(data);
                             // Handle the response data here
                             callback(data); // Call the callback function with the data
                         },

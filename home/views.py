@@ -21991,3 +21991,31 @@ def query_data(api_response):
 
 def google_analytics(request):
     return render(request,"admin_analytics.html")
+
+
+
+
+
+
+
+
+
+
+def save_emails_from_csv(request, file_name):
+    # Check if the file exists
+    if not os.path.isfile(f'{file_name}.csv'):
+        return HttpResponse("File not found", status=404)
+
+    # Read the CSV file
+    df = pd.read_csv(f'{file_name}.csv')
+
+    # Iterate over each row in the DataFrame
+    for index, row in df.iterrows():
+        # Get the email value from the 'E-mail 1 - Value' column
+        email = row['E-mail 1 - Value']
+        
+        # Save the email to the Subscriber model
+        subscriber = Subscriber(email=email, subscribed_at=datetime.datetime.now(), active=True)
+        subscriber.save()
+
+    return HttpResponse("Saved")
