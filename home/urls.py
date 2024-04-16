@@ -609,6 +609,8 @@ urlpatterns = [
      path('api/webhook/', views.webhook_urls, name='webhook_urls'),
      path('webhooks_url', views.webhooks_url, name='webhooks_url'),
      path('customer_contact', views.customer_contact, name='customer_contact'),
+     path('google_analytics', views.google_analytics, name='google_analytics'),
+     path('google_analytics_data', views.google_analytics_data, name='google_analytics_data'),
 
 
 

@@ -21902,3 +21902,92 @@ def customer_contact(request):
             return JsonResponse({"error_message": error_message}, status=500)
 
     return JsonResponse({"error_message": "Invalid request method."}, status=405)
+
+
+
+
+
+
+
+
+
+
+
+
+
+from google.analytics.data_v1beta import BetaAnalyticsDataClient
+from google.analytics.data_v1beta.types import DateRange, Dimension, Metric, RunReportRequest
+import pandas as pd
+import itertools
+import os
+
+
+
+def google_analytics_data(request):
+    start_date = request.GET.get('start_date')
+    end_date = request.GET.get('end_date')
+    metrics = request.GET.getlist('metrics[]')  # Get list of metrics
+    dimensions = request.GET.getlist('dimensions[]')  # Get list of dimensions
+    analytics_name = request.GET.get('analytics_name')  # Get analytics name
+    print(dimensions)
+    print(analytics_name)
+    
+    property_id = "423339347"  # Replace with your Google Analytics property ID
+
+    yesterday = str(start_date)
+    now_date = end_date
+
+    os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = 'reports-419713-d4fd88329122.json'
+
+    client = BetaAnalyticsDataClient()
+
+    dimensions_obj = [Dimension(name=dim) for dim in dimensions]
+
+    metrics_obj = [Metric(name=metric) for metric in metrics]
+
+    request_api = RunReportRequest(
+        property=f"properties/{property_id}",
+        dimensions=dimensions_obj,
+        metrics=metrics_obj,
+        date_ranges=[DateRange(start_date=yesterday, end_date=str(now_date))],
+    )
+
+    try:
+        response = client.run_report(request_api)
+        data = query_data(response)
+        parsed_data = json.loads(data)
+        # Optionally, you can include analytics_name in the response
+        parsed_data['analytics_name'] = analytics_name
+        return JsonResponse(parsed_data, safe=False)
+    except Exception as e:
+        return HttpResponseServerError(f"An error occurred: {str(e)}")
+def query_data(api_response):
+    print(api_response)
+    # Process API response
+    dimension_headers = [header.name for header in api_response.dimension_headers]
+    metric_headers = [header.name for header in api_response.metric_headers]
+    dimensions = []
+    metrics = []
+    for i in range(len(dimension_headers)):
+        dimensions.append([row.dimension_values[i].value for row in api_response.rows])
+    for i in range(len(metric_headers)):
+        metrics.append([row.metric_values[i].value for row in api_response.rows])
+    headers = dimension_headers + metric_headers
+    data = dimensions + metrics
+    df = pd.DataFrame(data).transpose()
+    df.columns = headers
+    return df.to_json()
+
+
+
+
+
+
+
+
+
+
+
+
+def google_analytics(request):
+    return render(request,"admin_analytics.html")

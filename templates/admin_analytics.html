@@ -1,0 +1,439 @@
+{% extends "base_admin_panel.html" %}
+{% load static %}
+{% block dashboard_admin_body %}
+<script src="https://cdn.amcharts.com/lib/4/core.js"></script>
+<script src="https://cdn.amcharts.com/lib/4/charts.js"></script>
+<script src="https://cdn.amcharts.com/lib/4/themes/animated.js"></script>
+<style>
+    .dashboard_date_picker {
+
+
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        row-gap: 0.2rem;
+
+    }
+
+    .picker_date {
+        display: flex;
+        gap: 1rem;
+
+    }
+
+    .card_sells {
+        display: flex;
+        justify-content: space-between;
+        padding: 13px;
+        align-items: center;
+    }
+
+    @media screen and (min-width:768px) {
+        .col-lg-4 {
+            width: 31%;
+        }
+
+
+    }
+
+    @media screen and (max-width:400px) {
+        .sales_price {
+            display: flex;
+            justify-content: center !important;
+            align-items: center;
+            padding: 13px;
+            flex-wrap: wrap;
+
+        }
+    }
+
+    p {
+        margin-bottom: auto;
+    }
+
+    .sales_price {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 13px;
+        flex-wrap: wrap;
+
+    }
+
+    .sales_per_compared {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+    }
+
+    .inner_sales {
+        display: flex;
+        align-items: center;
+
+    }
+
+    .compared_prev {
+        font-size: 12px;
+        color: rgb(22, 35, 35);
+    }
+
+    .saw-pulse__counter {
+        background: #d9ecff;
+        border-radius: 0.125rem;
+        color: #004b9a;
+        font-size: 2.5rem;
+        font-weight: 500;
+        line-height: 1;
+        margin: 0 1.25rem 0.75rem;
+        padding: 1.5rem 1.25rem;
+        text-align: center;
+    }
+
+    .sa-widget-header {
+        align-items: center;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .sa-widget-header__title {
+        font-size: 1.0625rem;
+        font-weight: 500;
+        margin: 0;
+    }
+
+    .saw-pulse__header {
+        padding: 1.25rem;
+    }
+
+    .card {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+        word-wrap: break-word;
+        background-color: #fff;
+        background-clip: border-box;
+        border: 0 solid rgba(0, 0, 0, 0.125);
+        border-radius: 2px;
+    }
+
+    .row {
+        margin-left: auto;
+    }
+
+    .saw-chart__header {
+        padding: 1.25rem 1.25rem 0;
+    }
+
+    .sa-widget-header {
+        align-items: center;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    @media (min-width: 992px) {
+        .col-lg-8 {
+            flex: 0 0 auto;
+            width: 65.666667%;
+        }
+    }
+</style>
+<style>
+    .saw-chart__body {
+        width: 100%;
+        overflow-x: auto;
+        padding: 19px;
+    }
+
+    .saw-chart__container {
+        position: relative;
+        width: 100%;
+        padding-bottom: 50%;
+        /* Adjust the padding-bottom value to set the chart container height */
+    }
+
+    .saw-chart__container canvas {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+    }
+</style>
+<div class="main_dashboard ">
+    <div class="dashboard_date_picker ">
+        <h4 style="    font-weight: 700;">Site Analytics</h4>
+        <div class="picker_date">
+            <input class="form-control form-control-solid" placeholder="Pick date rage" id="export_admin"
+                data-listener-added_a06394db="true">
+            <button class="button btn btn-primary" id="applyBtn">Apply</button>
+        </div>
+    </div>
+
+<style>
+    #device_category, #user_chart {
+      height: 500px;
+    }
+</style>
+    <div class="container-fluid mt-3">
+        <div class="row">
+          <div class="col-md-8">
+            <div id="user_chart"></div>
+          </div>
+          <div class="col-md-4">
+            <div id="device_category"></div>
+          </div>
+        </div>
+      </div>
+    
+
+    <script>
+        $("#export_admin").daterangepicker();
+        $(document).ready(function () {
+            // Initialize date range picker
+    
+            // Add click event listener to Apply button
+            $("#applyBtn").click(function () {
+                // Retrieve selected date range
+                var selectedRange = $("#export_admin").val();
+                // Log the selected date range
+                console.log("Selected Date Range: " + selectedRange);
+                var dates = selectedRange.split(" - ");
+                var startDate = formatDate(dates[0]);
+                var endDate = formatDate(dates[1]);
+                console.log("Start Date: " + startDate);
+                console.log("End Date: " + endDate);
+
+                var main_analytics_metrics_dimensions_unique = [
+                {
+                "metrics" : ["totalUsers", "engagedSessions", "sessions","newUsers"],
+                "dimensions" : ["date"],
+                "analytics_name":"user_date_wise"
+
+            },    
+                {
+                    "metrics":["totalUsers", "engagedSessions", "sessions"],
+                    "dimensions" : ["deviceCategory"],
+                    "analytics_name":"user_device_category"
+
+                },
+
+            ]
+            function getAnalyticsSequentially(index) {
+    if (index >= main_analytics_metrics_dimensions_unique.length) {
+        // All calls have been completed
+        return;
+    }
+    
+    var item = main_analytics_metrics_dimensions_unique[index];
+    
+    getAnalytics(startDate, endDate, item.metrics, item.dimensions, item.analytics_name, function (output_analytics) {
+        // console.log(output_analytics);
+        // Further processing of analytics data can be done here
+       if (output_analytics.analytics_name==="user_device_category") {
+        drawDevice_category(output_analytics)
+       } else if (output_analytics.analytics_name==="user_date_wise") {
+        drawUserchart(output_analytics)
+       }
+        // Proceed to the next call
+        getAnalyticsSequentially(index + 1);
+    });
+}
+
+// Start the sequential process
+getAnalyticsSequentially(0);
+
+            });
+
+
+            function drawUserchart(All_users) {
+
+                console.log(All_users);
+   
+                console.log(All_users);
+
+    // Convert the provided JSON data into arrays
+    var dates = Object.values(All_users.date);
+    var totalUsers = Object.values(All_users.totalUsers).map(Number);
+    var newUsers = Object.values(All_users.newUsers).map(Number);
+
+    // Create chart instance
+    var chart = am4core.create("user_chart", am4charts.XYChart);
+
+    // Add data
+    chart.data = [];
+    for (var i = 0; i < dates.length; i++) {
+        chart.data.push({
+            "date":dates[i],
+            "totalUsers": totalUsers[i],
+            "newUsers": newUsers[i]
+        });
+    }
+console.log(chart.data);
+chart.data.forEach(function(item) {
+    item.date = new Date(item.date.substr(0, 4), parseInt(item.date.substr(4, 2)) - 1, item.date.substr(6, 2));
+});
+
+chart.data.sort(function(a, b) {
+    return new Date(a.date) - new Date(b.date);
+});
+console.log(chart.data);
+                
+    // Create axes
+    var dateAxis = chart.xAxes.push(new am4charts.DateAxis());
+    dateAxis.renderer.minGridDistance = 50; // Set minimum grid distance
+    dateAxis.title.text = "Date";
+
+    var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
+    valueAxis.title.text = "Users";
+
+    // Create series
+    var totalUsersSeries = chart.series.push(new am4charts.LineSeries());
+    totalUsersSeries.dataFields.dateX = "date";
+    totalUsersSeries.dataFields.valueY = "totalUsers";
+    totalUsersSeries.name = "Total Users";
+    totalUsersSeries.tooltipText = "{name}: [bold]{valueY}[/]";
+    totalUsersSeries.strokeWidth = 2; // Set line thickness
+
+
+    var newUsersSeries = chart.series.push(new am4charts.LineSeries());
+    newUsersSeries.dataFields.dateX = "date";
+    newUsersSeries.dataFields.valueY = "newUsers";
+    newUsersSeries.name = "New Users";
+    newUsersSeries.tooltipText = "{name}: [bold]{valueY}[/]";
+    newUsersSeries.strokeWidth = 2; // Set line thickness
+  
+
+    // Add chart cursor
+    chart.cursor = new am4charts.XYCursor();
+
+    // Add legend
+    chart.legend = new am4charts.Legend();
+    chart.legend.position = "top";
+
+    // Add scrollbar
+    chart.scrollbarX = new am4core.Scrollbar();
+
+    // Enable responsive features
+    chart.responsive.enabled = true;
+
+    // Enable themes
+    am4core.useTheme(am4themes_animated);
+
+    // Assign chart object to the container element
+
+}
+
+var device_category_chart = null
+
+            function drawDevice_category(device_category_data) {
+                       // Define the data
+
+
+
+
+// Dispose of the existing chart if it exists
+if (device_category_chart) {
+    device_category_chart.dispose();
+}
+                       var deviceCategories = Object.values(device_category_data.deviceCategory);
+    var totalUsers = Object.values(device_category_data.totalUsers).map(Number);
+    var engagedSessions = Object.values(device_category_data.engagedSessions).map(Number);
+    var sessions = Object.values(device_category_data.sessions).map(Number);
+
+    // Create an array to hold the chart data
+    var chartData = [];
+
+    // Loop through the device categories
+    for (var i = 0; i < deviceCategories.length; i++) {
+        // Push data for each category into the chartData array
+        chartData.push({
+            "deviceCategory": deviceCategories[i],
+            "totalUsers": totalUsers[i],
+            "engagedSessions": engagedSessions[i],
+            "sessions": sessions[i]
+        });
+    }
+
+        // Create chart instance
+        var chart = am4core.create("device_category", am4charts.PieChart);
+        device_category_chart = chart; // Store the chart instance
+        // Add data
+        chart.data = chartData;
+    
+        // Add and configure Series
+        var pieSeries = chart.series.push(new am4charts.PieSeries());
+        pieSeries.dataFields.value = "totalUsers";
+        pieSeries.dataFields.category = "deviceCategory";
+        pieSeries.labels.template.disabled = true; // Disable default labels
+
+// Enable labels inside the chart
+pieSeries.labels.template.text = "{category}\n{value.percent.formatNumber('#.#')}%";
+pieSeries.labels.template.fontSize = 12; // Set label font size
+
+// Set label position inside the donut chart
+pieSeries.labels.template.radius = am4core.percent(-40);
+        // Add a title
+
+        chart.logo.disabled = true;
+        // Add a legend
+        chart.legend = new am4charts.Legend();
+        chart.legend.position = "top";
+       // Customize legend
+       chart.legend.labels.template.fontSize = 15; // Set legend font size
+    chart.legend.itemContainers.template.width = 150; // Set legend item container width
+
+        // Add inner radius to make it a donut chart
+        chart.innerRadius = am4core.percent(50);
+    
+        // Enable responsive features
+        chart.responsive.enabled = true;
+    
+        // Enable animated transitions
+        chart.responsive.useDefaults = true;
+        chart.responsive.animationEasing = am4core.ease.sinOut;
+    
+        // Enable themes
+        am4core.useTheme(am4themes_animated);
+
+                
+            }
+
+
+
+
+
+    
+            function formatDate(dateString) {
+                var parts = dateString.split("/");
+                // Rearrange the parts to form the desired format
+                return parts[2] + "-" + parts[0].padStart(2, '0') + "-" + parts[1].padStart(2, '0');
+            }
+    
+            function getAnalytics(startDate, endDate, metrics, dimensions, analyticsName, callback) {
+
+                console.log(metrics.join(','));
+                    $.ajax({
+                        url: '/google_analytics_data',
+                        type: 'GET',
+                        data: {
+                            'start_date': startDate,
+                            'end_date': endDate,
+                            'metrics[]': metrics,  // Pass metrics as an array
+                        'dimensions[]': dimensions,  // Pass dimensions as an array
+                            'analytics_name': analyticsName
+                        },
+                        success: function (data) {
+                            // Handle the response data here
+                            callback(data); // Call the callback function with the data
+                        },
+                        error: function (xhr, status, error) {
+                            console.error('Error:', error);
+                        }
+                    });
+                }
+        });
+    </script>
+    
+
+{% endblock dashboard_admin_body %}
