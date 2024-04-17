@@ -4,6 +4,14 @@
 <script src="https://cdn.amcharts.com/lib/4/core.js"></script>
 <script src="https://cdn.amcharts.com/lib/4/charts.js"></script>
 <script src="https://cdn.amcharts.com/lib/4/themes/animated.js"></script>
+  <!-- Include the AmCharts 4 core library -->
+
+  <!-- Include the maps module -->
+  <script src="https://cdn.amcharts.com/lib/4/maps.js"></script>
+  <!-- Include the world map definition -->
+  <script src="https://cdn.amcharts.com/lib/4/geodata/worldLow.js"></script>
+ 
+
 <style>
     .dashboard_date_picker {
 
@@ -246,10 +254,31 @@
           </div>
         </div>
       </div>
+        <div class="row mt-3">
+          <div class="col-md-4">
+            <div id="countryBar" style="height: 500px;"></div>
+          </div>
+          <div class="col-md-8">
+            <div id="mapchart" style="height: 500px;"></div>
+          </div>
+        </div>
+      </div>
     
 
-    <script>
-   
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+      <script>
 
 var start = moment().subtract(29, 'days');
 var end = moment();
@@ -314,6 +343,18 @@ cb(start, end);
                     "analytics_name":"user_device_category"
 
                 },
+                {
+                    "metrics":["newUsers","activeUsers", "engagedSessions", "sessions"],
+                    "dimensions" : ["firstUserDefaultChannelGroup"],
+                    "analytics_name":"channelgroup"
+
+                },
+                {
+                    "metrics":["newUsers","activeUsers", "engagedSessions", "sessions"],
+                    "dimensions" : ["country"],
+                    "analytics_name":"counryOrigin"
+
+                },
 
             ]
             function getAnalyticsSequentially(index) {
@@ -334,6 +375,9 @@ cb(start, end);
        
        } else if (output_analytics.analytics_name==="all_user") {
         drawtopoverViews(output_analytics)
+       
+       } else if (output_analytics.analytics_name==="counryOrigin") {
+        drawMapCountryUsers(output_analytics)
        }
         // Proceed to the next call
         getAnalyticsSequentially(index + 1);
@@ -342,6 +386,333 @@ cb(start, end);
 
 // Start the sequential process
 getAnalyticsSequentially(0);
+        }
+
+        function drawMapCountryUsers(countryData_user) {
+
+
+
+
+
+    // Create chart instance
+    var chart = am4core.create("countryBar", am4charts.XYChart);
+    var filteredData = Object.keys(countryData_user.country).filter(key => countryData_user.country[key] !== "(not set)")
+                                                      .map(key => ({
+                                                          "country": countryData_user.country[key],
+                                                          "activeUsers": parseInt(countryData_user.activeUsers[key])
+                                                      }));
+    // Add data
+    chart.data =filteredData
+      // Create axes
+      var categoryAxis = chart.yAxes.push(new am4charts.CategoryAxis());
+    categoryAxis.dataFields.category = "country";
+    categoryAxis.renderer.inversed = true; // Invert y-axis to make it horizontal
+    categoryAxis.renderer.minGridDistance = 30;
+    categoryAxis.renderer.labels.template.horizontalCenter = "left";
+    categoryAxis.renderer.labels.template.verticalCenter = "middle";
+
+    var valueAxis = chart.xAxes.push(new am4charts.ValueAxis());
+    valueAxis.renderer.minGridDistance = 50;
+
+    // Create series
+    var series = chart.series.push(new am4charts.ColumnSeries());
+    series.dataFields.valueX = "activeUsers";
+    series.dataFields.categoryY = "country";
+    series.name = "Active Users";
+    series.columns.template.tooltipText = "{categoryY}: [bold]{valueX}[/]";
+    series.columns.template.fillOpacity = .8;
+
+    // Add cursor
+    chart.cursor = new am4charts.XYCursor();
+
+    // Add scrollbar
+    chart.scrollbarY = new am4core.Scrollbar();
+    chart.scrollbarY.start = 1; // Set start position of the scrollbar
+    chart.scrollbarY.end = 0.5; // Set end position of the scrollbar
+
+    // Add legend
+    chart.legend = new am4charts.Legend();
+
+    // Add title
+    chart.titles.create().text = "Active Users by Country";
+    chart.logo.disabled = true;
+
+
+
+
+
+
+
+                  // Country data from the backend
+        var countryData = countryData_user
+    
+        // Create map instance
+        var chart = am4core.create("mapchart", am4maps.MapChart);
+    
+        // Set map definition
+        chart.geodata = am4geodata_worldLow;
+        chart.logo.disabled = true;
+        // Set projection
+        chart.projection = new am4maps.projections.Miller();
+    
+        // Create map polygon series
+        var polygonSeries = chart.series.push(new am4maps.MapPolygonSeries());
+    
+        // Make map load polygon (like country names) data from GeoJSON
+        polygonSeries.useGeodata = true;
+    
+        // Configure series
+        var polygonTemplate = polygonSeries.mapPolygons.template;
+        polygonTemplate.tooltipHTML = `<img src="{flag}" style="width:20px;height:15px;vertical-align:middle;"> {name}: {value} active users`; // Customize tooltip template
+        polygonTemplate.propertyFields.fill = "fill";
+    
+        // Create hover state and set alternative fill color
+        var hs = polygonTemplate.states.create("hover");
+        hs.properties.fill = am4core.color("#367B25");
+    
+        // Remove Antarctica
+        polygonSeries.exclude = ["AQ"];
+    
+        // Initialize polygon data array
+        var polygonData = [];
+    
+        // Iterate through country data and create polygon data
+        Object.keys(countryData.country).forEach(function(key) {
+            var countryName = countryData.country[key];
+            var activeUsers = parseInt(countryData.activeUsers[key]);
+            if (countryName !== "(not set)") {
+                var countryCode = getCountryCode(countryName);
+                if (countryCode) {
+                    polygonData.push({
+                        "id": countryCode,
+                        "value": activeUsers,
+                        "name": countryName,
+               
+                        "flag": `https://flagsapi.com/${countryCode}/flat/64.png`, // Country flag
+                        "fill": am4core.color("#74B266")
+                    });
+                }
+            }
+        });
+    
+        // Set the polygon data
+        polygonSeries.data = polygonData;
+    
+        // Function to get country code based on country name
+        function getCountryCode(countryName) {
+    switch (countryName) {
+        case "India": return "IN";
+        case "United States": return "US";
+        case "Netherlands": return "NL";
+        case "Ireland": return "IE";
+        case "Japan": return "JP";
+        case "United Arab Emirates": return "AE";
+        case "China": return "CN";
+        case "Mauritius": return "MU";
+        case "Oman": return "OM";
+        case "Peru": return "PE";
+        case "Philippines": return "PH";
+        case "Saudi Arabia": return "SA";
+        case "United Kingdom": return "GB";
+        case "Afghanistan": return "AF";
+        case "Albania": return "AL";
+        case "Algeria": return "DZ";
+        case "Andorra": return "AD";
+        case "Angola": return "AO";
+        case "Antigua and Barbuda": return "AG";
+        case "Argentina": return "AR";
+        case "Armenia": return "AM";
+        case "Australia": return "AU";
+        case "Austria": return "AT";
+        case "Azerbaijan": return "AZ";
+        case "Bahamas": return "BS";
+        case "Bahrain": return "BH";
+        case "Bangladesh": return "BD";
+        case "Barbados": return "BB";
+        case "Belarus": return "BY";
+        case "Belgium": return "BE";
+        case "Belize": return "BZ";
+        case "Benin": return "BJ";
+        case "Bhutan": return "BT";
+        case "Bolivia": return "BO";
+        case "Bosnia and Herzegovina": return "BA";
+        case "Botswana": return "BW";
+        case "Brazil": return "BR";
+        case "Brunei Darussalam": return "BN";
+        case "Bulgaria": return "BG";
+        case "Burkina Faso": return "BF";
+        case "Burundi": return "BI";
+        case "Cabo Verde": return "CV";
+        case "Cambodia": return "KH";
+        case "Cameroon": return "CM";
+        case "Canada": return "CA";
+        case "Central African Republic": return "CF";
+        case "Chad": return "TD";
+        case "Chile": return "CL";
+        case "Colombia": return "CO";
+        case "Comoros": return "KM";
+        case "Congo (Brazzaville)": return "CG";
+        case "Congo (Kinshasa)": return "CD";
+        case "Costa Rica": return "CR";
+        case "Croatia": return "HR";
+        case "Cuba": return "CU";
+        case "Cyprus": return "CY";
+        case "Czech Republic": return "CZ";
+        case "Denmark": return "DK";
+        case "Djibouti": return "DJ";
+        case "Dominica": return "DM";
+        case "Dominican Republic": return "DO";
+        case "Ecuador": return "EC";
+        case "Egypt": return "EG";
+        case "El Salvador": return "SV";
+        case "Equatorial Guinea": return "GQ";
+        case "Eritrea": return "ER";
+        case "Estonia": return "EE";
+        case "Eswatini": return "SZ";
+        case "Ethiopia": return "ET";
+        case "Fiji": return "FJ";
+        case "Finland": return "FI";
+        case "France": return "FR";
+        case "Gabon": return "GA";
+        case "Gambia": return "GM";
+        case "Georgia": return "GE";
+        case "Germany": return "DE";
+        case "Ghana": return "GH";
+        case "Greece": return "GR";
+        case "Grenada": return "GD";
+        case "Guatemala": return "GT";
+        case "Guinea": return "GN";
+        case "Guinea-Bissau": return "GW";
+        case "Guyana": return "GY";
+        case "Haiti": return "HT";
+        case "Holy See (Vatican City State)": return "VA";
+        case "Honduras": return "HN";
+        case "Hungary": return "HU";
+        case "Iceland": return "IS";
+        case "India": return "IN";
+        case "Indonesia": return "ID";
+        case "Iran": return "IR";
+        case "Iraq": return "IQ";
+        case "Ireland": return "IE";
+        case "Israel": return "IL";
+        case "Italy": return "IT";
+        case "Jamaica": return "JM";
+        case "Japan": return "JP";
+        case "Jordan": return "JO";
+        case "Kazakhstan": return "KZ";
+        case "Kenya": return "KE";
+        case "Korea, Democratic People's Republic of": return "KP";
+        case "Korea, Republic of": return "KR";
+        case "Kuwait": return "KW";
+        case "Kyrgyzstan": return "KG";
+        case "Lao PDR": return "LA";
+        case "Latvia": return "LV";
+        case "Lebanon": return "LB";
+        case "Lesotho": return "LS";
+        case "Liberia": return "LR";
+        case "Libya": return "LY";
+        case "Liechtenstein": return "LI";
+        case "Lithuania": return "LT";
+        case "Luxembourg": return "LU";
+        case "Madagascar": return "MG";
+        case "Malawi": return "MW";
+        case "Malaysia": return "MY";
+        case "Maldives": return "MV";
+        case "Mali": return "ML";
+        case "Malta": return "MT";
+        case "Marshall Islands": return "MH";
+        case "Mauritania": return "MR";
+        case "Mauritius": return "MU";
+        case "Mexico": return "MX";
+        case "Micronesia, Federated States of": return "FM";
+        case "Moldova": return "MD";
+        case "Monaco": return "MC";
+        case "Mongolia": return "MN";
+        case "Montenegro": return "ME";
+        case "Morocco": return "MA";
+        case "Mozambique": return "MZ";
+        case "Myanmar": return "MM";
+        case "Namibia": return "NA";
+        case "Nauru": return "NR";
+        case "Nepal": return "NP";
+        case "Netherlands": return "NL";
+        case "New Zealand": return "NZ";
+        case "Nicaragua": return "NI";
+        case "Niger": return "NE";
+        case "Nigeria": return "NG";
+        case "North Macedonia": return "MK";
+        case "Norway": return "NO";
+        case "Oman": return "OM";
+        case "Pakistan": return "PK";
+        case "Palau": return "PW";
+        case "Palestinian Territory": return "PS";
+        case "Panama": return "PA";
+        case "Papua New Guinea": return "PG";
+        case "Paraguay": return "PY";
+        case "Peru": return "PE";
+        case "Philippines": return "PH";
+        case "Poland": return "PL";
+        case "Portugal": return "PT";
+        case "Qatar": return "QA";
+        case "Republic of Kosovo": return "XK";
+        case "Romania": return "RO";
+        case "Russia": return "RU";
+        case "Rwanda": return "RW";
+        case "Saint Kitts and Nevis": return "KN";
+        case "Saint Lucia": return "LC";
+        case "Saint Vincent and the Grenadines": return "VC";
+        case "Samoa": return "WS";
+        case "San Marino": return "SM";
+        case "Sao Tome and Principe": return "ST";
+        case "Saudi Arabia": return "SA";
+        case "Senegal": return "SN";
+        case "Serbia": return "RS";
+        case "Seychelles": return "SC";
+        case "Sierra Leone": return "SL";
+        case "Singapore": return "SG";
+        case "Slovakia": return "SK";
+        case "Slovenia": return "SI";
+        case "Solomon Islands": return "SB";
+        case "Somalia": return "SO";
+        case "South Africa": return "ZA";
+        case "South Sudan": return "SS";
+        case "Spain": return "ES";
+        case "Sri Lanka": return "LK";
+        case "Sudan": return "SD";
+        case "Suriname": return "SR";
+        case "Sweden": return "SE";
+        case "Switzerland": return "CH";
+        case "Syrian Arab Republic (Syria)": return "SY";
+        case "Taiwan, Republic of China": return "TW";
+        case "Tajikistan": return "TJ";
+        case "Tanzania, United Republic of": return "TZ";
+        case "Thailand": return "TH";
+        case "Timor-Leste": return "TL";
+        case "Togo": return "TG";
+        case "Tonga": return "TO";
+        case "Trinidad and Tobago": return "TT";
+        case "Tunisia": return "TN";
+        case "Turkey": return "TR";
+        case "Turkmenistan": return "TM";
+        case "Tuvalu": return "TV";
+        case "Uganda": return "UG";
+        case "Ukraine": return "UA";
+        case "United Arab Emirates": return "AE";
+        case "United Kingdom": return "GB";
+        case "United Republic of Tanzania": return "TZ";
+        case "United States": return "US";
+        case "Uruguay": return "UY";
+        case "Uzbekistan": return "UZ";
+        case "Vanuatu": return "VU";
+        case "Venezuela (Bolivarian Republic)": return "VE";
+        case "Viet Nam": return "VN";
+        case "Yemen": return "YE";
+        case "Zambia": return "ZM";
+        case "Zimbabwe": return "ZW";
+        default: return null;
+    }
+}
+
         }
    
         function drawtopoverViews(output_analytics) {
