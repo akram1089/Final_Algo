@@ -1,0 +1,198 @@
+{% extends "base_admin_panel.html" %}
+{% load static %}
+{% block dashboard_admin_body %}
+
+<style>
+    .input-field {
+        display: none;
+      }
+
+      .table_box{
+        border: 1px solid #0000000a;
+        padding: 20px;
+      }
+
+      #example_admin_table thead{
+        background: #4ca0f1;
+        color: white;
+      }
+
+      .buttons-html5{
+        background: #4ca0f1 !important;
+        color: white !important;
+        border: 1px solid #4ca0f1 !important;
+      }
+</style>
+<section>
+    <div class="report_box">
+      <h5>Reports</h5>
+      <hr>
+      <div class="row">
+        <div class="col-lg-6">
+            <label for="contactType">Select:</label>
+            <select id="contactType" class="form-select" aria-label="Default select example">
+                <option value="email">Email</option>
+                <option value="phone" selected>Phone Number</option>
+            </select>
+        </div>
+        <div class="col-lg-6">
+            <div id="emailInput" class="input-field">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" class="form-control">
+              </div>
+              
+              <div id="phoneInput" class="input-field">
+                <label for="phone">Phone Number:</label>
+                <input type="text" id="phone" name="phone" class="form-control">
+              </div>
+        </div>
+      </div>
+      <div class="buttons mt-4 text-center">
+       <button class="btn btn-primary report_filter_btn">Submit</button>
+       <button class="btn btn-secondary">Cancel</button>
+      </div>
+      <hr>
+      <div class="table_box">
+        <!-- <div class="data_format">
+            <button id="csv">CSV</button>
+            <button id="excel">Excel</button>
+            <button id="pdf">PDF</button>
+            <button id="print">Print</button>
+        </div> -->
+        <table id="example_admin_table" class="table display nowrap" style="width:100%">
+            <thead>
+              <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Name</th>
+                <th scope="col">Email Id</th>
+                <th scope="col">Phone No.</th>
+              </tr>
+            </thead>
+            <tbody>
+
+            </tbody>
+        </table>
+      </div>
+    </div>
+</section>
+
+
+<script>
+    $(document).ready(function() {
+        // Hide all input fields initially
+        $(".input-field").hide();
+      
+        // Show phone input field by default
+        $("#phoneInput").show();
+      
+        // Add change event listener to the dropdown
+        $("#contactType").change(function() {
+          // Hide all input fields
+          $(".input-field").hide();
+      
+          // Show input field based on selected option
+          var selectedOption = $(this).val();
+          $("#" + selectedOption + "Input").show();
+        });
+
+
+        $('.report_filter_btn').click(function() {
+        var selectedOption = $('#contactType').val();
+        var inputValue = $("#" + selectedOption).val(); // Get value from the selected input field
+
+        console.log(inputValue)
+        // Send data to backend for filtering
+        $.ajax({
+            url: '/filter_report_data',
+            method: 'POST',
+            data: {
+                inputValue: inputValue
+            },
+            dataType: 'json',
+            success: function(response) {
+                // Handle filtered data
+                console.log(response);
+                renderTableData(response.users);
+                
+            },
+            error: function(xhr, status, error) {
+                console.error('Error:', error);
+            }
+        });
+    });
+
+
+    function renderTableData(users) {
+    var tbody = $('#example_admin_table tbody');
+    tbody.empty(); // Clear existing table rows
+    $('#example_admin_table').DataTable().destroy();
+    // Loop through each user and append a new row to the table
+    users.forEach(function(user, index) {
+        var row = '<tr>' +
+            '<td>' + (index + 1) + '</td>' + // Remove scope="row"
+            '<td>' + user.full_name + '</td>' +
+            '<td>' + user.email + '</td>' +
+            '<td>' + user.Mobile_number + '</td>' +
+            '</tr>';
+        tbody.append(row);
+    });
+    $('#example_admin_table').DataTable({
+    dom: 'Bfrtip',
+    buttons: [
+        'excelHtml5',
+        'pdfHtml5',
+        'csvHtml5'
+    ]
+});
+
+}
+
+$('#example_admin_table').DataTable({
+    dom: 'Bfrtip',
+    buttons: [
+        'excelHtml5',
+        'pdfHtml5',
+        'csvHtml5'
+    ]
+});
+
+      
+
+
+        // $('#csv').click(function() {
+        //     $('#example').DataTable().buttons.exportData({ format: 'csv' });
+        // });
+        
+        // // Generate Excel
+        // $('#excel').click(function() {
+        //     $('#example').DataTable().buttons.exportData({ format: 'xls' });
+        // });
+        
+        // // Generate PDF
+        // $('#pdf').click(function() {
+        //     // var doc = new jsPDF();
+        //     // doc.autoTable({ html: '#example' });
+        //     // doc.save('table.pdf');
+        //     const doc = new jsPDF({
+        //     orientation: "landscape",
+        //     unit: "in",
+        //     format: [4, 2]
+        //   });
+          
+        //   doc.text("Hello world!", 1, 1);
+        //   doc.save("two-by-four.pdf");
+        // });
+
+        // const doc = new jsPDF({
+        //     orientation: "landscape",
+        //     unit: "in",
+        //     format: [4, 2]
+        //   });
+          
+        //   doc.text("Hello world!", 1, 1);
+        //   doc.save("two-by-four.pdf");
+        
+      });
+</script>
+
+{% endblock dashboard_admin_body %}

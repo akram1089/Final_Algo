@@ -603,6 +603,7 @@ urlpatterns = [
      path('unsubscribe', views.unsubscribe, name='unsubscribe'),
      path('add_newsletter_data', views.add_newsletter_data, name='add_newsletter_data'),
      path('promotional_email', views.promotional_email, name='promotional_email'),
+     path('test_welcome_mail', views.test_welcome_mail, name='test_welcome_mail'),
 
      path('news_letter_data_template', views.news_letter_data_template, name='news_letter_data_template'),
      path('webhook/series/<str:user_id>/', views.webhook_view, {'url_type': 'series'}, name='webhook_series'),
@@ -613,6 +614,8 @@ urlpatterns = [
      path('google_analytics', views.google_analytics, name='google_analytics'),
      path('google_analytics_data', views.google_analytics_data, name='google_analytics_data'),
      path('save_emails_from_csv/<str:file_name>', views.save_emails_from_csv, name='save_emails_from_csv'),
+     path('adminreport', views.adminreport, name='adminreport'),
+     path('filter_report_data', views.filter_report_data, name='filter_report_data'),
 
 
 
