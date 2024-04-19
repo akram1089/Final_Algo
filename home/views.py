@@ -12904,10 +12904,23 @@ def fetch_option_data_with_spot_price(request):
     
 
     headers = {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
+        "Accept": "application/json, text/plain, */*",
+        "Accept-Encoding": "gzip, deflate, br, zstd",
         "Accept-Language": "en-US,en;q=0.9",
-        "Accept-Encoding": "gzip, deflate, br",
+        "Authorization": "Basic bmlmdHlhcGl1c2VyOm5pZnR5YXBpdXNlckAyMTEwIw==",
+        "Connection": "keep-alive",
+        "Host": "services.niftytrader.in",
+        "Origin": "https://www.niftytrader.in",
+        "Referer": "https://www.niftytrader.in/",
+        "Sec-Ch-Ua": '"Google Chrome";v="123", "Not:A-Brand";v="8", "Chromium";v="123"',
+        "Sec-Ch-Ua-Mobile": "?0",
+        "Sec-Ch-Ua-Platform": '"Windows"',
+        "Sec-Fetch-Dest": "empty",
+        "Sec-Fetch-Mode": "cors",
+        "Sec-Fetch-Site": "same-site",
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36"
     }
+
 
     response = requests.get(url, headers=headers)
     response_url = requests.get(url_symbol_list, headers=headers)
@@ -22038,52 +22051,24 @@ def save_emails_from_csv(request, file_name):
 
 
 def test_welcome_mail(request):
-
-
-
-
-
-        # Define API endpoints
-    api_endpoints = {
-        'stock_index': 'https://webapi.niftytrader.in/webapi/symbol/stock-index-data',
-        'global_market': 'https://webapi.niftytrader.in/webapi/usstock/global-market',
-        'top_gainers': 'https://webapi.niftytrader.in/webapi/Symbol/top-gainers-historical-data?range_type=gainers&range_days=1day',
-        'top_losers': 'https://webapi.niftytrader.in/webapi/Symbol/top-gainers-historical-data?range_type=loosers&range_days=1day',
-        'world_news': 'https://webapi.niftytrader.in/webapi/Other/rss-feeds-data?NewsType=WorldNews&lanType=English',
-        # Add more API endpoints as needed
-    }
-    
-    collected_data = {}
-    
-    for key, endpoint in api_endpoints.items():
-        response = requests.get(endpoint)
-        
-        if response.status_code == 200:
-            data = response.json().get('resultData', [])
-            collected_data[key] = data
-        else:
-            return {'error': f'Failed to fetch data from {endpoint}.'}
-        
-    # Pass the collected data to the email template
-    # Get today's date
-    today_date = datetime.datetime.now().strftime('%d %B, %Y')
-    
-    # Construct subject with today's date
-    subject = f'Fwd: Daily Pointer - {today_date}'
-    html_content = render_to_string('news_letter_data_template.html', {'collected_data': collected_data})
-    
-    html_content_inline =css_inline.inline(html_content)
+    # Get the email template
     email_template = get_template('aaaanew_welcom_template.html')
     context = {'username': "Naveen"}
     email_content = email_template.render(context)
+
+    # Define email subject and message
     subject = 'Welcome to Option Perks'
     message = 'Thank you for signing up on Your Website. We are glad to have you as part of our community.'
-    from_email = 'optionperks@gmail.com'  # Use the same email as configured in settings.py
-    recipient_list = ["tufailakram8190@gmail.com"]
 
-    send_mail(subject, message, from_email, recipient_list, html_message=html_content_inline, fail_silently=False)
+    # Get all subscribers
+    subscribers = Subscriber.objects.filter(active=True)
+
+    # Send welcome email to each subscriber
+    for subscriber in subscribers:
+        recipient_email = subscriber.email
+        send_mail(subject, message, 'optionperks@gmail.com', [recipient_email], html_message=email_content, fail_silently=False)
+
     return HttpResponse('mail sent')
-
 
 
 
