@@ -101,6 +101,9 @@
         var inputValue = $("#" + selectedOption).val(); // Get value from the selected input field
 
         console.log(inputValue)
+        if (!inputValue) {
+        return; // Exit the function if the input field is empty
+        }
         // Send data to backend for filtering
         $.ajax({
             url: '/filter_report_data',
@@ -112,6 +115,7 @@
             success: function(response) {
                 // Handle filtered data
                 console.log(response);
+                $("#" + selectedOption).val("");
                 renderTableData(response.users);
                 
             },
@@ -124,12 +128,12 @@
 
     function renderTableData(users) {
     var tbody = $('#example_admin_table tbody');
-    tbody.empty(); // Clear existing table rows
     $('#example_admin_table').DataTable().destroy();
+    tbody.empty(); // Clear existing table rows
     // Loop through each user and append a new row to the table
     users.forEach(function(user, index) {
         var row = '<tr>' +
-            '<td>' + (index + 1) + '</td>' + // Remove scope="row"
+            '<td>' + user.id + '</td>' + // Remove scope="row"
             '<td>' + user.full_name + '</td>' +
             '<td>' + user.email + '</td>' +
             '<td>' + user.Mobile_number + '</td>' +
