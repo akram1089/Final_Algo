@@ -22103,6 +22103,7 @@ def save_all_option_simulator(request):
                                 current_datetime = datetime.datetime.combine(market_day, current_time)
 
                                 if market_open_datetime <= current_datetime <= market_close_datetime:
+                                    print(f"Symbol: {symbol}, Expiry Date: {formatted_expiry_date}, Current Date: {current_date}, Current Time: {current_time}")
                                     api_url = "https://webapi.niftytrader.in/webapi/Option/option-simulator-expiry-data"
                                     current_time_str = current_time.strftime("%H:%M:%S")
                                     current_date_str = current_date.strftime("%Y-%m-%d")
