@@ -98,12 +98,23 @@
 
         $('.report_filter_btn').click(function() {
         var selectedOption = $('#contactType').val();
-        var inputValue = $("#" + selectedOption).val(); // Get value from the selected input field
+        var inputValue = $("#" + selectedOption).val().trim(); // Get value from the selected input field
 
         console.log(inputValue)
-        if (!inputValue) {
-        return; // Exit the function if the input field is empty
+        if (selectedOption === 'email') {
+        // Validate email format
+        if (!isValidEmail(inputValue)) {
+            toastr.error("Please enter a valid email address.");
+            return; // Exit the function if the email format is invalid
         }
+    } else if (selectedOption === 'phone') {
+        // Validate phone number format
+        if (!isValidPhoneNumber(inputValue)) {
+            toastr.error("Please enter a valid phone number.");
+            return; // Exit the function if the phone number format is invalid
+        }
+    }
+
         // Send data to backend for filtering
         $.ajax({
             url: '/filter_report_data',
@@ -116,7 +127,11 @@
                 // Handle filtered data
                 console.log(response);
                 $("#" + selectedOption).val("");
+                if (response.users.length > 0) {
                 renderTableData(response.users);
+            } else {
+                toastr.warning('No users found with the given input value');
+            }
                 
             },
             error: function(xhr, status, error) {
@@ -124,6 +139,20 @@
             }
         });
     });
+
+
+    function isValidEmail(email) {
+    // Regular expression for validating email format
+    var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+}
+
+// Function to validate phone number format
+function isValidPhoneNumber(phone) {
+    // Regular expression for validating phone number format
+    var phoneRegex = /^\d{10}$/; // Assuming 10-digit phone number
+    return phoneRegex.test(phone);
+}
 
 
     function renderTableData(users) {
@@ -200,3 +229,29 @@ $('#example_admin_table').DataTable({
 </script>
 
 {% endblock dashboard_admin_body %}
+
+
+@csrf_exempt
+def filter_report_data(request):
+    if request.method == 'POST':
+        input_value = request.POST.get('inputValue')  # Get the input value from the POST data
+
+        # Filter users based on phone number or email
+        filtered_users = User.objects.filter(
+            Mobile_number=input_value
+        ).union(
+            User.objects.filter(email=input_value)
+        )
+
+        if filtered_users.exists():
+            # Serialize the filtered users to JSON
+            serialized_users = [{'id': user.id, 'full_name': user.full_name, 'email': user.email, 'Mobile_number': user.Mobile_number} for user in filtered_users]
+
+            # Return the filtered users as JSON response
+            return JsonResponse({'users': serialized_users})
+        else:
+            # No users found with the given input value
+            return JsonResponse({'message': 'No users found with the given input value'}, status=404)
+    else:
+        # Handle GET requests if needed
+        return JsonResponse({'error': 'Only POST requests are allowed'})
