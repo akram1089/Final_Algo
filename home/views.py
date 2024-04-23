@@ -22131,8 +22131,7 @@ def save_all_option_simulator(request):
                                 current_time = (datetime.datetime.combine(datetime.datetime.now().date(), current_time) + datetime.timedelta(minutes=5)).time()
                         current_date += datetime.timedelta(days=1)
 
-                if counter == 2:
-                    break
+
 
         else:
             return JsonResponse({"error": f"Failed to fetch data for {symbol}. Status code: {response.status_code}"})
