@@ -37,11 +37,13 @@ from.models import UserLoginHistory
 from.models import UserSession
 from.models import PromotionalEmail
 from.models import Post
+from.models import OptionExpiryData
 
 # from.models import StockListing
 
 
 
+admin.site.register(OptionExpiryData)
 admin.site.register(Post)
 admin.site.register(PromotionalEmail)
 admin.site.register(UserSession)

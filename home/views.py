@@ -2945,100 +2945,6 @@ def chart_topgainer(request):
     return render(request, "chart_topgainer.html")
 
 
-def fetch_option_data_with_spot_price(request):
-    selected_symbol = request.GET.get('symbol','NIFTY')
-    selectedDate = request.GET.get('selectedDate')
-    print(selected_symbol)
-    print(selectedDate)
-
-    url = f"https://webapi.niftytrader.in/webapi/option/fatch-option-chain?symbol={selected_symbol}&expiryDate={selectedDate}"
-
-    url_symbol_list = "https://webapi.niftytrader.in/webapi/symbol/psymbol-list"
-    url_india_vix = "https://webapi.niftytrader.in/webapi/Other/other-symbol-spot-data?symbol=INDIA+VIX"
-    url_spot_data = f"https://webapi.niftytrader.in/webapi/symbol/today-spot-data?symbol={selected_symbol}"
-    
-
-    headers = {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
-        "Accept-Language": "en-US,en;q=0.9",
-        "Accept-Encoding": "gzip, deflate, br",
-    }
-
-    response = requests.get(url, headers=headers)
-    response_url = requests.get(url_symbol_list, headers=headers)
-    response_india_vix = requests.get(url_india_vix, headers=headers)
-    response_spot_data = requests.get(url_spot_data, headers=headers)
-
-    data = response.json()
-    symbol_data = response_url.json()
-    india_vix_data = response_india_vix.json()
-    india_spot_data = response_spot_data.json()
-
-    total_put_volume = 0
-    total_call_volume = 0
-    All_option_data = []
-    All_dates = []
-    All_symbols = []
-    India_vix_data = india_vix_data["resultData"]
-    india_spot_data = india_spot_data["resultData"]
-
-    for symbol in symbol_data['resultData']:
-        All_symbols.append(symbol["symbol_name"])
-
-    for options_date in data['resultData']["opExpiryDates"]:
-        if options_date is not None and isinstance(options_date, str):
-            date_str = options_date.split("T")[0]
-            date_obj = datetime.datetime.strptime(date_str, "%Y-%m-%d")
-            formatted_date = date_obj.strftime("%Y-%m-%d")
-            print(options_date)
-            print(formatted_date)
-            All_dates.append(formatted_date)
-    print(All_dates)        
-
-    total_puts_change_oi = 0
-    total_calls_change_oi = 0
-
-    for options_data in data['resultData']["opDatas"]:
-        All_option_data.append(options_data)
-        put_volume = options_data["puts_volume"]
-        call_volume = options_data["calls_volume"]
-        puts_change_oi = options_data["puts_change_oi"]
-        calls_change_oi = options_data["calls_change_oi"]
-
-        total_put_volume += put_volume
-        total_call_volume += call_volume
-
-        total_puts_change_oi += puts_change_oi
-        total_calls_change_oi += calls_change_oi
-
-    # Check if total_put_volume is zero to avoid division by zero
-    if total_put_volume != 0:
-        put_call_ratio = total_call_volume / total_put_volume
-    else:
-        put_call_ratio = 0  # Set a default value or handle it differently
-
-    if total_puts_change_oi != 0:
-        oi_pcr = total_calls_change_oi / total_puts_change_oi
-    else:
-        oi_pcr = 0  # Set a default value or handle it differently
-
-    print(oi_pcr)
-    response_data = {
-        "india_spot_data": india_spot_data,
-        "India_vix_data": India_vix_data,
-        "All_symbols": All_symbols,
-        "All_dates": All_dates,
-        "All_option_data": All_option_data,
-        "total_put_volume": total_put_volume,
-        "total_call_volume": total_call_volume,
-        "put_call_ratio": put_call_ratio,
-        "oi_pcr": oi_pcr,
-
-    }
-
-    return JsonResponse(response_data)
-
-
 def stock_option_chain(request):
     return render(request, 'stock_option_chain.html')
 
@@ -12897,11 +12803,17 @@ def fetch_option_data_with_spot_price(request):
     print(selectedDate)
 
     url = f"https://webapi.niftytrader.in/webapi/option/fatch-option-chain?symbol={selected_symbol}&expiryDate={selectedDate}"
+#https://webapi.niftytrader.in/webapi/option/fatch-option-chain?symbol=nifty&expiryDate=
 
     url_symbol_list = "https://webapi.niftytrader.in/webapi/symbol/psymbol-list"
-    url_india_vix = "https://webapi.niftytrader.in/webapi/Other/other-symbol-spot-data?symbol=INDIA+VIX"
-    url_spot_data = f"https://webapi.niftytrader.in/webapi/symbol/today-spot-data?symbol={selected_symbol}"
-    
+#   https://webapi.niftytrader.in/webapi/symbol/psymbol-list
+
+
+    url_india_vix = "https://services.niftytrader.in/webapi/symbol/other-symbol-spot-data?symbol=INDIA+VIX"
+#    https://services.niftytrader.in/webapi/symbol/other-symbol-spot-data?symbol=INDIA+VIX
+
+    url_spot_data = f"https://services.niftytrader.in/webapi/symbol/today-spot-data?symbol={selected_symbol}"
+                            #     https://services.niftytrader.in/webapi/symbol/today-spot-data?symbol=NIFTY"
 
     headers = {
         "Accept": "application/json, text/plain, */*",
@@ -12931,14 +12843,15 @@ def fetch_option_data_with_spot_price(request):
     symbol_data = response_url.json()
     india_vix_data = response_india_vix.json()
     india_spot_data = response_spot_data.json()
+    print(india_spot_data)
 
     total_put_volume = 0
     total_call_volume = 0
     All_option_data = []
     All_dates = []
     All_symbols = []
-    India_vix_data = india_vix_data["resultData"]
-    india_spot_data = india_spot_data["resultData"]
+    India_vix_data = india_vix_data["result"]
+    india_spot_data = india_spot_data["result"]
 
     for symbol in symbol_data['resultData']:
         All_symbols.append(symbol["symbol_name"])
@@ -22113,3 +22026,164 @@ def filter_report_data(request):
         return JsonResponse({'error': 'Only POST requests are allowed'})
 
 
+
+
+def api_test_check(request):
+    url = "https://services.niftytrader.in/webapi/symbol/today-spot-data?symbol=NIFTY"
+    headers = {
+        "Accept": "application/json, text/plain, */*",
+        "Accept-Encoding": "gzip, deflate, br, zstd",
+        "Accept-Language": "en-US,en;q=0.9",
+        "Authorization": "Basic bmlmdHlhcGl1c2VyOm5pZnR5YXBpdXNlckAyMTEwIw==",
+        "Connection": "keep-alive",
+        "Host": "services.niftytrader.in",
+        "Origin": "https://www.niftytrader.in",
+        "Referer": "https://www.niftytrader.in/",
+        "Sec-Ch-Ua": '"Google Chrome";v="123", "Not:A-Brand";v="8", "Chromium";v="123"',
+        "Sec-Ch-Ua-Mobile": "?0",
+        "Sec-Ch-Ua-Platform": '"Windows"',
+        "Sec-Fetch-Dest": "empty",
+        "Sec-Fetch-Mode": "cors",
+        "Sec-Fetch-Site": "same-site",
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36"
+    }
+
+    response = requests.get(url, headers=headers)
+
+    if response.status_code == 200:
+        data = response.json()
+        # Process the data as needed
+        print(data)
+        return JsonResponse(data)
+    else:
+        print("Failed to fetch data. Status code:", response.status_code)
+
+
+
+
+
+from home.models import OptionExpiryData  # Import your Django app's model
+
+
+def save_all_option_simulator(request):
+
+
+    symbols = ["NIFTY", "BANKNIFTY", "FINNIFTY"]
+    url = "https://webapi.niftytrader.in/webapi/Option/option-simulator-expiry-list"
+
+    def is_market_hours():
+        current_time = datetime.datetime.now().time()
+        market_open = datetime.datetime.strptime("09:15:00", "%H:%M:%S").time()
+        market_close = datetime.datetime.strptime("15:30:00", "%H:%M:%S").time()
+        return market_open <= current_time <= market_close
+
+    for symbol in symbols:
+        payload = {"symbol": symbol}
+        response = requests.post(url, json=payload)
+        
+        if response.status_code == 200:
+            print(f"Response for {symbol}:")
+            expiry_dates = response.json()["resultData"]["expiry_all"] 
+            expiry_dates.sort(reverse=False)
+            counter = 0
+
+            print("Expiry Dates (Ascending Order):")
+            for expiry_date in expiry_dates:
+                formatted_expiry_date = datetime.datetime.strptime(expiry_date, "%Y-%m-%dT%H:%M:%S").date()
+                previous_expiry_date = formatted_expiry_date - datetime.timedelta(days=90)  # Subtract 3 months
+                
+                print(f"Symbol: {symbol}, Expiry Date: {formatted_expiry_date}, Previous Last 3 Month Date: {previous_expiry_date}")
+
+                if is_market_hours():
+                    # Print dates between expiry date and previous expiry date
+                    current_date = previous_expiry_date
+                    market_open = datetime.datetime.strptime("09:15:00", "%H:%M:%S").time()
+                    market_close = datetime.datetime.strptime("15:30:00", "%H:%M:%S").time()
+                    market_day = datetime.datetime.now().date()
+                    
+                    while current_date < formatted_expiry_date:
+                        market_open_datetime = datetime.datetime.combine(market_day, market_open)
+                        market_close_datetime = datetime.datetime.combine(market_day, market_close)
+                        if market_open_datetime <= datetime.datetime.now() <= market_close_datetime:
+                            # Print each minute within market hours
+                            current_time = market_open
+                            while current_time <= market_close:
+                                current_datetime = datetime.datetime.combine(market_day, current_time)
+                                if market_open_datetime <= current_datetime <= market_close_datetime:
+                                    print(f"Symbol: {symbol}, Expiry Date: {formatted_expiry_date}, Current Date: {current_date}, Current Time: {current_time}")
+                                    
+                                    api_url = "https://webapi.niftytrader.in/webapi/Option/option-simulator-expiry-data"
+                                    current_time_str = current_time.strftime("%H:%M:%S")
+                                    current_date_str = current_date.strftime("%Y-%m-%d")
+                                    payload = {
+                                        "symbol": symbol,
+                                        "expiryDate": str(formatted_expiry_date),
+                                        "createdAt": current_date_str,
+                                        "createdTime": current_time_str
+                                    }
+
+                                    response = requests.post(api_url, json=payload)
+
+                                    if response.status_code == 200:
+                                        if response.json()["resultData"]:  # Check if data is not empty
+                                            print("Response:")
+                                            print(response.json()["resultData"])
+                                            json_response = response.json()["resultData"]
+                                            if json_response:
+                                                OptionExpiryData.objects.create(
+                                                    symbol=symbol,
+                                                    expiry_date=formatted_expiry_date,
+                                                    created_at=current_date_str,
+                                                    created_time=current_time_str,
+                                                    json_response=json_response
+                                                )
+                                        else:
+                                            print("Data is empty. Skipping the loop for the current date.")
+                                            break  # Exit the inner loop if data is empty
+                                            # Skip this loop and move to the next expiry_date
+                                            continue
+
+                                    else:
+                                        print("Failed to fetch data. Status code:", response.status_code)
+
+                                current_time = (datetime.datetime.combine(datetime.datetime.now().date(), current_time) + datetime.timedelta(minutes=5)).time()
+                        current_date += datetime.timedelta(days=1)
+
+                # Increment counter
+                counter += 1
+                
+                # Break the loop after 2 iterations
+                if counter == 2:
+                    break
+        else:
+            print(f"Failed to fetch data for {symbol}. Status code:", response.status_code)
+
+
+
+
+def delete_option_simulator(request):
+    OptionExpiryData.objects.all().delete()
+    return HttpResponse("deleted all data in the option expiry table")
+
+
+
+def retrieve_all_option_data(request):
+    # Retrieve all instances where json_response is not empty and not an empty list
+    data_with_json_response = OptionExpiryData.objects.exclude(json_response=None).exclude(json_response=[])
+
+    # Serialize the queryset to JSON
+    serialized_data = [
+        {
+            "symbol": data.symbol,
+            "expiry_date": data.expiry_date,
+            "created_at": data.created_at,
+            "created_time": data.created_time,
+            "json_response": data.json_response,
+       
+            "created_now": data.created_now
+        }
+        for data in data_with_json_response
+    ]
+
+    # Return JSON response
+    return JsonResponse(serialized_data, safe=False)

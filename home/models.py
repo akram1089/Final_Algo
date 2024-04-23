@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.utils import timezone  # Import 'timezone' from 'django.utils'
 
 from django.db import models
@@ -553,3 +555,22 @@ class Post(models.Model):
     def get_absolute_url(self):
         # Define the URL pattern name for the post detail view
         return reverse('post_detail', args=[str(self.pk)])
+
+
+
+
+
+
+
+from django.db import models
+
+class OptionExpiryData(models.Model):
+    symbol = models.CharField(max_length=50)
+    expiry_date = models.DateField()
+    created_at = models.DateTimeField()
+    created_time = models.TimeField()
+    json_response = models.JSONField()
+    created_now = models.DateTimeField(default=datetime.now, editable=False)
+
+    def __str__(self):
+        return f"{self.symbol} - {self.expiry_date}"

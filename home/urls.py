@@ -616,6 +616,10 @@ urlpatterns = [
      path('save_emails_from_csv/<str:file_name>', views.save_emails_from_csv, name='save_emails_from_csv'),
      path('adminreport', views.adminreport, name='adminreport'),
      path('filter_report_data', views.filter_report_data, name='filter_report_data'),
+     path('api_test_check', views.api_test_check, name='api_test_check'),
+     path('save_all_option_simulator', views.save_all_option_simulator, name='save_all_option_simulator'),
+     path('delete_option_simulator', views.delete_option_simulator, name='delete_option_simulator'),
+     path('retrieve_all_option_data', views.retrieve_all_option_data, name='retrieve_all_option_data'),
 
 
 
