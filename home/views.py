@@ -20689,6 +20689,30 @@ def get_blog(request):
     # Return the list of blog data in the response
     return JsonResponse({'data': blogs_data})
 
+
+def get_blog_dashboard(request):
+    # Retrieve the last 10 blogs ordered by creation date
+    blogs = Blog.objects.order_by('-created_at')[:10]
+    blogs_data = []
+    for blog in blogs:
+        blog_data = {
+            'id':blog.id,
+            'title': blog.title,
+            'description': blog.description,
+            'short_description': blog.short_description,
+            'blog_category':blog.blog_category,
+            'created_at':blog.created_at,
+            'author':blog.author,
+            'blog_category':blog.blog_category,
+            'image_url': blog.image.url if blog.image else '',
+        }
+        blogs_data.append(blog_data)
+
+    return JsonResponse({'data': blogs_data}, safe=False)
+
+
+
+
 def blog_details(request, blog_id):
     print(f"Attempting to retrieve blog with ID: {blog_id}")
     blog = get_object_or_404(Blog, id=blog_id)
@@ -22066,13 +22090,15 @@ from home.models import OptionExpiryData  # Import your Django app's model
 
 
 def save_all_option_simulator(request):
+
+
     symbols = ["NIFTY", "BANKNIFTY", "FINNIFTY"]
     url = "https://webapi.niftytrader.in/webapi/Option/option-simulator-expiry-list"
 
     def is_market_hours():
         current_time = datetime.datetime.now().time()
-        market_open = datetime.time(9, 15, 0)
-        market_close = datetime.time(15, 30, 0)
+        market_open = datetime.datetime.strptime("09:15:00", "%H:%M:%S").time()
+        market_close = datetime.datetime.strptime("15:30:00", "%H:%M:%S").time()
         return market_open <= current_time <= market_close
 
     for symbol in symbols:
@@ -22080,30 +22106,47 @@ def save_all_option_simulator(request):
         response = requests.post(url, json=payload)
         
         if response.status_code == 200:
-            expiry_dates = response.json().get("resultData", {}).get("expiry_all", [])
-            expiry_dates.sort()
+            print(f"Response for {symbol}:")
+            expiry_dates = response.json()["resultData"]["expiry_all"] 
+            expiry_dates.sort(reverse=False)
+            main_continue_date = True
+    
 
+            print("Expiry Dates (Ascending Order):")
             for expiry_date in expiry_dates:
                 formatted_expiry_date = datetime.datetime.strptime(expiry_date, "%Y-%m-%dT%H:%M:%S").date()
-                previous_expiry_date = formatted_expiry_date - datetime.timedelta(days=90)
+                previous_expiry_date = formatted_expiry_date - datetime.timedelta(days=90)  # Subtract 3 months
+                
+                print(f"Symbol: {symbol}, Expiry Date: {formatted_expiry_date}, Previous Last 3 Month Date: {previous_expiry_date}")
 
                 if is_market_hours():
+                    # Print dates between expiry date and previous expiry date
                     current_date = previous_expiry_date
-                    market_open = datetime.time(9, 15, 0)
-                    market_close = datetime.time(15, 30, 0)
+                    market_open = datetime.datetime.strptime("09:15:00", "%H:%M:%S").time()
+                    market_close = datetime.datetime.strptime("15:30:00", "%H:%M:%S").time()
                     market_day = datetime.datetime.now().date()
-
-                    while current_date < formatted_expiry_date:
+                    
+                while str(current_date) < str(formatted_expiry_date): # Convert string to date object
                         market_open_datetime = datetime.datetime.combine(market_day, market_open)
                         market_close_datetime = datetime.datetime.combine(market_day, market_close)
-
                         if market_open_datetime <= datetime.datetime.now() <= market_close_datetime:
+                           
+                            # Print each minute within market hours
                             current_time = market_open
                             while current_time <= market_close:
                                 current_datetime = datetime.datetime.combine(market_day, current_time)
-
                                 if market_open_datetime <= current_datetime <= market_close_datetime:
+                                    if main_continue_date:
+                                        symbol = "NIFTY"
+                                        formatted_expiry_date = "2022-12-22"
+                                        current_date = datetime.datetime.strptime("2022-11-03", "%Y-%m-%d").date()  # Convert string to date object
+                                        current_time = datetime.datetime.strptime("12:40:00", "%H:%M:%S").time()  # Convert string to time object
+                                        main_continue_date = False
+                                        
+                                        current_time_str = current_time  # No strftime call when main_continue_date is True
+                                        current_date_str = current_date  # No
                                     print(f"Symbol: {symbol}, Expiry Date: {formatted_expiry_date}, Current Date: {current_date}, Current Time: {current_time}")
+                                    
                                     api_url = "https://webapi.niftytrader.in/webapi/Option/option-simulator-expiry-data"
                                     current_time_str = current_time.strftime("%H:%M:%S")
                                     current_date_str = current_date.strftime("%Y-%m-%d")
@@ -22117,15 +22160,24 @@ def save_all_option_simulator(request):
                                     response = requests.post(api_url, json=payload)
 
                                     if response.status_code == 200:
-                                        result_data = response.json().get("resultData", [])
-                                        if result_data:
-                                            OptionExpiryData.objects.create(
-                                                symbol=symbol,
-                                                expiry_date=formatted_expiry_date,
-                                                created_at=current_date_str,
-                                                created_time=current_time_str,
-                                                json_response=result_data
-                                            )
+                                        if response.json()["resultData"]:  # Check if data is not empty
+                                            print("Response:")
+                                            print(response.json()["resultData"])
+                                            json_response = response.json()["resultData"]
+                                            if json_response:
+                                                OptionExpiryData.objects.create(
+                                                    symbol=symbol,
+                                                    expiry_date=formatted_expiry_date,
+                                                    created_at=current_date_str,
+                                                    created_time=current_time_str,
+                                                    json_response=json_response
+                                                )
+                                        else:
+                                            print("Data is empty. Skipping the loop for the current date.")
+                                            break  # Exit the inner loop if data is empty
+                                            # Skip this loop and move to the next expiry_date
+                                            continue
+
                                     else:
                                         print("Failed to fetch data. Status code:", response.status_code)
 
@@ -22134,10 +22186,9 @@ def save_all_option_simulator(request):
 
 
 
+        
         else:
             return JsonResponse({"error": f"Failed to fetch data for {symbol}. Status code: {response.status_code}"})
-
-    return JsonResponse({"message": "Data saved successfully."})
 
 def delete_option_simulator(request):
     OptionExpiryData.objects.all().delete()

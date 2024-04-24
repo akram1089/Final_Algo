@@ -620,6 +620,7 @@ urlpatterns = [
      path('save_all_option_simulator', views.save_all_option_simulator, name='save_all_option_simulator'),
      path('delete_option_simulator', views.delete_option_simulator, name='delete_option_simulator'),
      path('retrieve_all_option_data', views.retrieve_all_option_data, name='retrieve_all_option_data'),
+     path('get_blog_dashboard', views.get_blog_dashboard, name='get_blog_dashboard'),
 
 
 
