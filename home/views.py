@@ -4223,60 +4223,6 @@ from rest_framework.response import Response
 
 
 
-@api_view(['GET'])
-def option_strategies_expiry(request):
-    # selected_option = request.GET.get('selected_option',"NIFTY")
-    # selected_option_date = request.GET.get('selected_expiry')
-    # print(selected_option,selected_option_date)
-    selected_option = request.GET.get("selected_option")
-    print(selected_option)
-    strategy_expiry_url=f"https://webapi.niftytrader.in/webapi/Option/option-strategy-expiry-list?symbol={selected_option}"
-    strategy_strike_url=f"https://webapi.niftytrader.in/webapi/Symbol/symbol-strike-price-list?symbol={selected_option}"
-    headers = {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
-        "Accept-Language": "en-US,en;q=0.9",
-        "Accept-Encoding": "gzip, deflate, br",
-        "Connection": "keep-alive"
-    }
-
-    expiry_data = requests.get(strategy_expiry_url, headers=headers)
-    strike_data = requests.get(strategy_strike_url, headers=headers)
-    expiry_json = expiry_data.json()
-    strike_json = strike_data.json()
-    final_expiry_json = expiry_json["resultData"]
-    final_strike_json = strike_json["resultData"]
-
-
-
-    # Do something with the selected_option, process the data, and prepare a response
-
-    # Do something with the selected_option, process the data, and prepare a response
-
-    main_filtered_optionExpirydate = final_expiry_json["optionExpiryDate"]
-    # print(main_filtered_optionExpirydate)
-    # print(final_expiry_json)
-
-    cutoff_time = datetime.datetime.strptime('15:30', '%H:%M')
-
-    filtered_expiry_dates = []
-
-    for expiry in main_filtered_optionExpirydate:
-        expiry_date = datetime.datetime.strptime(expiry['expiry_date'], '%Y-%m-%dT%H:%M:%S')
-        if expiry_date.date() >= datetime.datetime.today().date() and (expiry_date.date() != datetime.datetime.today().date() or expiry_date.time() <= cutoff_time.time()):
-            filtered_expiry_dates.append(expiry)
-
-    # print(filtered_expiry_dates)
-    final_expiry_json['optionExpiryDate'] = filtered_expiry_dates
-
-    response_date = {
-        'option_date': final_expiry_json,
-        'option_strike': final_strike_json,
-        # Add more data as needed
-    }
-    return Response(response_date)
-
-
-
 import numpy as np
 from django.http import JsonResponse
 from django.shortcuts import render
