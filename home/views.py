@@ -14202,7 +14202,7 @@ def option_strategies_expiry(request):
             datetime.datetime.now().time() < cutoff_time)
     ]
     print("filtered_expiry_dates",filtered_expiry_dates)
-    final_expiry_json['optionExpiryDate'] = filtered_expiry_dates
+    final_expiry_json['optionExpiryDate'] = main_filtered_optionExpirydate
 
     response_date = {
         'option_date': final_expiry_json,

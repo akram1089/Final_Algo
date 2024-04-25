@@ -13902,6 +13902,9 @@ aria-labelledby="exampleModalLabel" aria-hidden="true">
                     });
                   }
                   function populateExpiryDropdown(expiries, data) {
+
+                    console.log('expiries',expiries);
+                    
                     var expiryDropdown = $(".futures_expiry");
 
                     // Clear existing dropdown options
@@ -13918,23 +13921,34 @@ aria-labelledby="exampleModalLabel" aria-hidden="true">
                     // Create a date object for today at 3:30 PM
                     var todayAt330PM = new Date(currentYear, currentMonth - 1, currentDay, 15, 30, 0);
 
+                    console.log('todayAt330PM',todayAt330PM);
+                    
+
                     // Add an option for each expiry date
-                    expiries.forEach(function (expiry) {
-                      var parsedDate = new Date(expiry);
-                      var currentHour = parsedDate.getHours();
-                      var currentMinute = parsedDate.getMinutes();
+// Get the current date and time
+var currentDate = new Date();
+var currentHour = currentDate.getHours();
+var currentMinute = currentDate.getMinutes();
 
-                      // Check if the expiry date is today and if it's after 3:30 PM
+// Iterate through each expiry date
+expiries.forEach(function (expiry) {
+    var parsedDate = new Date(expiry);
+    
+    // Check if the expiry date is today and if it's after 15:30
+    if (parsedDate.toDateString() === currentDate.toDateString() && (currentHour > 15 || (currentHour === 15 && currentMinute >= 30))) {
+        return; // Skip this expiry date
+    }
+    
+    // Format the date as DD-MM-YYYY
+    var month = parsedDate.getMonth() + 1; // Month is zero-based, so add 1
+    var day = parsedDate.getDate();
+    var year = parsedDate.getFullYear();
+    var formattedDate = `${day.toString().padStart(2, '0')}-${month.toString().padStart(2, '0')}-${year}`;
 
-
-                      var month = parsedDate.getMonth() + 1; // Month is zero-based, so add 1
-                      var day = parsedDate.getDate();
-                      var year = parsedDate.getFullYear();
-                      var formattedDate = `${day.toString().padStart(2, '0')}-${month.toString().padStart(2, '0')}-${year}`;
-
-                      var option = `<option value="${expiry}">${formattedDate}</option>`;
-                      expiryDropdown.append(option);
-                    });
+    // Create an option element and append it to the dropdown
+    var option = `<option value="${expiry}">${formattedDate}</option>`;
+    expiryDropdown.append(option);
+});
 
                     // Uncomment below lines if needed
                     // ;
@@ -29767,40 +29781,59 @@ $(".main_leg_button_input input").val(0)
         if (!calc) {
           // Add each expiry date as an option without duplicates
           var addedExpiryDates = [];
-          $(".expiry_date_input option").each(function () {
-            addedExpiryDates.push(this.value);
-          });
-          var optionExpiryDropdown = $("#optionExpiryDropdown");
-          optionExpiryDropdown.empty()
-          expiryDates.forEach((expiry) => {
-            var inputDate = expiry.expiry_date.split("T")[0];
-            if (!addedExpiryDates.includes(inputDate)) {
-              addedExpiryDates.push(inputDate);
-              var parsedDate = new Date(inputDate);
+$(".expiry_date_input option").each(function () {
+    addedExpiryDates.push(this.value);
+});
 
+var optionExpiryDropdown = $("#optionExpiryDropdown");
+optionExpiryDropdown.empty();
 
-              // Add to the dropdown
-              var day = parsedDate.getDate().toString().padStart(2, "0");
-              var month = (parsedDate.getMonth() + 1).toString().padStart(2, "0");
-              var year = parsedDate.getFullYear();
-              var formattedDate = day + "-" + month + "-" + year;
-              $(".expiry_date_input").append(
+expiryDates.forEach((expiry) => {
+    var inputDate = expiry.expiry_date.split("T")[0];
+    var parsedDate = new Date(inputDate);
+
+    // Check if the expiry date is today and after 15:30
+    var currentDate = new Date();
+    if (
+        parsedDate.toDateString() === currentDate.toDateString() &&
+        currentDate.getHours() >= 15 &&
+        currentDate.getMinutes() >= 30
+    ) {
+        return; // Skip this expiry date
+    }
+
+    // Check if the expiry date is in the future
+    if (parsedDate > new Date()) {
+        // If the expiry date is not already added, add it to the list
+        if (!addedExpiryDates.includes(inputDate)) {
+            addedExpiryDates.push(inputDate);
+
+            // Format the date
+            var day = parsedDate.getDate().toString().padStart(2, "0");
+            var month = (parsedDate.getMonth() + 1).toString().padStart(2, "0");
+            var year = parsedDate.getFullYear();
+            var formattedDate = `${day}-${month}-${year}`;
+
+            // Append the option to the expiry date input dropdown
+            $(".expiry_date_input").append(
                 $("<option>", {
-                  value: inputDate, // You can keep the original value or use formattedDate if needed
-                  text: formattedDate,
+                    value: inputDate, // You can keep the original value or use formattedDate if needed
+                    text: formattedDate,
                 })
-              );
+            );
 
-              // optionExpiryDropdown
-              optionExpiryDropdown.append(
+            // Append the option to the optionExpiryDropdown
+            optionExpiryDropdown.append(
                 $("<option>", {
-                  value: inputDate, // You can keep the original value or use formattedDate if needed
-                  text: formattedDate,
+                    value: inputDate, // You can keep the original value or use formattedDate if needed
+                    text: formattedDate,
                 })
+            );
+        }
+    }
+});
 
-              )
-            }
-          });
+          console.log('addedExpiryDates',addedExpiryDates);
           loadOptionData($("#stockDropdown_optionchain").val(), optionExpiryDropdown.val());
         }
 
