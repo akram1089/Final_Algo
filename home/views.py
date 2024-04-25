@@ -14243,15 +14243,18 @@ def option_strategies_expiry(request):
     # print(main_filtered_optionExpirydate)
     print(final_expiry_json)
 
-    cutoff_time = datetime.datetime.strptime('15:30', '%H:%M')
+    now = datetime.datetime.now()
 
-    filtered_expiry_dates = []
+    # Define the cutoff time
+    cutoff_time = datetime.time(15, 30)
 
-    for expiry in main_filtered_optionExpirydate:
-        expiry_date = datetime.datetime.strptime(expiry['expiry_date'], '%Y-%m-%dT%H:%M:%S')
-        if expiry_date.date() >= datetime.datetime.today().date() and (expiry_date.date() != datetime.datetime.today().date() or expiry_date.time() >= cutoff_time.time()):
-            filtered_expiry_dates.append(expiry)
-
+    # Filter expiry dates
+    filtered_expiry_dates = [
+        expiry for expiry in main_filtered_optionExpirydate
+        if datetime.datetime.fromisoformat(expiry['expiry_date']).date() != now.date()
+        or (datetime.datetime.fromisoformat(expiry['expiry_date']).date() == now.date() and
+            datetime.datetime.now().time() < cutoff_time)
+    ]
     print("filtered_expiry_dates",filtered_expiry_dates)
     final_expiry_json['optionExpiryDate'] = filtered_expiry_dates
 
@@ -21541,8 +21544,11 @@ from django.http import JsonResponse
 from .models import Subscriber
 
 def get_subscribers(request):
-    subscribers = Subscriber.objects.values('email', 'subscribed_at', 'active','id').distinct()
+    # Filter subscribers with email addresses ending in "@gmail.com"
+    subscribers = Subscriber.objects.filter(email__endswith='@gmail.com').values('email', 'subscribed_at', 'active', 'id').distinct()
+    
     subscribers_list = list(subscribers)
+    
     return JsonResponse({'subscribers': subscribers_list})
 
 def send_promotional_emails(request):
@@ -21989,7 +21995,7 @@ def save_emails_from_csv(request, file_name):
 
 def test_welcome_mail(request):
     # Get the email template
-    email_template = get_template('aaaanew_welcom_template.html')
+    email_template = get_template('Email_template/feature_email.html')
     context = {'username': "Naveen"}
     email_content = email_template.render(context)
 
@@ -22008,6 +22014,26 @@ def test_welcome_mail(request):
     return HttpResponse('mail sent')
 
 
+
+# def test_welcome_mail(request):
+#     # Get the email template
+#     email_template = get_template('Email_template/feature_email.html')
+#     context = {'username': "Naveen"}
+#     email_content = email_template.render(context)
+
+#     # Define email subject and message
+#     subject = 'Welcome to Option Perks'
+#     message = 'Thank you for signing up on Your Website. We are glad to have you as part of our community.'
+
+#     # Get all subscribers
+#     subscribers = "tufailakram8190@gmail.com"
+
+#     # Send welcome email to each subscriber
+
+#     recipient_email = subscribers
+#     send_mail(subject, message, 'optionperks@gmail.com', [recipient_email], html_message=email_content, fail_silently=False)
+
+#     return HttpResponse('mail sent')
 
 
 
