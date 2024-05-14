@@ -574,3 +574,20 @@ class OptionExpiryData(models.Model):
 
     def __str__(self):
         return f"{self.symbol} - {self.expiry_date}"
+
+
+# models.py
+from django.db import models
+
+class UploadedFileNewLetter(models.Model):
+    file = models.FileField(upload_to='uploadsNewsLatters/')
+    file_path = models.CharField(max_length=255, blank=True)
+    subject =models.CharField(max_length=255,blank=True)
+    template = models.CharField(max_length=100)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def save(self, *args, **kwargs):
+        # If file_path is not set, set it based on the uploaded file's path
+        if not self.file_path:
+            self.file_path = self.file.url
+        super().save(*args, **kwargs)

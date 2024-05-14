@@ -44,6 +44,13 @@ from.models import OptionExpiryData
 
 
 admin.site.register(OptionExpiryData)
+from.models import UploadedFileNewLetter
+
+# from.models import StockListing
+
+
+
+admin.site.register(UploadedFileNewLetter)
 admin.site.register(Post)
 admin.site.register(PromotionalEmail)
 admin.site.register(UserSession)
