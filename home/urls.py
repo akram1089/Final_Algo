@@ -6,7 +6,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.views.static import serve
-from .views import MarketStatusView
+from .views import MarketStatusView, TemplateAPIView
 from .views import BanListView
 from .views import BookListCreateView
 from .views import Fetch_Future_Data
@@ -621,6 +621,14 @@ urlpatterns = [
      path('delete_option_simulator', views.delete_option_simulator, name='delete_option_simulator'),
      path('retrieve_all_option_data', views.retrieve_all_option_data, name='retrieve_all_option_data'),
      path('get_blog_dashboard', views.get_blog_dashboard, name='get_blog_dashboard'),
+     path('newsletter_management', views.newsletter_management, name='newsletter_management'),
+     path('api/template/', TemplateAPIView.as_view(), name='template_api'),
+     path('upload/newsLetter', views.newsLetter_save, name='newsLetter_save'),
+     path('all_templates_newsletter', views.all_templates_newsletter, name='all_templates_newsletter'),
+     path('delete_template/', views.delete_template, name='delete_template'),
+     path('delete_file/', views.delete_file, name='delete_file'),
+     path('send_template_mail', views.send_template_mail, name='send_template_mail'),
+     path('nifty_movements', views.nifty_movements, name='nifty_movements'),
 
 
 

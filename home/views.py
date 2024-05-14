@@ -21941,20 +21941,21 @@ def save_emails_from_csv(request, file_name):
 
 def test_welcome_mail(request):
     # Get the email template
-    email_template = get_template('Email_template/feature_email.html')
+    email_template = get_template('newslatter/lot_size_news_letter.html')
     context = {'username': "Naveen"}
     email_content = email_template.render(context)
 
     # Define email subject and message
-    subject = 'Welcome to Option Perks'
+    subject = 'Revision in Market Lot of Derivative Contracts on Indices'
     message = 'Thank you for signing up on Your Website. We are glad to have you as part of our community.'
 
     # Get all subscribers
-    subscribers = Subscriber.objects.filter(active=True)
+
+    subscribers = Subscriber.objects.filter(email__endswith='@gmail.com').values('email', 'subscribed_at', 'active', 'id').distinct()
 
     # Send welcome email to each subscriber
     for subscriber in subscribers:
-        recipient_email = subscriber.email
+        recipient_email = subscriber['email'] 
         send_mail(subject, message, 'optionperks@gmail.com', [recipient_email], html_message=email_content, fail_silently=False)
 
     return HttpResponse('mail sent')
@@ -21963,12 +21964,12 @@ def test_welcome_mail(request):
 
 # def test_welcome_mail(request):
 #     # Get the email template
-#     email_template = get_template('Email_template/feature_email.html')
+#     email_template = get_template('newslatter/lot_size_news_letter.html')
 #     context = {'username': "Naveen"}
 #     email_content = email_template.render(context)
 
 #     # Define email subject and message
-#     subject = 'Welcome to Option Perks'
+#     subject = 'Revision in Market Lot of Derivative Contracts on Indices'
 #     message = 'Thank you for signing up on Your Website. We are glad to have you as part of our community.'
 
 #     # Get all subscribers
@@ -22188,3 +22189,155 @@ def retrieve_all_option_data(request):
 
     # Return JSON response
     return JsonResponse(serialized_data, safe=False)
+
+
+
+
+
+
+
+
+
+
+def newsletter_management(requests):
+    return render(requests,'newsletter_management.html')
+
+
+
+# views.py
+
+from rest_framework.response import Response
+from rest_framework.decorators import api_view
+from .serializers import TemplateSerializer
+
+from django.http import JsonResponse
+from django.template.loader import render_to_string
+from django.template import loader  # Import loader here
+from django.views import View
+
+class TemplateAPIView(View):
+    def get(self, request):
+        # Render the template
+        template = loader.get_template('newslatter/lot_size_news_letter.html')  # Use loader here
+        template_content = template.render()
+        
+        # Serialize the template content
+        data = {
+            'template_content': template_content
+        }
+        
+        # Return the serialized content as JSON response
+        return JsonResponse(data)
+
+
+from .models import UploadedFileNewLetter
+@csrf_exempt
+def newsLetter_save(request):
+    if request.method == 'POST':
+        file = request.FILES['file']
+        template = request.POST['template']
+        subject = request.POST['subject']
+        created_at = request.POST['createdAt']  # Get date from AJAX request
+        uploaded_file = UploadedFileNewLetter.objects.create(file=file, template=template, created_at=created_at,subject=subject)
+        uploaded_file.save()
+        return JsonResponse({'message': 'File uploaded successfully!'})
+    return render(request, 'upload_form.html')
+
+
+
+
+
+
+
+
+
+def all_templates_newsletter(request):
+    templates = UploadedFileNewLetter.objects.values_list('template', flat=True).distinct()
+    template_html = {}
+    for template in templates:
+        files = UploadedFileNewLetter.objects.filter(template=template)
+        template_html[template] = [{'pk': file.pk, 'html': file.file.read().decode('utf-8')} for file in files]
+    return JsonResponse({'templates': template_html})
+
+
+
+
+def delete_template(request):
+    if request.method == 'POST':
+        template_name = request.POST.get('template_name')
+        try:
+            files = UploadedFileNewLetter.objects.filter(template=template_name)
+            for file in files:
+                file.delete()
+            return JsonResponse({'message': 'Template and associated files deleted successfully.'})
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
+    else:
+        return JsonResponse({'error': 'Only POST method is allowed for this endpoint.'}, status=405)
+
+
+
+@csrf_exempt
+def delete_file(request):
+    if request.method == 'POST':
+        file_id = request.POST.get('file_id')
+        try:
+            file_to_delete = UploadedFileNewLetter.objects.get(pk=file_id)
+            file_to_delete.delete()
+            return JsonResponse({'message': 'File deleted successfully!'})
+        except UploadedFileNewLetter.DoesNotExist:
+            return JsonResponse({'error': 'File does not exist.'}, status=404)
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
+    else:
+        return JsonResponse({'error': 'Only POST method is allowed for this endpoint.'}, status=405)
+
+
+
+
+
+@csrf_exempt
+def send_template_mail(request):
+    if request.method == 'POST':
+        file_id = request.POST.get('file_id')
+        try:
+            file_to_delete = UploadedFileNewLetter.objects.get(pk=file_id)
+
+            # Construct the path relative to MEDIA_ROOT
+            template_relative_path = file_to_delete.file.url
+            print("template_relative_path",template_relative_path)
+            template_relative_path = template_relative_path.replace('/media/', '')
+            email_template_path = os.path.join(settings.MEDIA_ROOT, template_relative_path)
+            message = 'Thank you for signing up on Your Website. We are glad to have you as part of our community.'
+            print(email_template_path)
+
+            # Read the HTML content from the template file
+            with open(email_template_path, 'r') as template_file:
+                html_content = template_file.read()
+
+            # Print the HTML content
+            print(html_content)
+
+            # Define email subject
+            subject = file_to_delete.subject
+
+            # Get subscribers
+            subscribers = Subscriber.objects.filter(email__endswith='@gmail.com').values('email', 'subscribed_at', 'active', 'id').distinct()
+
+            # Send welcome email to each subscriber
+            for subscriber in subscribers:
+                recipient_email = subscriber['email'] 
+                send_mail(subject, message, 'optionperks@gmail.com', [recipient_email], html_message=html_content, fail_silently=False)
+
+            return JsonResponse({'message': 'Mail sent'})
+        
+        except UploadedFileNewLetter.DoesNotExist:
+            return JsonResponse({'error': 'File does not exist.'}, status=404)
+        
+    else:
+        return JsonResponse({'error': 'Only POST method is allowed for this endpoint.'}, status=405)
+
+
+
+def nifty_movements(request):
+    return render(request,"nifty_movements.html")
