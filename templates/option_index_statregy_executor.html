@@ -14124,7 +14124,6 @@ Option Strategy Builder
 
 
                   $(".stockDropdown").change(function () {
-                    var symbolIndices = $(this).val();
                     getFutureData(symbolIndices);
                     var chartUrl;
                     if (symbolIndices === 'NIFTY') {
@@ -16984,40 +16983,17 @@ Option Strategy Builder
                 }),
                 contentType: "application/json",
                 success: function (response) {
+                  
                   // //////;
+                  response = JSON.parse(response);
+                  console.log(response)
+              
+
 
 
 
                   if (response.broker_name === "zerodha") {
 
-                    // ;
-
-                    if (response.margin_info.status === "error") {
-
-                      toastr.error(response.margin_info.message)
-
-                      $(".check_liquidity").prop("disabled", true);
-
-                      // Create a new paragraph element
-                      var $errorParagraph = $("<p></p>");
-
-                      // Set the text and class for the error message
-                      $errorParagraph.text("Invalid zerodha credentials !! Please check your Zerodha Login, password or TOTP secret key !!");
-                      $errorParagraph.addClass("text-danger");
-                      $errorParagraph.css({
-                        "border": "1px solid red",
-                        "padding": "5px",
-                        "border-radius": "10px"
-                      });
-
-                      // Empty the .main_extented_status_liquidity element and append the error message
-                      $(".main_extented_status_liquidity").empty().append($errorParagraph);
-
-                      return
-
-                    } else {
-                      $(".check_liquidity").prop("disabled", false);
-                    }
 
                     if (response.status === "success") {
 
@@ -17043,12 +17019,9 @@ Option Strategy Builder
                       $(".names_user_details h5").text(zerodha_kite_profile.user_name);
                       $(".names_user_details p").text(`Client ID:${zerodha_kite_profile.user_id}`);
 
-                      var zerodha_margin = response.margin_info.data.equity.available.cash
+             
                       //////;
 
-                      $(".margin_available").val(zerodha_margin);
-
-                      $(".margin_needed").val((response.order_response.data.final.total).toFixed(2))
 
                       if (
                         response &&
@@ -17102,17 +17075,26 @@ Option Strategy Builder
                       // ;
 
                       // Assuming response is an array of objects
+                      var parse_values = JSON.parse(response.result_data.ohlc_market_indepth)
+                      console.log(parse_values)
                       // Assuming 'response' is the JSON response from your server
-                      for (let i = 0; i < response.result_data.ohlc_market_indepth.length; i++) {
+                      for (let i = 0; i < parse_values.length; i++) {
                         // const trading_data = response.result_data.ohlc_market_indepth[i];
                         // const trading_symbol = trading_data.instrument_token; // Assuming instrument_token is the trading symbol
-                        const trading_symbol = Object.keys(response.result_data.ohlc_market_indepth[i])[0];
-                        const trading_data = response.result_data.ohlc_market_indepth[i][trading_symbol];
+        
+                        const trading_data = parse_values[i]
+        
+                        console.log(trading_data);
+                        
                         //////;
                         //////;
 
-                        $(".main_trading_symbol").eq(i).append(trading_symbol.replace("NFO:", ""));
-                        $(".schedule_main_trading_symbol").eq(i).append(trading_symbol.replace("NFO:", ""));
+                        response.result_data.trading_quotes.map((x)=>{
+console.log(x);
+                          $(".main_trading_symbol").eq(i).append(x.combinedString.replace("NFO:", ""));
+                        $(".schedule_main_trading_symbol").eq(i).append(x.combinedString.replace("NFO:", ""));
+                        })
+
 
 
 
@@ -17663,8 +17645,12 @@ Option Strategy Builder
         ohlc: { open, high, low, close },
         volume,
         last_quantity,
+        volume_traded,
         average_price,
         timestamp,
+        last_trade_time,
+        last_traded_quantity,
+        average_traded_price,
         oi,
       } = firstInstrument;
 
@@ -17675,7 +17661,7 @@ Option Strategy Builder
 
 
       // Convert the timestamp to a more readable format
-      const ltt = new Date(timestamp).toLocaleString();
+      const ltt = new Date(timestamp||last_trade_time).toLocaleString();
 
       // Create the HTML structure with the extracted data
       let main_spot_data = '<div class="inner_main_spot_order">';
@@ -17706,15 +17692,15 @@ Option Strategy Builder
     <div class='right_spot'>
         <div class="main_last_price_order d-flex justify-content-between" style="border-bottom: 1px solid #ccc; padding: 8px 0;">
             <p>Volume:</p>
-            <p>${volume}</p>
+            <p>${volume||volume_traded}</p>
         </div>
         <div class="main_last_price_order d-flex justify-content-between" style="border-bottom: 1px solid #ccc; padding-bottom: 8px;">
             <p>LTQ:</p>
-            <p>${last_quantity}</p>
+            <p>${last_quantity||last_traded_quantity}</p>
         </div>
         <div class="main_last_price_order d-flex justify-content-between" style="border-bottom: 1px solid #ccc; padding-bottom: 8px;">
             <p>Avg. Price:</p>
-            <p>${average_price}</p>
+            <p>${average_price||average_traded_price}</p>
         </div>
         <div class="main_last_price_order d-flex justify-content-between" style="border-bottom: 1px solid #ccc; padding-bottom: 8px;">
             <p>LTT:</p>

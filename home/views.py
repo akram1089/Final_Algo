@@ -18907,6 +18907,38 @@ def angel_one_order_place(data_trade, logging_id, password, totp_key, api_key,df
 
 
 
+ticks_data = None
+received_ticks = False
+
+# Global variable to store ticks
+def main_fetch_quotes(kws,instrument_token):
+
+    def on_ticks(ws, ticks):
+        global ticks_data, received_ticks
+        ticks_data = ticks
+        received_ticks = True
+        ws.close()
+
+    kws.on_ticks = on_ticks
+
+    kws.connect(threaded=True)
+
+    # Wait for connection
+    while not kws.is_connected():
+        time.sleep(1)
+    print("WebSocket: Connected")
+
+    # Subscribe to a specific instrument
+
+    kws.subscribe(instrument_token)
+    kws.set_mode(kws.MODE_FULL, instrument_token)
+
+    # Wait for the ticks to be received
+    while not received_ticks:
+        time.sleep(1)
+
+
+
 
 
 
@@ -18918,7 +18950,7 @@ import os
 import requests
 import pandas as pd
 from fuzzywuzzy import fuzz, process
-
+from kiteconnect import KiteTicker
 
 @csrf_exempt
 def quote_data_from_broker(request):
@@ -18968,7 +19000,9 @@ def quote_data_from_broker(request):
                 main_closest_symbols =[]
                 zerodha_api = ZerodhaPlaceOrder(enctoken)
                 all_profile = zerodha_api.get_user_profile()
-                margin_info = zerodha_api.margins()
+           
+
+                all_trading_zerodha_token_quote=[]
 
                 for quote in trading_quotes:
                     target_string = {
@@ -18978,12 +19012,18 @@ def quote_data_from_broker(request):
                         'strikePrice': quote["strikePrice"]
                     }
 
-                    tradingsymbols = download_csv_and_display(target_string)
+                    tradingsymbols = download_csv_and_display(target_string,"quote_web_socket")
+                    print("tradingsymbols",tradingsymbols)
 
                     if not tradingsymbols.empty:
-                        closest_match = tradingsymbols.iloc[0]
-                        quote['combinedString'] = f'NFO:{closest_match}'
-                        main_closest_symbols.append(closest_match)
+                        closest_match = tradingsymbols.iloc[0]['instrument_token']
+                        tradingsymbol = tradingsymbols.iloc[0]['tradingsymbol']
+                     
+               
+                        all_trading_zerodha_token_quote.append(int(closest_match))
+                        print("closest_match",closest_match)
+                        quote['combinedString'] = f'NFO:{tradingsymbol}'
+                        main_closest_symbols.append(tradingsymbol)
 
                      
                         result_data['closest_match'] = closest_match
@@ -18991,40 +19031,46 @@ def quote_data_from_broker(request):
                         # Handle case where tradingsymbols is empty
                         quote['combinedString'] = None
                     print("Merged Data:",merged_data)
-                    ohlc_market_indepth = zerodha_api.quote(quote["combinedString"])
-                    result_data['ohlc_market_indepth'].append(ohlc_market_indepth)
+              
+
                     result_data['trading_quotes'].append(quote)
                 print(main_closest_symbols)
+                print(all_trading_zerodha_token_quote)
+                kite = ZerodhaPlaceOrder(enctoken=enctoken)
+                user_id = kite.get_user_profile()["data"]["user_id"]
+                print(user_id)
+
+                kws = KiteTicker(api_key="TradeViaPython", access_token=enctoken + "&user_id=" + user_id)
+                instrument_token = all_trading_zerodha_token_quote
+                main_fetch_quotes(kws,instrument_token)
+             
+                # Custom encoder for JSON serialization
+                class CustomEncoder(json.JSONEncoder):
+                    def default(self, obj):
+                        if isinstance(obj, np.integer):
+                            return int(obj)
+                        if isinstance(obj, np.floating):
+                            return float(obj)
+                        if isinstance(obj, np.ndarray):
+                            return obj.tolist()
+                        if isinstance(obj, datetime.datetime):
+                            return obj.isoformat()
+                        return super(CustomEncoder, self).default(obj)
+
+                serialized_data=json.dumps(ticks_data, cls=CustomEncoder)
+                print(serialized_data)
+         
+
+                result_data['ohlc_market_indepth'].append(serialized_data)
                 for i, item in enumerate(merged_data):
                     item['main_trading_symbol'] = main_closest_symbols[i]
 
                 # Print updated merged_data
                 print("Updated merged_data:")
                 print(merged_data)
+                print("result_data",result_data)
 
                 
-                # New variable to store order_params
-                order_params_list = []
-
-                # Loop through merged_data and create order_params
-                for item in merged_data:
-                    order_params = {
-                        "exchange": "NFO",
-                        "tradingsymbol": item["main_trading_symbol"],
-                        "transaction_type": item["sell_buy_indicator"],
-                        "variety": "regular",
-                        "product": "NRML",
-                        "order_type": "LIMIT",
-                        "quantity": item["final_lot_size_along_with_qty"],
-                        "price": float(item["entryPrice"]),
-                        "trigger_price": 0,
-                        "squareoff": 0,
-                        "stoploss": 0
-                    }
-                    order_params_list.append(order_params)
-                print("order_params_list",order_params_list)
-                order_response = zerodha_api.calc_margin(order_params_list)
-                print(order_response)
 
         
                 response_data = {
@@ -19033,10 +19079,12 @@ def quote_data_from_broker(request):
                     "broker_name": "zerodha",
                     'result_data': result_data,
                     'all_profile': all_profile,
-                    'order_response': order_response,
-                    "margin_info": margin_info
+             
                 }
-                return JsonResponse(response_data)
+                print(response_data)
+                print("response_data")
+                response_data_se=json.dumps(response_data, cls=CustomEncoder)
+                return JsonResponse(response_data_se,safe=False)
             else:
                 return JsonResponse({'status': 'error', 'message': 'Failed to get enctoken'})
 
@@ -19096,13 +19144,91 @@ def quote_data_from_broker(request):
 
 
 
+
+
+
 def get_icici_quote(trading_quotes, logging_id, password, phone_number, totp_key, api_key, api_secret, broker_instance_upstocks, access_token):
     pass
 
 
 
 
+class ZerodhaAPI:
+    def __init__(self, enctoken):
+        self.headers = {"Authorization": f"enctoken {enctoken}"}
+        self.session = requests.Session()
+        self.root_url = "https://kite.zerodha.com/oms"
+        self.session.get(self.root_url, headers=self.headers)
+    
+    def get_user_profile(self):
+        profile_url = f"{self.root_url}/user/profile/full"
+        response = self.session.get(profile_url, headers=self.headers)
+        return response.json() if response.status_code == 200 else None
 
+
+ticks_data = None
+received_ticks = False
+# Global variable to store ticks
+def main_fetch_quotes(kws,instrument_token):
+
+
+    def on_ticks(ws, ticks):
+        global ticks_data, received_ticks
+        ticks_data = ticks
+        print(ticks)
+     
+        received_ticks = True
+        ws.close()
+
+
+    kws.on_ticks = on_ticks
+
+    kws.connect(threaded=True)
+
+    # Wait for connection
+    while not kws.is_connected():
+        time.sleep(1)
+    print("WebSocket: Connected")
+
+    # Subscribe to a specific instrument
+
+    kws.subscribe(instrument_token)
+    kws.set_mode(kws.MODE_FULL, instrument_token)
+
+    # Wait for the ticks to be received
+    while not received_ticks:
+        time.sleep(1)
+    class CustomEncoder(json.JSONEncoder):
+        def default(self, obj):
+            if isinstance(obj, np.integer):
+                return int(obj)
+            if isinstance(obj, np.floating):
+                return float(obj)
+            if isinstance(obj, np.ndarray):
+                return obj.tolist()
+            if isinstance(obj, datetime.datetime):
+                return obj.isoformat()
+            return super(CustomEncoder, self).default(obj)    
+    serialized_received_ticks=ticks_data
+    return serialized_received_ticks
+
+
+
+# Custom encoder for JSON serialization
+# Custom encoder for JSON serialization
+class CustomEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, np.integer):
+            return int(obj)
+        if isinstance(obj, np.floating):
+            return float(obj)
+        if isinstance(obj, np.ndarray):
+            return obj.tolist()
+        if isinstance(obj, datetime.datetime):
+            return obj.isoformat()
+        return super(CustomEncoder, self).default(obj)
+
+print("Ticks received:", json.dumps(ticks_data, cls=CustomEncoder))
 
 
 
@@ -19434,7 +19560,7 @@ import os
 import requests
 import pandas as pd
 
-def download_csv_and_display(target_string):
+def download_csv_and_display(target_string,quote_web_socket):
     # Check if the CSV file already exists
     csv_file_name = "zerodha_instruments.csv"
     if os.path.exists(csv_file_name):
@@ -19524,7 +19650,7 @@ def download_csv_and_display(target_string):
 
                     # Apply the filter to the DataFrame
                     filtered_df = instruments_df[filter_condition]
-                    tradingsymbols = filtered_df['tradingsymbol']
+                    tradingsymbols = filtered_df
         # print(tradingsymbols)
 
                     return tradingsymbols
@@ -19541,7 +19667,8 @@ def download_csv_and_display(target_string):
                 return
 
         # Print only the 'tradingsymbol' column
-        tradingsymbols = filtered_df['tradingsymbol']
+        
+        tradingsymbols = filtered_df
         # print(tradingsymbols)
 
         return tradingsymbols

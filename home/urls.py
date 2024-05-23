@@ -629,6 +629,7 @@ urlpatterns = [
      path('delete_file/', views.delete_file, name='delete_file'),
      path('send_template_mail', views.send_template_mail, name='send_template_mail'),
      path('nifty_movements', views.nifty_movements, name='nifty_movements'),
+     # path('main_fetch_quotes', views.main_fetch_quotes, name='main_fetch_quotes'),
 
 
 
