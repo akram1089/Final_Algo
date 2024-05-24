@@ -16498,7 +16498,7 @@ Option Strategy Builder
                 <div class="tradingsymbol">${combinedString}</div> 
                 <div class="expiry_initial">${expiry_initial}</div> 
                 <div class="d-none strikePrice_order_window">${strikePrice}</div>
-                <div class="d-none main_trading_symbol"></div>
+                <div class="d-block main_trading_symbol"></div>
                 <div class="d-block main_instrument_token"></div>
                 <div class="d-none main_strikePrice_values">${main_values_strikePrice}</div>
                 <div class="d-none stockDropdown_main">${stockDropdown}</div>
@@ -17089,12 +17089,15 @@ Option Strategy Builder
                         //////;
                         //////;
 
-                        response.result_data.trading_quotes.map((x)=>{
-console.log(x);
-                          $(".main_trading_symbol").eq(i).append(x.combinedString.replace("NFO:", ""));
-                        $(".schedule_main_trading_symbol").eq(i).append(x.combinedString.replace("NFO:", ""));
-                        })
+                        response.result_data.trading_quotes.map((x, i) => {
+    console.log(x);
 
+    // Append to main_trading_symbol elements
+    $(".main_trading_symbol").eq(i).empty().append(x.combinedString.replace("NFO:", ""));
+
+    // Append to schedule_main_trading_symbol elements
+    $(".schedule_main_trading_symbol").eq(i).append(x.combinedString.replace("NFO:", ""));
+});
 
 
 
