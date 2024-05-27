@@ -16696,174 +16696,156 @@ console.log(sortedData);
                 }),
                 contentType: "application/json",
                 success: function (response) {
-                  // //////console.log(response.broker_name);
-
+                  response = JSON.parse(response);
+                  console.log(response)
+                  console.log(response.broker_name);
 
 
                   if (response.broker_name === "zerodha") {
 
-                    // console.log(response.margin_info);
 
-                    if (response.margin_info.status ==="error") {
+if (response.status === "success") {
 
-                      toastr.error(response.margin_info.message)
+  $(".broker_icon").empty().append(`<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 90 60">
+      <defs>
+        <style>
+          .cls-1 {
+            fill: #f6461a;
+          }
 
-                      $(".check_liquidity").prop("disabled", true);
-
-                      // Create a new paragraph element
-                      var $errorParagraph = $("<p></p>");
-
-                      // Set the text and class for the error message
-                      $errorParagraph.text("Invalid zerodha credentials !! Please check your Zerodha Login, password or TOTP secret key !!");
-                      $errorParagraph.addClass("text-danger");
-                      $errorParagraph.css({
-                          "border": "1px solid red",
-                          "padding": "5px",
-                          "border-radius": "10px"
-                      });
-
-                      // Empty the .main_extented_status_liquidity element and append the error message
-                      $(".main_extented_status_liquidity").empty().append($errorParagraph);
-
-                      return
-                      
-                    }else{
-                      $(".check_liquidity").prop("disabled", false);
-                    }
-
-                    if (response.status === "success") {
-
-                      $(".broker_icon").empty().append(`<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 90 60">
-                          <defs>
-                            <style>
-                              .cls-1 {
-                                fill: #f6461a;
-                              }
-
-                              .cls-2 {
-                                fill: #db342c;
-                              }
-                            </style>
-                          </defs>
-                          <title>Kite logo trimmed</title>
-                          <polygon class="cls-1" points="30 0 0 30 30 60 60 30 90 0 30 0" />
-                          <polygon class="cls-2" points="30 60 60 30 90 60 30 60" />
-                        </svg>`)
+          .cls-2 {
+            fill: #db342c;
+          }
+        </style>
+      </defs>
+      <title>Kite logo trimmed</title>
+      <polygon class="cls-1" points="30 0 0 30 30 60 60 30 90 0 30 0" />
+      <polygon class="cls-2" points="30 60 60 30 90 60 30 60" />
+    </svg>`)
 
 
-                      var zerodha_kite_profile = response.all_profile.data
-                      $(".names_user_details h5").text(zerodha_kite_profile.user_name);
-                      $(".names_user_details p").text(`Client ID:${zerodha_kite_profile.user_id}`);
+  var zerodha_kite_profile = response.all_profile.data
+  $(".names_user_details h5").text(zerodha_kite_profile.user_name);
+  $(".names_user_details p").text(`Client ID:${zerodha_kite_profile.user_id}`);
 
-                      var zerodha_margin = response.margin_info.data.equity.available.cash
-                      //////console.log(zerodha_margin);
 
-                      $(".margin_available").val(zerodha_margin);
+  //////;
 
-                      $(".margin_needed").val((response.order_response.data.final.total).toFixed(2))
 
-                      if (
-                        response &&
-                        response.length > 0 &&
-                        response[response.length - 1].hasOwnProperty("combined_data")
-                      ) {
-                        var combinedData = response[response.length - 1]["combined_data"];
+  if (
+    response &&
+    response.length > 0 &&
+    response[response.length - 1].hasOwnProperty("combined_data")
+  ) {
+    var combinedData = response[response.length - 1]["combined_data"];
 
-                        // Now you can access the properties of 'combined_data'
-                        var symbolSpot = combinedData["symbol_spot"];
-                        // Remove 'NSE:' if it exists at the beginning of the string
-                        if (symbolSpot.startsWith("NSE:")) {
-                          symbolSpot = symbolSpot.substring(4);
-                        }
-                        var niftyLtp = combinedData["nifty_ltp"];
-                        var percentageChange = combinedData["percentage_change"];
-                        var profile = combinedData["profile"];
-                        var available_cash = combinedData["available_cash"];
-                        var userId = combinedData["user_id"];
-                        var total_sum = combinedData["total_sum"];
-                        var formattedPercentageChange;
-                        var precent_color = "";
-                        if (percentageChange > 0) {
-                          formattedPercentageChange = "+" + percentageChange.toFixed(2);
-                          precent_color = "text-success";
-                        } else if (percentageChange < 0) {
-                          formattedPercentageChange =
-                            "-" + Math.abs(percentageChange).toFixed(2);
-                          precent_color = "text-danger";
-                        } else {
-                          formattedPercentageChange = percentageChange.toFixed(2);
-                        }
+    // Now you can access the properties of 'combined_data'
+    var symbolSpot = combinedData["symbol_spot"];
+    // Remove 'NSE:' if it exists at the beginning of the string
+    if (symbolSpot.startsWith("NSE:")) {
+      symbolSpot = symbolSpot.substring(4);
+    }
+    var niftyLtp = combinedData["nifty_ltp"];
+    var percentageChange = combinedData["percentage_change"];
+    var profile = combinedData["profile"];
+    var available_cash = combinedData["available_cash"];
+    var userId = combinedData["user_id"];
+    var total_sum = combinedData["total_sum"];
+    var formattedPercentageChange;
+    var precent_color = "";
+    if (percentageChange > 0) {
+      formattedPercentageChange = "+" + percentageChange.toFixed(2);
+      precent_color = "text-success";
+    } else if (percentageChange < 0) {
+      formattedPercentageChange =
+        "-" + Math.abs(percentageChange).toFixed(2);
+      precent_color = "text-danger";
+    } else {
+      formattedPercentageChange = percentageChange.toFixed(2);
+    }
 
 
 
-                        $(".margin_needed").val(total_sum.toFixed(2));
-                        $(".symbol_name_order p").text(symbolSpot);
-                        $(".strike_price_order p").text(niftyLtp);
-                        $(".change_per_order p")
-                          .text(formattedPercentageChange)
-                          .addClass(precent_color);
+    $(".margin_needed").val(total_sum.toFixed(2));
+    $(".symbol_name_order p").text(symbolSpot);
+    $(".strike_price_order p").text(niftyLtp);
+    $(".change_per_order p")
+      .text(formattedPercentageChange)
+      .addClass(precent_color);
 
-                        // Use these values as needed in your JavaScript code
-                        //////console.log("Symbol Spot:", symbolSpot);
-                        //////console.log("Nifty LTP:", niftyLtp);
-                        //////console.log("Percentage Change:", percentageChange);
-                        //////console.log("Profile:", profile);
-                        //////console.log("User ID:", userId);
-                      }
+    // Use these values as needed in your JavaScript code
+    //////;
+    //////;
+    //////;
+    //////;
+    //////;
+  }
 
-                      // console.log(response.result_data.ohlc_market_indepth);
+  // ;
 
-                      // Assuming response is an array of objects
-                      // Assuming 'response' is the JSON response from your server
-                      for (let i = 0; i < response.result_data.ohlc_market_indepth.length; i++) {
-                        // const trading_data = response.result_data.ohlc_market_indepth[i];
-                        // const trading_symbol = trading_data.instrument_token; // Assuming instrument_token is the trading symbol
-                        const trading_symbol = Object.keys(response.result_data.ohlc_market_indepth[i])[0];
-                        const trading_data = response.result_data.ohlc_market_indepth[i][trading_symbol];
-                        //////console.log(trading_symbol);
-                        //////console.log(trading_data);
+  // Assuming response is an array of objects
+  var parse_values = JSON.parse(response.result_data.ohlc_market_indepth)
+  console.log(parse_values)
+  // Assuming 'response' is the JSON response from your server
+  for (let i = 0; i < parse_values.length; i++) {
+    // const trading_data = response.result_data.ohlc_market_indepth[i];
+    // const trading_symbol = trading_data.instrument_token; // Assuming instrument_token is the trading symbol
 
-                        $(".main_trading_symbol").eq(i).append(trading_symbol.replace("NFO:", ""));
-                        $(".schedule_main_trading_symbol").eq(i).append(trading_symbol.replace("NFO:", ""));
+    const trading_data = parse_values[i]
+
+    console.log(trading_data);
+    
+    //////;
+    //////;
+
+    response.result_data.trading_quotes.map((x, i) => {
+console.log(x);
+
+// Append to main_trading_symbol elements
+$(".main_trading_symbol").eq(i).empty().append(x.combinedString.replace("NFO:", ""));
+
+// Append to schedule_main_trading_symbol elements
+$(".schedule_main_trading_symbol").eq(i).append(x.combinedString.replace("NFO:", ""));
+});
 
 
 
 
-                        // Generate the table HTML
-                        $(".indepth_details").eq(i).empty();
-                        $(".indepth_details_offer").eq(i).empty();
-                        $(".main_spot_order").eq(i).empty();
-                        // Generate the table HTML
-                        $(".schedule_indepth_details").eq(i).empty();
-                        $(".schedule_indepth_details_offer").eq(i).empty();
-                        $(".schedule_main_spot_order").eq(i).empty();
+    // Generate the table HTML
+    $(".indepth_details").eq(i).empty();
+    $(".indepth_details_offer").eq(i).empty();
+    $(".main_spot_order").eq(i).empty();
+    // Generate the table HTML
+    $(".schedule_indepth_details").eq(i).empty();
+    $(".schedule_indepth_details_offer").eq(i).empty();
+    $(".schedule_main_spot_order").eq(i).empty();
 
-                        //   <div class="gap-1 schedule_main_indepth">
-                        //     <div class="schedule_indepth_details"></div>
-                        //     <div class="schedule_indepth_details_offer"></div>
-                        //     <div class="schedule_main_spot_order"> </div>
-                        // </div>
+    //   <div class="gap-1 schedule_main_indepth">
+    //     <div class="schedule_indepth_details"></div>
+    //     <div class="schedule_indepth_details_offer"></div>
+    //     <div class="schedule_main_spot_order"> </div>
+    // </div>
 
-                        const table = generateBidTable(trading_data.depth.buy);
-                        const tableOffer = generateOfferTable(trading_data.depth.sell);
-                        const spot_data_order = generateSpotData(trading_data);
+    const table = generateBidTable(trading_data.depth.buy);
+    const tableOffer = generateOfferTable(trading_data.depth.sell);
+    const spot_data_order = generateSpotData(trading_data);
 
-                        // Append the table to the elements with the corresponding classes
+    // Append the table to the elements with the corresponding classes
 
-                        $(".indepth_details").eq(i).append(table);
-                        $(".indepth_details_offer").eq(i).append(tableOffer);
-                        $(".main_spot_order").eq(i).append(spot_data_order);
+    $(".indepth_details").eq(i).append(table);
+    $(".indepth_details_offer").eq(i).append(tableOffer);
+    $(".main_spot_order").eq(i).append(spot_data_order);
 
-                        $(".schedule_indepth_details").eq(i).append(table);
-                        $(".schedule_indepth_details_offer").eq(i).append(tableOffer);
-                        $(".schedule_main_spot_order").eq(i).append(spot_data_order);
-                      }
+    $(".schedule_indepth_details").eq(i).append(table);
+    $(".schedule_indepth_details_offer").eq(i).append(tableOffer);
+    $(".schedule_main_spot_order").eq(i).append(spot_data_order);
+  }
 
 
 
-                    }
+}
 
-                  }
+}
                   else if (response.broker_name === "angelone") {
 
                     // console.log(response.market_data.data.fetched);
@@ -17369,18 +17351,22 @@ console.log(sortedData);
 
     function generateSpotData(trading_data) {
 
-      //////console.log(trading_data);
-      // Extract the data for the first instrument
-      const firstInstrument = trading_data;
-      const {
-        last_price,
-        ohlc: { open, high, low, close },
-        volume,
-        last_quantity,
-        average_price,
-        timestamp,
-        oi,
-      } = firstInstrument;
+//////;
+// Extract the data for the first instrument
+const firstInstrument = trading_data;
+const {
+  last_price,
+  ohlc: { open, high, low, close },
+  volume,
+  last_quantity,
+  volume_traded,
+  average_price,
+  timestamp,
+  last_trade_time,
+  last_traded_quantity,
+  average_traded_price,
+  oi,
+} = firstInstrument;
 
 
 
@@ -17388,65 +17374,65 @@ console.log(sortedData);
 
 
 
-      // Convert the timestamp to a more readable format
-      const ltt = new Date(timestamp).toLocaleString();
+// Convert the timestamp to a more readable format
+const ltt = new Date(timestamp||last_trade_time).toLocaleString();
 
-      // Create the HTML structure with the extracted data
-      let main_spot_data = '<div class="inner_main_spot_order">';
-      main_spot_data += `
-   <div class="spot_main_table">
-    <div class='left_spot'>
-        <div class="main_last_price_order d-flex justify-content-between" style="border-bottom: 1px solid #ccc; padding: 8px 0;">
-            <p>Last Price:</p>
-            <p class="last_price_order_zerodha">${last_price.toFixed(2)}</p>
-        </div>
-        <div class="main_last_price_order d-flex justify-content-between" style="border-bottom: 1px solid #ccc; padding-bottom: 8px;">
-            <p>Open:</p>
-            <p>${open}</p>
-        </div>
-        <div class="main_last_price_order d-flex justify-content-between" style="border-bottom: 1px solid #ccc; padding-bottom: 8px;">
-            <p>High:</p>
-            <p>${high}</p>
-        </div>
-        <div class="main_last_price_order d-flex justify-content-between" style="border-bottom: 1px solid #ccc; padding-bottom: 8px;">
-            <p>Low:</p>
-            <p>${low}</p>
-        </div>
-        <div class="main_last_price_order d-flex justify-content-between" style="border-bottom: 1px solid #ccc; padding-bottom: 8px;">
-            <p>Close:</p>
-            <p>${close}</p>
-        </div>
-    </div>
-    <div class='right_spot'>
-        <div class="main_last_price_order d-flex justify-content-between" style="border-bottom: 1px solid #ccc; padding: 8px 0;">
-            <p>Volume:</p>
-            <p>${volume}</p>
-        </div>
-        <div class="main_last_price_order d-flex justify-content-between" style="border-bottom: 1px solid #ccc; padding-bottom: 8px;">
-            <p>LTQ:</p>
-            <p>${last_quantity}</p>
-        </div>
-        <div class="main_last_price_order d-flex justify-content-between" style="border-bottom: 1px solid #ccc; padding-bottom: 8px;">
-            <p>Avg. Price:</p>
-            <p>${average_price}</p>
-        </div>
-        <div class="main_last_price_order d-flex justify-content-between" style="border-bottom: 1px solid #ccc; padding-bottom: 8px;">
-            <p>LTT:</p>
-            <p>${ltt}</p>
-        </div>
-        <div class="main_last_price_order d-flex justify-content-between" style="border-bottom: 1px solid #ccc; padding-bottom: 8px;">
-            <p>OI:</p>
-            <p>${oi}</p>
-        </div>
-    </div>
+// Create the HTML structure with the extracted data
+let main_spot_data = '<div class="inner_main_spot_order">';
+main_spot_data += `
+<div class="spot_main_table">
+<div class='left_spot'>
+  <div class="main_last_price_order d-flex justify-content-between" style="border-bottom: 1px solid #ccc; padding: 8px 0;">
+      <p>Last Price:</p>
+      <p class="last_price_order_zerodha">${last_price.toFixed(2)}</p>
+  </div>
+  <div class="main_last_price_order d-flex justify-content-between" style="border-bottom: 1px solid #ccc; padding-bottom: 8px;">
+      <p>Open:</p>
+      <p>${open}</p>
+  </div>
+  <div class="main_last_price_order d-flex justify-content-between" style="border-bottom: 1px solid #ccc; padding-bottom: 8px;">
+      <p>High:</p>
+      <p>${high}</p>
+  </div>
+  <div class="main_last_price_order d-flex justify-content-between" style="border-bottom: 1px solid #ccc; padding-bottom: 8px;">
+      <p>Low:</p>
+      <p>${low}</p>
+  </div>
+  <div class="main_last_price_order d-flex justify-content-between" style="border-bottom: 1px solid #ccc; padding-bottom: 8px;">
+      <p>Close:</p>
+      <p>${close}</p>
+  </div>
+</div>
+<div class='right_spot'>
+  <div class="main_last_price_order d-flex justify-content-between" style="border-bottom: 1px solid #ccc; padding: 8px 0;">
+      <p>Volume:</p>
+      <p>${volume||volume_traded}</p>
+  </div>
+  <div class="main_last_price_order d-flex justify-content-between" style="border-bottom: 1px solid #ccc; padding-bottom: 8px;">
+      <p>LTQ:</p>
+      <p>${last_quantity||last_traded_quantity}</p>
+  </div>
+  <div class="main_last_price_order d-flex justify-content-between" style="border-bottom: 1px solid #ccc; padding-bottom: 8px;">
+      <p>Avg. Price:</p>
+      <p>${average_price||average_traded_price}</p>
+  </div>
+  <div class="main_last_price_order d-flex justify-content-between" style="border-bottom: 1px solid #ccc; padding-bottom: 8px;">
+      <p>LTT:</p>
+      <p>${ltt}</p>
+  </div>
+  <div class="main_last_price_order d-flex justify-content-between" style="border-bottom: 1px solid #ccc; padding-bottom: 8px;">
+      <p>OI:</p>
+      <p>${oi}</p>
+  </div>
+</div>
 </div>
 
 
-   `;
-      main_spot_data += "</div>";
+`;
+main_spot_data += "</div>";
 
-      return main_spot_data;
-    }
+return main_spot_data;
+}
 
     $(".check_liquidity").click(function () {
       var All_positionTrade = [];

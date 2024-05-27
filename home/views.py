@@ -18907,41 +18907,6 @@ def angel_one_order_place(data_trade, logging_id, password, totp_key, api_key,df
 
 
 
-ticks_data = None
-received_ticks = False
-
-# Global variable to store ticks
-def main_fetch_quotes(kws,instrument_token):
-
-    def on_ticks(ws, ticks):
-        global ticks_data, received_ticks
-        ticks_data = ticks
-        received_ticks = True
-        ws.close()
-
-    kws.on_ticks = on_ticks
-
-    kws.connect(threaded=True)
-
-    # Wait for connection
-    while not kws.is_connected():
-        time.sleep(1)
-    print("WebSocket: Connected")
-
-    # Subscribe to a specific instrument
-
-    kws.subscribe(instrument_token)
-    kws.set_mode(kws.MODE_FULL, instrument_token)
-
-    # Wait for the ticks to be received
-    while not received_ticks:
-        time.sleep(1)
-
-
-
-
-
-
 
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -18955,6 +18920,8 @@ from kiteconnect import KiteTicker
 @csrf_exempt
 def quote_data_from_broker(request):
     user = request.user
+    response_data={}
+    result_data=[]
 
     if not user.is_authenticated:
         return JsonResponse({'status': 'user_not_authenticated', 'message': 'User not authenticated'})
@@ -19042,7 +19009,11 @@ def quote_data_from_broker(request):
 
                 kws = KiteTicker(api_key="TradeViaPython", access_token=enctoken + "&user_id=" + user_id)
                 instrument_token = all_trading_zerodha_token_quote
-                main_fetch_quotes(kws,instrument_token)
+                fetcher = QuoteFetcher(kws, instrument_token)
+                ticks_data = fetcher.fetch_quotes()
+                print(ticks_data)
+                main_all_data_quote=ticks_data
+                print("main_all_data_quote",main_all_data_quote)
              
                 # Custom encoder for JSON serialization
                 class CustomEncoder(json.JSONEncoder):
@@ -19057,8 +19028,8 @@ def quote_data_from_broker(request):
                             return obj.isoformat()
                         return super(CustomEncoder, self).default(obj)
 
-                serialized_data=json.dumps(ticks_data, cls=CustomEncoder)
-                print(serialized_data)
+                serialized_data=ticks_data
+                # print(serialized_data)
          
 
                 result_data['ohlc_market_indepth'].append(serialized_data)
@@ -19067,8 +19038,8 @@ def quote_data_from_broker(request):
 
                 # Print updated merged_data
                 print("Updated merged_data:")
-                print(merged_data)
-                print("result_data",result_data)
+                # print(merged_data)
+                # print("result_data",result_data)
 
                 
 
@@ -19081,7 +19052,7 @@ def quote_data_from_broker(request):
                     'all_profile': all_profile,
              
                 }
-                print(response_data)
+                # print(response_data)
                 print("response_data")
                 response_data_se=json.dumps(response_data, cls=CustomEncoder)
                 return JsonResponse(response_data_se,safe=False)
@@ -19166,56 +19137,6 @@ class ZerodhaAPI:
         return response.json() if response.status_code == 200 else None
 
 
-ticks_data = None
-received_ticks = False
-# Global variable to store ticks
-def main_fetch_quotes(kws,instrument_token):
-
-
-    def on_ticks(ws, ticks):
-        global ticks_data, received_ticks
-        ticks_data = ticks
-        print(ticks)
-     
-        received_ticks = True
-        ws.close()
-
-
-    kws.on_ticks = on_ticks
-
-    kws.connect(threaded=True)
-
-    # Wait for connection
-    while not kws.is_connected():
-        time.sleep(1)
-    print("WebSocket: Connected")
-
-    # Subscribe to a specific instrument
-
-    kws.subscribe(instrument_token)
-    kws.set_mode(kws.MODE_FULL, instrument_token)
-
-    # Wait for the ticks to be received
-    while not received_ticks:
-        time.sleep(1)
-    class CustomEncoder(json.JSONEncoder):
-        def default(self, obj):
-            if isinstance(obj, np.integer):
-                return int(obj)
-            if isinstance(obj, np.floating):
-                return float(obj)
-            if isinstance(obj, np.ndarray):
-                return obj.tolist()
-            if isinstance(obj, datetime.datetime):
-                return obj.isoformat()
-            return super(CustomEncoder, self).default(obj)    
-    serialized_received_ticks=ticks_data
-    return serialized_received_ticks
-
-
-
-# Custom encoder for JSON serialization
-# Custom encoder for JSON serialization
 class CustomEncoder(json.JSONEncoder):
     def default(self, obj):
         if isinstance(obj, np.integer):
@@ -19228,7 +19149,39 @@ class CustomEncoder(json.JSONEncoder):
             return obj.isoformat()
         return super(CustomEncoder, self).default(obj)
 
-print("Ticks received:", json.dumps(ticks_data, cls=CustomEncoder))
+class QuoteFetcher:
+    def __init__(self, kws, instrument_token):
+        self.kws = kws
+        self.instrument_token = instrument_token
+        self.ticks_data = None
+        self.received_ticks = False
+
+    def on_ticks(self, ws, ticks):
+        self.ticks_data = ticks
+        print("ticks", ticks)
+        self.received_ticks = True
+        ws.close()
+
+    def fetch_quotes(self):
+        self.kws.on_ticks = self.on_ticks
+        self.kws.connect(threaded=True)
+
+        # Wait for connection
+        while not self.kws.is_connected():
+            time.sleep(1)
+        print("WebSocket: Connected")
+
+        # Subscribe to a specific instrument
+        self.kws.subscribe(self.instrument_token)
+        self.kws.set_mode(self.kws.MODE_FULL, self.instrument_token)
+
+        # Wait for the ticks to be received
+        while not self.received_ticks:
+            time.sleep(1)
+
+        serialized_received_ticks = json.dumps(self.ticks_data, cls=CustomEncoder)
+        return serialized_received_ticks
+
 
 
 
