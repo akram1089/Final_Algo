@@ -1615,7 +1615,9 @@ def bulk_deal_data_page(request):
 
 
 def base_dashboard1(request):
-    url = "https://webapi.niftytrader.in/webapi/symbol/stock-index-data"
+    url = "https://services.niftytrader.in/webapi/symbol/stock-index-data"
+    # https://services.niftytrader.in/webapi/symbol/stock-index-data
+
 
     headers = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
@@ -11415,20 +11417,21 @@ def bulk_deal_data_page(request):
 
 
 def base_dashboard1(request):
-    url = "https://webapi.niftytrader.in/webapi/symbol/stock-index-data"
+    url = "https://services.niftytrader.in/webapi/symbol/stock-index-data"
 
     headers = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
         "Accept-Language": "en-US,en;q=0.9",
         "Accept-Encoding": "gzip, deflate, br",
+        "Authorization": "Basic bmlmdHlhcGl1c2VyOm5pZnR5YXBpdXNlckAyMTEwIw==",
     }
 
     response = requests.get(url, headers=headers)
     data = response.json()
 
-    nifty50_data = data['resultData'].get('nifty50', '')
-    niftybank_data = data['resultData'].get('niftybank', '')
-    finnity_data = data['resultData'].get('finnity', '')
+    nifty50_data = data['result'].get('nifty50', '')
+    niftybank_data = data['result'].get('niftybank', '')
+    finnity_data = data['result'].get('finnity', '')
 
     nifty50_difference = nifty50_data.get(
         'last_trade_price', 0) - nifty50_data.get('prev_price', 0)
