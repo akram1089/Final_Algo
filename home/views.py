@@ -19074,6 +19074,7 @@ def quote_data_from_broker(request):
                     totp_key=broker_instance_angelone.totp_key,
                     api_key=broker_instance_angelone.api_key
                 )
+                print("response_data",response_data)
                 return JsonResponse(response_data)
         elif broker_instance_upstocks:
             data = json.loads(request.body)
@@ -19768,6 +19769,7 @@ def get_angel_one_quote(trading_quotes, logging_id, password, totp_key, api_key)
         'all_profile': all_profile,
         'main_angel_one_strikePrice': main_angel_one_strikePrice,
     }
+    print("result_data",result_data)
 
     return result_data
 

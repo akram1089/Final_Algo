@@ -16985,7 +16985,15 @@ Option Strategy Builder
                 success: function (response) {
                   
                   // //////;
-                  response = JSON.parse(response);
+                  response= response
+                              try {
+                                // Attempt to parse the response as JSON
+                                response = JSON.parse(response);
+                            } catch (e) {
+                                // If parsing fails, the response is not a JSON string and is left as it is
+                                response=response
+                            }
+                       
                   console.log(response)
               
 
