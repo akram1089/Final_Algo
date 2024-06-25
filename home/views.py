@@ -20681,6 +20681,7 @@ from.models import Blog
 def blogs_save(request):
  if request.method == 'POST':
     title = request.POST.get('title', '')
+    print(title)
     description = request.POST.get('description', '')
     author = request.POST.get('writer_name', '')
     blog_category = request.POST.get('blog_category', '')
@@ -21734,25 +21735,28 @@ def webhook_view(request, user_id, url_type):
         return JsonResponse({"error": "Unsupported method"}, status=405)
 
 
+
+from django.contrib.sites.models import Site
+from django.http import HttpResponse
+from django.urls import reverse
+
 def webhook_urls(request):
     user = request.user
-    print(user)
+    secret_key = user.secret_key.lower()
+    user_id = user.id
+
+    # Get the first site's URL
+    site = Site.objects.first()
+    site_url = site.domain
+
+    # Construct webhook API URL
+    webhook_api = f"{site_url}/webhook_auth_rest/{user_id}/{secret_key}/"
+
+    return JsonResponse({"webhook_api":webhook_api})
 
 
-    
-    webhook_series_url = f"http://localhost:8000/webhook/series/{user.id}/"
-    webhook_chartlink_url = f"http://localhost:8000/webhook/chartlink/{user.id}/"
-    
-    data = {
-        "series_webhook_url": webhook_series_url,
-        "chartlink_webhook_url": webhook_chartlink_url
-    }
-    
-    return JsonResponse(data)
-
-
-
-
+def webhooks(request):
+    return render(request,"webhooks.html")
 
 
 def order_zerodha_webwooks(data):
@@ -21843,6 +21847,55 @@ def webhooks_url (request):
     return render(request, "webhook/webhooks_url.html")
 
 
+
+from django.http import JsonResponse, HttpResponse
+from django.views.decorators.csrf import csrf_exempt
+import json
+
+
+from .models import WebhookResponse
+
+@csrf_exempt
+def webhook_auth_rest(request, user_id, secret_key):
+
+    if request.method == 'POST':
+        try:
+            # Parse the JSON data from the request body
+            data = json.loads(request.body.decode('utf-8'))
+            
+            # Retrieve the user based on the provided user_id
+            try:
+                user = User.objects.get(id=user_id)
+                print(user)
+            except User.DoesNotExist:
+                return JsonResponse({"message": "User is not authenticated"}, status=401)
+            
+            # Check if the provided secret_key matches the user's secret_key
+            if user.secret_key.lower() == secret_key.lower():
+                # Process the data as needed
+                # For testing purposes, let's just print the received data
+                print(data)
+                broker_instance_zerodha = Broker.objects.filter(user=user, broker_name="zerodha", active_api=True).first()
+                broker_instance_angelone = Broker.objects.filter(user=user, broker_name="angelone", active_api=True).first()
+                print(broker_instance_zerodha)
+
+                if broker_instance_zerodha:
+                    zerodha_response = order_zerodha_webwooks(data,broker_instance_zerodha)
+                    print("zerodha_response",zerodha_response)
+
+                    # Save the zerodha_response into WebhookResponse model
+                    WebhookResponse.objects.create(user=user, zerodha_response_data=zerodha_response)
+
+                    return JsonResponse(zerodha_response)
+                else:
+                    return JsonResponse({"message":"Unknown Broker or No broker is activated"})    
+            else:
+                return JsonResponse({"message": "Webhook error"}, status=401)
+        except json.JSONDecodeError as e:
+            # Return an error response if JSON decoding fails
+            return JsonResponse({"error": "Invalid JSON format"}, status=400)
+    else:
+        return JsonResponse({"error": "Unsupported method"}, status=405)
 
 
 

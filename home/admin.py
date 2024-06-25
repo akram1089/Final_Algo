@@ -46,6 +46,9 @@ from.models import OptionExpiryData
 admin.site.register(OptionExpiryData)
 from.models import UploadedFileNewLetter
 
+from.models import WebhookResponse
+admin.site.register(WebhookResponse)
+
 # from.models import StockListing
 
 

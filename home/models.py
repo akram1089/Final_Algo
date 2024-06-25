@@ -591,3 +591,15 @@ class UploadedFileNewLetter(models.Model):
         if not self.file_path:
             self.file_path = self.file.url
         super().save(*args, **kwargs)
+
+
+
+
+
+
+class WebhookResponse(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    zerodha_response_data = models.JSONField()
+
+    def __str__(self):
+        return f"Webhook Response for {self.user}"
