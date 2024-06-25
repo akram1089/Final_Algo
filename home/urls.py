@@ -632,6 +632,7 @@ urlpatterns = [
      # path('main_fetch_quotes', views.main_fetch_quotes, name='main_fetch_quotes'),
      path('webhooks', views.webhooks, name='webhooks'),
      path('webhook_urls', views.webhook_urls, name='webhook_urls'),
+     path('webhook_auth_rest/<str:user_id>/<str:secret_key>/', views.webhook_auth_rest, name='webhook_auth_rest'),
 
 
 
