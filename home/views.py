@@ -21759,14 +21759,15 @@ def webhooks(request):
     return render(request,"webhooks.html")
 
 
-def order_zerodha_webwooks(data):
+def order_zerodha_webwooks(data,broker_instance_zerodha):
+        print(broker_instance_zerodha)
         data_trade = data
         # print("data_trade", data_trade)
+        logging_id = broker_instance_zerodha.logging_id
+        password = broker_instance_zerodha.password
+        totp_key = broker_instance_zerodha.totp_key
 
 
-        logging_id = "THC219"
-        password = "Naveen321#"
-        totp_key = "MWL2UU2GOOX2L4PNZJW6KLAVS6R6V7NH"
         
         enctoken = get_enctoken_internal(logging_id, password, totp_key)
         print(enctoken)
@@ -21778,6 +21779,7 @@ def order_zerodha_webwooks(data):
 
             for trade_data in data_trade:
                 tradingsymbol = trade_data.get('main_trading_symbol', '')
+                print('tradingsymbol',tradingsymbol)
                 sell_buy_indicator = trade_data.get('sell_buy_indicator', '').upper()  # Ensure it's uppercase
                 quantity = int(trade_data.get('Quantity', 0))
                 price = float(trade_data.get('price', 0))
@@ -21839,7 +21841,7 @@ def order_zerodha_webwooks(data):
 
                 # Continue with your logic here, e.g., handling the order response
 
-            return JsonResponse({'status': 'success','broker':'zerodha', 'message': 'Orders placed successfully', 'order_details': order_details})
+            return {'status': 'success','broker':'zerodha', 'message': 'Orders placed successfully', 'order_details': order_details}
 
 
 
