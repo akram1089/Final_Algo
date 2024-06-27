@@ -6,6 +6,8 @@ import pyotp
 import dateutil.parser
 import datetime
 import json
+
+import pandas as pd
 User = get_user_model()
 @shared_task
 def add(x, y):
@@ -468,3 +470,89 @@ def send_newsletter_emails():
   
 
     return ({'message': 'Promotional emails sent successfully!'})
+
+
+
+
+
+
+
+csv_url = "https://api.kite.trade/instruments"
+csv_file_name = "zerodha_instruments.csv"
+
+@shared_task
+def fetch_and_save_csv():
+    try:
+        # Download the CSV file
+        response = requests.get(csv_url)
+        response.raise_for_status()  # Raise an error on bad status
+ 
+
+        # Save the downloaded content to a file
+        with open(csv_file_name, 'w', newline='') as csv_file:
+            csv_file.write(response.text)
+
+        print(f"CSV file downloaded successfully: {csv_file_name}")
+    except Exception as e:
+        # Handle exceptions, if any
+        print(f"An error occurred: {e}")
+
+
+
+
+
+
+
+import pandas as pd
+
+@shared_task
+def fetch_and_save_angelone_csv():
+    csv_file_path = 'angelone_instruments.csv'
+    url = "https://margincalculator.angelbroking.com/OpenAPI_File/files/OpenAPIScripMaster.json"
+
+    try:
+        # Download data from the provided URL
+        response = requests.get(url)
+        response.raise_for_status()  # Raise an error on bad status
+
+        # Parse the JSON data
+        data = response.json()
+
+        # Convert the JSON data to a Pandas DataFrame
+        df = pd.DataFrame(data)
+
+        # Save the DataFrame to the CSV file
+        df.to_csv(csv_file_path, index=False)
+
+        print(f"CSV file downloaded and saved successfully: {csv_file_path}")
+    except Exception as e:
+        print(f"An error occurred: {e}")
+
+
+
+import gzip
+import shutil
+
+
+@shared_task
+def fetch_and_save_upstox_csv():
+    url = "https://assets.upstox.com/market-quote/instruments/exchange/complete.csv.gz"
+    compressed_file_name = "upstox_instu.csv.gz"
+    uncompressed_file_name = "upstox_instu.csv"
+
+    try:
+        # Download the file
+        response = requests.get(url, stream=True)
+        response.raise_for_status()  # Raise an error on bad status
+
+        # Save the compressed content to a file
+        with open(compressed_file_name, "wb") as file:
+            shutil.copyfileobj(response.raw, file)
+
+        # Decompress the file
+        with gzip.open(compressed_file_name, 'rb') as f_in, open(uncompressed_file_name, 'wb') as f_out:
+            shutil.copyfileobj(f_in, f_out)
+
+        print(f"File '{compressed_file_name}' downloaded and saved as '{uncompressed_file_name}'.")
+    except Exception as e:
+        print(f"An error occurred: {e}")

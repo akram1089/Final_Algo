@@ -25,6 +25,25 @@ app.conf.beat_schedule['send-newsletter-emails-daily'] = {
     'schedule': crontab(hour=16, minute=30),  # Daily at 4 PM
 }
 
+app.conf.beat_schedule = {
+    'fetch-and-save-csv-every-day-830am': {
+        'task': 'home.tasks.fetch_and_save_csv',
+        'schedule': crontab(hour=8, minute=43),
+    },
+}
+app.conf.beat_schedule = {
+    'fetch-and-save-angelone-every-day-844am': {
+        'task': 'home.tasks.fetch_and_save_angelone_csv',
+        'schedule': crontab(hour=8, minute=44),
+    },
+}
+app.conf.beat_schedule = {
+    'fetch-and-save-upstox-every-day-845am': {
+        'task': 'home.tasks.fetch_and_save_upstox_csv',
+        'schedule': crontab(hour=8, minute=45),
+    },
+}
+
 app.autodiscover_tasks(['home'])  # Add the app name where your tasks are defined
 
 @app.task(bind=True)

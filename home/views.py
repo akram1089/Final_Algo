@@ -7637,7 +7637,7 @@ def kite_order_zerodha(request):
                 print("Login failed.")
                 return HttpResponse("Login failed.")
         elif broker_instance_angelone:
-            df = pd.read_csv('data.csv')
+            df = pd.read_csv('angelone_instruments,csv')
 
             # angel_one=angel_one_order_place(broker_instance_angelone,data_trade)
     
@@ -8580,8 +8580,8 @@ def get_angel_one_quote(trading_quotes, logging_id, password, totp_key, api_key)
 
     # Fetch data from Angel One Margin Calculator API
 
-    if os.path.exists('data.csv'):
-        df = pd.read_csv('data.csv')
+    if os.path.exists('angelone_instruments,csv'):
+        df = pd.read_csv('angelone_instruments,csv')
 
         token_list = []
         token_list_not_found = []
@@ -8605,7 +8605,7 @@ def get_angel_one_quote(trading_quotes, logging_id, password, totp_key, api_key)
                 if response.status_code == 200:
                     data = response.json()
                     df = pd.DataFrame(data)
-                    df.to_csv('data.csv', index=False)
+                    df.to_csv('angelone_instruments,csv', index=False)
 
                     for symbol_filter in modified_strikes:
                         filtered_df = df[df['symbol'] == symbol_filter]
@@ -8634,7 +8634,7 @@ def get_angel_one_quote(trading_quotes, logging_id, password, totp_key, api_key)
         if response.status_code == 200:
             data = response.json()
             df = pd.DataFrame(data)
-            df.to_csv('data.csv', index=False)
+            df.to_csv('angelone_instruments,csv', index=False)
 
             token_list_else = []
 
@@ -18619,7 +18619,7 @@ def kite_order_zerodha(request):
                 print("Login failed.")
                 return HttpResponse("Login failed.")
         elif broker_instance_angelone:
-            df = pd.read_csv('data.csv')
+            df = pd.read_csv('angelone_instruments,csv')
 
             # angel_one=angel_one_order_place(broker_instance_angelone,data_trade)
     
@@ -19681,8 +19681,8 @@ def get_angel_one_quote(trading_quotes, logging_id, password, totp_key, api_key)
 
     # Fetch data from Angel One Margin Calculator API
 
-    if os.path.exists('data.csv'):
-        df = pd.read_csv('data.csv')
+    if os.path.exists('angelone_instruments,csv'):
+        df = pd.read_csv('angelone_instruments,csv')
 
         token_list = []
         token_list_not_found = []
@@ -19706,7 +19706,7 @@ def get_angel_one_quote(trading_quotes, logging_id, password, totp_key, api_key)
                 if response.status_code == 200:
                     data = response.json()
                     df = pd.DataFrame(data)
-                    df.to_csv('data.csv', index=False)
+                    df.to_csv('angelone_instruments,csv', index=False)
 
                     for symbol_filter in modified_strikes:
                         filtered_df = df[df['symbol'] == symbol_filter]
@@ -19735,7 +19735,7 @@ def get_angel_one_quote(trading_quotes, logging_id, password, totp_key, api_key)
         if response.status_code == 200:
             data = response.json()
             df = pd.DataFrame(data)
-            df.to_csv('data.csv', index=False)
+            df.to_csv('angelone_instruments,csv', index=False)
 
             token_list_else = []
 
