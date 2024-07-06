@@ -1,0 +1,73 @@
+{% extends "base_dashboard.html" %} {% load static %} {% block dashboard_body %}
+
+<body>
+    <div class="container mt-5">
+        <h2>Schedule your strategy</h2>
+        <form id="addNumbersForm">
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label for="number2">Strategy Code:</label>
+                <textarea class="form-control" id="all_strategy_values" rows="3"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="scheduleTime">Schedule Time:</label>
+                <input type="datetime-local" class="form-control" id="scheduleTime" required />
+            </div>
+
+            <div class="form-group">
+                <input type="text" class="form-control" id="strategy_name">
+            </div>
+
+            <div class="form-group">
+                <button type="button" class="btn btn-primary" id="addNumbersBtn_main">Add Numbers</button>
+            </div>
+        </form>
+
+        <div id="resultContainer"></div>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            $("#addNumbersBtn_main").click(function () {
+                // Get values from the form
+                var all_strategy_values = $("#all_strategy_values").val();
+                var strategy_name = $("#strategy_name").val();
+                var scheduleTime = $("#scheduleTime").val();
+
+                // Check if scheduleTime is not empty
+                if (scheduleTime.trim() !== '') {
+                    // Convert scheduleTime to timestamp (if needed)
+                    var scheduleTimestamp = new Date(scheduleTime).getTime();
+
+                    console.log('Parsed scheduleTimestamp:', scheduleTimestamp);
+
+                    // Ajax request
+                    $.ajax({
+                        url: "{% url 'ajax_add_numbers' %}",
+                        method: "POST",
+                        data: {
+                            all_strategy_values: all_strategy_values,
+                            strategy_name: strategy_name,
+                            schedule_time: scheduleTimestamp,
+                            csrfmiddlewaretoken: "{{ csrf_token }}"
+                        },
+                        success: function (data) {
+                            // Display the result
+                            $("#resultContainer").html("Result: " + data.result);
+                        },
+                        error: function (xhr, errmsg, err) {
+                            console.log(xhr.status + ": " + xhr.responseText);
+                        }
+                    });
+                } else {
+                    // Handle empty scheduleTime
+                    console.log('Schedule time is empty');
+                }
+            });
+        });
+    </script>
+
+</body>
+{% endblock dashboard_body %}

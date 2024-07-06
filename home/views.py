@@ -22481,3 +22481,6 @@ def send_template_mail(request):
 
 def nifty_movements(request):
     return render(request,"nifty_movements.html")
+
+def broker_top(request):
+    return render(request,"test_templates/discount_broker.html")

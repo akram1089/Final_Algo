@@ -1,0 +1,94 @@
+{% extends "base_dashboard.html" %}
+{% load static %}
+
+{% block dashboard_body %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script> <!-- Include jQuery UI -->
+<style>
+  button.btn-settings {
+    margin: 25px;
+    padding: 20px 30px;
+    font-size: 1.2em;
+    background-color: #337ab7;
+    color: white;
+  }
+
+  button.btn-settings:active {
+    color: white;
+  }
+
+  .modal {
+    overflow: hidden;
+  }
+
+  .modal-dialog {
+    margin-right: 0;
+    margin-left: 0;
+  }
+
+  .modal-header {
+    height: 30px;
+    padding: 20px;
+    background-color: #18456b;
+    color: white;
+  }
+
+  .modal-title {
+    margin-top: -10px;
+    font-size: 16px;
+  }
+
+  .modal-header .close {
+    margin-top: -10px;
+    color: #fff;
+  }
+
+  .modal-body {
+    color: #888;
+    padding: 5px 35px 20px;
+  }
+
+  .modal-body h3 {
+    text-align: center;
+  }
+
+  .modal-body p {
+    padding-top: 10px;
+    font-size: 1.1em;
+  }
+</style>
+
+<button href="#myModal" class="btn btn-settings" data-backdrop="false" data-toggle="modal">Open Modal</button>
+<div id="myModal" class="modal fade">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title">Settings</h4>
+      </div>
+      <div class="modal-body">
+        <h3>Lorem Ipsum</h3>
+        <p>Praesent non dictum dolor, vitae interdum erat. Nam quis consectetur mi. In consequat condimentum tortor, et lobortis est convallis ac. Quisque volutpat posuere dui, pellentesque vulputate dolor. Morbi dapibus orci eu est consectetur, sed pretium mauris laoreet. Pellentesque sodales ante non justo viverra, sit amet consectetur nisl vulputate.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        <button id="loadpage" type="button" class="btn btn-primary">Save</button>
+      </div>
+    </div>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
+<script>
+  $(document).ready(function() { // Wait for the document to be fully loaded
+    let $modal = $("#myModal");
+    $modal.on('shown.bs.modal', function () {
+      $modal.draggable({
+        handle: ".modal-header",
+      });
+    });
+    $modal.resizable();
+  });
+</script>
+{% endblock dashboard_body %}

@@ -1,0 +1,891 @@
+{% extends "base_dashboard.html" %}
+{% load static %}
+
+{% block dashboard_body %}
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bootstrap demo</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+</head>
+
+<style>
+    .broker-feutures li {
+        font-size: 1rem !important;
+    }
+
+    .web-btn {
+        color: white;
+        border: 1px solid #4399eb !important;
+        background: linear-gradient(180deg, #4399eb, #5cadfb) !important;
+        box-shadow: none !important;
+        outline: 0 !important;
+        transition: all .2s ease-in-out !important
+    }
+
+    .web-btn:hover {
+        background: #fff !important;
+        color: #4399eb !important
+    }
+
+    .web-btn:disabled {
+        opacity: .65;
+        background: linear-gradient(180deg, #4399eb, #5cadfb) !important;
+        color: #fff !important;
+        cursor: default
+    }
+
+    .ads-broker-btn {
+        border: 1px solid #c0083e !important;
+        background: linear-gradient(.74turn, #c0083e -5.36%, #ff2565 110.14%);
+        color: #fff !important;
+        border-radius: 8px
+    }
+
+    .ads-broker-btn:hover {
+        background: transparent !important;
+        color: #c0083e !important
+    }
+
+    .section-top-brokers {
+
+        top: 85%
+    }
+
+    .section-top-brokers .row-cards .broker-ratings {
+        font-size: 13px;
+        color: var(--label-color-5);
+        font-weight: 400
+    }
+
+    .section-top-brokers .row-cards .broker-ratings svg {
+        color: #f5a523
+    }
+
+    .section-top-brokers .row-cards .broker-premium-feaures li {
+        font-size: 13px;
+        line-height: 30px;
+        color: #74788d;
+        font-weight: 400;
+        margin-right: 60px
+    }
+
+    .section-top-brokers .row-cards .broker-premium-feaures li p {
+        font-size: 15px;
+        color: var(--label-color-5);
+        font-weight: 500
+    }
+
+    .section-top-brokers .row-cards .broker-title {
+        font-size: 20px;
+        letter-spacing: 1px;
+        color: var(--label-color-5);
+        min-width: 140px
+    }
+
+    .new_broker_box {
+        border-radius: 5px;
+        box-shadow: 0 3px 16px 0 rgba(35, 47, 62, .15);
+        background-color: var(--bg-white)
+    }
+
+    .new_broker_box .new_brokers_logo {
+        min-width: 105px;
+        max-width: 105px
+    }
+
+    .new_broker_box .br_service {
+        width: 205px
+    }
+
+    .new_broker_box .br_service span {
+        height: 25px;
+        align-items: center;
+        font-size: 13px;
+        background: #f1f5f9
+    }
+
+    .new_broker_box .broker-feutures li {
+        line-height: 38px
+    }
+
+    .new_broker_box .score {
+        display: block;
+        font-size: 16px;
+        position: relative;
+        overflow: hidden
+    }
+
+    .new_broker_box .score-wrap {
+        display: inline-block;
+        position: relative;
+        height: 19px
+    }
+
+    .new_broker_box .score .stars-active {
+        color: #eebd01;
+        position: relative;
+        z-index: 10;
+        display: inline-block;
+        overflow: hidden;
+        white-space: nowrap
+    }
+
+    .new_broker_box .score .stars-inactive {
+        color: gray;
+        position: absolute;
+        top: 0;
+        left: 0;
+        -webkit-text-stroke: initial
+    }
+
+    .fingertips-p,
+    .fingertips-ps {
+        font-family: Roboto;
+        color: #818992 !important
+    }
+
+    .fingertips-heading {
+        font-size: 33px;
+        color: #0f2137
+    }
+
+    .borker-img {
+        height: 33px !important;
+    }
+
+    .broker-slide .top-brokers-box {
+        padding: 16px 12px;
+        box-shadow: 0 5px 18px 0 rgba(103, 114, 134, .1);
+        background-color: #fff;
+        border: 1px solid transparent;
+        cursor:pointer
+    }
+
+    .broker-slide .top-brokers-box:hover {
+        border: 1px solid #2196f3;
+        box-shadow: 0 8px 24px 0 rgba(33, 150, 243, .4)
+    }
+
+    .broker-slide .angel-broking-box:first-child {
+        padding-left: unset !important
+    }
+
+    .broker-slide .angel-broking-box:last-of-type {
+        padding-right: unset !important
+    }
+
+    .broker-slide .active-broker-box {
+        border: 1px solid #2196f3;
+        box-shadow: 0 8px 24px 0 rgba(33, 150, 243, .2)
+    }
+
+    .broker-slide .active-broker-box:after {
+        content: "";
+        display: block;
+        position: absolute;
+        left: 0;
+        right: 0;
+        margin-right: auto;
+        margin-left: auto;
+        top: 101%;
+        width: 0;
+        height: 0;
+        border-color: #2196f3 transparent transparent;
+        border-style: solid;
+        border-width: 10px 10px 0
+    }
+</style>
+
+<body>
+    <div class="container">
+        <div class="row mt-4 d-none d-lg-block">
+            <div class="col-lg-12">
+                <h3 class="text-center mt-md-4 mt-4 fingertips-heading">Top 5 Brokers</h3>
+                <p class="text-center label-color-5 mb-md-5 fingertips-p">Open account with leading brokers for Indian
+                    Stock Market.</p>
+            </div>
+        </div>
+        <div class="broker-slide d-none d-lg-block">
+            <div class="row mb-lg-5">
+                <div class="col mb-sm-3 angel-broking-box">
+                    <div class="top-brokers-box text-center rounded cursor-pointer
+        active-broker-box position-relative"><img alt="Zerodha" loading="lazy" width="137" height="28" decoding="async"
+                            data-nimg="1" class="img-fluid borker-img" sizes="100vw"
+                            srcset="https://d3oodytt0tuddk.cloudfront.net/images/brokers/Zerodha.webp 640w, https://d3oodytt0tuddk.cloudfront.net/images/brokers/Zerodha.webp 750w, https://d3oodytt0tuddk.cloudfront.net/images/brokers/Zerodha.webp 828w, https://d3oodytt0tuddk.cloudfront.net/images/brokers/Zerodha.webp 1080w, https://d3oodytt0tuddk.cloudfront.net/images/brokers/Zerodha.webp 1200w, https://d3oodytt0tuddk.cloudfront.net/images/brokers/Zerodha.webp 1920w, https://d3oodytt0tuddk.cloudfront.net/images/brokers/Zerodha.webp 2048w, https://d3oodytt0tuddk.cloudfront.net/images/brokers/Zerodha.webp 3840w"
+                            src="https://d3oodytt0tuddk.cloudfront.net/images/brokers/Zerodha.webp"
+                            style="color: transparent;"></div>
+                </div>
+                <div class="col mb-sm-3 angel-broking-box">
+                    <div class="top-brokers-box text-center rounded cursor-pointer
+        false"><img alt="Angel One" loading="lazy" width="137" height="28" decoding="async" data-nimg="1"
+                            class="img-fluid borker-img" sizes="100vw"
+                            srcset="https://d3oodytt0tuddk.cloudfront.net/images/brokers/AO-logo-DesktopNew.webp 640w, https://d3oodytt0tuddk.cloudfront.net/images/brokers/AO-logo-DesktopNew.webp 750w, https://d3oodytt0tuddk.cloudfront.net/images/brokers/AO-logo-DesktopNew.webp 828w, https://d3oodytt0tuddk.cloudfront.net/images/brokers/AO-logo-DesktopNew.webp 1080w, https://d3oodytt0tuddk.cloudfront.net/images/brokers/AO-logo-DesktopNew.webp 1200w, https://d3oodytt0tuddk.cloudfront.net/images/brokers/AO-logo-DesktopNew.webp 1920w, https://d3oodytt0tuddk.cloudfront.net/images/brokers/AO-logo-DesktopNew.webp 2048w, https://d3oodytt0tuddk.cloudfront.net/images/brokers/AO-logo-DesktopNew.webp 3840w"
+                            src="https://d3oodytt0tuddk.cloudfront.net/images/brokers/AO-logo-DesktopNew.webp"
+                            style="color: transparent;"></div>
+                </div>
+                <div class="col mb-sm-3 angel-broking-box">
+                    <div class="top-brokers-box text-center rounded cursor-pointer
+        false"><img alt="DHAN" loading="lazy" width="137" height="28" decoding="async" data-nimg="1"
+                            class="img-fluid borker-img" sizes="100vw"
+                            srcset="https://join.dhan.co/assets/images/Dhan_logo.svg 640w, https://join.dhan.co/assets/images/Dhan_logo.svg 750w, https://join.dhan.co/assets/images/Dhan_logo.svg 828w, https://join.dhan.co/assets/images/Dhan_logo.svg 1080w, https://join.dhan.co/assets/images/Dhan_logo.svg 1200w, https://join.dhan.co/assets/images/Dhan_logo.svg 1920w, https://join.dhan.co/assets/images/Dhan_logo.svg 2048w, https://join.dhan.co/assets/images/Dhan_logo.svg 3840w"
+                            src="https://join.dhan.co/assets/images/Dhan_logo.svg" style="color: transparent;"></div>
+                </div>
+                <div class="col mb-sm-3 angel-broking-box">
+                    <div class="top-brokers-box text-center rounded cursor-pointer
+        false"><img alt="Upstox" loading="lazy" width="137" height="28" decoding="async" data-nimg="1"
+                            class="img-fluid borker-img" sizes="100vw"
+                            srcset="https://d3oodytt0tuddk.cloudfront.net/images/brokers/upstox_new.webp 640w, https://d3oodytt0tuddk.cloudfront.net/images/brokers/upstox_new.webp 750w, https://d3oodytt0tuddk.cloudfront.net/images/brokers/upstox_new.webp 828w, https://d3oodytt0tuddk.cloudfront.net/images/brokers/upstox_new.webp 1080w, https://d3oodytt0tuddk.cloudfront.net/images/brokers/upstox_new.webp 1200w, https://d3oodytt0tuddk.cloudfront.net/images/brokers/upstox_new.webp 1920w, https://d3oodytt0tuddk.cloudfront.net/images/brokers/upstox_new.webp 2048w, https://d3oodytt0tuddk.cloudfront.net/images/brokers/upstox_new.webp 3840w"
+                            src="https://d3oodytt0tuddk.cloudfront.net/images/brokers/upstox_new.webp"
+                            style="color: transparent;"></div>
+                </div>
+                <div class="col mb-sm-3 angel-broking-box">
+                    <div class="top-brokers-box text-center rounded cursor-pointer
+        false"><img alt="Ventura" loading="lazy" width="137" height="28" decoding="async" data-nimg="1"
+                            class="img-fluid borker-img" sizes="100vw"
+                            srcset="https://d14zm0hu08yytt.cloudfront.net/wp-content/uploads/2023/03/darklogo.png 640w, https://d14zm0hu08yytt.cloudfront.net/wp-content/uploads/2023/03/darklogo.png 750w, https://d14zm0hu08yytt.cloudfront.net/wp-content/uploads/2023/03/darklogo.png 828w, https://d14zm0hu08yytt.cloudfront.net/wp-content/uploads/2023/03/darklogo.png 1080w, https://d14zm0hu08yytt.cloudfront.net/wp-content/uploads/2023/03/darklogo.png 1200w, https://d14zm0hu08yytt.cloudfront.net/wp-content/uploads/2023/03/darklogo.png 1920w, https://d14zm0hu08yytt.cloudfront.net/wp-content/uploads/2023/03/darklogo.png 2048w, https://d14zm0hu08yytt.cloudfront.net/wp-content/uploads/2023/03/darklogo.png 3840w"
+                            src="https://d14zm0hu08yytt.cloudfront.net/wp-content/uploads/2023/03/darklogo.png"
+                            style="color: transparent;"></div>
+                </div>
+                <section class="section-top-brokers d-none d-md-block">
+                    <div class="row row-cards">
+                        <div class="col-12 px-0">
+                            <div class="new_broker_box d-flex align-items-center p-4">
+                                <div class="new_brokers_logo d-flex align-items-center justify-content-center me-3"><a
+                                        href="https://bit.ly/2Yr3HTI" target="_blank" rel="noreferrer"><img
+                                            alt="Zerodha" loading="lazy" width="137" height="28" decoding="async"
+                                            data-nimg="1" class="img-fluid" sizes="100vw"
+                                            srcset="https://d3oodytt0tuddk.cloudfront.net/images/brokers/Zerodha.webp 640w, https://d3oodytt0tuddk.cloudfront.net/images/brokers/Zerodha.webp 750w, https://d3oodytt0tuddk.cloudfront.net/images/brokers/Zerodha.webp 828w, https://d3oodytt0tuddk.cloudfront.net/images/brokers/Zerodha.webp 1080w, https://d3oodytt0tuddk.cloudfront.net/images/brokers/Zerodha.webp 1200w, https://d3oodytt0tuddk.cloudfront.net/images/brokers/Zerodha.webp 1920w, https://d3oodytt0tuddk.cloudfront.net/images/brokers/Zerodha.webp 2048w, https://d3oodytt0tuddk.cloudfront.net/images/brokers/Zerodha.webp 3840w"
+                                            src="https://d3oodytt0tuddk.cloudfront.net/images/brokers/Zerodha.webp"
+                                            style="color: transparent;"></a></div>
+                                <div class="position-relative w-100 align-items-center">
+                                    <div class="d-flex w-100 align-items-center"><a href="https://bit.ly/2Yr3HTI"
+                                            target="_blank"
+                                            class="broker-title broker-redirect-btn fw-bold text-decoration-none"
+                                            rel="noreferrer">Zerodha<svg aria-hidden="true" focusable="false"
+                                                data-prefix="fas" data-icon="external-link-alt"
+                                                class="svg-inline--fa fa-external-link-alt fa-w-16 ms-1" role="img"
+                                                xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="16"
+                                                height="14">
+                                                <path fill="currentColor"
+                                                    d="M432,320H400a16,16,0,0,0-16,16V448H64V128H208a16,16,0,0,0,16-16V80a16,16,0,0,0-16-16H48A48,48,0,0,0,0,112V464a48,48,0,0,0,48,48H400a48,48,0,0,0,48-48V336A16,16,0,0,0,432,320ZM488,0h-128c-21.37,0-32.05,25.91-17,41l35.73,35.73L135,320.37a24,24,0,0,0,0,34L157.67,377a24,24,0,0,0,34,0L435.28,133.32,471,169c15,15,41,4.5,41-17V24A24,24,0,0,0,488,0Z">
+                                                </path>
+                                            </svg></a>
+                                        <div class="broker-ratings ms-5 d-flex align-items-center"><span class="score">
+                                                <div class="score-wrap"><span class="stars-active"
+                                                        style="width: 90%;"><svg aria-hidden="true" focusable="false"
+                                                            data-prefix="fas" data-icon="star"
+                                                            class="svg-inline--fa fa-star fa-w-18 " role="img"
+                                                            xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"
+                                                            width="14" height="14">
+                                                            <path fill="currentColor"
+                                                                d="M259.3 17.8L194 150.2 47.9 171.5c-26.2 3.8-36.7 36.1-17.7 54.6l105.7 103-25 145.5c-4.5 26.3 23.2 46 46.4 33.7L288 439.6l130.7 68.7c23.2 12.2 50.9-7.4 46.4-33.7l-25-145.5 105.7-103c19-18.5 8.5-50.8-17.7-54.6L382 150.2 316.7 17.8c-11.7-23.6-45.6-23.9-57.4 0z">
+                                                            </path>
+                                                        </svg><svg aria-hidden="true" focusable="false"
+                                                            data-prefix="fas" data-icon="star"
+                                                            class="svg-inline--fa fa-star fa-w-18 " role="img"
+                                                            xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"
+                                                            width="14" height="14">
+                                                            <path fill="currentColor"
+                                                                d="M259.3 17.8L194 150.2 47.9 171.5c-26.2 3.8-36.7 36.1-17.7 54.6l105.7 103-25 145.5c-4.5 26.3 23.2 46 46.4 33.7L288 439.6l130.7 68.7c23.2 12.2 50.9-7.4 46.4-33.7l-25-145.5 105.7-103c19-18.5 8.5-50.8-17.7-54.6L382 150.2 316.7 17.8c-11.7-23.6-45.6-23.9-57.4 0z">
+                                                            </path>
+                                                        </svg><svg aria-hidden="true" focusable="false"
+                                                            data-prefix="fas" data-icon="star"
+                                                            class="svg-inline--fa fa-star fa-w-18 " role="img"
+                                                            xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"
+                                                            width="14" height="14">
+                                                            <path fill="currentColor"
+                                                                d="M259.3 17.8L194 150.2 47.9 171.5c-26.2 3.8-36.7 36.1-17.7 54.6l105.7 103-25 145.5c-4.5 26.3 23.2 46 46.4 33.7L288 439.6l130.7 68.7c23.2 12.2 50.9-7.4 46.4-33.7l-25-145.5 105.7-103c19-18.5 8.5-50.8-17.7-54.6L382 150.2 316.7 17.8c-11.7-23.6-45.6-23.9-57.4 0z">
+                                                            </path>
+                                                        </svg><svg aria-hidden="true" focusable="false"
+                                                            data-prefix="fas" data-icon="star"
+                                                            class="svg-inline--fa fa-star fa-w-18 " role="img"
+                                                            xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"
+                                                            width="14" height="14">
+                                                            <path fill="currentColor"
+                                                                d="M259.3 17.8L194 150.2 47.9 171.5c-26.2 3.8-36.7 36.1-17.7 54.6l105.7 103-25 145.5c-4.5 26.3 23.2 46 46.4 33.7L288 439.6l130.7 68.7c23.2 12.2 50.9-7.4 46.4-33.7l-25-145.5 105.7-103c19-18.5 8.5-50.8-17.7-54.6L382 150.2 316.7 17.8c-11.7-23.6-45.6-23.9-57.4 0z">
+                                                            </path>
+                                                        </svg><svg aria-hidden="true" focusable="false"
+                                                            data-prefix="fas" data-icon="star"
+                                                            class="svg-inline--fa fa-star fa-w-18 " role="img"
+                                                            xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"
+                                                            width="14" height="14">
+                                                            <path fill="currentColor"
+                                                                d="M259.3 17.8L194 150.2 47.9 171.5c-26.2 3.8-36.7 36.1-17.7 54.6l105.7 103-25 145.5c-4.5 26.3 23.2 46 46.4 33.7L288 439.6l130.7 68.7c23.2 12.2 50.9-7.4 46.4-33.7l-25-145.5 105.7-103c19-18.5 8.5-50.8-17.7-54.6L382 150.2 316.7 17.8c-11.7-23.6-45.6-23.9-57.4 0z">
+                                                            </path>
+                                                        </svg></span><span class="stars-inactive"><svg
+                                                            aria-hidden="true" focusable="false" data-prefix="far"
+                                                            data-icon="star" class="svg-inline--fa fa-star fa-w-18 "
+                                                            role="img" xmlns="http://www.w3.org/2000/svg"
+                                                            viewBox="0 0 576 512" width="14" height="14">
+                                                            <path fill="currentColor"
+                                                                d="M528.1 171.5L382 150.2 316.7 17.8c-11.7-23.6-45.6-23.9-57.4 0L194 150.2 47.9 171.5c-26.2 3.8-36.7 36.1-17.7 54.6l105.7 103-25 145.5c-4.5 26.3 23.2 46 46.4 33.7L288 439.6l130.7 68.7c23.2 12.2 50.9-7.4 46.4-33.7l-25-145.5 105.7-103c19-18.5 8.5-50.8-17.7-54.6zM388.6 312.3l23.7 138.4L288 385.4l-124.3 65.3 23.7-138.4-100.6-98 139-20.2 62.2-126 62.2 126 139 20.2-100.6 98z">
+                                                            </path>
+                                                        </svg><svg aria-hidden="true" focusable="false"
+                                                            data-prefix="far" data-icon="star"
+                                                            class="svg-inline--fa fa-star fa-w-18 " role="img"
+                                                            xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"
+                                                            width="14" height="14">
+                                                            <path fill="currentColor"
+                                                                d="M528.1 171.5L382 150.2 316.7 17.8c-11.7-23.6-45.6-23.9-57.4 0L194 150.2 47.9 171.5c-26.2 3.8-36.7 36.1-17.7 54.6l105.7 103-25 145.5c-4.5 26.3 23.2 46 46.4 33.7L288 439.6l130.7 68.7c23.2 12.2 50.9-7.4 46.4-33.7l-25-145.5 105.7-103c19-18.5 8.5-50.8-17.7-54.6zM388.6 312.3l23.7 138.4L288 385.4l-124.3 65.3 23.7-138.4-100.6-98 139-20.2 62.2-126 62.2 126 139 20.2-100.6 98z">
+                                                            </path>
+                                                        </svg><svg aria-hidden="true" focusable="false"
+                                                            data-prefix="far" data-icon="star"
+                                                            class="svg-inline--fa fa-star fa-w-18 " role="img"
+                                                            xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"
+                                                            width="14" height="14">
+                                                            <path fill="currentColor"
+                                                                d="M528.1 171.5L382 150.2 316.7 17.8c-11.7-23.6-45.6-23.9-57.4 0L194 150.2 47.9 171.5c-26.2 3.8-36.7 36.1-17.7 54.6l105.7 103-25 145.5c-4.5 26.3 23.2 46 46.4 33.7L288 439.6l130.7 68.7c23.2 12.2 50.9-7.4 46.4-33.7l-25-145.5 105.7-103c19-18.5 8.5-50.8-17.7-54.6zM388.6 312.3l23.7 138.4L288 385.4l-124.3 65.3 23.7-138.4-100.6-98 139-20.2 62.2-126 62.2 126 139 20.2-100.6 98z">
+                                                            </path>
+                                                        </svg><svg aria-hidden="true" focusable="false"
+                                                            data-prefix="far" data-icon="star"
+                                                            class="svg-inline--fa fa-star fa-w-18 " role="img"
+                                                            xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"
+                                                            width="14" height="14">
+                                                            <path fill="currentColor"
+                                                                d="M528.1 171.5L382 150.2 316.7 17.8c-11.7-23.6-45.6-23.9-57.4 0L194 150.2 47.9 171.5c-26.2 3.8-36.7 36.1-17.7 54.6l105.7 103-25 145.5c-4.5 26.3 23.2 46 46.4 33.7L288 439.6l130.7 68.7c23.2 12.2 50.9-7.4 46.4-33.7l-25-145.5 105.7-103c19-18.5 8.5-50.8-17.7-54.6zM388.6 312.3l23.7 138.4L288 385.4l-124.3 65.3 23.7-138.4-100.6-98 139-20.2 62.2-126 62.2 126 139 20.2-100.6 98z">
+                                                            </path>
+                                                        </svg><svg aria-hidden="true" focusable="false"
+                                                            data-prefix="far" data-icon="star"
+                                                            class="svg-inline--fa fa-star fa-w-18 " role="img"
+                                                            xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"
+                                                            width="14" height="14">
+                                                            <path fill="currentColor"
+                                                                d="M528.1 171.5L382 150.2 316.7 17.8c-11.7-23.6-45.6-23.9-57.4 0L194 150.2 47.9 171.5c-26.2 3.8-36.7 36.1-17.7 54.6l105.7 103-25 145.5c-4.5 26.3 23.2 46 46.4 33.7L288 439.6l130.7 68.7c23.2 12.2 50.9-7.4 46.4-33.7l-25-145.5 105.7-103c19-18.5 8.5-50.8-17.7-54.6zM388.6 312.3l23.7 138.4L288 385.4l-124.3 65.3 23.7-138.4-100.6-98 139-20.2 62.2-126 62.2 126 139 20.2-100.6 98z">
+                                                            </path>
+                                                        </svg></span></div>
+                                            </span><span class="ps-2">(4.3)</span></div><a href="https://bit.ly/2Yr3HTI"
+                                            target="_blank"
+                                            class="btn rounded modal-save-btn modal-login-btn ms-auto px-3 web-btn"
+                                            rel="noreferrer">Open Account</a>
+                                    </div>
+                                    <div class="d-flex align-items-center">
+                                        <div class="br_service"><span
+                                                class="text-uppercase fw-500 d-flex w-max-content rounded label-color-5 px-2">Discount
+                                                Broker</span></div>
+                                        <ul class="my-2 p-0 broker-feutures d-flex align-items-center">
+                                            <li class="d-inline-block px-3 fs-4 label-color-5"><svg width="17"
+                                                    height="17" alt="Equity" class="me-1" id="broker_equity"
+                                                    viewBox="0 0 24 24">
+                                                    <rect id="Rectangle_3" data-name="Rectangle 3" width="24"
+                                                        height="24" fill="none"></rect>
+                                                    <g id="Group_43" data-name="Group 43" transform="translate(1 -14)">
+                                                        <path id="Path_333" data-name="Path 333"
+                                                            d="M35.667,336H32.733a.734.734,0,0,0-.733.733V340.4a.734.734,0,0,0,.733.733h2.933a.734.734,0,0,0,.733-.733v-3.667A.734.734,0,0,0,35.667,336Z"
+                                                            transform="translate(-30.533 -305.867)" fill="#64b5f6">
+                                                        </path>
+                                                        <path id="Path_334" data-name="Path 334"
+                                                            d="M195.667,208h-2.933a.734.734,0,0,0-.733.733v9.533a.734.734,0,0,0,.733.733h2.933a.734.734,0,0,0,.733-.733v-9.533A.734.734,0,0,0,195.667,208Z"
+                                                            transform="translate(-183.2 -183.733)" fill="#2196f3">
+                                                        </path>
+                                                        <path id="Path_335" data-name="Path 335"
+                                                            d="M355.667,80h-2.933a.722.722,0,0,0-.733.71V95.623a.722.722,0,0,0,.733.71h2.933a.722.722,0,0,0,.733-.71V80.71A.722.722,0,0,0,355.667,80Z"
+                                                            transform="translate(-335.867 -61.067)" fill="#1e88e5">
+                                                        </path>
+                                                        <path id="Path_336" data-name="Path 336"
+                                                            d="M74.992,16h-4.4a.733.733,0,0,0,0,1.467h2.63l-9.016,9.014a.734.734,0,0,0,1.038,1.038L74.259,18.5v2.63a.733.733,0,0,0,1.467,0v-4.4A.734.734,0,0,0,74.992,16Z"
+                                                            transform="translate(-61.059)" fill="#ffc107"></path>
+                                                        <path id="Path_337" data-name="Path 337"
+                                                            d="M21.267,433.467H.733a.733.733,0,0,1,0-1.467H21.267a.733.733,0,0,1,0,1.467Z"
+                                                            transform="translate(0 -397.467)" fill="#455a64"></path>
+                                                    </g>
+                                                </svg> Equity</li>
+                                            <li class="d-inline-block px-3 fs-4 label-color-5"><svg width="17"
+                                                    height="17" alt="Futures" class="me-1" id="broker_equity_f"
+                                                    viewBox="0 0 24 24">
+                                                    <rect id="Rectangle_3" data-name="Rectangle 3" width="24"
+                                                        height="24" fill="none"></rect>
+                                                    <g id="Group_42" data-name="Group 42" transform="translate(1 -14)">
+                                                        <path id="Path_326" data-name="Path 326"
+                                                            d="M352.733,176h2.933a.734.734,0,0,1,.733.733v11a.734.734,0,0,1-.733.733h-2.933a.734.734,0,0,1-.733-.733v-11A.734.734,0,0,1,352.733,176Z"
+                                                            transform="translate(-335.867 -153.2)" fill="#1e88e5">
+                                                        </path>
+                                                        <path id="Path_327" data-name="Path 327"
+                                                            d="M192.733,272h2.933a.734.734,0,0,1,.733.733v6.6a.734.734,0,0,1-.733.733h-2.933a.734.734,0,0,1-.733-.733v-6.6A.734.734,0,0,1,192.733,272Z"
+                                                            transform="translate(-183.2 -244.8)" fill="#2196f3"></path>
+                                                        <path id="Path_328" data-name="Path 328"
+                                                            d="M32.733,176h2.933a.734.734,0,0,1,.733.733v11a.734.734,0,0,1-.733.733H32.733a.734.734,0,0,1-.733-.733v-11A.734.734,0,0,1,32.733,176Z"
+                                                            transform="translate(-30.533 -153.2)" fill="#64b5f6"></path>
+                                                        <path id="Path_329" data-name="Path 329"
+                                                            d="M.733,433.467H21.267a.733.733,0,0,0,0-1.467H.733a.733.733,0,0,0,0,1.467Z"
+                                                            transform="translate(0 -397.467)" fill="#455a64"></path>
+                                                        <g id="Group_41" data-name="Group 41"
+                                                            transform="translate(1.467 16)">
+                                                            <rect id="Rectangle_12" data-name="Rectangle 12"
+                                                                width="1.467" height="5.645"
+                                                                transform="matrix(0.515, -0.857, 0.857, 0.515, 3.074, 3.577)"
+                                                                fill="#ffc107"></rect>
+                                                            <rect id="Rectangle_13" data-name="Rectangle 13"
+                                                                width="5.645" height="1.467"
+                                                                transform="matrix(0.857, -0.515, 0.515, 0.857, 10.408, 5.221)"
+                                                                fill="#ffc107"></rect>
+                                                            <path id="Path_330" data-name="Path 330"
+                                                                d="M34.2,20.4a2.2,2.2,0,1,1,2.2-2.2A2.2,2.2,0,0,1,34.2,20.4Z"
+                                                                transform="translate(-32 -16)" fill="#ffc107"></path>
+                                                            <path id="Path_331" data-name="Path 331"
+                                                                d="M194.2,116.4a2.2,2.2,0,1,1,2.2-2.2A2.2,2.2,0,0,1,194.2,116.4Z"
+                                                                transform="translate(-184.667 -107.6)" fill="#ffc107">
+                                                            </path>
+                                                            <path id="Path_332" data-name="Path 332"
+                                                                d="M354.2,20.4a2.2,2.2,0,1,1,2.2-2.2A2.2,2.2,0,0,1,354.2,20.4Z"
+                                                                transform="translate(-337.333 -16)" fill="#ffc107">
+                                                            </path>
+                                                        </g>
+                                                    </g>
+                                                </svg> Futures</li>
+                                            <li class="d-inline-block px-3 fs-4 label-color-5"><svg width="17"
+                                                    height="17" alt="Options" class="me-1" id="broker_equity"
+                                                    viewBox="0 0 24 24">
+                                                    <rect id="Rectangle_3" data-name="Rectangle 3" width="24"
+                                                        height="24" fill="none"></rect>
+                                                    <g id="Group_43" data-name="Group 43" transform="translate(1 -14)">
+                                                        <path id="Path_333" data-name="Path 333"
+                                                            d="M35.667,336H32.733a.734.734,0,0,0-.733.733V340.4a.734.734,0,0,0,.733.733h2.933a.734.734,0,0,0,.733-.733v-3.667A.734.734,0,0,0,35.667,336Z"
+                                                            transform="translate(-30.533 -305.867)" fill="#64b5f6">
+                                                        </path>
+                                                        <path id="Path_334" data-name="Path 334"
+                                                            d="M195.667,208h-2.933a.734.734,0,0,0-.733.733v9.533a.734.734,0,0,0,.733.733h2.933a.734.734,0,0,0,.733-.733v-9.533A.734.734,0,0,0,195.667,208Z"
+                                                            transform="translate(-183.2 -183.733)" fill="#2196f3">
+                                                        </path>
+                                                        <path id="Path_335" data-name="Path 335"
+                                                            d="M355.667,80h-2.933a.722.722,0,0,0-.733.71V95.623a.722.722,0,0,0,.733.71h2.933a.722.722,0,0,0,.733-.71V80.71A.722.722,0,0,0,355.667,80Z"
+                                                            transform="translate(-335.867 -61.067)" fill="#1e88e5">
+                                                        </path>
+                                                        <path id="Path_336" data-name="Path 336"
+                                                            d="M74.992,16h-4.4a.733.733,0,0,0,0,1.467h2.63l-9.016,9.014a.734.734,0,0,0,1.038,1.038L74.259,18.5v2.63a.733.733,0,0,0,1.467,0v-4.4A.734.734,0,0,0,74.992,16Z"
+                                                            transform="translate(-61.059)" fill="#ffc107"></path>
+                                                        <path id="Path_337" data-name="Path 337"
+                                                            d="M21.267,433.467H.733a.733.733,0,0,1,0-1.467H21.267a.733.733,0,0,1,0,1.467Z"
+                                                            transform="translate(0 -397.467)" fill="#455a64"></path>
+                                                    </g>
+                                                </svg> Options</li>
+                                            <li class="d-inline-block px-3 fs-4 label-color-5"><svg width="17"
+                                                    height="17" alt="Currency" class="me-1" id="rupee-sign"
+                                                    viewBox="0 0 24 24">
+                                                    <rect id="Rectangle_3" data-name="Rectangle 3" width="24"
+                                                        height="24" fill="none"></rect>
+                                                    <path id="Path_338" data-name="Path 338"
+                                                        d="M149.672,138.672a11,11,0,1,0,11,11A11.012,11.012,0,0,0,149.672,138.672Zm3.251,8.5a.75.75,0,1,1,0,1.5h-1.172a3.246,3.246,0,0,1-2.9,2.246l3.5,2.385a.749.749,0,0,1-.423,1.37.744.744,0,0,1-.422-.13l-5.5-3.75a.751.751,0,0,1,.423-1.371h2.25a1.749,1.749,0,0,0,1.433-.75h-3.683a.75.75,0,0,1,0-1.5h3.918a1.748,1.748,0,0,0-1.668-1.25h-2.25a.75.75,0,0,1,0-1.5h6.5a.75.75,0,0,1,0,1.5H151.4a3.229,3.229,0,0,1,.47,1.25h1.049Z"
+                                                        transform="translate(-137.672 -137.672)" fill="#2196f3"></path>
+                                                </svg> Currency Futures</li>
+                                            <li class="d-inline-block px-3 fs-4 label-color-5"><svg width="17"
+                                                    height="17" alt="Currency" class="me-1" id="rupee-sign"
+                                                    viewBox="0 0 24 24">
+                                                    <rect id="Rectangle_3" data-name="Rectangle 3" width="24"
+                                                        height="24" fill="none"></rect>
+                                                    <path id="Path_338" data-name="Path 338"
+                                                        d="M149.672,138.672a11,11,0,1,0,11,11A11.012,11.012,0,0,0,149.672,138.672Zm3.251,8.5a.75.75,0,1,1,0,1.5h-1.172a3.246,3.246,0,0,1-2.9,2.246l3.5,2.385a.749.749,0,0,1-.423,1.37.744.744,0,0,1-.422-.13l-5.5-3.75a.751.751,0,0,1,.423-1.371h2.25a1.749,1.749,0,0,0,1.433-.75h-3.683a.75.75,0,0,1,0-1.5h3.918a1.748,1.748,0,0,0-1.668-1.25h-2.25a.75.75,0,0,1,0-1.5h6.5a.75.75,0,0,1,0,1.5H151.4a3.229,3.229,0,0,1,.47,1.25h1.049Z"
+                                                        transform="translate(-137.672 -137.672)" fill="#2196f3"></path>
+                                                </svg> Currency Options</li>
+                                            <li class="d-inline-block px-3 fs-4 label-color-5"><svg width="17"
+                                                    height="16" class="me-1" alt="Commodity" id="broker_commodity"
+                                                    viewBox="0 0 24 24">
+                                                    <rect id="Rectangle_3" data-name="Rectangle 3" width="24"
+                                                        height="24" fill="none"></rect>
+                                                    <g id="Group_46" data-name="Group 46" transform="translate(1 1)">
+                                                        <path id="Path_339" data-name="Path 339"
+                                                            d="M51.25.688v5.5h-.687l-5.5,4.125H38.188l-5.5,5.5H32V.688A.681.681,0,0,1,32.688,0H50.563A.681.681,0,0,1,51.25.688Z"
+                                                            transform="translate(-30.625)" fill="#2196f3"></path>
+                                                        <path id="Path_340" data-name="Path 340"
+                                                            d="M51.25,144v15.125a.681.681,0,0,1-.687.688H32.688a.681.681,0,0,1-.687-.687v-5.5h.688l5.5-5.5h6.875l5.5-4.125Z"
+                                                            transform="translate(-30.625 -137.813)" fill="#64b5f6">
+                                                        </path>
+                                                        <g id="Group_44" data-name="Group 44"
+                                                            transform="translate(2.352 6.325)">
+                                                            <path id="Path_341" data-name="Path 341"
+                                                                d="M58.493,246.913l-3.547,3.547a.688.688,0,0,0,.974.972l3.547-3.548a.688.688,0,0,0-.973-.972Z"
+                                                                transform="translate(-54.744 -242.436)" fill="#fafafa">
+                                                            </path>
+                                                            <path id="Path_342" data-name="Path 342"
+                                                                d="M350.127,147.464a.686.686,0,0,0-.962-.138l-3.3,2.475a.687.687,0,1,0,.824,1.1l3.3-2.475A.688.688,0,0,0,350.127,147.464Z"
+                                                                transform="translate(-333.09 -147.189)" fill="#fafafa">
+                                                            </path>
+                                                            <path id="Path_343" data-name="Path 343"
+                                                                d="M196.813,224h-4.125a.688.688,0,0,0,0,1.375h4.125a.688.688,0,0,0,0-1.375Z"
+                                                                transform="translate(-186.102 -220.7)" fill="#fafafa">
+                                                            </path>
+                                                        </g>
+                                                        <g id="Group_45" data-name="Group 45"
+                                                            transform="translate(0 4.4)">
+                                                            <circle id="Ellipse_18" data-name="Ellipse 18" cx="2" cy="2"
+                                                                r="2" transform="translate(0 8.6)" fill="#ffc107">
+                                                            </circle>
+                                                            <circle id="Ellipse_19" data-name="Ellipse 19" cx="2" cy="2"
+                                                                r="2" transform="translate(6 3.6)" fill="#ffc107">
+                                                            </circle>
+                                                            <circle id="Ellipse_20" data-name="Ellipse 20" cx="2" cy="2"
+                                                                r="2" transform="translate(13 3.6)" fill="#ffc107">
+                                                            </circle>
+                                                            <circle id="Ellipse_21" data-name="Ellipse 21" cx="2" cy="2"
+                                                                r="2" transform="translate(18 -0.4)" fill="#ffc107">
+                                                            </circle>
+                                                        </g>
+                                                    </g>
+                                                </svg> Commodity</li>
+                                        </ul>
+                                    </div>
+                                    <div class="row ">
+                                        <div class="col-lg-12">
+                                            <ul class="p-0 m-0 broker-premium-feaures">
+                                                <li class="d-inline-block">Account Opening Charge <p class="m-0">₹ 300
+                                                    </p>
+                                                </li>
+                                                <li class="d-inline-block">Account Maintenance Charge <p class="m-0">₹
+                                                        300</p>
+                                                </li>
+                                                <li class="d-inline-block">Equity Delivery Brokerage<p class="m-0">Zero
+                                                    </p>
+                                                </li>
+                                                <li class="d-inline-block">Equity Intra Brokerage <p class="m-0">0.03%
+                                                    </p>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+</body>
+<script>
+    $(document).ready(function () { // Wait for the document to be fully loaded
+        let broker_main = $(".angel-broking-box .top-brokers-box");
+
+        broker_main.click(function () {
+
+
+
+
+            var broker_redirect_btn = $(".broker-redirect-btn");
+            if ($(this).find("img").attr("alt") == "Zerodha") {
+                $(".top-brokers-box").removeClass("active-broker-box")
+                $(this).addClass("active-broker-box position-relative").removeClass("false")
+                broker_redirect_btn.attr("href", "https://zerodha.com/login");
+                $(".modal-login-btn").attr("href", "https://zerodha.com/login");
+                $(".new_brokers_logo a").attr("href", "https://zerodha.com/login");
+                // Change only the text of the button to "Zerodha"
+                broker_redirect_btn.contents().filter(function () {
+                    return this.nodeType === 3; // NodeType 3 is a text node
+                }).first().replaceWith("Zerodha");
+
+
+                $(".broker-ratings .ps-2").text("(4.3)")
+
+                var imgElement = $(".new_brokers_logo img");
+
+                // Change the src attribute
+                imgElement.attr("src", "https://d3oodytt0tuddk.cloudfront.net/images/brokers/Zerodha.webp");
+
+                // Change the srcset attribute
+                imgElement.attr("srcset",
+                    "https://d3oodytt0tuddk.cloudfront.net/images/brokers/Zerodha.webp 640w, " +
+                    "https://d3oodytt0tuddk.cloudfront.net/images/brokers/Zerodha.webp 750w, " +
+                    "https://d3oodytt0tuddk.cloudfront.net/images/brokers/Zerodha.webp 828w, " +
+                    "https://d3oodytt0tuddk.cloudfront.net/images/brokers/Zerodha.webp 1080w, " +
+                    "https://d3oodytt0tuddk.cloudfront.net/images/brokers/Zerodha.webp 1200w, " +
+                    "https://d3oodytt0tuddk.cloudfront.net/images/brokers/Zerodha.webp 1920w, " +
+                    "https://d3oodytt0tuddk.cloudfront.net/images/brokers/Zerodha.webp 2048w, " +
+                    "https://d3oodytt0tuddk.cloudfront.net/images/brokers/Zerodha.webp 3840w"
+                );
+
+                // Change the alt attribute
+                imgElement.attr("alt", "Zerodha");
+
+
+                $(".br_service span").text("DISCOUNT BROKER")
+
+
+
+
+                // Access the first <li> element (index 0) and change its content
+                var firstItem = $(".broker-premium-feaures li").eq(0);
+                firstItem.find("p").text("₹ 300");
+
+
+                // Access the second <li> element (index 1) and change its content
+                var secondItem = $(".broker-premium-feaures li").eq(1);
+                secondItem.find("p").text("₹ 300");
+
+
+                // Access the third <li> element (index 2) and change its content
+                var thirdItem = $(".broker-premium-feaures li").eq(2);
+                thirdItem.find("p").text("Zero");
+
+
+                // Access the fourth <li> element (index 3) and change its content
+                var fourthItem = $(".broker-premium-feaures li").eq(3);
+                fourthItem.find("p").text("0.03%"); // Assuming "Zero" stays the same, you can change if needed
+
+
+
+
+
+
+            } 
+            else if ($(this).find("img").attr("alt") == "Angel One") {
+$(".top-brokers-box").removeClass("active-broker-box")
+                $(this).addClass("active-broker-box position-relative").removeClass("false")
+                // Change the href attribute to the Angel One login URL
+                broker_redirect_btn.attr("href", "https://bit.ly/2Yr3HTI");
+                $(".modal-login-btn").attr("href", "https://angel.com/login");
+                $(".new_brokers_logo a").attr("href", "https://angelone.com/login");
+                // Change only the text of the button to "Angel One"
+                broker_redirect_btn.contents().filter(function () {
+                    return this.nodeType === 3; // NodeType 3 is a text node
+                }).first().replaceWith("Angel One");
+
+
+                $(".broker-ratings .ps-2").text("(4.5)")
+                var imgElement = $(".new_brokers_logo img");
+
+                // Change the src attribute
+                imgElement.attr("src", "https://d3oodytt0tuddk.cloudfront.net/images/brokers/AO-logo-DesktopNew.webp");
+
+                // Change the srcset attribute
+                imgElement.attr("srcset",
+                    "https://d3oodytt0tuddk.cloudfront.net/images/brokers/AO-logo-DesktopNew.webp 640w, " +
+                    "https://d3oodytt0tuddk.cloudfront.net/images/brokers/AO-logo-DesktopNew.webp 750w, " +
+                    "https://d3oodytt0tuddk.cloudfront.net/images/brokers/AO-logo-DesktopNew.webp 828w, " +
+                    "https://d3oodytt0tuddk.cloudfront.net/images/brokers/AO-logo-DesktopNew.webp 1080w, " +
+                    "https://d3oodytt0tuddk.cloudfront.net/images/brokers/AO-logo-DesktopNew.webp 1200w, " +
+                    "https://d3oodytt0tuddk.cloudfront.net/images/brokers/AO-logo-DesktopNew.webp 1920w, " +
+                    "https://d3oodytt0tuddk.cloudfront.net/images/brokers/AO-logo-DesktopNew.webp 2048w, " +
+                    "https://d3oodytt0tuddk.cloudfront.net/images/brokers/AO-logo-DesktopNew.webp 3840w"
+                );
+
+                // Change the alt attribute
+                imgElement.attr("alt", "Angel One");
+
+                $(".br_service span").text("FULL SERVICE BROKER")
+
+                // Access the first <li> element (index 0) and change its content
+                var firstItem = $(".broker-premium-feaures li").eq(0);
+                firstItem.find("p").text("Free");
+
+
+                // Access the second <li> element (index 1) and change its content
+                var secondItem = $(".broker-premium-feaures li").eq(1);
+                secondItem.find("p").text("₹ 240");
+
+
+                // Access the third <li> element (index 2) and change its content
+                var thirdItem = $(".broker-premium-feaures li").eq(2);
+                thirdItem.find("p").text("Zero");
+
+
+                // Access the fourth <li> element (index 3) and change its content
+                var fourthItem = $(".broker-premium-feaures li").eq(3);
+                fourthItem.find("p").text("0.05%"); // Assuming "Zero" stays the same, you can change if needed
+
+            }
+
+
+            else if ($(this).find("img").attr("alt") == "DHAN") {
+                $(".top-brokers-box").removeClass("active-broker-box")
+                $(this).addClass("active-broker-box position-relative").removeClass("false")
+                // Change the href attribute to the Angel One login URL
+                broker_redirect_btn.attr("href", "https://dhan.com/login");
+                $(".modal-login-btn").attr("href", "https://dhan.com/login");
+                $(".new_brokers_logo a").attr("href", "https://dhan.com/login");
+                // Change only the text of the button to "Angel One"
+                broker_redirect_btn.contents().filter(function () {
+                    return this.nodeType === 3; // NodeType 3 is a text node
+                }).first().replaceWith("Dhan");
+
+
+                $(".broker-ratings .ps-2").text("(4.3)")
+                var imgElement = $(".new_brokers_logo img");
+
+                // Change the src attribute
+                imgElement.attr("src", "https://join.dhan.co/assets/images/Dhan_logo.svg");
+
+                // Change the srcset attribute
+                imgElement.attr("srcset",
+                    "https://join.dhan.co/assets/images/Dhan_logo.svg 640w, " +
+                    "https://join.dhan.co/assets/images/Dhan_logo.svg 750w, " +
+                    "https://join.dhan.co/assets/images/Dhan_logo.svg 828w, " +
+                    "https://join.dhan.co/assets/images/Dhan_logo.svg 1080w, " +
+                    "https://join.dhan.co/assets/images/Dhan_logo.svg 1200w, " +
+                    "https://join.dhan.co/assets/images/Dhan_logo.svg 1920w, " +
+                    "https://join.dhan.co/assets/images/Dhan_logo.svg 2048w, " +
+                    "https://join.dhan.co/assets/images/Dhan_logo.svg 3840w"
+                );
+
+                // Change the alt attribute
+                imgElement.attr("alt", "Dhan");
+
+                $(".br_service span").text("FULL SERVICE BROKER")
+
+                // Access the first <li> element (index 0) and change its content
+                var firstItem = $(".broker-premium-feaures li").eq(0);
+                firstItem.find("p").text("Free");
+
+
+                // Access the second <li> element (index 1) and change its content
+                var secondItem = $(".broker-premium-feaures li").eq(1);
+                secondItem.find("p").text("Free");
+
+
+                // Access the third <li> element (index 2) and change its content
+                var thirdItem = $(".broker-premium-feaures li").eq(2);
+                thirdItem.find("p").text("Zero");
+
+
+                // Access the fourth <li> element (index 3) and change its content
+                var fourthItem = $(".broker-premium-feaures li").eq(3);
+                fourthItem.find("p").text("0.03%"); // Assuming "Zero" stays the same, you can change if needed
+
+            }
+
+
+
+           
+            else if ($(this).find("img").attr("alt") == "Upstox") {
+                $(".top-brokers-box").removeClass("active-broker-box")
+                $(this).addClass("active-broker-box position-relative").removeClass("false")
+                // Change the href attribute to the Angel One login URL
+                broker_redirect_btn.attr("href", "https://Upstox.com/login");
+                $(".modal-login-btn").attr("href", "https://Upstox.com/login");
+                $(".new_brokers_logo a").attr("href", "https://Upstox.com/login");
+                // Change only the text of the button to "Angel One"
+                broker_redirect_btn.contents().filter(function () {
+                    return this.nodeType === 3; // NodeType 3 is a text node
+                }).first().replaceWith("Upstox");
+
+
+                $(".broker-ratings .ps-2").text("(4.3)")
+                var imgElement = $(".new_brokers_logo img");
+
+                // Change the src attribute
+                imgElement.attr("src", "https://d3oodytt0tuddk.cloudfront.net/images/brokers/upstox_new.webp");
+
+                // Change the srcset attribute
+                imgElement.attr("srcset",
+                    "https://d3oodytt0tuddk.cloudfront.net/images/brokers/upstox_new.webp 640w, " +
+                    "https://d3oodytt0tuddk.cloudfront.net/images/brokers/upstox_new.webp 750w, " +
+                    "https://d3oodytt0tuddk.cloudfront.net/images/brokers/upstox_new.webp 828w, " +
+                    "https://d3oodytt0tuddk.cloudfront.net/images/brokers/upstox_new.webp 1080w, " +
+                    "https://d3oodytt0tuddk.cloudfront.net/images/brokers/upstox_new.webp 1200w, " +
+                    "https://d3oodytt0tuddk.cloudfront.net/images/brokers/upstox_new.webp 1920w, " +
+                    "https://d3oodytt0tuddk.cloudfront.net/images/brokers/upstox_new.webp 2048w, " +
+                    "https://d3oodytt0tuddk.cloudfront.net/images/brokers/upstox_new.webp 3840w"
+                );
+
+                // Change the alt attribute
+                imgElement.attr("alt", "Upstox");
+
+                $(".br_service span").text("DISCOUNT BROKER")
+
+                // Access the first <li> element (index 0) and change its content
+                var firstItem = $(".broker-premium-feaures li").eq(0);
+                firstItem.find("p").text("Free");
+
+
+                // Access the second <li> element (index 1) and change its content
+                var secondItem = $(".broker-premium-feaures li").eq(1);
+                secondItem.find("p").text("Free");
+
+
+                // Access the third <li> element (index 2) and change its content
+                var thirdItem = $(".broker-premium-feaures li").eq(2);
+                thirdItem.find("p").text("₹20 per order or 2.5% (whichever is lower)");
+
+
+                // Access the fourth <li> element (index 3) and change its content
+                var fourthItem = $(".broker-premium-feaures li").eq(3);
+                fourthItem.find("p").text("0.05%"); // Assuming "Zero" stays the same, you can change if needed
+
+            }
+
+
+
+           
+            else if ($(this).find("img").attr("alt") == "Ventura") {
+                $(".top-brokers-box").removeClass("active-broker-box")
+                $(this).addClass("active-broker-box position-relative").removeClass("false")
+                // Change the href attribute to the Angel One login URL
+                broker_redirect_btn.attr("href", "https://Ventura.com/login");
+                $(".modal-login-btn").attr("href", "https://Ventura.com/login");
+                $(".new_brokers_logo a").attr("href", "https://Ventura.com/login");
+                // Change only the text of the button to "Angel One"
+                broker_redirect_btn.contents().filter(function () {
+                    return this.nodeType === 3; // NodeType 3 is a text node
+                }).first().replaceWith("Ventura");
+
+
+                $(".broker-ratings .ps-2").text("(3.8)")
+                var imgElement = $(".new_brokers_logo img");
+
+                // Change the src attribute
+                imgElement.attr("src", "https://d14zm0hu08yytt.cloudfront.net/wp-content/uploads/2023/03/darklogo.png");
+
+                // Change the srcset attribute
+                imgElement.attr("srcset",
+                    "https://d14zm0hu08yytt.cloudfront.net/wp-content/uploads/2023/03/darklogo.png 640w, " +
+                    "https://d14zm0hu08yytt.cloudfront.net/wp-content/uploads/2023/03/darklogo.png 750w, " +
+                    "https://d14zm0hu08yytt.cloudfront.net/wp-content/uploads/2023/03/darklogo.png 828w, " +
+                    "https://d14zm0hu08yytt.cloudfront.net/wp-content/uploads/2023/03/darklogo.png 1080w, " +
+                    "https://d14zm0hu08yytt.cloudfront.net/wp-content/uploads/2023/03/darklogo.png 1200w, " +
+                    "https://d14zm0hu08yytt.cloudfront.net/wp-content/uploads/2023/03/darklogo.png 1920w, " +
+                    "https://d14zm0hu08yytt.cloudfront.net/wp-content/uploads/2023/03/darklogo.png 2048w, " +
+                    "https://d14zm0hu08yytt.cloudfront.net/wp-content/uploads/2023/03/darklogo.png 3840w"
+                );
+
+                // Change the alt attribute
+                imgElement.attr("alt", "Ventura");
+
+                $(".br_service span").text("FULL SERVICE BROKER")
+
+                // Access the first <li> element (index 0) and change its content
+                var firstItem = $(".broker-premium-feaures li").eq(0);
+                firstItem.find("p").text("Free");
+
+
+                // Access the second <li> element (index 1) and change its content
+                var secondItem = $(".broker-premium-feaures li").eq(1);
+                secondItem.find("p").text("Free");
+
+
+                // Access the third <li> element (index 2) and change its content
+                var thirdItem = $(".broker-premium-feaures li").eq(2);
+                thirdItem.find("p").text("0.1%");
+
+
+                // Access the fourth <li> element (index 3) and change its content
+                var fourthItem = $(".broker-premium-feaures li").eq(3);
+                fourthItem.find("p").text("₹18 per lot"); // Assuming "Zero" stays the same, you can change if needed
+
+            }
+
+
+
+
+
+
+
+
+
+
+
+
+
+        })
+
+
+    });
+</script>
+
+</html>
+
+{% endblock dashboard_body %}
