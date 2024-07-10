@@ -1,0 +1,24 @@
+<!-- users/templates/users/import_users.html -->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Import Users</title>
+</head>
+<body>
+    <h1>Import Users from CSV</h1>
+    {% if messages %}
+        <ul>
+            {% for message in messages %}
+                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <label for="csv_file">Upload CSV file:</label>
+        <input type="file" name="csv_file" id="csv_file" accept=".csv" required>
+        <button type="submit">Upload</button>
+    </form>
+</body>
+</html>

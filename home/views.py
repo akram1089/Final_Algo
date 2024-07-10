@@ -22484,3 +22484,44 @@ def nifty_movements(request):
 
 def broker_top(request):
     return render(request,"test_templates/discount_broker.html")
+
+
+
+# users/management/commands/import_users.py
+# users/views.py
+
+import csv
+from django.shortcuts import render, redirect
+
+from django.contrib import messages
+
+def import_users(request):
+    if request.method == 'POST' and request.FILES.get('csv_file'):
+        csv_file = request.FILES['csv_file']
+        if not csv_file.name.endswith('.csv'):
+            messages.error(request, 'This is not a CSV file')
+            return redirect('import_users')
+
+        file_data = csv_file.read().decode('utf-8').splitlines()
+        reader = csv.DictReader(file_data)
+
+        for row in reader:
+            full_name = row['Full name']
+            Mobile_number = row['Phone number']
+            first_name_part = full_name.split()[-1]
+
+            username = full_name.replace(" ", "").lower()
+            password = first_name_part
+            print(password)
+
+            if User.objects.filter(username=username).exists():
+                messages.warning(request, f'User {username} already exists')
+            else:
+                user = User.objects.create_user(Mobile_number=Mobile_number.replace(" ", ""), password=password.lower() ,full_name=full_name)
+                user.first_name = full_name
+                user.save()
+                messages.success(request, f'User {username} created successfully')
+
+        return redirect('import_users')
+
+    return render(request, 'import_users.html')
