@@ -22495,6 +22495,7 @@ from django.shortcuts import render, redirect
 
 from django.contrib import messages
 
+
 def import_users(request):
     if request.method == 'POST' and request.FILES.get('csv_file'):
         csv_file = request.FILES['csv_file']
@@ -22511,16 +22512,19 @@ def import_users(request):
             first_name_part = full_name.split()[-1]
 
             username = full_name.replace(" ", "").lower()
-            password = first_name_part
-            print(password)
+            password = first_name_part.lower()
 
-            if User.objects.filter(username=username).exists():
-                messages.warning(request, f'User {username} already exists')
-            else:
-                user = User.objects.create_user(Mobile_number=Mobile_number.replace(" ", ""), password=password.lower() ,full_name=full_name)
-                user.first_name = full_name
-                user.save()
-                messages.success(request, f'User {username} created successfully')
+            # Check if user with Mobile_number already exists
+            if User.objects.filter(username=Mobile_number.replace(" ", "")).exists():
+                messages.warning(request, f'User {Mobile_number.replace(" ", "")} already exists')
+                continue  # Skip to the next iteration
+
+            # Create the user
+            try:
+                user = User.objects.create_user(Mobile_number=Mobile_number.replace(" ", ""), password=password, first_name=full_name)
+                messages.success(request, f'User {Mobile_number.replace(" ", "")} created successfully')
+            except Exception as e:
+                messages.error(request, f'Error creating user: {str(e)}')
 
         return redirect('import_users')
 
