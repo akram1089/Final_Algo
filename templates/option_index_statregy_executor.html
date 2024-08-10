@@ -31788,25 +31788,32 @@ Option Strategy Builder
             // Set the last th element text to the formatted dropdown value
             thLastElement.text(`${formatDropdownDate(dropdownValue)}`);
 
-            // Get the current date
             var currentDate = new Date();
-            // Display dates based on the number of th elements
-            thElements.each(function (index) {
-              // Calculate the date for each th
-              var dateForTH = new Date(currentDate);
-              dateForTH.setDate(currentDate.getDate() + index);
 
-              // Skip Saturday (6) and Sunday (0)
-              while (dateForTH.getDay() === 0 || dateForTH.getDay() === 6) {
-                dateForTH.setDate(dateForTH.getDate() + 1); // Move to the next day
-              }
+// Display dates based on the number of th elements
+thElements.each(function (index) {
+  var dateForTH = new Date(currentDate);
 
-              // Format the date as "On Target Date Mon DD MMM"
-              var formattedDate = getDayOfWeek(dateForTH) + ", " + formatDate(dateForTH);
+  // Add index days, skipping weekends
+  var daysToAdd = 0;
 
-              // Display the formatted date
-              $(this).text(formattedDate);
-            });
+  while (daysToAdd < index + 1) {
+    dateForTH.setDate(dateForTH.getDate() + 1);
+
+    // Check if the new date is a weekday (Monday to Friday)
+    if (dateForTH.getDay() !== 0 && dateForTH.getDay() !== 6) {
+      daysToAdd++;
+    }
+  }
+
+  // Format the date as "DayOfWeek, DD MMM"
+  console.log('dateForTH', dateForTH);
+  var formattedDate = getDayOfWeek(dateForTH) + ", " + formatDate(dateForTH);
+
+  // Display the formatted date
+  $(this).text(formattedDate);
+});
+
 
             // Function to get the day of the week
             function getDayOfWeek(date) {
