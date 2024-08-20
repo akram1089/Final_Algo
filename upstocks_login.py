@@ -19,7 +19,7 @@ SECRET_KEY = 'ghjv4yytiu'
 TOTP_KEY = 'SAIVSYRK2BQZ6QUY5QJ7ZVQA5DUGN7L3'
 MOBILE_NO = '9885443405'
 PIN = '747474'
-RURL = 'https://www.google.co.in/'
+RURL = 'https://optionperks.com/my_portfolio'
 
 def get_access_token(code):
     url = 'https://api-v2.upstox.com/login/authorization/token'
