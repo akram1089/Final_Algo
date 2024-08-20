@@ -40,27 +40,24 @@ def get_access_token(code):
     return json_response['access_token']
 
 def run_selenium():
-    print("selenium run")
     AUTH_URL = f'https://api-v2.upstox.com/login/authorization/dialog?response_type=code&client_id={API_KEY}&redirect_uri={RURL}'
-    print(AUTH_URL)
+
     chrome_options = Options()
-    print("Entered the chrome option")
     chrome_options.add_argument("--disable-web-security")
     chrome_options.add_argument("--disable-gpu")
     chrome_options.add_argument('--log-level=1')
-    # chrome_options.add_argument('--headless')  # Uncomment this line if you want to run in headless mode
+    chrome_options.add_argument('--headless')  # Uncomment this line if you want to run in headless mode
     chrome_options.add_argument('--no-sandbox')
     chrome_options.add_argument('--disable-dev-shm-usage')
     chrome_options.add_argument('--ignore-certificate-errors')
     chrome_options.add_argument("--disable-blink-features=AutomationControlled")
     chrome_options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36")
     chrome_options.add_argument("--enable-logging")
-    print("Passed all the chrome option ")
-    browser = webdriver.Chrome()
-    browser.implicitly_wait(10)  # Wait up to 10 seconds for elements to be available
 
-    print("trying to get the webdriver")
+    browser = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
     browser.get(AUTH_URL)
+    print("got the web driver ")
+
     try:
         # Wait for mobile number input field to be visible
         mobile_num_input_xpath = WebDriverWait(browser, 10).until(
@@ -111,6 +108,7 @@ def run_selenium():
         # Wait for redirection to the specified URL
         WebDriverWait(browser, 10).until(EC.url_contains(RURL))
         code = parse_qs(urlparse(browser.current_url).query)['code'][0]
+        print(code)
 
         return code
 
