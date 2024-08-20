@@ -109,6 +109,7 @@ def run_selenium():
 
         # Wait for redirection to the specified URL
         WebDriverWait(browser, 15).until(EC.url_contains(RURL))
+        print(browser.current_url)
         code = parse_qs(urlparse(browser.current_url).query)['code'][0]
         print(code)
 
