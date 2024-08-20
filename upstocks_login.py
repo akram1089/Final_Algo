@@ -83,6 +83,7 @@ def run_selenium():
         time.sleep(1)  # Add a delay of 1 second
 
         # Enter OTP
+        print(token)
         otp_input_xpath.send_keys(token)
 
         # Click on the verify OTP button
@@ -97,6 +98,7 @@ def run_selenium():
         twofa_input_xpath = WebDriverWait(browser, 10).until(
             EC.visibility_of_element_located((By.XPATH, "/html/body/main/div/div[3]/div/div[1]/div[2]/div[1]/div/div/div[2]/form/div/div/div/div/div/input"))
         )
+        print(PIN)
         twofa_input_xpath.send_keys(PIN)
 
         # Click on the submit 2FA button
@@ -106,7 +108,7 @@ def run_selenium():
         submit_2fa_button.click()
 
         # Wait for redirection to the specified URL
-        WebDriverWait(browser, 10).until(EC.url_contains(RURL))
+        WebDriverWait(browser, 15).until(EC.url_contains(RURL))
         code = parse_qs(urlparse(browser.current_url).query)['code'][0]
         print(code)
 
