@@ -92,7 +92,7 @@ def run_selenium():
         )
         verify_button.click()
 
-        time.sleep(1)  # Add a delay of 1 second
+        time.sleep(2)  # Add a delay of 1 second
 
         # Wait for 2FA input field to be visible
         twofa_input_xpath = WebDriverWait(browser, 10).until(
