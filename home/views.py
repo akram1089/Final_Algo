@@ -9667,8 +9667,9 @@ def blogs_save(request):
     blog_category = request.POST.get('blog_category', '')
     short_description = request.POST.get('short_description', '')
     image = request.FILES.get('image', None)
+    writer_img_field = request.FILES.get('writer_img_field', None)
 
-    new_blog = Blog(title=title, description=description, image=image, author=author,short_description=short_description,blog_category=blog_category )
+    new_blog = Blog(title=title, description=description, image=image, image_author=writer_img_field ,author=author,short_description=short_description,blog_category=blog_category )
     new_blog.save()
 
     return JsonResponse({'status': 'success', 'data': {
@@ -18450,7 +18451,7 @@ class ZerodhaPlaceOrder:
 
     def place_order(self, variety, exchange, tradingsymbol, transaction_type, quantity, product, order_type, price=None,
                     validity=None, disclosed_quantity=None, trigger_price=None, squareoff=None, stoploss=None,
-                    trailing_stoploss=None, tag=None):
+                    trailing_stoploss=None):
         # Check if the provided product, order type, variety, transaction type, validity, and exchange are valid
         if product not in [self.PRODUCT_MIS, self.PRODUCT_CNC, self.PRODUCT_NRML, self.PRODUCT_CO]:
             raise ValueError("Invalid product type")
@@ -18596,9 +18597,11 @@ def kite_order_zerodha(request):
                         validity=zerodha_api.VALIDITY_DAY,
                         disclosed_quantity=0,
                         trigger_price=0,
-                        squareoff=0,
-                        stoploss=0,
+                        squareoff=12,
+                        stoploss=12,
                         trailing_stoploss=0,
+                    
+                    
                     )
                     order_details.append({
                         'tradingsymbol': tradingsymbol,
@@ -20677,18 +20680,20 @@ def dynamic_user_tasks(request):
 
 from.models import Blog
 
+from.models import Blog
+
 @csrf_exempt
 def blogs_save(request):
  if request.method == 'POST':
     title = request.POST.get('title', '')
-    print(title)
     description = request.POST.get('description', '')
     author = request.POST.get('writer_name', '')
     blog_category = request.POST.get('blog_category', '')
     short_description = request.POST.get('short_description', '')
     image = request.FILES.get('image', None)
+    writer_img_field = request.FILES.get('writer_img_field', None)
 
-    new_blog = Blog(title=title, description=description, image=image, author=author,short_description=short_description,blog_category=blog_category )
+    new_blog = Blog(title=title, description=description, image=image, image_author=writer_img_field ,author=author,short_description=short_description,blog_category=blog_category )
     new_blog.save()
 
     return JsonResponse({'status': 'success', 'data': {
@@ -20718,6 +20723,7 @@ def get_blog(request):
             'author':blog.author,
             'blog_category':blog.blog_category,
             'image_url': blog.image.url if blog.image else '',
+            'writer_img_field': blog.image_author.url if blog.image_author else '',
         }
         blogs_data.append(blog_data)
 
@@ -21850,56 +21856,6 @@ def webhooks_url (request):
 
 
 
-from django.http import JsonResponse, HttpResponse
-from django.views.decorators.csrf import csrf_exempt
-import json
-
-
-from .models import WebhookResponse
-
-@csrf_exempt
-def webhook_auth_rest(request, user_id, secret_key):
-
-    if request.method == 'POST':
-        try:
-            # Parse the JSON data from the request body
-            data = json.loads(request.body.decode('utf-8'))
-            
-            # Retrieve the user based on the provided user_id
-            try:
-                user = User.objects.get(id=user_id)
-                print(user)
-            except User.DoesNotExist:
-                return JsonResponse({"message": "User is not authenticated"}, status=401)
-            
-            # Check if the provided secret_key matches the user's secret_key
-            if user.secret_key.lower() == secret_key.lower():
-                # Process the data as needed
-                # For testing purposes, let's just print the received data
-                print(data)
-                broker_instance_zerodha = Broker.objects.filter(user=user, broker_name="zerodha", active_api=True).first()
-                broker_instance_angelone = Broker.objects.filter(user=user, broker_name="angelone", active_api=True).first()
-                print(broker_instance_zerodha)
-
-                if broker_instance_zerodha:
-                    zerodha_response = order_zerodha_webwooks(data,broker_instance_zerodha)
-                    print("zerodha_response",zerodha_response)
-
-                    # Save the zerodha_response into WebhookResponse model
-                    WebhookResponse.objects.create(user=user, zerodha_response_data=zerodha_response)
-
-                    return JsonResponse(zerodha_response)
-                else:
-                    return JsonResponse({"message":"Unknown Broker or No broker is activated"})    
-            else:
-                return JsonResponse({"message": "Webhook error"}, status=401)
-        except json.JSONDecodeError as e:
-            # Return an error response if JSON decoding fails
-            return JsonResponse({"error": "Invalid JSON format"}, status=400)
-    else:
-        return JsonResponse({"error": "Unsupported method"}, status=405)
-
-
 
 
 
@@ -22529,3 +22485,143 @@ def import_users(request):
         return redirect('import_users')
 
     return render(request, 'import_users.html')
+
+
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+import json
+from django_celery_beat.models import PeriodicTask, IntervalSchedule
+from celery.schedules import crontab
+
+from .models import OrderSl_TG
+from .tasks import process_order
+
+@csrf_exempt
+def webhook_auth_rest(request, user_id, secret_key):
+    if request.method == 'POST':
+        try:
+            # Parse the JSON data from the request body
+            data = json.loads(request.body.decode('utf-8'))
+            
+            # Retrieve the user based on the provided user_id
+            try:
+                user = User.objects.get(id=user_id)
+            except User.DoesNotExist:
+                return JsonResponse({"message": "User is not authenticated"}, status=401)
+            
+            # Check if the provided secret_key matches the user's secret_key
+            if user.secret_key.lower() == secret_key.lower():
+                try:
+                    for i in data:
+                        if i["broker"] == "angel_one":
+                            print("Processing data for broker 'angel_one'")
+                            token_mapping, token_list_not_found = get_the_angel_one_symbolToken(data)
+                            print(token_mapping)
+                            # Merge tokens into the original data
+                            main_symbol = i["main_trading_symbol"]
+                            if main_symbol in token_mapping:
+                                # Handle case where only one token is found
+                                if len(token_mapping[main_symbol]) == 1:
+                                    i["tokens"] = token_mapping[main_symbol]
+                                else:
+                                    i["tokens"] = token_mapping[main_symbol]
+                            else:
+                                i["tokens"] = []
+                    # Process the data as needed
+                    print(data)
+                    order = OrderSl_TG.objects.create(All_orders=data, user=user)
+                    
+                    # Trigger Celery task to process the order immediately
+                    process_order.delay(order.id, user_id)  # Pass order.id and user.id to the Celery task
+                    
+                    # Create or get the CrontabSchedule for periodic checking
+                    schedule, created = IntervalSchedule.objects.get_or_create(
+                        every=1,  # Check every 10 seconds
+                        period=IntervalSchedule.SECONDS
+                    )
+
+                    # Create a unique task name
+                    task_name = f"check_order_status_{order.id}"
+                    
+                    # Create the periodic task
+                    PeriodicTask.objects.get_or_create(
+                        interval=schedule,  # Use the interval schedule
+                        name=task_name,  # Task name
+                        task='home.tasks.process_order',  # Full path to your task
+                        defaults={
+                            'args': json.dumps([order.id, user_id]),  # Pass order ID and user ID as arguments
+                        }
+                    )
+                    
+                    return JsonResponse({'message': 'Order successfully created and processing started'}, status=201)
+                except Exception as e:
+                    return JsonResponse({"message": f"Failed to create or process order: {str(e)}"}, status=500)
+            else:
+                return JsonResponse({"message": "Invalid secret key"}, status=403)
+        
+        except json.JSONDecodeError:
+            # Return an error response if JSON decoding fails
+            return JsonResponse({"message": "Invalid JSON format"}, status=400)
+        
+        except Exception as e:
+            return JsonResponse({"message": f"An error occurred: {str(e)}"}, status=500)
+    
+    else:
+        return JsonResponse({"message": "Unsupported method"}, status=405)
+
+
+def get_the_angel_one_symbolToken(data):
+    print("Data received:", data)
+
+    # Create a list of modified symbols using 'main_trading_symbol'
+    modified_strikes = [entry["main_trading_symbol"] for entry in data]
+    print("Modified Strikes:", modified_strikes)
+
+    # Initialize dictionary to store token information
+    token_mapping = {}
+    token_list_not_found = []
+
+    # Define CSV file path
+    csv_file_path = 'angelone_instruments.csv'
+
+    # Check if CSV file exists
+    if os.path.exists(csv_file_path):
+        df = pd.read_csv(csv_file_path)
+        df['symbol'] = df['symbol'].astype(str)  # Ensure 'symbol' is a string
+        print("CSV File Loaded. Data Sample:\n", df.head())
+    else:
+        df = pd.DataFrame()
+
+    # Fetch data from API if CSV file doesn't exist or is empty
+    if df.empty:
+        print("Downloading Angel One trading symbols")
+
+        # Fetch data from the API
+        url = "https://margincalculator.angelbroking.com/OpenAPI_File/files/OpenAPIScripMaster.json"
+        response = requests.get(url)
+
+        if response.status_code == 200:
+            data = response.json()
+            df = pd.DataFrame(data)
+            df.to_csv(csv_file_path, index=False)
+            print("Data fetched and saved to CSV. Data Sample:\n", df.head())
+        else:
+            print("Failed to download data from API")
+            return token_mapping, token_list_not_found
+
+    # Process modified symbols and find tokens
+    for symbol_filter in modified_strikes:
+        filtered_df = df[df['symbol'] == symbol_filter]
+        print(f"Looking up symbol: {symbol_filter}, Found: {not filtered_df.empty}")
+
+        if not filtered_df.empty:
+            token_values = filtered_df['token'].tolist()
+            token_mapping[symbol_filter] = token_values
+        else:
+            token_list_not_found.append(symbol_filter)
+            print(f"No trading symbol found for {symbol_filter}")
+
+    print("Token Mapping:", token_mapping)
+    print("Symbols not found:", token_list_not_found)
+    
+    return token_mapping, token_list_not_found

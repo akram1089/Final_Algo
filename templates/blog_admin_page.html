@@ -39,6 +39,11 @@ referrerpolicy="origin"></script>
                     <div class="invalid-feedback">Please enter a title.</div>
                 </div>
                 <div class="mb-3">
+                    <label for="writer_img_field" class="form-label">Writer Img</label>
+                    <input type="file" class="form-control" name="img" id="writer_img_field" placeholder="" required>
+                    <div class="invalid-feedback">Please select an image.</div>
+                </div>
+                <div class="mb-3">
                     <label for="title" class="form-label">Writer Name</label>
                     <input type="text" class="form-control" name="name" id="writer_name" placeholder="Enter Name" required>
                     <div class="invalid-feedback">Please enter your name.</div>
@@ -224,6 +229,8 @@ $("#blog_btn").click(function () {
     
         var imageField = $("#img_field")[0].files[0];
         formData.append('image', imageField);
+        var writer_img_field = $("#writer_img_field")[0].files[0];
+        formData.append('writer_img_field', writer_img_field);
 
         console.log('Before AJAX call');
         $.ajax({
@@ -240,6 +247,7 @@ $("#blog_btn").click(function () {
                 $("#writer_name").val('');
                 tinymce.get('mytextarea').setContent('');
                 $("#img_field").val('');
+                $("#writer_img_field").val('');
                 $("#short_description").val('');
                 console.log('Blog submitted successfully!');
                 toastr.success('Blog submitted successfully!');
@@ -296,6 +304,7 @@ $('#blogForm input, #blogForm textarea, #blogForm select').on('input change', fu
             var title = $('#title').val();
             var writerName = $('#writer_name').val();
             var imgField = $('#img_field').val();
+            var writer_img_field = $('#writer_img_field').val();
             var blogCategory = $('#id_blog_category').val();
             var shortDescription = $('#short_description').val();
             var description = tinymce.get('mytextarea').getContent();
@@ -310,6 +319,10 @@ $('#blogForm input, #blogForm textarea, #blogForm select').on('input change', fu
     
             if (imgField === '') {
                 $('#img_field').addClass('is-invalid');
+            }
+    
+            if (writer_img_field === '') {
+                $('#writer_img_field').addClass('is-invalid');
             }
     
             if (blogCategory === '') {
@@ -331,44 +344,53 @@ $('#blogForm input, #blogForm textarea, #blogForm select').on('input change', fu
             return true;
         }
 
-
         function get_blog_data() {
-            
-            $.ajax({
-            url: 'get_blog',  // Replace with your actual backend endpoint
-            method: 'GET',
-            success:function(response){
-             var blogs = response.data
-             console.log(blogs);
-             blogs.forEach(element => {
-                var cards = `
-                <div class="blogs">
-                   <img src="${element.image_url}" alt="">
-                   <div class="short_descriptions">${element.short_description}</div>
-                   <div class="action_div">
-                    <i class='bx bx-trash'  data-blog-id="${element.id}"></i>
-                    <i class='bx bx-edit' data-blog-id="${element.id}"></i>
-                   </div>
-                 </div>
-                        `
-                $(".blogs_list").append(cards);
-             });
+    $.ajax({
+        url: 'get_blog',  // Replace with your actual backend endpoint
+        method: 'GET',
+        success: function(response) {
+            var blogs = response.data;
+            console.log(blogs);
 
-             $(".bx-edit").click(function () {
-                    var blogId = $(this).data("blog-id");
-                    var blog = blogs.find(blog => blog.id === blogId);
-                    populateEditModal(blog);
-                });
+            blogs.forEach(element => {
+                if (element.image_url) { // Check if the image URL exists
+                    var img = new Image();
+                    img.onload = function() {
+                        // If the image loads successfully, append the blog card
+                        var cards = `
+                            <div class="blogs">
+                                <img src="${element.image_url}" alt="">
+                                <div class="short_descriptions">${element.short_description}</div>
+                                <div class="action_div">
+                                    <i class='bx bx-trash' data-blog-id="${element.id}"></i>
+                                    <i class='bx bx-edit' data-blog-id="${element.id}"></i>
+                                </div>
+                            </div>
+                        `;
+                        $(".blogs_list").append(cards);
 
-             $(".bx-trash").click(function() {
-                var blogId = $(this).data("blog-id");
-                deleteBlog(blogId);
+                        // Attach event handlers after the card is added to the DOM
+                        $(".bx-edit").last().click(function() {
+                            var blogId = $(this).data("blog-id");
+                            var blog = blogs.find(blog => blog.id === blogId);
+                            populateEditModal(blog);
+                        });
+
+                        $(".bx-trash").last().click(function() {
+                            var blogId = $(this).data("blog-id");
+                            deleteBlog(blogId);
+                        });
+                    };
+                    img.onerror = function() {
+                        console.log("Image not found for blog ID:", element.id);
+                    };
+                    img.src = element.image_url; // Set the image source to trigger the load
+                }
             });
-            },
-
-            })
         }
-    
+    });
+}
+
         function populateEditModal(blog) {
 
             currentBlog = blog;

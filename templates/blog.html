@@ -367,130 +367,112 @@ a, .w-tab-link, .w-nav-link, .w-dropdown-btn, .w-dropdown-toggle, .w-dropdown-li
 
 <script>
   $(document).ready(function () {
+
     function fetchAndRenderBlog(init_blog_category) {
+    console.log(init_blog_category);
+    $.ajax({
+        url: 'get_blog',  // Replace with your actual backend endpoint
+        method: 'GET',
+        success: function (response) {
+            var blogData = response.data;
+            console.log(blogData);
 
-     console.log(init_blog_category);
-      $.ajax({
-          url: 'get_blog',  // Replace with your actual backend endpoint
-          method: 'GET',
-          success: function (response) {
-              var blogData = response.data;
-              console.log(blogData);
-              blogData.sort(function (a, b) {
-              return b - a; // Sort based on array index
-             });
+            // Sort the blog data
+            blogData.sort(function (a, b) {
+                return b - a; // Sort based on array index
+            });
 
-             console.log(blogData);
+            console.log(blogData);
 
-              $(".recent_blog").empty()
-             if(blogData.length > 0){
-              var latestBlog = blogData[0]
-              console.log('Latest Blog:', latestBlog);
-              var latestBloghtml = `<div role="list" class="grid-rows w-dyn-items">
-          <div role="listitem" class="w-dyn-item">
-            <a href="#" class="link-card-block w-inline-block blog_detail_page" data-id = ${latestBlog.id}>
-              <img alt="Probability Theory: How Many Trades Does it Take to be Successful?" src="${latestBlog.image_url}" width="100%" class="rounded">
-              <h4 class="new-card-heading-large margin-top-medium mt-4">${latestBlog.title}</h4>
-              <div class="text-gray-2">${latestBlog.short_description}</div>
-              <div class="horizontal-div text-small text-muted margin-top-small">
-                <div>6 min read</div>
-              </div>
-            </a>
-          </div>
-        </div>`
+            // Filter out blogs with broken images
+            var validBlogs = [];
+            var totalBlogs = blogData.length;
+            var processedBlogs = 0;
 
-        $(".recent_blog").append(latestBloghtml)
+            blogData.forEach(function(blog) {
+                var img = new Image();
+                img.onload = function() {
+                    validBlogs.push(blog);
+                    processedBlogs++;
+                    checkAndRenderBlogs();
+                };
+                img.onerror = function() {
+                    // console.log("Skipping blog with broken image, ID:", blog.id);
+                    processedBlogs++;
+                    checkAndRenderBlogs();
+                };
+                img.src = blog.image_url;
+            });
 
-             }
+            function checkAndRenderBlogs() {
+                if (processedBlogs === totalBlogs) {
+                    // All blogs have been processed, now render valid blogs
+                    $(".recent_blog").empty();
+                    $(".blog_list").empty();
 
-              $(".blog_list").empty()
-              for (var i = 0; i < Math.min(5, blogData.length); i++) {
-                var element = blogData[i];
-                var createdAt = new Date(element.created_at);
-                var options = { year: 'numeric', month: 'long', day: 'numeric' };
-                var formattedDate = createdAt.toLocaleDateString('en-US', options).toUpperCase();
-                console.log(`Blog at index ${i}:`, element.id);
-                var blogHtml = `<div role="list" class="w-dyn-items">
-                    <div role="listitem" class="w-dyn-item">
-                        <a href="#" class="posts-horizontal  list-item w-inline-block blog_detail_page" data-id = ${element.id}>
-                            <img alt="${element.title}" src="${element.image_url}" sizes="(max-width: 479px) 92vw, 175px" srcset="${element.image_url}" class="posts-horizontal-image">
-                            <div class="description no-margin-left">
-                                <h6 class="card-heading-small">${element.title}</h6>
-                                <div class="text-small text-gray-1 text-muted">${formattedDate}</div>
+                    if (validBlogs.length > 0) {
+                        var latestBlog = validBlogs[0];
+                        var latestBloghtml = `
+                        <div role="list" class="grid-rows w-dyn-items">
+                            <div role="listitem" class="w-dyn-item">
+                                <a href="#" class="link-card-block w-inline-block blog_detail_page" data-id="${latestBlog.id}">
+                                    <img alt="${latestBlog.title}" src="${latestBlog.image_url}" width="100%" class="rounded">
+                                    <h4 class="new-card-heading-large margin-top-medium mt-4">${latestBlog.title}</h4>
+                                    <div class="text-gray-2">${latestBlog.short_description}</div>
+                                    <div class="horizontal-div text-small text-muted margin-top-small">
+                                        <div>6 min read</div>
+                                    </div>
+                                </a>
                             </div>
-                        </a>
-                    </div>
-                </div>`;
+                        </div>`;
+                        $(".recent_blog").append(latestBloghtml);
+                    }
 
-                $(".blog_list").append(blogHtml);
+                    for (var i = 0; i < Math.min(5, validBlogs.length); i++) {
+                        var element = validBlogs[i];
+                        var createdAt = new Date(element.created_at);
+                        var options = { year: 'numeric', month: 'long', day: 'numeric' };
+                        var formattedDate = createdAt.toLocaleDateString('en-US', options).toUpperCase();
+                        var blogHtml = `
+                        <div role="list" class="w-dyn-items">
+                            <div role="listitem" class="w-dyn-item">
+                                <a href="#" class="posts-horizontal list-item w-inline-block blog_detail_page" data-id="${element.id}">
+                                    <img alt="${element.title}" src="${element.image_url}" sizes="(max-width: 479px) 92vw, 175px" srcset="${element.image_url}" class="posts-horizontal-image">
+                                    <div class="description no-margin-left">
+                                        <h6 class="card-heading-small">${element.title}</h6>
+                                        <div class="text-small text-gray-1 text-muted">${formattedDate}</div>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>`;
+                        $(".blog_list").append(blogHtml);
+                    }
 
-            }
-
+                    // Filter and render blogs by category
 
             $("#all_blogs_container").empty();
-            var filteredBlogs = blogData.filter(function (blog) {
-             return blog.blog_category === init_blog_category; // Adjust 'category' field based on your data
-            });
-            renderBlogs(filteredBlogs)
-//                 for (var i = 0; i < blogData.length; i++) {
-//                   var element = blogData[i];
-//                   console.log(`Blog at index ${i}:`, element);
-//                   var blogHtml = `<div class="col-lg-4">
-//  <div role="listitem" class="w-dyn-item">
-  
-//   <a href="#" class="content-clickable w-inline-block blog_detail_page" data-id = ${element.id}>
-    
-//     <div class="margin-bottom margin-small">
-//       <div class="content-image-link">
-//         <div class="image-wrapper-16-9">
-//           <img src="${element.image_url}" loading="lazy" alt="" sizes="(max-width: 479px) 93vw, (max-width: 767px) 47vw, (max-width: 991px) 46vw, (max-width: 1439px) 30vw, 405.3359375px" srcset="${element.image_url}" class="content-feature-image">
-//         </div>
-//       </div>
-//     </div>
-//     <div class="category-link">
-//       <div>Platform Updates</div>
-//     </div>
-//     <div class="margin-bottom margin-xxsmall">
-//       <h3 class="heading-xxsmall text-style-2lines">${element.title}</h3>
-//     </div>
-//     <div class="margin-bottom margin-xsmall">
-//       <div class="text-style-3lines">${element.description}</div>
-//     </div>
-//     <div class="blog-author-wrapper hide-mobile-landscape">
-//       <div class="blog-author-image-wrapper">
-//         <img loading="lazy" alt="" src="https://assets-global.website-files.com/5fba23eb8789c3c7fcfb5f31/622fa2005a5fabed64659616_607d8ea5221240c8618ea3d1_Kirk-Du-Plessis-Avatar%20(1).png" sizes="(max-width: 767px) 100vw, (max-width: 1279px) 40px, (max-width: 1439px) 3vw, 40px" srcset="https://assets-global.website-files.com/5fba23eb8789c3c7fcfb5f31/622fa2005a5fabed64659616_607d8ea5221240c8618ea3d1_Kirk-Du-Plessis-Avatar%20(1)-p-500.png 500w, https://assets-global.website-files.com/5fba23eb8789c3c7fcfb5f31/622fa2005a5fabed64659616_607d8ea5221240c8618ea3d1_Kirk-Du-Plessis-Avatar%20(1).png 1153w" class="blog-small-author-image">
-//       </div>
-//       <div class="blog-author-text">
-//         <div class="text-size-small text-weight-medium text-color-gray900">Kirk Du Plessis</div>
-//         <div class="card-meta-items-wrapper text-color-gray500">
-//           <div class="text-size-small">Nov 14, 2023</div>
-//           <div class="text-divider text-size-small">•</div>
-//           <div class="text-size-small">2 min read</div>
-//         </div></div>
-//       </div>
-//     </a>
-//   </div>
-//     </div>`
-//     $("#all_blogs_container").append(blogHtml)
-//                 }
+                    var filteredBlogs = validBlogs.filter(function(blog) {
+                      console.log(init_blog_category);
+                      
+                        return blog.blog_category === init_blog_category;
+                    });
+                    renderBlogs(filteredBlogs);
 
-                
-                $(".blog_detail_page").click(function () {
-                  
-        // Retrieve the data-id attribute value
-        var blogId = $(this).data('id');
-        console.log('Clicked blog id:', blogId);
-        // Redirect to the blog details page
-        window.location.href = '/blog_details/' + blogId;
-      });
-              
-          },
-          error: function (error) {
-              // Handle error response from the backend
-              console.error(error);
-          }
-      });
-  }
+                    // Add click event to blog detail pages
+                    $(".blog_detail_page").click(function() {
+                        var blogId = $(this).data('id');
+                        console.log('Clicked blog id:', blogId);
+                        window.location.href = '/blog_details/' + blogId;
+                    });
+                }
+            }
+        },
+        error: function (error) {
+            console.error(error);
+        }
+    });
+}
+
 
   var init_blog_category = "featured"
   $(".filter-button").click(function (event) {
@@ -508,54 +490,72 @@ a, .w-tab-link, .w-nav-link, .w-dropdown-btn, .w-dropdown-toggle, .w-dropdown-li
     return group1 + group2.toUpperCase();
   });
 }
-
-  function renderBlogs(blogs) {
+function renderBlogs(blogs) {
     blogs.forEach(function (element, i) {
-      var createdAt = new Date(element.created_at);
-      var options = { year: 'numeric', month: 'long', day: 'numeric' };
-      var formattedDate = createdAt.toLocaleDateString('en-US', options).toUpperCase();
+        var createdAt = new Date(element.created_at);
+        var options = { year: 'numeric', month: 'long', day: 'numeric' };
+        var formattedDate = createdAt.toLocaleDateString('en-US', options).toUpperCase();
 
-      var camelCaseCategory = toCamelCase(element.blog_category);
-      var blogHtml = `<div role="list" class="">
-  <div role="listitem" class="w-dyn-item">
-  
-   <a href="#" class="content-clickable w-inline-block blog_detail_page" data-id = ${element.id}>
-    
-     <div class="margin-bottom margin-small">
-      <div class="content-image-link">
-         <div class="image-wrapper-16-9">
-           <img src="${element.image_url}" loading="lazy" alt="" sizes="(max-width: 479px) 93vw, (max-width: 767px) 47vw, (max-width: 991px) 46vw, (max-width: 1439px) 30vw, 405.3359375px" srcset="${element.image_url}" class="content-feature-image">
-         </div>
-       </div>
-     </div>
-     <div class="category-link">
-       <div>${camelCaseCategory}</div>
-      </div>
-     <div class="margin-bottom margin-xxsmall">
-       <h3 class="heading-xxsmall text-style-2lines">${element.title}</h3>
-     </div>
-     <div class="margin-bottom margin-xsmall">
-       <div class="text-style-3lines">${element.short_description}</div>
-     </div>
-     <div class="blog-author-wrapper hide-mobile-landscape">
-       <div class="blog-author-image-wrapper">
-         <img loading="lazy" alt="" src="https://assets-global.website-files.com/5fba23eb8789c3c7fcfb5f31/622fa2005a5fabed64659616_607d8ea5221240c8618ea3d1_Kirk-Du-Plessis-Avatar%20(1).png" sizes="(max-width: 767px) 100vw, (max-width: 1279px) 40px, (max-width: 1439px) 3vw, 40px" srcset="https://assets-global.website-files.com/5fba23eb8789c3c7fcfb5f31/622fa2005a5fabed64659616_607d8ea5221240c8618ea3d1_Kirk-Du-Plessis-Avatar%20(1)-p-500.png 500w, https://assets-global.website-files.com/5fba23eb8789c3c7fcfb5f31/622fa2005a5fabed64659616_607d8ea5221240c8618ea3d1_Kirk-Du-Plessis-Avatar%20(1).png 1153w" class="blog-small-author-image">
-       </div>
-      <div class="blog-author-text">
-        <div class="text-size-small text-weight-medium text-color-gray900">${element.author}</div>
-        <div class="card-meta-items-wrapper text-color-gray500">
-          <div class="text-size-small">${formattedDate}</div>
-          <div class="text-divider text-size-small">•</div>
-          <div class="text-size-small">2 min read</div>
-        </div></div>
-      </div>
-    </a>
-  </div>
-    `;
+        var camelCaseCategory = toCamelCase(element.blog_category);
 
-      $("#all_blogs_container").append(blogHtml);
+        // Determine the image source
+        var writerImgField = element.writer_img_field;
+        var defaultImgUrl;
+
+        if (!writerImgField) {
+            // Set default image based on the author's name
+            if (element.author === 'Sonali Sahu') {
+                defaultImgUrl = "https://womensagenda.com.au/wp-content/uploads/2023/10/Ai-Woman-1380.920.jpg";
+            } else if (element.author === 'Ganesh') {
+                defaultImgUrl = "https://assets-global.website-files.com/5fba23eb8789c3c7fcfb5f31/622fa2005a5fabed64659616_607d8ea5221240c8618ea3d1_Kirk-Du-Plessis-Avatar%20(1)-p-500.png";
+            } else {
+                // Fallback to a generic default image if author is not specified
+                defaultImgUrl = "https://assets-global.website-files.com/5fba23eb8789c3c7fcfb5f31/622fa2005a5fabed64659616_607d8ea5221240c8618ea3d1_Kirk-Du-Plessis-Avatar%20(1).png";
+            }
+        } else {
+            defaultImgUrl = writerImgField;
+        }
+
+        var blogHtml = `<div role="list" class="">
+            <div role="listitem" class="w-dyn-item">
+                <a href="#" class="content-clickable w-inline-block blog_detail_page" data-id=${element.id}>
+                    <div class="margin-bottom margin-small">
+                        <div class="content-image-link">
+                            <div class="image-wrapper-16-9">
+                                <img src="${element.image_url}" loading="lazy" alt="" sizes="(max-width: 479px) 93vw, (max-width: 767px) 47vw, (max-width: 991px) 46vw, (max-width: 1439px) 30vw, 405.3359375px" srcset="${element.image_url}" class="content-feature-image">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="category-link">
+                        <div>${camelCaseCategory}</div>
+                    </div>
+                    <div class="margin-bottom margin-xxsmall">
+                        <h3 class="heading-xxsmall text-style-2lines">${element.title}</h3>
+                    </div>
+                    <div class="margin-bottom margin-xsmall">
+                        <div class="text-style-3lines">${element.short_description}</div>
+                    </div>
+                    <div class="blog-author-wrapper hide-mobile-landscape">
+                        <div class="blog-author-image-wrapper">
+                            <img loading="lazy" alt="" src="${defaultImgUrl}" 
+                            sizes="(max-width: 767px) 100vw, (max-width: 1279px) 40px, (max-width: 1439px) 3vw, 40px" srcset="${defaultImgUrl}" class="blog-small-author-image">
+                        </div>
+                        <div class="blog-author-text">
+                            <div class="text-size-small text-weight-medium text-color-gray900">${element.author}</div>
+                            <div class="card-meta-items-wrapper text-color-gray500">
+                                <div class="text-size-small">${formattedDate}</div>
+                                <div class="text-divider text-size-small">•</div>
+                                <div class="text-size-small">2 min read</div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>`;
+
+        $("#all_blogs_container").append(blogHtml);
     });
-  }
+}
 
   fetchAndRenderBlog(init_blog_category) 
   });

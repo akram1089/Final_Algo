@@ -1,4 +1,5 @@
 from datetime import datetime
+import json
 
 from django.utils import timezone  # Import 'timezone' from 'django.utils'
 
@@ -453,6 +454,7 @@ class Blog(models.Model):
 
     title = models.CharField(max_length=255)
     image = models.ImageField(upload_to='images/')
+    image_author = models.ImageField(upload_to='images/', null=True, blank=True)  # Allow null and blank initially
     short_description = models.TextField()
     description = models.TextField()
     author = models.CharField(max_length=255)
@@ -603,3 +605,42 @@ class WebhookResponse(models.Model):
 
     def __str__(self):
         return f"Webhook Response for {self.user}"
+    
+    
+    
+    
+    
+    
+class OrderSl_TG(models.Model):
+    STATUS_CHOICES = [
+        ('pending', 'Pending'),
+        ('active', 'Active'),
+        ('completed', 'Completed'),
+        ('failed', 'Failed'),
+    ]
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    All_orders = models.JSONField()
+
+
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
+
+    def __str__(self):
+        return f"Order {self.id} for {self.user.username}"    
+   
+
+  
+    
+
+class UserSessionAlgo(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    api_key = models.CharField(max_length=255)
+    authToken = models.TextField()
+    refreshToken = models.TextField()
+    feedToken = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Session for {self.user.username}"    
+    
