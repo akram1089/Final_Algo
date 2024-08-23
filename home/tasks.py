@@ -83,6 +83,9 @@ class ZerodhaAPI:
     def margins(self):
         margins = self.session.get(f"{self.root_url}/user/margins", headers=self.headers).json()
         return margins
+    def ltp(self, instruments):
+        data = self.session.get(f"{self.root_url}/quote/ltp", params={"i": instruments}, headers=self.headers).json()["data"]
+        return data
 
        
     PRODUCT_MIS = "MIS"
@@ -175,7 +178,26 @@ class ZerodhaAPI:
 
 
 
-
+# Function to get enctoken
+def get_enctoken(userid, password, twofa):
+    session = requests.Session()
+    response = session.post('https://kite.zerodha.com/api/login', data={
+        "user_id": userid,
+        "password": password
+    })
+    response = session.post('https://kite.zerodha.com/api/twofa', data={
+        "request_id": response.json()['data']['request_id'],
+        "twofa_value": twofa,
+        "user_id": response.json()['data']['user_id']
+    })
+    enctoken = response.cookies.get('enctoken')
+    if enctoken:
+        # Save the enctoken to a text file
+        with open('enctoken.txt', 'w') as file:
+            file.write(enctoken)
+        return enctoken
+    else:
+        raise Exception("Enter valid details !!!!")
 
 
 
@@ -205,26 +227,7 @@ def perform_addition_task(self, user_id, all_strategy_values,custom_field_value,
 
 
 
-    # Function to get enctoken
-    def get_enctoken(userid, password, twofa):
-        session = requests.Session()
-        response = session.post('https://kite.zerodha.com/api/login', data={
-            "user_id": userid,
-            "password": password
-        })
-        response = session.post('https://kite.zerodha.com/api/twofa', data={
-            "request_id": response.json()['data']['request_id'],
-            "twofa_value": twofa,
-            "user_id": response.json()['data']['user_id']
-        })
-        enctoken = response.cookies.get('enctoken')
-        if enctoken:
-            # Save the enctoken to a text file
-            with open('enctoken.txt', 'w') as file:
-                file.write(enctoken)
-            return enctoken
-        else:
-            raise Exception("Enter valid details !!!!")
+
 
  # Function to read enctoken from file
     def read_enctoken():
@@ -556,3 +559,232 @@ def fetch_and_save_upstox_csv():
         print(f"File '{compressed_file_name}' downloaded and saved as '{uncompressed_file_name}'.")
     except Exception as e:
         print(f"An error occurred: {e}")
+        
+        
+        
+        
+from .models import OrderSl_TG        
+import time
+
+from .models import Broker
+from .models import UserSessionAlgo
+import logging
+from django_celery_beat.models import PeriodicTask, IntervalSchedule
+
+logger = logging.getLogger(__name__)
+
+
+
+
+@shared_task
+def process_order(order_id, user_id):
+    # Log the received arguments for debugging
+    logger.info(f"Received order_id: {order_id}, user_id: {user_id}")
+
+    try:
+        order = OrderSl_TG.objects.get(id=order_id)
+        broker = Broker.objects.get(id=user_id)
+        user = User.objects.get(id=user_id)
+        
+        if order.status == "pending":
+            logger.info(f"Order status is pending and broker's API is active. Order ID: {order_id}, User ID: {user_id}")
+            
+            broker_instance_angelone = Broker.objects.filter(user=user, broker_name="angelone", active_api=True).first()
+            if broker_instance_angelone:
+                logger.info(f"Broker instance found: {broker_instance_angelone}")
+                #  logging_id=broker_instance_angelone.logging_id,
+                #     password=broker_instance_angelone.password,
+                #     totp_key=broker_instance_angelone.totp_key,
+                #     api_key=broker_instance_angelone.api_key,
+                reuturnFrom = get_or_initialize_session(order_id,user_id,broker_instance_angelone.api_key,broker_instance_angelone.logging_id,broker_instance_angelone.password,broker_instance_angelone.totp_key)
+                print(reuturnFrom)
+                
+   
+
+                if reuturnFrom:
+                    # Update the order status if the condition is met
+                    order.status = 'completed'
+                    order.save()
+                    logger.info(f"Order with ID {order.id} completed.")
+
+                    # Create a unique task name
+                    task_name = f"check_order_status_{order.id}"
+                    
+                    # Disable the periodic task once the order is completed
+                    try:
+                        periodic_task = PeriodicTask.objects.get(name=task_name)
+                        periodic_task.enabled = False
+                        periodic_task.save()
+                        logger.info(f"Periodic task {task_name} disabled.")
+                    except PeriodicTask.DoesNotExist:
+                        logger.warning(f"Periodic task {task_name} does not exist.")
+                else:
+                    logger.info(f"Order with ID {order.id} not completed.")
+            else:
+                logger.warning(f"No active broker instance found for user_id: {user_id}")
+        else:
+            logger.info(f"Order status is not pending or broker's API is not active. Order ID: {order_id}, User ID: {user_id}")
+
+    except OrderSl_TG.DoesNotExist:
+        logger.error(f"Order with ID {order_id} does not exist.")
+    except Broker.DoesNotExist:
+        logger.error(f"Broker with ID {user_id} does not exist.")
+    except Exception as e:
+        logger.exception(f"An unexpected error occurred: {e}")
+
+
+from SmartApi import SmartConnect
+import pyotp
+def clean_token(token):
+    # Remove "Bearer " prefix if it exists
+    if token.startswith("Bearer "):
+        token = token[len("Bearer "):]
+    
+    # Strip any extra spaces
+    token = token.strip()
+    
+    return token
+
+import logging
+
+logger = logging.getLogger(__name__)
+
+def get_or_initialize_session(order_id, user_id, api_key, client_id, password, totp_token):
+    try:
+        # Retrieve the user object
+        user = User.objects.get(pk=user_id)
+
+        # Retrieve the user session
+        try:
+            user_session = UserSessionAlgo.objects.get(user=user)
+        except UserSessionAlgo.DoesNotExist:
+            logger.error(f"User session for user ID {user_id} does not exist.")
+            raise
+
+        logger.info(f"User session: {user_session}")
+
+        # Initialize the SmartConnect API
+        smartApi = SmartConnect(api_key)
+
+        # Try to use the existing session token
+        authToken = user_session.authToken
+        cleaned_authToken = clean_token(authToken)
+
+        # Set the cleaned access token
+        smartApi.setAccessToken(cleaned_authToken)
+        smartApi.setRefreshToken(user_session.refreshToken)
+
+        logger.info('Fetching user data...')
+        res = smartApi.getProfile(user_session.refreshToken)
+        logger.info(f"Profile: {res}")
+        final_res = res.get("status")
+
+        # If the response is valid, proceed
+        if final_res:
+            mode = "LTP"
+            exchange_tokens = {'NFO': ['51686']}
+            market_data = smartApi.getMarketData(mode, exchange_tokens)
+            logger.info(f"Market Data for user {user_id}: {market_data}")
+
+            try:
+                # Get the order
+                print("order_id",order_id)
+                order = OrderSl_TG.objects.get(id=order_id)
+                print("order status",order.status)
+                sl = 0
+                target = 0
+                tokens = []
+                
+                # Iterate through the JSON data
+                for item in order.All_orders:
+                    # Print each item (for debugging purposes)
+                    print("Order Item:", item)
+                    
+                    # Aggregate sl and target values (assuming summing them is the requirement)
+                    sl += int(item.get("sl", 0))
+                    target += int(item.get("target", 0))
+                    
+                    # Append tokens, ensuring no duplicates (if desired)
+                    tokens.extend(item.get("tokens", []))
+                
+                # Remove duplicates from tokens if needed
+                tokens = list(set(tokens))
+                
+                # Print aggregated results
+                print("Aggregated SL:", sl)
+                print("Aggregated Target:", target)
+                print("Unique Tokens:", tokens)
+      
+        
+
+                # Print the extracted values
+                print(f"Tokens: {tokens}")
+                print(f"Target: {target}")
+                print(f"Stop Loss (SL): {sl}")
+
+                if not tokens or target is None or sl is None:
+                    print("No valid order data found.")
+                    return False
+
+                # Assuming market_data returns a dictionary with token as the key and LTP as the value
+                ltp = float(market_data["data"]["fetched"][0]["ltp"])  # Adjust this based on actual data structure
+
+                if ltp > target:
+                    print(f"LTP {ltp} is greater than target {target}. Proceeding with action.")
+                    # Your logic for handling the situation when LTP is greater than target
+                elif ltp < sl:
+                    print(f"LTP {ltp} is less than SL {sl}. Executing stop loss.")
+                    # Your logic for handling the situation when LTP is less than SL
+                else:
+                    print(f"LTP {ltp} is within range.")
+                    # Your logic for handling the situation when LTP is within the range
+
+            except OrderSl_TG.DoesNotExist:
+                print(f"Order with ID {order_id} does not exist.")
+                return False
+            except Exception as e:
+                print(f"An error occurred while processing order data: {e}")
+                return False
+
+            return True
+        else:
+            raise Exception("Invalid session status received from API")
+
+    except (UserSessionAlgo.DoesNotExist, Exception) as e:
+        logger.error(f"Exception: {e}")
+
+        # If the session does not exist or is invalid, reinitialize it
+        intitializeReturn = initialize_session(api_key, client_id, password, totp_token, user_id)
+
+        if intitializeReturn:
+            return True
+        else:
+            return False
+
+
+
+
+def initialize_session(api_key, client_id, password, totp_token, user_id):
+    smartApi = SmartConnect(api_key)
+    totp = pyotp.TOTP(totp_token).now()
+    user_data = smartApi.generateSession(client_id, password, totp)
+    authToken = user_data['data']['jwtToken']
+    refreshToken = user_data['data']['refreshToken']
+    feedToken = user_data['data']['feedToken']
+
+    # Retrieve the user object
+    user = User.objects.get(id=user_id)
+
+    # Create or update the user session
+    session, created = UserSessionAlgo.objects.update_or_create(
+        user=user,
+        defaults={
+            'api_key': api_key,
+            'authToken': authToken,
+            'refreshToken': refreshToken,
+            'feedToken': feedToken,
+        }
+    )
+
+    # Optionally, you can return the session object
+    return True
