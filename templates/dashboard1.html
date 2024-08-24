@@ -4564,7 +4564,23 @@ function initializeSwiper() {
             var createdAt = new Date(element.created_at);
       var options = { year: 'numeric', month: 'long', day: 'numeric' };
       var formattedDate = createdAt.toLocaleDateString('en-US', options).toUpperCase();
+        // Determine the image source
+        var writerImgField = element.writer_img_field;
+        var defaultImgUrl;
 
+        if (!writerImgField) {
+            // Set default image based on the author's name
+            if (element.author === 'Sonali Sahu') {
+                defaultImgUrl = "https://womensagenda.com.au/wp-content/uploads/2023/10/Ai-Woman-1380.920.jpg";
+            } else if (element.author === 'Ganesh') {
+                defaultImgUrl = "https://assets-global.website-files.com/5fba23eb8789c3c7fcfb5f31/622fa2005a5fabed64659616_607d8ea5221240c8618ea3d1_Kirk-Du-Plessis-Avatar%20(1)-p-500.png";
+            } else {
+                // Fallback to a generic default image if author is not specified
+                defaultImgUrl = "https://assets-global.website-files.com/5fba23eb8789c3c7fcfb5f31/622fa2005a5fabed64659616_607d8ea5221240c8618ea3d1_Kirk-Du-Plessis-Avatar%20(1).png";
+            }
+        } else {
+            defaultImgUrl = writerImgField;
+        }
       var camelCaseCategory = toCamelCase(element.blog_category);
             var blogHtml = `
             
@@ -4590,9 +4606,10 @@ function initializeSwiper() {
        <div class="text-style-3lines">${element.short_description}</div>
      </div>
      <div class="blog-author-wrapper hide-mobile-landscape">
-       <div class="blog-author-image-wrapper">
-         <img loading="lazy" alt="" src="https://assets-global.website-files.com/5fba23eb8789c3c7fcfb5f31/622fa2005a5fabed64659616_607d8ea5221240c8618ea3d1_Kirk-Du-Plessis-Avatar%20(1).png" sizes="(max-width: 767px) 100vw, (max-width: 1279px) 40px, (max-width: 1439px) 3vw, 40px" srcset="https://assets-global.website-files.com/5fba23eb8789c3c7fcfb5f31/622fa2005a5fabed64659616_607d8ea5221240c8618ea3d1_Kirk-Du-Plessis-Avatar%20(1)-p-500.png 500w, https://assets-global.website-files.com/5fba23eb8789c3c7fcfb5f31/622fa2005a5fabed64659616_607d8ea5221240c8618ea3d1_Kirk-Du-Plessis-Avatar%20(1).png 1153w" class="blog-small-author-image">
-       </div>
+             <div class="blog-author-image-wrapper">
+                            <img loading="lazy" alt="" src="${defaultImgUrl}" 
+                            sizes="(max-width: 767px) 100vw, (max-width: 1279px) 40px, (max-width: 1439px) 3vw, 40px" srcset="${defaultImgUrl}" class="blog-small-author-image">
+                        </div>
       <div class="blog-author-text">
         <div class="text-size-small text-weight-medium text-color-gray900">${element.author}</div>
         <div class="card-meta-items-wrapper text-color-gray500">

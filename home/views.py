@@ -20746,6 +20746,7 @@ def get_blog_dashboard(request):
             'author':blog.author,
             'blog_category':blog.blog_category,
             'image_url': blog.image.url if blog.image else '',
+            'writer_img_field': blog.image_author.url if blog.image_author else '',
         }
         blogs_data.append(blog_data)
 
