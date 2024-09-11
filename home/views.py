@@ -20870,49 +20870,98 @@ def terms_conditions(request):
 def indices_historical_data(request):
     return render(request, "indices_historical_data.html")
 
+import datetime
+import requests
+import pandas as pd
+import numpy as np
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 
 @csrf_exempt
 def get_index_historical_data(request):
     if request.method == 'POST':
+        # Extract POST data
         frequency = request.POST.get('frequency')
         symbol = request.POST.get('symbol')
         start_date = request.POST.get('start_date')
         end_date = request.POST.get('end_date')
 
-        print(frequency)
-        print(symbol)
-        print(start_date)
-        print(end_date)
+        print(f"Received data - Frequency: {frequency}, Symbol: {symbol}, Start Date: {start_date}, End Date: {end_date}")
 
+        # Validate date format and convert to timestamps
         try:
-            # Convert start_date and end_date to timestamps
-            start_timestamp = datetime.datetime.strptime(start_date, '%m/%d/%Y').timestamp()
-            end_timestamp = datetime.datetime.strptime(end_date, '%m/%d/%Y').timestamp()
+            start_timestamp = int(datetime.datetime.strptime(start_date, '%m/%d/%Y').timestamp())
+            end_timestamp = int(datetime.datetime.strptime(end_date, '%m/%d/%Y').timestamp())
         except ValueError:
             return JsonResponse({'error': 'Invalid date format. Please use MM/DD/YYYY.'}, status=400)
 
-        events = 'history'
-        url = f'https://query1.finance.yahoo.com/v7/finance/download/{symbol}?period1={int(start_timestamp)}&period2={int(end_timestamp)}&interval={frequency}&events={events}&includeAdjustedClose=true'
-        print(url)
+        # Construct the Yahoo Finance API URL
+        events = 'capitalGain|div|split'  # Set events to fetch
+        url = (f'https://query1.finance.yahoo.com/v8/finance/chart/{symbol}?'
+               f'events={events}&formatted=true&includeAdjustedClose=true&interval={frequency}&'
+               f'period1={start_timestamp}&period2={end_timestamp}&lang=en-US&region=US')
+
+        print(f"Fetching data from URL: {url}")
+
+        # Define request headers
+        headers = {
+            'authority': 'query1.finance.yahoo.com',
+            'method': 'GET',
+            'scheme': 'https',
+            'accept': '*/*',
+            'accept-encoding': 'gzip, deflate, br, zstd',
+            'accept-language': 'en-US,en;q=0.9',
+            'origin': 'https://finance.yahoo.com',
+            'referer': 'https://finance.yahoo.com',
+            'sec-ch-ua': '"Chromium";v="128", "Not;A=Brand";v="24", "Google Chrome";v="128"',
+            'sec-ch-ua-mobile': '?0',
+            'sec-ch-ua-platform': '"Windows"',
+            'sec-fetch-dest': 'empty',
+            'sec-fetch-mode': 'cors',
+            'sec-fetch-site': 'same-site',
+            'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36',
+        }
+
+        # Fetch the data from Yahoo Finance API
         try:
-            stockdata = pd.read_csv(url)
-            print(stockdata)
-            stockdata.replace({np.nan: None}, inplace=True)
-            # Convert DataFrame to a list of dictionaries
-            data_list = stockdata.to_dict(orient='records')
-            return JsonResponse({"historical_data": data_list})
+            response = requests.get(url, headers=headers)
+            data = response.json()
+
+            # Check if the API returned valid data
+            if 'chart' in data and 'result' in data['chart']:
+                result = data['chart']['result'][0]
+                
+                # Extract timestamps and indicators
+                timestamps = result.get('timestamp', [])
+                indicators = result.get('indicators', {}).get('quote', [{}])[0]
+
+                # Create DataFrame from fetched data
+                stock_df = pd.DataFrame({
+                    'Date': [datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d') for ts in timestamps],
+                    'Open': indicators.get('open', [None] * len(timestamps)),
+                    'High': indicators.get('high', [None] * len(timestamps)),
+                    'Low': indicators.get('low', [None] * len(timestamps)),
+                    'Close': indicators.get('close', [None] * len(timestamps)),
+                    'Volume': indicators.get('volume', [None] * len(timestamps))
+                })
+
+                # Replace NaN values with None to handle missing data
+                stock_df.replace({np.nan: None}, inplace=True)
+
+                # Convert DataFrame to a list of dictionaries
+                data_list = stock_df.to_dict(orient='records')
+
+                return JsonResponse({"historical_data": data_list})
+            else:
+                return JsonResponse({'error': 'No data found for the given symbol.'}, status=404)
+
         except Exception as e:
-            # Log the error and return a user-friendly message
             print(f"Error fetching data: {e}")
             return JsonResponse({'error': 'Failed to fetch historical data. Please try again later.'}, status=500)
-            
+
     else:
-        # Return a JSON response indicating failure (if the request method is not POST)
+        # Return an error response for non-POST requests
         return JsonResponse({'error': 'Invalid request method.'}, status=400)
-
-
-
-
 
 
 
