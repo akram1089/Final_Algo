@@ -30099,48 +30099,44 @@ Option Strategy Builder
           optionExpiryDropdown.empty();
 
           expiryDates.forEach((expiry) => {
+            console.log('expiry',expiry);
+            
             var inputDate = expiry.expiry_date.split("T")[0];
             var parsedDate = new Date(inputDate);
 
-            // Check if the expiry date is today and after 15:30
-            var currentDate = new Date();
-            if (
-              parsedDate.toDateString() === currentDate.toDateString() &&
-              currentDate.getHours() >= 15 &&
-              currentDate.getMinutes() >= 30
-            ) {
-              return; // Skip this expiry date
-            }
+ // Set the cutoff time for today (e.g., 15:30)
+var cutoffTime = new Date();
+cutoffTime.setHours(15, 30, 0, 0); // 15:30:00 on today's date
 
-            // Check if the expiry date is in the future
-            if (parsedDate > new Date()) {
-              // If the expiry date is not already added, add it to the list
-              if (!addedExpiryDates.includes(inputDate)) {
-                addedExpiryDates.push(inputDate);
+if (parsedDate > new Date() || (parsedDate.toDateString() === new Date().toDateString() && new Date() < cutoffTime)) {
+  // If the expiry date is not already added, add it to the list
+  if (!addedExpiryDates.includes(inputDate)) {
+    addedExpiryDates.push(inputDate);
 
-                // Format the date
-                var day = parsedDate.getDate().toString().padStart(2, "0");
-                var month = (parsedDate.getMonth() + 1).toString().padStart(2, "0");
-                var year = parsedDate.getFullYear();
-                var formattedDate = `${day}-${month}-${year}`;
+    // Format the date
+    var day = parsedDate.getDate().toString().padStart(2, "0");
+    var month = (parsedDate.getMonth() + 1).toString().padStart(2, "0");
+    var year = parsedDate.getFullYear();
+    var formattedDate = `${day}-${month}-${year}`;
 
-                // Append the option to the expiry date input dropdown
-                $(".expiry_date_input").append(
-                  $("<option>", {
-                    value: inputDate, // You can keep the original value or use formattedDate if needed
-                    text: formattedDate,
-                  })
-                );
+    // Append the option to the expiry date input dropdown
+    $(".expiry_date_input").append(
+      $("<option>", {
+        value: inputDate, // You can keep the original value or use formattedDate if needed
+        text: formattedDate,
+      })
+    );
 
-                // Append the option to the optionExpiryDropdown
-                optionExpiryDropdown.append(
-                  $("<option>", {
-                    value: inputDate, // You can keep the original value or use formattedDate if needed
-                    text: formattedDate,
-                  })
-                );
-              }
-            }
+    // Append the option to the optionExpiryDropdown
+    optionExpiryDropdown.append(
+      $("<option>", {
+        value: inputDate, // You can keep the original value or use formattedDate if needed
+        text: formattedDate,
+      })
+    );
+  }
+}
+
           });
 
           console.log('addedExpiryDates', addedExpiryDates);
