@@ -22919,9 +22919,7 @@ def get_kite_enc(zerodha_username, zerodha_password, totp_secret):
 
 
 
-from django.shortcuts import render
-def home(request):
-    return render(request, 'index.html')
+
 
 import requests
 from rest_framework.response import Response
