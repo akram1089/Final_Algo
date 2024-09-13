@@ -23024,8 +23024,10 @@ def run_selenium(USER_ID,PIN,TOTP_KEY,MOBILE_NO,API_KEY,SECRET_KEY):
     chrome_options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36")
     chrome_options.add_argument("--enable-logging")
     print("Passed all the chrome option ")
-    browser = webdriver.Chrome()
+
+    browser = webdriver.Chrome(service=Service(ChromeDriverManager().install()),options=chrome_options)
     browser.implicitly_wait(10)  # Wait up to 10 seconds for elements to be available
+
 
     print("trying to get the webdriver")
     browser.get(AUTH_URL)
