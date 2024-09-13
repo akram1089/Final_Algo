@@ -22675,3 +22675,538 @@ def get_the_angel_one_symbolToken(data):
     print("Symbols not found:", token_list_not_found)
     
     return token_mapping, token_list_not_found
+
+
+
+
+
+import json
+from rest_framework.response import Response
+from rest_framework import status
+from rest_framework.views import APIView
+from home.models import User
+from home.serializers import SendPasswordResetEmailSerializer, UserChangePasswordSerializer, UserLoginSerializer, UserPasswordResetSerializer, UserProfileSerializer, UserRegistrationSerializer
+from django.contrib.auth import authenticate
+from home.renderers import UserRenderer
+from rest_framework_simplejwt.tokens import RefreshToken
+
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.parsers import JSONParser
+# Generate Token Manually
+def get_tokens_for_user(user):
+  refresh = RefreshToken.for_user(user)
+  return {
+      'refresh': str(refresh),
+      'access': str(refresh.access_token),
+  }
+
+class UserRegistrationView(APIView):
+  renderer_classes = [UserRenderer]
+  def post(self, request, format=None):
+    serializer = UserRegistrationSerializer(data=request.data)
+    serializer.is_valid(raise_exception=True)
+    user = serializer.save()
+    token = get_tokens_for_user(user)
+    return Response({'token':token, 'msg':'Registration Successful'}, status=status.HTTP_201_CREATED)
+
+class UserLoginView(APIView):
+    renderer_classes = [UserRenderer]
+
+    def post(self, request, format=None):
+        uname = request.data.get('username')
+        email = request.data.get('email')
+        password = request.data.get('password')
+    
+        totp = request.data.get('totp')
+        pnumber = request.data.get('pnumber',"")
+        api_key = request.data.get('api_key',"")
+        secret_key = request.data.get('secret_key',"")
+        broker_name = request.data.get('broker_name')
+        print(broker_name)
+        print(uname,password,totp)
+        if broker_name == "upstox":
+            kite_login_details,enctoken=run_selenium(uname,password,totp,pnumber,api_key,secret_key)
+            
+            print("Success")
+            print("Kite login details:", kite_login_details)
+            print("enctoken:", enctoken)
+        else:    
+
+            kite_login_details,enctoken = get_kite_enc(uname,password ,totp)
+
+            print("Success")
+            print("Kite login details:", kite_login_details)
+            print("enctoken:", enctoken)
+
+        if User.objects.filter(uname=uname).exists():
+        
+
+            print("User already exists")
+            user = User.objects.get(uname=uname)
+            token = get_tokens_for_user(user)
+        else:
+        
+            print(kite_login_details)
+            # data = json.loads(request.data)
+            data = {
+            'uname': uname,  # Map 'username' to 'uname'
+            'password': password,
+            'totp': totp,
+            'Mobile_number': pnumber,
+            'api_key': api_key,
+            'secret_key': secret_key,
+            'enctoken': enctoken
+        }  # Copy the data to modify it
+            print('data',data)
+            data['enctoken'] = enctoken
+            serializer = UserRegistrationSerializer(data=data)
+            if serializer.is_valid():
+                user = serializer.save()
+                print("New user created:", data)
+                token = get_tokens_for_user(user)
+            else:
+                print("Serializer errors:", serializer.errors)  # Print serializer errors
+
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        return Response({'token': token, 'enctoken':enctoken, 'kite_login_details': kite_login_details, 'msg': 'Login Success'}, status=status.HTTP_200_OK)
+
+class UserProfileView(APIView):
+  renderer_classes = [UserRenderer]
+  permission_classes = [IsAuthenticated]
+  parser_classes = [JSONParser]  # Add the parser class
+  def post(self, request, format=None):
+    
+    enctoken = request.data.get("enctoken")
+    broker = request.data.get("broker")
+    print(enctoken)
+    print(broker)
+    zerodha_api = ZerodhaAPI(enctoken)
+
+        # Fetch user profile
+    user_profile = zerodha_api.get_user_profile()
+    print("user_profile",user_profile)
+    serializer = UserProfileSerializer(request.user)
+    return Response({"user_profile":user_profile,"User_data":serializer.data,}, status=status.HTTP_200_OK)
+
+class UserChangePasswordView(APIView):
+  renderer_classes = [UserRenderer]
+  permission_classes = [IsAuthenticated]
+  def post(self, request, format=None):
+    serializer = UserChangePasswordSerializer(data=request.data, context={'user':request.user})
+    serializer.is_valid(raise_exception=True)
+    return Response({'msg':'Password Changed Successfully'}, status=status.HTTP_200_OK)
+
+class SendPasswordResetEmailView(APIView):
+  renderer_classes = [UserRenderer]
+  def post(self, request, format=None):
+    serializer = SendPasswordResetEmailSerializer(data=request.data)
+    serializer.is_valid(raise_exception=True)
+    return Response({'msg':'Password Reset link send. Please check your Email'}, status=status.HTTP_200_OK)
+
+class UserPasswordResetView(APIView):
+  renderer_classes = [UserRenderer]
+  def post(self, request, uid, token, format=None):
+    serializer = UserPasswordResetSerializer(data=request.data, context={'uid':uid, 'token':token})
+    serializer.is_valid(raise_exception=True)
+    return Response({'msg':'Password Reset Successfully'}, status=status.HTTP_200_OK)
+
+
+
+
+
+import requests
+import pyotp
+import dateutil.parser
+import datetime
+
+class ZerodhaAPI:
+    def __init__(self, enctoken):
+        self.headers = {"Authorization": f"enctoken {enctoken}"}
+        self.session = requests.Session()
+        self.root_url = "https://kite.zerodha.com/oms"
+        self.session.get(self.root_url, headers=self.headers)
+
+    def get_user_profile(self):
+        profile_url = f"{self.root_url}/user/profile/full"
+        response = self.session.get(profile_url, headers=self.headers)
+        return response.json() if response.status_code == 200 else None
+
+    def orders(self):
+        orders = self.session.get(f"{self.root_url}/orders", headers=self.headers).json()["data"]
+        return orders
+
+    def positions(self):
+        positions = self.session.get(f"{self.root_url}/portfolio/positions", headers=self.headers).json()["data"]
+        return positions
+
+    def holdings(self):
+        holdings = self.session.get(f"{self.root_url}/portfolio/holdings", headers=self.headers).json()["data"]
+        return holdings
+    def quote(self, instruments):
+        data = self.session.get(f"{self.root_url}/quote", params={"i": instruments}, headers=self.headers).json()
+        return data
+    
+import requests
+
+def get_enctoken(userid, password, twofa):
+    try:
+      
+        otp =twofa
+
+        session = requests.Session()
+        login_response = session.post('https://kite.zerodha.com/api/login', data={
+            "user_id": userid,
+            "password": password
+        })
+        
+        if login_response.status_code != 200 or 'data' not in login_response.json():
+            return "Error in login: {}".format(login_response.text)
+
+        twofa_response = session.post('https://kite.zerodha.com/api/twofa', data={
+            "request_id": login_response.json()['data']['request_id'],
+            "twofa_value": otp,
+            "user_id": login_response.json()['data']['user_id']
+        })
+
+        if twofa_response.status_code != 200 or 'enctoken' not in twofa_response.cookies:
+            return "Error in two-factor authentication: {}".format(twofa_response.text)
+
+        enctoken = twofa_response.cookies.get('enctoken')
+
+        if enctoken:
+            return enctoken
+        else:
+            return "Invalid TOTP"
+
+    except Exception as e:
+        return str(e)
+
+
+
+def get_kite_enc(zerodha_username, zerodha_password, totp_secret):
+    print("get_kite_enc called")
+    totp = pyotp.TOTP(totp_secret)
+    otp = totp.now()
+    print(otp)
+    
+    # Get enctoken using the provided function
+    enctoken = get_enctoken(zerodha_username, zerodha_password, otp)
+
+    
+    print(f"Enctoken: {enctoken}")
+
+    # Check if login was successful
+    if enctoken:
+        # Create ZerodhaAPI instance
+        zerodha_api = ZerodhaAPI(enctoken)
+
+        # Fetch user profile
+        user_profile = zerodha_api.get_user_profile()
+        if user_profile:
+            # print(f"User Profile: {user_profile}")
+            # print(zerodha_api.orders())
+            # print(zerodha_api.positions())
+            # print(zerodha_api.holdings())
+            return user_profile,enctoken  # Return user profile as result and no error message
+
+        else:
+            # If fetching user profile fails, regenerate the enctoken and try again
+            return None, "Failed to fetch user profile. Regenerating enctoken..."
+
+    else:
+        return None, "Login failed."
+
+
+
+from django.shortcuts import render
+def home(request):
+    return render(request, 'index.html')
+
+import requests
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from django.http import JsonResponse
+
+class SymbolListView(APIView):
+    def get(self, request):
+        # Fetch data from the external API
+        response = requests.get('https://webapi.niftytrader.in/webapi/symbol/psymbol-list')
+        data = response.json()
+
+        # Return the data as JSON
+        return JsonResponse(data, safe=False)  # `safe=False` allows the data to be a list
+
+
+# views.py
+
+import pandas as pd
+from django.http import JsonResponse
+from django.conf import settings
+import os
+
+def filter_option_expiry(request):
+    # Get the filters from the query parameters
+    name_filter = request.GET.get('name', 'NIFTY')
+    segment_filter = request.GET.get('segment', 'NFO-OPT')
+    exchange_filter = request.GET.get('exchange', 'NFO')
+
+    # Load the CSV file into a DataFrame
+    csv_file_path = os.path.join(settings.BASE_DIR, 'zerodha_instruments.csv')
+    df = pd.read_csv(csv_file_path)
+
+    # Apply the filters to the DataFrame
+    filtered_df = df[
+        (df['name'] == name_filter) &
+        (df['segment'] == segment_filter) &
+        (df['exchange'] == exchange_filter)
+    ]
+
+    # Extract unique expiry dates
+    unique_expiry_dates = filtered_df['expiry'].drop_duplicates().tolist()
+
+    # Return the unique expiry dates as JSON
+    return JsonResponse({'unique_expiry_dates': unique_expiry_dates})
+
+
+from urllib.parse import parse_qs, urlparse
+import requests
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+import time
+from pyotp import TOTP
+from selenium.webdriver.chrome.service import Service 
+from selenium.webdriver.chrome.options import Options 
+from webdriver_manager.chrome import ChromeDriverManager
+import upstox_client
+from upstox_client.rest import ApiException
+from pprint import pprint
+
+
+
+
+
+
+
+def get_access_token(code,API_KEY,SECRET_KEY,RURL):
+    url = 'https://api-v2.upstox.com/login/authorization/token'
+    headers = {
+        'accept': 'application/json',
+        'Api-Version': '2.0',
+        'Content-Type': 'application/x-www-form-urlencoded'
+    }
+    data = {
+        'code': code,
+        'client_id': API_KEY,
+        'client_secret': SECRET_KEY,
+        'redirect_uri': RURL,
+        'grant_type': 'authorization_code'
+    }
+    response = requests.post(url, headers=headers, data=data)
+    json_response = response.json()
+    return json_response['access_token']
+
+def run_selenium(USER_ID,PIN,TOTP_KEY,MOBILE_NO,API_KEY,SECRET_KEY):
+    RURL = 'https://optionperks.com/my_portfolio'
+    print("selenium run")
+    AUTH_URL = f'https://api-v2.upstox.com/login/authorization/dialog?response_type=code&client_id={API_KEY}&redirect_uri={RURL}'
+    print(AUTH_URL)
+    chrome_options = Options()
+    print("Entered the chrome option")
+    chrome_options.add_argument("--disable-web-security")
+    chrome_options.add_argument("--disable-gpu")
+    chrome_options.add_argument('--log-level=1')
+    chrome_options.add_argument('--headless')  # Uncomment this line if you want to run in headless mode
+    chrome_options.add_argument('--no-sandbox')
+    chrome_options.add_argument('--disable-dev-shm-usage')
+    chrome_options.add_argument('--ignore-certificate-errors')
+    chrome_options.add_argument("--disable-blink-features=AutomationControlled")
+    chrome_options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36")
+    chrome_options.add_argument("--enable-logging")
+    print("Passed all the chrome option ")
+    browser = webdriver.Chrome()
+    browser.implicitly_wait(10)  # Wait up to 10 seconds for elements to be available
+
+    print("trying to get the webdriver")
+    browser.get(AUTH_URL)
+    try:
+        # Wait for mobile number input field to be visible
+        mobile_num_input_xpath = WebDriverWait(browser, 1).until(
+            EC.visibility_of_element_located((By.XPATH, "/html/body/main/div/div[3]/div/div/div[2]/div[1]/div/div/div[2]/form/div/div/div/div/div/div/input"))
+        )
+        mobile_num_input_xpath.send_keys(MOBILE_NO)
+
+        # Click on the submit button after entering mobile number
+        submit_button = WebDriverWait(browser, 1).until(
+            EC.element_to_be_clickable((By.XPATH, "/html/body/main/div/div[3]/div/div/div[2]/div[1]/div/div/div[2]/form/div/button"))
+        )
+        submit_button.click()
+
+        time.sleep(1)  # Add a delay of 1 second
+
+        # Wait for OTP input field to be visible
+        otp_input_xpath = WebDriverWait(browser, 1).until(
+            EC.visibility_of_element_located((By.XPATH, "/html/body/main/div/div[3]/div/div/div[2]/div[1]/div/div/div[2]/form/div[1]/div/div[1]/div/div/div/input"))
+        )
+        totp = TOTP(TOTP_KEY)
+        token = totp.now()
+
+        time.sleep(1)  # Add a delay of 1 second
+
+        # Enter OTP
+        otp_input_xpath.send_keys(token)
+
+        # Click on the verify OTP button
+        verify_button = WebDriverWait(browser, 1).until(
+            EC.element_to_be_clickable((By.XPATH, "/html/body/main/div/div[3]/div/div/div[2]/div[1]/div/div/div[2]/form/div[2]/button"))
+        )
+        verify_button.click()
+
+        time.sleep(1)  # Add a delay of 1 second
+
+        # Wait for 2FA input field to be visible
+        twofa_input_xpath = WebDriverWait(browser, 1).until(
+            EC.visibility_of_element_located((By.XPATH, "/html/body/main/div/div[3]/div/div[1]/div[2]/div[1]/div/div/div[2]/form/div/div/div/div/div/input"))
+        )
+        twofa_input_xpath.send_keys(PIN)
+
+        # Click on the submit 2FA button
+        submit_2fa_button = WebDriverWait(browser, 1).until(
+            EC.element_to_be_clickable((By.XPATH, "/html/body/main/div/div[3]/div/div[1]/div[2]/div[1]/div/div/div[2]/form/button"))
+        )
+        submit_2fa_button.click()
+
+        # Wait for redirection to the specified URL
+        WebDriverWait(browser, 1).until(EC.url_contains(RURL))
+        print(browser.current_url)
+        code = parse_qs(urlparse(browser.current_url).query)['code'][0]
+        if code:
+            access_token = get_access_token(code,API_KEY,SECRET_KEY,RURL)
+            print(access_token)
+            
+            # Configure OAuth2 access token for authorization: OAUTH2
+            configuration = upstox_client.Configuration()
+            configuration.access_token = access_token
+
+            # Create an instance of the API class
+            api_instance = upstox_client.UserApi(upstox_client.ApiClient(configuration))
+            api_version = 'api_version_example' # str | API Version Header
+
+            try:
+                # Get profile
+                api_response = api_instance.get_profile(api_version)
+                response_dict = api_response.to_dict() if hasattr(api_response, 'to_dict') else api_response.__dict__
+
+                pprint(api_response)
+            except ApiException as e:
+                print("Exception when calling UserApi->get_profile: %s\n" % e)
+        else:
+            print("Error retrieving code.")
+
+
+        return response_dict,access_token
+
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        return None
+
+    finally:
+        # Save screenshot
+        browser.save_screenshot("screenshot_final.png")
+        browser.quit()
+
+import pandas as pd
+import numpy as np
+from django.http import JsonResponse
+
+def upstox_symbol_filter(request, name_filter):
+    # Load the CSV file
+    df = pd.read_csv('upstox_instu.csv')
+
+    # Convert 'name_filter' to lowercase
+    name_filter = name_filter.lower()
+
+    # Dictionary mapping keys to their corresponding names
+    nifty_dict = {
+        "nifty": "Nifty 50",
+        "banknifty": "Nifty Bank",
+        "finnifty": "Nifty Fin Service"
+    }
+
+    # Initialize contains_nifty as False
+    contains_nifty = False
+
+    # Check if 'name_filter' matches any key in 'nifty_dict'
+    if name_filter in nifty_dict:
+        contains_nifty = True
+        name_filter = nifty_dict[name_filter]
+
+    # Apply the filter based on the condition
+    if contains_nifty:
+        # Filter using 'name' column
+        filtered_df = df[(df['name'].str.contains(name_filter, case=False, na=False)) & (df['exchange'] == "NSE_INDEX")]
+    else:
+        # Filter using 'tradingsymbol' column
+        filtered_df = df[(df['tradingsymbol'].str.contains(name_filter, case=False, na=False)) & (df['exchange'] == "NSE_EQ")]
+
+    # Check if filtered_df is not empty and get the first row
+    if not filtered_df.empty:
+        # Convert NaN values to None
+        first_row = filtered_df.iloc[0].replace({np.nan: None}).to_dict()
+    else:
+        first_row = {}
+
+    # Return the result as JSON
+    return JsonResponse(first_row, safe=False)
+
+
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+import pandas as pd
+import numpy as np
+
+# Load the CSV data into a DataFrame
+df = pd.read_csv('angelone_instruments.csv')
+
+@api_view(['POST'])
+def filter_tokens(request):
+    # Retrieve POST data with defaults
+    name = request.data.get('name', 'NIFTY')
+    instrumenttype = request.data.get('instrumenttype', 'OPTIDX')
+    exch_seg = request.data.get('exch_seg', 'NFO')
+    expiry = request.data.get('expiry', '19SEP2024')
+
+    # Filter the data based on the specified conditions
+    filtered_df = df[(df['name'] == name) & 
+                     (df['instrumenttype'] == instrumenttype) & 
+                     (df['exch_seg'] == exch_seg) & 
+                     (df['expiry'] == expiry)]
+    
+    filtered_index = df[(df['name'] == name) & 
+                        (df['instrumenttype'] == 'AMXIDX')]
+
+    # Extract 'token' column if available, or handle case if not
+    if not filtered_df.empty:
+        token_list = filtered_df['token'].tolist()
+    else:
+        token_list = []
+
+    # Replace NaN and infinite values with None for filtered_df
+    filtered_df.replace([np.inf, -np.inf, np.nan], None, inplace=True)
+
+    # Replace NaN and infinite values with None for filtered_index
+    filtered_index.replace([np.inf, -np.inf, np.nan], None, inplace=True)
+
+    # Convert the entire filtered DataFrames to dictionaries
+    filtered_df_dict = filtered_df.to_dict(orient='records')
+    filtered_index_dict = filtered_index.to_dict(orient='records')
+
+    # Return the filtered data (filtered_df and filtered_index) and tokens in JSON response
+    return Response({
+        'filtered_index': filtered_index_dict,
+        'token_list': token_list,
+        'filtered_data': filtered_df_dict  # Entire filtered DataFrame
+    })
+

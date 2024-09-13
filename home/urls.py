@@ -635,6 +635,17 @@ urlpatterns = [
      path('webhook_auth_rest/<str:user_id>/<str:secret_key>/', views.webhook_auth_rest, name='webhook_auth_rest'),
      path('broker_top', views.broker_top, name='broker_top'),
      path('import-users/', views.import_users, name='import_users'),
+     
+     
+     #Opitonperks app
+     path('register/', views.UserRegistrationView.as_view(), name='register'),
+     path('login/', views.UserLoginView.as_view(), name='login'),
+     path('profile/', views.UserProfileView.as_view(), name='profile'),
+     path('api/symbols/', views.SymbolListView.as_view(), name='symbol-list'),
+     path('filter_option_expiry/', views.filter_option_expiry, name='filter_option_expiry'),
+     path('upstox_symbol_filter/<str:name_filter>/', views.upstox_symbol_filter, name='upstox_symbol_filter'),
+     path('filter-tokens/', views.filter_tokens, name='filter_tokens'),  # Define the URL pattern
+
 
 
 

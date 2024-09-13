@@ -25,9 +25,16 @@ class User(AbstractUser):
     forget_password_token = models.CharField(max_length=100,null=True)
     terms_of_service = models.BooleanField(default=False)
     secret_key = models.CharField(max_length=50, blank=True, null=True)
-    ip_address_user = models.CharField(max_length=50, blank=True, null=True)  # Add this field
-
-
+    ip_address_user = models.CharField(max_length=50, blank=True, null=True)  
+    # Add this field
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    totp = models.CharField(max_length=250,null=True)
+    uname = models.CharField(max_length=50, null=True)
+    enctoken = models.CharField(max_length=520, null=True)
+    api_key = models.CharField(max_length=256, null=True, blank=True)
+    secret_key = models.CharField(max_length=256, null=True, blank=True)
+    
     objects=UserManager()
     USERNAME_FIELD='Mobile_number'
     REQUIRED_FIELDS=[]
