@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
+from datetime import timedelta
 from django.contrib.messages import constants as messages
 import os
 from pathlib import Path
@@ -32,7 +33,7 @@ SECRET_KEY = 'django-insecure-bni-q+a&4eggvue+&l%__^n#q%-hlti_=sc-u1ff0joram2yb@
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['172.31.128.1','91.108.105.76','192.168.101.10', '[::1]','www.algotrde.com','testserver', '127.0.0.1', 'http://localhost/','localhost','algotrde.com','https://algotrde.com','http://algotrde.com','34.100.183.27','optionperks.com','www.optionperks.com','0.0.0.0','34.100.184.223','35.200.212.177']
+ALLOWED_HOSTS = ['172.31.128.1','192.168.101.10', '[::1]','www.algotrde.com','testserver', '127.0.0.1', 'http://localhost/','localhost','algotrde.com','https://algotrde.com','http://algotrde.com','34.100.183.27','optionperks.com','www.optionperks.com','0.0.0.0','34.100.184.223','35.200.212.177','10.0.2.2:8000', '10.0.2.2', '127.0.0.1', '127.0.0.1:8000','localhost']
 
 TIME_ZONE = 'Asia/Kolkata'
 USE_TZ = True
@@ -63,14 +64,18 @@ INSTALLED_APPS = [
     'cms',
     'menus',
     'treebeard',
-    'django.contrib.sitemaps'
+    'django.contrib.sitemaps',
+    'rest_framework_simplejwt'
 
     
 ]
 REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': [
         'rest_framework.renderers.JSONRenderer',
-    ]
+    ],
+        'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    )
 }
 
 CORS_ALLOWED_ORIGINS = [
@@ -86,6 +91,13 @@ CORS_ALLOWED_ORIGINS = [
 
     "http://www.algotrde.com",
     "http://www.optionperks.com",
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+    "http://127.0.0.1:8081",
+    "http://localhost:8081",
+    "http://192.168.101.10:8081",
+    "http://117.221.173.17:8081",
+    "http://127.0.0.1:5501"
 ]
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -257,6 +269,8 @@ EMAIL_PORT = 587
 EMAIL_HOST_USER = 'optionperks@gmail.com'
 EMAIL_HOST_PASSWORD = 'xojrleiasoimqyiw'
 # xojrleiasoimqyiw
+#zzpz gyiw ooze hssz
+
 
 SITE_ID = 1
 
@@ -306,7 +320,7 @@ CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TIMEZONE = 'Asia/Kolkata'
 
-CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
+
 
 #celery-beat
 
@@ -318,3 +332,24 @@ CELERY_IMPORTS = [
 
 ACCOUNT_DEFAULT_HTTP_PROTOCOL='http'
 
+
+# JWT Settings
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+
+    'AUTH_HEADER_TYPES': ('Bearer',),
+    'AUTH_HEADER_NAME': 'HTTP_AUTHORIZATION',
+    'USER_ID_FIELD': 'id',
+    'USER_ID_CLAIM': 'user_id',
+    'USER_AUTHENTICATION_RULE': 'rest_framework_simplejwt.authentication.default_user_authentication_rule',
+
+    'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
+    'TOKEN_TYPE_CLAIM': 'token_type',
+    'TOKEN_USER_CLASS': 'rest_framework_simplejwt.models.TokenUser',
+
+    'JTI_CLAIM': 'jti',
+
+}
+
+PASSWORD_RESET_TIMEOUT=900          # 900 Sec = 15 Min
