@@ -22692,6 +22692,21 @@ from rest_framework_simplejwt.tokens import RefreshToken
 
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.parsers import JSONParser
+
+from urllib.parse import parse_qs, urlparse
+import requests
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+import time
+from pyotp import TOTP
+from selenium.webdriver.chrome.service import Service 
+from selenium.webdriver.chrome.options import Options 
+from webdriver_manager.chrome import ChromeDriverManager
+import upstox_client
+from upstox_client.rest import ApiException
+from pprint import pprint
 # Generate Token Manually
 def get_tokens_for_user(user):
   refresh = RefreshToken.for_user(user)
