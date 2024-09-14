@@ -22772,22 +22772,63 @@ class UserLoginView(APIView):
         return Response({'token': token, 'enctoken':enctoken, 'kite_login_details': kite_login_details, 'msg': 'Login Success'}, status=status.HTTP_200_OK)
 
 class UserProfileView(APIView):
-  renderer_classes = [UserRenderer]
-  permission_classes = [IsAuthenticated]
-  parser_classes = [JSONParser]  # Add the parser class
-  def post(self, request, format=None):
-    
-    enctoken = request.data.get("enctoken")
-    broker = request.data.get("broker")
-    print(enctoken)
-    print(broker)
-    zerodha_api = ZerodhaAPI(enctoken)
+    renderer_classes = [UserRenderer]
+    permission_classes = [IsAuthenticated]
+    parser_classes = [JSONParser]
 
-        # Fetch user profile
-    user_profile = zerodha_api.get_user_profile()
-    print("user_profile",user_profile)
-    serializer = UserProfileSerializer(request.user)
-    return Response({"user_profile":user_profile,"User_data":serializer.data,}, status=status.HTTP_200_OK)
+    def post(self, request, format=None):
+        # Extract the nested dictionary from enctoken
+        enctoken_data = request.data.get("enctoken", {})
+
+        # Extract individual values from the nested dictionary
+        broker = enctoken_data.get("broker")
+        enctoken = enctoken_data.get("enctoken")
+        access_token = enctoken_data.get("access")
+        refresh_token = enctoken_data.get("refresh")
+
+        print("broker:", broker)
+        print("enctoken:", enctoken)
+        print("access_token:", access_token)
+        print("refresh_token:", refresh_token)
+        print("request.user:", request.user)
+
+        if broker == 'ZERODHA':
+            # Zerodha case
+            zerodha_api = ZerodhaAPI(enctoken)
+
+            # Fetch user profile
+            user_profile = zerodha_api.get_user_profile()
+            print("User Profile (Zerodha):", user_profile)
+
+            return Response({"user_profile": user_profile}, status=status.HTTP_200_OK)
+
+        elif broker == 'UPSTOX':
+            # Upstox case
+            print("Access Token (Upstox):", access_token)
+            access_token = enctoken
+
+            # Configure OAuth2 access token for authorization: OAUTH2
+            configuration = upstox_client.Configuration()
+            configuration.access_token = access_token
+
+            # Create an instance of the API class
+            api_instance = upstox_client.UserApi(upstox_client.ApiClient(configuration))
+            api_version = 'api_version_example'  # replace with actual API version
+
+            try:
+                # Get profile
+                api_response = api_instance.get_profile(api_version)
+                response_dict = api_response.to_dict() if hasattr(api_response, 'to_dict') else api_response.__dict__
+                print("User Profile (Upstox):", response_dict)
+
+                return Response({"user_profile": response_dict}, status=status.HTTP_200_OK)
+
+            except ApiException as e:
+                print("Exception when calling UserApi->get_profile: %s\n" % e)
+                return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+        else:
+            return Response({"error": "Unknown broker"}, status=status.HTTP_400_BAD_REQUEST)
 
 class UserChangePasswordView(APIView):
   renderer_classes = [UserRenderer]
@@ -22967,20 +23008,6 @@ def filter_option_expiry(request):
     return JsonResponse({'unique_expiry_dates': unique_expiry_dates})
 
 
-from urllib.parse import parse_qs, urlparse
-import requests
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-import time
-from pyotp import TOTP
-from selenium.webdriver.chrome.service import Service 
-from selenium.webdriver.chrome.options import Options 
-from webdriver_manager.chrome import ChromeDriverManager
-import upstox_client
-from upstox_client.rest import ApiException
-from pprint import pprint
 
 
 
@@ -23024,10 +23051,10 @@ def run_selenium(USER_ID,PIN,TOTP_KEY,MOBILE_NO,API_KEY,SECRET_KEY):
     chrome_options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36")
     chrome_options.add_argument("--enable-logging")
     print("Passed all the chrome option ")
-
     browser = webdriver.Chrome(service=Service(ChromeDriverManager().install()),options=chrome_options)
-    browser.implicitly_wait(10)  # Wait up to 10 seconds for elements to be available
 
+    # browser = webdriver.Chrome()
+    browser.implicitly_wait(10)  # Wait up to 10 seconds for elements to be available
 
     print("trying to get the webdriver")
     browser.get(AUTH_URL)
