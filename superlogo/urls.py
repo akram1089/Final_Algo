@@ -25,7 +25,7 @@ sitemaps={
 urlpatterns = [
     path('admin/', admin.site.urls),
     path("", include("home.urls")),
-    # path('api/user/', include('home.urls')),
+    path('api/user/', include('home.urls')),
     path('accounts/', include('allauth.urls')),
     path("django-check-seo/", include("django_check_seo.urls")),
      path(
