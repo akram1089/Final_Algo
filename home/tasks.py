@@ -425,17 +425,34 @@ from django.template.loader import render_to_string
 from .models import PromotionalEmail
 import css_inline
 from .models import Subscriber
-from django.core.mail import send_mail
+from django.core.mail import send_mail, get_connection
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import datetime 
 from django.utils.html import strip_tags
 
 
+
+NEWSLETTER_EMAIL_ACCOUNTS = [
+    {
+        "EMAIL_HOST_USER": "optionperks@gmail.com",
+        "EMAIL_HOST_PASSWORD": "xojrleiasoimqyiw",
+    },
+    {
+        "EMAIL_HOST_USER": "perksoption@gmail.com",
+        "EMAIL_HOST_PASSWORD": "wetzgjhgmbvhsdpz",
+    },
+    # Add more accounts as needed
+]
+
+
 @shared_task
 def send_newsletter_emails():
-    subscribers = Subscriber.objects.filter(active=True)
-    
+    subscribers = Subscriber.objects.filter(active=True).values_list('email', flat=True)
+    subscriber_emails = [s for s in subscribers]
+    accounts = NEWSLETTER_EMAIL_ACCOUNTS
+    batch_size = 500
+
     # Define API endpoints
     api_endpoints = {
         'stock_index': 'https://webapi.niftytrader.in/webapi/symbol/stock-index-data',
@@ -445,34 +462,67 @@ def send_newsletter_emails():
         'world_news': 'https://webapi.niftytrader.in/webapi/Other/rss-feeds-data?NewsType=WorldNews&lanType=English',
         # Add more API endpoints as needed
     }
-    
+
     collected_data = {}
-    
     for key, endpoint in api_endpoints.items():
         response = requests.get(endpoint)
-        
         if response.status_code == 200:
             data = response.json().get('resultData', [])
             collected_data[key] = data
         else:
-            return {'error': f'Failed to fetch data from {endpoint}.'}
-        
-    # Pass the collected data to the email template
-    # Get today's date
+            return JsonResponse({'error': f'Failed to fetch data from {endpoint}.'})
+
     today_date = datetime.datetime.now().strftime('%d %B, %Y')
-    
-    # Construct subject with today's date
     subject = f'Fwd: Daily Pointer - {today_date}'
     html_content = render_to_string('news_letter_data_template.html', {'collected_data': collected_data})
-    
-    html_content_inline =css_inline.inline(html_content)
+    html_content_inline = css_inline.inline(html_content)
 
-    for subscriber in subscribers:
-        # Send email to each subscriber
-        send_mail(subject, '', None, [subscriber.email], html_message=html_content_inline)
-  
+    results = []
+    # Robust per-email fallback: try all senders for each email
+    for email in subscriber_emails:
+        sent = False
+        for sender_index, account in enumerate(accounts):
+            try:
+                connection = get_connection(
+                    host='smtp.gmail.com',
+                    port=587,
+                    username=account["EMAIL_HOST_USER"],
+                    password=account["EMAIL_HOST_PASSWORD"],
+                    use_tls=True,
+                )
+                send_mail(
+                    subject,
+                    '',
+                    account["EMAIL_HOST_USER"],
+                    [email],
+                    html_message=html_content_inline,
+                    connection=connection
+                )
+                results.append({
+                    "email": email,
+                    "sender": account["EMAIL_HOST_USER"],
+                    "status": "success"
+                })
+                sent = True
+                break
+            except Exception as e:
+                print(f"Error with sender {account['EMAIL_HOST_USER']} for {email}: {str(e)}")
+                # Try next sender
+                continue
+        if not sent:
+            results.append({
+                "email": email,
+                "sender": None,
+                "status": "failed",
+                "error": "All senders failed"
+            })
 
-    return ({'message': 'Promotional emails sent successfully!'})
+    return JsonResponse({
+        'message': 'Newsletter sending completed',
+        'results': results
+    })
+
+
 
 
 
